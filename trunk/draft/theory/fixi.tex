@@ -1,0 +1,79 @@
+\section{\Fixi}
+\Fixi\ is an extension of \Fixw\ with indexed types.
+To have indexed types we need to extend the kinds.
+We limit only the first-order types can be used as indices
+(e.g. boolean, natrual numbers).
+For simplicity, let us consider $\mathsf{Bool}$
+(that is, $\forall X^\star.X\to X\to X$) only for now.
+
+The syntax for kinds and types for \Fixw\ is
+\begin{table}
+\begin{align*}
+&\text{Polaries}
+	& p		&~ ::= ~ + \mid - \mid \textsf{o}
+\\
+&\text{Kinds}
+	& \kappa	&~ ::= ~ \star \mid p\kappa \to \kappa
+\\
+&\text{Type Constructors}
+	& A,B,F,G	&~ ::= ~ X
+			\mid \lambda X^{p\kappa}.F
+			\mid F G
+			\mid A\to B
+			\mid \forall X^\kappa . A
+			\mid \fix F
+\\
+&\text{Terms}
+	& r,s,t		&~ ::= ~ x \mid \lambda x.t \mid r\;s
+\\
+&\text{Contexts}
+	& \Delta	&~ ::= ~ \cdot
+			\mid \Delta, x:A
+			\mid \Delta, X^{p\kappa}
+\end{align*}
+\caption{Syntax of \Fixw}
+\label{tbl:syntaxFixw}
+\end{table}
+
+
+\begin{table}
+\begin{align*}
+&\text{Polaries}
+	& p		&~ ::= ~ + \mid - \mid \textsf{o}
+\\
+&\text{Kinds}
+ 	& \kappa &~::=~ \star \mid  p\underline\kappa \to \kappa
+\\
+&\text{Argument Kinds}
+	& \underline\kappa	&~ ::= ~ \kappa \mid \Bool
+\\
+&\text{Type Constructors}
+	& A,B,F,G	&~ ::= ~ X
+			\mid \lambda X^{p\kappa}.F
+			\mid F G
+			\mid A\to B
+			\mid \forall X^\kappa . A
+			\mid \fix F
+			\mid \{t\}
+\\
+&\text{Terms}
+	& r,s,t		&~ ::= ~ x \mid \lambda x.t \mid r\;s
+\\
+&\text{Contexts}
+	& \Delta	&~ ::= ~ \cdot
+			\mid \Delta, x :^n A
+			\mid \Delta, X^{p\kappa}
+\end{align*}
+\caption{Syntax of \Fixi}
+\label{tbl:syntaxFixi}
+\end{table}
+
+The syntax for kinds and types for \Fixi\ is
+
+
+
+We need to define $\SAT^{\underline\kappa}$.
+In particular, how would we define $\SAT^{p\Bool\to\underline\kappa}$?
+\[ \SAT^{p\Bool\to\underline\kappa} = \SAT^{\underline\kappa} \]
+aa
+

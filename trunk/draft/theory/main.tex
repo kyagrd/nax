@@ -3,24 +3,23 @@
 \documentclass[adraft,copyright,creativecommons]{eptcs}
 \providecommand{\event}{FICS or MSFP 2012} % Name of the event to submit
 \usepackage{breakurl}              % Not needed if you use pdflatex only.
+\usepackage{amssymb}
+\usepackage[fleqn]{amsmath}
 \usepackage{semantic}
 
 \title{Nax theory}
 
-\author{Rob van Glabbeek
-\institute{NICTA\\ Sydney, Australia}
-\institute{School of Computer Science and Engineering\\
-University of New South Wales\thanks{A fine university.}\\
-Sydney, Australia}
-\email{rvg@cs.stanford.edu}
+\author{Ki Yung Ahn \qquad Tim Sheard
+\institute{Portland State University\thanks{A fine university.}\\
+           Portland, Oergon, USA}
+\email{kya@cs.pdx.edu \qquad sheard@cs.pdx.edu}
 \and
-Co Author \qquad\qquad Yet S. Else
-\institute{Stanford Univeristy\\
-California, USA}
-\email{\quad is@gmail.com \quad\qquad somebody@else.org}
+Marcelo Fiore \quad\qquad Andrew Pitts %% TODO find exact names in their paper
+\institute{University of Cambridge\\ Cambridge, UK}
+\email{\{Marcelo.Fiore,Andrew.Pitts\}@cl.cam.ac.uk}
 }
-\def\titlerunning{A Longtitled Paper}
-\def\authorrunning{R.J. van Glabbeek, C. Author \& Y.S. Else}
+\def\titlerunning{title running}
+\def\authorrunning{author running 1, author running 2 \& author running 3}
 
 \newcommand{\fix}{\mathsf{fix}}
 \newcommand{\Fix}{\mathsf{Fix}}
@@ -55,29 +54,8 @@ There is no specific page limit but authors should strive for brevity.
 
 \section{TODO}
 
-\section{\Fixi}
-\Fixi\ is an extension of \Fixw\ with indexed types.
-To have indexed types we need to extend the kinds.
-We limit only the first-order types can be used as indices
-(e.g. boolean, natrual numbers).
-For simplicity, let us consider $\mathsf{Bool}$
-(that is, $\forall X^\star.X\to X\to X$) only for now.
+\input{fixi}
 
-The syntax for kinds and types for \Fixw\ is
-\[ \kappa ::= \star \mid p\kappa \to \kappa \]
-\[ A,B,F,G ::= X \mid \lambda X^{p\kappa}.F \mid F G \mid A\to B
-          \mid \forall X^\kappa . A \mid \fix F \]
-
-The syntax for kinds and types for \Fixi\ is
-\[ \underline\kappa ::= \star \mid  p\kappa \to \underline\kappa \]
-\[ \kappa ::= \Bool \mid \underline\kappa \]
-
-\[ A,B,F,G ::= X \mid \lambda X^{p\kappa}.F \mid F G \mid A\to B
-          \mid \forall X^\kappa . A \mid \fix F \]
-
-How would we define $\SAT^\Bool$?
-
-aa
 \section{TODO}
 
 \nocite{*}
