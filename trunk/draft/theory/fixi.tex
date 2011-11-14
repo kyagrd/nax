@@ -6,11 +6,12 @@ We limit only the first-order types can be used as indices
 For simplicity, let us consider $\mathsf{Bool}$
 (that is, $\forall X^\star.X\to X\to X$) only for now.
 
+
 The syntax for kinds and types for \Fixw\ is
-\begin{table}
+\begin{figure}
 \begin{align*}
 &\text{Polaries}
-	& p		&~ ::= ~ + \mid - \mid \textsf{o}
+	& p		&~ ::= ~ + \mid - \mid \oz
 \\
 &\text{Kinds}
 	& \kappa	&~ ::= ~ \star \mid p\kappa \to \kappa
@@ -33,47 +34,138 @@ The syntax for kinds and types for \Fixw\ is
 \end{align*}
 \caption{Syntax of \Fixw}
 \label{tbl:syntaxFixw}
-\end{table}
+\end{figure}
 
-
-\begin{table}
+\begin{figure}
 \begin{align*}
 &\text{Polaries}
-	& p		&~ ::= ~ + \mid - \mid \textsf{o}
+	& p			&~ ::= ~ + \mid - \mid \oz
 \\
 &\text{Kinds}
- 	& \kappa &~::=~ \star \mid  p\underline\kappa \to \kappa
+ 	& \kappa		&~ ::= ~ \star
+				\mid  p\ka \to \kappa
 \\
-&\text{Argument Kinds}
-	& \underline\kappa	&~ ::= ~ \kappa \mid \Bool
+&\text{Kind Arguments}
+	& \ka	&~ ::= ~ \kappa \mid \iota
+\\
+&\text{Indices}
+	& \iota &~::=~ \Bool %% TODO any 1st order datatype
 \\
 &\text{Type Constructors}
-	& A,B,F,G	&~ ::= ~ X
-			\mid \lambda X^{p\kappa}.F
-			\mid F G
-			\mid A\to B
-			\mid \forall X^\kappa . A
-			\mid \fix F
-			\mid \{t\}
+	& A,B,F,G		&~ ::= ~ X
+				\mid \lambda X^{p\ka}.F
+				\mid F G
+				\mid A\to B
+				\mid \forall X^\ka . A
+				\mid \fix F
+				\mid \{t\}
 \\
 &\text{Terms}
-	& r,s,t		&~ ::= ~ x \mid \lambda x.t \mid r\;s
+	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
+				\mid \bullet
 \\
 &\text{Contexts}
-	& \Delta	&~ ::= ~ \cdot
-			\mid \Delta, x :^n A
-			\mid \Delta, X^{p\kappa}
+	& \Delta		&~ ::= ~ \cdot
+				\mid \Delta, x : A
+				\mid \Delta, X^{p\ka}
 \end{align*}
 \caption{Syntax of \Fixi}
 \label{tbl:syntaxFixi}
-\end{table}
+\end{figure}
 
-The syntax for kinds and types for \Fixi\ is
+The syntax for kinds and types for \Fixi\ is TODO
 
 
+\paragraph{Kinding.}
+\[ \inference{X^{p\ka} & p\in\{+,\oldstylenums{0}\}}{\Delta |- X : \ka}
+ ~~~~
+   \inference{\Delta,X^{p\ka} |- F : \kappa}
+             {\Delta |- \lambda X^{p\ka}.F : p\ka\to\kappa}
+ ~~~~
+   \inference{\Delta |- F : p\ka\to\kappa & p\Delta |- G : \ka}
+             {\Delta |- F G : \kappa}
+\]
+\[ \inference{-\Delta |- A : \star & \Delta |- B : \star}
+             {\Delta |- A \to B : \star }
+ ~~~~
+   \inference{\Delta, X^{\oz\ka} |- A : \star}
+             {\Delta |- \forall X^\ka . A : \star}
+ ~~~~
+   \inference{\Delta |- F : +\kappa \to \kappa}{\Delta |- \fix F : \kappa}
+ ~~~~
+   \inference{\hat\Delta |- t : \iota}{\Delta |- \{t\} : \iota}
+\]
 
-We need to define $\SAT^{\underline\kappa}$.
-In particular, how would we define $\SAT^{p\Bool\to\underline\kappa}$?
-\[ \SAT^{p\Bool\to\underline\kappa} = \SAT^{\underline\kappa} \]
+\paragraph{Wellformed typing context}
+\[ \inference{}{|-\cdot}
+ ~~~~
+   \inference{|-\Delta}{|-\Delta,X^{\oz\ka}}
+ ~~~~
+   \inference{|-\Delta & \Delta |- A:*}{|-\Delta,x:A}
+\]
+
+\paragraph{Type constructor equality.}
+%% Computation Axioms
+\[ \inference{\Delta,X^{p\ka} |- F:\kappa & p\Delta |- G:\ka}
+             {\Delta |- (\lambda X^{p\ka}.F) G = [G/X]F:\kappa}
+ ~~~~
+   \inference{\Delta |- F : +\ka\to\kappa}
+             {\Delta |- \fix F = F(\fix F) : \kappa}
+ ~~~~
+   \inference{\hat\Delta |- t=t : \iota}{\Delta |- \{t\}=\{t'\}:\iota}
+\]
+%% Congruences
+\[ \inference{X^{p\ka}\in\Delta & p\in\{+,\oz\}}{\Delta |- X=X:\ka}
+ ~~~~
+   \inference{\Delta |- F=F':p\ka\to\kappa & p\Delta |- G:\ka}
+             {\Delta |- F G = F' G : \kappa}
+\]
+ ~~~~
+\[ \inference{\Delta,X^{p\ka} |- F=F' : \kappa}
+             {\Delta |- \lambda X^{p\ka}.F=\lambda X^{p\ka}.F' : p\ka\to\kappa}
+ ~~~~
+   \inference{\Delta,X^{\oz\ka} |- A=A':*}
+             {\Delta |- \forall X^{\oz\ka}.A=\forall X^{\oz\ka}.A':*}
+\]
+\[ \inference{-\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A\to B=A'\to B':*}
+ ~~~~
+   \inference{\Delta |- F=F':+\ka\to\kappa}{\Delta |- \fix F=\fix F':\kappa}
+\]
+%% Symmetry and Transitivity
+\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+ ~~~~
+   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
+             {\Delta |- F = F'' : \kappa}
+\]
+
+\paragraph{Term equality}
+\[ \inference{x:A\in\Delta & \Delta |- x:A}{\Delta |- x=x:A}
+ ~~~~
+   \inference{\Delta,x:A |- t:B & \Delta |- s:A}
+             {\Delta |- (\lambda x.t)s=[s/x]t : B}
+ ~~~~
+   \inference{\Delta |- r=r':A\to B & \Delta |- s=s':A}{\Delta |- r\;s=r'\;s':B}
+\]
+
+\paragraph{Typing.}
+\[ \inference{}{\Delta |- \bullet : A}
+ ~~~~
+   \inference{x:A \in \Delta & |-\Delta}{\Delta |- x:A}
+ ~~~~
+   \inference{\Delta, x:A |- t : B}{\Delta |- \lambda x.t : A\to B}
+ ~~~~
+   \inference{\Delta |- r : A\to B & |- \Delta |- s : A}{\Delta |- r\;s : B}
+\]
+\[ \inference{\Delta, X^{\oz\ka} |- t : A}{\Delta |- t : \forall X^\ka.A}
+ ~~~~
+   \inference{\Delta |- t : \forall X^\ka.A & \Delta |- F:\kappa}
+             {\Delta |- t : [F/X]A}
+ ~~~~
+   \inference{\Delta |- t :A & \Delta |- A = B : *}{\Delta |- t : B}
+\]
+
+We need to define $\SAT^{\ka}$.
+In particular, how would we define $\SAT^{p\Bool\to\kappa}$?
+\[ \SAT^{p\Bool\to\kappa} = \SAT^{\kappa} \]
 aa
 
