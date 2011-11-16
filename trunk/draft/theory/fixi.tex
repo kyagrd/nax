@@ -4,7 +4,7 @@ To have indexed types we need to extend the kinds.
 We limit only the first-order types can be used as indices
 (e.g. boolean, natrual numbers).
 For simplicity, let us consider $\mathsf{Bool}$
-(that is, $\forall X^\star.X\to X\to X$) only for now.
+(that is, $\forall X^*.X\to X\to X$) only for now.
 
 
 The syntax for kinds and types for \Fixw\ is
@@ -14,7 +14,7 @@ The syntax for kinds and types for \Fixw\ is
 	& p		&~ ::= ~ + \mid - \mid \oz
 \\
 &\text{Kinds}
-	& \kappa	&~ ::= ~ \star \mid p\kappa \to \kappa
+	& \kappa	&~ ::= ~ * \mid p\kappa \to \kappa
 \\
 &\text{Type Constructors}
 	& A,B,F,G	&~ ::= ~ X
@@ -33,7 +33,7 @@ The syntax for kinds and types for \Fixw\ is
 			\mid \Delta, X^{p\kappa}
 \end{align*}
 \caption{Syntax of \Fixw}
-\label{tbl:syntaxFixw}
+\label{fig:syntaxFixw}
 \end{figure}
 
 \begin{figure}
@@ -42,7 +42,7 @@ The syntax for kinds and types for \Fixw\ is
 	& p			&~ ::= ~ + \mid - \mid \oz
 \\
 &\text{Kinds}
- 	& \kappa		&~ ::= ~ \star
+ 	& \kappa		&~ ::= ~ *
 				\mid  p\ka \to \kappa
 \\
 &\text{Kind Arguments}
@@ -70,7 +70,7 @@ The syntax for kinds and types for \Fixw\ is
 				\mid \Delta, X^{p\ka}
 \end{align*}
 \caption{Syntax of \Fixi}
-\label{tbl:syntaxFixi}
+\label{fig:syntaxFixi}
 \end{figure}
 
 The syntax for kinds and types for \Fixi\ is TODO
@@ -85,11 +85,11 @@ The syntax for kinds and types for \Fixi\ is TODO
    \inference{\Delta |- F : p\ka\to\kappa & p\Delta |- G : \ka}
              {\Delta |- F G : \kappa}
 \]
-\[ \inference{-\Delta |- A : \star & \Delta |- B : \star}
-             {\Delta |- A \to B : \star }
+\[ \inference{-\Delta |- A : * & \Delta |- B : *}
+             {\Delta |- A \to B : * }
  ~~~~
-   \inference{\Delta, X^{\oz\ka} |- A : \star}
-             {\Delta |- \forall X^\ka . A : \star}
+   \inference{\Delta, X^{\oz\ka} |- A : *}
+             {\Delta |- \forall X^\ka . A : *}
  ~~~~
    \inference{\Delta |- F : +\kappa \to \kappa}{\Delta |- \fix F : \kappa}
  ~~~~

@@ -1,12 +1,18 @@
+\newpage
 \section{\Fi}
 \Fi\ is an extension of \Fw\ with indexed types, but less powerful than
 the Calculus of Constructions (CC). That is, all typeable terms in \Fi\ are
 typeable terms in \Fi\ and all typable terms in \Fi\ are typable terms in CC.
 Since CC is normalizing, normalization of \Fi\ is automatic.
+
+\subsection{\Fi\ in regards to PTS}
 We describe \Fw\ and CC as an instances of the Pure Type System (PTS),
 and then describe \Fi\ as an extension of \Fw\ and a restriction of CC.
 
-PTS typing rules
+\begin{figure}
+\[\text{Syntax}~~~~~ a,b,A,B ::= s \mid x \mid b~a \mid \lambda x:A.B
+                                   \mid (x:A) -> B \]
+\[\text{Typing}~~~~~\]
 \[
  \inference[Ax]{|-\Gamma & (s_1,s_2)\in\calA}{\Gamma |- s_1 : s_2}
  ~~~~
@@ -16,21 +22,23 @@ PTS typing rules
 \]
 \[
  \inference[Pi]{\Gamma |- A:s_1 & \Gamma,x:A |- B:s_2 & (s_1,s_2,s_3)\in\calR}
-               {\Gamma |- (x:A)\to B : s_3}
+               {\Gamma |- (x:A)-> B : s_3}
 \]
 \[
- \inference[Lam]{\Gamma |- (x:A)\to B : s & \Gamma,x:A |- b:B}
-                {\Gamma |- \lambda x:A.b : (x:A)\to B}
+ \inference[Lam]{\Gamma |- (x:A)-> B : s & \Gamma,x:A |- b:B}
+                {\Gamma |- \lambda x:A.b : (x:A)-> B}
  ~~~~
- \inference[App]{\Gamma |- b:(x:A)\to B & \Gamma |- a:A}{\Gamma |- b\;a:[a/x]B}
+ \inference[App]{\Gamma |- b:(x:A)-> B & \Gamma |- a:A}{\Gamma |- b\;a:[a/x]B}
 \]
 
-
-\[
+\[\text{Context}~~~~~
  \inference{}{|-\cdot}
  ~~~~
  \inference{x\notin\dom(\Gamma) & |-\Gamma}{|-\Gamma,x:A}
 \]
+\caption{Pure Type System}
+\label{fig:PTSrule}
+\end{figure}
 
 PTS is instantiated by the triple $(\calS,\calA,\calR)$ where
 $\calS$ is the set of sorts ($s,s_1,s_2,s_3\in\calS$ in the PTS typing rules),
@@ -38,9 +46,12 @@ $\calA\subset\calS\times\calS$ is the set of axioms (used in Ax rule), and
 $\calR\subset\calS\times\calS\times\calS$ is the set of rules (used in Pi rule).
 
 \Fw\ is an instance of PTS where
-\[\calS=\{*,\square\}\]
-\[\calA=\{(*,\square)\}\]
-\[\calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)\}\]
+\[\calS=\{*,\square\}
+  ~~~~~
+  \calA=\{(*,\square)\}
+  ~~~~~
+  \calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)\}
+\]
 Each element in $\calR$ stands for certain ability of dependency:
 $(*,*,*)$ enables functions at the value level
 (values depending on values)
@@ -50,12 +61,14 @@ $(\square,\square,\square)$ enables functions at the type level
 (types depending on types).
 
 CC extends \Fw\ with one additional rule
-$(*,\square,\square)$, which enalbes types depending on values
-(sometiles called \emph{value dependency}).
+$(*,\square,\square)$, which enables types depending on values
+(\emph{dependent types}, or, types with \emph{value dependency}).
 That is, CC is an instance of PTS where
-\[\calS=\{*,\square\}\]
-\[\calA=\{(*,\square)\}\]
-\[\calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)
+\[\calS=\{*,\square\}
+  ~~~~~
+  \calA=\{(*,\square)\}
+  ~~~~~
+  \calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)
          ,(*,\square,\square)\}\]
 
 \Fi\ is also an extension of \Fw\, but a restriction of CC.  Instead of
@@ -67,14 +80,84 @@ we only allow value dependency partially via special syntax as follows:
  ~~~~
  \inference[Pi$_{(*,\square,\square)}$]
      {\Gamma |- A:* & \Gamma |- B:\square}
-     {\Gamma |- (x:A)\to B : \square}
+     {\Gamma |- (x:A)-> B : \square}
 \]
-The Let rule can be derived in CC by combining Pi rule and App rule
-instantiated by $(*,\square,\square)$. However, we only allow
-value dependency $(*,\square,\square)$ in this limited form, but
-disallow arbitrary labmbda abstractions to form value dependent functions
-by limiting the Pi rule.
+The Let rule can be derived in CC by combining Pi rule and App rule.  However,
+we only allow value dependency $(*,\square,\square)$ in this limited form,
+but disallow arbitrary lambda abstractions to form value dependent functions
+by limiting the Pi rule on $(*,\square,\square)$.
 
 Normalization of \Fi\ is automatic since \Fi\ is a strict subset of CC,
 which is known to be strongly normalizing.
+
+\subsection{examples}
+For better intuition, let us see some examples what we can express and
+what we cannot in \Fi.
+\newcommand{\List}{\mathsf{List}}
+\newcommand{\Vect}{\mathsf{Vec}}
+
+\paragraph{Ordinary (parametric) polymorphism} is obviously possible,
+since \Fi\ is an extension of \Fw. Note, $\Gamma |- (x:*) -> B : *$
+where $\Gamma,x:* |- B:*$, since $(\square,\star,\star) \in\calR$.
+If you'd prefer \Fw\-like syntax we could use alternative notation
+$\forall(x:*).B$ for $(x:*) -> B$. With the support of ordinary polymorphism,
+we can write functions over polymorphic lists as follows
+where $\List : * -> *$ (details of the function body is omitted):
+\[ (\Lambda a:*.\lambda x:\List~a. \cdots) : \forall(a:*).\List~a -> \List~a \]
+The uppercase lambda ($\Lambda$) is an alternative notation in flavour of \Fw
+for the ordinary lowercase lambda ($\lambda$)
+More generally, we can be polymorphic over any \Fw\ kind such as $* -> *$.
+For instance, $\forall(x:* -> *).B$.
+
+\paragraph{Polymorphism over indexed values} is also possible.
+Note, $\Gamma |- (x:A) -> B : *$ where $\Gamma |- A:*$ and $\Gamma,x:A |- B:*$.
+With the support of polymorphism over indexed values, we can write functions
+over type indexed lists as follows (details of the function body is omitted)
+where $\Vect : \Nat -> *$:
+\[
+(\Lambda n:\Nat.\lambda x:\Vect~n. \cdots) : \forall(n:\Nat).\Vect~n -> \Vect~n 
+\]
+More generally, $\Gamma |- (x:\ka) -> B : *$ where $\Gamma, x:\ka |- B:*$
+can be written as $\forall(x:\ka).B$ in flavour of \Fw.
+
+We call the (parametric) polymorphism of \Fi, which includes
+both the ordinary polymorphism of \Fw\ and the polymorphism involving indices,
+\emph{generalized polymorphism}.
+
+To be more precise, this is not exactly the polymorphism we would expect
+in functional languages with indexed types (\eg, GADT extension in Haskell),
+since we usually expect index variables like $n$ bound by $\Lambda$ to be
+erasable (or, computationally irrelevant) in contrast to the variables bound
+by ordinary $\lambda$. Here in PTS, which is in Church style, $n$ can also
+appear as computationally relevant in the function body. Unlike ordinary
+polymorphism where the polymorphic variable is a type variable that cannot
+live in value world, nothing prevents the index variables like $n$ to be used
+in the value level. This is what Abel and Matthes in CSL 04 paper meant that
+the Church style becomes richer than the Curry style as we move from \Fw\ to
+a dependently typed setting such as CC. I think it is better to formalize
+if we want to capture the erasure property of polymorphism correctly in \Fi.
+
+\paragraph{Large eliminations resulting in constant kinds} are possible.
+Large eliminations are type computations depending on values.  For example,
+computing an $n$-ary boolean function type given a natural number index $n$
+can be defined as follows (details of the function body is omitted):
+\[
+(\lambda n:\Nat. \stackrel{n}{\overbrace{\Bool-> \cdots-> \Bool}}\;\, -> \Bool)
+  : (n:\Nat) -> *
+\]
+Note, the resulting kind ($*$) is constant, being independent of $n$.
+So, the example above is a large elimination resulting in a constant kind,
+which does not involve any kind computation.
+
+However, a large eliminations resulting in varying kinds that depend on
+input index values are not possible, unless you use the let syntax to make
+the input index values available (then, the input indices do not vary
+at runtime after all). For example, large elimination computing an $n$-ary
+type constructor given a natural number index $n$ line the following
+is \emph{not} possible to define in \Fi:
+\[
+(\lambda n:\Nat. \cdots \cdots)
+  : (n:Nat) -> \,\;\stackrel{n}{\overbrace{* -> \cdots -> *}}\;\, -> *
+\]
+This restriction is to make the kind inference doable.
 
