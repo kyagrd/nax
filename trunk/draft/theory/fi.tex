@@ -1,0 +1,80 @@
+\section{\Fi}
+\Fi\ is an extension of \Fw\ with indexed types, but less powerful than
+the Calculus of Constructions (CC). That is, all typeable terms in \Fi\ are
+typeable terms in \Fi\ and all typable terms in \Fi\ are typable terms in CC.
+Since CC is normalizing, normalization of \Fi\ is automatic.
+We describe \Fw\ and CC as an instances of the Pure Type System (PTS),
+and then describe \Fi\ as an extension of \Fw\ and a restriction of CC.
+
+PTS typing rules
+\[
+ \inference[Ax]{|-\Gamma & (s_1,s_2)\in\calA}{\Gamma |- s_1 : s_2}
+ ~~~~
+ \inference[Var]{|-\Gamma & (x:A)\in\Gamma}{\Gamma |- x:A} 
+ ~~~~
+ \inference[Conv]{\Gamma |- a:A & \Gamma |- B:s & A=B}{\Gamma |- a:B}
+\]
+\[
+ \inference[Pi]{\Gamma |- A:s_1 & \Gamma,x:A |- B:s_2 & (s_1,s_2,s_3)\in\calR}
+               {\Gamma |- (x:A)\to B : s_3}
+\]
+\[
+ \inference[Lam]{\Gamma |- (x:A)\to B : s & \Gamma,x:A |- b:B}
+                {\Gamma |- \lambda x:A.b : (x:A)\to B}
+ ~~~~
+ \inference[App]{\Gamma |- b:(x:A)\to B & \Gamma |- a:A}{\Gamma |- b\;a:[a/x]B}
+\]
+
+
+\[
+ \inference{}{|-\cdot}
+ ~~~~
+ \inference{x\notin\dom(\Gamma) & |-\Gamma}{|-\Gamma,x:A}
+\]
+
+PTS is instantiated by the triple $(\calS,\calA,\calR)$ where
+$\calS$ is the set of sorts ($s,s_1,s_2,s_3\in\calS$ in the PTS typing rules),
+$\calA\subset\calS\times\calS$ is the set of axioms (used in Ax rule), and
+$\calR\subset\calS\times\calS\times\calS$ is the set of rules (used in Pi rule).
+
+\Fw\ is an instance of PTS where
+\[\calS=\{*,\square\}\]
+\[\calA=\{(*,\square)\}\]
+\[\calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)\}\]
+Each element in $\calR$ stands for certain ability of dependency:
+$(*,*,*)$ enables functions at the value level
+(values depending on values)
+$(\square,*,*)$ enables parametric polymorphism
+(values depending on types)
+$(\square,\square,\square)$ enables functions at the type level
+(types depending on types).
+
+CC extends \Fw\ with one additional rule
+$(*,\square,\square)$, which enalbes types depending on values
+(sometiles called \emph{value dependency}).
+That is, CC is an instance of PTS where
+\[\calS=\{*,\square\}\]
+\[\calA=\{(*,\square)\}\]
+\[\calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)
+         ,(*,\square,\square)\}\]
+
+\Fi\ is also an extension of \Fw\, but a restriction of CC.  Instead of
+allowing full value dependency (given by $(*,\square,\square)$ in CC),
+we only allow value dependency partially via special syntax as follows:
+\[
+ \inference[Let]{\Gamma |- A:s & \Gamma, x:A |- b:B}
+                {\Gamma |- \mathsf{let}~x:A=a~\mathsf{in}~b : [a/x]B}
+ ~~~~
+ \inference[Pi$_{(*,\square,\square)}$]
+     {\Gamma |- A:* & \Gamma |- B:\square}
+     {\Gamma |- (x:A)\to B : \square}
+\]
+The Let rule can be derived in CC by combining Pi rule and App rule
+instantiated by $(*,\square,\square)$. However, we only allow
+value dependency $(*,\square,\square)$ in this limited form, but
+disallow arbitrary labmbda abstractions to form value dependent functions
+by limiting the Pi rule.
+
+Normalization of \Fi\ is automatic since \Fi\ is a strict subset of CC,
+which is known to be strongly normalizing.
+

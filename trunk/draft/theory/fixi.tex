@@ -77,7 +77,7 @@ The syntax for kinds and types for \Fixi\ is TODO
 
 
 \paragraph{Kinding.}
-\[ \inference{X^{p\ka} & p\in\{+,\oldstylenums{0}\}}{\Delta |- X : \ka}
+\[ \inference{X^{p\ka}\in\Delta & p\in\{+,\oldstylenums{0}\}}{\Delta |- X : \ka}
  ~~~~
    \inference{\Delta,X^{p\ka} |- F : \kappa}
              {\Delta |- \lambda X^{p\ka}.F : p\ka\to\kappa}
