@@ -1,15 +1,145 @@
-\newpage
 \section{\Fi}
 \Fi\ is an extension of \Fw\ with indexed types, but less powerful than
 the Calculus of Constructions (CC). That is, all typeable terms in \Fi\ are
 typeable terms in \Fi\ and all typable terms in \Fi\ are typable terms in CC.
 Since CC is normalizing, normalization of \Fi\ is automatic.
 
+\subsection{\Fi\ in Curry style}
+
+\begin{align*}
+&\text{Kinds}
+ 	& \kappa		&~ ::= ~ *
+				\mid \ka \to \kappa
+\\
+&\text{Kind Arguments}
+ 	& \ka		&~ ::= ~ \kappa \mid A
+\\
+%% &\text{Type Schemes}
+%% 	& \sigma	&~ ::= ~ A
+%% 			\mid (x:A) -> \sigma
+%% \\
+%% &\text{Kind Schemes}
+%% 	& \delta	&~ ::= ~ \kappa
+%% 			\mid (x:A) -> \delta
+%%			\mid (X:\kappa) -> \delta
+%% \\
+&\text{Type Constructors}
+	& A,B,F,G		&~ ::= ~ X
+				\mid \lambda X^\ka.F
+				\mid F\,I
+				\mid A\to B
+				\mid \forall X^\ka . B
+\\
+&\text{Type Arguments}
+	& I			&~ ::= ~ G \mid t
+\\
+&\text{Terms}
+	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
+\\
+&\text{Contexts}
+	& \Delta		&~ ::= ~ \cdot
+				\mid \Delta, x : A
+				\mid \Delta, X^\ka
+\end{align*}
+%% \caption{Syntax of \Fi}
+%% \label{tbl:syntaxFi}
+
+\paragraph{Wellformed typing context}
+\[ \inference{}{|- \cdot}
+ ~~~~
+   \inference{|- \Delta & \Delta |- \kappa:\square}{|- \Delta,X^\kappa}
+ ~~~~
+   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,X^A}
+ ~~~~
+   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x:A}
+\]
+
+\paragraph{Sorting.}
+\[ \inference{}{\Delta |- *:\square}
+ ~~~~
+   \inference{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
+             {\Delta |- \kappa \to \kappa' : \square}
+ ~~~~
+   \inference{\Delta |- A:* & \Delta |- \kappa:\square}
+             {\Delta |- A \to \kappa : \square}
+\]
+\paragraph{Kinding.}
+\[ \inference{X^\kappa\in\Delta & |- \Delta}
+             {\Delta |- X : \kappa}
+ ~~~~
+   \inference{\Delta,X^\ka |- F : \kappa}
+             {\Delta |- \lambda X^\ka.F : \ka\to\kappa}
+ ~~~~
+   \inference{\Delta |- F : \ka\to\kappa & \Delta |- G : \ka}
+             {\Delta |- F\,I : \kappa}
+\]
+\[ \inference{\Delta |- A : * & \Delta |- B : *}{\Delta |- A \to B : * }
+ ~~~~
+   \inference{\Delta, X^\ka |- B : *}{\Delta |- \forall X^\ka . B : *}
+\]
+
+\paragraph{Typing.}
+\[ \inference{x:A \in \Delta & |- \Delta}{\Delta |- x:A}
+ ~~~~
+   \inference{\Delta, x:A |- t : B}{\Delta |- \lambda x.t : A\to B}
+ ~~~~
+   \inference{\Delta |- r : A\to B & |- \Delta |- s : A}{\Delta |- r\;s : B}
+\]
+\[ \inference{\Delta, X^\ka |- t : B}{\Delta |- t : \forall X^\ka.B}
+ ~~~~
+   \inference{\Delta |- t : \forall X^\ka.B & \Delta |- I:\ka}
+             {\Delta |- t : [I/X]B}
+ ~~~~
+   \inference{\Delta |- t :A & \Delta |- A = B : *}{\Delta |- t : B}
+\]
+
+\paragraph{Type constructor equality.}
+%% Computation Axioms
+\[ \inference{\Delta,X^\ka |- F:\kappa & \Delta |- I:\ka}
+             {\Delta |- (\lambda X^\ka.F)\,I = [I/X]F:\kappa}
+\]
+%% Congruences
+\[ \inference{\Delta |- X:\ka }{\Delta |- X=X:\ka}
+ ~~~~
+   \inference{\Delta |- F=F':\ka\to\kappa & \Delta |- I=I':\ka}
+             {\Delta |- F\,I = F'\,I' : \kappa}
+\]
+ ~~~~
+\[ \inference{\Delta,X^\ka |- F=F' : \kappa}
+             {\Delta |- \lambda X^\ka.F=\lambda X^\ka.F' : \ka\to\kappa}
+ ~~~~
+   \inference{\Delta,X^\ka |- A=A':*}
+             {\Delta |- \forall X^\ka.A=\forall X^\ka.A':*}
+\]
+\[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A\to B=A'\to B':*}
+\]
+%% Symmetry and Transitivity
+\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+ ~~~~
+   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
+             {\Delta |- F = F'' : \kappa}
+\]
+
+\paragraph{Term equality}
+\[ \inference{\Delta |- x:A}{\Delta |- x=x:A}
+ ~~~~
+   \inference{\Delta,x:A |- t:B & \Delta |- s:A}
+             {\Delta |- (\lambda x.t)s=[s/x]t : B}
+ ~~~~
+   \inference{\Delta |- r=r':A\to B & \Delta |- s=s':A}{\Delta |- r\;s=r'\;s':B}
+\]
+
+
+
+
+
+
+
 \subsection{\Fi\ in regards to PTS}
 We describe \Fw\ and CC as an instances of the Pure Type System (PTS),
 and then describe \Fi\ as an extension of \Fw\ and a restriction of CC.
 
-\begin{figure}
+%% \begin{figure}
 \[\text{Syntax}~~~~~ a,b,A,B ::= s \mid x \mid b~a \mid \lambda x:A.B
                                    \mid (x:A) -> B \]
 \[\text{Typing}~~~~~\]
@@ -36,9 +166,9 @@ and then describe \Fi\ as an extension of \Fw\ and a restriction of CC.
  ~~~~
  \inference{x\notin\dom(\Gamma) & |-\Gamma}{|-\Gamma,x:A}
 \]
-\caption{Pure Type System}
-\label{fig:PTSrule}
-\end{figure}
+%% \caption{Pure Type System}
+%% \label{fig:PTSrule}
+%% \end{figure}
 
 PTS is instantiated by the triple $(\calS,\calA,\calR)$ where
 $\calS$ is the set of sorts ($s,s_1,s_2,s_3\in\calS$ in the PTS typing rules),
@@ -75,9 +205,10 @@ That is, CC is an instance of PTS where
 allowing full value dependency (given by $(*,\square,\square)$ in CC),
 we only allow value dependency partially via special syntax as follows:
 \[
- \inference[Let]{\Gamma |- A:s & \Gamma, x:A |- b:B}
+ \inference[Let]{\Gamma |- a:A & \Gamma, x:A |- b:B}
                 {\Gamma |- \mathsf{let}~x:A=a~\mathsf{in}~b : [a/x]B}
- ~~~~
+\]
+\[
  \inference[Pi$_{(*,\square,\square)}$]
      {\Gamma |- A:* & \Gamma |- B:\square}
      {\Gamma |- (x:A)-> B : \square}
