@@ -9,7 +9,7 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 \begin{align*}
 &\text{Kinds}
  	& \kappa		&~ ::= ~ *
-				\mid \ka \to \kappa
+				\mid \ka -> \kappa
 \\
 &\text{Kind Arguments}
  	& \ka		&~ ::= ~ \kappa \mid A
@@ -27,7 +27,7 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 	& A,B,F,G		&~ ::= ~ X
 				\mid \lambda X^\ka.F
 				\mid F\,I
-				\mid A\to B
+				\mid A-> B
 				\mid \forall X^\ka . B
 \\
 &\text{Type Arguments}
@@ -58,32 +58,35 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 \[ \inference{}{\Delta |- *:\square}
  ~~~~
    \inference{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
-             {\Delta |- \kappa \to \kappa' : \square}
+             {\Delta |- \kappa -> \kappa' : \square}
  ~~~~
    \inference{\Delta |- A:* & \Delta |- \kappa:\square}
-             {\Delta |- A \to \kappa : \square}
+             {\Delta |- A -> \kappa : \square}
 \]
 \paragraph{Kinding.}
 \[ \inference{X^\kappa\in\Delta & |- \Delta}
              {\Delta |- X : \kappa}
  ~~~~
    \inference{\Delta,X^\ka |- F : \kappa}
-             {\Delta |- \lambda X^\ka.F : \ka\to\kappa}
+             {\Delta |- \lambda X^\ka.F : \ka->\kappa}
  ~~~~
-   \inference{\Delta |- F : \ka\to\kappa & \Delta |- G : \ka}
+   \inference{\Delta |- F : \ka->\kappa & \Delta |- I : \ka}
              {\Delta |- F\,I : \kappa}
 \]
-\[ \inference{\Delta |- A : * & \Delta |- B : *}{\Delta |- A \to B : * }
+\[ \inference{\Delta |- A : * & \Delta |- B : *}{\Delta |- A -> B : * }
  ~~~~
    \inference{\Delta, X^\ka |- B : *}{\Delta |- \forall X^\ka . B : *}
+ ~~~~
+   \inference{\Delta |- A : \kappa & \Delta |- \kappa = \kappa' : \square}
+             {\Delta |- A : \kappa'}
 \]
 
 \paragraph{Typing.}
 \[ \inference{x:A \in \Delta & |- \Delta}{\Delta |- x:A}
  ~~~~
-   \inference{\Delta, x:A |- t : B}{\Delta |- \lambda x.t : A\to B}
+   \inference{\Delta, x:A |- t : B}{\Delta |- \lambda x.t : A-> B}
  ~~~~
-   \inference{\Delta |- r : A\to B & |- \Delta |- s : A}{\Delta |- r\;s : B}
+   \inference{\Delta |- r : A-> B & |- \Delta |- s : A}{\Delta |- r\;s : B}
 \]
 \[ \inference{\Delta, X^\ka |- t : B}{\Delta |- t : \forall X^\ka.B}
  ~~~~
@@ -91,6 +94,25 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
              {\Delta |- t : [I/X]B}
  ~~~~
    \inference{\Delta |- t :A & \Delta |- A = B : *}{\Delta |- t : B}
+\]
+
+\paragraph{Kind equality}
+\[ \inference{}{\Delta |- * = *:\square}
+\]
+\[
+   \inference{ \Delta |- \kappa_1 = \kappa_1':\square
+             & \Delta |- \kappa_2 = \kappa_2':\square}
+             {\Delta |- \kappa_1-> \kappa_2 = \kappa_1'-> \kappa_2':\square}
+ ~~~~
+   \inference{\Delta |- A=A':* & \Delta |- \kappa=\kappa':\square}
+             {\Delta |- A -> \kappa = A' -> \kappa' : \square}
+\]
+\[ \inference{\Delta |- \kappa=\kappa':\square}
+             {\Delta |- \kappa'=\kappa:\square}
+ ~~~~
+   \inference{ \Delta |- \kappa =\kappa' :\square
+             & \Delta |- \kappa'=\kappa'':\square}
+             {\Delta |- \kappa=\kappa'':\square}
 \]
 
 \paragraph{Type constructor equality.}
@@ -101,17 +123,17 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 %% Congruences
 \[ \inference{\Delta |- X:\ka }{\Delta |- X=X:\ka}
  ~~~~
-   \inference{\Delta |- F=F':\ka\to\kappa & \Delta |- I=I':\ka}
+   \inference{\Delta |- F=F':\ka->\kappa & \Delta |- I=I':\ka}
              {\Delta |- F\,I = F'\,I' : \kappa}
 \]
  ~~~~
 \[ \inference{\Delta,X^\ka |- F=F' : \kappa}
-             {\Delta |- \lambda X^\ka.F=\lambda X^\ka.F' : \ka\to\kappa}
+             {\Delta |- \lambda X^\ka.F=\lambda X^\ka.F' : \ka->\kappa}
  ~~~~
    \inference{\Delta,X^\ka |- A=A':*}
              {\Delta |- \forall X^\ka.A=\forall X^\ka.A':*}
 \]
-\[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A\to B=A'\to B':*}
+\[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
 \]
 %% Symmetry and Transitivity
 \[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
@@ -126,8 +148,13 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
    \inference{\Delta,x:A |- t:B & \Delta |- s:A}
              {\Delta |- (\lambda x.t)s=[s/x]t : B}
  ~~~~
-   \inference{\Delta |- r=r':A\to B & \Delta |- s=s':A}{\Delta |- r\;s=r'\;s':B}
+   \inference{\Delta |- r=r':A-> B & \Delta |- s=s':A}{\Delta |- r\;s=r'\;s':B}
 \]
+\[ \inference{\Delta |- t=t':A}{\Delta |- t'=t:A}
+ ~~~~
+   \inference{\Delta |- t=t':A & \Delta |- t'=t'':A}{\Delta |- t=t'':A}
+\]
+
 
 
 
