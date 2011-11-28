@@ -23,6 +23,7 @@ Marcelo P. Fiore \quad\qquad Andrew M. Pitts
 \def\authorrunning{KY. Ahn, T. Sheard \& M. P. Fiore, A. M. Pitts}
 
 \newcommand{\eg}{{e.g.}}
+\newcommand{\ie}{{i.e.}}
 
 \newcommand{\Fi}{\ensuremath{\mathsf{F}_i}}
 \newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
@@ -33,6 +34,8 @@ Marcelo P. Fiore \quad\qquad Andrew M. Pitts
 
 \newcommand{\Nat}{\ensuremath{\mathsf{Nat}}}
 \newcommand{\Bool}{\ensuremath{\mathsf{Bool}}}
+\newcommand{\sfList}{\ensuremath{\mathsf{List}}}
+\newcommand{\sfVec}{\ensuremath{\mathsf{Vec}}}
 \newcommand{\SAT}{\ensuremath{\mathsf{SAT}}}
 
 \newcommand{\oz}{\oldstylenums{0}}
@@ -53,8 +56,31 @@ This is yet another sentence in the abstract.
 This is the final sentence in the abstract.
 \end{abstract}
 
+\input{intro}
 
-\section{Introduction}
+\section{Background}\label{sec:bg}
+\subsection{Indexed types with static indices}\label{sec:bg:ix}
+
+ A representative example of a term
+indexed type is the length indexed list type (often called the vector type).
+A regular polymorphic list type ($\sfList\;a$) is parametrized by a type
+parameter ($a$), which can be instantiated to a specific type, while the
+vector type ($\sfVec\;a\;\{n\}$) has an additional term index ($n$), which
+can be instantiated to a specific natural number value. The curly brackets
+($\{\cdots\}$) around $n$ is to syntactically distinguish term indices from
+other type arguments. 
+\subsection{recursive types}\label{sec:bg:rec}
+\subsection{Mendler style iterators}
+
+%% \section{TODO}
+
+\input{fi}
+
+%% \input{fixi}
+
+%% \section{TODO}
+
+\section{TODO}
 let's write a paper for maybe one of the following venues?
 \begin{itemize}
 \item FICS \url{http://www.inf.u-szeged.hu/fics2012/}\\
@@ -65,14 +91,6 @@ Paper submission: 	11 Dec 2011\\
 Submission of papers 16 December\\
 There is no specific page limit but authors should strive for brevity.
 \end{itemize}
-
-%% \section{TODO}
-
-\input{fi}
-
-%% \input{fixi}
-
-%% \section{TODO}
 
 ~\\~\\
 \cite{article,bookA} just dummy citation %% \nocite{*}

@@ -1,0 +1,40 @@
+\section{Introduction}
+
+We have designed and implemented a prototype of Nax, which is
+a strongly normalizing functional language supporting following features:
+\begin{description}
+\item[Indexed types with static term indices]
+An indexed type is a family of types indexed by varying type arguments,
+called indices. Both types and terms can appear as indices in Nax.
+We focus on term indices since type indices are rather mild extension to
+the type system compared to term indices.
+Indices are static in Nax. That is, indices are only used for type checking
+but computationally irrelevant. For instance, using length indexed lists
+should be no less efficient than using ordinary lists without indices in Nax.
+
+\item[Recursive types of unrestricted polarity but restricted elimination]
+It is well known that unrestricted recursive types enable diverging computation
+even without any recursion at term level. To design a normalizing language
+that support recursive types, we should make a design choice that limits
+the ability of recursive types in one way or another. There are two possible
+design choices. We may restrict either the formation of recursive types
+(\ie, type definition) or the elimination of recursive types
+(\ie, pattern matching). We choose the latter for Nax.
+
+\item[Mendler style iteration and recursion combinators]
+Any practically useful normalizing language needs principled recursion
+combinators, which allow limited forms of recursion guaranteed to normalize.
+Since Nax allows indexed types, we need recursion combinators that accommodate
+to arbitrary indices. Since Nax allows arbitrary recursive type formation,
+we need recursion combinators that guarantee normalization for arbitrary
+recursive types. Mendler style iteration and recursion combinators suit
+those needs to handle indexed types and arbitrary recursive types.
+%% For simplicity, we will describe the language with only one operator \mit
+%% in this paper.
+
+\item[Type inference (or, reconstruction) from minimal annotation]
+kind annotation on
+It is well known that simple minded extension of indexed types over
+Hindely-Milner type system 
+\end{description}
+

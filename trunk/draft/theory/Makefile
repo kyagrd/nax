@@ -1,6 +1,6 @@
 .PHONY: pdf ps dvi
 
-TEXSRC=main.tex fixi.tex
+TEXSRC=main.tex intro.tex fi.tex
 
 pdf: main.pdf
 
