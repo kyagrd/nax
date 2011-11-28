@@ -1,11 +1,11 @@
 \section{Introduction}
 
 We have designed and implemented a prototype of Nax, which is
-a strongly normalizing functional language supporting following features:
+a strongly normalizing functional language supporting following features
+(to be elaborated in \S\ref{sec:bg}):
 \begin{description}
 \item[Indexed types with static term indices]
-An indexed type is a family of types indexed by varying type arguments,
-called indices. Both types and terms can appear as indices in Nax.
+Both types and terms can appear as indices in Nax.
 We focus on term indices since type indices are rather mild extension to
 the type system compared to term indices.
 Indices are static in Nax. That is, indices are only used for type checking
@@ -27,14 +27,19 @@ combinators, which allow limited forms of recursion guaranteed to normalize.
 Since Nax allows indexed types, we need recursion combinators that accommodate
 to arbitrary indices. Since Nax allows arbitrary recursive type formation,
 we need recursion combinators that guarantee normalization for arbitrary
-recursive types. Mendler style iteration and recursion combinators suit
-those needs to handle indexed types and arbitrary recursive types.
-%% For simplicity, we will describe the language with only one operator \mit
-%% in this paper.
+recursive types. Mendler style combinators meet thees needs.
 
 \item[Type inference (or, reconstruction) from minimal annotation]
-kind annotation on
-It is well known that simple minded extension of indexed types over
-Hindely-Milner type system 
+When we extend the Hindley-Milner type system with indexed types, we no longer
+have type inference from completely unannotated terms. Although complete
+type inference is not possible, partial type inference (or, reconstruction) is
+still possible when sufficient amount of type annotations is provided.
+The Nax syntax systematically requires type annotations on necessary places
+that are sufficient to infer types only from those annotations.
 \end{description}
+
+\paragraph{Write about why Nax matters}
+make out some interesting story out of above:
+each of the features have been studied in one way or another,
+but what are we doing more or better or fun?
 
