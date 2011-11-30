@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage[fleqn]{amsmath}
 \usepackage{semantic}
+\usepackage{color}
 
 \title{Nax theory}
 
@@ -21,6 +22,10 @@ Marcelo P. Fiore \quad\qquad Andrew M. Pitts
 }
 \def\titlerunning{title running}
 \def\authorrunning{KY. Ahn, T. Sheard \& M. P. Fiore, A. M. Pitts}
+
+%%%%% cammands for comments
+\newcommand{\KYA}[1]{\textcolor{magenta}{#1 --KYA}}
+
 
 \newcommand{\eg}{{e.g.}}
 \newcommand{\ie}{{i.e.}}
@@ -59,9 +64,9 @@ This is the final sentence in the abstract.
 \input{intro}
 
 \section{Background}\label{sec:bg}
-\subsection{Indexed types with static indices}\label{sec:bg:ix}
+\subsection{Indexed types with static indices}\label{sec:bg:ixty}
 
- A representative example of a term
+A representative example of a term
 indexed type is the length indexed list type (often called the vector type).
 A regular polymorphic list type ($\sfList\;a$) is parametrized by a type
 parameter ($a$), which can be instantiated to a specific type, while the
@@ -69,8 +74,13 @@ vector type ($\sfVec\;a\;\{n\}$) has an additional term index ($n$), which
 can be instantiated to a specific natural number value. The curly brackets
 ($\{\cdots\}$) around $n$ is to syntactically distinguish term indices from
 other type arguments. 
-\subsection{recursive types}\label{sec:bg:rec}
-\subsection{Mendler style iterators}
+
+\subsection{Recursive types of unrestricted polarity but restricted elimination}
+\label{sec:bg:recty}
+TODO
+
+\subsection{Mendler style iteration and recursion combinators}
+\label{sec:bg:Mendler}
 
 %% \section{TODO}
 

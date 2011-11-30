@@ -1,5 +1,84 @@
 \section{Introduction}
 
+\subsection{Need for a unified system for both programming and reasoning}
+\KYA{explain whey we want such a thing}
+
+Two main application areas of typed lambda calculi are
+functional programming languages (\eg, ML, Haskell) and
+logical reasoning systems (or, proof assistants) (\eg, Coq, Agda).
+Although functional languages and logical reasoning systems are closely related,
+a unified system that has full support for both
+programming and reasoning has not yet been developed.
+
+%% \footnote{By ``full support'', we mean
+%% having all programs in functional languages and all proofs in reasoning systems.
+%% And hopefully more than just the union of programs and proofs by interesting
+%% interaction between them when such a system is realized.}
+
+
+\subsection{Naive approaches towards a unified system}
+At first glance, the design principle for such a unified system seems obvious:
+either
+(1) extend a proof assistant with general recursion and track termination, or,
+(2) extend a functional language with dependent types and check termination.
+The absence of such a unified system tells us that it is not so obvious.
+Termination checking and tracking are, of course, challenging issues
+of their own, but these issues are only part of the problem we face
+when we try to design such a unified system. Neither (1) nor (2) will
+lead to a successful design, even if we had good strategies for
+termination checking and tracking. Why is it so?
+It is because dependently typed languages do not subsume
+all the desired properties of functional programming languages.
+More precisely, the problem lies in two folds.
+
+Firstly, dependently typed languages designed for logical reasoning usually do
+not support \emph{all the recursive datatypes} we enjoy in functional languages.
+For example, most dependently typed proof assistants will reject
+a straightforward datatype definition for Higher-Order Abstract Syntax (HOAS),
+which we can easily define in Haskell:
+\textbf{data} \textit{HOAS} $=$ \textit{Lam} (\textit{HOAS} $->$ \textit{HOAS})
+                         $\mid$ \textit{App} \textit{HOAS} \textit{HOAS}.
+Note, there is a mismatch between types allowed in proof assistants and
+functional languages. The types available in proof assistants do not subsume
+the types available in functional languages. This is why (1) fails to be
+a promising approach. Approach (1) will only end up with partial support for
+programming, missing some of the useful datatypes in functional programming.
+
+Secondly, dependently typed languages, in general, lack \emph{type erasure}
+and \emph{type inference}. A dependently typed language designed for
+programming, without considering logical consistency, would be certainly
+more expressive than a functional language based on Hindley-Milner type system.
+However, some good features we enjoy in functional languages are lost when we
+move to dependent types. This is why we don't believe (2) is promising either.
+
+One of the features we lose is \emph{type erasure}. In functional languages,
+types are irrelevant once type checking is done. So, they need not exist for
+computation at runtime. In dependently typed languages, types can be indexed
+by terms as well as types. Furthermore, dependently typed languages usually
+do not distinguish between term applications, which are computationally
+relevant, and type application, which are computationally irrelevant.
+Thus, type erasure becomes very difficult. In a dependently typed language,
+it is unclear whether, in the application $f\;3$, the argument $3$ will be
+used for computation or used only for type checking.
+% We would have to examine the source code of the function $f$ and
+% every function called inside $f$ that depends on its argument to determine
+% the computational relevance of the argument $3$.
+This is not only counterintuitive to functional programmers, but also becomes
+a huge obstacle for implementation considering efficient execution and
+separate compilation.
+
+Another feature we lost in dependently typed languages is
+\emph{type inference}. Programming can be done without type inference,
+but it wouldn't be as pleasant.
+\KYA{Tim, if you have more things to say please add. I left it really brief.}
+
+\subsection{TODO}
+\KYA{Write about why Nax matters (\ie, contribution).
+make out some interesting story out of above:
+each of the features have been studied in one way or another,
+but what are we doing more or better or fun?
+An example Nax program should be introduced here as well?}
+
 We have designed and implemented a prototype of Nax, which is
 a strongly normalizing functional language supporting following features
 (to be elaborated in \S\ref{sec:bg}):
@@ -11,6 +90,7 @@ the type system compared to term indices.
 Indices are static in Nax. That is, indices are only used for type checking
 but computationally irrelevant. For instance, using length indexed lists
 should be no less efficient than using ordinary lists without indices in Nax.
+In other words, Nax supports \emph{type erasure}.
 
 \item[Recursive types of unrestricted polarity but restricted elimination]
 It is well known that unrestricted recursive types enable diverging computation
@@ -19,15 +99,17 @@ that support recursive types, we should make a design choice that limits
 the ability of recursive types in one way or another. There are two possible
 design choices. We may restrict either the formation of recursive types
 (\ie, type definition) or the elimination of recursive types
-(\ie, pattern matching). We choose the latter for Nax.
+(\ie, pattern matching). We choose the latter for Nax so that we can
+define \emph{all the recursive datatypes} available in functional languages.
 
 \item[Mendler style iteration and recursion combinators]
-Any practically useful normalizing language needs principled recursion
-combinators, which allow limited forms of recursion guaranteed to normalize.
-Since Nax allows indexed types, we need recursion combinators that accommodate
-to arbitrary indices. Since Nax allows arbitrary recursive type formation,
-we need recursion combinators that guarantee normalization for arbitrary
-recursive types. Mendler style combinators meet thees needs.
+Any useful normalizing language should support principled recursion
+combinators that guarantee normalization. There are two requirements
+for recursion combinators in Nax. Firstly, we need recursion combinators
+that accommodate to arbitrary indices since Nax allows indexed types.
+Secondly, we need recursion combinators that guarantee normalization for
+arbitrary recursive types since Nax allows arbitrary recursive type definition.
+Mendler style combinators meet both requirements. So, we adopt them in Nax.
 
 \item[Type inference (or, reconstruction) from minimal annotation]
 When we extend the Hindley-Milner type system with indexed types, we no longer
@@ -36,10 +118,10 @@ type inference is not possible, partial type inference (or, reconstruction) is
 still possible when sufficient amount of type annotations is provided.
 The Nax syntax systematically requires type annotations on necessary places
 that are sufficient to infer types only from those annotations.
+Nax supports \emph{type inference}, which faithfully extends the Hindley-Milner
+type inference (\ie, virtually no annotations needed for the programs that are
+already inferable by Hindley-Milner).
 \end{description}
 
-\paragraph{Write about why Nax matters}
-make out some interesting story out of above:
-each of the features have been studied in one way or another,
-but what are we doing more or better or fun?
+
 
