@@ -1,18 +1,19 @@
 \section{\Fi}
-\Fi\ is an extension of \Fw\ with indexed types, but less powerful than
-the Calculus of Constructions (CC). That is, all typeable terms in \Fi\ are
-typeable terms in \Fi\ and all typable terms in \Fi\ are typable terms in CC.
+\Fi\ is an extension of Curry style \Fw\ with indexed types.
+%%, but less powerful than
+% the Calculus of Constructions (CC). That is, all typeable terms in \Fi\ are
+% typeable terms in \Fi\ and all typable terms in \Fi\ are typable terms in CC.
+% We can show normalization of \Fi\ by straitforward translation from
 Since CC is normalizing, normalization of \Fi\ is automatic.
 
 \subsection{\Fi\ in Curry style}
-
+\begin{figure}
+\paragraph{Syntax:}
 \begin{align*}
 &\text{Kinds}
  	& \kappa		&~ ::= ~ *
-				\mid \ka -> \kappa
-\\
-&\text{Kind Arguments}
- 	& \ka		&~ ::= ~ \kappa \mid A
+				\mid \kappa -> \kappa
+				\mid A -> \kappa
 \\
 %% &\text{Type Schemes}
 %% 	& \sigma	&~ ::= ~ A
@@ -25,13 +26,13 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 %% \\
 &\text{Type Constructors}
 	& A,B,F,G		&~ ::= ~ X
-				\mid \lambda X^\ka.F
-				\mid F\,I
-				\mid A-> B
-				\mid \forall X^\ka . B
-\\
-&\text{Type Arguments}
-	& I			&~ ::= ~ G \mid t
+				\mid \lambda X^\kappa.F
+				\mid \lambda x^A.F
+				\mid F\,G
+				\mid F\,\{s\}
+				\mid A -> B
+				\mid \forall X^\kappa . B
+				\mid \forall x^A . B
 \\
 &\text{Terms}
 	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
@@ -39,70 +40,119 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 &\text{Contexts}
 	& \Delta		&~ ::= ~ \cdot
 				\mid \Delta, x : A
-				\mid \Delta, X^\ka
+				\mid \Delta, X^\kappa
+				\mid \Delta, x^A
+				\mid \Delta, x :: A
 \end{align*}
-%% \caption{Syntax of \Fi}
-%% \label{tbl:syntaxFi}
 
-\paragraph{Wellformed typing context}
+\paragraph{Wellformed contexts:}
 \[ \inference{}{|- \cdot}
- ~~~~
-   \inference{|- \Delta & \Delta |- \kappa:\square}{|- \Delta,X^\kappa}
- ~~~~
-   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,X^A}
- ~~~~
+ ~~~
    \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x:A}
+ ~~~
+   \inference{|- \Delta & \Delta |- \kappa:\square}{|- \Delta,X^\kappa}
+ ~~~
+   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x^A}
+ ~~~
+   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x::A}
 \]
 
-\paragraph{Sorting.}
-\[ \inference{}{\Delta |- *:\square}
- ~~~~
-   \inference{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
-             {\Delta |- \kappa -> \kappa' : \square}
- ~~~~
-   \inference{\Delta |- A:* & \Delta |- \kappa:\square}
-             {\Delta |- A -> \kappa : \square}
+\noindent
+\begin{minipage}{.5\textwidth}
+\textbf{Context lifting:}\vspace*{-.5em}
+\begin{align*}
+\hat\cdot &=~ \cdot \\
+\widehat{\Delta,x:A} &=~ \hat\Delta \\
+\widehat{\Delta,X^\kappa} &=~ \hat\Delta,X^\kappa \\
+\widehat{\Delta,x^A} &=~ \hat\Delta,x::A \\
+\widehat{\Delta,x::A} &=~ \hat\Delta,x::A
+\end{align*}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+\paragraph{Sorting:}
+\[ \inference[($A$)]{}{\Delta |- *:\square} \]
+\[ \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
+                    {\Delta |- \kappa -> \kappa' : \square}
+\]\vspace*{.2em}
+\[ \inference[($Ri$)]{\Delta |- A:* & \Delta |- \kappa:\square}
+                     {\Delta |- A -> \kappa : \square}
 \]
-\paragraph{Kinding.}
-\[ \inference{X^\kappa\in\Delta & |- \Delta}
-             {\Delta |- X : \kappa}
- ~~~~
-   \inference{\Delta,X^\ka |- F : \kappa}
-             {\Delta |- \lambda X^\ka.F : \ka->\kappa}
- ~~~~
-   \inference{\Delta |- F : \ka->\kappa & \Delta |- I : \ka}
-             {\Delta |- F\,I : \kappa}
-\]
-\[ \inference{\Delta |- A : * & \Delta |- B : *}{\Delta |- A -> B : * }
- ~~~~
-   \inference{\Delta, X^\ka |- B : *}{\Delta |- \forall X^\ka . B : *}
- ~~~~
-   \inference{\Delta |- A : \kappa & \Delta |- \kappa = \kappa' : \square}
-             {\Delta |- A : \kappa'}
-\]
+\end{minipage}
 
-\paragraph{Typing.}
-\[ \inference{x:A \in \Delta & |- \Delta}{\Delta |- x:A}
+\paragraph{Kinding:}
+\[ \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
+                       {\Delta |- X : \kappa}
  ~~~~
-   \inference{\Delta, x:A |- t : B}{\Delta |- \lambda x.t : A-> B}
- ~~~~
-   \inference{\Delta |- r : A-> B & |- \Delta |- s : A}{\Delta |- r\;s : B}
-\]
-\[ \inference{\Delta, X^\ka |- t : B}{\Delta |- t : \forall X^\ka.B}
- ~~~~
-   \inference{\Delta |- t : \forall X^\ka.B & \Delta |- I:\ka}
-             {\Delta |- t : [I/X]B}
- ~~~~
-   \inference{\Delta |- t :A & \Delta |- A = B : *}{\Delta |- t : B}
-\]
-
-\paragraph{Kind equality}
-\[ \inference{}{\Delta |- * = *:\square}
+   \inference[($Conv$)]{ \Delta |- A : \kappa
+                       & \Delta |- \kappa = \kappa' : \square }
+                       {\Delta |- A : \kappa'}
 \]
 \[
-   \inference{ \Delta |- \kappa_1 = \kappa_1':\square
-             & \Delta |- \kappa_2 = \kappa_2':\square}
-             {\Delta |- \kappa_1-> \kappa_2 = \kappa_1'-> \kappa_2':\square}
+   \inference[($\lambda$)]{\Delta,X^\kappa |- F : \kappa}
+                          {\Delta |- \lambda X^\kappa.F : \kappa->\kappa}
+ ~~~~
+ \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
+                      & \Delta |- G : \kappa }
+                      {\Delta |- F\,G : \kappa'}
+\]
+\[ \inference[($\lambda i$)]{\Delta,x^A |- F : \kappa}
+                            {\Delta |- \lambda x^A.F : A->\kappa}
+ ~~~~
+   \inference[($@i$)]{ \Delta |- F : A -> \kappa
+                     & \hat\Delta |- s : A }
+                     {\Delta |- F\,\{s\} : \kappa}
+\]
+\[ \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
+                     {\Delta |- A -> B : * }
+ ~~~~
+   \inference[($\forall$)]{\Delta, X^\kappa |- B : *}
+                            {\Delta |- \forall X^\kappa . B : *}
+ ~~~~
+   \inference[($\forall i$)]{\Delta, x^A |- B : *}
+                              {\Delta |- \forall x^A . B : *}
+\]
+
+\paragraph{Typing:}
+\[ \inference[($:$)]{x:A \in \Delta & |- \Delta} 
+                    {\Delta |- x:A}
+ ~~~~
+   \inference[($::$)]{x::A \in \Delta & |- \Delta} 
+                     {\Delta |- x:A}
+ ~~~~
+   \inference[($=$)]{\Delta |- t :A & \Delta |- A = B : *}
+                    {\Delta |- t : B}
+\]
+\[
+   \inference[($->$$I$)]{\Delta, x:A |- t : B}
+                        {\Delta |- \lambda x.t : A -> B}
+ ~~~~
+   \inference[($->$$E$)]{\Delta |- r : A -> B & \Delta |- s : A}
+                        {\Delta |- r\;s : B}
+\]
+\[ \inference[($\forall I$)]{\Delta, X^\kappa |- t : B}
+                            {\Delta |- t : \forall X^\kappa.B}
+ ~~~~
+   \inference[($\forall E$)]{ \Delta |- t : \forall X^\kappa.B
+                            & \Delta |- G:\kappa }
+                            {\Delta |- t : [G/X]B}
+\]
+\[ \inference[($\forall i I$)]{\Delta, x^A |- t : B}
+                            {\Delta |- t : \forall x^A.B}
+ ~~~~
+   \inference[($\forall i E$)]{\Delta |- t : \forall x^A.B & \hat\Delta |- s:A}
+                            {\Delta |- t : [s/x]B}
+\]
+\caption{\Fi}
+\label{fig:Fi}
+\end{figure}
+
+\begin{figure}
+\paragraph{Kind equality:}
+\[ \inference{}{\Delta |- * = *:\square}
+ ~~~~
+   \inference{ \Delta |- \kappa_1 = \kappa_1' : \square
+             & \Delta |- \kappa_2 = \kappa_2' : \square }
+             {\Delta |- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
  ~~~~
    \inference{\Delta |- A=A':* & \Delta |- \kappa=\kappa':\square}
              {\Delta |- A -> \kappa = A' -> \kappa' : \square}
@@ -113,36 +163,45 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
    \inference{ \Delta |- \kappa =\kappa' :\square
              & \Delta |- \kappa'=\kappa'':\square}
              {\Delta |- \kappa=\kappa'':\square}
-\]
+\] ~\\
 
-\paragraph{Type constructor equality.}
-%% Computation Axioms
-\[ \inference{\Delta,X^\ka |- F:\kappa & \Delta |- I:\ka}
-             {\Delta |- (\lambda X^\ka.F)\,I = [I/X]F:\kappa}
+\paragraph{Type constructor equality:}
+\[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
+ ~~~~
+   \inference{\Delta,X^\kappa |- F:\kappa & \Delta |- G:\kappa}
+             {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
+ ~~~~
+   \inference{\Delta,x^A |- F:\kappa & \hat\Delta |- s:A}
+             {\Delta |- (\lambda x^A.F)\,\{s\} = [s/x]F:\kappa}
 \]
-%% Congruences
-\[ \inference{\Delta |- X:\ka }{\Delta |- X=X:\ka}
+\[ \inference{\Delta,X^\kappa |- F=F' : \kappa'}
+             {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
  ~~~~
-   \inference{\Delta |- F=F':\ka->\kappa & \Delta |- I=I':\ka}
-             {\Delta |- F\,I = F'\,I' : \kappa}
+   \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
+             {\Delta |- F\,G = F'\,G' : \kappa'}
 \]
  ~~~~
-\[ \inference{\Delta,X^\ka |- F=F' : \kappa}
-             {\Delta |- \lambda X^\ka.F=\lambda X^\ka.F' : \ka->\kappa}
+\[ \inference{\Delta,x^A |- F=F' : \kappa}
+             {\Delta |- \lambda x^A.F=\lambda x^A.F' : A -> \kappa}
  ~~~~
-   \inference{\Delta,X^\ka |- A=A':*}
-             {\Delta |- \forall X^\ka.A=\forall X^\ka.A':*}
+   \inference{\Delta |- F=F':A->\kappa & \hat\Delta |- s=s':A}
+             {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
 \]
 \[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+ ~~~~
+   \inference{\Delta,X^\kappa |- B=B':*}
+             {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
+ ~~~~
+   \inference{\Delta,x^A |- B=B':*}
+             {\Delta |- \forall x^A.B=\forall x^A.B':*}
 \]
-%% Symmetry and Transitivity
 \[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
  ~~~~
    \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
              {\Delta |- F = F'' : \kappa}
-\]
+\] ~\\
 
-\paragraph{Term equality}
+\paragraph{Term equality:}
 \[ \inference{\Delta |- x:A}{\Delta |- x=x:A}
  ~~~~
    \inference{\Delta,x:A |- t:B & \Delta |- s:A}
@@ -155,7 +214,9 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
    \inference{\Delta |- t=t':A & \Delta |- t'=t'':A}{\Delta |- t=t'':A}
 \]
 
-
+\caption{Equality rules for \Fi}
+\label{fig:eqFi}
+\end{figure}
 
 
 
@@ -228,6 +289,7 @@ That is, CC is an instance of PTS where
   \calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)
          ,(*,\square,\square)\}\]
 
+\KYA{ below is what I understood marcelo maybe wrong}
 \Fi\ is also an extension of \Fw\, but a restriction of CC.  Instead of
 allowing full value dependency (given by $(*,\square,\square)$ in CC),
 we only allow value dependency partially via special syntax as follows:
