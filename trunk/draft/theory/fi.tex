@@ -1,19 +1,25 @@
 \section{\Fi}
-\Fi\ is an extension of Curry style \Fw\ with indexed types.
-%%, but less powerful than
-% the Calculus of Constructions (CC). That is, all typeable terms in \Fi\ are
-% typeable terms in \Fi\ and all typable terms in \Fi\ are typable terms in CC.
-% We can show normalization of \Fi\ by straitforward translation from
-Since CC is normalizing, normalization of \Fi\ is automatic.
+\label{sec:Fi}
+System \Fi\ is a higher-order polymorphic lambda calculus with term indices.
+In other words, System \Fi\ is an extension of System \Fw\ by term indices.
+The complete syntax and rules of \Fi\ are described in \Fig{Fi} and \Fig{eqFi}.
+The syntax and rules highlighted by \newFi{\text{grey boxes}} are the extensions
+new to \Fi\, which are not part of \Fw. That is, the system we get excluding
+all the grey boxes from \Fig{Fi} and \Fig{eqFi} is a version of \Fw.
+In particular, it is a version of \Fw\ with Curry style terms. That is,
+term level lambda bindings are unannotated ($\lambda x.t$), and
+type abstraction ($\forall I$) and application ($\forall E$) are implicit.
+Types remain Church style as usual. That is, type level lambda bindings are
+annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar
+to \Fw\ and focus on describing new constructs of \Fi\ in grey boxes.
 
-\subsection{\Fi\ in Curry style}
 \begin{figure}
 \paragraph{Syntax:}
 \begin{align*}
 &\text{Kinds}
  	& \kappa		&~ ::= ~ *
 				\mid \kappa -> \kappa
-				\mid A -> \kappa
+				\mid \newFi{A -> \kappa}
 \\
 %% &\text{Type Schemes}
 %% 	& \sigma	&~ ::= ~ A
@@ -27,12 +33,12 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 &\text{Type Constructors}
 	& A,B,F,G		&~ ::= ~ X
 				\mid \lambda X^\kappa.F
-				\mid \lambda x^A.F
+				\mid \newFi{\lambda x^A.F}
 				\mid F\,G
-				\mid F\,\{s\}
+				\mid \newFi{F\,\{s\}}
 				\mid A -> B
 				\mid \forall X^\kappa . B
-				\mid \forall x^A . B
+				\mid \newFi{\forall x^A . B}
 \\
 &\text{Terms}
 	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
@@ -41,24 +47,27 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 	& \Delta		&~ ::= ~ \cdot
 				\mid \Delta, x : A
 				\mid \Delta, X^\kappa
-				\mid \Delta, x^A
-				\mid \Delta, x :: A
+				\mid \newFi{\Delta, x^A}
+				\mid \newFi{\Delta, x :: A}
 \end{align*}
 
-\paragraph{Wellformed contexts:}
-\[ \inference{}{|- \cdot}
- ~~~
-   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x:A}
- ~~~
-   \inference{|- \Delta & \Delta |- \kappa:\square}{|- \Delta,X^\kappa}
- ~~~
-   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x^A}
- ~~~
-   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x::A}
-\]
-
 \noindent
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.45\textwidth}
+\paragraph{Well-formed contexts:}
+\[\!\!\!\!\!\!\!\!
+   \inference{}{|- \cdot} \]
+\[\!\!\!\!\!\!\!\!
+   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x:A}
+ ~~
+   \inference{|- \Delta & \Delta |- \kappa:\square}{|- \Delta,X^\kappa}
+\]
+\[\!\!\!\!\!\!\!\! \newFi{
+   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x^A} }
+ ~~ \newFi{
+   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x::A} }
+\]
+\end{minipage}~~
+\newFi{\begin{minipage}{.2\textwidth}
 \textbf{Context lifting:}\vspace*{-.5em}
 \begin{align*}
 \hat\cdot &=~ \cdot \\
@@ -67,25 +76,26 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
 \widehat{\Delta,x^A} &=~ \hat\Delta,x::A \\
 \widehat{\Delta,x::A} &=~ \hat\Delta,x::A
 \end{align*}
-\end{minipage}
-\begin{minipage}{.5\textwidth}
+\end{minipage}}~~
+\begin{minipage}{.2\textwidth}
 \paragraph{Sorting:}
 \[ \inference[($A$)]{}{\Delta |- *:\square} \]
 \[ \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
                     {\Delta |- \kappa -> \kappa' : \square}
 \]\vspace*{.2em}
-\[ \inference[($Ri$)]{\Delta |- A:* & \Delta |- \kappa:\square}
-                     {\Delta |- A -> \kappa : \square}
+\[ \newFi{
+   \inference[($Ri$)]{\Delta |- A:* & \Delta |- \kappa:\square}
+                     {\Delta |- A -> \kappa : \square} }
 \]
 \end{minipage}
 
 \paragraph{Kinding:}
 \[ \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
                        {\Delta |- X : \kappa}
- ~~~~
+ ~~~~ \newFi{
    \inference[($Conv$)]{ \Delta |- A : \kappa
                        & \Delta |- \kappa = \kappa' : \square }
-                       {\Delta |- A : \kappa'}
+                       {\Delta |- A : \kappa'} }
 \]
 \[
    \inference[($\lambda$)]{\Delta,X^\kappa |- F : \kappa}
@@ -95,29 +105,30 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
                       & \Delta |- G : \kappa }
                       {\Delta |- F\,G : \kappa'}
 \]
-\[ \inference[($\lambda i$)]{\Delta,x^A |- F : \kappa}
-                            {\Delta |- \lambda x^A.F : A->\kappa}
- ~~~~
+\[ \newFi{
+   \inference[($\lambda i$)]{\Delta,x^A |- F : \kappa}
+                            {\Delta |- \lambda x^A.F : A->\kappa} }
+ ~~~~ \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
                      & \hat\Delta |- s : A }
-                     {\Delta |- F\,\{s\} : \kappa}
+                     {\Delta |- F\,\{s\} : \kappa} }
 \]
 \[ \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
                      {\Delta |- A -> B : * }
  ~~~~
    \inference[($\forall$)]{\Delta, X^\kappa |- B : *}
                             {\Delta |- \forall X^\kappa . B : *}
- ~~~~
+ ~~~~ \newFi{
    \inference[($\forall i$)]{\Delta, x^A |- B : *}
-                              {\Delta |- \forall x^A . B : *}
+                              {\Delta |- \forall x^A . B : *} }
 \]
 
 \paragraph{Typing:}
 \[ \inference[($:$)]{x:A \in \Delta & |- \Delta} 
                     {\Delta |- x:A}
- ~~~~
+ ~~~~ \newFi{
    \inference[($::$)]{x::A \in \Delta & |- \Delta} 
-                     {\Delta |- x:A}
+                     {\Delta |- x:A} }
  ~~~~
    \inference[($=$)]{\Delta |- t :A & \Delta |- A = B : *}
                     {\Delta |- t : B}
@@ -136,13 +147,14 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
                             & \Delta |- G:\kappa }
                             {\Delta |- t : [G/X]B}
 \]
-\[ \inference[($\forall i I$)]{\Delta, x^A |- t : B}
-                            {\Delta |- t : \forall x^A.B}
- ~~~~
-   \inference[($\forall i E$)]{\Delta |- t : \forall x^A.B & \hat\Delta |- s:A}
-                            {\Delta |- t : [s/x]B}
+\[ \newFi{
+   \inference[($\forall I i$)]{\Delta, x^A |- t : B}
+                              {\Delta |- t : \forall x^A.B} }
+ ~~~~ \newFi{
+   \inference[($\forall E i$)]{\Delta |- t : \forall x^A.B & \hat\Delta |- s:A}
+                              {\Delta |- t : [s/x]B} }
 \]
-\caption{\Fi}
+\caption{Syntax and Typing rules of \Fi}
 \label{fig:Fi}
 \end{figure}
 
@@ -153,9 +165,9 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
    \inference{ \Delta |- \kappa_1 = \kappa_1' : \square
              & \Delta |- \kappa_2 = \kappa_2' : \square }
              {\Delta |- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
- ~~~~
+ ~~~~ \newFi{
    \inference{\Delta |- A=A':* & \Delta |- \kappa=\kappa':\square}
-             {\Delta |- A -> \kappa = A' -> \kappa' : \square}
+             {\Delta |- A -> \kappa = A' -> \kappa' : \square} }
 \]
 \[ \inference{\Delta |- \kappa=\kappa':\square}
              {\Delta |- \kappa'=\kappa:\square}
@@ -163,16 +175,16 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
    \inference{ \Delta |- \kappa =\kappa' :\square
              & \Delta |- \kappa'=\kappa'':\square}
              {\Delta |- \kappa=\kappa'':\square}
-\] ~\\
-
+\]
+~\\
 \paragraph{Type constructor equality:}
 \[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
  ~~~~
    \inference{\Delta,X^\kappa |- F:\kappa & \Delta |- G:\kappa}
              {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
- ~~~~
+ ~~~~ \newFi{
    \inference{\Delta,x^A |- F:\kappa & \hat\Delta |- s:A}
-             {\Delta |- (\lambda x^A.F)\,\{s\} = [s/x]F:\kappa}
+             {\Delta |- (\lambda x^A.F)\,\{s\} = [s/x]F:\kappa} }
 \]
 \[ \inference{\Delta,X^\kappa |- F=F' : \kappa'}
              {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
@@ -181,26 +193,27 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
              {\Delta |- F\,G = F'\,G' : \kappa'}
 \]
  ~~~~
-\[ \inference{\Delta,x^A |- F=F' : \kappa}
-             {\Delta |- \lambda x^A.F=\lambda x^A.F' : A -> \kappa}
- ~~~~
+\[ \newFi{
+   \inference{\Delta,x^A |- F=F' : \kappa}
+             {\Delta |- \lambda x^A.F=\lambda x^A.F' : A -> \kappa} }
+ ~~~~ \newFi{
    \inference{\Delta |- F=F':A->\kappa & \hat\Delta |- s=s':A}
-             {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
+             {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
 \]
 \[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
  ~~~~
    \inference{\Delta,X^\kappa |- B=B':*}
              {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
- ~~~~
+ ~~~~ \newFi{
    \inference{\Delta,x^A |- B=B':*}
-             {\Delta |- \forall x^A.B=\forall x^A.B':*}
+             {\Delta |- \forall x^A.B=\forall x^A.B':*} }
 \]
 \[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
  ~~~~
    \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
              {\Delta |- F = F'' : \kappa}
-\] ~\\
-
+\]
+~\\
 \paragraph{Term equality:}
 \[ \inference{\Delta |- x:A}{\Delta |- x=x:A}
  ~~~~
@@ -213,10 +226,71 @@ Since CC is normalizing, normalization of \Fi\ is automatic.
  ~~~~
    \inference{\Delta |- t=t':A & \Delta |- t'=t'':A}{\Delta |- t=t'':A}
 \]
+~\\
+\paragraph{Reduction:}
+$  \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
+ ~~~~
+   \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
+ ~~~~
+   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'} $
 
-\caption{Equality rules for \Fi}
+\caption{Equality rules and Reduction rules for \Fi}
 \label{fig:eqFi}
 \end{figure}
+
+
+We extend kind syntax by an indexed arrow kind \newFi{A -> \kappa}.
+%% example?
+
+The sorting rule \newFi{(Ri)}
+specifies when such an indexed arrow kind is well-formed:
+$A -> \kappa$ is well-formed under the typing context $\Delta$
+when $A$ is a well-formed type under $\Delta$
+and $\kappa$ is a well-formed kind under $\Delta$.
+
+We extend the type syntax by several constructs.
+\newFi{\lambda x^A.F} is type level lambda abstraction over an index.
+
+\newFi{F\,\{s\}} is a type level index application.
+
+\newFi{\forall x^A . B} is an index polymorphic type.
+
+We need to extend the syntax of typing context accordingly.
+\newFi{\Delta, x^A} is a typing context $\Delta$ extended by
+an index variable binding $x^A$. The index bindings are introduced from
+$\lambda x^A.F$ by the kinding rule \newFi{(\lambda i)}.
+Intuitively $x^A$ means that $x$ can only be used at type level,
+but not at term level. In contrast, the ordinary term binding $x:A$
+\newFi{\Delta, x :: A} is a typing contrext $\Delta$ extend ed by
+multiple purpose variable binding $x::A$. Intuitively $x::A$ amounts to
+having both $x^A$ and $x:A$. That is, we can use $x$ at both type and
+term level when we have $x::A$ in the context.
+TODO
+% when we go inside curly brackets to type check the argument term ($s$) of
+% an index application ($F\,\{s\}$). This property of $x::A$ is captured
+TODO
+
+kinding rules
+\newFi{(Conv)}
+\newFi{(\lambda i)}
+\newFi{(@i)}
+\newFi{(\forall i)}
+
+typing rules
+\newFi{(::)}
+\newFi{(\forall I i)}
+\newFi{(\forall E i)}
+
+
+
+%% \Fi 
+%%, but less powerful than
+% the Calculus of Constructions (CC). That is, all typeable terms in \Fi\ are
+% typeable terms in \Fi\ and all typable terms in \Fi\ are typable terms in CC.
+% We can show normalization of \Fi\ by straitforward translation from
+%% Since CC is normalizing, normalization of \Fi\ is automatic.
 
 
 

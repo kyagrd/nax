@@ -7,6 +7,9 @@
 \usepackage[fleqn]{amsmath}
 \usepackage{semantic}
 \usepackage{color}
+\usepackage{fancybox}
+
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
 
 \title{Nax theory}
 
@@ -26,6 +29,8 @@ Marcelo P. Fiore \quad\qquad Andrew M. Pitts
 %%%%% cammands for comments
 \newcommand{\KYA}[1]{\textcolor{magenta}{#1 --KYA}}
 
+\newcommand{\Fig}[1]{Figure\,\ref{fig:#1}}
+\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
 
 \newcommand{\eg}{{e.g.}}
 \newcommand{\ie}{{i.e.}}
@@ -83,6 +88,8 @@ TODO
 \label{sec:bg:Mendler}
 
 %% \section{TODO}
+
+\input{nax}
 
 \input{fi}
 
