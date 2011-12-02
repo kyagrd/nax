@@ -1,19 +1,21 @@
-\section{\Fi}
+\section{System \Fi}
 \label{sec:Fi}
 System \Fi\ is a higher-order polymorphic lambda calculus with term indices.
 In other words, System \Fi\ is an extension of System \Fw\ by term indices.
 The complete syntax and rules of \Fi\ are described in \Fig{Fi} and \Fig{eqFi}.
 The syntax and rules highlighted by \newFi{\text{grey boxes}} are the extensions
-new to \Fi\, which are not part of \Fw. That is, the system we get excluding
-all the grey boxes from \Fig{Fi} and \Fig{eqFi} is a version of \Fw.
-In particular, it is a version of \Fw\ with Curry style terms. That is,
-term level lambda bindings are unannotated ($\lambda x.t$), and
-type abstraction ($\forall I$) and application ($\forall E$) are implicit.
-Types remain Church style as usual. That is, type level lambda bindings are
-annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar
-to \Fw\ and focus on describing new constructs of \Fi\ in grey boxes.
+new to \Fi, which are not originally part of \Fw. That is, the system we obtain
+by excluding all the grey boxes from \Fig{Fi} and \Fig{eqFi} is a version of
+\Fw. In particular, it is a version of \Fw\ with Curry style terms. That is,
+term level lambda abstractions are unannotated ($\lambda x.t$), and
+type abstraction ($\forall I$) and type application ($\forall E$) are implicit
+at term level. Types remain Church style as usual. That is, type level lambda
+abstractions are annotated by kinds ($\lambda X^\kappa.F$). We expect readers
+to be familiar to \Fw\ and focus on describing new constructs of \Fi, which
+are in grey boxes.
 
 \begin{figure}
+\begin{framed}
 \paragraph{Syntax:}
 \begin{align*}
 &\text{Kinds}
@@ -54,7 +56,7 @@ to \Fw\ and focus on describing new constructs of \Fi\ in grey boxes.
 \noindent
 \begin{minipage}{.45\textwidth}
 \paragraph{Well-formed contexts:}
-\[\!\!\!\!\!\!\!\!
+\[\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
    \inference{}{|- \cdot} \]
 \[\!\!\!\!\!\!\!\!
    \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x:A}
@@ -70,14 +72,14 @@ to \Fw\ and focus on describing new constructs of \Fi\ in grey boxes.
 \newFi{\begin{minipage}{.2\textwidth}
 \textbf{Context lifting:}\vspace*{-.5em}
 \begin{align*}
-\hat\cdot &=~ \cdot \\
-\widehat{\Delta,x:A} &=~ \hat\Delta \\
-\widehat{\Delta,X^\kappa} &=~ \hat\Delta,X^\kappa \\
-\widehat{\Delta,x^A} &=~ \hat\Delta,x::A \\
-\widehat{\Delta,x::A} &=~ \hat\Delta,x::A
+\!\!\!\!\!\!\!\!\!\hat\cdot &=~ \cdot \\
+\!\!\!\!\!\!\!\!\!\widehat{\Delta,x:A} &=~ \hat\Delta \\
+\!\!\!\!\!\!\!\!\!\widehat{\Delta,X^\kappa} &=~ \hat\Delta,X^\kappa \\
+\!\!\!\!\!\!\!\!\!\widehat{\Delta,x^A} &=~ \hat\Delta,x::A \\
+\!\!\!\!\!\!\!\!\!\widehat{\Delta,x::A} &=~ \hat\Delta,x::A
 \end{align*}
 \end{minipage}}~~
-\begin{minipage}{.2\textwidth}
+\begin{minipage}{.15\textwidth}
 \paragraph{Sorting:}
 \[ \inference[($A$)]{}{\Delta |- *:\square} \]
 \[ \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
@@ -154,11 +156,13 @@ to \Fw\ and focus on describing new constructs of \Fi\ in grey boxes.
    \inference[($\forall E i$)]{\Delta |- t : \forall x^A.B & \hat\Delta |- s:A}
                               {\Delta |- t : [s/x]B} }
 \]
+\end{framed}
 \caption{Syntax and Typing rules of \Fi}
 \label{fig:Fi}
 \end{figure}
 
 \begin{figure}
+\begin{framed}
 \paragraph{Kind equality:}
 \[ \inference{}{\Delta |- * = *:\square}
  ~~~~
@@ -228,42 +232,62 @@ to \Fw\ and focus on describing new constructs of \Fi\ in grey boxes.
 \]
 ~\\
 \paragraph{Reduction:}
-$  \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
+\[ \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
  ~~~~
    \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
    \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
  ~~~~
-   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'} $
-
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+\]
+\end{framed}
 \caption{Equality rules and Reduction rules for \Fi}
 \label{fig:eqFi}
 \end{figure}
 
-
-We extend kind syntax by an indexed arrow kind \newFi{A -> \kappa}.
-%% example?
-
-The sorting rule \newFi{(Ri)}
-specifies when such an indexed arrow kind is well-formed:
-$A -> \kappa$ is well-formed under the typing context $\Delta$
+\paragraph{Kinds and Sorting rules}
+We extend the kind syntax of \Fw\ by indexed arrow kinds of the form
+\newFi{A -> \kappa}. The formation of indexed arrow kinds are
+governed by the sorting rule \newFi{(Ri)}.
+The rule $(Ri)$ specifies that an indexed arrow kind $A -> \kappa$
+is well-formed under the typing context $\Delta$
 when $A$ is a well-formed type under $\Delta$
 and $\kappa$ is a well-formed kind under $\Delta$.
 
-We extend the type syntax by several constructs.
-\newFi{\lambda x^A.F} is type level lambda abstraction over an index.
+\paragraph{Type Constructors and Kinding rules}
+We extend the type constructor syntax by three constructs.
 
-\newFi{F\,\{s\}} is a type level index application.
+\newFi{\lambda x^A.F} is the type level lambda abstraction over an index.
+This construct introduces indexed arrow kinds by the kinding rule
+\newFi{(\lambda i)}. In the $(\lambda i)$ rule, a new form of binding
+$x^A$ is appended to the context $\Delta$ to judge the kind of the body $F$.
+We will explain this new indexed binding in more detail when we discuss about
+the new extensions made for contexts.
 
-\newFi{\forall x^A . B} is an index polymorphic type.
+\newFi{F\,\{s\}} is the type level index application.
+In contrast to the ordinary type level application ($F\,G$) whose argument being
+applied is a type constructor ($G$), the argument of the index application
+($F\,\{s\}$) is a term ($s$). We use the curly bracket notation around
+the index argument to emphasize the distinction from ordinary type level
+application and also to emphasize that $s$ is an erasable (or static) term.
+This construct eliminates indexed arrow kinds by the kinding rule \newFi{(@i)}.
 
-We need to extend the syntax of typing context accordingly.
+\newFi{\forall x^A . B} is an index polymorphic type. The formation of
+indexed polymorphic types is governed by the kindig rule \newFi{\forall i}.
+
+\paragraph{Contexts}
+We need to extend the syntax of typing context accordingly to the changes
+of kinds syntax and type constructor syntax.
+
 \newFi{\Delta, x^A} is a typing context $\Delta$ extended by
 an index variable binding $x^A$. The index bindings are introduced from
 $\lambda x^A.F$ by the kinding rule \newFi{(\lambda i)}.
-Intuitively $x^A$ means that $x$ can only be used at type level,
-but not at term level. In contrast, the ordinary term binding $x:A$
-\newFi{\Delta, x :: A} is a typing contrext $\Delta$ extend ed by
+Intuitively $x^A$ means that $x$ can only be used at type level
+(or, statically), but not at term level (or, dynamically).
+In contrast, the ordinary term binding $x:A$ can only be used
+dynamically but not statically.
+
+\newFi{\Delta, x :: A} is a typing context $\Delta$ extended by
 multiple purpose variable binding $x::A$. Intuitively $x::A$ amounts to
 having both $x^A$ and $x:A$. That is, we can use $x$ at both type and
 term level when we have $x::A$ in the context.
@@ -363,23 +387,23 @@ That is, CC is an instance of PTS where
   \calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)
          ,(*,\square,\square)\}\]
 
-\KYA{ below is what I understood marcelo maybe wrong}
-\Fi\ is also an extension of \Fw\, but a restriction of CC.  Instead of
-allowing full value dependency (given by $(*,\square,\square)$ in CC),
-we only allow value dependency partially via special syntax as follows:
-\[
- \inference[Let]{\Gamma |- a:A & \Gamma, x:A |- b:B}
-                {\Gamma |- \mathsf{let}~x:A=a~\mathsf{in}~b : [a/x]B}
-\]
-\[
- \inference[Pi$_{(*,\square,\square)}$]
-     {\Gamma |- A:* & \Gamma |- B:\square}
-     {\Gamma |- (x:A)-> B : \square}
-\]
-The Let rule can be derived in CC by combining Pi rule and App rule.  However,
-we only allow value dependency $(*,\square,\square)$ in this limited form,
-but disallow arbitrary lambda abstractions to form value dependent functions
-by limiting the Pi rule on $(*,\square,\square)$.
+%% \KYA{ below is what I understood marcelo maybe wrong}
+%% \Fi\ is also an extension of \Fw\, but a restriction of CC.  Instead of
+%% allowing full value dependency (given by $(*,\square,\square)$ in CC),
+%% we only allow value dependency partially via special syntax as follows:
+%% \[
+%%  \inference[Let]{\Gamma |- a:A & \Gamma, x:A |- b:B}
+%%                 {\Gamma |- \mathsf{let}~x:A=a~\mathsf{in}~b : [a/x]B}
+%% \]
+%% \[
+%%  \inference[Pi$_{(*,\square,\square)}$]
+%%      {\Gamma |- A:* & \Gamma |- B:\square}
+%%      {\Gamma |- (x:A)-> B : \square}
+%% \]
+%% The Let rule can be derived in CC by combining Pi rule and App rule.  However,
+%% we only allow value dependency $(*,\square,\square)$ in this limited form,
+%% but disallow arbitrary lambda abstractions to form value dependent functions
+%% by limiting the Pi rule on $(*,\square,\square)$.
 
 Normalization of \Fi\ is automatic since \Fi\ is a strict subset of CC,
 which is known to be strongly normalizing.
