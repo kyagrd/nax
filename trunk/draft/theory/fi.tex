@@ -53,43 +53,40 @@ are in grey boxes.
 				\mid \newFi{\Delta, x :: A}
 \end{align*}
 
-\noindent
 \begin{minipage}{.45\textwidth}
 \paragraph{Well-formed contexts:}
-\[\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-   \inference{}{|- \cdot} \]
-\[\!\!\!\!\!\!\!\!
-   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x:A}
- ~~
+\[ \inference{}{|- \cdot} \]
+\[ \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x:A}
+ ~~~
    \inference{|- \Delta & \Delta |- \kappa:\square}{|- \Delta,X^\kappa}
 \]
-\[\!\!\!\!\!\!\!\! \newFi{
-   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x^A} }
- ~~ \newFi{
-   \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x::A} }
+\[  \newFi{
+   \inference{|- \Delta & \overline{\Delta} |- A:*}{|- \Delta,x^A} }
+ ~~~~ \newFi{
+   \inference{|- \Delta & \overline{\Delta} |- A:*}{|- \Delta,x::A} }
 \]
-\end{minipage}~~
-\newFi{\begin{minipage}{.2\textwidth}
-\textbf{Context lifting:}\vspace*{-.5em}
+\end{minipage} \qquad \newFi{
+\begin{minipage}{.4\textwidth}
+\textbf{Context lifting:}
 \begin{align*}
-\!\!\!\!\!\!\!\!\!\hat\cdot &=~ \cdot \\
-\!\!\!\!\!\!\!\!\!\widehat{\Delta,x:A} &=~ \hat\Delta \\
-\!\!\!\!\!\!\!\!\!\widehat{\Delta,X^\kappa} &=~ \hat\Delta,X^\kappa \\
-\!\!\!\!\!\!\!\!\!\widehat{\Delta,x^A} &=~ \hat\Delta,x::A \\
-\!\!\!\!\!\!\!\!\!\widehat{\Delta,x::A} &=~ \hat\Delta,x::A
+\hat\cdot                 &=~ \cdot                &~~~~ \overline\cdot             &=~ \cdot                       \\
+\widehat{\Delta,x:A}      &=~ \hat\Delta           &~~~~ \overline{\Delta,x:A}      &=~ \overline\Delta             \\
+\widehat{\Delta,X^\kappa} &=~ \hat\Delta,X^\kappa  &~~~~ \overline{\Delta,X^\kappa} &=~ \overline\Delta             \\
+\widehat{\Delta,x^A}      &=~ \hat\Delta,x::A      &~~~~ \overline{\Delta,x^A}      &=~ \overline\Delta             \\
+\widehat{\Delta,x::A}     &=~ \hat\Delta,x::A      &~~~~ \overline{\Delta,x::A}     &=~ \overline\Delta,x::A
 \end{align*}
-\end{minipage}}~~
-\begin{minipage}{.15\textwidth}
+\end{minipage} }
+
 \paragraph{Sorting:}
-\[ \inference[($A$)]{}{\Delta |- *:\square} \]
-\[ \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
+$ \inference[($A$)]{}{\Delta |- *:\square}
+ ~~~~
+   \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
                     {\Delta |- \kappa -> \kappa' : \square}
-\]\vspace*{.2em}
-\[ \newFi{
-   \inference[($Ri$)]{\Delta |- A:* & \Delta |- \kappa:\square}
+ ~~~~
+   \newFi{
+   \inference[($Ri$)]{\overline{\Delta} |- A:* & \Delta |- \kappa:\square}
                      {\Delta |- A -> \kappa : \square} }
-\]
-\end{minipage}
+$
 
 \paragraph{Kinding:}
 \[ \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
@@ -100,8 +97,8 @@ are in grey boxes.
                        {\Delta |- A : \kappa'} }
 \]
 \[
-   \inference[($\lambda$)]{\Delta,X^\kappa |- F : \kappa}
-                          {\Delta |- \lambda X^\kappa.F : \kappa->\kappa}
+   \inference[($\lambda$)]{\Delta,X^\kappa |- F : \kappa'}
+                          {\Delta |- \lambda X^\kappa.F : \kappa->\kappa'}
  ~~~~
  \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
                       & \Delta |- G : \kappa }
@@ -279,13 +276,12 @@ indexed polymorphic types is governed by the kindig rule \newFi{\forall i}.
 We need to extend the syntax of typing context accordingly to the changes
 of kinds syntax and type constructor syntax.
 
-\newFi{\Delta, x^A} is a typing context $\Delta$ extended by
-an index variable binding $x^A$. The index bindings are introduced from
-$\lambda x^A.F$ by the kinding rule \newFi{(\lambda i)}.
-Intuitively $x^A$ means that $x$ can only be used at type level
-(or, statically), but not at term level (or, dynamically).
-In contrast, the ordinary term binding $x:A$ can only be used
-dynamically but not statically.
+\newFi{\Delta, x^A} is a typing context $\Delta$ extended by an index binding
+$x^A$. An index binding is introduced from $\lambda x^A.F$ by the kinding rule
+\newFi{(\lambda i)}. Intuitively $x^A$ means that $x$ can only be used
+at type level (or, statically), but not at term level (or, dynamically).
+In contrast, an ordinary term binding $x:A$ can only be used dynamically
+but not statically.
 
 \newFi{\Delta, x :: A} is a typing context $\Delta$ extended by
 multiple purpose variable binding $x::A$. Intuitively $x::A$ amounts to
