@@ -7,12 +7,11 @@ The syntax and rules highlighted by \newFi{\text{grey boxes}} are the extensions
 new to \Fi, which are not originally part of \Fw. That is, the system we obtain
 by excluding all the grey boxes from \Fig{Fi} and \Fig{eqFi} is a version of
 \Fw. In particular, it is a version of \Fw\ with Curry style terms. That is,
-term level lambda abstractions are unannotated ($\lambda x.t$), and
-type abstraction ($\forall I$) and type application ($\forall E$) are implicit
-at term level. Types remain Church style as usual. That is, type level lambda
-abstractions are annotated by kinds ($\lambda X^\kappa.F$). We expect readers
-to be familiar to \Fw\ and focus on describing new constructs of \Fi, which
-are in grey boxes.
+term level abstractions are unannotated ($\lambda x.t$), and type generalization
+($\forall I$) and type instantiation ($\forall E$) are implicit at term level.
+Types remain Church style as usual. That is, type level abstractions are
+annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
+\Fw\ and focus on describing new constructs of \Fi, which are in grey boxes.
 
 \begin{figure}
 \begin{framed}
@@ -23,15 +22,6 @@ are in grey boxes.
 				\mid \kappa -> \kappa
 				\mid \newFi{A -> \kappa}
 \\
-%% &\text{Type Schemes}
-%% 	& \sigma	&~ ::= ~ A
-%% 			\mid (x:A) -> \sigma
-%% \\
-%% &\text{Kind Schemes}
-%% 	& \delta	&~ ::= ~ \kappa
-%% 			\mid (x:A) -> \delta
-%%			\mid (X:\kappa) -> \delta
-%% \\
 &\text{Type Constructors}
 	& A,B,F,G		&~ ::= ~ X
 				\mid \lambda X^\kappa.F
@@ -49,44 +39,33 @@ are in grey boxes.
 	& \Delta		&~ ::= ~ \cdot
 				\mid \Delta, x : A
 				\mid \Delta, X^\kappa
-				\mid \newFi{\Delta, x^A}
-				\mid \newFi{\Delta, x :: A}
 \end{align*}
 
 \begin{minipage}{.45\textwidth}
 \paragraph{Well-formed contexts:}
 \[ \inference{}{|- \cdot} \]
-\[ \inference{|- \Delta & \Delta |- A:*}{|- \Delta,x:A}
- ~~~
-   \inference{|- \Delta & \Delta |- \kappa:\square}{|- \Delta,X^\kappa}
+\[ \inference{|- \Delta & \Delta |- A:*}
+             {|- \Delta,x:A}
+      \big( x\notin\dom(\Delta) \big)
 \]
-\[  \newFi{
-   \inference{|- \Delta & \overline{\Delta} |- A:*}{|- \Delta,x^A} }
- ~~~~ \newFi{
-   \inference{|- \Delta & \overline{\Delta} |- A:*}{|- \Delta,x::A} }
+\[ \inference{|- \Delta & \Delta |- \kappa:\square}
+             {|- \Delta,X^\kappa}
+      \big( X\notin\dom(\Delta) \big)
 \]
-\end{minipage} \qquad \newFi{
-\begin{minipage}{.4\textwidth}
-\textbf{Context lifting:}
-\begin{align*}
-\hat\cdot                 &=~ \cdot                &~~~~ \overline\cdot             &=~ \cdot                       \\
-\widehat{\Delta,x:A}      &=~ \hat\Delta           &~~~~ \overline{\Delta,x:A}      &=~ \overline\Delta             \\
-\widehat{\Delta,X^\kappa} &=~ \hat\Delta,X^\kappa  &~~~~ \overline{\Delta,X^\kappa} &=~ \overline\Delta             \\
-\widehat{\Delta,x^A}      &=~ \hat\Delta,x::A      &~~~~ \overline{\Delta,x^A}      &=~ \overline\Delta             \\
-\widehat{\Delta,x::A}     &=~ \hat\Delta,x::A      &~~~~ \overline{\Delta,x::A}     &=~ \overline\Delta,x::A
-\end{align*}
-\end{minipage} }
-
+\end{minipage}
+\begin{minipage}{.45\textwidth}
 \paragraph{Sorting:}
-$ \inference[($A$)]{}{\Delta |- *:\square}
- ~~~~
-   \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
+\[ \inference[($A$)]{}{\Delta |- *:\square}
+\]
+\[ \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
                     {\Delta |- \kappa -> \kappa' : \square}
- ~~~~
+\]
+\[
    \newFi{
-   \inference[($Ri$)]{\overline{\Delta} |- A:* & \Delta |- \kappa:\square}
+   \inference[($Ri$)]{\Delta |- A:* & \Delta |- \kappa:\square}
                      {\Delta |- A -> \kappa : \square} }
-$
+\]
+\end{minipage}
 
 \paragraph{Kinding:}
 \[ \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
@@ -99,17 +78,19 @@ $
 \[
    \inference[($\lambda$)]{\Delta,X^\kappa |- F : \kappa'}
                           {\Delta |- \lambda X^\kappa.F : \kappa->\kappa'}
+      \big(\newFi{X\notin\FV(\kappa')}\big)
  ~~~~
  \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
                       & \Delta |- G : \kappa }
                       {\Delta |- F\,G : \kappa'}
 \]
 \[ \newFi{
-   \inference[($\lambda i$)]{\Delta,x^A |- F : \kappa}
-                            {\Delta |- \lambda x^A.F : A->\kappa} }
- ~~~~ \newFi{
+   \inference[($\lambda i$)]{\Delta,x:A |- F : \kappa}
+                            {\Delta |- \lambda x^A.F : A->\kappa}
+      \big( x\notin\FV(\kappa) \big) }
+ ~~~~ ~~~ \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
-                     & \hat\Delta |- s : A }
+                     & \Delta |- s : A }
                      {\Delta |- F\,\{s\} : \kappa} }
 \]
 \[ \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
@@ -118,16 +99,13 @@ $
    \inference[($\forall$)]{\Delta, X^\kappa |- B : *}
                             {\Delta |- \forall X^\kappa . B : *}
  ~~~~ \newFi{
-   \inference[($\forall i$)]{\Delta, x^A |- B : *}
+   \inference[($\forall i$)]{\Delta, x:A |- B : *}
                               {\Delta |- \forall x^A . B : *} }
 \]
 
 \paragraph{Typing:}
 \[ \inference[($:$)]{x:A \in \Delta & |- \Delta} 
                     {\Delta |- x:A}
- ~~~~ \newFi{
-   \inference[($::$)]{x::A \in \Delta & |- \Delta} 
-                     {\Delta |- x:A} }
  ~~~~
    \inference[($=$)]{\Delta |- t :A & \Delta |- A = B : *}
                     {\Delta |- t : B}
@@ -135,22 +113,24 @@ $
 \[
    \inference[($->$$I$)]{\Delta, x:A |- t : B}
                         {\Delta |- \lambda x.t : A -> B}
+      \big(\newFi{x\notin\FV(B)}\big)
  ~~~~
    \inference[($->$$E$)]{\Delta |- r : A -> B & \Delta |- s : A}
                         {\Delta |- r\;s : B}
 \]
 \[ \inference[($\forall I$)]{\Delta, X^\kappa |- t : B}
                             {\Delta |- t : \forall X^\kappa.B}
- ~~~~
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~
    \inference[($\forall E$)]{ \Delta |- t : \forall X^\kappa.B
                             & \Delta |- G:\kappa }
                             {\Delta |- t : [G/X]B}
 \]
 \[ \newFi{
-   \inference[($\forall I i$)]{\Delta, x^A |- t : B}
-                              {\Delta |- t : \forall x^A.B} }
+   \inference[($\forall I i$)]{\Delta, x:A |- t : B}
+                              {\Delta |- t : \forall x^A.B}
+      \big( x\notin\FV(t) \big) }
  ~~~~ \newFi{
-   \inference[($\forall E i$)]{\Delta |- t : \forall x^A.B & \hat\Delta |- s:A}
+   \inference[($\forall E i$)]{\Delta |- t : \forall x^A.B & \Delta |- s:A}
                               {\Delta |- t : [s/x]B} }
 \]
 \end{framed}
@@ -184,7 +164,7 @@ $
    \inference{\Delta,X^\kappa |- F:\kappa & \Delta |- G:\kappa}
              {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
  ~~~~ \newFi{
-   \inference{\Delta,x^A |- F:\kappa & \hat\Delta |- s:A}
+   \inference{\Delta,x^A |- F:\kappa & \Delta |- s:A}
              {\Delta |- (\lambda x^A.F)\,\{s\} = [s/x]F:\kappa} }
 \]
 \[ \inference{\Delta,X^\kappa |- F=F' : \kappa'}
@@ -198,7 +178,7 @@ $
    \inference{\Delta,x^A |- F=F' : \kappa}
              {\Delta |- \lambda x^A.F=\lambda x^A.F' : A -> \kappa} }
  ~~~~ \newFi{
-   \inference{\Delta |- F=F':A->\kappa & \hat\Delta |- s=s':A}
+   \inference{\Delta |- F=F':A->\kappa & \Delta |- s=s':A}
              {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
 \]
 \[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
@@ -242,6 +222,7 @@ $
 \label{fig:eqFi}
 \end{figure}
 
+\subsection{The constructs new to \Fi}
 \paragraph{Kinds and Sorting rules}
 We extend the kind syntax of \Fw\ by indexed arrow kinds of the form
 \newFi{A -> \kappa}. The formation of indexed arrow kinds are
@@ -254,56 +235,61 @@ and $\kappa$ is a well-formed kind under $\Delta$.
 \paragraph{Type Constructors and Kinding rules}
 We extend the type constructor syntax by three constructs.
 
-\newFi{\lambda x^A.F} is the type level lambda abstraction over an index.
-This construct introduces indexed arrow kinds by the kinding rule
-\newFi{(\lambda i)}. In the $(\lambda i)$ rule, a new form of binding
-$x^A$ is appended to the context $\Delta$ to judge the kind of the body $F$.
-We will explain this new indexed binding in more detail when we discuss about
-the new extensions made for contexts.
+\newFi{\lambda x^A.F} is the type level abstraction over an index
+(or, index abstraction). Index abstractions introduce indexed arrow kinds
+by the kinding rule \newFi{(\lambda i)}. Note the side condition
+($x\notin\FV(\kappa)$) in the ($\lambda i$) rule, which prevents
+index dependent kinds. In addition, we have the side condition
+(\newFi{X\notin\FV(\kappa')}) to prevent type dependent kinds
+in the $(\lambda)$ rule for ordinary type level abstractions.
+Since kinds can have the form $A -> \kappa$, where $A$ can possibly involve
+type variables and indexed terms, we need these side conditions on the rules
+($\lambda$) and ($\lambda i$) to avoid dependent kinds.
 
-\newFi{F\,\{s\}} is the type level index application.
-In contrast to the ordinary type level application ($F\,G$) whose argument being
-applied is a type constructor ($G$), the argument of the index application
-($F\,\{s\}$) is a term ($s$). We use the curly bracket notation around
-the index argument to emphasize the distinction from ordinary type level
-application and also to emphasize that $s$ is an erasable (or static) term.
-This construct eliminates indexed arrow kinds by the kinding rule \newFi{(@i)}.
+\newFi{F\,\{s\}} is the type level index application. In contrast to
+the ordinary type level application ($F\,G$) whose argument being applied is
+a type constructor ($G$), the argument of the index application ($F\,\{s\}$) is
+a term ($s$). We use the curly bracket notation around the index argument to
+emphasize the distinction from ordinary type arguments and also to emphasize
+that $s$ is an erasable (or static) term. Index applications eliminate
+indexed arrow kinds by the kinding rule \newFi{(@i)}.
 
-\newFi{\forall x^A . B} is an index polymorphic type. The formation of
-indexed polymorphic types is governed by the kindig rule \newFi{\forall i}.
+\newFi{\forall x^A . B} is an index polymorphic type.
+The formation of indexed polymorphic types is governed by
+the kinding rule \newFi{\forall i}, which is very similar to
+the formation rule ($\forall$) for ordinary polymorphic types.
 
-\paragraph{Contexts}
-We need to extend the syntax of typing context accordingly to the changes
-of kinds syntax and type constructor syntax.
+\paragraph{Typing rules}
+Since terms may appear in the syntax of type constructors, particularly in
+index applications (F {s}), we need to make sure that types do not depend
+on dynamically bound variables introduced by term level abstraction
+($\lambda x.t$). So, we have the side condition (\newFi{x\in\FV(B)})
+on the typing rule ($->I$) rule to avoid dependent types, just as we had
+the side conditions on the kinding rules to avoid dependent kinds.
 
-\newFi{\Delta, x^A} is a typing context $\Delta$ extended by an index binding
-$x^A$. An index binding is introduced from $\lambda x^A.F$ by the kinding rule
-\newFi{(\lambda i)}. Intuitively $x^A$ means that $x$ can only be used
-at type level (or, statically), but not at term level (or, dynamically).
-In contrast, an ordinary term binding $x:A$ can only be used dynamically
-but not statically.
+Since we have index polymorphic types, we need typing rules for
+index polymorphism: the rule \newFi{(\forall I i)} for index generalization
+and the rule \newFi{(\forall E i)} for index instantiation.
 
-\newFi{\Delta, x :: A} is a typing context $\Delta$ extended by
-multiple purpose variable binding $x::A$. Intuitively $x::A$ amounts to
-having both $x^A$ and $x:A$. That is, we can use $x$ at both type and
-term level when we have $x::A$ in the context.
-TODO
-% when we go inside curly brackets to type check the argument term ($s$) of
-% an index application ($F\,\{s\}$). This property of $x::A$ is captured
-TODO
+The index generalization rule ($\forall I i$) is very similar to
+the type generalization rule ($\forall I$), except the side condition
+($x\notin\FV(t)$) on the rule ($\forall I i$) to avoid terms depending
+on type level index variables introduced by index polymorphism.
+The type generalization rule ($\forall I$) do not need such side conditions
+because the Curry style term syntax prevents type variables ($X$) from
+appearing at term level.
 
-kinding rules
-\newFi{(Conv)}
-\newFi{(\lambda i)}
-\newFi{(@i)}
-\newFi{(\forall i)}
-
-typing rules
-\newFi{(::)}
-\newFi{(\forall I i)}
-\newFi{(\forall E i)}
-
-
+The index instantiation rule ($\forall E i$) is very similar to
+the type instantiation rule ($\forall E i$).
+Unlike the index generalization rule, the index instantiation rule does not
+have any side conditions to prevent terms depending on index variables.
+What prevents $s$ in the rule ($\forall E i$) from depending on some dynamic
+variable? That is, why is it not possible to have $x'\in\dom\Delta$ such that
+$x'\in\FV(s)$ as well as $x'\in\FV(t)$? It is because the side condition
+($x\notin\FV(B)$) on the rule ($->$$I$) have already eliminated such
+possibilities????????? \KYA{Unfortunately the sentence before is not ture!!!
+I think I found a counterexample. The system with side conditions actually
+accepts more terms than the system with context lifting}.
 
 %% \Fi 
 %%, but less powerful than
