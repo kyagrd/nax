@@ -39,33 +39,57 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 	& \Delta		&~ ::= ~ \cdot
 				\mid \Delta, x : A
 				\mid \Delta, X^\kappa
+				\mid \newFi{\Delta, x^A}
+				\mid \newFi{\Delta, x::A}
 \end{align*}
 
-\begin{minipage}{.45\textwidth}
+\paragraph{Context lifting:}
+\begin{align*}
+\hat\cdot                  &=~ \cdot                &
+\widehat{\Delta,x:A}       &=~ \hat\Delta           &
+\widehat{\Delta,X^\kappa}  &=~ \hat\Delta,X^\kappa  &
+\widehat{\Delta,x^A}       &=~ \hat\Delta,x::A      &
+\widehat{\Delta,x::A}      &=~ \hat\Delta,x::A
+\\
+\overline\cdot             &=~ \cdot                &
+\overline{\Delta,x:A}      &=~ \overline\Delta      &
+\overline{\Delta,X^\kappa} &=~ \overline\Delta      &
+\overline{\Delta,x^A}      &=~ \overline\Delta      &
+\overline{\Delta,x::A}     &=~ \overline\Delta,x::A 
+\end{align*}
+
 \paragraph{Well-formed contexts:}
-\[ \inference{}{|- \cdot} \]
-\[ \inference{|- \Delta & \Delta |- A:*}
+\[ \inference{}{|- \cdot}
+ ~~~~
+   \inference{|- \Delta & \Delta |- A:*}
              {|- \Delta,x:A}
       \big( x\notin\dom(\Delta) \big)
-\]
-\[ \inference{|- \Delta & \Delta |- \kappa:\square}
+ ~~~~
+   \inference{|- \Delta & \Delta |- \kappa:\square}
              {|- \Delta,X^\kappa}
       \big( X\notin\dom(\Delta) \big)
 \]
-\end{minipage}
-\begin{minipage}{.45\textwidth}
+\[ \newFi{
+   \inference{|- \Delta & \overline\Delta |- A:*}
+             {|- \Delta,x^A}
+      \big( x\notin\dom(\Delta) \big) }
+ ~~~~
+ \newFi{
+   \inference{|- \Delta & \overline\Delta |- A:*}
+             {|- \Delta,x::A}
+      \big( x\notin\dom(\Delta) \big) }
+\]
+
 \paragraph{Sorting:}
-\[ \inference[($A$)]{}{\Delta |- *:\square}
-\]
-\[ \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
+$  \inference[($A$)]{}{\Delta |- *:\square}
+ ~~~~
+   \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
                     {\Delta |- \kappa -> \kappa' : \square}
-\]
-\[
+ ~~~~
    \newFi{
-   \inference[($Ri$)]{\Delta |- A:* & \Delta |- \kappa:\square}
+   \inference[($Ri$)]{\overline\Delta |- A:* & \Delta |- \kappa:\square}
                      {\Delta |- A -> \kappa : \square} }
-\]
-\end{minipage}
+$
 
 \paragraph{Kinding:}
 \[ \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
@@ -78,34 +102,35 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 \[
    \inference[($\lambda$)]{\Delta,X^\kappa |- F : \kappa'}
                           {\Delta |- \lambda X^\kappa.F : \kappa->\kappa'}
-      \big(\newFi{X\notin\FV(\kappa')}\big)
  ~~~~
- \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
-                      & \Delta |- G : \kappa }
-                      {\Delta |- F\,G : \kappa'}
+   \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
+                    & \Delta |- G : \kappa }
+                    {\Delta |- F\,G : \kappa'}
 \]
 \[ \newFi{
    \inference[($\lambda i$)]{\Delta,x:A |- F : \kappa}
-                            {\Delta |- \lambda x^A.F : A->\kappa}
-      \big( x\notin\FV(\kappa) \big) }
- ~~~~ ~~~ \newFi{
+                            {\Delta |- \lambda x^A.F : A->\kappa} }
+ ~~~~ \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
-                     & \Delta |- s : A }
+                     & \hat\Delta |- s : A }
                      {\Delta |- F\,\{s\} : \kappa} }
 \]
 \[ \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
                      {\Delta |- A -> B : * }
  ~~~~
    \inference[($\forall$)]{\Delta, X^\kappa |- B : *}
-                            {\Delta |- \forall X^\kappa . B : *}
+                          {\Delta |- \forall X^\kappa . B : *}
  ~~~~ \newFi{
    \inference[($\forall i$)]{\Delta, x:A |- B : *}
-                              {\Delta |- \forall x^A . B : *} }
+                            {\Delta |- \forall x^A . B : *} }
 \]
 
 \paragraph{Typing:}
 \[ \inference[($:$)]{x:A \in \Delta & |- \Delta} 
                     {\Delta |- x:A}
+ ~~~~ \newFi{
+   \inference[($::$)]{x::A \in \Delta & |- \Delta} 
+                     {\Delta |- x:A} }
  ~~~~
    \inference[($=$)]{\Delta |- t :A & \Delta |- A = B : *}
                     {\Delta |- t : B}
@@ -113,24 +138,23 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 \[
    \inference[($->$$I$)]{\Delta, x:A |- t : B}
                         {\Delta |- \lambda x.t : A -> B}
-      \big(\newFi{x\notin\FV(B)}\big)
  ~~~~
    \inference[($->$$E$)]{\Delta |- r : A -> B & \Delta |- s : A}
                         {\Delta |- r\;s : B}
 \]
 \[ \inference[($\forall I$)]{\Delta, X^\kappa |- t : B}
                             {\Delta |- t : \forall X^\kappa.B}
- ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~
+ ~~~~
    \inference[($\forall E$)]{ \Delta |- t : \forall X^\kappa.B
                             & \Delta |- G:\kappa }
                             {\Delta |- t : [G/X]B}
 \]
 \[ \newFi{
-   \inference[($\forall I i$)]{\Delta, x:A |- t : B}
-                              {\Delta |- t : \forall x^A.B}
-      \big( x\notin\FV(t) \big) }
+   \inference[($\forall I i$)]{\Delta, x^A |- t : B}
+                              {\Delta |- t : \forall x^A.B} }
  ~~~~ \newFi{
-   \inference[($\forall E i$)]{\Delta |- t : \forall x^A.B & \Delta |- s:A}
+   \inference[($\forall E i$)]{ \Delta |- t : \forall x^A.B
+                              & \hat\Delta |- s:A}
                               {\Delta |- t : [s/x]B} }
 \]
 \end{framed}
@@ -164,7 +188,7 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
    \inference{\Delta,X^\kappa |- F:\kappa & \Delta |- G:\kappa}
              {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
  ~~~~ \newFi{
-   \inference{\Delta,x^A |- F:\kappa & \Delta |- s:A}
+   \inference{\Delta,x^A |- F:\kappa & \hat\Delta |- s:A}
              {\Delta |- (\lambda x^A.F)\,\{s\} = [s/x]F:\kappa} }
 \]
 \[ \inference{\Delta,X^\kappa |- F=F' : \kappa'}
@@ -178,7 +202,7 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
    \inference{\Delta,x^A |- F=F' : \kappa}
              {\Delta |- \lambda x^A.F=\lambda x^A.F' : A -> \kappa} }
  ~~~~ \newFi{
-   \inference{\Delta |- F=F':A->\kappa & \Delta |- s=s':A}
+   \inference{\Delta |- F=F':A->\kappa & \hat\Delta |- s=s':A}
              {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
 \]
 \[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
