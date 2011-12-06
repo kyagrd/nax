@@ -17,12 +17,12 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 \begin{framed}
 \paragraph{Syntax:}
 \begin{align*}
-&\text{Kinds}
+\!\!\!\!\!\!\!\!&\text{Kinds}
  	& \kappa		&~ ::= ~ *
 				\mid \kappa -> \kappa
 				\mid \newFi{A -> \kappa}
 \\
-&\text{Type Constructors}
+\!\!\!\!\!\!\!\!&\text{Type Constructors}
 	& A,B,F,G		&~ ::= ~ X
 				\mid \lambda X^\kappa.F
 				\mid \newFi{\lambda x^A.F}
@@ -32,31 +32,33 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 				\mid \forall X^\kappa . B
 				\mid \newFi{\forall x^A . B}
 \\
-&\text{Terms}
+\!\!\!\!\!\!\!\!&\text{Terms}
 	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
 \\
-&\text{Contexts}
+\!\!\!\!\!\!\!\!&\text{Contexts}
 	& \Delta		&~ ::= ~ \cdot
 				\mid \Delta, x : A
 				\mid \Delta, X^\kappa
 				\mid \newFi{\Delta, x^A}
 				\mid \newFi{\Delta, x::A}
 \end{align*}
-
-\paragraph{Context lifting:}
-\begin{align*}
-\hat\cdot                  &=~ \cdot                &
-\widehat{\Delta,x:A}       &=~ \hat\Delta           &
-\widehat{\Delta,X^\kappa}  &=~ \hat\Delta,X^\kappa  &
-\widehat{\Delta,x^A}       &=~ \hat\Delta,x::A      &
-\widehat{\Delta,x::A}      &=~ \hat\Delta,x::A
-\\
-\overline\cdot             &=~ \cdot                &
-\overline{\Delta,x:A}      &=~ \overline\Delta      &
-\overline{\Delta,X^\kappa} &=~ \overline\Delta      &
-\overline{\Delta,x^A}      &=~ \overline\Delta      &
-\overline{\Delta,x::A}     &=~ \overline\Delta,x::A 
+\newFi{ 
+\begin{minipage}{\textwidth}\vspace*{-1em}
+\begin{align*}\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+\textbf{Context lifting:}~~~~
+& \hat\cdot                  = \cdot                &~~~&
+  \widehat{\Delta,x:A}       = \hat\Delta           &~~~&
+  \widehat{\Delta,X^\kappa}  = \hat\Delta,X^\kappa  &~~~&
+  \widehat{\Delta,x^A}       = \hat\Delta,x::A      &~~~&
+  \widehat{\Delta,x::A}      = \hat\Delta,x::A
+ \\
+& \overline\cdot             = \cdot                &~~~&
+  \overline{\Delta,x:A}      = \overline\Delta      &~~~&
+  \overline{\Delta,X^\kappa} = \overline\Delta      &~~~&
+  \overline{\Delta,x^A}      = \overline\Delta      &~~~&
+  \overline{\Delta,x::A}     = \overline\Delta,x::A 
 \end{align*}
+\end{minipage} }
 
 \paragraph{Well-formed contexts:}
 \[ \inference{}{|- \cdot}
@@ -108,7 +110,7 @@ $
                     {\Delta |- F\,G : \kappa'}
 \]
 \[ \newFi{
-   \inference[($\lambda i$)]{\Delta,x:A |- F : \kappa}
+   \inference[($\lambda i$)]{\Delta,x^A |- F : \kappa}
                             {\Delta |- \lambda x^A.F : A->\kappa} }
  ~~~~ \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
@@ -121,7 +123,7 @@ $
    \inference[($\forall$)]{\Delta, X^\kappa |- B : *}
                           {\Delta |- \forall X^\kappa . B : *}
  ~~~~ \newFi{
-   \inference[($\forall i$)]{\Delta, x:A |- B : *}
+   \inference[($\forall i$)]{\Delta, x^A |- B : *}
                             {\Delta |- \forall x^A . B : *} }
 \]
 
@@ -253,22 +255,17 @@ We extend the kind syntax of \Fw\ by indexed arrow kinds of the form
 governed by the sorting rule \newFi{(Ri)}.
 The rule $(Ri)$ specifies that an indexed arrow kind $A -> \kappa$
 is well-formed under the typing context $\Delta$
-when $A$ is a well-formed type under $\Delta$
-and $\kappa$ is a well-formed kind under $\Delta$.
+when $A$ is a well-formed type under the lifted typing contex $\overline\Delta$
+and $\kappa$ is a well-formed kind under the same typeing context $\Delta$.
+We will explain what the lifted context notation $\overline\Delta$ means
+in more details when we discuss about contexts.
 
 \paragraph{Type Constructors and Kinding rules}
 We extend the type constructor syntax by three constructs.
 
 \newFi{\lambda x^A.F} is the type level abstraction over an index
 (or, index abstraction). Index abstractions introduce indexed arrow kinds
-by the kinding rule \newFi{(\lambda i)}. Note the side condition
-($x\notin\FV(\kappa)$) in the ($\lambda i$) rule, which prevents
-index dependent kinds. In addition, we have the side condition
-(\newFi{X\notin\FV(\kappa')}) to prevent type dependent kinds
-in the $(\lambda)$ rule for ordinary type level abstractions.
-Since kinds can have the form $A -> \kappa$, where $A$ can possibly involve
-type variables and indexed terms, we need these side conditions on the rules
-($\lambda$) and ($\lambda i$) to avoid dependent kinds.
+by the kinding rule \newFi{(\lambda i)}.
 
 \newFi{F\,\{s\}} is the type level index application. In contrast to
 the ordinary type level application ($F\,G$) whose argument being applied is
