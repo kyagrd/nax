@@ -53,14 +53,14 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 \end{minipage} }
 
 \paragraph{Well-formed contexts:} ~~~~
-$ \inference{}{|- \cdot}
+$  \inference{}{|- \cdot}
  ~~~~ ~~~~ ~~~~
    \inference{|- \Delta & \Delta |- A:*}
              {|- \Delta,x:A}
       \big( x\notin\dom(\Delta) \big)
 $
 \[
-   \inference{|- \Delta & \cdot |- \kappa:\square}
+   \inference{|- \Delta & \Delta |- \kappa:\square}
              {|- \Delta,X^\kappa}
       \big( X\notin\dom(\Delta) \big)
  ~~~~ \newFi{
