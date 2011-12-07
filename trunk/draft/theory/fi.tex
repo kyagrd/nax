@@ -40,45 +40,32 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 				\mid \Delta, x : A
 				\mid \Delta, X^\kappa
 				\mid \newFi{\Delta, x^A}
-				\mid \newFi{\Delta, x::A}
 \end{align*}
 \newFi{ 
 \begin{minipage}{\textwidth}\vspace*{-1em}
 \begin{align*}\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-\textbf{Context lifting:}~~~~
+\textbf{Context lifting:}~~~~~~~~~
 & \hat\cdot                  = \cdot                &~~~&
   \widehat{\Delta,x:A}       = \hat\Delta           &~~~&
   \widehat{\Delta,X^\kappa}  = \hat\Delta,X^\kappa  &~~~&
-  \widehat{\Delta,x^A}       = \hat\Delta,x::A      &~~~&
-  \widehat{\Delta,x::A}      = \hat\Delta,x::A
- \\
-& \overline\cdot             = \cdot                &~~~&
-  \overline{\Delta,x:A}      = \overline\Delta      &~~~&
-  \overline{\Delta,X^\kappa} = \overline\Delta      &~~~&
-  \overline{\Delta,x^A}      = \overline\Delta      &~~~&
-  \overline{\Delta,x::A}     = \overline\Delta,x::A 
+  \widehat{\Delta,x^A}       = \hat\Delta,x^A
 \end{align*}
 \end{minipage} }
 
-\paragraph{Well-formed contexts:}
-\[ \inference{}{|- \cdot}
- ~~~~
+\paragraph{Well-formed contexts:} ~~~~
+$ \inference{}{|- \cdot}
+ ~~~~ ~~~~ ~~~~
    \inference{|- \Delta & \Delta |- A:*}
              {|- \Delta,x:A}
       \big( x\notin\dom(\Delta) \big)
- ~~~~
-   \inference{|- \Delta & \Delta |- \kappa:\square}
+$
+\[
+   \inference{|- \Delta & \cdot |- \kappa:\square}
              {|- \Delta,X^\kappa}
       \big( X\notin\dom(\Delta) \big)
-\]
-\[ \newFi{
-   \inference{|- \Delta & \overline\Delta |- A:*}
+ ~~~~ \newFi{
+   \inference{|- \Delta & \cdot |- A:*}
              {|- \Delta,x^A}
-      \big( x\notin\dom(\Delta) \big) }
- ~~~~
- \newFi{
-   \inference{|- \Delta & \overline\Delta |- A:*}
-             {|- \Delta,x::A}
       \big( x\notin\dom(\Delta) \big) }
 \]
 
@@ -89,7 +76,7 @@ $  \inference[($A$)]{}{\Delta |- *:\square}
                     {\Delta |- \kappa -> \kappa' : \square}
  ~~~~
    \newFi{
-   \inference[($Ri$)]{\overline\Delta |- A:* & \Delta |- \kappa:\square}
+   \inference[($Ri$)]{\cdot |- A:* & \Delta |- \kappa:\square}
                      {\Delta |- A -> \kappa : \square} }
 $
 
@@ -131,7 +118,7 @@ $
 \[ \inference[($:$)]{x:A \in \Delta & |- \Delta} 
                     {\Delta |- x:A}
  ~~~~ \newFi{
-   \inference[($::$)]{x::A \in \Delta & |- \Delta} 
+   \inference[($:'$)]{x^A \in \Delta & |- \Delta} 
                      {\Delta |- x:A} }
  ~~~~
    \inference[($=$)]{\Delta |- t :A & \Delta |- A = B : *}
@@ -140,13 +127,13 @@ $
 \[
    \inference[($->$$I$)]{\Delta, x:A |- t : B}
                         {\Delta |- \lambda x.t : A -> B}
- ~~~~
+ ~~~~ ~~~~ ~~~~ ~~~~
    \inference[($->$$E$)]{\Delta |- r : A -> B & \Delta |- s : A}
                         {\Delta |- r\;s : B}
 \]
 \[ \inference[($\forall I$)]{\Delta, X^\kappa |- t : B}
                             {\Delta |- t : \forall X^\kappa.B}
- ~~~~
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~
    \inference[($\forall E$)]{ \Delta |- t : \forall X^\kappa.B
                             & \Delta |- G:\kappa }
                             {\Delta |- t : [G/X]B}
@@ -154,12 +141,13 @@ $
 \[ \newFi{
    \inference[($\forall I i$)]{\Delta, x^A |- t : B}
                               {\Delta |- t : \forall x^A.B} }
+     \big( x\notin\FV(t) \big)
  ~~~~ \newFi{
    \inference[($\forall E i$)]{ \Delta |- t : \forall x^A.B
                               & \hat\Delta |- s:A}
                               {\Delta |- t : [s/x]B} }
 \]
-\end{framed}\vspace*{-1em}
+\end{framed}
 \caption{Syntax and Typing rules of \Fi}
 \label{fig:Fi}
 \end{figure}
@@ -173,7 +161,7 @@ $
              & \Delta |- \kappa_2 = \kappa_2' : \square }
              {\Delta |- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
  ~~~~ \newFi{
-   \inference{\overline\Delta |- A=A':* & \Delta |- \kappa=\kappa':\square}
+   \inference{\cdot |- A=A':* & \Delta |- \kappa=\kappa':\square}
              {\Delta |- A -> \kappa = A' -> \kappa' : \square} }
 \]
 \[ \inference{\Delta |- \kappa=\kappa':\square}
@@ -322,28 +310,43 @@ kind judgment for a type $A$ at kind level in the sorting rule ($Ri$)).
 
 \newFi{x^A} is an index variable binding, which can only be used statically
 (\ie, at type level) but not dynamically (\ie, at term level). For example,
-$\Delta,x^A |- F {x} :*$ is possible but $\Delta,x^A |- x:A$ is not.
+$\Delta,x^A |- F \{x\} :*$ is possible but $\Delta,x^A |- x:A$ is not.
 In contrast, the ordinary term variable binding $x:A$ can only be used
 dynamically but not statically. For example, $\Delta,x:A |- x:A$ is possible
-but $\Delta,x:A |- F {x}:*$ cannot be derived. Index bindings ($x^A$) are
+but $\Delta,x:A |- F \{x\}:*$ cannot be derived. Index bindings ($x^A$) are
 introduced either from index abstractions ($\lambda x^A.F$)
 or from index polymorphic types ($\forall x^A.B$).
 \KYA{Talk about how it corresponds to side conditions
     in the rules at some point.
-    IPTS or its instance ICC has side conditinos on $\forall$ generalization,
+    IPTS or its instance ICC has side conditions on $\forall$ generalization,
     which precisely captures that index variable bindings are static.
-    However, simply constrinaing $\Pi$ related rules with side condition on
+    However, simply constraining $\Pi$ related rules with side condition on
     the range, or body of $\Pi$, wouldn't precisely capture that term bindings
     are dynamic (or, at least it is not trivial to prove whether it actually
     corresponds to what we want or not).}
 
-\newFi{x::A} is a persistant binding, which can be used both statically and
+\newFi{x::A} is a persistent binding, which can be used both statically and
 dynamically. Intuitively, it has both capabilities of $x^A$ and $x:A$ at once
 so that it can be used both at term level and type level. For example,
-both $\Delta,x::A |- F {x} :*$ and $\Delta,x::A |- x:A$ are possible.
-Presistant bindings are introduced by the context lifting of the form
-$\hat\Delta$. When we need to type check terms at type level kinding rules,
-we lift the context using the hat operation on contexts defined in \Fig{Fi}.
+both $\Delta,x::A |- F \{x\} :*$ and $\Delta,x::A |- x:A$ are possible.
+Persistent bindings are introduced by the context lifting of the form
+$\hat\Delta$ defined in \Fig{Fi}. We perform the hatted context lifting
+($\hat\Delta$), when we type check terms that are to be used as an index
+at type level. There are two places where terms are used as indices:
+index application ($@i$) and index instantiation ($\forall E i$).
+Note, we use the hatted context lifting in the rules ($@i$) and ($\forall E i$).
+
+The hatted context lifting ($\hat\Delta$) forgets dynamic bindings ($x:A$),
+changes static bindings ($x^A$) into persistant bindings ($x::A$), and leaves
+the others ($X^\kappa$ and $x::A$) unchaged. The hatted context lifinting
+captures the idea that index terms (\eg, $s$ in the rules ($@i$)
+and ($\forall E i$)) should not have access to the dynamic variables but should
+be able to access the type variables and the static variables already in scope.
+
+%% The overlined context lifting ($\hat
+
+%% kinding rules,
+%% we lift the context using the hat operation on contexts 
 
 \subsection{\Fi\ in regards to PTS}
 We describe \Fw\ and CC as an instances of the Pure Type System (PTS),
