@@ -33,7 +33,8 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 				\mid \newFi{\forall i^A . B}
 \\
 \!\!\!\!\!\!\!\!&\text{Terms}
-	& r,s,t			&~ ::= ~ x \mid i \mid \lambda x.t \mid r\;s
+	& r,s,t			&~ ::= ~ x \mid \newFi{i}
+                                \mid \lambda x.t \mid r\;s
 \\
 \!\!\!\!\!\!\!\!&\text{Contexts}
 	& \Delta		&~ ::= ~ \cdot
@@ -44,26 +45,30 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 \end{align*}
 
 \paragraph{Well-formed contexts:}
-\[  \inference{}{|- \cdot}
+\[ \fbox{$|- \Delta$}
+ ~~~~ ~~~~
+   \inference{}{|- \cdot}
  ~~~~
    \inference{|- \Delta & \Delta |- \kappa:\square}
              {|- \Delta,X^\kappa}
       \big( X\notin\dom(\Delta) \big)
  ~~~~ \newFi{
-   \inference{|- \Delta & \cdot;\cdot |- A:*}
+   \inference{|- \Delta & \cdot |- A:*}
              {|- \Delta,i^A}
       \big( i\notin\dom(\Delta) \big) }
 \]
-\[ \inference{|- \Delta}{\Delta |- \cdot}
+\[ \fbox{$\Delta |- \Gamma$}
  ~~~~
-   \inference{\Delta |- \Gamma & \Delta;\cdot |- A:*}
+   \inference{|- \Delta}{\Delta |- \cdot}
+ ~~~~
+   \inference{\Delta |- \Gamma & \Delta |- A:*}
              {\Delta |- \Gamma,x:A}
       \big( x\notin\dom(\Gamma) \big)
 \]
 
 
-\paragraph{Sorting:}
-$  \inference[($A$)]{}{\Delta |- *:\square}
+\paragraph{Sorting:} \fbox{$\Delta |- \kappa : \square$}
+\[ \inference[($A$)]{}{\Delta |- *:\square}
  ~~~~
    \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
                     {\Delta |- \kappa -> \kappa' : \square}
@@ -71,9 +76,9 @@ $  \inference[($A$)]{}{\Delta |- *:\square}
    \newFi{
    \inference[($Ri$)]{\cdot |- A:* & \Delta |- \kappa:\square}
                      {\Delta |- A -> \kappa : \square} }
-$
+\]
 
-\paragraph{Kinding:}
+\paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
 \[ \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
                        {\Delta |- X : \kappa}
  ~~~~ \newFi{
@@ -107,7 +112,7 @@ $
                             {\Delta |- \forall i^A . B : *} }
 \]
 
-\paragraph{Typing:}
+\paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
 \[ \inference[($:$)]{x:A \in \Gamma & \Delta |- \Gamma} 
                     {\Delta;\Gamma |- x:A}
  ~~~~ \newFi{
@@ -126,9 +131,9 @@ $
 \]
 \[ \inference[($\forall I$)]{\Delta, X^\kappa;\Gamma |- t : B}
                             {\Delta;\Gamma |- t : \forall X^\kappa.B}
- ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~
    \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
-                            & \Delta;\Gamma |- G:\kappa }
+                            & \Delta |- G:\kappa }
                             {\Delta;\Gamma |- t : [G/X]B}
 \]
 \[ \newFi{
@@ -147,7 +152,7 @@ $
 
 \begin{figure}
 \begin{framed}
-\paragraph{Kind equality:}
+\paragraph{Kind equality:} \fbox{$\Delta |- \kappa=\kappa' : \square$}
 \[ \inference{}{\Delta |- * = *:\square}
  ~~~~
    \inference{ \Delta |- \kappa_1 = \kappa_1' : \square
@@ -165,7 +170,7 @@ $
              {\Delta |- \kappa=\kappa'':\square}
 \]
 ~\\
-\paragraph{Type constructor equality:}
+\paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
 \[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
  ~~~~
    \inference{\Delta,X^\kappa |- F:\kappa & \Delta |- G:\kappa}
@@ -202,7 +207,7 @@ $
              {\Delta |- F = F'' : \kappa}
 \]
 ~\\
-\paragraph{Term equality:}
+\paragraph{Term equality:} \fbox{$\Delta;\Gamma |- t = t' : A$}
 \[ \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
  ~~~~
    \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
@@ -217,7 +222,7 @@ $
              {\Delta;\Gamma |- t=t'':A}
 \]
 ~\\
-\paragraph{Reduction:}
+\paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
 \[ \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
  ~~~~
    \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
@@ -237,14 +242,14 @@ We extend the kind syntax of \Fw\ by indexed arrow kinds of the form
 \newFi{A -> \kappa}. The formation of indexed arrow kinds are
 governed by the sorting rule \newFi{(Ri)}.
 The rule $(Ri)$ specifies that an indexed arrow kind $A -> \kappa$
-is well-formed under the typing context $\Delta$
-when $A$ is a well-formed type under the empty context ($\cdot$) 
-and $\kappa$ is a well-formed kind under the same typeing context $\Delta$.
-The type $A$ appearing in the index arrow kind $A -> \kappa$ must be
-well kindined under the empty context since we do not want any dependent kinds
-(\ie, kinds depending on type level or value level bindings). Since \Fi\ does
-not have any binidings at kind level, $A$ must be well-kinded in the empty
-context.
+is well-sorted under the static context $\Delta$
+when $A$ is well-kinded under the empty static context ($\cdot$) 
+and $\kappa$ is well-sorted under the same static context $\Delta$.
+We avoid dependent kinds (\ie, kinds depending on type level or
+value level bindings) by requiring $\cdot |- A$. The type $A$ appearing
+in the index arrow kind $A -> \kappa$ must be well kindined under
+the empty static context ($\cdot$), since no bindings are introduced
+at kind level in \Fi.
 
 \paragraph{Type Constructors and Kinding rules}
 We extend the type constructor syntax by three constructs,
@@ -262,10 +267,10 @@ a type constructor ($G$), the argument of the index application ($F\,\{s\}$) is
 a term ($s$). We use the curly bracket notation around the index argument to
 emphasize the distinction from ordinary type arguments and also to emphasize
 that $s$ is an erasable (or static) term. Index applications eliminate
-indexed arrow kinds by the kinding rule \newFi{(@i)}. Note, we type check $s$
-under the lifted context $\hat\Delta$ in the rule ($@i$).
-We will explain what this lifted context notation $\hat\Delta$ means
-in more detail when we discuss about contexts.
+indexed arrow kinds by the kinding rule \newFi{(@i)}. Note, we type check
+the index term ($s$) under the current static context paired with
+the empty dynamic context ($\Delta;\cdot$) in the rule ($@i$), since
+we do not want the index terms to depend on any dynamic bindings.
 
 \newFi{\forall i^A . B} is an index polymorphic type.
 The formation of indexed polymorphic types is governed by
@@ -273,89 +278,95 @@ the kinding rule \newFi{\forall i}, which is very similar to
 the formation rule ($\forall$) for ordinary polymorphic types.
 
 In addition to the rules ($\lambda i$), ($@ i$), and ($\forall i$),
-we need a conversion rule \newFi{($Conv$)} at kind level. This is because of
-the new extension to the kind syntax $A -> \kappa$ involving types.
+we need a conversion rule \newFi{($Conv$)} at kind level. This is because
+the new extension to the kind syntax $A -> \kappa$ involves types.
 Since kind syntax involves types, we need more than simple structural
 equality over kinds. The equality over kinds is the usual structural
 equality extended by type equality when comparing indexed arrow kinds
 (see \Fig{eqFi}).
 
-\paragraph{Typing rules}
-Since we have index polymorphic types ($\forall i^A . B$),
+\paragraph{Terms and Typing rules}
+The term syntax is extended by index variables (\newFi{$i$}), since terms used
+as indices may have both term variables ($x$) index variables ($i$)
+(\eg, $\lambda i^A.F\{(\lambda x.x\;i)\,(\lambda x.x)\}$).
+The term variables are introduced from term level abstractions ($\lambda x.t$).
+The index variables are introduced from index abstraction ($\lambda i^A.F$)
+and index polymorphic types ($\forall i^A.B$). However, the distinction between
+$x$ and $i$ is in fact a convention for the convenience of the reader.
+An equivalent but more succinct description of the system would be possible
+by having only $x$ for both term and index variables instead of having two
+kinds of variables $x$ and $i$.
+
+Since \Fi\ has index polymorphic types ($\forall i^A . B$),
 we need typing rules for index polymorphism:
-the rule \newFi{(\forall I i)} for index generalization
-and the rule \newFi{(\forall E i)} for index instantiation.
+\newFi{(\forall I i)} for index generalization
+and \newFi{(\forall E i)} for index instantiation.
 
 The index generalization rule ($\forall I i$) is similar to
 the type generalization rule ($\forall I$), except the additional
-side condition $\big(x\notin\FV(t)\big)$. This side condition prevents
+side condition $\big(i\notin\FV(t)\big)$. This side condition prevents
 terms from accessing the type level index variables introduced by index
-polymorhpism. Otherwise, whithout this side condition, $\forall$ would be
-no longer behave as polymorphism but powerful enough to behave as
-dependent type functions, which are usually denoted by the $\Pi$ binder
-in independend type theory. This side condition is fairly standard
-in dependently typed languages supporting distinction between polymorphism
-(or, erasable arguments) and dependent functions
-(\eg, IPTS[TODO cite Nathans' thesis], ICC[TODO cite]).
-The rule ($\forall I$) for ordinary type gernalization rule does not need
-a side condition such as $\big(X\notin\FV(t)\big)$ because the syntax of
-terms cannot have any type variables to appear in terms.
+polymorphism. Otherwise, without this side condition, $\forall$-bindier
+would be no longer behave as polymorphism but powerful enough to behave as
+dependent functions, which are usually denoted by the $\Pi$-binder in
+dependent type theories. The side condition on generalization rules
+for polymorphism is fairly standard in dependently typed languages supporting
+distinctions between polymorphism (or, erasable arguments) and
+dependent functions (\eg, IPTS[TODO cite Nathans' thesis], ICC[TODO cite]).
+The rule ($\forall I$) for ordinary type penalization rule does not need
+a side condition because type variables cannot appear in the syntax of terms.
 
 The index instantiation rule ($\forall E i$) is similar to
 the type instantiation rule ($\forall E i$), except that
-we type check the index term $s$ to be instantiated for $x$
-in the lifted context $\hat\Delta$.
-We will explain what this lifted context notation $\hat\Delta$ means
-in more detail when we discuss about contexts.
+we type check the index term $s$ to be instantiated for $i$
+in the current static context paired with the empty dynamic context
+($\Delta;\cdot$) rather than the current dynamic context.
+Since index terms are at type level, they should not depend on dynamic bindings.
 
 In addition to the rules ($\forall I i$) and ($\forall E i$) for
 index polymorphism, we need an additional variable rule \newFi{(:')}
-to be able to acess to index variables already in scope. Terms ($s$) used
-at type level in index applications ($F\{s\}$) should be able to acess
+to be able to access to index variables already in scope. Terms ($s$) used
+at type level in index applications ($F\{s\}$) should be able to access
 index variables already in scope. For example, $\lambda i^A.F\{x\}$ should be
 well-kinded under a context where $F$ is well-kinded,
 justified by the following derivation:
-\[
-   \inference[($\lambda i$)]
+\[ \inference[($\lambda i$)]
       { \inference[(@i)]{ \Delta, i^A |- F : A -> \kappa
-                        & \inference[($:'$)]{ i^A\in\widehat{\Delta,i^A}
-                                            & |- \widehat{\Delta,i^A} }
-                                            {\widehat{\Delta,i^A} |- x:A}
+                        & \inference[($:'$)]{ i^A\in \Delta,i^A
+                                            & \Delta |- \cdot }
+                                            {\Delta,i^A;\cdot |- x:A}
                         }
                         {\Delta, i^A |- F\{x\} : \kappa} }
       {\Delta |- \lambda i^A.F\{x\} :\kappa}
 \]
-\KYA{we stil need to show a small lemma that context lifting preserves
-well-formedness of cotnexts so that we can accept $|-\widehat{\Delta,i^A}$
-assuming $|-\hat\Delta$. TODO put this in the next paragraph.}
 
 \paragraph{Contexts}
-We have a forms of bindings $i^A$, which we call index binding,
-that can appear in the context. We also define the context lifting
-for the judgement that appear at an upper level than its usual level (\eg,
-type judgment for a term $s$ at type level in the kinding rule ($@i$),
-kind judgment for a type $A$ at kind level in the sorting rule ($Ri$)).
+We have static contexts ($\Delta$) for type level bindings
+and dynamic contexts ($\Gamma$) for term level bindings.
+We have a new form of index variable bindings ($i^A$) that can appear in
+static contexts in addition to type variable bindings ($X^\kappa$).
+There is only one form of term level binding ($x:A$) that can appear in
+dynamic contexts.
 
-\newFi{i^A} is an index binding, which can only be used statically
-(\ie, at type level) but not dynamically (\ie, at term level).
-Index bindings ($i^A$) are introduced either from index abstractions
-($\lambda i^A.F$) or from index polymorphic types ($\forall i^A.B$).
-The index binding introduced from index abstraction can be used in its
-body, as we have alredy discussed above with the example derivation for
-$\Delta,i^A |- F \{x\} :*$, since the body of index abstraction ($F\{x\}$)
-is at type level. However, the index biniding $i^A$ introduced by
-index polymorhpic type in the generalization rule ($\forall I i$)
-is not allowed to appear in the term $t$, which is at term level,
-although it can appear in $B$, which is at type level.
+A static context $\Delta$ is well-formed when it is either empty, extended by
+a type variable binding $X^\kappa$ whose kind $\kappa$ is well-sorted
+under $\Delta$, or extended by an index binding $i^A$ whose type $A$ is
+well-kinded under the empty static context. Similarly to the well-sorted rule
+($Ri$) for indexed arrow kinds, we require $A$ of $i^A$ to be well-kinded in
+the empty static context ($\cdot$), since no bindings are introduced
+at kind level in \Fi.
 
-The context lifting ($\hat\Delta$) forgets dynamic bindings ($x:A$)
-and leaves the others ($X^\kappa$ and $i^A$) unchaged.
-The definition of context lifinting captures the idea that index terms
-(\eg, $s$ in the rules ($@i$) and ($\forall E i$)) should not have access to
-the dynamic term variables but should be able to access the type variables and
-the index variables already in scope.
+A dynamic context $\Gamma$ is well-formed under a static contexts $\Delta$
+when it is either empty or extended by a term variable binding $x:A$ whose
+type $A$ is well-kinded under $\Delta$.
 
 
+\subsection{Metatheory?}
+
+
+index erasure thm:
+if $\Delta;\Gamma |- t : A$ then $\Delta';\Gamma' |- t : A'$,
+with some proper notion of structurally defined index erasure.
 
 \subsection{\Fi\ in regards to PTS}
 We describe \Fw\ and CC as an instances of the Pure Type System (PTS),
