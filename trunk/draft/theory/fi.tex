@@ -243,10 +243,13 @@ We extend the kind syntax of \Fw\ by indexed arrow kinds of the form
 governed by the sorting rule \newFi{(Ri)}.
 The rule $(Ri)$ specifies that an indexed arrow kind $A -> \kappa$
 is well-formed under the typing context $\Delta$
-when $A$ is a well-formed type under the lifted typing contex $\overline\Delta$
+when $A$ is a well-formed type under the empty context ($\cdot$) 
 and $\kappa$ is a well-formed kind under the same typeing context $\Delta$.
-We will explain what this lifted context notation $\overline\Delta$ means
-in more detail when we discuss about contexts.
+The type $A$ appearing in the index arrow kind $A -> \kappa$ must be
+well kindined under the empty context since we do not want any dependent kinds
+(\ie, kinds depending on type level or value level bindings). Since \Fi\ does
+not have any binidings at kind level, $A$ must be well-kinded in the empty
+context.
 
 \paragraph{Type Constructors and Kinding rules}
 We extend the type constructor syntax by three constructs,
@@ -287,8 +290,22 @@ Since we have index polymorphic types ($\forall x^A . B$),
 we need typing rules for index polymorphism:
 the rule \newFi{(\forall I i)} for index generalization
 and the rule \newFi{(\forall E i)} for index instantiation.
+
 The index generalization rule ($\forall I i$) is similar to
-the type generalization rule ($\forall I$).
+the type generalization rule ($\forall I$), except the additional
+side condition $\big(x\notin\FV(t)\big)$. This side condition prevents
+terms from accessing the type level index variables introduced by index
+polymorhpism. Otherwise, whithout this side condition, $\forall$ would be
+no longer behave as polymorphism but powerful enough to behave as
+dependent type functions, which are usually denoted by the $\Pi$ binder
+in independend type theory. This side condition is fairly standard
+in dependently typed languages supporting distinction between polymorphism
+(or, erasable arguments) and dependent functions
+(\eg, IPTS[TODO cite Nathans' thesis], ICC[TODO cite]).
+The rule ($\forall I$) for ordinary type gernalization rule does not need
+a side condition such as $\big(X\notin\FV(t)\big)$ because the syntax of
+terms cannot have any type variables to appear in terms.
+
 The index instantiation rule ($\forall E i$) is similar to
 the type instantiation rule ($\forall E i$), except that
 we type check the index term $s$ to be instantiated for $x$
@@ -297,56 +314,53 @@ We will explain what this lifted context notation $\hat\Delta$ means
 in more detail when we discuss about contexts.
 
 In addition to the rules ($\forall I i$) and ($\forall E i$) for
-index polymorphism, we need an additional variable rule \newFi{($::$)}
-for yet another binding form $x::A$.
-We will explain what this binding means shortly when we discuss about contexts.
+index polymorphism, we need an additional variable rule \newFi{(:')}
+to be able to acess to index variables already in scope. Terms ($s$) used
+at type level in index applications ($F\{s\}$) should be able to acess
+index variables already in scope. For example, $\lambda x^A.F\{x\}$ should be
+well-kinded under a context where $F$ is well-kinded,
+justified by the following derivation:
+\[
+   \inference[($\lambda i$)]
+      { \inference[(@i)]{ \Delta, x^A |- F : A -> \kappa
+                        & \inference[($:'$)]{ x^A\in\widehat{\Delta,x^A}
+                                            & |- \widehat{\Delta,x^A} }
+                                            {\widehat{\Delta,x^A} |- x:A}
+                        }
+                        {\Delta, x^A |- F\{x\} : \kappa} }
+      {\Delta |- \lambda x^A.F\{x\} :\kappa}
+\]
+\KYA{we stil need to show a small lemma that context lifting preserves
+well-formedness of cotnexts so that we can accept $|-\widehat{\Delta,x^A}$
+assuming $|-\hat\Delta$. TODO put this in the next paragraph.}
 
 \paragraph{Contexts}
-We have two new forms of bindings that can be added to the context.
-We also define two forms of context lifting when we need derive a judgement
-at an upper level (\eg,
+We have a forms of bindings $x^A$, which we call index binding,
+that can appear in the context. We also define the context lifting
+for the judgement that appear at an upper level than its usual level (\eg,
 type judgment for a term $s$ at type level in the kinding rule ($@i$),
 kind judgment for a type $A$ at kind level in the sorting rule ($Ri$)).
 
-\newFi{x^A} is an index variable binding, which can only be used statically
-(\ie, at type level) but not dynamically (\ie, at term level). For example,
-$\Delta,x^A |- F \{x\} :*$ is possible but $\Delta,x^A |- x:A$ is not.
-In contrast, the ordinary term variable binding $x:A$ can only be used
-dynamically but not statically. For example, $\Delta,x:A |- x:A$ is possible
-but $\Delta,x:A |- F \{x\}:*$ cannot be derived. Index bindings ($x^A$) are
-introduced either from index abstractions ($\lambda x^A.F$)
-or from index polymorphic types ($\forall x^A.B$).
-\KYA{Talk about how it corresponds to side conditions
-    in the rules at some point.
-    IPTS or its instance ICC has side conditions on $\forall$ generalization,
-    which precisely captures that index variable bindings are static.
-    However, simply constraining $\Pi$ related rules with side condition on
-    the range, or body of $\Pi$, wouldn't precisely capture that term bindings
-    are dynamic (or, at least it is not trivial to prove whether it actually
-    corresponds to what we want or not).}
+\newFi{x^A} is an index binding, which can only be used statically
+(\ie, at type level) but not dynamically (\ie, at term level).
+Index bindings ($x^A$) are introduced either from index abstractions
+($\lambda x^A.F$) or from index polymorphic types ($\forall x^A.B$).
+The index binding introduced from index abstraction can be used in its
+body, as we have alredy discussed above with the example derivation for
+$\Delta,x^A |- F \{x\} :*$, since the body of index abstraction ($F\{x\}$)
+is at type level. However, the index biniding $x^A$ introduced by
+index polymorhpic type in the generalization rule ($\forall I i$)
+is not allowed to appear in the term $t$, which is at term level,
+although it can appear in $B$, which is at type level.
 
-\newFi{x::A} is a persistent binding, which can be used both statically and
-dynamically. Intuitively, it has both capabilities of $x^A$ and $x:A$ at once
-so that it can be used both at term level and type level. For example,
-both $\Delta,x::A |- F \{x\} :*$ and $\Delta,x::A |- x:A$ are possible.
-Persistent bindings are introduced by the context lifting of the form
-$\hat\Delta$ defined in \Fig{Fi}. We perform the hatted context lifting
-($\hat\Delta$), when we type check terms that are to be used as an index
-at type level. There are two places where terms are used as indices:
-index application ($@i$) and index instantiation ($\forall E i$).
-Note, we use the hatted context lifting in the rules ($@i$) and ($\forall E i$).
+The context lifting ($\hat\Delta$) forgets dynamic bindings ($x:A$)
+and leaves the others ($X^\kappa$ and $x^A$) unchaged.
+The definition of context lifinting captures the idea that index terms
+(\eg, $s$ in the rules ($@i$) and ($\forall E i$)) should not have access to
+the dynamic term variables but should be able to access the type variables and
+the index variables already in scope.
 
-The hatted context lifting ($\hat\Delta$) forgets dynamic bindings ($x:A$),
-changes static bindings ($x^A$) into persistant bindings ($x::A$), and leaves
-the others ($X^\kappa$ and $x::A$) unchaged. The hatted context lifinting
-captures the idea that index terms (\eg, $s$ in the rules ($@i$)
-and ($\forall E i$)) should not have access to the dynamic variables but should
-be able to access the type variables and the static variables already in scope.
 
-%% The overlined context lifting ($\hat
-
-%% kinding rules,
-%% we lift the context using the hat operation on contexts 
 
 \subsection{\Fi\ in regards to PTS}
 We describe \Fw\ and CC as an instances of the Pure Type System (PTS),
