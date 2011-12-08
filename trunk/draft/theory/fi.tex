@@ -286,13 +286,15 @@ equality extended by type equality when comparing indexed arrow kinds
 (see \Fig{eqFi}).
 
 \paragraph{Terms and Typing rules}
-The term syntax is extended by index variables (\newFi{$i$}), since terms used
-as indices may have both term variables ($x$) index variables ($i$)
+The term syntax is extended by index variables (\newFi{i}), since terms used
+as indices may have index variables as well as term variables
 (\eg, $\lambda i^A.F\{(\lambda x.x\;i)\,(\lambda x.x)\}$).
-The term variables are introduced from term level abstractions ($\lambda x.t$).
-The index variables are introduced from index abstraction ($\lambda i^A.F$)
-and index polymorphic types ($\forall i^A.B$). However, the distinction between
-$x$ and $i$ is in fact a convention for the convenience of the reader.
+The term variables ($x$) are introduced from
+term level abstractions ($\lambda x.t$).
+The index variables ($i$) are introduced from
+index abstraction ($\lambda i^A.F$) and
+index polymorphic types ($\forall i^A.B$). However, the distinction between
+$x$ and $i$ is in fact only a convention for the convenience of the reader.
 An equivalent but more succinct description of the system would be possible
 by having only $x$ for both term and index variables instead of having two
 kinds of variables $x$ and $i$.
@@ -363,10 +365,125 @@ type $A$ is well-kinded under $\Delta$.
 
 \subsection{Metatheory?}
 
+\begin{proposition}[well-formed static context ensures well-sorted kinding judgemnet]
+\[ \inference{ |- \Delta & \Delta |- F : \kappa}{ \Delta |- \kappa }
+\]
+\end{proposition}
 
-index erasure thm:
-if $\Delta;\Gamma |- t : A$ then $\Delta';\Gamma' |- t : A'$,
-with some proper notion of structurally defined index erasure.
+\begin{proposition}[well-formed dynamic context ensures well-kinded typing judgement]
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * }
+\]
+\end{proposition}
+
+\begin{proposition}[anti-dependency on arrow types]
+\[ \inference{ \Delta |- \Gamma
+             & \Delta;\Gamma |- \lambda x.t : A -> B }
+             { x\notin\FV(B) }
+\]
+\end{proposition}
+
+\begin{remark} Our system is more strong??? than anti-dependency on arrow types
+TODO
+\end{remark}
+
+\begin{proposition}[anti-dependency on arrow kinds]
+\[ \inference{ |- \Delta
+             & \Delta |- \lambda X^\kappa . F : \kappa \to \kappa' }
+             { X\notin\FV(\kappa') }
+\]
+\end{proposition}
+
+\begin{proposition}[anti-dependency on indexed arrow kinds]
+\[ \inference{ |- \Delta
+             & \Delta |- \lambda i^A . F : A \to \kappa }
+             { i\notin\FV(\kappa) }
+\]
+\end{proposition}
+
+\begin{proposition}[static context irrelevance of sorting]
+\[ \inference{ |- \Delta & \Delta |- \kappa : \square }
+             { \cdot |- \kappa : \square }
+\]
+\end{proposition}
+
+\begin{definition}[index erasure]
+\[ \fbox{$\kappa^\circ$}
+ ~~~~
+ *^\circ =
+ *
+ ~~~~
+ (\kappa -> \kappa')^\circ =
+ \kappa^\circ -> \kappa^\circ
+ ~~~~
+ (A -> \kappa)^\circ =
+ \kappa
+\]
+\[ \fbox{$F^\circ$}
+ ~~~~
+ X^\circ =
+ X
+ ~~~~
+ (\lambda X^\kappa.F)^\circ =
+ \lambda X^{\kappa^\circ}.F^\circ
+ ~~~~
+ (\lambda i^A.F)^\circ =
+ F^\circ
+ ~~~~
+ (F\;G)^\circ =
+ F^\circ\;G^\circ
+ ~~~~
+ (F\,\{s\})^\circ
+ F^\circ
+\]
+\[ ~~~~ ~~~~ ~~~~
+ (A -> B)^\circ =
+ A^\circ -> B^\circ
+ ~~~~
+ (\forall X^\kappa . B)^\circ =
+ \forall X^{\kappa^\circ} . B^\circ
+ ~~~~
+ (\forall i^A . B)^\circ =
+ B^\circ
+\]
+\[ \fbox{$\Delta^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~
+ (\Delta,X^\kappa)^\circ = \Delta^\circ,X^{\kappa^\circ}
+ ~~~~
+ (\Delta,i^A)^\circ = \Delta^\circ
+\]
+\[ \fbox{$\Gamma^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~
+ (\Gamma,x^A)^\circ = \Gamma^\circ,x^{A^\circ}
+\]
+\end{definition}
+
+\begin{lemma}[index erasure on well-formed static contexts]
+If $|- \Delta$ then $|- \Delta^\circ$.
+\end{lemma}
+
+\begin{lemma}[index erasure on well-formed dynamic contexts]
+If $\Delta |- \Gamma$ then $\Delta^\circ |- \Gamma^\circ$.
+\end{lemma}
+
+\begin{lemma}[index erasure on well-sorted kinds]
+If $|- \Delta$ and $\Delta |- \kappa : \square$
+then $\Delta^\circ |- \kappa^\circ : \square$.
+\end{lemma}
+
+\begin{lemma}[index erasure on well-kinded type constructors]
+If $|- \Delta$ and $\Delta |- F : \kappa$
+then $\Delta^\circ |- F^\circ : \kappa^\circ$.
+\end{lemma}
+
+\begin{theorem}[index erasure on well-typed terms]
+If $\Delta |- \Gamma$ and $\Delta;\Gamma |- t : A$
+then $\Delta^\circ;\Gamma^\circ |- t : A^\circ$.
+\end{theorem}
+
 
 \subsection{\Fi\ in regards to PTS}
 We describe \Fw\ and CC as an instances of the Pure Type System (PTS),

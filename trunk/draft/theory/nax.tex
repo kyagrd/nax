@@ -1,0 +1,51 @@
+\section{Nax}
+TODO put Nax definition here ...
+What is the syntax of Nax?? below is just a scribble
+
+\paragraph{Syntax:}
+\begin{align*}
+&\text{Kinds}
+	& \kappa	&~ ::= ~ * \mid \kappa -> \kappa \mid A -> \kappa
+ \\
+&\text{Kind Arguments}
+	& K		&~ ::= ~ \kappa \mid A
+ \\
+&\text{Type Constructors}
+	& T,H,A,B	&~ ::= ~ X \mid \mu^\kappa \mid F
+			   \mid T\;H \mid T\,\{s\}
+			   \mid A -> B
+ \\
+&\text{Type Schemes}
+	& \sigma	&~ ::= A
+			   \mid \forall X.\sigma
+			   \mid \forall i.\sigma
+ \\
+&\text{Terms}
+	& r,s,t		&~ ::= ~ x \mid i
+			   \mid \lambda x.t \mid r\;s \mid \Let{x}{s}{t}
+			   \mid \In^\kappa \mid \MIt^\psi s
+			   \mid \case^\psi~t~\overline{C\;\overline{x} -> t}
+ \\
+&\text{Index Transformers}
+	& \psi		&~ ::= \cdot \mid \overline\iota . B
+ \\
+&\text{Type Arguments}
+	& \iota		&~ ::= ~ X \mid i
+ \\
+\end{align*}
+
+\paragraph{Reduction:}
+\[ \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
+ ~~~~
+   \inference{}
+             {\MIt^\psi s\;(\In^\kappa t) \rightsquigarrow s\;(\MIt^\psi s)\;t}
+\]
+\[ \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
+ ~~~~
+   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{\MIt^\psi s \rightsquigarrow \MIt^\psi s'}
+\]
+
