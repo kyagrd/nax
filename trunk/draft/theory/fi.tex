@@ -25,49 +25,42 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 \!\!\!\!\!\!\!\!&\text{Type Constructors}
 	& A,B,F,G		&~ ::= ~ X
 				\mid \lambda X^\kappa.F
-				\mid \newFi{\lambda x^A.F}
+				\mid \newFi{\lambda i^A.F}
 				\mid F\,G
 				\mid \newFi{F\,\{s\}}
 				\mid A -> B
 				\mid \forall X^\kappa . B
-				\mid \newFi{\forall x^A . B}
+				\mid \newFi{\forall i^A . B}
 \\
 \!\!\!\!\!\!\!\!&\text{Terms}
-	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
+	& r,s,t			&~ ::= ~ x \mid i \mid \lambda x.t \mid r\;s
 \\
 \!\!\!\!\!\!\!\!&\text{Contexts}
 	& \Delta		&~ ::= ~ \cdot
-				\mid \Delta, x : A
 				\mid \Delta, X^\kappa
-				\mid \newFi{\Delta, x^A}
+				\mid \newFi{\Delta, i^A} \\
+&	& \Gamma		&~ ::= ~ \cdot
+				\mid \Gamma, x : A
 \end{align*}
-\newFi{ 
-\begin{minipage}{\textwidth}\vspace*{-1em}
-\begin{align*}\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-\textbf{Context lifting:}~~~~~~~~~
-& \hat\cdot                  = \cdot                &~~~&
-  \widehat{\Delta,x:A}       = \hat\Delta           &~~~&
-  \widehat{\Delta,X^\kappa}  = \hat\Delta,X^\kappa  &~~~&
-  \widehat{\Delta,x^A}       = \hat\Delta,x^A
-\end{align*}
-\end{minipage} }
 
-\paragraph{Well-formed contexts:} ~~~~
-$  \inference{}{|- \cdot}
- ~~~~ ~~~~ ~~~~
-   \inference{|- \Delta & \Delta |- A:*}
-             {|- \Delta,x:A}
-      \big( x\notin\dom(\Delta) \big)
-$
-\[
+\paragraph{Well-formed contexts:}
+\[  \inference{}{|- \cdot}
+ ~~~~
    \inference{|- \Delta & \Delta |- \kappa:\square}
              {|- \Delta,X^\kappa}
       \big( X\notin\dom(\Delta) \big)
  ~~~~ \newFi{
-   \inference{|- \Delta & \cdot |- A:*}
-             {|- \Delta,x^A}
-      \big( x\notin\dom(\Delta) \big) }
+   \inference{|- \Delta & \cdot;\cdot |- A:*}
+             {|- \Delta,i^A}
+      \big( i\notin\dom(\Delta) \big) }
 \]
+\[ \inference{|- \Delta}{\Delta |- \cdot}
+ ~~~~
+   \inference{\Delta |- \Gamma & \Delta;\cdot |- A:*}
+             {\Delta |- \Gamma,x:A}
+      \big( x\notin\dom(\Gamma) \big)
+\]
+
 
 \paragraph{Sorting:}
 $  \inference[($A$)]{}{\Delta |- *:\square}
@@ -97,11 +90,11 @@ $
                     {\Delta |- F\,G : \kappa'}
 \]
 \[ \newFi{
-   \inference[($\lambda i$)]{\Delta,x^A |- F : \kappa}
-                            {\Delta |- \lambda x^A.F : A->\kappa} }
+   \inference[($\lambda i$)]{\Delta,i^A |- F : \kappa}
+                            {\Delta |- \lambda i^A.F : A->\kappa} }
  ~~~~ \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
-                     & \hat\Delta |- s : A }
+                     & \Delta;\cdot |- s : A }
                      {\Delta |- F\,\{s\} : \kappa} }
 \]
 \[ \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
@@ -110,42 +103,42 @@ $
    \inference[($\forall$)]{\Delta, X^\kappa |- B : *}
                           {\Delta |- \forall X^\kappa . B : *}
  ~~~~ \newFi{
-   \inference[($\forall i$)]{\Delta, x^A |- B : *}
-                            {\Delta |- \forall x^A . B : *} }
+   \inference[($\forall i$)]{\Delta, i^A |- B : *}
+                            {\Delta |- \forall i^A . B : *} }
 \]
 
 \paragraph{Typing:}
-\[ \inference[($:$)]{x:A \in \Delta & |- \Delta} 
-                    {\Delta |- x:A}
+\[ \inference[($:$)]{x:A \in \Gamma & \Delta |- \Gamma} 
+                    {\Delta;\Gamma |- x:A}
  ~~~~ \newFi{
-   \inference[($:'$)]{x^A \in \Delta & |- \Delta} 
-                     {\Delta |- x:A} }
+   \inference[($:i$)]{i^A \in \Delta & \Delta |- \Gamma} 
+                     {\Delta;\Gamma |- i:A} }
  ~~~~
-   \inference[($=$)]{\Delta |- t :A & \Delta |- A = B : *}
-                    {\Delta |- t : B}
+   \inference[($=$)]{\Delta;\Gamma |- t : A & \Delta |- A = B : *}
+                    {\Delta;\Gamma |- t : B}
 \]
 \[
-   \inference[($->$$I$)]{\Delta, x:A |- t : B}
-                        {\Delta |- \lambda x.t : A -> B}
+   \inference[($->$$I$)]{\Delta;\Gamma,x:A |- t : B}
+                        {\Delta;\Gamma |- \lambda x.t : A -> B}
  ~~~~ ~~~~ ~~~~ ~~~~
-   \inference[($->$$E$)]{\Delta |- r : A -> B & \Delta |- s : A}
-                        {\Delta |- r\;s : B}
+   \inference[($->$$E$)]{\Delta;\Gamma |- r : A -> B & \Delta;\Gamma |- s : A}
+                        {\Delta;\Gamma |- r\;s : B}
 \]
-\[ \inference[($\forall I$)]{\Delta, X^\kappa |- t : B}
-                            {\Delta |- t : \forall X^\kappa.B}
+\[ \inference[($\forall I$)]{\Delta, X^\kappa;\Gamma |- t : B}
+                            {\Delta;\Gamma |- t : \forall X^\kappa.B}
  ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~
-   \inference[($\forall E$)]{ \Delta |- t : \forall X^\kappa.B
-                            & \Delta |- G:\kappa }
-                            {\Delta |- t : [G/X]B}
+   \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
+                            & \Delta;\Gamma |- G:\kappa }
+                            {\Delta;\Gamma |- t : [G/X]B}
 \]
 \[ \newFi{
-   \inference[($\forall I i$)]{\Delta, x^A |- t : B}
-                              {\Delta |- t : \forall x^A.B} }
-     \big( x\notin\FV(t) \big)
+   \inference[($\forall I i$)]{\Delta, i^A;\Gamma |- t : B}
+                              {\Delta;\Gamma |- t : \forall i^A.B}
+     \big( i\notin\FV(t) \big) }
  ~~~~ \newFi{
-   \inference[($\forall E i$)]{ \Delta |- t : \forall x^A.B
-                              & \hat\Delta |- s:A}
-                              {\Delta |- t : [s/x]B} }
+   \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
+                              & \Delta;\cdot |- s:A}
+                              {\Delta;\Gamma |- t : [s/x]B} }
 \]
 \end{framed}
 \caption{Syntax and Typing rules of \Fi}
@@ -178,8 +171,8 @@ $
    \inference{\Delta,X^\kappa |- F:\kappa & \Delta |- G:\kappa}
              {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
  ~~~~ \newFi{
-   \inference{\Delta,x^A |- F:\kappa & \hat\Delta |- s:A}
-             {\Delta |- (\lambda x^A.F)\,\{s\} = [s/x]F:\kappa} }
+   \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+             {\Delta |- (\lambda i^A.F)\,\{s\} = [s/x]F:\kappa} }
 \]
 \[ \inference{\Delta,X^\kappa |- F=F' : \kappa'}
              {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
@@ -189,10 +182,10 @@ $
 \]
  ~~~~
 \[ \newFi{
-   \inference{\Delta,x^A |- F=F' : \kappa}
-             {\Delta |- \lambda x^A.F=\lambda x^A.F' : A -> \kappa} }
+   \inference{\Delta,i^A |- F=F' : \kappa}
+             {\Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa} }
  ~~~~ \newFi{
-   \inference{\Delta |- F=F':A->\kappa & \hat\Delta |- s=s':A}
+   \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
              {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
 \]
 \[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
@@ -200,8 +193,8 @@ $
    \inference{\Delta,X^\kappa |- B=B':*}
              {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
  ~~~~ \newFi{
-   \inference{\Delta,x^A |- B=B':*}
-             {\Delta |- \forall x^A.B=\forall x^A.B':*} }
+   \inference{\Delta,i^A |- B=B':*}
+             {\Delta |- \forall i^A.B=\forall i^A.B':*} }
 \]
 \[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
  ~~~~
@@ -210,16 +203,18 @@ $
 \]
 ~\\
 \paragraph{Term equality:}
-\[ \inference{\Delta |- x:A}{\Delta |- x=x:A}
+\[ \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
  ~~~~
-   \inference{\Delta,x:A |- t:B & \Delta |- s:A}
-             {\Delta |- (\lambda x.t)s=[s/x]t : B}
- ~~~~
-   \inference{\Delta |- r=r':A-> B & \Delta |- s=s':A}{\Delta |- r\;s=r'\;s':B}
+   \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
+             {\Delta;\Gamma |- (\lambda x.t)s=[s/x]t : B}
 \]
-\[ \inference{\Delta |- t=t':A}{\Delta |- t'=t:A}
+\[ \inference{\Delta;\Gamma |- r=r':A-> B & \Delta;\Gamma |- s=s':A}
+             {\Delta;\Gamma |- r\;s=r'\;s':B}
+\]
+\[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
  ~~~~
-   \inference{\Delta |- t=t':A & \Delta |- t'=t'':A}{\Delta |- t=t'':A}
+   \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
+             {\Delta;\Gamma |- t=t'':A}
 \]
 ~\\
 \paragraph{Reduction:}
@@ -255,10 +250,10 @@ context.
 We extend the type constructor syntax by three constructs,
 and extend the kinding rules accordingly for these new constructs.
 
-\newFi{\lambda x^A.F} is the type level abstraction over an index
+\newFi{\lambda i^A.F} is the type level abstraction over an index
 (or, index abstraction). Index abstractions introduce indexed arrow kinds
 by the kinding rule \newFi{(\lambda i)}. Note, we have new form of binding
-$x^A$ in the kinding rule ($\lambda i$).
+$i^A$ in the kinding rule ($\lambda i$).
 We will explain what this binding means when we discuss about contexts.
 
 \newFi{F\,\{s\}} is the type level index application. In contrast to
@@ -272,7 +267,7 @@ under the lifted context $\hat\Delta$ in the rule ($@i$).
 We will explain what this lifted context notation $\hat\Delta$ means
 in more detail when we discuss about contexts.
 
-\newFi{\forall x^A . B} is an index polymorphic type.
+\newFi{\forall i^A . B} is an index polymorphic type.
 The formation of indexed polymorphic types is governed by
 the kinding rule \newFi{\forall i}, which is very similar to
 the formation rule ($\forall$) for ordinary polymorphic types.
@@ -286,7 +281,7 @@ equality extended by type equality when comparing indexed arrow kinds
 (see \Fig{eqFi}).
 
 \paragraph{Typing rules}
-Since we have index polymorphic types ($\forall x^A . B$),
+Since we have index polymorphic types ($\forall i^A . B$),
 we need typing rules for index polymorphism:
 the rule \newFi{(\forall I i)} for index generalization
 and the rule \newFi{(\forall E i)} for index instantiation.
@@ -317,44 +312,44 @@ In addition to the rules ($\forall I i$) and ($\forall E i$) for
 index polymorphism, we need an additional variable rule \newFi{(:')}
 to be able to acess to index variables already in scope. Terms ($s$) used
 at type level in index applications ($F\{s\}$) should be able to acess
-index variables already in scope. For example, $\lambda x^A.F\{x\}$ should be
+index variables already in scope. For example, $\lambda i^A.F\{x\}$ should be
 well-kinded under a context where $F$ is well-kinded,
 justified by the following derivation:
 \[
    \inference[($\lambda i$)]
-      { \inference[(@i)]{ \Delta, x^A |- F : A -> \kappa
-                        & \inference[($:'$)]{ x^A\in\widehat{\Delta,x^A}
-                                            & |- \widehat{\Delta,x^A} }
-                                            {\widehat{\Delta,x^A} |- x:A}
+      { \inference[(@i)]{ \Delta, i^A |- F : A -> \kappa
+                        & \inference[($:'$)]{ i^A\in\widehat{\Delta,i^A}
+                                            & |- \widehat{\Delta,i^A} }
+                                            {\widehat{\Delta,i^A} |- x:A}
                         }
-                        {\Delta, x^A |- F\{x\} : \kappa} }
-      {\Delta |- \lambda x^A.F\{x\} :\kappa}
+                        {\Delta, i^A |- F\{x\} : \kappa} }
+      {\Delta |- \lambda i^A.F\{x\} :\kappa}
 \]
 \KYA{we stil need to show a small lemma that context lifting preserves
-well-formedness of cotnexts so that we can accept $|-\widehat{\Delta,x^A}$
+well-formedness of cotnexts so that we can accept $|-\widehat{\Delta,i^A}$
 assuming $|-\hat\Delta$. TODO put this in the next paragraph.}
 
 \paragraph{Contexts}
-We have a forms of bindings $x^A$, which we call index binding,
+We have a forms of bindings $i^A$, which we call index binding,
 that can appear in the context. We also define the context lifting
 for the judgement that appear at an upper level than its usual level (\eg,
 type judgment for a term $s$ at type level in the kinding rule ($@i$),
 kind judgment for a type $A$ at kind level in the sorting rule ($Ri$)).
 
-\newFi{x^A} is an index binding, which can only be used statically
+\newFi{i^A} is an index binding, which can only be used statically
 (\ie, at type level) but not dynamically (\ie, at term level).
-Index bindings ($x^A$) are introduced either from index abstractions
-($\lambda x^A.F$) or from index polymorphic types ($\forall x^A.B$).
+Index bindings ($i^A$) are introduced either from index abstractions
+($\lambda i^A.F$) or from index polymorphic types ($\forall i^A.B$).
 The index binding introduced from index abstraction can be used in its
 body, as we have alredy discussed above with the example derivation for
-$\Delta,x^A |- F \{x\} :*$, since the body of index abstraction ($F\{x\}$)
-is at type level. However, the index biniding $x^A$ introduced by
+$\Delta,i^A |- F \{x\} :*$, since the body of index abstraction ($F\{x\}$)
+is at type level. However, the index biniding $i^A$ introduced by
 index polymorhpic type in the generalization rule ($\forall I i$)
 is not allowed to appear in the term $t$, which is at term level,
 although it can appear in $B$, which is at type level.
 
 The context lifting ($\hat\Delta$) forgets dynamic bindings ($x:A$)
-and leaves the others ($X^\kappa$ and $x^A$) unchaged.
+and leaves the others ($X^\kappa$ and $i^A$) unchaged.
 The definition of context lifinting captures the idea that index terms
 (\eg, $s$ in the rules ($@i$) and ($\forall E i$)) should not have access to
 the dynamic term variables but should be able to access the type variables and
