@@ -1,14 +1,26 @@
 \section{Introduction}
 
 \subsection{Need for a unified system for both programming and reasoning}
-\KYA{explain whey we want such a thing}
 
-Two main application areas of typed lambda calculi are
-functional programming languages (\eg, ML, Haskell) and
-logical reasoning systems (or, proof assistants) (\eg, Coq, Agda).
-Although functional languages and logical reasoning systems are closely related,
-a unified system that has full support for both
-programming and reasoning has not yet been developed.
+
+Few will argue with the statement that we need better tools for reasoning about
+programs, yet there is little widespread agreement about how such tools should be built.
+One promising approach is to exploit the Curry-Howard isomorphism that states there is an
+isomorphism between two systems in widespread use. The first such system  includes
+typed programming languages (\eg, ML, Haskell) , where programs are assigned types, and
+logical reasoning systems (or, proof assistants) (\eg, Coq, Agda) where proofs prove
+propositions. The Curry-Howard isomorphism states the structure encoding the
+relationships {\it Program :: Type} and {\it Proof :: Proposition} is identical in both
+systems. It seems reasonable that since both systems have the typed lambda calculi as
+their core, that unified system would be developed. Such a system would have the
+benefits of both, and the additional symbiosis of providing a natural substrate for
+reasoning about programs. While there has been much work in this area, few
+would agree that we have arrived. The problem is hard because the two kinds of
+systems were designed for different purposes, and the features that support
+these purposes often clash -- being crucial in one system but anathema in the other.
+Examples include non-termination and effects to model
+real world systems (in programming systems) v.s.
+totality and purity to ensure soundness (in reasoning systems).
 
 %% \footnote{By ``full support'', we mean
 %% having all programs in functional languages and all proofs in reasoning systems.
@@ -17,60 +29,77 @@ programming and reasoning has not yet been developed.
 
 
 \subsection{Naive approaches towards a unified system}
-At first glance, the design principle for such a unified system seems obvious:
+
+
+At first glance, the design strategy for such a unified system may seem obvious:
 either
-(1) extend a proof assistant with general recursion and track termination, or,
-(2) extend a functional language with dependent types and check termination.
-The absence of such a unified system tells us that it is not so obvious.
-Termination checking and tracking are, of course, challenging issues
-of their own, but these issues are only part of the problem we face
-when we try to design such a unified system. Neither (1) nor (2) will
+(1) extend a proof assistant with general recursion and effects, or,
+(2) extend a functional language with dependent types.
+In either case, be careful to track where the undesirable features creep
+from one part of the system to the other.
+The absence of such a unified system tells us that how to do this is perhaps not obvious.
+Termination checking, and the ensuing tracking are, of course, both challenging issues
+in their own right, but are only part of the problem. Neither (1) nor (2) will
 lead to a successful design, even if we had good strategies for
-termination checking and tracking. Why is it so?
+termination checking and tracking. Why is this so?
 It is because dependently typed languages do not subsume
-all the desired properties of functional programming languages.
-More precisely, the problem lies in two folds.
+all the other desired properties of functional programming languages. There
+are other issues in play.
 
-Firstly, dependently typed languages designed for logical reasoning usually do
-not support \emph{all the recursive datatypes} we enjoy in functional languages.
+
+
+Firstly, dependently typed languages, designed for logical reasoning, usually do
+not support \emph{all the recursive datatypes} that are commonly used in functional programs.
 For example, most dependently typed proof assistants will reject
-a straightforward datatype definition for Higher-Order Abstract Syntax (HOAS),
-which we can easily define in Haskell:
-\textbf{data} \textit{HOAS} $=$ \textit{Lam} (\textit{HOAS} $->$ \textit{HOAS})
-                         $\mid$ \textit{App} \textit{HOAS} \textit{HOAS}.
-Note, there is a mismatch between types allowed in proof assistants and
-functional languages. The types available in proof assistants do not subsume
-the types available in functional languages. This is why (1) fails to be
-a promising approach. Approach (1) will only end up with partial support for
-programming, missing some of the useful datatypes in functional programming.
+a straightforward datatype definition for Higher-Order Abstract Syntax (HOAS)
+For example, in Haskell we may write:
+{\small\begin{verbatim}
+data HOAS = Lam (HOAS -> HOAS) | App HOAS HOAS
+\end{verbatim}}
+But in Coq, this would not be admitted as a legal datatype, because of the
+use of {\tt HOAS} in a contravariant position in the type of {\tt Lam}.
+In short, there is a mismatch between types allowed in proof assistants and
+functional languages. This is why (1) fails to be
+a promising approach. Approach (1) can only supply partial support for the kinds
+of data definition in common use in functional programming systems.
 
-Secondly, dependently typed languages, in general, lack \emph{type erasure}
-and \emph{type inference}. A dependently typed language designed for
-programming, without considering logical consistency, would be certainly
-more expressive than a functional language based on Hindley-Milner type system.
-However, some good features we enjoy in functional languages are lost when we
-move to dependent types. This is why we don't believe (2) is promising either.
+Secondly, dependently typed languages, in general, lack both \emph{type erasure} and
+\emph{type inference}. A dependently typed language designed for programming, even
+without considering logical consistency, would be certainly more expressive than a
+functional language based on Hindley-Milner type reconstruction. However, some good
+features we enjoy in functional languages are lost when we move to such a system. One
+feature is the conciseness of Hindley-Milner type reconstruction. Programmers need
+supply only the most minimal amount of type information when programming. Another
+feature we lose is \emph{type erasure}. In functional languages, types are irrelevant
+once type checking is done. So, they need not persist for computation at runtime. In
+dependently typed languages, types can be indexed by terms as well as types.
+Furthermore, dependently typed languages usually do not distinguish between term
+applications, which are usually computationally relevant, and type application, which
+are usually computationally irrelevant. Thus, type erasure becomes very difficult. In a
+dependently typed language, it is unclear whether, in the application $f\;3$, the
+argument $3$ will be used for computation or used only for type checking.
+For these two reasons, we don't believe (2) is a promising approach either.
 
-One of the features we lose is \emph{type erasure}. In functional languages,
-types are irrelevant once type checking is done. So, they need not exist for
-computation at runtime. In dependently typed languages, types can be indexed
-by terms as well as types. Furthermore, dependently typed languages usually
-do not distinguish between term applications, which are computationally
-relevant, and type application, which are computationally irrelevant.
-Thus, type erasure becomes very difficult. In a dependently typed language,
-it is unclear whether, in the application $f\;3$, the argument $3$ will be
-used for computation or used only for type checking.
-% We would have to examine the source code of the function $f$ and
-% every function called inside $f$ that depends on its argument to determine
-% the computational relevance of the argument $3$.
-This is not only counterintuitive to functional programmers, but also becomes
-a huge obstacle for implementation considering efficient execution and
-separate compilation.
+These two issues are not only counter productiive for functional programmers, but also
+become obstacles for efficient  implementation and separate
+compilation. So, we believe that rather than blend one existing system
+towards the other, it may be useful to start the design process from scratch,
+of course, all the while keeping in mind not only these issues, but also
+all the valuable lessons learned from previous systems. Design goals
+\begin{itemize}
+\item Type inference and type reconstruction whereever possible. Keep type
+annotations light weight and minimal (minimal might be hard to tie down precisely).
 
-Another feature we lost in dependently typed languages is
-\emph{type inference}. Programming can be done without type inference,
-but it wouldn't be as pleasant.
-\KYA{Tim, if you have more things to say please add. I left it really brief.}
+\item Use dependent types to state and ensure properties of programs. Our strategy
+is to start with indexed types and move to full dependency in future work.
+
+\item Clearly separate what parts of the program are irrelevant at run time and
+use erasure to build efficient implementations.
+
+\item Let the mathematics and theory guide the development.
+\end{itemize}
+
+ 
 
 \subsection{Nax as a starting point}
 \KYA{Write about why Nax matters (\ie, contribution).
