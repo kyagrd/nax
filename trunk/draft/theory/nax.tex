@@ -1,6 +1,4 @@
 \section{Nax}
-TODO put Nax definition here ...
-What is the syntax of Nax?? below is just a scribble
 
 \paragraph{Syntax:}
 \begin{align*}
@@ -10,10 +8,22 @@ What is the syntax of Nax?? below is just a scribble
 &\text{Kind Arguments}
 	& K		&~ ::= ~ \kappa \mid A
  \\
+&\text{Datatype Definitions}
+	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
+                             ~ \mathbf{where} ~
+                               \overline{C : \overline{A} -> F\,\overline{\tau}}
+ \\
+&\text{Datatype Declarations}
+	& \overline{D}	&~ ::= \cdot \mid D,\overline{D}
+ \\
+&\text{Type Arguments}
+	& \tau		&~ ::= ~ H \mid \{s\}
+ \\
 &\text{Type Constructors}
-	& T,H,A,B	&~ ::= ~ X \mid \mu^\kappa \mid F
+	& T,H,A,B	&~ ::= ~ X \mid F
 			   \mid T\;H \mid T\,\{s\}
 			   \mid A -> B
+			   \mid \mu^\kappa
  \\
 &\text{Type Schemes}
 	& \sigma	&~ ::= A
@@ -23,29 +33,182 @@ What is the syntax of Nax?? below is just a scribble
 &\text{Terms}
 	& r,s,t		&~ ::= ~ x \mid i
 			   \mid \lambda x.t \mid r\;s \mid \Let{x}{s}{t}
-			   \mid \In^\kappa \mid \MIt^\psi s
-			   \mid \case^\psi~t~\overline{C\;\overline{x} -> t}
+			   \mid \In^\kappa\,t
+			   \mid \MIt^\psi \varphi 
+			   \mid \case^\psi~s~\overline{C\;\overline{x} -> t}
+ \\
+&\text{Program}
+	& Prog		&~ ::= ~ \overline{D};t
  \\
 &\text{Index Transformers}
 	& \psi		&~ ::= \cdot \mid \overline\iota . B
  \\
-&\text{Type Arguments}
+&\text{Recursive Equations}
+	& \varphi	&~ ::= \overline{x' ~ (C\;\overline{x}) = t}
+ \\
+&\text{Type Argument Variables}
 	& \iota		&~ ::= ~ X \mid i
  \\
+&\text{Global Contexts}
+	& \Sigma		&~ ::= ~ \cdot
+				\mid \Sigma, F: \kappa \mid \Sigma, C: \sigma
+ \\
+&\text{Static Contexts}
+	& \Delta		&~ ::= ~ \cdot
+				\mid \Delta, X^\kappa
+				\mid \Delta, i^\sigma
+ \\
+&\text{Dynamic Contexts}
+	& \Gamma		&~ ::= ~ \cdot
+				\mid \Gamma, x : \sigma
 \end{align*}
 
-\paragraph{Reduction:}
+\paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
 \[ \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
  ~~~~
-   \inference{}
-             {\MIt^\psi s\;(\In^\kappa t) \rightsquigarrow s\;(\MIt^\psi s)\;t}
+   \inference{ \varphi \defeq \overline{x' ~ (C\;\overline{x}) = t} }
+             { \MIt^\psi \varphi\;(\In^\kappa t')
+             \rightsquigarrow
+               \case^\psi~t'~\overline{C\;\overline{x} -> [\MIt^\psi \varphi/x']t}
+      }
 \]
 \[ \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
    \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
  ~~~~
    \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
- ~~~~
-   \inference{s \rightsquigarrow s'}{\MIt^\psi s \rightsquigarrow \MIt^\psi s'}
 \]
 
+\paragraph{Sorting:}
+\fbox{$\Sigma |- \kappa : \square$}
+\[ \inference[($A$)]{}{\Sigma |- *:\square}
+ ~~~~
+   \inference[($R$)]{ \Sigma |- \kappa:\square
+                    & \Sigma |- \kappa':\square }
+                    { \Sigma |- \kappa -> \kappa' : \square }
+ ~~~~
+   \inference[($Ri$)]{\cdot |- A:* & \Sigma |- \kappa:\square}
+                     {\Sigma |- A -> \kappa : \square}
+\]
+
+\paragraph{Kinding:}
+\fbox{$\Sigma;\Delta |- T : \kappa$}
+\[ \inference[($Var$)]{X^\kappa\in\Delta & \Sigma |- \Delta}
+                      {\Sigma;\Delta |- X : \kappa}
+ ~~~~
+   \inference[($TCon$)]{F:\kappa\in\Sigma & \Sigma |- \Delta}
+                       {\Sigma;\Delta |- F : \kappa}
+ ~~~~
+   \inference[($Conv$)]{ \Sigma;\Delta |- A : \kappa
+                       & \Sigma;\Delta |- \kappa = \kappa' : \square }
+                       {\Sigma;\Delta |- A : \kappa'}
+\]
+\[
+   \inference[($@$)]{ \Sigma;\Delta |- T : \kappa -> \kappa'
+                    & \Sigma;\Delta |- H : \kappa }
+                    {\Sigma;\Delta |- T\,H : \kappa'}
+ ~~~~
+   \inference[($@i$)]{ \Sigma;\Delta |- T : A -> \kappa
+                     & \Sigma;\Delta;\cdot |- s : A }
+                     {\Sigma;\Delta |- T\,\{s\} : \kappa}
+\]
+\[ \inference[($->$)]{\Sigma;\Delta |- A : * & \Sigma;\Delta |- B : *}
+                     {\Sigma;\Delta |- A -> B : * }
+ ~~~~
+   \inference[($\mu$)]{\Sigma |- \kappa : \square}
+                       {\Sigma;\Delta |- \mu^\kappa : \kappa -> \kappa}
+\]
+\[ \fbox{$\Sigma;\Delta |- \sigma : \kappa$ }
+ ~~~~
+   \inference[($\forall$)]{\Sigma;\Delta, X^\kappa |- \sigma : *}
+                          {\Sigma;\Delta |- \forall X . \sigma : *}
+ ~~~~
+   \inference[($\forall i$)]{\Sigma;\Delta, i^A |- \sigma : *}
+                            {\Sigma;\Delta |- \forall i . \sigma : *}
+\]
+
+
+\paragraph{Typing:}
+\[ \fbox{$\Sigma |- Prog : A$}
+ ~~~~
+   \inference[]{\Sigma;\cdot;\cdot |- t:A}
+               {\Sigma |- \cdot;t : A}
+ ~~~~
+   \inference[]{ \Sigma |- D \Rrightarrow \Sigma'
+               & \Sigma' |- \overline{D};\; t : A}
+               {\Sigma |- D,\overline{D};\; t : A}
+\]
+
+\fbox{$\Sigma;\Delta;\Gamma |- t : A$}
+\[ \inference[($:$)]
+      {x:\sigma \in \Gamma & A\prec\sigma & \Sigma;\Delta |- \Gamma} 
+      {\Sigma;\Delta;\Gamma |- x:A}
+ ~~~~
+   \inference[($:i$)]
+      {i^\sigma \in \Delta & A\prec\sigma & \Sigma;\Delta |- \Gamma} 
+      {\Sigma;\Delta;\Gamma |- i:A}
+\]
+\[ \inference[($:C$)]
+      {C:\sigma \in \Sigma & A\prec\sigma & \Sigma;\Delta |- \Gamma}
+      {\Sigma;\Delta;\Gamma |- C:A}
+ ~~~~
+   \inference[($=$)]{\Sigma;\Delta;\Gamma |- t : A & \Sigma;\Delta |- A = B : *}
+                    {\Sigma;\Delta;\Gamma |- t : B}
+\]
+\[ \inference[($->$$I$)]{\Sigma;\Delta;\Gamma,x:A |- t : B}
+                        {\Sigma;\Delta;\Gamma |- \lambda x.t : A -> B}
+ ~~~~ ~~~~ ~~~~ ~~~~
+   \inference[($->$$E$)]{ \Sigma;\Delta;\Gamma |- r : A -> B
+                        & \Sigma;\Delta;\Gamma |- s : A}
+                        {\Sigma;\Delta;\Gamma |- r\;s : B}
+\]
+\[ \inference[(let)]
+      { \Sigma;\Delta,\overline{\iota^K};\Gamma |- s : A
+      & \Sigma;\Delta;\Gamma,x:\forall\,\overline{\iota}.A |- t : B }
+      {\Sigma;\Delta;\Gamma |- \Let{x}{s}{t} : B }
+      \big( \overline{\iota} \cup \FV(s) = \emptyset =
+            \overline{\iota} \cup \FV(\Gamma) \big)
+\]
+\[ \inference[(In)]
+      {\Sigma;\Delta;\Gamma |- t : T(\mu^\kappa T)\,\overline{\tau}}
+      {\Sigma;\Delta;\Gamma |- \In^\kappa\,t : \mu^\kappa T\; \overline{\tau}}
+\]
+\[ \inference[(MIt)]
+      { \overline{\begin{matrix}
+        C:\sigma\in\Sigma ~&~ \overline{A} -> T\,\overline\tau \prec \sigma
+      ~&~
+        \Sigma;\Delta,X^{\kappa};
+        \Gamma
+            ,x':\forall\,\overline\iota.X\overline\iota -> \psi(\overline\iota)
+            ,\overline{x:A}
+          |- t : \psi(\overline\tau) \end{matrix} }
+      }
+      {\Sigma;\Delta;\Gamma
+           |- \MIt^\psi ~ \overline{x' ~ (C\;\overline{x}) = t}
+            : \mu^{\kappa}\,T\;\overline\tau -> \psi(\overline\tau) }
+      \big( X\notin\FV(\Gamma) \big)
+\]
+\[ \inference[(case)]
+      { \Sigma;\Delta;\Gamma |- s : T\;\overline\tau
+      & \overline{\begin{matrix}
+          C:\sigma \in \Sigma ~&~
+          \overline{A} -> \psi(\overline{\tau}) \prec \sigma ~&~
+          \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline\tau) 
+        \end{matrix} }
+      }
+      {\Sigma;\Delta;\Gamma |- \case^\psi~s~\overline{C\;\overline{x} -> t}
+                             : \psi(\overline\tau) }
+\]
+
+
+
+\paragraph{Extending the Global Context:}
+\fbox{$\Sigma |- D \Rrightarrow \Sigma'$}
+\[ \inference[]{ \Sigma |- \kappa : \square
+               & \overline{\Sigma,F:\kappa;\;\overline{\iota^K} |- B:*} }
+               { \Sigma |- \mathbf{data}~ F : \kappa ~ \mathbf{where} ~
+                                        \overline{C : B}
+                        ~\Rrightarrow~
+                           \Sigma,F:\kappa
+                                 ,\overline{C:\forall\,\overline{\iota}.B} }
+\]

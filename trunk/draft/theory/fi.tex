@@ -67,15 +67,15 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 \]
 
 
-\paragraph{Sorting:} \fbox{$\Delta |- \kappa : \square$}
-\[ \inference[($A$)]{}{\Delta |- *:\square}
+\paragraph{Sorting:} \fbox{$|- \kappa : \square$}
+\[ \inference[($A$)]{}{|- *:\square}
  ~~~~
-   \inference[($R$)]{\Delta |- \kappa:\square & \Delta |- \kappa':\square}
-                    {\Delta |- \kappa -> \kappa' : \square}
+   \inference[($R$)]{|- \kappa:\square & |- \kappa':\square}
+                    {|- \kappa -> \kappa' : \square}
  ~~~~
    \newFi{
-   \inference[($Ri$)]{\cdot |- A:* & \Delta |- \kappa:\square}
-                     {\Delta |- A -> \kappa : \square} }
+   \inference[($Ri$)]{\cdot |- A:* & |- \kappa:\square}
+                     {|- A -> \kappa : \square} }
 \]
 
 \paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
@@ -152,22 +152,22 @@ annotated by kinds ($\lambda X^\kappa.F$). We expect readers to be familiar to
 
 \begin{figure}
 \begin{framed}
-\paragraph{Kind equality:} \fbox{$\Delta |- \kappa=\kappa' : \square$}
-\[ \inference{}{\Delta |- * = *:\square}
+\paragraph{Kind equality:} \fbox{$|- \kappa=\kappa' : \square$}
+\[ \inference{}{|- * = *:\square}
  ~~~~
-   \inference{ \Delta |- \kappa_1 = \kappa_1' : \square
-             & \Delta |- \kappa_2 = \kappa_2' : \square }
-             {\Delta |- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
+   \inference{ |- \kappa_1 = \kappa_1' : \square
+             & |- \kappa_2 = \kappa_2' : \square }
+             {|- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
  ~~~~ \newFi{
-   \inference{\cdot |- A=A':* & \Delta |- \kappa=\kappa':\square}
-             {\Delta |- A -> \kappa = A' -> \kappa' : \square} }
+   \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}
+             {|- A -> \kappa = A' -> \kappa' : \square} }
 \]
-\[ \inference{\Delta |- \kappa=\kappa':\square}
-             {\Delta |- \kappa'=\kappa:\square}
+\[ \inference{|- \kappa=\kappa':\square}
+             {|- \kappa'=\kappa:\square}
  ~~~~
-   \inference{ \Delta |- \kappa =\kappa' :\square
-             & \Delta |- \kappa'=\kappa'':\square}
-             {\Delta |- \kappa=\kappa'':\square}
+   \inference{ |- \kappa =\kappa' :\square
+             & |- \kappa'=\kappa'':\square}
+             {|- \kappa=\kappa'':\square}
 \]
 ~\\
 \paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
@@ -366,7 +366,7 @@ type $A$ is well-kinded under $\Delta$.
 \subsection{Metatheory?}
 
 \begin{proposition}[well-formed static context ensures well-sorted kinding judgemnet]
-\[ \inference{ |- \Delta & \Delta |- F : \kappa}{ \Delta |- \kappa }
+\[ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa }
 \]
 \end{proposition}
 
@@ -375,9 +375,23 @@ type $A$ is well-kinded under $\Delta$.
 \]
 \end{proposition}
 
+\begin{proposition}[anti-dependency on arrow kinds]
+\[ \inference{ |- \Delta,X^\kappa
+             & \Delta,X^\kappa |- F : \kappa' }
+             { X\notin\FV(\kappa') }
+\]
+\end{proposition}
+
+\begin{proposition}[anti-dependency on indexed arrow kinds]
+\[ \inference{ |- \Delta,i^A
+             & \Delta,i^A |- F : \kappa }
+             { i\notin\FV(\kappa) }
+\]
+\end{proposition}
+
 \begin{proposition}[anti-dependency on arrow types]
-\[ \inference{ \Delta |- \Gamma
-             & \Delta;\Gamma |- \lambda x.t : A -> B }
+\[ \inference{ \Delta |- \Gamma,x:A
+             & \Delta;\Gamma,x:A |- t : B }
              { x\notin\FV(B) }
 \]
 \end{proposition}
@@ -385,26 +399,6 @@ type $A$ is well-kinded under $\Delta$.
 \begin{remark} Our system is more strong??? than anti-dependency on arrow types
 TODO
 \end{remark}
-
-\begin{proposition}[anti-dependency on arrow kinds]
-\[ \inference{ |- \Delta
-             & \Delta |- \lambda X^\kappa . F : \kappa \to \kappa' }
-             { X\notin\FV(\kappa') }
-\]
-\end{proposition}
-
-\begin{proposition}[anti-dependency on indexed arrow kinds]
-\[ \inference{ |- \Delta
-             & \Delta |- \lambda i^A . F : A \to \kappa }
-             { i\notin\FV(\kappa) }
-\]
-\end{proposition}
-
-\begin{proposition}[static context irrelevance of sorting]
-\[ \inference{ |- \Delta & \Delta |- \kappa : \square }
-             { \cdot |- \kappa : \square }
-\]
-\end{proposition}
 
 \begin{definition}[index erasure]
 \[ \fbox{$\kappa^\circ$}
