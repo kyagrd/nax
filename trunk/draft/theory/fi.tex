@@ -308,14 +308,14 @@ The index generalization rule ($\forall I i$) is similar to
 the type generalization rule ($\forall I$), except the additional
 side condition $\big(i\notin\FV(t)\big)$. This side condition prevents
 terms from accessing the type level index variables introduced by index
-polymorphism. Otherwise, without this side condition, $\forall$-bindier
+polymorphism. Otherwise, without this side condition, $\forall$-binder
 would be no longer behave as polymorphism but powerful enough to behave as
 dependent functions, which are usually denoted by the $\Pi$-binder in
 dependent type theories. The side condition on generalization rules
 for polymorphism is fairly standard in dependently typed languages supporting
 distinctions between polymorphism (or, erasable arguments) and
 dependent functions (\eg, IPTS[TODO cite Nathans' thesis], ICC[TODO cite]).
-The rule ($\forall I$) for ordinary type penalization rule does not need
+The rule ($\forall I$) for ordinary type generalization rule does not need
 a side condition because type variables cannot appear in the syntax of terms.
 
 The index instantiation rule ($\forall E i$) is similar to

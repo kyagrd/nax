@@ -1,24 +1,10 @@
-\section{Nax}
+\section{Nax}\label{sec:nax}
 \begin{figure}
 \begin{framed}
 \paragraph{Syntax:}
 \begin{align*}
 &\text{Kinds}
 	& \kappa	&~ ::= ~ * \mid \kappa -> \kappa \mid A -> \kappa
- \\
-&\text{Kind Arguments}
-	& K		&~ ::= ~ \kappa \mid A
- \\
-&\text{Datatype Definitions}
-	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
-                             ~ \mathbf{where} ~
-                               \overline{C : \overline{A} -> F\,\overline{\tau}}
- \\
-&\text{Datatype Declarations}
-	& \overline{D}	&~ ::= \cdot \mid D,\overline{D}
- \\
-&\text{Type Arguments}
-	& \tau		&~ ::= ~ H \mid \{s\}
  \\
 &\text{Type Constructors}
 	& T,H,A,B	&~ ::= ~ X \mid F
@@ -35,12 +21,29 @@
 	& r,s,t		&~ ::= ~ x \mid i
 			   \mid \lambda x.t \mid r\;s \mid \Let{x}{s}{t} \\
 &	&		&~~~~~
+			   \mid \case^\psi~s~\overline{C\;\overline{x} -> t}
 			   \mid \In^\kappa\,t
 			   \mid \MIt^\psi \varphi 
-			   \mid \case^\psi~s~\overline{C\;\overline{x} -> t}
  \\
 &\text{Program}
 	& Prog		&~ ::= ~ \overline{D};t
+ \\
+&\text{Datatype Definitions}
+	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
+                             ~ \mathbf{where} ~
+                               \overline{C : \overline{A} -> F\,\overline{\tau}}
+ \\
+&\text{Datatype Declarations}
+	& \overline{D}	&~ ::= \cdot \mid D,\overline{D}
+ \\
+&\text{Kind Arguments}
+	& K		&~ ::= ~ \kappa \mid A
+ \\
+&\text{Type Arguments}
+	& \tau		&~ ::= ~ H \mid \{s\}
+ \\
+&\text{Type Argument Variables}
+	& \iota		&~ ::= ~ X \mid i
  \\
 &\text{Index Transformers}
 	& \psi		&~ ::= \cdot \mid \overline\iota . B
@@ -48,23 +51,19 @@
 &\text{Recursive Equations}
 	& \varphi	&~ ::= \overline{x' ~ (C\;\overline{x}) = t}
  \\
-&\text{Type Argument Variables}
-	& \iota		&~ ::= ~ X \mid i
+&\text{Contexts}
+	& \Sigma	&~ ::= ~ \cdot
+			   \mid \Sigma, F: \kappa \mid \Sigma, C: \sigma
+	& \text{(Global)}
  \\
-&\text{Global Contexts}
-	& \Sigma		&~ ::= ~ \cdot
-				\mid \Sigma, F: \kappa \mid \Sigma, C: \sigma
+&	& \Delta	&~ ::= ~ \cdot
+			   \mid \Delta, X^\kappa
+			   \mid \Delta, i^\sigma
+	& \text{(Static)}
  \\
-&\text{Static Contexts}
-	& \Delta		&~ ::= ~ \cdot
-				\mid \Delta, X^\kappa
-				\mid \Delta, i^\sigma
- \\
-&\text{Dynamic Contexts}
-	& \Gamma		&~ ::= ~ \cdot
-				\mid \Gamma, x : \sigma
+&	& \Gamma	&~ ::= ~ \cdot \mid \Gamma,x:\sigma
+	& \text{(Dynamic)}
 \end{align*}
-~\\
 
 \paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
 \[ \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
@@ -73,6 +72,14 @@
       { \MIt^\psi \varphi\;(\In^\kappa t') \rightsquigarrow
         \case^\psi~t'~\overline{C\;\overline{x} -> [\MIt^\psi \varphi/x']t} }
       \big( \varphi \defeq \overline{x' ~ (C\;\overline{x}) = t}\; \big)
+\]
+\[ \inference{}
+             {\case^\psi (C_i\,\overline{t}) ~
+                \{C_1\,\overline{x_1} -> t_1;\;\cdots;\;
+                  C_i\,\overline{x_i} -> t_i;\;\cdots;\;
+                  C_n\,\overline{x_n} -> t_n \}
+              \rightsquigarrow
+              [\overline{t}/\overline{x_i}]t_i }
 \]
 \[  \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
@@ -83,7 +90,26 @@
    \inference{t \rightsquigarrow t'}
              {\In^\kappa t \rightsquigarrow \In^\kappa t'}
 \]
-~\\
+\[ \inference{t_i \to t_i'}
+             {C~t_1\cdots t_i \cdots t_n \rightsquigarrow
+              C~t_1\cdots t_i'\cdots t_n }
+ ~~~~
+   \inference{s \rightsquigarrow s'}
+             {\case^\psi s ~\overline{C\;\overline{x} -> t} \rightsquigarrow
+              \case^\psi s'~\overline{C\;\overline{x} -> t} }
+\]
+\[ \inference{t_i \rightsquigarrow t_i' }
+             {\begin{matrix}
+             &\case^\psi s ~
+                \{C_1\,\overline{x_1} -> t_1;\;\cdots;\;
+                  C_i\,\overline{x_i} -> t_i;\;\cdots;\;
+                  C_n\,\overline{x_n} -> t_n \} \\
+             \rightsquigarrow
+             &\case^\psi s ~
+                \{C_1\,\overline{x_1} -> t_1;\;\cdots;\;
+                  C_i\,\overline{x_i} -> t_i';\;\cdots;\;
+                  C_n\,\overline{x_n} -> t_n \} \end{matrix} }
+\]
 
 \paragraph{Well-formed contexts:}
 \[ \fbox{$|- \Sigma$}
@@ -220,6 +246,17 @@
       {\Sigma;\Delta;\Gamma |- t : T(\mu^\kappa T)\,\overline{\tau}}
       {\Sigma;\Delta;\Gamma |- \In^\kappa\,t : \mu^\kappa T\; \overline{\tau}}
 \]
+\[ \inference[(case)]
+      { \Sigma;\Delta;\Gamma |- s : T\;\overline\tau
+      & \overline{\begin{matrix}
+          C:\sigma \in \Sigma ~&~
+          \overline{A} -> \psi(\overline{\tau}) \prec \sigma ~&~
+          \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline\tau) 
+        \end{matrix} }
+      }
+      {\Sigma;\Delta;\Gamma |- \case^\psi~s~\overline{C\;\overline{x} -> t}
+                             : \psi(\overline\tau) }
+\]
 \[ \inference[(MIt)]
       { \overline{\begin{matrix}
         C:\sigma\in\Sigma ~&~ \overline{A} -> T\,\overline\tau \prec \sigma
@@ -235,17 +272,6 @@
             : \mu^{\kappa}\,T\;\overline\tau -> \psi(\overline\tau) }
       \big( X\notin\FV(\Gamma) \big)
 \]
-\[ \inference[(case)]
-      { \Sigma;\Delta;\Gamma |- s : T\;\overline\tau
-      & \overline{\begin{matrix}
-          C:\sigma \in \Sigma ~&~
-          \overline{A} -> \psi(\overline{\tau}) \prec \sigma ~&~
-          \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline\tau) 
-        \end{matrix} }
-      }
-      {\Sigma;\Delta;\Gamma |- \case^\psi~s~\overline{C\;\overline{x} -> t}
-                             : \psi(\overline\tau) }
-\]
 
 \paragraph{Extending the Global Context:}
 \[ \fbox{$\Sigma |- D \Rrightarrow \Sigma'$}
@@ -259,9 +285,40 @@
                                  ,\overline{C:\forall\,\overline{\iota}.B} }
 \]
 \end{framed}
-
 \caption{Typing rules of Nax}
 \label{fig:NaxTyping}
 \end{figure}
 
+The Nax language definition is described in \Fig{NaxSyntax} and \Fig{NaxTyping}.
+
+The kind syntax of Nax is exactly the same as the kind syntax of \Fi.
+
+The syntax related to types are similar to \Fi, but different from \Fi
+in two aspects.
+Firstly, polymorphic types are separate out as type schemes in Nax
+since the type system of Nax is in flavour of Hindley-Milner
+to support type inference (or, reconstruction).
+Secondly, there are no type level abstractions and index abstractions in Nax.
+Instead of defining type constructors expecting type arguments by
+abstraction and index abstraction at type level, Nax supports datatype
+definitions ($\mathbf{data}~F:\kappa~\mathbf{where}~\dots$) and
+recursive type operators ($\mu^\kappa$) as language constructs.
+
+The term syntax of Nax has four additional constructs:
+polymorphic let binding ($\sflet~\dots$),
+constructors ($\In~\dots$) for recursive types,
+Mendler style iterators ($\MIt~\dots$), and
+eliminators for data constructors ($\case~\dots$).
+Polymorphic let bindings are just the usual term construct of Hindley-Milner
+type system for generalizing types of local definitions into type schemes.
+The $\In$ constructors for recursive types TODO.
+
+
+A Nax program is a datatype declaration (\ie, a list of datatype definitions)
+followed by a term. The information about the datatype definitions in
+the datatype declarations are captured in the global context $\Sigma$ before
+type checking the term. Therefore, the sorting, kinding, and typing rules
+of Nax (\Fig{NaxTyping}) has an additional context ($\Sigma$) compared to
+the corresponding rules of \Fi\ described in \Fig{Fi}.
+%% TODO talk about embedding (fwd ref)???
 
