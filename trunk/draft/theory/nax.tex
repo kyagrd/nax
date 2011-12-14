@@ -114,11 +114,11 @@
  ~~~~
    \inference{}{|- \cdot}
  ~~~~
-   \inference{\Sigma & \Sigma |- \kappa:\square}
+   \inference{|- \Sigma & \Sigma |- \kappa:\square}
              {|- \Sigma,F:\kappa}
       \big( F\notin\dom(\Sigma) \big)
  ~~~~
-   \inference{\Sigma & \Sigma;\cdot |- \sigma:*}
+   \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
              {|- \Sigma,C:\sigma}
       \big( C\notin\dom(\Sigma) \big)
 \]
@@ -126,7 +126,7 @@
  ~~~~
    \inference{|- \Sigma}{\Sigma |- \cdot}
  ~~~~
-   \inference{\Sigma |- \Delta & \Delta |- \kappa:\square}
+   \inference{\Sigma |- \Delta & \Sigma |- \kappa:\square}
              {\Sigma |- \Delta,X^\kappa}
       \big( X\notin\dom(\Delta) \big)
  ~~~~ 
@@ -139,7 +139,7 @@
    \inference{\Sigma |- \Delta}{\Sigma;\Delta |- \cdot}
  ~~~~
    \inference{\Sigma;\Delta |- \Gamma & \Sigma;\Delta |- A:*}
-             {\Sigma;\Delta |- \Sigma;\Gamma,x:A}
+             {\Sigma;\Delta |- \Gamma,x:A}
       \big( x\notin\dom(\Gamma) \big)
 \]
 \end{framed}
@@ -236,8 +236,8 @@
       { \Sigma;\Delta,\overline{\iota^K};\Gamma |- s : A \\
         \Sigma;\Delta;\Gamma,x:\forall\,\overline{\iota}.A |- t : B }
       {\Sigma;\Delta;\Gamma |- \Let{x}{s}{t} : B }
-      \begin{pmatrix} \overline{\iota} \cup \FV(s) = \emptyset \\
-                      \overline{\iota} \cup \FV(\Gamma) = \emptyset
+      \begin{pmatrix} \overline{\iota} \cap \FV(s) = \emptyset \\
+                      \overline{\iota} \cap \FV(\Gamma) = \emptyset
       \end{pmatrix}
  ~~~~
    \inference[(In)]

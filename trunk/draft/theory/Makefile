@@ -1,7 +1,8 @@
 .PHONY: pdf ps dvi
 
 TEXSRC=main.tex \
-       intro.tex nax.tex fi.tex embed.tex related.tex future.tex concl.tex
+       intro.tex nax.tex fi.tex embed.tex future.tex concl.tex
+# related.tex 
 
 pdf: main.pdf
 
@@ -13,6 +14,7 @@ main.pdf: ${TEXSRC} main.bbl
 	pdflatex main
 
 main.ps: main.dvi
+	dvips main
 
 main.dvi: ${TEXSRC} main.bbl
 	latex main
