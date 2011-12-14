@@ -22,7 +22,7 @@
 			   \mid \lambda x.t \mid r\;s \mid \Let{x}{s}{t} \\
 &	&		&~~~~~
 			   \mid \case^\psi~s~\overline{C\;\overline{x} -> t}
-			   \mid \In^\kappa\,t
+			   \mid \In^\kappa
 			   \mid \MIt^\psi \varphi 
  \\
 &\text{Program}
@@ -87,25 +87,23 @@
  ~~~~
    \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
  ~~~~
-   \inference{t \rightsquigarrow t'}
-             {\In^\kappa t \rightsquigarrow \In^\kappa t'}
-\]
-\[ \inference{t_i \to t_i'}
+   \inference{t_i \to t_i'}
              {C~t_1\cdots t_i \cdots t_n \rightsquigarrow
               C~t_1\cdots t_i'\cdots t_n }
- ~~~~
-   \inference{s \rightsquigarrow s'}
+\]
+\[ \inference{s \rightsquigarrow s'}
              {\case^\psi s ~\overline{C\;\overline{x} -> t} \rightsquigarrow
               \case^\psi s'~\overline{C\;\overline{x} -> t} }
-\]
-\[ \inference{t_i \rightsquigarrow t_i' }
+ ~~~~
+   \inference{t_i \rightsquigarrow t_i' }
              {\begin{matrix}
-             &\case^\psi s ~
+             \phantom{\rightsquigarrow'}
+              \case^\psi s ~
                 \{C_1\,\overline{x_1} -> t_1;\;\cdots;\;
                   C_i\,\overline{x_i} -> t_i;\;\cdots;\;
                   C_n\,\overline{x_n} -> t_n \} \\
              \rightsquigarrow
-             &\case^\psi s ~
+              \case^\psi s ~
                 \{C_1\,\overline{x_1} -> t_1;\;\cdots;\;
                   C_i\,\overline{x_i} -> t_i';\;\cdots;\;
                   C_n\,\overline{x_n} -> t_n \} \end{matrix} }
@@ -203,12 +201,12 @@
 \paragraph{Typing:}
 \[ \fbox{$\Sigma |- Prog : A$}
  ~~~~
-   \inference[]{\Sigma;\cdot;\cdot |- t:A}
-               {\Sigma |- \cdot;t : A}
+   \inference[($\cdot;t$)]{\Sigma;\cdot;\cdot |- t:A}
+                          {\Sigma |- \cdot;t : A}
  ~~~~
-   \inference[]{ \Sigma |- D \Rrightarrow \Sigma'
-               & \Sigma' |- \overline{D};\; t : A}
-               {\Sigma |- D,\overline{D};\; t : A}
+   \inference[($D$)]{ \Sigma |- D \Rrightarrow \Sigma'
+                    & \Sigma' |- \overline{D};\; t : A}
+                    {\Sigma |- D,\overline{D};\; t : A}
 \]
 \[ \fbox{$\Sigma;\Delta;\Gamma |- t : A$}
  ~~~~
@@ -243,8 +241,9 @@
       \end{pmatrix}
  ~~~~
    \inference[(In)]
-      {\Sigma;\Delta;\Gamma |- t : T(\mu^\kappa T)\,\overline{\tau}}
-      {\Sigma;\Delta;\Gamma |- \In^\kappa\,t : \mu^\kappa T\; \overline{\tau}}
+      {}
+      {\Sigma;\Delta;\Gamma |- \In^\kappa
+        : T(\mu^\kappa T)\,\overline{\tau} -> \mu^\kappa T\; \overline{\tau} }
 \]
 \[ \inference[(case)]
       { \Sigma;\Delta;\Gamma |- s : T\;\overline\tau
@@ -256,6 +255,7 @@
       }
       {\Sigma;\Delta;\Gamma |- \case^\psi~s~\overline{C\;\overline{x} -> t}
                              : \psi(\overline\tau) }
+      \big( \text{\KYA{pattern is total}} \big)
 \]
 \[ \inference[(MIt)]
       { \overline{\begin{matrix}
@@ -276,13 +276,12 @@
 \paragraph{Extending the Global Context:}
 \[ \fbox{$\Sigma |- D \Rrightarrow \Sigma'$}
  ~~~~
-   \inference[]{ \Sigma |- \kappa : \square
-               & \overline{\Sigma,F:\kappa;\;\overline{\iota^K} |- B:*} }
-               { \Sigma |- \mathbf{data}~ F : \kappa ~ \mathbf{where} ~
-                                        \overline{C : B}
-                        ~\Rrightarrow~
-                           \Sigma,F:\kappa
-                                 ,\overline{C:\forall\,\overline{\iota}.B} }
+   \inference[(Ext$\Sigma$)]
+      { \Sigma |- \kappa : \square
+      & \overline{\Sigma,F:\kappa;\;\overline{\iota^K} |- B:*} }
+      { \Sigma |- \mathbf{data}~ F : \kappa ~ \mathbf{where} ~ \overline{C : B}
+               ~\Rrightarrow~
+                  \Sigma,F:\kappa,\overline{C:\forall\,\overline{\iota}.B} }
 \]
 \end{framed}
 \caption{Typing rules of Nax}
@@ -291,34 +290,51 @@
 
 The Nax language definition is described in \Fig{NaxSyntax} and \Fig{NaxTyping}.
 
-The kind syntax of Nax is exactly the same as the kind syntax of \Fi.
+\paragraph{The kind syntax} of Nax is exactly the same as
+the kind syntax of \Fi.
 
-The syntax related to types are similar to \Fi, but different from \Fi
-in two aspects.
+\paragraph{The type syntax} of Nax is similar to \Fi, but different from
+\Fi in two aspects.
+
 Firstly, polymorphic types are separate out as type schemes in Nax
 since the type system of Nax is in flavour of Hindley-Milner
 to support type inference (or, reconstruction).
+
 Secondly, there are no type level abstractions and index abstractions in Nax.
 Instead of defining type constructors expecting type arguments by
 abstraction and index abstraction at type level, Nax supports datatype
 definitions ($\mathbf{data}~F:\kappa~\mathbf{where}~\dots$) and
 recursive type operators ($\mu^\kappa$) as language constructs.
 
-The term syntax of Nax has four additional constructs:
+\paragraph{The term syntax} of Nax has four additional term constructs than \Fi:
 polymorphic let binding ($\sflet~\dots$),
-constructors ($\In~\dots$) for recursive types,
-Mendler style iterators ($\MIt~\dots$), and
-eliminators for data constructors ($\case~\dots$).
-Polymorphic let bindings are just the usual term construct of Hindley-Milner
-type system for generalizing types of local definitions into type schemes.
-The $\In$ constructors for recursive types TODO.
+eliminators for data constructors ($\case^\psi~\dots$),
+constructors ($\In^\kappa~\dots$) for recursive types, and
+Mendler style iterators ($\MIt^\psi~\dots$).
 
+Polymorphic let bindings in Nax are just the usual polymorphic bindings of
+Hindley-Milner type system for generalizing types of local definitions into
+type schemes. In Nax, we generalize over term indices as well as types.
 
-A Nax program is a datatype declaration (\ie, a list of datatype definitions)
-followed by a term. The information about the datatype definitions in
-the datatype declarations are captured in the global context $\Sigma$ before
-type checking the term. Therefore, the sorting, kinding, and typing rules
-of Nax (\Fig{NaxTyping}) has an additional context ($\Sigma$) compared to
-the corresponding rules of \Fi\ described in \Fig{Fi}.
+Eliminators for data constructors, or $\case$-terms, are also the usual
+$\case$-terms for non-indexed types (\ie, when $\psi=\cdot$), but with
+the additional index transformer ($\psi$) annotation, which aids
+type reconstruction of $\case$-terms for indexed types.
+TODO example and explanation for index transformers
+
+The $\In$ constructors for recursive types are as usual.
+However, Nax does not provide destructors, or inverse functions of $\In$,
+which are often denoted as \textsf{unIn} or \textsf{out}, since we want
+to support arbitrary recursive types in a normalizing language.
+
+$\MIt$ TODO.
+
+\paragraph{A Nax program} is a datatype declaration (\ie, a list of datatype
+definitions) followed by a term. The information about the datatype definitions
+in the datatype declarations are captured in the global context ($\Sigma$)
+before type checking the term (see (Ext$\Sigma$) rule in \Fig{NaxTyping}).
+Therefore, each of the sorting, kinding, and typing rules of Nax
+(\Fig{NaxTyping}) has an additional global context ($\Sigma$) compared to
+the corresponding rules of \Fi\ (\Fig{Fi}).
 %% TODO talk about embedding (fwd ref)???
 

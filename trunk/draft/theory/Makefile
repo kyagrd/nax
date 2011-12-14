@@ -1,6 +1,7 @@
 .PHONY: pdf ps dvi
 
-TEXSRC=main.tex intro.tex nax.tex fi.tex embed.tex future.tex concl.tex
+TEXSRC=main.tex \
+       intro.tex nax.tex fi.tex embed.tex related.tex future.tex concl.tex
 
 pdf: main.pdf
 
