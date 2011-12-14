@@ -21,19 +21,22 @@
 	& r,s,t		&~ ::= ~ x \mid i
 			   \mid \lambda x.t \mid r\;s \mid \Let{x}{s}{t} \\
 &	&		&~~~~~
-			   \mid \case^\psi~s~\overline{C\;\overline{x} -> t}
+			   \mid \case^\psi~s~\varphi
 			   \mid \In^\kappa
-			   \mid \MIt^\psi \varphi 
+			   \mid \MIt^\psi x.\varphi
  \\
 &\text{Program}
 	& Prog		&~ ::= ~ \overline{D};t
  \\
-&\text{Datatype Definitions}
-	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
-                             ~ \mathbf{where} ~
-                               \overline{C : \overline{A} -> F\,\overline{\tau}}
+&\text{Declarations}
+%	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
+%                             ~ \mathbf{where} ~
+%                               \overline{C : \overline{A} -> F\,\overline{\tau}}
+	& D		&~ ::= \mathbf{data}~ F : \kappa
+                             ~ \mathbf{where} ~ \overline{C : B}
+			 ~~\mid~ x = t
  \\
-&\text{Datatype Declarations}
+&\text{List of Declarations}
 	& \overline{D}	&~ ::= \cdot \mid D,\overline{D}
  \\
 &\text{Kind Arguments}
@@ -48,38 +51,38 @@
 &\text{Index Transformers}
 	& \psi		&~ ::= \cdot \mid \overline\iota . B
  \\
-&\text{Recursive Equations}
-	& \varphi	&~ ::= \overline{x' ~ (C\;\overline{x}) = t}
+&\text{Branches}
+	& \varphi	&~ ::= \overline{C\;\overline{x} -> t}
  \\
 &\text{Contexts}
 	& \Sigma	&~ ::= ~ \cdot
-			   \mid \Sigma, F: \kappa \mid \Sigma, C: \sigma
-	& \text{(Global)}
+			   \mid \Sigma, F: \kappa
+			   \mid \Sigma, C: \sigma
+			   \mid \Sigma, x: \sigma
  \\
 &	& \Delta	&~ ::= ~ \cdot
 			   \mid \Delta, X^\kappa
 			   \mid \Delta, i^\sigma
-	& \text{(Static)}
  \\
 &	& \Gamma	&~ ::= ~ \cdot \mid \Gamma,x:\sigma
-	& \text{(Dynamic)}
 \end{align*}
 
-\paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
-\[ \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
+\paragraph{Reduction:}
+\[ \fbox{$t \rightsquigarrow t'$}
+ ~~~~
+   \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
  ~~~~
    \inference{}
-      { \MIt^\psi \varphi\;(\In^\kappa t') \rightsquigarrow
-        \case^\psi~t'~\overline{C\;\overline{x} -> [\MIt^\psi \varphi/x']t} }
-      \big( \varphi \defeq \overline{x' ~ (C\;\overline{x}) = t}\; \big)
+      { \MIt^\psi x.\varphi\;(\In^\kappa t) \rightsquigarrow
+        \case^\psi~t~\, [\MIt^\psi \varphi/x]\varphi }
 \]
 \[ \inference{}
-             {\case^\psi (C_i\,\overline{t}) ~
-                \{C_1\,\overline{x_1} -> t_1;\;\cdots;\;
-                  C_i\,\overline{x_i} -> t_i;\;\cdots;\;
-                  C_n\,\overline{x_n} -> t_n \}
-              \rightsquigarrow
-              [\overline{t}/\overline{x_i}]t_i }
+             { \case^\psi (C\,\overline{t}) ~ \varphi \rightsquigarrow
+               \varphi_{C}(\overline{t}) }
+      \big( \varphi_{C_i}(\overline{t}) = [\overline{t}/\overline{x_i}]t_i
+           ~\text{where}~ \varphi = C_1\,\overline{x_1} -> t_1;\cdots;
+                                    C_i\,\overline{x_i} -> t_i;\cdots;
+                                    C_n\,\overline{x_n} -> t_n \big)
 \]
 \[  \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
@@ -87,26 +90,30 @@
  ~~~~
    \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
  ~~~~
-   \inference{t_i \to t_i'}
+   \inference{t_i \rightsquigarrow t_i'}
              {C~t_1\cdots t_i \cdots t_n \rightsquigarrow
               C~t_1\cdots t_i'\cdots t_n }
 \]
-\[ \inference{s \rightsquigarrow s'}
-             {\case^\psi s ~\overline{C\;\overline{x} -> t} \rightsquigarrow
-              \case^\psi s'~\overline{C\;\overline{x} -> t} }
+\[ \inference{\varphi \rightsquigarrow \varphi'}
+             {\MIt^\psi x.\varphi \rightsquigarrow \MIt^\psi x.\varphi'}
  ~~~~
-   \inference{t_i \rightsquigarrow t_i' }
-             {\begin{matrix}
-             \phantom{\rightsquigarrow'}
-              \case^\psi s ~
-                \{C_1\,\overline{x_1} -> t_1;\;\cdots;\;
-                  C_i\,\overline{x_i} -> t_i;\;\cdots;\;
-                  C_n\,\overline{x_n} -> t_n \} \\
-             \rightsquigarrow
-              \case^\psi s ~
-                \{C_1\,\overline{x_1} -> t_1;\;\cdots;\;
-                  C_i\,\overline{x_i} -> t_i';\;\cdots;\;
-                  C_n\,\overline{x_n} -> t_n \} \end{matrix} }
+   \inference{s \rightsquigarrow s'}
+             {\case^\psi s ~\varphi \rightsquigarrow \case^\psi s'\;\varphi }
+ ~~~~
+   \inference{\varphi \rightsquigarrow \varphi'}
+             {\case^\psi s ~\varphi \rightsquigarrow \case^\psi s ~\varphi'}
+\]
+\[ \fbox{$\varphi \rightsquigarrow \varphi'$}
+ ~~~~
+   \inference{t_i \rightsquigarrow t_i'}
+      { C_1\,\overline{x_1} -> t_1;\cdots
+       ;C_i\,\overline{x_i} -> t_i;\cdots
+       ;C_n\,\overline{x_n} -> t_n
+      ~\rightsquigarrow~
+        C_1\,\overline{x_1} -> t_1;\cdots
+       ;C_i\,\overline{x_i} -> t_i';\cdots
+       ;C_n\,\overline{x_n} -> t_n
+      }
 \]
 
 \paragraph{Well-formed contexts:}
