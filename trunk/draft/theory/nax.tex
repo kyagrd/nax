@@ -18,7 +18,7 @@
 			   \mid \forall i.\sigma
  \\
 &\text{Terms}
-	& r,s,t		&~ ::= ~ x \mid i
+	& r,s,t		&~ ::= ~ x \mid `x \mid i
 			   \mid \lambda x.t \mid r\;s \mid \Let{x}{s}{t} \\
 &	&		&~~~~~
 			   \mid \case^\psi~s~\varphi
@@ -29,12 +29,10 @@
 	& Prog		&~ ::= ~ \overline{D};t
  \\
 &\text{Declarations}
-%	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
-%                             ~ \mathbf{where} ~
-%                               \overline{C : \overline{A} -> F\,\overline{\tau}}
-	& D		&~ ::= \mathbf{data}~ F : \kappa
-                             ~ \mathbf{where} ~ \overline{C : B}
-			 ~~\mid~ x = t
+	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
+                             ~ \mathbf{where} ~
+                            \overline{C : \overline{A} -> F\,\overline{\tau}}
+			 ~~\mid~ `x = t
  \\
 &\text{List of Declarations}
 	& \overline{D}	&~ ::= \cdot \mid D,\overline{D}
@@ -52,7 +50,7 @@
 	& \psi		&~ ::= \cdot \mid \overline\iota . B
  \\
 &\text{Branches}
-	& \varphi	&~ ::= \overline{C\;\overline{x} -> t}
+	& \varphi	&~ ::= \overline{C\,\overline{x} -> t}
  \\
 &\text{Contexts}
 	& \Sigma	&~ ::= ~ \cdot
@@ -68,21 +66,19 @@
 \end{align*}
 
 \paragraph{Reduction:}
-\[ \fbox{$t \rightsquigarrow t'$}
+$ \fbox{$t \rightsquigarrow t'$}
  ~~~~
    \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
  ~~~~
    \inference{}
-      { \MIt^\psi x.\varphi\;(\In^\kappa t) \rightsquigarrow
+      { (\MIt^\psi x.\varphi)\,(\In^\kappa t) \rightsquigarrow
         \case^\psi~t~\, [\MIt^\psi \varphi/x]\varphi }
-\]
+$
 \[ \inference{}
              { \case^\psi (C\,\overline{t}) ~ \varphi \rightsquigarrow
                \varphi_{C}(\overline{t}) }
-      \big( \varphi_{C_i}(\overline{t}) = [\overline{t}/\overline{x_i}]t_i
-           ~\text{where}~ \varphi = C_1\,\overline{x_1} -> t_1;\cdots;
-                                    C_i\,\overline{x_i} -> t_i;\cdots;
-                                    C_n\,\overline{x_n} -> t_n \big)
+      ~ \big( \varphi_{C}(\overline{t}) = [\overline{t}/\overline{x}]t
+            ~~\text{where}~~ C\,\overline{x} -> t \in \varphi \big)
 \]
 \[  \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
@@ -124,10 +120,14 @@
    \inference{|- \Sigma & \Sigma |- \kappa:\square}
              {|- \Sigma,F:\kappa}
       \big( F\notin\dom(\Sigma) \big)
- ~~~~
-   \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
+\]
+\[ \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
              {|- \Sigma,C:\sigma}
       \big( C\notin\dom(\Sigma) \big)
+ ~~~~
+   \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
+             {|- \Sigma,`x:\sigma=t}
+      \big( `x\notin\dom(\Sigma) \big)
 \]
 \[ \fbox{$\Sigma|- \Delta$}
  ~~~~
@@ -170,8 +170,17 @@
 \]
 
 \paragraph{Kinding:}
-\[ \fbox{$\Sigma;\Delta |- T : \kappa$} \]
-\[ \inference[($Var$)]{X^\kappa\in\Delta & \Sigma |- \Delta}
+$ \fbox{$\Sigma;\Delta |- \sigma : \kappa$ }
+ ~~~~
+   \inference[($\forall$)]{\Sigma;\Delta, X^\kappa |- \sigma : *}
+                          {\Sigma;\Delta |- \forall X . \sigma : *}
+ ~~~~
+   \inference[($\forall i$)]{\Sigma;\Delta, i^A |- \sigma : *}
+                            {\Sigma;\Delta |- \forall i . \sigma : *}
+$
+\[ \fbox{$\Sigma;\Delta |- T : \kappa$}
+ ~~~~
+   \inference[($Var$)]{X^\kappa\in\Delta & \Sigma |- \Delta}
                       {\Sigma;\Delta |- X : \kappa}
  ~~~~
    \inference[($TCon$)]{F:\kappa\in\Sigma & \Sigma |- \Delta}
@@ -195,14 +204,6 @@
                        & \Sigma;\Delta |- \kappa = \kappa' : \square }
                        {\Sigma;\Delta |- A : \kappa'}
 \]
-\[ \fbox{$\Sigma;\Delta |- \sigma : \kappa$ }
- ~~~~
-   \inference[($\forall$)]{\Sigma;\Delta, X^\kappa |- \sigma : *}
-                          {\Sigma;\Delta |- \forall X . \sigma : *}
- ~~~~
-   \inference[($\forall i$)]{\Sigma;\Delta, i^A |- \sigma : *}
-                            {\Sigma;\Delta |- \forall i . \sigma : *}
-\]
 
 
 \paragraph{Typing:}
@@ -217,20 +218,29 @@
 \]
 \[ \fbox{$\Sigma;\Delta;\Gamma |- t : A$}
  ~~~~
-   \inference[($:$)]
-      {x:\sigma \in \Gamma & A\prec\sigma & \Sigma;\Delta |- \Gamma} 
+   \inference[($=$)]{ \Sigma;\Delta;\Gamma |- t : A
+                    & \Sigma;\Delta |- A = B : *}
+                    {\Sigma;\Delta;\Gamma |- t : B}
+\]
+\[ \inference[($:$)]
+      { x:\sigma \in \Gamma & \Sigma;\Delta |- A\prec\sigma
+      & \Sigma;\Delta |- \Gamma }
       {\Sigma;\Delta;\Gamma |- x:A}
  ~~~~
    \inference[($:i$)]
-      {i^\sigma \in \Delta & A\prec\sigma & \Sigma;\Delta |- \Gamma} 
+      { i^\sigma \in \Delta & \Sigma;\Delta |- A\prec\sigma
+      & \Sigma;\Delta |- \Gamma }
       {\Sigma;\Delta;\Gamma |- i:A}
 \]
 \[ \inference[($:C$)]
-      {C:\sigma \in \Sigma & A\prec\sigma & \Sigma;\Delta |- \Gamma}
+      { C:\sigma \in \Sigma & \Sigma;\Delta |- A\prec\sigma
+      & \Sigma;\Delta |- \Gamma }
       {\Sigma;\Delta;\Gamma |- C:A}
  ~~~~
-   \inference[($=$)]{\Sigma;\Delta;\Gamma |- t : A & \Sigma;\Delta |- A = B : *}
-                    {\Sigma;\Delta;\Gamma |- t : B}
+ \inference[($:`$)]
+      { `x:\sigma=t \in \Sigma & \Sigma;\Delta |- A\prec\sigma
+      & \Sigma;\Delta |- \Gamma }
+      {\Sigma;\Delta;\Gamma |- `x:A}
 \]
 \[ \inference[($->$$I$)]{\Sigma;\Delta;\Gamma,x:A |- t : B}
                         {\Sigma;\Delta;\Gamma |- \lambda x.t : A -> B}
@@ -250,45 +260,60 @@
    \inference[(In)]
       {}
       {\Sigma;\Delta;\Gamma |- \In^\kappa
-        : T(\mu^\kappa T)\,\overline{\tau} -> \mu^\kappa T\; \overline{\tau} }
+        : T(\mu^\kappa T)\,\overline{\tau} -> \mu^\kappa T\;\overline{\tau} }
 \]
 \[ \inference[(case)]
       { \Sigma;\Delta;\Gamma |- s : T\;\overline\tau
-      & \overline{\begin{matrix}
-          C:\sigma \in \Sigma ~&~
-          \overline{A} -> \psi(\overline{\tau}) \prec \sigma ~&~
-          \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline\tau) 
-        \end{matrix} }
-      }
-      {\Sigma;\Delta;\Gamma |- \case^\psi~s~\overline{C\;\overline{x} -> t}
+      & \Sigma;\Delta;\Gamma |-^\psi \varphi
+                             : \forall\,\overline\iota . T\,\overline\iota
+                                                    -> \psi(\overline\iota) }
+      {\Sigma;\Delta;\Gamma |- \case^\psi~s~\varphi
                              : \psi(\overline\tau) }
-      \big( \text{\KYA{pattern is total}} \big)
 \]
 \[ \inference[(MIt)]
-      { \overline{\begin{matrix}
-        C:\sigma\in\Sigma ~&~ \overline{A} -> T\,\overline\tau \prec \sigma
-      ~&~
-        \Sigma;\Delta,X^{\kappa};
-        \Gamma
-            ,x':\forall\,\overline\iota.X\overline\iota -> \psi(\overline\iota)
-            ,\overline{x:A}
-          |- t : \psi(\overline\tau) \end{matrix} }
-      }
+      { \Sigma;\Delta,X^\kappa;
+               \Gamma,x:\forall\,\overline{\iota'} . X\overline{\iota'}
+                                              -> \psi(\overline{\iota'})
+           |-^\psi \varphi
+           : \forall\,\overline\iota . T\,X\,\overline\iota
+                                     -> \psi(\overline\iota) }
       {\Sigma;\Delta;\Gamma
-           |- \MIt^\psi ~ \overline{x' ~ (C\;\overline{x}) = t}
+           |- \MIt^\psi ~ x.\varphi
             : \mu^{\kappa}\,T\;\overline\tau -> \psi(\overline\tau) }
       \big( X\notin\FV(\Gamma) \big)
 \]
+\[ \fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi : \sigma$}
+ ~~~~
+   \inference
+      { \Sigma|_F = \overline{C_k:\sigma_k}^{\;k=1..n} &
+        \overline{
+        \begin{matrix}
+         \Sigma;\Delta
+           |- \overline{A} -> F\,\overline{\tau'}\,\overline\tau\prec\sigma_k
+        ~&~
+         \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline\tau) 
+        \end{matrix} }^{\;k=1..n} }
+      { \Sigma;\Delta;\Gamma
+           |-^\psi \overline{C_k\;\overline{x} -> t}^{\;k=1..n}
+           : F\,\overline{\tau'}\,\overline\tau -> \psi(\overline\tau) }
+\]
 
 \paragraph{Extending the Global Context:}
-\[ \fbox{$\Sigma |- D \Rrightarrow \Sigma'$}
- ~~~~
-   \inference[(Ext$\Sigma$)]
-      { \Sigma |- \kappa : \square
-      & \overline{\Sigma,F:\kappa;\;\overline{\iota^K} |- B:*} }
-      { \Sigma |- \mathbf{data}~ F : \kappa ~ \mathbf{where} ~ \overline{C : B}
+\fbox{$\Sigma |- D \Rrightarrow \Sigma'$}
+\[ \inference[($\Sigma,`x$)]
+       {\Sigma;\overline{\iota^K};\cdot |- t : A}
+       {\Sigma |- `x = t \Rrightarrow \Sigma,`x:\forall\,\overline{\iota}.A=t}
+      \big( \overline{\iota} \cap \FV(t) = \emptyset \big)
+\]
+\[ \inference[($\Sigma,F$)]
+      { \overline{ \Sigma,F:\kappa;\;\overline{\iota^K}
+                      |- \overline{A} -> F\,\overline\tau :*} }
+      { \Sigma |- \mathbf{data}~ F : \kappa ~ \mathbf{where} ~
+                  \overline{C : \overline{A} -> F\,\overline\tau }
                ~\Rrightarrow~
-                  \Sigma,F:\kappa,\overline{C:\forall\,\overline{\iota}.B} }
+                  \Sigma,F:\kappa
+                        ,\overline{C:\forall\,\overline{\iota}.\overline{A}
+                                                       -> F\,\overline\tau} }
 \]
 \end{framed}
 \caption{Typing rules of Nax}
@@ -336,10 +361,10 @@ to support arbitrary recursive types in a normalizing language.
 
 $\MIt$ TODO.
 
-\paragraph{A Nax program} is a datatype declaration (\ie, a list of datatype
-definitions) followed by a term. The information about the datatype definitions
+\paragraph{A Nax program} is a list of declarations followed by a term.
+The information about the datatype definitions
 in the datatype declarations are captured in the global context ($\Sigma$)
-before type checking the term (see (Ext$\Sigma$) rule in \Fig{NaxTyping}).
+before type checking the term (see ($\Sigma,F$) rule in \Fig{NaxTyping}).
 Therefore, each of the sorting, kinding, and typing rules of Nax
 (\Fig{NaxTyping}) has an additional global context ($\Sigma$) compared to
 the corresponding rules of \Fi\ (\Fig{Fi}).
