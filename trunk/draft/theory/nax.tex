@@ -314,15 +314,17 @@ $
         : F(\mu^\kappa F)\,\overline{\tau} -> \mu^\kappa F\;\overline{\tau} }
 \]
 \[ \fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi : \sigma$}
- ~~~~
+ ~~
    \inference
       { \Sigma|_T = \overline{C_k:\sigma_k}^{\;k=1..n} &
         \overline{
         \begin{matrix}
          \Sigma;\Delta
-           |- \overline{A} -> T\,\overline{\tau'}\,\overline\tau\prec\sigma_k
-        ~&~
-         \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline\tau) 
+           |- \overline{A} -> T\,\overline{\tau'}\,\overline{\tau}_k
+              \prec
+              \sigma_k
+        &
+         \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline{\tau}_k) 
         \end{matrix} }^{\;k=1..n} }
       { \Sigma;\Delta;\Gamma
            |-^\psi \overline{C_k\;\overline{x} -> t}^{\;k=1..n}
@@ -389,24 +391,58 @@ TODO explain the kinding rules different from \Fi
 
 \paragraph{Terms and their typing rules}
 The term syntax of Nax has four additional term constructs than \Fi:
-polymorphic let binding ($\<let>\dots \<in> \dots$),
+polymorphic let bindings ($\<let> x=s \<in> t$),
 eliminators for data constructors ($\varphi^\psi$),
-Mendler style iterators ($\<MIt>\dots$), and
-constructors for recursive types ($\In^\kappa~\dots$).
+Mendler style iterators ($\<MIt>x.\varphi^\psi$), and
+constructors for recursive types ($\In^\kappa$).
 
 Polymorphic let bindings in Nax are just the usual polymorphic bindings of
 Hindley-Milner type system for generalizing types of local definitions into
 type schemes. In Nax, we generalize over term indices as well as types.
 
-Eliminators for data constructors, or case terms, are also the usual
-case terms for non-indexed types (\ie, when $\psi=\cdot$), but with
-the additional index transformer ($\psi$) annotation, which aids
-type reconstruction of case terms for indexed types.
-TODO example and explanation for index transformers
+Eliminators for data constructors ($\varphi^\psi$), or case terms, are
+case branches ($\varphi$) annotated by index transformers ($\psi$).
+For non-indexed types, case terms are the usual single level patterm matching
+expressions in functional languages. For example, a case term applited to
+a term of a non-indexed type ($\varphi^\cdot~s$) in Nax corresponds to
+a case expression over that term ($\mathbf{case}~s~\mathbf{of}~\{\varphi\}$)
+in Haskell. Note, we give trivial index transformer annotation
+(\ie, $\psi=\cdot$) for non-indexed types (\eg, booleans, natural numbers)
+since there are no indices to worry about. For indexed types,
+the indexed transformer annotation aids type reconstruction.
+For example, consider the following datatype declaration:
+\begin{align*}
+\<data> \mathtt{Judgement : Bool -> *} \<where>
+&~\mathtt{TJ : Formula -> Judgement~\{True\}};\\
+&~\mathtt{FJ : Formula -> Judgement~\{False\}}
+\end{align*}
+The datatype $\mathtt{Judgement}$ is index by boolean terms
+(\eg, $\mathtt{True}$ and $\mathtt{False}$ of type $\mathtt{Bool}$).
+The data constructor $\mathtt{TJ}$ contains a formula expected to be true and
+the data constructor $\mathtt{FJ}$ contains a formula expected to be false.
+We can define a function, which produces an inverted judgement by negating
+the formula contained in a given judgement, as follows:
+% (case branches laid out as multiple lines for better readability):
+\[
+\begin{pmatrix}
+ \mathtt{TJ}~x -> \mathtt{FJ} (\mathop{neg}~x);\\
+ \mathtt{FJ}~x -> \mathtt{TJ} (\mathop{neg}~x)\phantom{;}
+\end{pmatrix}^{i\,.\,\mathtt{Judgement}~\{`not~i\}}
+~~~
+\begin{matrix}
+ \text{where $neg$ is a function that produces negated formula}\\
+~~~\text{and $`not$ is a global function that negates booleans.}
+\end{matrix}
+\]
+Note that the index transformer ($i\,.\,\mathtt{Judgement}~\{`not~i\}$)
+captures the idea that the resulting inverted judgement has opposite
+expectations from the given judgement. The types of such case terms
+involving indexed types can also be inferred when we annotate
+the case terms with appropriate index transformers.
 
-$\<MIt>$ TODO.
+Mendler style iterators ($\<MIt> x.\varphi^\psi$) TODO.
 
-The $\In$ constructors for recursive types are as usual.
+The constructors for recursive types $\In^\kappa$ are as usual. TODO
 However, Nax does not provide destructors, or inverse functions of $\In$,
 which are often denoted as \textsf{unIn} or \textsf{out}, since we want
 to support arbitrary recursive types in a normalizing language.
@@ -414,6 +450,7 @@ to support arbitrary recursive types in a normalizing language.
 
 \paragraph{Nax programs and their typing rules}
 A Nax program is a list of declarations followed by a term.
+TODO % discuss about top level definitions as well
 The information about the datatype definitions
 in the datatype declarations are captured in the top level context ($\Sigma$)
 before type checking the term (see ($\Sigma,T$) rule in \Fig{NaxTyping}).
