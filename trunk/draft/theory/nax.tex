@@ -30,8 +30,8 @@
 			   \mid \lambda x.t \mid r\;s
 			   \mid \<let> x=s \<in> t %% \\
 %% &	&		&~~~~~
-			   \mid \case^\psi~s~\varphi
-			   \mid \MIt^\psi x.\varphi~s
+			   \mid \varphi^\psi
+			   \mid \<MIt> x.\varphi^\psi
 			   \mid \In^\kappa
  \!\!\!\! \!\!\!\! \\
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
@@ -73,7 +73,7 @@
 	& \psi		&~ ::= \cdot \mid \overline\iota . B
  \!\!\!\! \!\!\!\! \\
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
- \text{Branches}
+ \text{Case Branches}
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \varphi	&~ ::= \overline{C\,\overline{x} -> t}
  \!\!\!\! \!\!\!\! \\
@@ -104,12 +104,12 @@ $ \fbox{$t \rightsquigarrow t'$}
    \inference{}{\<let> x=s \<in> t \rightsquigarrow [s/x]t}
 $
 \[ \inference{ C\,\overline{x} -> t \in \varphi }
-             { \case^\psi (C\,\overline{t}) ~ \varphi \rightsquigarrow
+             { \varphi^\psi (C\,\overline{t})  \rightsquigarrow
                [\overline{t}/\overline{x}]t }
  ~~~~
    \inference{}
-      { \MIt^\psi x.\varphi\;(\In^\kappa t) \rightsquigarrow
-        \case^\psi~t~\, [\MIt^\psi x.\varphi/x]\varphi }
+      { \<MIt> x.\varphi^\psi\;(\In^\kappa t) \rightsquigarrow
+        [\<MIt> x.\varphi^\psi/x]\varphi^\psi ~ t}
 \]
 \[  \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
@@ -124,31 +124,20 @@ $
 \[ \inference{s\rightsquigarrow s'}
              {\<let> x=s \<in> t \rightsquigarrow \<let> x=s' \<in> t}
  ~~~~
- \inference{s \rightsquigarrow s'}
-             {\case^\psi s ~\varphi \rightsquigarrow \case^\psi s'\;\varphi }
- ~~~~
- \inference{s\rightsquigarrow s'}
-             {\MIt^\psi x.\varphi~s \rightsquigarrow \MIt^\psi x.\varphi~s'}
-\]
-\[ \inference{t\rightsquigarrow t'}
+ \inference{t\rightsquigarrow t'}
              {\<let> x=s \<in> t \rightsquigarrow \<let> x=s \<in> t'}
  ~~~~
-   \inference{\varphi \rightsquigarrow \varphi'}
-             {\case^\psi s ~\varphi \rightsquigarrow \case^\psi s ~\varphi'}
- ~~~~
-   \inference{\varphi \rightsquigarrow \varphi'}
-             {\MIt^\psi x.\varphi~s \rightsquigarrow \MIt^\psi x.\varphi'~s}
+   \inference{\varphi^\psi \rightsquigarrow \varphi'^\psi}
+             {\<MIt> x.\varphi^\psi \rightsquigarrow \<MIt> x.\varphi'^\psi}
 \]
-\[ \fbox{$\varphi \rightsquigarrow \varphi'$}
- ~~~~
-   \inference{t_i \rightsquigarrow t_i'}
-      { C_1\,\overline{x_1} -> t_1;\cdots
+\[ \inference{t_i \rightsquigarrow t_i'}
+      {(C_1\,\overline{x_1} -> t_1;\cdots
        ;C_i\,\overline{x_i} -> t_i;\cdots
-       ;C_n\,\overline{x_n} -> t_n
+       ;C_n\,\overline{x_n} -> t_n)^\psi
       ~\rightsquigarrow~
-        C_1\,\overline{x_1} -> t_1;\cdots
+       (C_1\,\overline{x_1} -> t_1;\cdots
        ;C_i\,\overline{x_i} -> t_i';\cdots
-       ;C_n\,\overline{x_n} -> t_n
+       ;C_n\,\overline{x_n} -> t_n)^\psi
       }
 \]
 
@@ -303,23 +292,22 @@ $
         : T(\mu^\kappa T)\,\overline{\tau} -> \mu^\kappa T\;\overline{\tau} }
 \]
 \[ \inference[(case)]
-      { \Sigma;\Delta;\Gamma |- s : T\;\overline\tau
-      & \Sigma;\Delta;\Gamma |-^\psi \varphi
+      { \Sigma;\Delta;\Gamma |-^\psi \varphi
                              : \forall\,\overline\iota . T\,\overline\iota
                                                     -> \psi(\overline\iota) }
-      {\Sigma;\Delta;\Gamma |- \case^\psi~s~\varphi
-                             : \psi(\overline\tau) }
+      {\Sigma;\Delta;\Gamma |- \varphi^\psi
+                             : T\;\overline\tau -> \psi(\overline\tau) }
 \]
 \[ \inference[(MIt)]
-      { \Sigma;\Delta;\Gamma |- s : \mu^{\kappa}\,T\;\overline\tau
-      & \Sigma;\Delta,X^\kappa;
+      { \Sigma;\Delta,X^\kappa;
                \Gamma,x:\forall\,\overline{\iota'} . X\overline{\iota'}
                                               -> \psi(\overline{\iota'})
            |-^\psi \varphi
            : \forall\,\overline\iota . T\,X\,\overline\iota
                                      -> \psi(\overline\iota) }
       {\Sigma;\Delta;\Gamma
-           |- \MIt^\psi x.\varphi ~ s : \psi(\overline\tau) }
+           |- \<MIt> x.\varphi^\psi
+           : \mu^{\kappa}\,T\;\overline\tau -> \psi(\overline\tau) }
       \big( X\notin\FV(\Gamma) \big)
 \]
 \[ \fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi : \sigma$}
@@ -368,7 +356,7 @@ the two zones of \Fi (the type level context $\Delta$ and
 the term level context $\Gamma$), we have top level contexts ($\Sigma$).
 The top level contexts can contain three kinds of bindings:
 type constructor binding ($F:\kappa$), data constructor binding ($C:\sigma$),
-and top level variable binding $`x:\sigma$.
+and top level variable binding ($`x:\sigma$).
 
 $F:\kappa$ is the type constructor binding.
 
@@ -399,21 +387,21 @@ TODO explain the kinding rules different from \Fi
 \paragraph{Terms and their typing rules}
 The term syntax of Nax has four additional term constructs than \Fi:
 polymorphic let binding ($\<let>\dots \<in> \dots$),
-eliminators for data constructors ($\case^\psi~\dots$),
-Mendler style iterators ($\MIt^\psi\dots$), and
+eliminators for data constructors ($\phi^\psi$),
+Mendler style iterators ($\<MIt>\dots$), and
 constructors for recursive types ($\In^\kappa~\dots$).
 
 Polymorphic let bindings in Nax are just the usual polymorphic bindings of
 Hindley-Milner type system for generalizing types of local definitions into
 type schemes. In Nax, we generalize over term indices as well as types.
 
-Eliminators for data constructors, or $\case$ terms, are also the usual
-$\case$ terms for non-indexed types (\ie, when $\psi=\cdot$), but with
+Eliminators for data constructors, or case terms, are also the usual
+case terms for non-indexed types (\ie, when $\psi=\cdot$), but with
 the additional index transformer ($\psi$) annotation, which aids
-type reconstruction of $\case$-terms for indexed types.
+type reconstruction of case terms for indexed types.
 TODO example and explanation for index transformers
 
-$\MIt$ TODO.
+$\<MIt>$ TODO.
 
 The $\In$ constructors for recursive types are as usual.
 However, Nax does not provide destructors, or inverse functions of $\In$,
