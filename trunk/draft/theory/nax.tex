@@ -82,7 +82,7 @@
 	& \Sigma	&~ ::= ~ \cdot
 			   \mid \Sigma, T: \kappa
 			   \mid \Sigma, C: \sigma
-			   \mid \Sigma, `x: \sigma = t
+			   \mid \Sigma, `x: \sigma
  \!\!\!\! \!\!\!\! \\
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
@@ -110,7 +110,7 @@
       \big( C\notin\dom(\Sigma) \big)
  ~~~~
    \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
-             {|- \Sigma,`x:\sigma=t}
+             {|- \Sigma,`x:\sigma}
       \big( `x\notin\dom(\Sigma) \big)
 \]
 \[ \fbox{$\Sigma|- \Delta$}
@@ -147,8 +147,10 @@ $
                [\overline{t}/\overline{x}]t }
  ~~~~
    \inference{}
-      { \<MIt> x.\varphi^\psi\;(\In^\kappa t) \rightsquigarrow
-        [\<MIt> x.\varphi^\psi/x]\varphi^\psi ~ t}
+             { \<MIt> x.\varphi^\psi\;(\In^\kappa t) \rightsquigarrow
+               [\<MIt> x.\varphi^\psi/x]\varphi^\psi ~ t}
+ ~~~~
+   \inference{ `x=t \in \overline{D} }{ `x \rightsquigarrow t }
 \]
 \[  \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
@@ -268,7 +270,7 @@ $
       {\Sigma;\Delta;\Gamma |- C:A}
  ~~~~
  \inference[($:`$)]
-      { `x:\sigma=t \in \Sigma & \Sigma;\Delta |- A\prec\sigma
+      { `x:\sigma \in \Sigma & \Sigma;\Delta |- A\prec\sigma
       & \Sigma;\Delta |- \Gamma }
       {\Sigma;\Delta;\Gamma |- `x:A}
 \]
@@ -331,7 +333,7 @@ $
 \fbox{$\Sigma |- D \Rrightarrow \Sigma'$}
 \[ \inference[($\Sigma,`x$)]
        {\Sigma;\overline{\iota^K};\cdot |- t : A}
-       {\Sigma |- `x = t \Rrightarrow \Sigma,`x:\forall\,\overline{\iota}.A=t}
+       {\Sigma |- `x = t \Rrightarrow \Sigma,`x:\forall\,\overline{\iota}.A}
       \big( \overline{\iota} \cap \FV(t) = \emptyset \big)
 \]
 \[ \inference[($\Sigma,T$)]
