@@ -11,9 +11,9 @@
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
  \text{Type Constructors}
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-	& T,H,A,B	&~ ::= ~ X \mid F
-			   \mid \mu^\kappa
-			   \mid T\;H \mid T\,\{s\}
+	& T,H,A,B	&~ ::= ~ X \mid T
+			   \mid \mu^\kappa(T\,\overline\tau)
+			   \mid F\;G \mid F\,\{s\}
 			   \mid A -> B
  \!\!\!\! \!\!\!\! \\
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
@@ -42,9 +42,9 @@
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
  \text{Declarations}
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
+	& D		&~ ::= \mathbf{data}~ T : \overline{K} -> *
                              ~ \mathbf{where} ~
-                            \overline{C : \overline{A} -> F\,\overline{\tau}}
+                            \overline{C : \overline{A} -> T\,\overline{\tau}}
 			 ~~\mid~ `x = t
  \!\!\!\! \!\!\!\! \\
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
@@ -60,7 +60,7 @@
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
  \text{Type Arguments}
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-	& \tau		&~ ::= ~ H \mid \{s\}
+	& \tau		&~ ::= ~ G \mid \{s\}
  \!\!\!\! \!\!\!\! \\
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
  \text{Type Argument Variables}
@@ -81,7 +81,7 @@
  \text{Contexts}
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \Sigma	&~ ::= ~ \cdot
-			   \mid \Sigma, F: \kappa
+			   \mid \Sigma, T: \kappa
 			   \mid \Sigma, C: \sigma
 			   \mid \Sigma, `x: \sigma
  \!\!\!\! \!\!\!\! \\
@@ -147,8 +147,8 @@ $
    \inference{}{|- \cdot}
  ~~~~
    \inference{|- \Sigma & \Sigma |- \kappa:\square}
-             {|- \Sigma,F:\kappa}
-      \big( F\notin\dom(\Sigma) \big)
+             {|- \Sigma,T:\kappa}
+      \big( T\notin\dom(\Sigma) \big)
 \]
 \[ \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
              {|- \Sigma,C:\sigma}
@@ -207,24 +207,24 @@ $ \fbox{$\Sigma;\Delta |- \sigma : \kappa$ }
    \inference[($\forall i$)]{\Sigma;\Delta, i^A |- \sigma : *}
                             {\Sigma;\Delta |- \forall i . \sigma : *}
 $
-\[ \fbox{$\Sigma;\Delta |- T : \kappa$}
+\[ \fbox{$\Sigma;\Delta |- F : \kappa$}
  ~~~~
    \inference[($Var$)]{X^\kappa\in\Delta & \Sigma |- \Delta}
                       {\Sigma;\Delta |- X : \kappa}
  ~~~~
-   \inference[($TCon$)]{F:\kappa\in\Sigma & \Sigma |- \Delta}
-                       {\Sigma;\Delta |- F : \kappa}
+   \inference[($TCon$)]{T:\kappa\in\Sigma & \Sigma |- \Delta}
+                       {\Sigma;\Delta |- T : \kappa}
  ~~~~
    \inference[($\mu$)]{\Sigma |- \kappa : \square}
                        {\Sigma;\Delta |- \mu^\kappa : \kappa -> \kappa}
 \]
-\[ \inference[($@$)]{ \Sigma;\Delta |- T : \kappa -> \kappa'
-                    & \Sigma;\Delta |- H : \kappa }
-                    {\Sigma;\Delta |- T\,H : \kappa'}
+\[ \inference[($@$)]{ \Sigma;\Delta |- F : \kappa -> \kappa'
+                    & \Sigma;\Delta |- G : \kappa }
+                    {\Sigma;\Delta |- F\,G : \kappa'}
  ~~~~
-   \inference[($@i$)]{ \Sigma;\Delta |- T : A -> \kappa
+   \inference[($@i$)]{ \Sigma;\Delta |- F : A -> \kappa
                      & \Sigma;\Delta;\cdot |- s : A }
-                     {\Sigma;\Delta |- T\,\{s\} : \kappa}
+                     {\Sigma;\Delta |- F\,\{s\} : \kappa}
 \]
 \[ \inference[($->$)]{\Sigma;\Delta |- A : * & \Sigma;\Delta |- B : *}
                      {\Sigma;\Delta |- A -> B : * }
@@ -289,21 +289,21 @@ $
    \inference[(In)]
       {}
       {\Sigma;\Delta;\Gamma |- \In^\kappa
-        : T(\mu^\kappa T)\,\overline{\tau} -> \mu^\kappa T\;\overline{\tau} }
+        : F(\mu^\kappa F)\,\overline{\tau} -> \mu^\kappa F\;\overline{\tau} }
 \]
 \[ \inference[(case)]
       { \Sigma;\Delta;\Gamma |-^\psi \varphi
-                             : \forall\,\overline\iota . T\,\overline\iota
+                             : \forall\,\overline\iota . F\,\overline\iota
                                                     -> \psi(\overline\iota) }
       {\Sigma;\Delta;\Gamma |- \varphi^\psi
-                             : T\;\overline\tau -> \psi(\overline\tau) }
+                             : F\;\overline\tau -> \psi(\overline\tau) }
 \]
 \[ \inference[(MIt)]
       { \Sigma;\Delta,X^\kappa;
                \Gamma,x:\forall\,\overline{\iota'} . X\overline{\iota'}
                                               -> \psi(\overline{\iota'})
            |-^\psi \varphi
-           : \forall\,\overline\iota . T\,X\,\overline\iota
+           : \forall\,\overline\iota . F\,X\,\overline\iota
                                      -> \psi(\overline\iota) }
       {\Sigma;\Delta;\Gamma
            |- \<MIt> x.\varphi^\psi
@@ -313,17 +313,17 @@ $
 \[ \fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi : \sigma$}
  ~~~~
    \inference
-      { \Sigma|_F = \overline{C_k:\sigma_k}^{\;k=1..n} &
+      { \Sigma|_T = \overline{C_k:\sigma_k}^{\;k=1..n} &
         \overline{
         \begin{matrix}
          \Sigma;\Delta
-           |- \overline{A} -> F\,\overline{\tau'}\,\overline\tau\prec\sigma_k
+           |- \overline{A} -> T\,\overline{\tau'}\,\overline\tau\prec\sigma_k
         ~&~
          \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline\tau) 
         \end{matrix} }^{\;k=1..n} }
       { \Sigma;\Delta;\Gamma
            |-^\psi \overline{C_k\;\overline{x} -> t}^{\;k=1..n}
-           : F\,\overline{\tau'}\,\overline\tau -> \psi(\overline\tau) }
+           : T\,\overline{\tau'}\,\overline\tau -> \psi(\overline\tau) }
 \]
 
 \paragraph{Extending the Global Context:}
@@ -333,15 +333,15 @@ $
        {\Sigma |- `x = t \Rrightarrow \Sigma,`x:\forall\,\overline{\iota}.A=t}
       \big( \overline{\iota} \cap \FV(t) = \emptyset \big)
 \]
-\[ \inference[($\Sigma,F$)]
-      { \overline{ \Sigma,F:\kappa;\;\overline{\iota^K}
-                      |- \overline{A} -> F\,\overline\tau :*} }
-      { \Sigma |- \mathbf{data}~ F : \kappa ~ \mathbf{where} ~
-                  \overline{C : \overline{A} -> F\,\overline\tau }
+\[ \inference[($\Sigma,T$)]
+      { \overline{ \Sigma,T:\kappa;\;\overline{\iota^K}
+                      |- \overline{A} -> T\,\overline\tau :*} }
+      { \Sigma |- \mathbf{data}~ T : \kappa ~ \mathbf{where} ~
+                  \overline{C : \overline{A} -> T\,\overline\tau }
                ~\Rrightarrow~
-                  \Sigma,F:\kappa
+                  \Sigma,T:\kappa
                         ,\overline{C:\forall\,\overline{\iota}.\overline{A}
-                                                       -> F\,\overline\tau} }
+                                                       -> T\,\overline\tau} }
 \]
 \end{framed}
 \caption{Typing rules of Nax}
@@ -355,14 +355,14 @@ The typing context of Nax spearated into three zones. In addition to
 the two zones of \Fi (the type level context $\Delta$ and
 the term level context $\Gamma$), we have top level contexts ($\Sigma$).
 The top level contexts can contain three kinds of bindings:
-type constructor binding ($F:\kappa$), data constructor binding ($C:\sigma$),
+type constructor binding ($T:\kappa$), data constructor binding ($C:\sigma$),
 and top level variable binding ($`x:\sigma$).
 
-$F:\kappa$ is the type constructor binding.
+$T:\kappa$ is the type constructor binding.
 
 $C:\sigma$ is the data constructor binding.
 
-$`x:\sigma$
+$`x:\sigma$ is the top level variable binding.
 
 \paragraph{Kinds and their sorting rules}
 The kind syntax of Nax is exactly the same as the kind syntax of \Fi.
@@ -370,16 +370,17 @@ The sorting rules are the same as \Fi\ except we judge the sorts of kinds
 under the top level context ($\Sigma$).
 
 \paragraph{Type constructors and their kinding rules}
-The type syntax of Nax is similar to \Fi, but different from \Fi in two aspects.
+The syntax for type constructors of Nax is similar to \Fi, but
+different from \Fi\ in two aspects.
 
-Firstly, polymorphic types are separate out as type schemes in Nax
+Firstly, polymorphic types are separate out as type schemes ($\sigma$) in Nax
 since the type system of Nax is in flavour of Hindley-Milner to support
 type inference (or, reconstruction).
 
 Secondly, there are no type level abstractions and index abstractions in Nax.
 Instead of defining type constructors expecting type arguments by abstraction
 and index abstraction at type level, Nax supports datatype definitions
-($\mathbf{data}~F:\kappa~\mathbf{where}~\dots$) and recursive type operators
+($\mathbf{data}~T:\kappa~\mathbf{where}~\dots$) and recursive type operators
 ($\mu^\kappa$) as language constructs.
 
 TODO explain the kinding rules different from \Fi
@@ -387,7 +388,7 @@ TODO explain the kinding rules different from \Fi
 \paragraph{Terms and their typing rules}
 The term syntax of Nax has four additional term constructs than \Fi:
 polymorphic let binding ($\<let>\dots \<in> \dots$),
-eliminators for data constructors ($\phi^\psi$),
+eliminators for data constructors ($\varphi^\psi$),
 Mendler style iterators ($\<MIt>\dots$), and
 constructors for recursive types ($\In^\kappa~\dots$).
 
@@ -409,10 +410,11 @@ which are often denoted as \textsf{unIn} or \textsf{out}, since we want
 to support arbitrary recursive types in a normalizing language.
 
 
-\paragraph{A Nax program} is a list of declarations followed by a term.
+\paragraph{Nax programs and their typing rules}
+A Nax program is a list of declarations followed by a term.
 The information about the datatype definitions
 in the datatype declarations are captured in the top level context ($\Sigma$)
-before type checking the term (see ($\Sigma,F$) rule in \Fig{NaxTyping}).
+before type checking the term (see ($\Sigma,T$) rule in \Fig{NaxTyping}).
 Therefore, each of the sorting, kinding, and typing rules of Nax
 (\Fig{NaxTyping}) has an additional top level context ($\Sigma$) compared to
 the corresponding rules of \Fi\ (\Fig{Fi}).
