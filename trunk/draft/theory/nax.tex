@@ -3,69 +3,99 @@
 \begin{framed}
 \paragraph{Syntax:}
 \begin{align*}
-&\text{Kinds}
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Kinds}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \kappa	&~ ::= ~ * \mid \kappa -> \kappa \mid A -> \kappa
- \\
-&\text{Type Constructors}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Type Constructors}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& T,H,A,B	&~ ::= ~ X \mid F
 			   \mid \mu^\kappa
 			   \mid T\;H \mid T\,\{s\}
 			   \mid A -> B
- \\
-&\text{Type Schemes}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Type Schemes}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \sigma	&~ ::= A
 			   \mid \forall X.\sigma
 			   \mid \forall i.\sigma
- \\
-&\text{Terms}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Terms}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& r,s,t		&~ ::= ~ x \mid `x \mid i
 			   \mid \lambda x.t \mid r\;s
-			   \mid \<let> x=s \<in> t \\
-&	&		&~~~~~
+			   \mid \<let> x=s \<in> t %% \\
+%% &	&		&~~~~~
 			   \mid \case^\psi~s~\varphi
-			   \mid \MIt^\psi x.\varphi
+			   \mid \MIt^\psi x.\varphi~s
 			   \mid \In^\kappa
- \\
-&\text{Program}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Program}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& Prog		&~ ::= ~ \overline{D};t
- \\
-&\text{Declarations}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Declarations}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& D		&~ ::= \mathbf{data}~ F : \overline{K} -> *
                              ~ \mathbf{where} ~
                             \overline{C : \overline{A} -> F\,\overline{\tau}}
 			 ~~\mid~ `x = t
- \\
-&\text{List of Declarations}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{List of Declarations}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \overline{D}	&~ ::= \cdot \mid D,\overline{D}
- \\
-&\text{Kind Arguments}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Kind Arguments}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& K		&~ ::= ~ \kappa \mid A
- \\
-&\text{Type Arguments}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Type Arguments}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \tau		&~ ::= ~ H \mid \{s\}
- \\
-&\text{Type Argument Variables}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Type Argument Variables}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \iota		&~ ::= ~ X \mid i
- \\
-&\text{Index Transformers}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Index Transformers}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \psi		&~ ::= \cdot \mid \overline\iota . B
- \\
-&\text{Branches}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Branches}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \varphi	&~ ::= \overline{C\,\overline{x} -> t}
- \\
-&\text{Contexts}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Contexts}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 	& \Sigma	&~ ::= ~ \cdot
 			   \mid \Sigma, F: \kappa
 			   \mid \Sigma, C: \sigma
-			   \mid \Sigma, x: \sigma
- \\
-&	& \Delta	&~ ::= ~ \cdot
+			   \mid \Sigma, `x: \sigma
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \Delta	&~ ::= ~ \cdot
 			   \mid \Delta, X^\kappa
 			   \mid \Delta, i^\sigma
- \\
-&	& \Gamma	&~ ::= ~ \cdot \mid \Gamma,x:\sigma
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \Gamma	&~ ::= ~ \cdot \mid \Gamma,x:\sigma
+ \!\!\!\! \!\!\!\!
 \end{align*}
-
 \paragraph{Reduction:}
 $ \fbox{$t \rightsquigarrow t'$}
  ~~~~
@@ -78,8 +108,8 @@ $
                [\overline{t}/\overline{x}]t }
  ~~~~
    \inference{}
-      { (\MIt^\psi x.\varphi)\,(\In^\kappa t) \rightsquigarrow
-        \case^\psi~t~\, [\MIt^\psi \varphi/x]\varphi }
+      { \MIt^\psi x.\varphi\;(\In^\kappa t) \rightsquigarrow
+        \case^\psi~t~\, [\MIt^\psi x.\varphi/x]\varphi }
 \]
 \[  \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
@@ -91,14 +121,23 @@ $
              {C~t_1\cdots t_i \cdots t_n \rightsquigarrow
               C~t_1\cdots t_i'\cdots t_n }
 \]
-\[ \inference{\varphi \rightsquigarrow \varphi'}
-             {\MIt^\psi x.\varphi \rightsquigarrow \MIt^\psi x.\varphi'}
+\[ \inference{s\rightsquigarrow s'}
+             {\<let> x=s \<in> t \rightsquigarrow \<let> x=s' \<in> t}
  ~~~~
-   \inference{s \rightsquigarrow s'}
+ \inference{s \rightsquigarrow s'}
              {\case^\psi s ~\varphi \rightsquigarrow \case^\psi s'\;\varphi }
+ ~~~~
+ \inference{s\rightsquigarrow s'}
+             {\MIt^\psi x.\varphi~s \rightsquigarrow \MIt^\psi x.\varphi~s'}
+\]
+\[ \inference{t\rightsquigarrow t'}
+             {\<let> x=s \<in> t \rightsquigarrow \<let> x=s \<in> t'}
  ~~~~
    \inference{\varphi \rightsquigarrow \varphi'}
              {\case^\psi s ~\varphi \rightsquigarrow \case^\psi s ~\varphi'}
+ ~~~~
+   \inference{\varphi \rightsquigarrow \varphi'}
+             {\MIt^\psi x.\varphi~s \rightsquigarrow \MIt^\psi x.\varphi'~s}
 \]
 \[ \fbox{$\varphi \rightsquigarrow \varphi'$}
  ~~~~
@@ -272,15 +311,15 @@ $
                              : \psi(\overline\tau) }
 \]
 \[ \inference[(MIt)]
-      { \Sigma;\Delta,X^\kappa;
+      { \Sigma;\Delta;\Gamma |- s : \mu^{\kappa}\,T\;\overline\tau
+      & \Sigma;\Delta,X^\kappa;
                \Gamma,x:\forall\,\overline{\iota'} . X\overline{\iota'}
                                               -> \psi(\overline{\iota'})
            |-^\psi \varphi
            : \forall\,\overline\iota . T\,X\,\overline\iota
                                      -> \psi(\overline\iota) }
       {\Sigma;\Delta;\Gamma
-           |- \MIt^\psi ~ x.\varphi
-            : \mu^{\kappa}\,T\;\overline\tau -> \psi(\overline\tau) }
+           |- \MIt^\psi x.\varphi ~ s : \psi(\overline\tau) }
       \big( X\notin\FV(\Gamma) \big)
 \]
 \[ \fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi : \sigma$}
@@ -323,10 +362,24 @@ $
 
 The Nax language definition is described in \Fig{NaxSyntax} and \Fig{NaxTyping}.
 
+\paragraph{Typing contexts}
+The typing context of Nax spearated into three zones. In addition to
+the two zones of \Fi (the type level context $\Delta$ and
+the term level context $\Gamma$), we have top level contexts ($\Sigma$).
+The top level contexts can contain three kinds of bindings:
+type constructor binding ($F:\kappa$), data constructor binding ($C:\sigma$),
+and top level variable binding $`x:\sigma$.
+
+$F:\kappa$ is the type constructor binding.
+
+$C:\sigma$ is the data constructor binding.
+
+$`x:\sigma$
+
 \paragraph{Kinds and their sorting rules}
 The kind syntax of Nax is exactly the same as the kind syntax of \Fi.
 The sorting rules are the same as \Fi\ except we judge the sorts of kinds
-under the global context ($\Sigma$).
+under the top level context ($\Sigma$).
 
 \paragraph{Type constructors and their kinding rules}
 The type syntax of Nax is similar to \Fi, but different from \Fi in two aspects.
@@ -347,32 +400,33 @@ TODO explain the kinding rules different from \Fi
 The term syntax of Nax has four additional term constructs than \Fi:
 polymorphic let binding ($\<let>\dots \<in> \dots$),
 eliminators for data constructors ($\case^\psi~\dots$),
-constructors ($\In^\kappa~\dots$) for recursive types, and
-Mendler style iterators ($\MIt^\psi~\dots$).
+Mendler style iterators ($\MIt^\psi\dots$), and
+constructors for recursive types ($\In^\kappa~\dots$).
 
 Polymorphic let bindings in Nax are just the usual polymorphic bindings of
 Hindley-Milner type system for generalizing types of local definitions into
 type schemes. In Nax, we generalize over term indices as well as types.
 
-Eliminators for data constructors, or $\case$-terms, are also the usual
-$\case$-terms for non-indexed types (\ie, when $\psi=\cdot$), but with
+Eliminators for data constructors, or $\case$ terms, are also the usual
+$\case$ terms for non-indexed types (\ie, when $\psi=\cdot$), but with
 the additional index transformer ($\psi$) annotation, which aids
 type reconstruction of $\case$-terms for indexed types.
 TODO example and explanation for index transformers
+
+$\MIt$ TODO.
 
 The $\In$ constructors for recursive types are as usual.
 However, Nax does not provide destructors, or inverse functions of $\In$,
 which are often denoted as \textsf{unIn} or \textsf{out}, since we want
 to support arbitrary recursive types in a normalizing language.
 
-$\MIt$ TODO.
 
 \paragraph{A Nax program} is a list of declarations followed by a term.
 The information about the datatype definitions
-in the datatype declarations are captured in the global context ($\Sigma$)
+in the datatype declarations are captured in the top level context ($\Sigma$)
 before type checking the term (see ($\Sigma,F$) rule in \Fig{NaxTyping}).
 Therefore, each of the sorting, kinding, and typing rules of Nax
-(\Fig{NaxTyping}) has an additional global context ($\Sigma$) compared to
+(\Fig{NaxTyping}) has an additional top level context ($\Sigma$) compared to
 the corresponding rules of \Fi\ (\Fig{Fi}).
 %% TODO talk about embedding (fwd ref)???
 
