@@ -19,11 +19,12 @@
  \\
 &\text{Terms}
 	& r,s,t		&~ ::= ~ x \mid `x \mid i
-			   \mid \lambda x.t \mid r\;s \mid \Let{x}{s}{t} \\
+			   \mid \lambda x.t \mid r\;s
+			   \mid \<let> x=s \<in> t \\
 &	&		&~~~~~
 			   \mid \case^\psi~s~\varphi
-			   \mid \In^\kappa
 			   \mid \MIt^\psi x.\varphi
+			   \mid \In^\kappa
  \\
 &\text{Program}
 	& Prog		&~ ::= ~ \overline{D};t
@@ -70,15 +71,15 @@ $ \fbox{$t \rightsquigarrow t'$}
  ~~~~
    \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
  ~~~~
+   \inference{}{\<let> x=s \<in> t \rightsquigarrow [s/x]t}
+$
+\[ \inference{ C\,\overline{x} -> t \in \varphi }
+             { \case^\psi (C\,\overline{t}) ~ \varphi \rightsquigarrow
+               [\overline{t}/\overline{x}]t }
+ ~~~~
    \inference{}
       { (\MIt^\psi x.\varphi)\,(\In^\kappa t) \rightsquigarrow
         \case^\psi~t~\, [\MIt^\psi \varphi/x]\varphi }
-$
-\[ \inference{}
-             { \case^\psi (C\,\overline{t}) ~ \varphi \rightsquigarrow
-               \varphi_{C}(\overline{t}) }
-      ~ \big( \varphi_{C}(\overline{t}) = [\overline{t}/\overline{x}]t
-            ~~\text{where}~~ C\,\overline{x} -> t \in \varphi \big)
 \]
 \[  \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
@@ -159,13 +160,13 @@ $
 \paragraph{Sorting:}
 \[ \fbox{$\Sigma |- \kappa : \square$}
  ~~~~
-  \inference[($A$)]{}{\Sigma |- *:\square}
+  \inference[($A$)]{}{\Sigma |- * : \square}
  ~~
-   \inference[($R$)]{ \Sigma |- \kappa:\square
-                    & \Sigma |- \kappa':\square }
+   \inference[($R$)]{ \Sigma |- \kappa  : \square
+                    & \Sigma |- \kappa' : \square }
                     { \Sigma |- \kappa -> \kappa' : \square }
  ~~
-   \inference[($Ri$)]{\Sigma;\cdot |- A:* & \Sigma |- \kappa:\square}
+   \inference[($Ri$)]{\Sigma;\cdot |- A : * & \Sigma |- \kappa : \square}
                      {\Sigma |- A -> \kappa : \square}
 \]
 
@@ -252,7 +253,7 @@ $
 \[ \inference[(let)]
       { \Sigma;\Delta,\overline{\iota^K};\Gamma |- s : A \\
         \Sigma;\Delta;\Gamma,x:\forall\,\overline{\iota}.A |- t : B }
-      {\Sigma;\Delta;\Gamma |- \Let{x}{s}{t} : B }
+      {\Sigma;\Delta;\Gamma |- \<let> x=s \<in> t : B }
       \begin{pmatrix} \overline{\iota} \cap \FV(s) = \emptyset \\
                       \overline{\iota} \cap \FV(\Gamma) = \emptyset
       \end{pmatrix}
@@ -322,24 +323,29 @@ $
 
 The Nax language definition is described in \Fig{NaxSyntax} and \Fig{NaxTyping}.
 
-\paragraph{The kind syntax} of Nax is exactly the same as
-the kind syntax of \Fi.
+\paragraph{Kinds and their sorting rules}
+The kind syntax of Nax is exactly the same as the kind syntax of \Fi.
+The sorting rules are the same as \Fi\ except we judge the sorts of kinds
+under the global context ($\Sigma$).
 
-\paragraph{The type syntax} of Nax is similar to \Fi, but different from
-\Fi in two aspects.
+\paragraph{Type constructors and their kinding rules}
+The type syntax of Nax is similar to \Fi, but different from \Fi in two aspects.
 
 Firstly, polymorphic types are separate out as type schemes in Nax
-since the type system of Nax is in flavour of Hindley-Milner
-to support type inference (or, reconstruction).
+since the type system of Nax is in flavour of Hindley-Milner to support
+type inference (or, reconstruction).
 
 Secondly, there are no type level abstractions and index abstractions in Nax.
-Instead of defining type constructors expecting type arguments by
-abstraction and index abstraction at type level, Nax supports datatype
-definitions ($\mathbf{data}~F:\kappa~\mathbf{where}~\dots$) and
-recursive type operators ($\mu^\kappa$) as language constructs.
+Instead of defining type constructors expecting type arguments by abstraction
+and index abstraction at type level, Nax supports datatype definitions
+($\mathbf{data}~F:\kappa~\mathbf{where}~\dots$) and recursive type operators
+($\mu^\kappa$) as language constructs.
 
-\paragraph{The term syntax} of Nax has four additional term constructs than \Fi:
-polymorphic let binding ($\sflet~\dots$),
+TODO explain the kinding rules different from \Fi
+
+\paragraph{Terms and their typing rules}
+The term syntax of Nax has four additional term constructs than \Fi:
+polymorphic let binding ($\<let>\dots \<in> \dots$),
 eliminators for data constructors ($\case^\psi~\dots$),
 constructors ($\In^\kappa~\dots$) for recursive types, and
 Mendler style iterators ($\MIt^\psi~\dots$).
@@ -369,4 +375,7 @@ Therefore, each of the sorting, kinding, and typing rules of Nax
 (\Fig{NaxTyping}) has an additional global context ($\Sigma$) compared to
 the corresponding rules of \Fi\ (\Fig{Fi}).
 %% TODO talk about embedding (fwd ref)???
+
+
+\subsection{Type inference (or, reconstruction)}
 

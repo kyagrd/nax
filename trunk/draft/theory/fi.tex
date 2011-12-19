@@ -241,7 +241,30 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
 \end{figure}
 
 \subsection{The constructs new to \Fi}
-\paragraph{Kinds and Sorting rules}
+
+\paragraph{Typing contexts}
+Typing contexts are split into two zones:
+type level contexts ($\Delta$) for type level bindings
+and term level contexts ($\Gamma$) for term level bindings.
+We have a new form of index variable bindings ($i^A$) that can appear in
+type level contexts in addition to type variable bindings ($X^\kappa$).
+There is only one form of term level binding ($x:A$) that can appear in
+term level contexts.
+
+A type level context $\Delta$ is well-formed when it is either empty,
+extended by a type variable binding $X^\kappa$ whose kind $\kappa$ is
+well-sorted under $\Delta$, or extended by an index binding $i^A$
+whose type $A$ is well-kinded under the empty type level context.
+Similarly to the well-sorted rule ($Ri$) for indexed arrow kinds,
+we require $A$ of $i^A$ to be well-kinded in the empty type level context
+($\cdot$), since no bindings are introduced at kind level in \Fi.
+
+A term level context $\Gamma$ is well-formed under a type level contexts
+$\Delta$ when it is either empty or extended by a term variable binding
+$x:A$ whose type $A$ is well-kinded under $\Delta$.
+
+
+\paragraph{Kinds and their sorting rules}
 We extend the kind syntax of \Fw\ by indexed arrow kinds of the form
 \newFi{A -> \kappa}. The formation of indexed arrow kinds is
 governed by the sorting rule \newFi{(Ri)}. The rule $(Ri)$ specifies that
@@ -253,7 +276,7 @@ the index arrow kind $A -> \kappa$ must be well kindined under
 the empty type level context ($\cdot$), since no bindings are
 introduced at kind level in \Fi.
 
-\paragraph{Type Constructors and Kinding rules}
+\paragraph{Type constructors and their kinding rules}
 We extend the type constructor syntax by three constructs,
 and extend the kinding rules accordingly for these new constructs.
 
@@ -287,7 +310,7 @@ equality over kinds. The equality over kinds is the usual structural
 equality extended by type equality when comparing indexed arrow kinds
 (see \Fig{eqFi}).
 
-\paragraph{Terms and Typing rules}
+\paragraph{Terms and their typing rules}
 The term syntax is extended by index variables (\newFi{i}), since terms used
 as indices may have index variables as well as term variables
 (\eg, $\lambda i^A.F\{(\lambda x.x\;i)\,(\lambda x.x)\}$).
@@ -336,34 +359,15 @@ index variables already in scope. For example, $\lambda i^A.F\{i\}$ should be
 well-kinded under a context where $F$ is well-kinded,
 justified by the following derivation:
 \[ \inference[($\lambda i$)]
-      { \inference[(@i)]{ \Delta, i^A |- F : A -> \kappa
-                        & \inference[($:i$)]{ i^A\in \Delta,i^A
-                                            & \Delta |- \cdot }
-                                            {\Delta,i^A;\cdot |- i:A}
-                        }
-                        {\Delta, i^A |- F\{i\} : \kappa} }
+      { \inference[($@i$)]{ \Delta, i^A |- F : A -> \kappa
+                          & \inference[($:i$)]{ i^A\in \Delta,i^A
+                                              & \Delta |- \cdot }
+                                              {\Delta,i^A;\cdot |- i:A}
+                          }
+                          {\Delta, i^A |- F\{i\} : \kappa} }
       {\Delta |- \lambda i^A.F\{i\} :\kappa}
 \]
 
-\paragraph{Typing contexts}
-We have type level contexts ($\Delta$) for type level bindings
-and term level contexts ($\Gamma$) for term level bindings.
-We have a new form of index variable bindings ($i^A$) that can appear in
-type level contexts in addition to type variable bindings ($X^\kappa$).
-There is only one form of term level binding ($x:A$) that can appear in
-term level contexts.
-
-A type level context $\Delta$ is well-formed when it is either empty, extended by
-a type variable binding $X^\kappa$ whose kind $\kappa$ is well-sorted
-under $\Delta$, or extended by an index binding $i^A$ whose type $A$ is
-well-kinded under the empty type level context. Similarly to the well-sorted rule
-($Ri$) for indexed arrow kinds, we require $A$ of $i^A$ to be well-kinded in
-the empty type level context ($\cdot$), since no bindings are introduced
-at kind level in \Fi.
-
-A term level context $\Gamma$ is well-formed under a type level contexts $\Delta$
-when it is either empty or extended by a term variable binding $x:A$ whose
-type $A$ is well-kinded under $\Delta$.
 
 
 \subsection{Metatheory?}

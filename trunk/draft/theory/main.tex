@@ -73,11 +73,15 @@ Marcelo P. Fiore \quad\qquad Andrew M. Pitts
 \newcommand{\MIt}{\mathsf{MIt}}
 \newcommand{\In}{\mathsf{In}}
 \newcommand{\case}{\mathsf{case}}
-\newcommand{\sflet}{\mathsf{let}}
-\newcommand{\sfin}{\mathsf{in}}
-\newcommand{\Let}[3]{\sflet\;#1 = #2\;\sfin\; #3}
 
 \newcommand{\defeq}{\stackrel{\mathrm{def}}{=}}
+\newcommand{\tyinf}{\mathrel{\triangleright}}
+
+%%%%% semantic package commands
+\reservestyle[\mathinner]{\command}{\mathsf}
+\command{let[let\;],in[\;in\;]}
+
+
 
 \begin{document}
 \maketitle
