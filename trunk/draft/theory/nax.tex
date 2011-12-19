@@ -42,9 +42,8 @@
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
  \text{Declarations}
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-	& D		&~ ::= \mathbf{data}~ T : \overline{K} -> *
-                             ~ \mathbf{where} ~
-                            \overline{C : \overline{A} -> T\,\overline{\tau}}
+	& D		&~ ::= \<data> T : \overline{K} -> * \<where>
+                               \overline{C : \overline{A} -> T\,\overline{\tau}}
 			 ~~\mid~ `x = t
  \!\!\!\! \!\!\!\! \\
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
@@ -83,7 +82,7 @@
 	& \Sigma	&~ ::= ~ \cdot
 			   \mid \Sigma, T: \kappa
 			   \mid \Sigma, C: \sigma
-			   \mid \Sigma, `x: \sigma
+			   \mid \Sigma, `x: \sigma = t
  \!\!\!\! \!\!\!\! \\
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
@@ -96,6 +95,46 @@
 	& \Gamma	&~ ::= ~ \cdot \mid \Gamma,x:\sigma
  \!\!\!\! \!\!\!\!
 \end{align*}
+
+\paragraph{Well-formed contexts:}
+\[ \fbox{$|- \Sigma$}
+ ~~~~
+   \inference{}{|- \cdot}
+ ~~~~
+   \inference{|- \Sigma & \Sigma |- \kappa:\square}
+             {|- \Sigma,T:\kappa}
+      \big( T\notin\dom(\Sigma) \big)
+\]
+\[ \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
+             {|- \Sigma,C:\sigma}
+      \big( C\notin\dom(\Sigma) \big)
+ ~~~~
+   \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
+             {|- \Sigma,`x:\sigma=t}
+      \big( `x\notin\dom(\Sigma) \big)
+\]
+\[ \fbox{$\Sigma|- \Delta$}
+ ~~~~
+   \inference{|- \Sigma}{\Sigma |- \cdot}
+ ~~~~
+   \inference{\Sigma |- \Delta & \Sigma |- \kappa:\square}
+             {\Sigma |- \Delta,X^\kappa}
+      \big( X\notin\dom(\Delta) \big)
+ ~~~~ 
+   \inference{\Sigma |- \Delta & \Sigma;\cdot |- \sigma:*}
+             {\Sigma |- \Delta,i^\sigma}
+      \big( i\notin\dom(\Delta) \big)
+\]
+\[ \fbox{$\Sigma;\Delta |- \Gamma$}
+ ~~~~
+   \inference{\Sigma |- \Delta}{\Sigma;\Delta |- \cdot}
+ ~~~~
+   \inference{\Sigma;\Delta |- \Gamma & \Sigma;\Delta |- A:*}
+             {\Sigma;\Delta |- \Gamma,x:A}
+      \big( x\notin\dom(\Gamma) \big)
+\]
+~\\
+
 \paragraph{Reduction:}
 $ \fbox{$t \rightsquigarrow t'$}
  ~~~~
@@ -140,44 +179,6 @@ $
        ;C_n\,\overline{x_n} -> t_n)^\psi
       }
 \]
-
-\paragraph{Well-formed contexts:}
-\[ \fbox{$|- \Sigma$}
- ~~~~
-   \inference{}{|- \cdot}
- ~~~~
-   \inference{|- \Sigma & \Sigma |- \kappa:\square}
-             {|- \Sigma,T:\kappa}
-      \big( T\notin\dom(\Sigma) \big)
-\]
-\[ \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
-             {|- \Sigma,C:\sigma}
-      \big( C\notin\dom(\Sigma) \big)
- ~~~~
-   \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
-             {|- \Sigma,`x:\sigma=t}
-      \big( `x\notin\dom(\Sigma) \big)
-\]
-\[ \fbox{$\Sigma|- \Delta$}
- ~~~~
-   \inference{|- \Sigma}{\Sigma |- \cdot}
- ~~~~
-   \inference{\Sigma |- \Delta & \Sigma |- \kappa:\square}
-             {\Sigma |- \Delta,X^\kappa}
-      \big( X\notin\dom(\Delta) \big)
- ~~~~ 
-   \inference{\Sigma |- \Delta & \Sigma;\cdot |- \sigma:*}
-             {\Sigma |- \Delta,i^\sigma}
-      \big( i\notin\dom(\Delta) \big)
-\]
-\[ \fbox{$\Sigma;\Delta |- \Gamma$}
- ~~~~
-   \inference{\Sigma |- \Delta}{\Sigma;\Delta |- \cdot}
- ~~~~
-   \inference{\Sigma;\Delta |- \Gamma & \Sigma;\Delta |- A:*}
-             {\Sigma;\Delta |- \Gamma,x:A}
-      \big( x\notin\dom(\Gamma) \big)
-\]
 \end{framed}
 \caption{Syntax and Reduction rules of Nax}
 \label{fig:NaxSyntax}
@@ -215,8 +216,8 @@ $
    \inference[($TCon$)]{T:\kappa\in\Sigma & \Sigma |- \Delta}
                        {\Sigma;\Delta |- T : \kappa}
  ~~~~
-   \inference[($\mu$)]{\Sigma |- \kappa : \square}
-                       {\Sigma;\Delta |- \mu^\kappa : \kappa -> \kappa}
+   \inference[($\mu$)]{\Sigma;\Delta |- T\,\overline\tau : \kappa -> \kappa}
+                      {\Sigma;\Delta |- \mu^\kappa(T\,\overline\tau) : \kappa}
 \]
 \[ \inference[($@$)]{ \Sigma;\Delta |- F : \kappa -> \kappa'
                     & \Sigma;\Delta |- G : \kappa }
@@ -286,12 +287,7 @@ $
                       \overline{\iota} \cap \FV(\Gamma) = \emptyset
       \end{pmatrix}
  ~~~~
-   \inference[(In)]
-      {}
-      {\Sigma;\Delta;\Gamma |- \In^\kappa
-        : F(\mu^\kappa F)\,\overline{\tau} -> \mu^\kappa F\;\overline{\tau} }
-\]
-\[ \inference[(case)]
+   \inference[(case)]
       { \Sigma;\Delta;\Gamma |-^\psi \varphi
                              : \forall\,\overline\iota . F\,\overline\iota
                                                     -> \psi(\overline\iota) }
@@ -309,6 +305,11 @@ $
            |- \<MIt> x.\varphi^\psi
            : \mu^{\kappa}\,T\;\overline\tau -> \psi(\overline\tau) }
       \big( X\notin\FV(\Gamma) \big)
+\]
+\[ \inference[(In)]
+      {}
+      {\Sigma;\Delta;\Gamma |- \In^\kappa
+        : F(\mu^\kappa F)\,\overline{\tau} -> \mu^\kappa F\;\overline{\tau} }
 \]
 \[ \fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi : \sigma$}
  ~~~~
@@ -336,7 +337,7 @@ $
 \[ \inference[($\Sigma,T$)]
       { \overline{ \Sigma,T:\kappa;\;\overline{\iota^K}
                       |- \overline{A} -> T\,\overline\tau :*} }
-      { \Sigma |- \mathbf{data}~ T : \kappa ~ \mathbf{where} ~
+      { \Sigma |- \<data> T : \kappa \<where>
                   \overline{C : \overline{A} -> T\,\overline\tau }
                ~\Rrightarrow~
                   \Sigma,T:\kappa
@@ -356,13 +357,12 @@ the two zones of \Fi (the type level context $\Delta$ and
 the term level context $\Gamma$), we have top level contexts ($\Sigma$).
 The top level contexts can contain three kinds of bindings:
 type constructor binding ($T:\kappa$), data constructor binding ($C:\sigma$),
-and top level variable binding ($`x:\sigma$).
-
-$T:\kappa$ is the type constructor binding.
-
-$C:\sigma$ is the data constructor binding.
-
-$`x:\sigma$ is the top level variable binding.
+and top level variable binding ($`x:\sigma$). These bindings are introduced
+from delcarations ($D$). Type constructor bindings ($T:\kappa$) and
+data constructor bindings ($C:\sigma$) are introduced from datatype declarations
+($\<data> T:\dots \<where> \dots$). Top level variable bindings ($`x:\sigma$)
+are introduced from top level definitions ($`x = t$).
+The rules for well-formed contexts in Nax are similar to those rules in \Fi.
 
 \paragraph{Kinds and their sorting rules}
 The kind syntax of Nax is exactly the same as the kind syntax of \Fi.
@@ -379,8 +379,8 @@ type inference (or, reconstruction).
 
 Secondly, there are no type level abstractions and index abstractions in Nax.
 Instead of defining type constructors expecting type arguments by abstraction
-and index abstraction at type level, Nax supports datatype definitions
-($\mathbf{data}~T:\kappa~\mathbf{where}~\dots$) and recursive type operators
+and index abstraction at type level, Nax supports datatype declarations
+($\<data> T:\dots \<where> \dots$) and recursive type operators
 ($\mu^\kappa$) as language constructs.
 
 TODO explain the kinding rules different from \Fi
