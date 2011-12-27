@@ -333,11 +333,6 @@ $
 
 \paragraph{Extending the Global Context:}
 \fbox{$\Sigma |- D \Rrightarrow \Sigma'$}
-\[ \inference[($\Sigma,`x$)]
-       {\Sigma;\overline{\iota^K};\cdot |- t : A}
-       {\Sigma |- `x = t \Rrightarrow \Sigma,`x:\forall\,\overline{\iota}.A}
-      \big( \overline{\iota} \cap \FV(t) = \emptyset \big)
-\]
 \[ \inference[($\Sigma,T$)]
       { \overline{ \Sigma,T:\kappa;\;\overline{\iota^K}
                       |- \overline{A} -> T\,\overline\tau :*} }
@@ -348,6 +343,11 @@ $
                         ,\overline{C:\forall\,\overline{\iota}.\overline{A}
                                                        -> T\,\overline\tau} }
 \]
+\[ \inference[($\Sigma,`x$)]
+       {\Sigma;\overline{\iota^K};\cdot |- t : A}
+       {\Sigma |- `x = t \Rrightarrow \Sigma,`x:\forall\,\overline{\iota}.A}
+      \big( \overline{\iota} \cap \FV(t) = \emptyset \big)
+\]
 \end{framed}
 \caption{Typing rules of Nax}
 \label{fig:NaxTyping}
@@ -356,12 +356,12 @@ $
 The Nax language definition is described in \Fig{NaxSyntax} and \Fig{NaxTyping}.
 
 \paragraph{Typing contexts}
-The typing context of Nax spearated into three zones. In addition to
+The typing context of Nax is spearated into three zones. In addition to
 the two zones of \Fi (the type level context $\Delta$ and
 the term level context $\Gamma$), we have top level contexts ($\Sigma$).
 The top level contexts can contain three kinds of bindings:
-type constructor binding ($T:\kappa$), data constructor binding ($C:\sigma$),
-and top level variable binding ($`x:\sigma$). These bindings are introduced
+type constructor bindings ($T:\kappa$), data constructor bindings ($C:\sigma$),
+and top level variable bindings ($`x:\sigma$). These bindings are introduced
 from delcarations ($D$). Type constructor bindings ($T:\kappa$) and
 data constructor bindings ($C:\sigma$) are introduced from datatype declarations
 ($\<data> T:\dots \<where> \dots$). Top level variable bindings ($`x:\sigma$)
@@ -384,33 +384,74 @@ type inference (or, reconstruction).
 Secondly, there are no type level abstractions and index abstractions in Nax.
 Instead of defining type constructors expecting type arguments by abstraction
 and index abstraction at type level, Nax supports datatype declarations
-($\<data> T:\dots \<where> \dots$) and recursive type operators
+($\<data> T:\kappa \<where> \dots$) and recursive type operators
 ($\mu^\kappa$) as language constructs.
 
-TODO explain the kinding rules different from \Fi
+Intuitively, the kinding rule for the recursive type operator should be
+$\Sigma |- \mu^\kappa : (\kappa -> \kappa) -> \kappa$. However, we restrict
+the recursive type operator ($\mu^\kappa$) only to be applied to datatypes
+($T\,\overline{\tau}$). This restriction is evident in both
+the type constructor syntax in \Fig{NaxSyntax}
+and the kinding rule ($\mu$) in \Fig{NaxTyping}. What this restriction
+really excludes are nested applications of recursive type operators.
+For instance, $\mu^{\kappa -> \kappa}(\mu^\kappa F)$ where
+$F:\kappa -> \kappa$ is not allowed although it would be well-kinded
+under the less restrictive kinding rule
+($\Sigma |- \mu^\kappa : (\kappa -> \kappa) -> \kappa$).
+Motivation behind this restriction is type inference.
+In order to infer a type for a Mendler style iterator, we need to restrict
+the form of its body since the body must be polymorphic over the indices
+(see (MIt) rule). In general, we do not want polymorphic types to be first
+class since we want type inference. One simple design choice is to allow
+case branches ($\varphi$) to have polymorphic types, or type schemes, and
+annotate case branches with index transformers ($\varphi^\phi$). For the
+exact same reason (\ie, type inference), we restrict the body of the
+Mendler style iterators be case terms (\ie, ($\<MIt> x.\varphi^\psi$)
+instead of ($\<MIt> x.t$)).
 
 \paragraph{Terms and their typing rules}
-The term syntax of Nax has four additional term constructs than \Fi:
+The term syntax of Nax has six additional term constructs than \Fi:
+data constructors ($C$), top level variables ($`x$),
 polymorphic let bindings ($\<let> x=s \<in> t$),
-eliminators for data constructors ($\varphi^\psi$),
+eliminators for datatypes ($\varphi^\psi$),
 Mendler style iterators ($\<MIt>x.\varphi^\psi$), and
 constructors for recursive types ($\In^\kappa$).
+Typing rules for them are provided in \Fig{NaxTyping}.
+
+The typing rules ($:C$) and ($:`$) are for data constructors ($C$)
+and top level variables ($`x$) bound in the top level context ($\Sigma$).
+Data constructors ($C$) are introduced from datatype declarations
+($\<data> T:\kappa \<where> \dots$) by the rule ($\Sigma,T$), and
+top level variables ($`x$) are introduced from top level definitions
+($`x=t$) by the rule ($\Sigma,`x$).
+The typing rules ($:C$) and ($:`$) behave similar to the rule ($:$)
+for the variables and the rule ($:i$) for index variables.
+All these four rules ($:$), ($:i$), ($:C$), and ($:`$) for
+identifiers look up a certain context (one of the three zones $\Sigma$,
+$\Delta$, and $\Gamma$). Since the Nax type system is in flavour of
+Hindley-Milner, identifiers are bound to type schems ($\sigma$) and
+the typing rules for the identifiers instantiate type schemes to types ($A$).
+Note, a type instantiation ($\Sigma;\Delta |- A\prec\sigma$) is a judgement
+under the top level context ($\Sigma$) and the type level context ($\Delta$),
+since the instantiated type needs to be well-kinded under
+$\Sigma$ and $\Delta$.
 
 Polymorphic let bindings in Nax are just the usual polymorphic bindings of
 Hindley-Milner type system for generalizing types of local definitions into
 type schemes. In Nax, we generalize over term indices as well as types.
+The typing rule for let bindings is the (let) rule.
 
-Eliminators for data constructors ($\varphi^\psi$), or case terms, are
+Eliminators for values datatypes ($\varphi^\psi$), or case-terms, are
 case branches ($\varphi$) annotated by index transformers ($\psi$).
-For non-indexed types, case terms are the usual single level patterm matching
-expressions in functional languages. For example, a case term applited to
-a term of a non-indexed type ($\varphi^\cdot~s$) in Nax corresponds to
-a case expression over that term ($\mathbf{case}~s~\mathbf{of}~\{\varphi\}$)
-in Haskell. Note, we give trivial index transformer annotation
-(\ie, $\psi=\cdot$) for non-indexed types (\eg, booleans, natural numbers)
-since there are no indices to worry about. For indexed types,
-the indexed transformer annotation aids type reconstruction.
-For example, consider the following datatype declaration:
+For non-indexed types, case-terms are the usual single level patterm matching
+expressions in functional languages. For example, a Nax case-term applied to
+non-indexed typed term ($\varphi^\cdot~s$) corresponds to a Haskell
+case-expression over that term ($\mathbf{case}~s~\mathbf{of}~\{\varphi\}$).
+Note, we give trivial index transformer annotation (\ie, $\psi=\cdot$) for
+non-indexed types (\eg, booleans, natural numbers) since there are no indices
+to worry about. For indexed types, the indexed transformer annotations
+privide useful information for type reconstruction. For example, consider
+the following datatype declaration:
 \begin{align*}
 \<data> \mathtt{Judgement : Bool -> *} \<where>
 &~\mathtt{TJ : Formula -> Judgement~\{True\}};\\
@@ -421,8 +462,8 @@ The datatype $\mathtt{Judgement}$ is index by boolean terms
 The data constructor $\mathtt{TJ}$ contains a formula expected to be true and
 the data constructor $\mathtt{FJ}$ contains a formula expected to be false.
 We can define a function, which produces an inverted judgement by negating
-the formula contained in a given judgement, as follows:
-% (case branches laid out as multiple lines for better readability):
+the formula contained in a given judgement, as follows\footnote{case branches
+are laid out in multiple lines for better readability}:
 \[
 \begin{pmatrix}
  \mathtt{TJ}~x -> \mathtt{FJ} (\mathop{neg}~x);\\
@@ -431,32 +472,74 @@ the formula contained in a given judgement, as follows:
 ~~~
 \begin{matrix}
  \text{where $neg$ is a function that produces negated formula}\\
-~~~\text{and $`not$ is a global function that negates booleans.}
+~~~\text{and $`not$ is a top level function that negates booleans.}
 \end{matrix}
 \]
 Note that the index transformer ($i\,.\,\mathtt{Judgement}~\{`not~i\}$)
 captures the idea that the resulting inverted judgement has opposite
-expectations from the given judgement. The types of such case terms
+expectations from the given judgement. The types of such case-terms
 involving indexed types can also be inferred when we annotate
-the case terms with appropriate index transformers.
+the case-terms with appropriate index transformers.
+Reduction rules for case-terms (\Fig{NaxSyntax}) are standard.
 
-Mendler style iterators ($\<MIt> x.\varphi^\psi$) TODO.
+Mendler style iterators ($\<MIt> x.\varphi^\psi$) are eliminators for
+recursive types. A case-term expects a datatype argument
+(of type $T\,\overline\tau$).
+A Mendler style iterator expects a recursive type argument
+(of type $\mu^\kappa(T\,\overline\tau)$).
+Intuitively, Mendler style iterators open up the recursive type
+($\mu^\kappa(T\,\overline\tau)$) and case branch over
+its base datatype structure (of type $T\,\overline\tau$).
+This intuition is captured by the reduction rule for
+Mendler style iterators (\Fig{NaxSyntax}):
+$\<MIt> x.\varphi^\psi\;(\In^\kappa t) \rightsquigarrow
+ [\<MIt> x.\varphi^\psi/x]\varphi^\psi\;t$.
+Note that a Mendler style iterator ($\<MIt> x.\varphi^\psi$) applied to
+a term of recursive type ($\In^\kappa t)$ constructed by the $\In^\kappa$
+constructor reduces to a case-term ($[\<MIt> x.\varphi^\psi/x]\varphi^\psi$)
+applied to the base structure ($t$) contained in the $\In^\kappa$ constructor.
+The variable ($x$) bound by $\<MIt>$ is a label for the recursive call.
+Note that the case-term ($[\<MIt> x.\varphi^\psi/x]\varphi^\psi$) appearing in
+the reduction rule substitutes $x$ with the Mendler style iterator itself.
+However, unlike the fixpoint operator for unrestricted general recursion,
+Mendler style iterators are guaranteed to normalize because of their carefully
+designed typing rule (MIt) due to Mendler.
 
-The constructors for recursive types $\In^\kappa$ are as usual. TODO
-However, Nax does not provide destructors, or inverse functions of $\In$,
-which are often denoted as \textsf{unIn} or \textsf{out}, since we want
-to support arbitrary recursive types in a normalizing language.
-
+The constructors for recursive types ($\In^\kappa$) are standard
+(see rule (In) in \Fig{NaxTyping}). The kind annotation $\kappa$ on
+the $\In^\kappa$ constructor aids kind inference. If we were to simulate
+the recursive type operator $\mu^\kappa$ and its constructor $\In^\kappa$ in
+a functional language like Haskell (with GADT and kind annotation extensions),
+we would simulate them by the following recursive datatype:
+\[ \<data> \mu^\kappa : (\kappa -> \kappa) -> \kappa \<where>
+      \In^\kappa : X(\mu X)\overline\iota -> \mu X\, \overline\iota \]
+However, such a simulation of $\mu^\kappa$ by recursive datatype
+cannot guarantee normalization of the language, since unlimited elimination
+of $\In^\kappa$ via case branches is already powerful enough to encode
+non-terminating computation even without using any recursion at term level.
+Thus, Nax provides $\mu^\kappa$ and $\In^\kappa$ as primitive language
+constructs, and only allow elimination of $\In^\kappa$ via
+Mendler style iteration. %\footnote{More recursion schemes}
+%%% TODO example?
+% Nax does not provide eliminators, or inverse functions of $\In^\kappa$,
+% which are often denoted as $\In^{-1}$, \textsf{unIn}, or \textsf{out},
+% since we want to support arbitrary recursive types in a normalizing language.
 
 \paragraph{Nax programs and their typing rules}
-A Nax program is a list of declarations followed by a term.
-TODO % discuss about top level definitions as well
-The information about the datatype definitions
-in the datatype declarations are captured in the top level context ($\Sigma$)
-before type checking the term (see ($\Sigma,T$) rule in \Fig{NaxTyping}).
-Therefore, each of the sorting, kinding, and typing rules of Nax
-(\Fig{NaxTyping}) has an additional top level context ($\Sigma$) compared to
-the corresponding rules of \Fi\ (\Fig{Fi}).
+A Nax program ($\overline{D};t$) is a list of declarations ($\overline{D}$)
+followed by a term ($t$). A declaration can be either a datatype declaration
+($\<data> T : \kappa \<where> \dots$) or a top level definition ($`x=t$).
+The list of declarations ($\overline{D}$) are processed by the rules
+($\Sigma,T$) and ($\Sigma,`x$) before type checking the term ($t$).
+The kinding and typing information from the datatype declarations and
+the top level definitions preceding the term are captured into
+the top level context ($\Sigma$) according to the rules ($\Sigma,T$)
+and ($\Sigma,`x$). The top level context extended by these rules are
+used for type checking the term following the list of declarations.
+Therefore, the sorting, kinding, and typing rules of Nax (\Fig{NaxTyping})
+involves $\Sigma$ in addtion to $\Delta$ and $\Gamma$, while
+the corresponding rule of \Fi\ (\Fig{Fi}) involves $\Delta$ and $\Gamma$
+only.
 %% TODO talk about embedding (fwd ref)???
 
 
