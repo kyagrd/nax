@@ -11,7 +11,7 @@
 &\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
  \text{Type Constructors}
  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-	& T,H,A,B	&~ ::= ~ X \mid T
+	& F,G,A,B	&~ ::= ~ X \mid T
 			   \mid \mu^\kappa(T\,\overline\tau)
 			   \mid F\;G \mid F\,\{s\}
 			   \mid A -> B
@@ -308,7 +308,7 @@ $
            : \mu^{\kappa}\,F\;\overline\tau -> \psi(\overline\tau) }
       \big( X\notin\FV(\Gamma) \big)
 \]
-\[ \inference[(In)]
+\[ \inference[(In)] %% TODO well kindedness
       {}
       {\Sigma;\Delta;\Gamma |- \In^\kappa
         : F(\mu^\kappa F)\,\overline{\tau} -> \mu^\kappa F\;\overline{\tau} }
