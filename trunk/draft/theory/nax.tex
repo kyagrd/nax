@@ -320,7 +320,7 @@ $
         \overline{
         \begin{matrix}
          \Sigma;\Delta
-           |- \overline{A} -> T\,\overline{\tau'}\,\overline{\tau}_k
+           |- \overline{A} -> T\,\overline{\tau}\,\overline{\tau}_k
               \prec
               \sigma_k
         &
@@ -328,7 +328,8 @@ $
         \end{matrix} }^{\;k=1..n} }
       { \Sigma;\Delta;\Gamma
            |-^\psi \overline{C_k\;\overline{x} -> t}^{\;k=1..n}
-           : T\,\overline{\tau'}\,\overline\tau -> \psi(\overline\tau) }
+           : \forall\,\overline\iota . T\,\overline{\tau}\,\overline\iota
+                                    -> \psi(\overline\iota) }
 \]
 
 \paragraph{Extending the Global Context:}
@@ -353,7 +354,11 @@ $
 \label{fig:NaxTyping}
 \end{figure}
 
+\subsection{Language definition}
 The Nax language definition is described in \Fig{NaxSyntax} and \Fig{NaxTyping}.
+\Fig{NaxSyntax} illustrates syntax, reduction rules, and well-formedness
+conditions for typing contexts.
+\Fig{NaxTyping} illustrates sorting, kinding, and typing rules.
 
 \paragraph{Typing contexts}
 The typing context of Nax is spearated into three zones. In addition to
@@ -542,6 +547,117 @@ the corresponding rule of \Fi\ (\Fig{Fi}) involves $\Delta$ and $\Gamma$
 only.
 %% TODO talk about embedding (fwd ref)???
 
+\paragraph{Reduction rules}
+Reduction rules are defined in \Fig{NaxSyntax}. First five rules are
+the redex rules that makes an actual reduction step on redexes.
+A redex is be one of the following: a lambda term applied to an argument,
+a let binding, a case term applied to a constructor term,
+a Mendler style iterator applied to an $\In^\kappa$-constructed term,
+and a top level variable.
+
+Note, the reduction rule for $`x$ mentions $\overline{D}$).
+Although we illustrate the reduction as a relation on terms
+($t\rightsquigarrow t'$), we implicitly assume that there exists
+some fixed list of declarations ($\overline{D}$)
+for the reduction relation ($\rightsquigarrow$).
+In order to make a reduction step for top level variables,
+we need to know the top level definition for $`x$, which
+should be contained in $\overline{D}$. Since the list of declarations
+are given by the input program ($\overline{D};t$) to type check,
+it is non-ambiguous which $\overline{D}$ to use for reducing $`x$.
+In case when it is ambiguous, we could use a notation like
+$t\stackrel{\overline{D}}\rightsquigarrow t'$ to make it more precise.
+
+The other rules, following the top level varaibel reduction rule
+($`x\rightsquigarrow t$), are context rules to make a reduction step
+for the terms whose redexes appear inside their subterms.
+
+\paragraph{Equality over types and kinds}
+TODO
 
 \subsection{Type inference (or, reconstruction)}
+
+\newcommand{\return}[0]{\mathrel{\rhd}}
+\newcommand{\fresh}[0]{\textit{fresh}}
+\newcommand{\frvar}[0]{\textit{frvar}}
+\newcommand{\unify}[0]{\textit{unify}}
+\paragraph{Typing:}
+\fbox{$\Sigma;\Delta;\Gamma |- t \rhd A$}
+\[ \inference[($:$)]
+      { x:\sigma \in \Gamma \\ A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- x \return A}
+ ~~~
+   \inference[($:i$)]
+      { i^\sigma \in \Delta \\ A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- i \return A}
+ ~~~
+   \inference[($:C$)]
+      { C:\sigma \in \Sigma \\ A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- C \return A}
+ ~~~
+ \inference[($:`$)]
+      { `x:\sigma \in \Sigma \\ A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- `x \return A}
+\]
+\[ \inference[($->$$I$)]
+      { A <- \fresh \\ \Sigma;\Delta;\Gamma,x:A |- t \return B }
+      {\Sigma;\Delta;\Gamma |- \lambda x.t \return A -> B}
+ ~~~~
+   \inference[($->$$E$)]{ \Sigma;\Delta;\Gamma |- r \return A'
+                        & \Sigma;\Delta;\Gamma |- s \return A \\
+                          B <- \fresh & \unify(A',\;A -> B) }
+                        {\Sigma;\Delta;\Gamma |- r\;s \return B}
+\]
+\[ \inference[(let)]
+      { \Sigma;\Delta;\Gamma |- s \return A & \sigma <- gen(A) \\
+        \Sigma;\Delta;\Gamma,x:\sigma |- t \return B }
+      {\Sigma;\Delta;\Gamma |- \<let> x=s \<in> t \return B }
+ ~~~~  
+   \inference[(In)]
+      { F <- \fresh & \overline\tau <- \fresh^{|\kappa|} }
+      {\Sigma;\Delta;\Gamma |- \In^\kappa \return
+         F(\mu^\kappa F)\,\overline{\tau} -> \mu^\kappa F\;\overline{\tau} }
+\]
+\[ \inference[(case)]
+      { \Sigma;\Delta;\Gamma |-^\psi \varphi \return \sigma \\
+         A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- \varphi^\psi \return A }
+ ~~~
+   \inference[(MIt)]
+      { \overline{K} <- \fresh^{|\psi|} & X <- \frvar
+      & \kappa = \overline{K} -> * & \overline{i'} <- \frvar^{|\psi|} \\
+        \Sigma;\Delta,X^\kappa;
+               \Gamma,x:\forall\,\overline{\iota'} . X\overline{\iota'}
+                                              -> \psi(\overline{\iota'})
+           |-^\psi \varphi \return \sigma
+      & A <- inst(\sigma) \\
+        \overline\tau <- \fresh^{|\psi|} & F <- \fresh
+      & \unify( A,\; F\,X\,\overline\tau -> \psi(\overline\tau) ) }
+      {\Sigma;\Delta;\Gamma
+           |- \<MIt> x.\varphi^\psi
+           : \mu^{\kappa}\,F\;\overline\tau -> \psi(\overline\tau) }
+\]
+
+\fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi \return \sigma$}
+\[ \inference
+      { \Sigma|_T = \overline{C_k:\sigma_k}^{\;k=1..n}
+      & \Sigma;\cdot |- T \return \kappa
+      & \overline\tau <- \fresh^{|\kappa| - |\psi|}
+      & \overline{\textit{InferBranch}}^{\;k=1..n}
+      & \overline\iota <-\fresh^{|\psi|} }
+      { \Sigma;\Delta;\Gamma
+           |-^\psi \overline{C_k\;\overline{x} -> t}^{\;k=1..n}
+           : \forall\,\overline\iota . T\,\overline{\tau}\,\overline\iota ->
+                                       \psi(\overline\iota) }
+\]
+\begin{align*}
+\text{where} ~~~~
+\textit{InferBranch} ~\defeq~
+&~ \overline{\tau}_k <- \fresh^{|\psi|} \qquad
+   B <- inst(\sigma_k) \qquad 
+   \overline{A} <- \fresh^{|B|}
+&~ \unify(B,\; \overline{A} -> T\,\overline{\tau}\,\overline{\tau}_k) \quad
+   \Sigma;\Delta;\Gamma,\overline{x:A} |- t \return B' \quad
+   \unify(B',\; \psi(\overline{\tau}_k))
+\end{align*}
 
