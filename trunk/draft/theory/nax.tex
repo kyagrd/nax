@@ -399,9 +399,9 @@ the recursive type operator ($\mu^\kappa$) only to be applied to datatypes
 the type constructor syntax in \Fig{NaxSyntax}
 and the kinding rule ($\mu$) in \Fig{NaxTyping}. What this restriction
 really excludes are nested applications of recursive type operators.
-For instance, $\mu^{\kappa -> \kappa}(\mu^\kappa F)$ where
-$F:\kappa -> \kappa$ is not allowed although it would be well-kinded
-under the less restrictive kinding rule
+For instance, $\mu^\kappa(\mu^{\kappa -> \kappa} F)$ where
+$F:(\kappa -> \kappa) -> \kappa -> \kappa$ is not allowed
+although it would be well-kinded under the less restrictive kinding rule
 ($\Sigma |- \mu^\kappa : (\kappa -> \kappa) -> \kappa$).
 Motivation behind this restriction is type inference.
 In order to infer a type for a Mendler style iterator, we need to restrict
@@ -409,7 +409,7 @@ the form of its body since the body must be polymorphic over the indices
 (see (MIt) rule). In general, we do not want polymorphic types to be first
 class since we want type inference. One simple design choice is to allow
 case branches ($\varphi$) to have polymorphic types, or type schemes, and
-annotate case branches with index transformers ($\varphi^\phi$). For the
+annotate case branches with index transformers ($\varphi^\psi$). For the
 exact same reason (\ie, type inference), we restrict the body of the
 Mendler style iterators be case terms (\ie, ($\<MIt> x.\varphi^\psi$)
 instead of ($\<MIt> x.t$)).
