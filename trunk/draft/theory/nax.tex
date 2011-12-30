@@ -655,7 +655,7 @@ TODO
 \textit{InferBranch} ~\defeq~
 &~ \overline{\tau}_k <- \fresh^{|\psi|} \qquad
    B <- inst(\sigma_k) \qquad 
-   \overline{A} <- \fresh^{|B|}
+   \overline{A} <- \fresh^{|B|} \\
 &~ \unify(B,\; \overline{A} -> T\,\overline{\tau}\,\overline{\tau}_k) \quad
    \Sigma;\Delta;\Gamma,\overline{x:A} |- t \return B' \quad
    \unify(B',\; \psi(\overline{\tau}_k))
