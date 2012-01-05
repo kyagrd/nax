@@ -603,6 +603,42 @@ TODO
 \newcommand{\fresh}[0]{\textit{fresh}}
 \newcommand{\frvar}[0]{\textit{frvar}}
 \newcommand{\unify}[0]{\textit{unify}}
+
+\paragraph{Kinding:}
+$ \fbox{$\Sigma;\Delta |- \sigma \return \kappa$ }
+ ~~~~
+   \inference[($\forall$)]{ X <- \frvar \\
+                            \Sigma;\Delta, X^\kappa |- \sigma \return *}
+                          {\Sigma;\Delta |- \forall X . \sigma \return *}
+ ~~~~
+   \inference[($\forall i$)]{ i <- \frvar \\
+                              \Sigma;\Delta, i^A |- \sigma \return *}
+                            {\Sigma;\Delta |- \forall i . \sigma \return *}
+$
+\[ \fbox{$\Sigma;\Delta |- F \return \kappa$}
+ ~~~~
+   \inference[($Var$)]{X^\kappa\in\Delta & \Sigma |- \Delta}
+                      {\Sigma;\Delta |- X \return \kappa}
+ ~~~~
+   \inference[($TCon$)]{T:\kappa\in\Sigma & \Sigma |- \Delta}
+                       {\Sigma;\Delta |- T \return \kappa}
+ ~~~~
+   \inference[($\mu$)]{\Sigma;\Delta |- T\,\overline\tau : \kappa -> \kappa}
+                      {\Sigma;\Delta |- \mu^\kappa(T\,\overline\tau) : \kappa}
+\]
+\[ \inference[($@$)]{ \Sigma;\Delta |- F : \kappa -> \kappa'
+                    & \Sigma;\Delta |- G : \kappa }
+                    {\Sigma;\Delta |- F\,G : \kappa'}
+ ~~~~
+   \inference[($@i$)]{ \Sigma;\Delta |- F : A -> \kappa
+                     & \Sigma;\Delta;\cdot |- s : A }
+                     {\Sigma;\Delta |- F\,\{s\} : \kappa}
+\]
+\[ \inference[($->$)]{\Sigma;\Delta |- A : * & \Sigma;\Delta |- B : *}
+                     {\Sigma;\Delta |- A -> B : * }
+\]
+
+
 \paragraph{Typing:}
 \fbox{$\Sigma;\Delta;\Gamma |- t \rhd A$}
 \[ \inference[($:$)]
