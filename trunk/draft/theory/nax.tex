@@ -517,8 +517,8 @@ the recursive type operator $\mu^\kappa$ and its constructor $\In^\kappa$ in
 a functional language like Haskell (with GADT and kind annotation extensions),
 we would simulate them by the following recursive datatype:
 \[ \<data> \mu^\kappa : (\kappa -> \kappa) -> \kappa \<where>
-      \In^\kappa : X(\mu X)\overline\iota -> \mu X\, \overline\iota \]
-However, such a simulation of $\mu^\kappa$ by recursive datatype
+      \In^\kappa : X(\mu^\kappa X)\overline\iota -> \mu^\kappa X\, \overline\iota \]
+However, such a simulation of $\mu^\kappa$ by a recursive datatype
 cannot guarantee normalization of the language, since unlimited elimination
 of $\In^\kappa$ via case branches is already powerful enough to encode
 non-terminating computation even without using any recursion at term level.
