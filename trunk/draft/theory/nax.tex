@@ -233,7 +233,7 @@ $
                      {\Sigma;\Delta |- A -> B : * }
  ~~~~
    \inference[($Conv$)]{ \Sigma;\Delta |- A : \kappa
-                       & \Sigma;\Delta |- \kappa = \kappa' : \square }
+                       & \Sigma |- \kappa = \kappa' : \square }
                        {\Sigma;\Delta |- A : \kappa'}
 \]
 
@@ -573,6 +573,28 @@ The other rules, following the top level varaibel reduction rule
 for the terms whose redexes appear inside their subterms.
 
 \paragraph{Equality over types and kinds}
+TODO
+
+\subsection{Syntax-directed type system}
+The kinding and typing rules of Nax illustrated in \Fig{NaxTyping} is not
+syntax directed since the conversion rules ($Conv$) and ($=$) are not syntax
+directed. These conversion rules can apply to anywhere regardless of the
+syntactic category of terms and types.
+
+We can easly adapt the system to be syntax directed by embedding
+the conversion rules into application-like rules (\eg, ($@i$), ($->$$E$)).
+\KYA{We need to prove that the syntax directed system are equivalent to
+the standard system modulo conversion}
+Among the kinding rules, the only place where conversion is truly necessary
+is in the index application rule ($@i$).
+We can define the syntax directed application rule ($@i$)$_s$ as follows:
+\[ \inference[($@i$)$_s$]{ \Sigma;\Delta |-_s F : A -> \kappa
+                     & \Sigma;\Delta;\cdot |-_s s : A'
+                     & \Sigma;\cdot |-_s A=A' : * }
+                     {\Sigma;\Delta |-_s F\,\{s\} : \kappa}
+\]
+Among the typing rules, we need to embed conversion into the ($->$$E$) rule
+and probably the rules (let) and (MIt), and the branch checking rule as well???
 TODO
 
 \subsection{Type inference (or, reconstruction)}
