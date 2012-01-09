@@ -31,8 +31,8 @@ data Bool = False | True
 data Either a b = Left a | Right b
 data Maybe a = Nothing | Just a
 \end{verbatim}}
-Kind inference infers the following kinds:
-(\verb+Bool: *+),  (\verb+Either: * -> * -> *+), and 
+Kind inference infers the kinds:
+(\verb+Bool: *+), (\verb+Either: * -> * -> *+), and 
 (\verb+Maybe: * -> *+), where \verb+*+ is the kind of ordinary types that
 classify values.
 
@@ -43,8 +43,8 @@ and the parameter to stand for the recursive component is written last
 (the \verb+r+ of \verb+Nat+, and the \verb+r+ of \verb+L+).
 {\small
 \begin{verbatim}
-data N r = Zero | Succ r  
-data L a r = Nil | Cons a r       
+data N r = Zero | Succ r        -- the fix point of N will the natural numbers
+data L a r = Nil | Cons a r     -- the fix point of L will be polymorphic lists   
 \end{verbatim}}
 
 Kind inference infers the following kinds:
@@ -54,9 +54,29 @@ non recursive type. Thus the traditional natural numbers are typed by \verb+Mu[*
 and the traditional lists with components of type \verb+a+ are typed by
 \verb+Mu[*] (L a)+.  Note that the \verb+Mu+ type operator is itself specialized with a kind argument inside
 square brackets (\verb+[ _ ]+). The fixpoint operator (\verb+Mu[k] f+) is well formed only
-if the operand \verb+f+ has kind \verb+k -> *+. 
+if the operand \verb+f+ has kind \verb+k -> j+, in which case the (\verb+Mu[k] f+) type
+has kind \verb+j+. Since both \verb+N+ and \verb+(L a)+ have kind \verb+* -> *+,
+the types  \verb+Mu[*] N+ and \verb+Mu[*] (L a)+ have kind \verb+*+, i.e. they 
+are both types, not type constructors.
 
-We may codify this once and for all by introducing
+\subsection{Creating values}
+
+Values of a particular data type are created by use of constructor functions. For
+example \verb+True+ and \verb+False+ are constructor (constants) of type \verb+Bool+.
+(\verb+Left 4+) is a value of type (\verb+Either Int a+). Values of recursive types
+(i.e. those values with types such as (\verb+Mu[k] f+) are formed by using the \verb+In+
+expression. Thus \verb+Nil+ has type \verb+L a+, and \verb+(In[*] Nil)+ has type
+(\verb+Mu[*] (L a)+). In general, applying the operator \verb+(In[k])+ injects a term of
+type \verb+f(Mu[k] f)+ to the recursive type (\verb+Mu[k] f+). Thus a list of Bool could be
+created using the term \verb+(In[*] (Cons True  (In[*] (Cons False  (In[*] Nil)))))+. 
+A general rule of thumb, is to apply \verb+In[k]+ to terms of non-recursive type
+to get terms of recursive type. Writing programs using two level types, and recursive
+injections has definite benefits, but it surely makes programs harder to write. Thus
+we have provided Nax with a simple but powerful synonym (macro) facility.
+
+\subsubsection{Synonyms, constructor functions, and derivation}
+
+We may codify that some type is the fixed point of another, once and for all, by introducing
 a type synonym (macro).
 
 {\small
@@ -64,22 +84,118 @@ a type synonym (macro).
 synonym Nat = Mu[*] N
 synonym List a = Mu[*] (L a)     
 \end{verbatim}}
-Note that both \verb+N+ and \verb+(L a)+
-have kind \verb+*+, so both of our synonyms are well formed.
 
-\subsection{Creating values}
+In a similar manner we can introduce constructor functions that create
+recursive values without explicit mention of \verb+In+ at their
+call sites (potentially many), but only at their site of defintion (exactly once).
 
-Values of a particular data type are created by use of constructor functions. For
-example \verb+True+ and \verb+False+ are constructor (constants) of type \verb+Bool+.
-(\verb+Left 4+) is a value of type (\verb+Either Int a+).
+{\small
+\begin{verbatim}
+zero = In[*] Zero
+succ n = In[*] (Succ n)
 
+nil = In[*] Nil
+cons x xs = In[*] (Cons x xs)
+\end{verbatim}}
+This is such a common occurence that recursive synonyms and recursive constructor functions
+can be automatically derived. With automatic synonym and constructor derivation
+using Nax is both concise ans simple. To illustrate, we provide side-by-side comparisons
+of Haskell and two different uses of Nax.
 
-Non recursive
-data
+\begin{tabular}{l|l|l}
+{\em Haskell}  & {\em Nax with synonyms} &  {\em Nax with derivation} \\ \hline
+\begin{minipage}[l]{.26\linewidth}
+{\small
+\begin{verbatim}
+data List a 
+  = Nil 
+  | Cons a (List a)
+  
+x = Cons 3 (Cons 2 Nil)  
+\end{verbatim}}
+\end{minipage}
 
-\subsubsection{Constructor functions, macros, and macro derivation}
+& 
+
+\begin{minipage}[l]{.34\linewidth}
+{\small
+\begin{verbatim}
+
+data L: * -> * -> * where
+  Nil: L a b
+  Cons: a -> b -> L a b
+  
+synonym List a = Mu[*] (L a)
+nil = In[*] Nil
+cons x xs = In[*] (Cons x xs)
+
+x = cons 3 (cons 2 nil)  
+\end{verbatim}}
+\end{minipage}
+
+&
+
+\begin{minipage}[l]{.26\linewidth}
+{\small
+\begin{verbatim}
+data L a r 
+     = Nil 
+     | Cons a r
+  deriving fixpoint List
+
+x = cons 3 (cons 2 nil)    
+\end{verbatim}}
+\end{minipage}
+
+\end{tabular}
+
 
 \subsection{Mendler operators for non-indexed types}
+There are no restrictions on what kind of datatypes
+can be defined, or on the construction of values using constructor
+functions and \verb+In+ in Nax. To ensure strong normalization, analysis of constructed
+terms is restricted to non-recursive types. This manifests in the lack of
+a pattern that matches the construction (\verb+In x+). Simple pattern matching functions
+over non-recursive data is supported. For example:
+
+{\small
+\begin{verbatim}
+not True = False
+not False = True
+
+unJust0 (Just x) = x
+unJust0 Nothing  = 0
+\end{verbatim}}
+Analysis of recursive data is performed with Mendler style operators. In our
+implementation we provide 4 operators \verb+mcata+ (fold or catamorphism), 
+\verb+mprim+ (primitive recursion), \verb+mhist+ (courses of values recursion),
+and \verb+msfcata+ (fold for recursive types with negative occurrences).
+
+{\small
+\begin{verbatim}
+length y = 
+   mcata y with
+     len Nil = 0
+     len (Cons x xs) = 1 + len xs
+
+tail x = 
+  mprim x with
+    tl cast Nil = []
+    tl cast (Cons y ys) = (cast ys )
+    
+factorial x =
+  mprim x with
+    fact cast Zero = 1
+    fact cast (Succ n) = (1 + nat2int(cast n)) * fact n
+                      
+fibonocci n =
+  mhist n with
+    fib out Zero = 1
+    fib out (Succ n) = case (out n) of
+                        Zero -> 1
+                        (Succ m) -> fib n + fib m 
+\end{verbatim}}
+
 
 \subsection{Types with static indices}\label{sec:bg:ixty}
 
