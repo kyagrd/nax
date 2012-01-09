@@ -1,0 +1,107 @@
+
+\section{Nax by Example}\label{sec:bg}
+
+In this section we introduce programming in our implementation of Nax by providing
+examples. An example usually consists of several parts.
+
+\begin{itemize}
+\item Introducing data definitions to describe the data of interest. Recursive
+data is introduced in two stages. We must be careful to separate parameters
+from indices when using indices to describe static properties of data.
+
+\item Introduce macros, either by explicit defintion, or by automatic derivation
+to limit the amount of explicit notation that must be supplied by the programmer.
+
+\item Write a series of definitions that describe how the data is to be
+manipulated. Deconstruction of recursive data can only be performed with Mendler style operators
+to ensure strong normalization.
+
+\end{itemize}
+
+\subsection{Two level types}
+Non recurisive datatypes are introduced by the \verb+data+ declaration.
+The data declaration can include arguments. The kind and separation of
+arguments into parameters and a indices is infered. For example, 
+the three no recursive data types, \verb+Bool+, \verb+Either+, and 
+\verb+Maybe+, familiar to many functional programmers, are introduced
+in a manner almost identical manner to traditional functional languages.
+{\small
+\begin{verbatim}   
+data Bool = False | True
+data Either a b = Left a | Right b
+data Maybe a = Nothing | Just a
+\end{verbatim}}
+Kind inference infers the following kinds:
+(\verb+Bool: *+),  (\verb+Either: * -> * -> *+), and 
+(\verb+Maybe: * -> *+), where \verb+*+ is the kind of ordinary types that
+classify values.
+
+To introduce a recursive type, we first introduce a non recursive datatype
+that uses a parameter where the usual recursive components occur. By design,
+normal parameters of the introduced type are written first (\verb+a+ in \verb+L+)
+and the parameter to stand for the recursive component is written last
+(the \verb+r+ of \verb+Nat+, and the \verb+r+ of \verb+L+).
+{\small
+\begin{verbatim}
+data N r = Zero | Succ r  
+data L a r = Nil | Cons a r       
+\end{verbatim}}
+
+Kind inference infers the following kinds:
+(\verb+N: * -> *+),  (\verb+L: * -> * -> *+). 
+The recursive type is just the fixpoint of a (perhaps partially applied)
+non recursive type. Thus the traditional natural numbers are typed by \verb+Mu[*] N+
+and the traditional lists with components of type \verb+a+ are typed by
+\verb+Mu[*] (L a)+.  Note that the \verb+Mu+ type operator is itself specialized with a kind argument inside
+square brackets (\verb+[ _ ]+). The fixpoint operator (\verb+Mu[k] f+) is well formed only
+if the operand \verb+f+ has kind \verb+k -> *+. 
+
+We may codify this once and for all by introducing
+a type synonym (macro).
+
+{\small
+\begin{verbatim}
+synonym Nat = Mu[*] N
+synonym List a = Mu[*] (L a)     
+\end{verbatim}}
+Note that both \verb+N+ and \verb+(L a)+
+have kind \verb+*+, so both of our synonyms are well formed.
+
+\subsection{Creating values}
+
+Values of a particular data type are created by use of constructor functions. For
+example \verb+True+ and \verb+False+ are constructor (constants) of type \verb+Bool+.
+(\verb+Left 4+) is a value of type (\verb+Either Int a+).
+
+
+Non recursive
+data
+
+\subsubsection{Constructor functions, macros, and macro derivation}
+
+\subsection{Mendler operators for non-indexed types}
+
+\subsection{Types with static indices}\label{sec:bg:ixty}
+
+
+\subsection{Mendler operators for indexed types}
+
+A representative example of a term
+indexed type is the length indexed list type (often called the vector type).
+A regular polymorphic list type ($\sfList\;a$) is parametrized by a type
+parameter ($a$), which can be instantiated to a specific type, while the
+vector type ($\sfVec\;a\;\{n\}$) has an additional term index ($n$), which
+can be instantiated to a specific natural number value. The curly brackets
+($\{\cdots\}$) around $n$ is to syntactically distinguish term indices from
+other type arguments. 
+
+\subsection{Recursive types of unrestricted polarity but restricted elimination}
+\label{sec:bg:recty}
+TODO
+
+\subsection{Mendler style iteration and recursion combinators}
+\label{sec:bg:Mendler}
+
+
+\section{Examples}\label{sec:examples}
+

@@ -102,53 +102,66 @@ use erasure to build efficient implementations.
  
 
 \subsection{Nax as a starting point}
-\KYA{Write about why Nax matters (\ie, contribution).
-make out some interesting story out of above:
-each of the features have been studied in one way or another,
-but what are we doing more or better or fun?
-An example Nax program should be introduced here as well?}
-
+ 
 We have designed and implemented a prototype of Nax, which is
-a strongly normalizing functional language supporting following features
-(to be elaborated in \S\ref{sec:bg}):
+a strongly normalizing functional language supporting the following features
+(which are all illustrated in \S\ref{sec:bg}):
 \begin{description}
-\item[Indexed types with static term indices]
-Both types and terms can appear as indices in Nax.
-We focus on term indices since type indices are rather mild extension to
-the type system compared to term indices.
-Indices are static in Nax. That is, indices are only used for type checking
-but computationally irrelevant. For instance, using length indexed lists
-should be no less efficient than using ordinary lists without indices in Nax.
-In other words, Nax supports \emph{type erasure}.
 
-\item[Recursive types of unrestricted polarity but restricted elimination]
+\item[Two level datatypes.]
+Recursive dataypes are introduced in two stages. First a non-recursive
+{\em structure} is introduced which abstracts over where recursive 
+sub-components will appear. Then a {\em fix-point} is taken define
+the recursive types. To minimize the extra notation necessary to program
+in this manner an extensive {\em macro-facility} is provided. The most common
+macro forms can be automatically derived. This is illustrated in \S\ref{two-level}.
+
+\item[Indexed types with static term indices.]
+A type constructor is applied to arguments. Arguments
+are either parameters or indices. A datatype is polymorphic over
+its parameters (in the sense that parametricty theorems hold over parameters).
+Parameters are always types.
+Indexed arguments can be either types or terms. An index usually
+encodes a static property about the shape or form of a value with
+that type. We use different kinding rules to separate
+term indices from type indices. For instance a length indexed list, \verb+x+,
+might have type \verb+List Int 2+. The \verb+Int+ is a paramter, indicating
+the list contains integers, but the \verb+2+ is an index indicating
+that the list, \verb+x+, has length exactly two elements.  
+Types are static in Nax. Types are only used for type checking
+and are computationally irrelevant, even though some parts of a type might include terms.
+In other words, Nax supports \emph{type erasure},
+
+\item[Recursive types of unrestricted polarity but restricted elimination.]
 It is well known that unrestricted recursive types enable diverging computation
-even without any recursion at term level. To design a normalizing language
-that support recursive types, we should make a design choice that limits
-the ability of recursive types in one way or another. There are two possible
-design choices. We may restrict either the formation of recursive types
-(\ie, type definition) or the elimination of recursive types
-(\ie, pattern matching). We choose the latter for Nax so that we can
-define \emph{all the recursive datatypes} available in functional languages.
+even without any recursion at the term level. To design a normalizing language
+that supports recursive types, we must make a design choice that limits
+the use of recursive types. There are two possible
+design choices. We may restrict the formation of recursive types
+(\ie, type definition) or we may restrict the elimination of recursive types
+(\ie, pattern matching). In Nax, we make the latter design choice, so that we can
+define \emph{all the recursive datatypes} available in modern functional languages.
 
-\item[Mendler style iteration and recursion combinators]
-Any useful normalizing language should support principled recursion
-combinators that guarantee normalization. There are two requirements
-for recursion combinators in Nax. Firstly, we need recursion combinators
-that accommodate to arbitrary indices since Nax allows indexed types.
-Secondly, we need recursion combinators that guarantee normalization for
-arbitrary recursive types since Nax allows arbitrary recursive type definition.
-Mendler style combinators meet both requirements. So, we adopt them in Nax.
+\item[Mendler style iteration and recursion combinators.] Any useful normalizing
+language should support principled recursion operators that guarantee
+normalization. Such operators should be easy to use, and expressive over datatypes
+with both parameters and indices. Mendler style combinators meet both requirements.
+So, we adopt them in Nax.
 
-\item[Type inference (or, reconstruction) from minimal annotation]
-When we extend the Hindley-Milner type system with indexed types, we no longer
-have type inference from completely unannotated terms. Although complete
-type inference is not possible, partial type inference (or, reconstruction) is
-still possible when sufficient amount of type annotations is provided.
-The Nax syntax systematically requires type annotations on necessary places
-that are sufficient to infer types only from those annotations.
-Nax supports \emph{type inference}, which faithfully extends the Hindley-Milner
-type inference (\ie, virtually no annotations needed for the programs that are
+\item[Type inference (reconstruction) from minimal annotation.]
+When we extend the Hindley-Milner type system with indexed data types, 
+we no longer have type inference for completely unannotated terms.
+For example, this restriction shows up in languages which support GADTs,
+which support a kind of type indexing.
+Although complete
+type inference is not possible, partial type inference (reconstruction of missing
+type information) is
+still possible when sufficient type annotations are provided. Nax's
+systematic partition of type parameters from type indices provides
+a mechanism where it is possible to decide exactly where
+additional type annotations are needed, and to enforce that the
+programmer supply such annotations. This system faithfully extends the Hindley-Milner
+type inference (\ie, no additional annotations are needed for the programs that are
 already inferable by Hindley-Milner).
 \end{description}
 
