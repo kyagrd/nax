@@ -18,13 +18,14 @@ to ensure strong normalization.
 
 \end{itemize}
 
-\subsection{Two level types}
+\subsection{Two level types}\label{2level}
 Non recurisive datatypes are introduced by the \verb+data+ declaration.
 The data declaration can include arguments. The kind and separation of
 arguments into parameters and a indices is infered. For example, 
-the three no recursive data types, \verb+Bool+, \verb+Either+, and 
+the three non-recursive data types, \verb+Bool+, \verb+Either+, and 
 \verb+Maybe+, familiar to many functional programmers, are introduced
 in a manner almost identical manner to traditional functional languages.
+
 {\small
 \begin{verbatim}   
 data Bool = False | True
@@ -44,13 +45,13 @@ and the parameter to stand for the recursive component is written last
 {\small
 \begin{verbatim}
 data N r = Zero | Succ r        -- the fix point of N will the natural numbers
-data L a r = Nil | Cons a r     -- the fix point of L will be polymorphic lists   
+data L a r = Nil | Cons a r     -- the fix point of (L a) will be polymorphic lists   
 \end{verbatim}}
 
 Kind inference infers the following kinds:
 (\verb+N: * -> *+),  (\verb+L: * -> * -> *+). 
-The recursive type is just the fixpoint of a (perhaps partially applied)
-non recursive type. Thus the traditional natural numbers are typed by \verb+Mu[*] N+
+A recursive type can be defined as the fixpoint of a (perhaps partially applied)
+non recursive type constructor. Thus the traditional natural numbers are typed by \verb+Mu[*] N+
 and the traditional lists with components of type \verb+a+ are typed by
 \verb+Mu[*] (L a)+.  Note that the \verb+Mu+ type operator is itself specialized with a kind argument inside
 square brackets (\verb+[ _ ]+). The fixpoint operator (\verb+Mu[k] f+) is well formed only
@@ -74,7 +75,7 @@ to get terms of recursive type. Writing programs using two level types, and recu
 injections has definite benefits, but it surely makes programs harder to write. Thus
 we have provided Nax with a simple but powerful synonym (macro) facility.
 
-\subsubsection{Synonyms, constructor functions, and derivation}
+\subsubsection{Synonyms, constructor functions, and derivation}\label{macro}
 
 We may codify that some type is the fixed point of another, once and for all, by introducing
 a type synonym (macro).
@@ -99,12 +100,18 @@ cons x xs = In[*] (Cons x xs)
 \end{verbatim}}
 This is such a common occurence that recursive synonyms and recursive constructor functions
 can be automatically derived. With automatic synonym and constructor derivation
-using Nax is both concise ans simple. To illustrate, we provide side-by-side comparisons
+using Nax is both concise ans simple. The clause ``\verb+deriving fixpoint List+"
+causes the \verb+synonym+ for \verb+List+ to be automatically defined. It
+also defines the constructor functions \verb+nil+ and \verb+cons+.
+By convention, the constructor functions are named by dropping the initial
+upper-case letter in the name of the non-recursive constructors to lower-case.
+To illustrate, we provide side-by-side comparisons
 of Haskell and two different uses of Nax.
 
+\vspace*{0.1in}
 \begin{tabular}{l|l|l}
 {\em Haskell}  & {\em Nax with synonyms} &  {\em Nax with derivation} \\ \hline
-\begin{minipage}[l]{.26\linewidth}
+\begin{minipage}[t]{.26\linewidth}
 {\small
 \begin{verbatim}
 data List a 
@@ -117,13 +124,12 @@ x = Cons 3 (Cons 2 Nil)
 
 & 
 
-\begin{minipage}[l]{.34\linewidth}
+\begin{minipage}[t]{.34\linewidth}
 {\small
 \begin{verbatim}
-
-data L: * -> * -> * where
-  Nil: L a b
-  Cons: a -> b -> L a b
+data L a r 
+     = Nil 
+     | Cons a r
   
 synonym List a = Mu[*] (L a)
 nil = In[*] Nil
@@ -135,7 +141,7 @@ x = cons 3 (cons 2 nil)
 
 &
 
-\begin{minipage}[l]{.26\linewidth}
+\begin{minipage}[t]{.26\linewidth}
 {\small
 \begin{verbatim}
 data L a r 
@@ -153,24 +159,43 @@ x = cons 3 (cons 2 nil)
 \subsection{Mendler operators for non-indexed types}
 There are no restrictions on what kind of datatypes
 can be defined, or on the construction of values using constructor
-functions and \verb+In+ in Nax. To ensure strong normalization, analysis of constructed
+functions and \verb+In[k]+ in Nax. To ensure strong normalization, analysis of constructed
 terms is restricted to non-recursive types. This manifests in the lack of
-a pattern that matches the construction (\verb+In x+). Simple pattern matching functions
+a pattern that matches the construction (\verb+In[*] x+). Simple pattern matching functions
 over non-recursive data is supported. For example:
 
+\vspace*{.1in}
+\begin{tabular}{l|l}
+\begin{minipage}[l]{.42\linewidth}
 {\small
 \begin{verbatim}
 not True = False
 not False = True
+\end{verbatim}}
+\end{minipage}
 
+& 
+
+\begin{minipage}[l]{.50\linewidth}
+{\small
+\begin{verbatim}
 unJust0 (Just x) = x
 unJust0 Nothing  = 0
 \end{verbatim}}
-Analysis of recursive data is performed with Mendler style operators. In our
-implementation we provide 4 operators \verb+mcata+ (fold or catamorphism), 
-\verb+mprim+ (primitive recursion), \verb+mhist+ (courses of values recursion),
-and \verb+msfcata+ (fold for recursive types with negative occurrences).
+\end{minipage}
+\end{tabular}
+\vspace*{.1in}
 
+Analysis of recursive data is performed with Mendler style operators. In our
+implementation we provide 4 Mendler style operators: \verb+mcata+ (fold or catamorphism), 
+\verb+mprim+ (primitive recursion), \verb+mhist+ (courses of values recursion),
+and \verb+msfcata+ (fold for recursive types with negative occurrences). {\em Do not}
+worry if these look strange at first. They will be disccused in greater detail
+below. {\em Do notice} that these programs are simple and concise.
+
+\vspace*{.1in}
+\begin{tabular}{l|l}
+\begin{minipage}[l]{.42\linewidth}
 {\small
 \begin{verbatim}
 length y = 
@@ -182,21 +207,150 @@ tail x =
   mprim x with
     tl cast Nil = []
     tl cast (Cons y ys) = (cast ys )
-    
+\end{verbatim}}
+\end{minipage}
+
+& 
+
+\begin{minipage}[l]{.50\linewidth}
+{\small
+\begin{verbatim}
+
 factorial x =
   mprim x with
     fact cast Zero = 1
-    fact cast (Succ n) = (1 + nat2int(cast n)) * fact n
+    fact cast (Succ n) = 
+        (1 + nat2int(cast n)) * fact n
                       
 fibonocci n =
   mhist n with
     fib out Zero = 1
-    fib out (Succ n) = case (out n) of
-                        Zero -> 1
-                        (Succ m) -> fib n + fib m 
+    fib out (Succ n) = 
+        case (out n) of
+          Zero -> 1
+          (Succ m) -> fib n + fib m 
 \end{verbatim}}
+\end{minipage}
+\end{tabular}
+\vspace*{.1in}
+
+In Nax, one uses a \verb+case+ expression to analyze
+a non-recursive type, and a Mendler style operator analyze
+a recursive value. Unlike a
+case statement (which only allows the user to specify patterns against which the
+argument is matched), a Mendler operator introduces additional names (variables),
+in addition to the variables occuring in the patterns, that
+provide additional functionality. For example compare the \verb+case+ expression
+to the \verb+mcata+ expression. In the \verb+case+, each line following the \verb+of+
+indicates a possible match of the scrutinee \verb+x+. In the \verb+mcata+,
+each equation following the \verb+with+, binds the variable $\newFi{f}$, and
+matches the pattern to a value related to the scrutinee \verb+x+.
+
+\vspace*{.1in}
+\begin{tabular}{l|l}
+\begin{minipage}[t]{.42\linewidth}
+\begin{tabbing}
+\verb+case+  x \verb+of+ \\
+\verb+  + \= \verb+(Cons x xs)+ \= $\to$  \= $e_{2}$ \\
+\> \verb+Nil+ \> $\to$  \> $e_{1}$ \\
+\end{tabbing}
+\end{minipage}
+
+& 
+
+\begin{minipage}[t]{.50\linewidth}
+\begin{tabbing}
+\verb+mcata+  x \verb+with+ \\
+\verb+  + \= \newFi{f} \= \verb+(Cons x xs)+ \= =  \= $e_{1}$ \\
+          \> \newFi{f} \> \verb+Nil+         \> =  \> $e_{2}$ \\
+\end{tabbing}
+\end{minipage}
+\end{tabular}
+\vspace*{.1in}
+
+The number and type of the additional variables depends upon which Mendler
+operation is used to analyze the scrutinee. In each case the scrutinee
+is a value of some recursive type (\verb+Mu+[*] \verb+T+) for a non-recursive
+type constructor \verb+T+. Each pattern has type \verb+T r+, for some
+abstract type \verb+r+. The additional variables introduced ($\newFi{f}$ and $\newFi{g}$)
+are functions that safely manipulate some form of the abstract type \verb+r+.
+
+\vspace*{.1in}
+\begin{tabular}{l|l|l}
+\begin{minipage}[t]{.25\linewidth}
+{\small
+\begin{tabbing}
+\verb+mcata+  x \verb+with+ \\
+\verb+  + \= \newFi{f} \= $\text{pat}_{i}$ \= =  \= $e_{i}$ \\
+\end{tabbing}
+$x$: \verb+Mu+[*] T \\
+$f$: r $\to$ \text{ans} \\
+$p_{i}$: T r \\
+$e_{i}$: \text{ans} \\
+\\
+\begin{verbatim}
+mcata phi (In[*] x) 
+   = phi (mcata phi) x
+\end{verbatim}}   
+\end{minipage}
+& 
+
+\begin{minipage}[t]{.35\linewidth}
+{\small
+\begin{tabbing}
+\verb+mprim+  x \verb+with+ \\
+\verb+  + \= \newFi{f} \= \newFi{g} \= $\text{pat}_{i}$ \= =  \= $e_{i}$ \\
+\end{tabbing}
+$x$: \verb+Mu+[*] T \\
+$f$: r $\to$ \text{ans} \\
+$g$: r $\to$ \verb+Mu+[*] T \\
+$p_{i}$: T r \\
+$e_{i}$: \text{ans} \\
+\\
+\begin{verbatim}
+mprim phi (In[*] x) 
+  = phi (mprim phi) (In[*]) x
+\end{verbatim}}  
+\end{minipage}
+
+& 
+
+\begin{minipage}[t]{.25\linewidth}
+{\small
+\begin{tabbing}
+\verb+mhist+  x \verb+with+ \\
+\verb+  + \= \newFi{f} \= \newFi{g} \= $\text{pat}_{i}$ \= =  \= $e_{i}$ \\
+\end{tabbing}
+$x$: \verb+Mu+[*] T \\
+$f$: r $\to$ \text{ans} \\
+$g$: r $\to$ T r \\
+$p_{i}$: T r \\
+$e_{i}$: \text{ans} \\
+\begin{verbatim}
+mhist phi (In[*] x) 
+    = phi (mhist phi) out x
+  where out (In[*] x) = x
+\end{verbatim}}
+\end{minipage}
+
+\end{tabular}
+\vspace*{.1in}
+
+Mendler observed that each operator can be defined
+by the equation at the bottom of its figure, and by abstracting
+values of type  \verb+Mu[*] T+ into some unknown abstract type \verb+r+, one can safely use
+types to insure termination.  Operationally
+if the \verb+phi+ function will work for some unknown type \verb+r+
+it will work for the actual type \verb+Mu[*] T+, but because it cannot
+assume that \verb+r+ has any particular structure, the function is
+guaranteed to terminate by a parametricity argument. In Nax we use special
+syntax, to get around the requirement of impredicative types that would be used
+to guarantee that the type \verb+r+ is abstract.
+
+With these explanations under our belt, let's look back at our four examples.
 
 
+  
 \subsection{Types with static indices}\label{sec:bg:ixty}
 
 

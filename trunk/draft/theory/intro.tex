@@ -6,9 +6,10 @@
 Few will argue with the statement that we need better tools for reasoning about
 programs, yet there is little widespread agreement about how such tools should be built.
 One promising approach is to exploit the Curry-Howard isomorphism that states there is an
-isomorphism between two systems in widespread use. The first such system  includes
+isomorphism between two kinds of systems in widespread use. The first kind of system  includes
 typed programming languages (\eg, ML, Haskell) , where programs are assigned types, and
-logical reasoning systems (or, proof assistants) (\eg, Coq, Agda) where proofs prove
+the second kind of system includes
+logical reasoning systems (or, proof assistants, \eg, Coq, Agda) where proofs prove
 propositions. The Curry-Howard isomorphism states the structure encoding the
 relationships {\it Program :: Type} and {\it Proof :: Proposition} is identical in both
 systems. It seems reasonable that since both systems have the typed lambda calculi as
@@ -51,7 +52,7 @@ are other issues in play.
 Firstly, dependently typed languages, designed for logical reasoning, usually do
 not support \emph{all the recursive datatypes} that are commonly used in functional programs.
 For example, most dependently typed proof assistants will reject
-a straightforward datatype definition for Higher-Order Abstract Syntax (HOAS)
+a straightforward datatype definition for Higher-Order Abstract Syntax (HOAS). 
 For example, in Haskell we may write:
 {\small\begin{verbatim}
 data HOAS = Lam (HOAS -> HOAS) | App HOAS HOAS
@@ -80,7 +81,7 @@ dependently typed language, it is unclear whether, in the application $f\;3$, th
 argument $3$ will be used for computation or used only for type checking.
 For these two reasons, we don't believe (2) is a promising approach either.
 
-These two issues are not only counter productiive for functional programmers, but also
+These two issues are not only counter productive for functional programmers, but also
 become obstacles for efficient  implementation and separate
 compilation. So, we believe that rather than blend one existing system
 towards the other, it may be useful to start the design process from scratch,
@@ -111,10 +112,10 @@ a strongly normalizing functional language supporting the following features
 \item[Two level datatypes.]
 Recursive dataypes are introduced in two stages. First a non-recursive
 {\em structure} is introduced which abstracts over where recursive 
-sub-components will appear. Then a {\em fix-point} is taken define
-the recursive types. To minimize the extra notation necessary to program
+sub-components will appear. Then a {\em fix-point} is taken to define
+the recursive types (\S \ref{2level}). To minimize the extra notation necessary to program
 in this manner an extensive {\em macro-facility} is provided. The most common
-macro forms can be automatically derived. This is illustrated in \S\ref{two-level}.
+macro forms can be automatically derived. This is illustrated in \S\ref{macro}.
 
 \item[Indexed types with static term indices.]
 A type constructor is applied to arguments. Arguments
@@ -125,9 +126,9 @@ Indexed arguments can be either types or terms. An index usually
 encodes a static property about the shape or form of a value with
 that type. We use different kinding rules to separate
 term indices from type indices. For instance a length indexed list, \verb+x+,
-might have type \verb+List Int 2+. The \verb+Int+ is a paramter, indicating
+might have type (\verb+List Int 2+). The \verb+Int+ is a paramter, indicating
 the list contains integers, but the \verb+2+ is an index indicating
-that the list, \verb+x+, has length exactly two elements.  
+that the list, \verb+x+, has exactly two elements.  
 Types are static in Nax. Types are only used for type checking
 and are computationally irrelevant, even though some parts of a type might include terms.
 In other words, Nax supports \emph{type erasure},
