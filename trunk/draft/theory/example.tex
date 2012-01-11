@@ -24,32 +24,88 @@ The data declaration can include arguments. The kind and separation of
 arguments into parameters and a indices is infered. For example, 
 the three non-recursive data types, \verb+Bool+, \verb+Either+, and 
 \verb+Maybe+, familiar to many functional programmers, are introduced
-in a manner almost identical manner to traditional functional languages.
+by declaring the kind of the type, and the type of each of the
+constructors. This is similar to the way {\small GADT}s are introduced in Haskell.
 
+\vspace*{0.1in}
+\begin{tabular}{l|l|l}
+\begin{minipage}[t]{.25\linewidth}
 {\small
-\begin{verbatim}   
-data Bool = False | True
-data Either a b = Left a | Right b
-data Maybe a = Nothing | Just a
+\begin{verbatim}
+data Bool: * where
+  False: Bool
+  True: Bool
 \end{verbatim}}
-Kind inference infers the kinds:
-(\verb+Bool: *+), (\verb+Either: * -> * -> *+), and 
-(\verb+Maybe: * -> *+), where \verb+*+ is the kind of ordinary types that
-classify values.
+\end{minipage}
 
+& 
+
+\begin{minipage}[t]{.38\linewidth}
+{\small
+\begin{verbatim}
+data Either: * -> * -> * where 
+  Left: a -> Either a b
+  Right: b -> Either a b
+\end{verbatim}}
+\end{minipage}
+
+&
+
+\begin{minipage}[t]{.26\linewidth}
+{\small
+\begin{verbatim}
+data Maybe: * -> * where
+  Nothing: Maybe a
+  Just: a -> Maybe a  
+\end{verbatim}}
+\end{minipage}
+\end{tabular}
+
+\vspace*{0.1in}
+Note the kind information
+(\verb+Bool: *+) declares \verb+Bool+ to be a type, (\verb+Either: * -> * -> *+) declares
+\verb+Either+ to be a type constructor with two type arguments, and 
+(\verb+Maybe: * -> *+) declares \verb+Maybe+ to a type constructor
+with one type argument.
 To introduce a recursive type, we first introduce a non recursive datatype
 that uses a parameter where the usual recursive components occur. By design,
 normal parameters of the introduced type are written first (\verb+a+ in \verb+L+)
 and the parameter to stand for the recursive component is written last
 (the \verb+r+ of \verb+Nat+, and the \verb+r+ of \verb+L+).
+
+
+
+\vspace*{0.1in}
+\begin{tabular}{l|l}
+\begin{minipage}[t]{.40\linewidth}
 {\small
 \begin{verbatim}
-data N r = Zero | Succ r        -- the fix point of N will the natural numbers
-data L a r = Nil | Cons a r     -- the fix point of (L a) will be polymorphic lists   
-\end{verbatim}}
+-- The fix point of N will 
+-- be the natural numbers.
 
-Kind inference infers the following kinds:
-(\verb+N: * -> *+),  (\verb+L: * -> * -> *+). 
+data N: * where
+  Zero: N a
+  Succ: a -> N a
+\end{verbatim}}
+\end{minipage}
+
+& 
+
+\begin{minipage}[t]{.40\linewidth}
+{\small
+\begin{verbatim}
+-- The fix point of (L a) will 
+-- be the polymorphic lists  
+
+data L: * -> * -> * where
+  Nil: L a r
+  Cons: a -> r -> L a r
+\end{verbatim}}
+\end{minipage}
+\end{tabular}
+
+\vspace*{0.1in}
+
 A recursive type can be defined as the fixpoint of a (perhaps partially applied)
 non recursive type constructor. Thus the traditional natural numbers are typed by \verb+Mu[*] N+
 and the traditional lists with components of type \verb+a+ are typed by
@@ -127,9 +183,9 @@ x = Cons 3 (Cons 2 Nil)
 \begin{minipage}[t]{.34\linewidth}
 {\small
 \begin{verbatim}
-data L a r 
-     = Nil 
-     | Cons a r
+data L: * -> * -> * where
+  Nil: L a r
+  Cons: a -> r -> L a r
   
 synonym List a = Mu[*] (L a)
 nil = In[*] Nil
@@ -144,10 +200,10 @@ x = cons 3 (cons 2 nil)
 \begin{minipage}[t]{.26\linewidth}
 {\small
 \begin{verbatim}
-data L a r 
-     = Nil 
-     | Cons a r
-  deriving fixpoint List
+data L: * -> * -> * where
+   Nil: L a r
+   Cons: a -> r -> L a r
+ deriving fixpoint List
 
 x = cons 3 (cons 2 nil)    
 \end{verbatim}}
@@ -158,13 +214,21 @@ x = cons 3 (cons 2 nil)
 
 \subsection{Mendler operators for non-indexed types}
 There are no restrictions on what kind of datatypes
-can be defined, or on the construction of values using constructor
-functions and \verb+In[k]+ in Nax. To ensure strong normalization, analysis of constructed
-terms is restricted to non-recursive types. This manifests in the lack of
-a pattern that matches the construction (\verb+In[*] x+). Simple pattern matching functions
-over non-recursive data is supported. For example:
+can be defined in Nax. There are also no restrictions on the creation
+of values. Values are created using constructor functions, and the recursive injection (\verb+In[k]+). 
+To ensure strong normalization, analysis of constructed
+values has some restrictions. Values of non-recursive types can
+be freely analysed using pattern matching. Values of recursive types
+must be analysed using one of the Mendler style operators. By design,
+we limit pattern matching to values of non-recursive types, by
+{\em not} providing any mechanism to match against
+the recursive injection (\verb+In[k]+).
 
-\vspace*{.1in}
+To illustrate simple pattern matching over non-recursive types, we 
+give a Nax multi-clause defintion for the \verb+not+ function over the (non-recursive) \verb+Bool+ type,
+and a function that strips off the \verb+Just+ constructor over the (non-recursive) \verb+Maybe+ type
+using a case expression.
+
 \begin{tabular}{l|l}
 \begin{minipage}[l]{.42\linewidth}
 {\small
@@ -179,68 +243,28 @@ not False = True
 \begin{minipage}[l]{.50\linewidth}
 {\small
 \begin{verbatim}
-unJust0 (Just x) = x
-unJust0 Nothing  = 0
+
+unJust0 x = 
+  case x of
+   (Just x) -> x
+   Nothing  -> 0
 \end{verbatim}}
 \end{minipage}
 \end{tabular}
 \vspace*{.1in}
 
 Analysis of recursive data is performed with Mendler style operators. In our
-implementation we provide 4 Mendler style operators: \verb+mcata+ (fold or catamorphism), 
-\verb+mprim+ (primitive recursion), \verb+mhist+ (courses of values recursion),
-and \verb+msfcata+ (fold for recursive types with negative occurrences). {\em Do not}
-worry if these look strange at first. They will be disccused in greater detail
-below. {\em Do notice} that these programs are simple and concise.
+implementation we provide 4 Mendler style operators: \verb+mcata+ (fold or catamorphism),
+\verb+mprim+ (primitive recursion), \verb+mhist+ (courses of values recursion), and
+\verb+msfcata+ (fold for recursive types with negative occurrences). A Mendler style
+operator appears similar to a case expression. It contains patterns, and the variables in
+the patterns are scoped over a term, that is executed if tha pattern matches. It differs
+from a case expression in that it also introduces additional names (or variables) into
+scope. These variables play a role similar in nature to the operations of an abstract
+datatype, and provide additional functionality over what can be done using just
+case analysis.
 
-\vspace*{.1in}
-\begin{tabular}{l|l}
-\begin{minipage}[l]{.42\linewidth}
-{\small
-\begin{verbatim}
-length y = 
-   mcata y with
-     len Nil = 0
-     len (Cons x xs) = 1 + len xs
-
-tail x = 
-  mprim x with
-    tl cast Nil = []
-    tl cast (Cons y ys) = (cast ys )
-\end{verbatim}}
-\end{minipage}
-
-& 
-
-\begin{minipage}[l]{.50\linewidth}
-{\small
-\begin{verbatim}
-
-factorial x =
-  mprim x with
-    fact cast Zero = 1
-    fact cast (Succ n) = 
-        (1 + nat2int(cast n)) * fact n
-                      
-fibonocci n =
-  mhist n with
-    fib out Zero = 1
-    fib out (Succ n) = 
-        case (out n) of
-          Zero -> 1
-          (Succ m) -> fib n + fib m 
-\end{verbatim}}
-\end{minipage}
-\end{tabular}
-\vspace*{.1in}
-
-In Nax, one uses a \verb+case+ expression to analyze
-a non-recursive type, and a Mendler style operator analyze
-a recursive value. Unlike a
-case statement (which only allows the user to specify patterns against which the
-argument is matched), a Mendler operator introduces additional names (variables),
-in addition to the variables occuring in the patterns, that
-provide additional functionality. For example compare the \verb+case+ expression
+For a visual example, compare the \verb+case+ expression
 to the \verb+mcata+ expression. In the \verb+case+, each line following the \verb+of+
 indicates a possible match of the scrutinee \verb+x+. In the \verb+mcata+,
 each equation following the \verb+with+, binds the variable $\newFi{f}$, and
@@ -269,11 +293,20 @@ matches the pattern to a value related to the scrutinee \verb+x+.
 \vspace*{.1in}
 
 The number and type of the additional variables depends upon which Mendler
-operation is used to analyze the scrutinee. In each case the scrutinee
+operation is used to analyze the scrutinee. 
+Each clause specifies (a potential) computation in an abstract datatype
+depending on whether the pattern matches. For the \verb+mcata+ operator (above)
+the abstract datatype has the following form. The scrutinee, \verb+x+,
 is a value of some recursive type (\verb+Mu+[*] \verb+T+) for a non-recursive
-type constructor \verb+T+. Each pattern has type \verb+T r+, for some
-abstract type \verb+r+. The additional variables introduced ($\newFi{f}$ and $\newFi{g}$)
-are functions that safely manipulate some form of the abstract type \verb+r+.
+type constructor \verb+T+. In each clause, the pattern has type (\verb+T r+), for some
+abstract type \verb+r+. The additional variable introduced ($\newFi{f}$) is
+an operator over the abstract type, \verb+r+, that can safely manipulate values of type \verb+r+.
+
+Different Mendler style operators support different abstractions. Each abstraction safely
+describes a class of provably terminating operations over a recursive type. The number (and type)
+of abstract operations differs from Mendler operator to Mendler operator. We give
+descriptions of three Mendler operators and their abstractions below. In each description
+the type \verb+ans+ represents the type of the complete operation.
 
 \vspace*{.1in}
 \begin{tabular}{l|l|l}
@@ -303,7 +336,7 @@ mcata phi (In[*] x)
 \end{tabbing}
 $x$: \verb+Mu+[*] T \\
 $f$: r $\to$ \text{ans} \\
-$g$: r $\to$ \verb+Mu+[*] T \\
+$cast$: r $\to$ \verb+Mu+[*] T \\
 $p_{i}$: T r \\
 $e_{i}$: \text{ans} \\
 \\
@@ -323,7 +356,7 @@ mprim phi (In[*] x)
 \end{tabbing}
 $x$: \verb+Mu+[*] T \\
 $f$: r $\to$ \text{ans} \\
-$g$: r $\to$ T r \\
+$project$: r $\to$ T r \\
 $p_{i}$: T r \\
 $e_{i}$: \text{ans} \\
 \begin{verbatim}
@@ -336,22 +369,196 @@ mhist phi (In[*] x)
 \end{tabular}
 \vspace*{.1in}
 
+A Mendler style operator implements a (provably terminating) recursive function
+applied to the scrutinee. The abstract type and its operations ensure termination.
+Note that every operation above includes an abstract operator, \verb+f: r -> ans+. 
+This operation represents a recursive call in the function defined by the Mendler
+operator. Other operations in the other Mendler operations (\verb+cast+ and \verb+project+), support other functionality. The equations
+at the bottom of each section provide an operational
+understanding of how the operator works. These can be safely ignored until after
+we see some examples of how a Mendler operator works in practice.
+
+\vspace*{.1in}
+\begin{tabular}{l|l}
+\begin{minipage}[l]{.42\linewidth}
+{\small
+\begin{verbatim}
+length y = 
+   mcata y with
+     len Nil = 0
+     len (Cons x xs) = 1 + len xs
+
+tail x = 
+  mprim x with
+    tl cast Nil = []
+    tl cast (Cons y ys) = (cast ys )
+\end{verbatim}}
+\end{minipage}
+
+& 
+
+\begin{minipage}[l]{.50\linewidth}
+{\small
+\begin{verbatim}
+
+factorial x =
+  mprim x with
+    fact cast Zero = succ zero
+    fact cast (Succ n) = 
+      times (succ (cast n)) (fact n)
+                      
+fibonocci x =
+  mhist x with
+    fib out Zero = 1
+    fib out (Succ n) = 
+        case (out n) of
+          Zero -> 1
+          (Succ m) -> fib n + fib m 
+\end{verbatim}}
+\end{minipage}
+\end{tabular}
+\vspace*{.1in}
+
+The \verb+length+ function uses the simplest kind of recursion where
+each recursive call is applied to the a direct sub component of the input.
+Operationally, \verb+length+ works as follows. The scrutinee
+has type (\verb+Mu[*] (L a)+), and has the form (\verb+In[*] x+). The 
+\verb+mcata+ strips off the (\verb+In[*]+) and matches \verb+x+ against
+the \verb+Nil+ and (\verb+Cons x xs+) patterns. If the \verb+Nil+ pattern
+matches, then \verb+0+ is returned. If the (\verb+Cons x xs+) pattern matches,
+\verb+x+ and \verb+xs+ are bound. The abstract type mechanism gives the
+pattern (\verb+Cons x xs+) the type (\verb+L a r+), so (\verb+x: a+) and
+(\verb+xs: r+) for some abstract type \verb+r+. The abstract operation,
+(\verb+len: r -> Int+), can safely be applied to \verb+xs+,
+obtaining the length of the tail of the original list. This value
+is incremented, and then returned. The \verb+mcata+ abstraction provides a safe way
+allow the user to make recursive calls, \verb+len+, but the abstract type, \verb+r+,
+limits its use to direct sub components, so termination is guaranteed.
+
+Some recursive functions need direct access, not only to the direct sub components,
+but also the original input as well. The Mendler operator \verb+mprim+ provides
+a safe, yet abstract mechanism, to support this. The Mendler \verb+mprim+
+abstraction provides two abstract operations. The recursive caller with type
+(\verb+r -> ans+) and a casting function with type (\verb+r -> Mu[k] T+). The
+casting operation allows the user to recover the original type from the abstract
+type \verb+r+, but since the recursive caller
+only works on the abstract type \verb+r+, the user cannot make a recursive call
+on one of these cast values. The functions
+\verb+factorial+ (over the natural numbers) and \verb+tail+ (over lists) are both
+defined using \verb+mprim+.
+
+Note how in \verb+factorial+ the original input is recovered (in constant time)
+by taking the successor of casting the abstract predecessor, \verb+n+. In the
+\verb+tail+ function, the abstract tail, \verb+ys+, is cast to get the
+answer, and the recursive caller is not even used.
+
+Some recursive functions need direct access, not only to the direct sub components,
+but even deeper sub components. The Mendler operator \verb+mhist+ provides
+a safe, yet abstract mechanism, to support this. The function \verb+fibonocci+
+is a classic example of this kind of recursion.  The Mendler \verb+mhist+
+provides two abstract operations. The recursive caller with type
+(\verb+r -> ans+) and a projection function with type (\verb+r -> T r+). The projection
+allows the programmer to observe the hidden \verb+T+ hidden inside a value
+of the the abstract type \verb+r+.
+In the fibonocci function above, we name the projection \verb+out+. It is used
+to observe if the abstract predecessor, \verb+n+, of the input, \verb+x+, is either
+zero, or the successor of the second predecessor, \verb+m+, of \verb+x+. Note
+how recursive calls are made on the direct predecessor, \verb+n+, and the second  predecessor,
+\verb+m+.
+
 Mendler observed that each operator can be defined
-by the equation at the bottom of its figure, and by abstracting
-values of type  \verb+Mu[*] T+ into some unknown abstract type \verb+r+, one can safely use
-types to insure termination.  Operationally
-if the \verb+phi+ function will work for some unknown type \verb+r+
-it will work for the actual type \verb+Mu[*] T+, but because it cannot
-assume that \verb+r+ has any particular structure, the function is
-guaranteed to terminate by a parametricity argument. In Nax we use special
-syntax, to get around the requirement of impredicative types that would be used
-to guarantee that the type \verb+r+ is abstract.
-
-With these explanations under our belt, let's look back at our four examples.
-
-
+by the equation at the bottom of its figure. Each operation can be given
+a naive type, but if we instead give it a more abstract type,
+abstracting values of type  \verb+Mu[*] T+ into some unknown abstract type \verb+r+, 
+one can safely guarantee a certain pattern of use that insures termination.  Operationally
+if the operation works for some unknown type \verb+r+
+it will certainly also work for the actual type \verb+Mu[*] T+, but because it cannot
+assume that \verb+r+ has any particular structure, the user is forced to use
+the abstract operations in carefully proscribed ways.
   
 \subsection{Types with static indices}\label{sec:bg:ixty}
+Recall that a type can have both parameters and indices, and that indices
+can be either types or terms. We define three
+types below each with one or more indices. Each example defines a non-recursive type, and
+then uses derivation to define synonyms for its fix point and recursive constructor
+functions. By convention, in each example, the argument that abstracts the recursive components
+is called \verb+r+. By design, arguments appearing before \verb+r+ are understood to be
+parameters, and arguments appearing after \verb+r+ are understood to be indices. To define a
+recursive type with indices, it is necessary give the argument, \verb+r+,
+a higher order kind. I.e. \verb+r+ should take indices as well, since it
+abstracts over a recursive type which takes indices.
+
+{\small
+\begin{verbatim}
+data Nest: (* -> *) -> * -> * where
+   Tip: a -> Nest r a
+   Fork: r(a,a) -> Nest r a
+ deriving fixpoint PowerTree
+  
+gadt V: * -> (Nat -> *) -> Nat -> * where
+  Vnil: V a r {`zero}
+  Vcons: a -> r {n} -> V a r {`succ n}
+    deriving fixpoint Vector
+
+data Tag = E | O
+
+gadt P: (Tag -> Nat -> *) -> Tag -> Nat -> * where
+  Base : P r {E} {In[*] Zero} 
+  StepO : r {O} {i} -> P r {E} {`succ i}
+  StepE : r {E} {i} -> P r {O} {`succ i}
+    deriving fixpoint Proof
+\end{verbatim}}
+
+Note, to distinguish type indices from term indices (and to make parsing unambiguous)
+we enclose term indices in braces ( \verb+{ _ }+). We also back quote (\verb+`+)
+variables in terms that we expect to be bound in the current environment. 
+Un-backquoted
+variables are taken to be universally quantified. By
+backquoting \verb+succ+ we indicate we
+want terms which are applications of the successor function, and not some
+universally quantified function.
+
+For non-recursive types without parameters, the kind of the fix point
+is the same as the kind of the recursive argument \verb+r+. If the the non-recursive
+type has parameters, the kind of the fix point will be composed
+of the parameters \verb+->+ the kind of the recursive argument \verb+r+. For example,
+study the kinds of the fix points for the non-recursive
+types declared above in the the table below.
+
+\vspace*{0.1in}
+\begin{tabular}{l|c|c|c}
+non-recursive type & Nest          & V                    & P                       \\
+recursive type     & PowerTree     & Vector               & Proof                   \\ \hline
+kind of T          & \verb+* -> *+ & \verb+* -> Nat -> *+ & \verb+Tag -> Nat -> *+  \\ 
+kind of \verb+r+   &  \verb+* -> *+ & \verb+Nat -> *+     & \verb+Tag -> Nat -> *+  \\
+number parameters  & 0             & 1                    & 0                       \\ 
+number indices     & 1 (type)      & 1 (term)             & 2 (term,term)           \\ 
+
+\end{tabular}
+
+\vspace*{0.1in}
+Recall, indices are used to track static properties about values
+with those types. A well formed (\verb+PowerTree x+) contains a balanced
+set of parenthesized binary tuples of elements. The index, \verb+x+,  describes
+the shape of the nesting. A (\verb+Vector a n+) is a list of elements of
+type \verb+a+, with length exactly equal to \verb+n+, and a (\verb+Proof E n+) witness that
+the natural number \verb+n+ is even, and a (\verb+Proof O m+) witnesses
+that the natural number \verb+m+ is odd. Some example value with these types are
+given below.
+
+{\small
+\begin{verbatim}
+tree1: PowerTree Int = (tip 3)
+tree2: PowerTree Int = (fork (tip (2, 5)))
+tree3: PowerTree Int = (fork (fork (tip ((4, 7), (0, 2)))))
+
+v2: Vector Int {succ (succ zero)} = (vcons 3 (vcons 5 vnil))
+
+p1: Odd {succ zero} = (stepE base)
+p2: Even {succ (succ zero)} = (stepO (stepE base))
+\end{verbatim}}
+
+ 
 
 
 \subsection{Mendler operators for indexed types}
