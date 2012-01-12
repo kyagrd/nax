@@ -594,48 +594,50 @@ sumTree t = genericSum t (\ x -> x)
 \end{verbatim}
 
 In general, the type of the result of a function over an indexed type,
-can depend upon what the index is. Thus a Mendler operator over a value
-with an indexed
-type must be specialized to that value's index. Different values of the
+can depend upon what the index is. Thus, a Mendler operator over a value
+with an indexed type, must be type-specialized to that value's index. Different values of the
 same general type, will have different indices. After all, the role of
 an index is to witness an invariant about the value, and different
-values might have different invariants. Capturing this variation is the role of clause
-\verb+{ a . (a -> Int) -> Int}+ following the key word \verb+mcata+. In
+values might have different invariants. Capturing this variation is the role of 
+the  clause \verb+{a . (a -> Int) -> Int}+ following the key word \verb+mcata+. 
+We call such a clause, an {\it index transformer}. In
 the same way that the type of the result depends upon the index, the type of
 the different components of the abstract datatype implementing the Mendler
 operator also depend upon the index. In fact, everything depends upon the index
-in a uniform way. Thus we observe the following types in the example.
+in a uniform way. The index transformer captures this uniformity.
+One cannot abstract over the index tranformer in Nax. Each Mendler operator, over
+an indexed type, must be supplied with a concrete clause (inside the braces)
+that describe how the results depend upon the index. To see how the tranformer
+is used, study the types of the terms in the example.
+
 The scrutinee \verb+t+ has type (\verb+PowerTree a+) which is a synonym for
 (\verb+(Mu[* -> *] Nest) a+). The recursive caller
-\verb+sum+ has type (\verb+forall a. _r a -> (a -> Int) -> Int+), for some abstract
+\verb+sum+ has type (\verb+forall a. r a -> (a -> Int) -> Int+), for some abstract
 type constructor \verb+r+. Recall \verb+r+ has an index, so it must be a type constructor, not a type. 
 The patterns (\verb+Tip x+) and (\verb+Fork x+) have type
-(\verb+Nest r a+) and the right hand sides of the equations
-((\verb+\ f -> f x+) and (\verb+\ f -> sum x (\ (a,b) -> f a + f b)+)) have type
+(\verb+Nest r a+) and the right hand sides of the equations:
+(\verb+\ f -> f x+) and (\verb!\ f -> sum x (\ (a,b) -> f a + f b)!), have type
 (\verb+(a -> Int) -> Int+). Note that the dependency of (\verb+(a -> Int) -> Int+) on
-the index \verb+a+, appears in both the result type and the type of the recursive caller.
-One cannot abstract over this dependanvy in Nax. Each Mendler operator, over
-an indexed type, must be supplied with a concrete clause (inside the braces)
-that describe how the results depend upon the index. 
-
-If we think of a clause like \verb+{ a . (a -> Int) -> Int}+ as a function \verb+F+,
-such that (\verb+F a = (a -> Int) -> Int+) we can succinctly
-describe the types of the operators masking up the Mendler abstraction \verb+mcata+
-in the table below. To make things clear, we put the general case on the left, and
-terms from the example, that illustrate the general case, on the right.
+the index \verb+a+, appears in both the result type, and the type of the recursive caller.
+If we think of an index transformer, like \verb+{a . (a -> Int) -> Int}+, as a function:
+$\psi$ \verb+a = (a -> Int) -> Int+, we can succinctly
+describe the types of the abstract operations in the \verb+mcata+ Mendler abstraction.
+In the table below, we put the general case on the left, and
+terms from the \verb+genericSum+ example, that illustrate the general case, on the right.
 
 {\small
 \begin{tabbing}
-\verb+mcata{+ $F$ \verb+}+  $x$ \verb+with+ \\
+\verb+mcata{+ $\psi$ \verb+}+  $x$ \verb+with+ \\
 \verb+  + \= $f$ \= $p_{i}$ \= =  \= $e_{i}$ \\
 \end{tabbing}
 \vspace*{-.15in}
 \begin{tabular}{l|clcl}
-$F$: \verb+k -> *+             & & \verb+{ a . (a -> Int) -> Int}+ & : & (\verb+* -> *+)\\
-$x$: (\verb+Mu+[*] T) a        & & \verb+t+ & : & (\verb+(Mu[* -> *] Nest) a+) \\
-$f$: $\forall$ (a:k) . r a $\to$ $F$ a & & \verb+sum+ & : & $\forall$ \verb+(a:*). r a -> (a -> Int) -> Int+) \\
-$p_{i}$: T r a                 & & (\verb+Fork x+) & : & (\verb+Nest r a+) \\
-$e_{i}$: \text{F} a     & & (\verb+\ f -> f x+) & : & (\verb+(a -> Int) -> Int+) \\
+$\psi$: \verb+k -> *+          & & \verb+{a . (a -> Int) -> Int}+ & : & (\verb+* -> *+)\\
+$T$: \verb+(k -> *) -> k -> *+ & & \verb+Nest+ & : & (\verb+(* -> *) -> * -> *+) \\
+$x$: (\verb+Mu+[\verb+k->*+] $T$) a        & & \verb+t+ & : & (\verb+(Mu[* -> *] Nest) a+) \\
+$f$: $\forall$ (a:k) . r a $\to$ $\psi$ a & & \verb+sum+ & : & $\forall$ \verb+(a:*). r a -> (a -> Int) -> Int+) \\
+$p_{i}$: $T$ r a                 & & (\verb+Fork x+) & : & (\verb+Nest r a+) \\
+$e_{i}$: $\psi$ a     & & (\verb+\ f -> f x+) & : & (\verb+(a -> Int) -> Int+) \\
 \end{tabular}
 }  
 \vspace*{0.08in}
@@ -643,7 +645,7 @@ $e_{i}$: \text{F} a     & & (\verb+\ f -> f x+) & : & (\verb+(a -> Int) -> Int+)
 The same scheme for \verb+mcata+ generalizes to type constructors with term indices, and with multiple
 indices. To illustrate this we give the generic schemes for type constructors
 with 2 or 3 indices. In the table the variables \verb+k+, \verb+j+, and \verb+i+,
-stand for arbitrary kinds (either types like \verb+*+ or terms like \verb+Nat+
+stand for arbitrary kinds (either kinds for types, like \verb+*+, or kinds for terms, like \verb+Nat+
 or \verb+Tag+).
 
 \vspace*{0.05in}
@@ -652,11 +654,11 @@ or \verb+Tag+).
 \begin{minipage}[l]{.45\linewidth}
 \begin{tabular}{lcl}
 $T$ & : & \verb+(k->j->*) -> (k->j->*)+ \\
-$F$ & : & \verb+k -> j -> *+               \\ 
-$x$ & : & (\verb+Mu+[*] T) a b        \\
-$f$ & : & $\forall$ (a:k)(b:j) . r a b $\to$ $F$ a b \\
-$p_{i}$ & : & T r a b             \\
-$e_{i}$ & : & \text{F} a b   \\
+$\psi$ & : & \verb+k -> j -> *+               \\ 
+$x$ & : & (\verb+Mu+[\verb+k->j->*+] $T$) a b        \\
+$f$ & : & $\forall$ (a:k)(b:j) . r a b $\to$ $\psi$ a b \\
+$p_{i}$ & : & $T$ r a b             \\
+$e_{i}$ & : & $\psi$ a b   \\
 \end{tabular}
 \end{minipage}
 
@@ -665,16 +667,43 @@ $e_{i}$ & : & \text{F} a b   \\
 \begin{minipage}[l]{.45\linewidth}
 \begin{tabular}{lcl}
 $T$ & : & \verb+(k->j->i->*) -> (k->j->i->*)+ \\
-$F$ & : & \verb+k -> j -> i -> *+               \\ 
-$x$ & : & (\verb+Mu+[*] T) a b c        \\
-$f$ & : & $\forall$ (a:k)(b:j)(c:i) . r a b c $\to$ $F$ a b c \\
-$p_{i}$ & : & T r a b c            \\
-$e_{i}$ & : & \text{F} a b c   \\
+$\psi$ & : & \verb+k -> j -> i -> *+               \\ 
+$x$ & : & (\verb+Mu+[\verb+k->j->i->*+] $T$) a b c        \\
+$f$ & : & $\forall$ (a:k)(b:j)(c:i) . r a b c $\to$ $\psi$ a b c \\
+$p_{i}$ & : & $T$ r a b c            \\
+$e_{i}$ & : & $\psi$ a b c   \\
 \end{tabular}
 \end{minipage}
 \end{tabular}
 }  
+\vspace*{0.05in}
 
+The simplest form of index transformation, is where the transformation
+is a constant function. This is the case of the function that computes
+the integer length of a natural-number, length-indexed, list
+(what we called a \verb+Vector+). Independent of the length the result
+is an integer. Such a function has type: \verb+Vector a n -> Int+.
+We can write this as follows:
+
+{\small
+\begin{verbatim}           
+vlen x = mcata{ {i} . Int} x with
+  len Vnil = 0
+  len (Vcons x xs) = 1 + len xs
+\end{verbatim}}
+
+
+Let's study an example with a more interesting index transformation.
+A term with type (\verb+Proof E n+), which is synonymous with the type 
+(\verb+Mu[Tag->Nat->*] P E n+),  
+witnesses that the term \verb+n+ is even. Can we transform such a term
+into a proof that \verb!n+1! is odd? We need to write a function which
+has both of the types:\\
+\verb+   Proof E n -> Proof O (succ n)  +, and \\
+\verb+   Proof O n -> Proof E (succ n)+. \\
+We can capture this dependency
+by defining the term-level function \verb+flip+, and using an \verb+mcata+
+with the index transformer: \verb+{{t} {i} . Proof {`flip t} {`succ i}}+.
 
 {\small
 \begin{verbatim}
@@ -686,11 +715,20 @@ flop x =
      with  f Base = stepE base
            f (StepO p) = (stepE(f p))
            f (StepE p) = stepO(f p)
-           
-vlen x = mcata{ {i} . Int} x with
-  len Vnil = 0
-  len (Vcons x xs) = 1 + len xs
-  
+\end{verbatim}}
+
+
+For our last term-indexed example, every length-indexed list has a length
+which is either even or odd. We can witness this fact by writing a function with type:
+\verb+Vector a n -> Either (Even n) (Odd n)+. Here, \verb+Even+ and \verb+Odd+
+are synonyms for particular kinds of \verb+Proof+. To write this function
+we need the index transformation: \verb+{ {n} . Either (Even {n}) (Odd {n})}+.
+
+{\small
+\begin{verbatim}    
+synonym Even x = Proof {E} {x}
+synonym Odd  x = Proof {O} {x}
+
 polarity x = 
   mcata { {n} . Either (Even {n}) (Odd {n})} x with
     pol Vnil = Left base
@@ -698,13 +736,45 @@ polarity x =
          case pol xs of
            Left p -> Right(stepE p)
            Right p -> Left(stepO p)  
-  
 \end{verbatim}}
-
 
 \subsection{Recursive types of unrestricted polarity but restricted elimination}
 \label{sec:bg:recty}
-TODO
+In Nax, programmers can define recursive data structures with both positive and 
+negative polarity.  The classic example is a datatype
+encoding the syntax of $\lambda$-calculus, which uses higher-order abstract syntax (HOAS).
+Terms in the $\lambda$-calculus are either variables, applications, or abstractions.
+In a HOAS representation, one uses Nax functions to encode abstractions. We
+give a two level description for recursive $\lambda$-calculus \verb+Term+s, by taking
+the fixpoint of the non-recursive \verb+Lam+ data type. 
+
+{\small
+\begin{verbatim}    
+data Lam: * -> * where
+   App: r -> r -> Lam r
+   Abs: (r -> r) -> Lam r
+ deriving fixpoint Term
+ 
+apply = abs (\ f -> abs (\ x -> app f x)) 
+\end{verbatim}}
+Note that we don't need to include a constructor for variables,
+as variables are represented by Nax variables, bound by Nax
+functions. For example the lamdba term: ($\lambda f . \lambda x . f\; x$)
+is encoded by the Nax term \verb+apply+ above.
+
+Note also, the recursive constructor: \verb+abs: (Term -> Term) -> Term+,
+introduced by the \verb+deriving fixpoint+ clause,
+has a negative occurrence of the type \verb+Term+. In a language with
+unrestricted analysis, such a type could lead to non-terminating
+computations. The Mendler \verb+mcata+ and \verb+mprim+ operators
+limit the analysis of such types in a manner that precludes non-terminating
+computations. The Mendler operator, \verb+mhist+, is too expressive
+to exclude non-terminating computations, and must be restricted to recursive
+datatypes with no negative occurences.
+
+
+
+
 
 \subsection{Mendler style iteration and recursion combinators}
 \label{sec:bg:Mendler}
