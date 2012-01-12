@@ -302,11 +302,12 @@ type constructor \verb+T+. In each clause, the pattern has type (\verb+T r+), fo
 abstract type \verb+r+. The additional variable introduced ($\newFi{f}$) is
 an operator over the abstract type, \verb+r+, that can safely manipulate values of type \verb+r+.
 
-Different Mendler style operators support different abstractions. Each abstraction safely
+Different Mendler style operators are implemented by different abstract types. Each abstraction safely
 describes a class of provably terminating operations over a recursive type. The number (and type)
 of abstract operations differs from Mendler operator to Mendler operator. We give
-descriptions of three Mendler operators and their abstractions below. In each description
-the type \verb+ans+ represents the type of the complete operation.
+descriptions of three Mendler operators, their abstractions, and the types of the operators
+within the abstraction, below. In each description
+the type \verb+ans+ represents the type of the complete Medler operator.
 
 \vspace*{.1in}
 \begin{tabular}{l|l|l}
@@ -314,7 +315,7 @@ the type \verb+ans+ represents the type of the complete operation.
 {\small
 \begin{tabbing}
 \verb+mcata+  x \verb+with+ \\
-\verb+  + \= \newFi{f} \= $\text{pat}_{i}$ \= =  \= $e_{i}$ \\
+\verb+  + \= \newFi{f} \= $\text{p}_{i}$ \= =  \= $e_{i}$ \\
 \end{tabbing}
 $x$: \verb+Mu+[*] T \\
 $f$: r $\to$ \text{ans} \\
@@ -332,7 +333,7 @@ mcata phi (In[*] x)
 {\small
 \begin{tabbing}
 \verb+mprim+  x \verb+with+ \\
-\verb+  + \= \newFi{f} \= \newFi{g} \= $\text{pat}_{i}$ \= =  \= $e_{i}$ \\
+\verb+  + \= \newFi{f} \= \newFi{cast} \= $\text{p}_{i}$ \= =  \= $e_{i}$ \\
 \end{tabbing}
 $x$: \verb+Mu+[*] T \\
 $f$: r $\to$ \text{ans} \\
@@ -352,7 +353,7 @@ mprim phi (In[*] x)
 {\small
 \begin{tabbing}
 \verb+mhist+  x \verb+with+ \\
-\verb+  + \= \newFi{f} \= \newFi{g} \= $\text{pat}_{i}$ \= =  \= $e_{i}$ \\
+\verb+  + \= \newFi{f} \= \newFi{project} \= $\text{p}_{i}$ \= =  \= $e_{i}$ \\
 \end{tabbing}
 $x$: \verb+Mu+[*] T \\
 $f$: r $\to$ \text{ans} \\
@@ -420,10 +421,11 @@ fibonocci x =
 \vspace*{.1in}
 
 The \verb+length+ function uses the simplest kind of recursion where
-each recursive call is applied to the a direct sub component of the input.
-Operationally, \verb+length+ works as follows. The scrutinee
-has type (\verb+Mu[*] (L a)+), and has the form (\verb+In[*] x+). The 
-\verb+mcata+ strips off the (\verb+In[*]+) and matches \verb+x+ against
+each recursive call is an application to a direct sub component of the input.
+Operationally, \verb+length+ works as follows. The scrutinee, \verb+y+,
+has type (\verb+Mu[*] (L a)+), and has the form (\verb+In[*] x+). 
+The type of \verb+y+ implies that \verb+x+ must have the form \verb+Nil+ or
+(\verb+Cons x xs+).  The  \verb+mcata+ strips off the (\verb+In[*]+) and matches \verb+x+ against
 the \verb+Nil+ and (\verb+Cons x xs+) patterns. If the \verb+Nil+ pattern
 matches, then \verb+0+ is returned. If the (\verb+Cons x xs+) pattern matches,
 \verb+x+ and \verb+xs+ are bound. The abstract type mechanism gives the
@@ -458,7 +460,7 @@ a safe, yet abstract mechanism, to support this. The function \verb+fibonocci+
 is a classic example of this kind of recursion.  The Mendler \verb+mhist+
 provides two abstract operations. The recursive caller with type
 (\verb+r -> ans+) and a projection function with type (\verb+r -> T r+). The projection
-allows the programmer to observe the hidden \verb+T+ hidden inside a value
+allows the programmer to observe the hidden \verb+T+ structure inside a value
 of the the abstract type \verb+r+.
 In the fibonocci function above, we name the projection \verb+out+. It is used
 to observe if the abstract predecessor, \verb+n+, of the input, \verb+x+, is either
@@ -468,11 +470,11 @@ how recursive calls are made on the direct predecessor, \verb+n+, and the second
 
 Mendler observed that each operator can be defined
 by the equation at the bottom of its figure. Each operation can be given
-a naive type, but if we instead give it a more abstract type,
-abstracting values of type  \verb+Mu[*] T+ into some unknown abstract type \verb+r+, 
+a naive type involving (\verb+Mu[*] T+), but if we instead give it a more abstract type,
+abstracting values of type (\verb+Mu[*] T+) into some unknown abstract type \verb+r+, 
 one can safely guarantee a certain pattern of use that insures termination.  Operationally
 if the operation works for some unknown type \verb+r+
-it will certainly also work for the actual type \verb+Mu[*] T+, but because it cannot
+it will certainly also work for the actual type (\verb+Mu[*] T+), but because it cannot
 assume that \verb+r+ has any particular structure, the user is forced to use
 the abstract operations in carefully proscribed ways.
   
@@ -540,7 +542,8 @@ number indices     & 1 (type)      & 1 (term)             & 2 (term,term)       
 Recall, indices are used to track static properties about values
 with those types. A well formed (\verb+PowerTree x+) contains a balanced
 set of parenthesized binary tuples of elements. The index, \verb+x+,  describes
-the shape of the nesting. A (\verb+Vector a n+) is a list of elements of
+what kind of vaules are nested in the parentheses. The invariant is that the
+number of items nested is always an exact power of 2. A (\verb+Vector a n+) is a list of elements of
 type \verb+a+, with length exactly equal to \verb+n+, and a (\verb+Proof E n+) witness that
 the natural number \verb+n+ is even, and a (\verb+Proof O m+) witnesses
 that the natural number \verb+m+ is odd. Some example value with these types are
@@ -554,23 +557,150 @@ tree3: PowerTree Int = (fork (fork (tip ((4, 7), (0, 2)))))
 
 v2: Vector Int {succ (succ zero)} = (vcons 3 (vcons 5 vnil))
 
-p1: Odd {succ zero} = (stepE base)
-p2: Even {succ (succ zero)} = (stepO (stepE base))
+p1: P {O} {succ zero} = (stepE base)
+p2: P {E} {succ (succ zero)} = (stepO (stepE base))
 \end{verbatim}}
 
- 
+Note that in the types of the terms above, the 
+indices in braces \verb+{ }+ are ordinary terms (not types). In these example we use 
+natural numbers (like \verb+succ (succ zero)+) and elements (\verb+E+ and \verb+O+)
+of the two-valued type \verb+Tag+. It is interesting to note that sometimes the
+terms are of recursive types (like \verb+Nat+ which is a synonym for \verb+Mu[*] N+),
+and some are non-recursive types (like \verb+Tag+).
 
 
 \subsection{Mendler operators for indexed types}
 
-A representative example of a term
-indexed type is the length indexed list type (often called the vector type).
-A regular polymorphic list type ($\sfList\;a$) is parametrized by a type
-parameter ($a$), which can be instantiated to a specific type, while the
-vector type ($\sfVec\;a\;\{n\}$) has an additional term index ($n$), which
-can be instantiated to a specific natural number value. The curly brackets
-($\{\cdots\}$) around $n$ is to syntactically distinguish term indices from
-other type arguments. 
+Mendler operators generalize naturally to indexed types. The key observation
+that makes this generalization possible is that the types of the operations
+within abstraction have to be generalized to deal with the type indices in
+a consistent manner. How this is done is best first explained by example, and
+then later abstracted to its full general form.
+
+Recall, a value of type (\verb+PowerTree Int+) is a nested, parenthesized, set
+of integers, where the number of integers is an exact power of 2. Consider
+a function that adds up all those integers. One wants a function of type
+(\verb+PowerTree Int -> Int+). One strategy to writing this function is write
+a more general function of type (\verb+PowerTree a -> (a -> Int) -> a+). In
+Nax we can do this as follows:
+
+{\small
+\begin{verbatim}
+genericSum t = mcata { a . (a -> Int) -> Int} t with
+                  sum (Tip x)  = \ f -> f x
+                  sum (Fork x) = \ f -> sum x (\ (a,b) -> f a + f b)
+
+sumTree t = genericSum t (\ x -> x)
+\end{verbatim}
+
+In general, the type of the result of a function over an indexed type,
+can depend upon what the index is. Thus a Mendler operator over a value
+with an indexed
+type must be specialized to that value's index. Different values of the
+same general type, will have different indices. After all, the role of
+an index is to witness an invariant about the value, and different
+values might have different invariants. Capturing this variation is the role of clause
+\verb+{ a . (a -> Int) -> Int}+ following the key word \verb+mcata+. In
+the same way that the type of the result depends upon the index, the type of
+the different components of the abstract datatype implementing the Mendler
+operator also depend upon the index. In fact, everything depends upon the index
+in a uniform way. Thus we observe the following types in the example.
+The scrutinee \verb+t+ has type (\verb+PowerTree a+) which is a synonym for
+(\verb+(Mu[* -> *] Nest) a+). The recursive caller
+\verb+sum+ has type (\verb+forall a. _r a -> (a -> Int) -> Int+), for some abstract
+type constructor \verb+r+. Recall \verb+r+ has an index, so it must be a type constructor, not a type. 
+The patterns (\verb+Tip x+) and (\verb+Fork x+) have type
+(\verb+Nest r a+) and the right hand sides of the equations
+((\verb+\ f -> f x+) and (\verb+\ f -> sum x (\ (a,b) -> f a + f b)+)) have type
+(\verb+(a -> Int) -> Int+). Note that the dependency of (\verb+(a -> Int) -> Int+) on
+the index \verb+a+, appears in both the result type and the type of the recursive caller.
+One cannot abstract over this dependanvy in Nax. Each Mendler operator, over
+an indexed type, must be supplied with a concrete clause (inside the braces)
+that describe how the results depend upon the index. 
+
+If we think of a clause like \verb+{ a . (a -> Int) -> Int}+ as a function \verb+F+,
+such that (\verb+F a = (a -> Int) -> Int+) we can succinctly
+describe the types of the operators masking up the Mendler abstraction \verb+mcata+
+in the table below. To make things clear, we put the general case on the left, and
+terms from the example, that illustrate the general case, on the right.
+
+{\small
+\begin{tabbing}
+\verb+mcata{+ $F$ \verb+}+  $x$ \verb+with+ \\
+\verb+  + \= $f$ \= $p_{i}$ \= =  \= $e_{i}$ \\
+\end{tabbing}
+\vspace*{-.15in}
+\begin{tabular}{l|clcl}
+$F$: \verb+k -> *+             & & \verb+{ a . (a -> Int) -> Int}+ & : & (\verb+* -> *+)\\
+$x$: (\verb+Mu+[*] T) a        & & \verb+t+ & : & (\verb+(Mu[* -> *] Nest) a+) \\
+$f$: $\forall$ (a:k) . r a $\to$ $F$ a & & \verb+sum+ & : & $\forall$ \verb+(a:*). r a -> (a -> Int) -> Int+) \\
+$p_{i}$: T r a                 & & (\verb+Fork x+) & : & (\verb+Nest r a+) \\
+$e_{i}$: \text{F} a     & & (\verb+\ f -> f x+) & : & (\verb+(a -> Int) -> Int+) \\
+\end{tabular}
+}  
+\vspace*{0.08in}
+
+The same scheme for \verb+mcata+ generalizes to type constructors with term indices, and with multiple
+indices. To illustrate this we give the generic schemes for type constructors
+with 2 or 3 indices. In the table the variables \verb+k+, \verb+j+, and \verb+i+,
+stand for arbitrary kinds (either types like \verb+*+ or terms like \verb+Nat+
+or \verb+Tag+).
+
+\vspace*{0.05in}
+{\small
+\begin{tabular}{l|l}
+\begin{minipage}[l]{.45\linewidth}
+\begin{tabular}{lcl}
+$T$ & : & \verb+(k->j->*) -> (k->j->*)+ \\
+$F$ & : & \verb+k -> j -> *+               \\ 
+$x$ & : & (\verb+Mu+[*] T) a b        \\
+$f$ & : & $\forall$ (a:k)(b:j) . r a b $\to$ $F$ a b \\
+$p_{i}$ & : & T r a b             \\
+$e_{i}$ & : & \text{F} a b   \\
+\end{tabular}
+\end{minipage}
+
+&
+
+\begin{minipage}[l]{.45\linewidth}
+\begin{tabular}{lcl}
+$T$ & : & \verb+(k->j->i->*) -> (k->j->i->*)+ \\
+$F$ & : & \verb+k -> j -> i -> *+               \\ 
+$x$ & : & (\verb+Mu+[*] T) a b c        \\
+$f$ & : & $\forall$ (a:k)(b:j)(c:i) . r a b c $\to$ $F$ a b c \\
+$p_{i}$ & : & T r a b c            \\
+$e_{i}$ & : & \text{F} a b c   \\
+\end{tabular}
+\end{minipage}
+\end{tabular}
+}  
+
+
+{\small
+\begin{verbatim}
+flip E = O
+flip O = E
+
+flop x = 
+   mcata {{t} {i} . Proof {`flip t} {`succ i}} x    
+     with  f Base = stepE base
+           f (StepO p) = (stepE(f p))
+           f (StepE p) = stepO(f p)
+           
+vlen x = mcata{ {i} . Int} x with
+  len Vnil = 0
+  len (Vcons x xs) = 1 + len xs
+  
+polarity x = 
+  mcata { {n} . Either (Even {n}) (Odd {n})} x with
+    pol Vnil = Left base
+    pol (Vcons x xs) = 
+         case pol xs of
+           Left p -> Right(stepE p)
+           Right p -> Left(stepO p)  
+  
+\end{verbatim}}
+
 
 \subsection{Recursive types of unrestricted polarity but restricted elimination}
 \label{sec:bg:recty}
