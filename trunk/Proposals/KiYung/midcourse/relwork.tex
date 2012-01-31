@@ -376,28 +376,39 @@ only''\cite{UusVen99}. So, until recently, the study on Mendler style recursion
 combinators focused on examples of positive recursive types.
 
 \subsubsection{Recent contributions of my thesis work}
-One of the reasons the search for interesting examples has been neglected
-is that techniques exist for encoding negative recursive types into positive recursive ones.
-Recall that the conventional iteration and
-primitive recursion normalize for positive datatypes. Thus, in such
-encodings, we can use standard techniques. What we gain by using such encodings must be 
-traded against the loss in transparency that such encodings force upon the implementation.
-The natural properties, which were evident in the negative datatype, become
-obscured by the encoding. 
+I have developed several new contributions to the study of the Mendler style
+in my thesis work. These contributions fall into 3 broad categories.
+\begin{itemize}
+\item Some Mendler operators terminate for negative datatypes, and are also quite expressive.
+\item Some Mendler operators are restricted to positive datatypes.
+\item Mendler operators can be extended to term indexed types (GADTs).
+\end{itemize}
+Each topic will be thoroughly described in the final thesis, and is outlined here.
+
 
 \paragraph{A new family of Mendler style recursion combinators for negative datatypes.}
-Identifying additional Mendler style operators that work
-naturally, and are more expressive than iteration and primitive recursion, has been
-an important result of my thesis work. While it is known
-that iteration and primitive recursion terminate for all datatypes
-\cite{AbeMatUus05,AbeMat04}, they are not particularly expressive over negative datatypes.
+
+While it is known that iteration and primitive recursion terminate for all data types
+\cite{AbeMatUus05,AbeMat04}, they are not particularly expressive over negative
+data types. Identifying additional Mendler style operators that work naturally, and are
+more expressive than iteration and primitive recursion, has been an important result of
+my thesis work.
+
+Interesting examples of Mendler-style operators over negative data types have been
+neglected in the literature. One of the reasons is because it is possible to encode
+negative recursive types into positive recursive ones. Because conventional iteration and
+primitive recursion normalize for positive data types we can use standard techniques on
+these encodings. What we gain by using such encodings must be traded against the loss in
+transparency that such encodings force upon the implementation. The natural properties,
+which were evident in the negative data type, become obscured by the encoding.
+
 
 A series of papers
-\cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} has studied 
+\cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} studied 
 techniques that define recursion schemes
 over negative recursive types in the conventional setting. In our recent work
 \cite{AhnShe11}, we discovered that this work can be naturally captured
-as a kind-indexed family of Mendler style combinators. The \verb+msfcata+
+as a kind-indexed family of Mendler style combinator. The \verb+msfcata+
 operator corresponds to the conventional recursion combinator discovered by
 \citet{FegShe96} and later refined by \citet{bgb}. With this new family, we were
 able to write many interesting programs, involving negative recursive types,
@@ -411,47 +422,76 @@ Recent work \cite{AhnShe11} shows
 that course-of-values iteration \cite{vene00phd,UusVen02} actually
 needs a positivity condition on recursive types to be well-defined. I.e., Mender style 
 course-of-values iteration only normalizes for positive recursive types.
-
-In the special case that a datatype uses only positive occurrences (the normal case
-for first order data) more terminating Mendler style operators are possible.
-We have identified new ones, adapted old ones, and organized them all into a natural
-hierarchy that explains how all are instances of a common pattern.
-However, we know of no guarantee that every principled
-recursion scheme has a Mendler style operator, so there is much work still to be done.
+In the special case that a data type uses only positive occurrences (the normal case
+for first order data) more expressive terminating Mendler style operators are possible.
 
 
+\paragraph{Examples involving indexed data types.} 
+We \cite{AhnShe11} have illustrated that Mendler-style recursion combinators can
+be defined not only for nested data types but also for arbitrary indexed data types,
+known as Generalized Algebraic DataTypes (GADTs) which can index over terms as well as types.
+Previous work, that promoted the expressiveness and generality of the Mendler style
+\cite{AbeMatUus03,AbeMatUus05,AbeMat04} used examples involving nested data types,
+a particularly simple kind of indexing. In order to handle nested data types, the
+translation of the Mendler-style into System F, had to be extended to translation
+into \Fw. To translate Mendler-style combinators over GADTs
+into a normalizing calculus we have to extend \Fw, 
+to a new calculus we call \Fi, and prove that this new
+calculus is also strongly normalizing. I have identified what the extensions must
+look like and have been developing the theoretical background necessary to
+accomplish this task. This theory is an important part of the thesis
+and is elaborated in this document in \S\ref{Fi} and \S\ref{sec:Fi}.
 
-\paragraph{Examples involving indexed datatypes.}
-We \cite{AhnShe11} have illustrated that Mendler-style
-recursion combinators can be defined for indexed datatypes, beyond the scope of
-nested datatypes. Previous work 
-that promoted the expressiveness and generality of the Mendler style 
-\cite{AbeMatUus03,AbeMatUus05,AbeMat04}
-used examples involving nested datatypes, a particularly simple kind of 
-indexing. To handle nested datatypes
-the translation of the Mendler-style into System F, had to
-be extended to \Fw. 
-Our work \cite{AhnShe11} includes examples involving Generalized Algebraic
-DataTypes (GADTs), and examples mutual recursion (between types) encoded in terms of GADTs.
-However, we only gave an informal argument of their normalization.
-To translate Mendler-style combinators over GADTs into a know normalizing calculus
-we have to extend \Fw, and prove that this new calculus is also
-strongly normalizing. I have identified what the extensions must look like
-and have been developing the theoretical background necessary to accomplish this task.
+Despite, not having a completed theory to support the translation of GADTs, we have 
+identified many examples \cite{AhnShe11}. Including many examples
+that use term indices to exploit the Curry-Howard isomorphism, and
+examples of mutual recursion (between types) encoded in terms of GADTs.
 
-\subsubsection{Work in progress}
+In general, we have pushed the boundaries of what is known about the Mendler style
+operators in many ways. We have identified new domains in which they are
+applicable, identified new operators, adapted old ones, and organized them all
+into a natural hierarchy that explains how all are instances of a common pattern.
+However, we know of no guarantee that every principled recursion scheme has a
+Mendler style operator, so there is much work still to be done.
+
+
+\subsubsection{Work in progress} \label{Fi}
+
+The thesis will also contain two chapters on work in progress.
+
+\paragraph{Sytem \Fi.}
 I am developing a typed lambda calculus called System \Fi\, which is an
-extension of System \Fw\ with term indexed types. Term indexed types
-express what GADTs express in a natural way. The type indices
-used in GADTs are often really intended to be values at term level,
-but are just simulations of such terms at type level. Within System \Fi, we can rigorously
+extension of System \Fw\ with term-indexed types. Term-indexed types
+naturally support the Curry-Howard isomorphism, as
+a type constructor can be seen as a relation between one or more terms.
+This kind of expressiveness is available in dependently
+typed languages (where there is no distinction between type and term),
+and is also encodable using GADTs in functional languages such as Haskell.
+GADTs in Haskell are often indexed by uninhabited types which are 
+isomorphic to terms. The type indices
+used in GADTs in Haskell programs are often really intended to be values at term level,
+but are just simulations of such terms at type level.
+For example one might introduce uninhabited type constructors \verb+Zero+
+and \verb+Succ+ in order to simulate the natural numbers when defining length indexed lists
+\begin{verbatim}
+data Zero
+data Succ x
+
+data Vector a n where
+  Nil:: Vector a Zero
+  Cons:: a -> Vector a n => Vector a (Succ n)
+\end{verbatim}  
+
+Within System \Fi, we can rigorously define types indexed by terms
+while keeping the term and type language cleanly separated. We can also
 argue about the properties of the Mendler style combinators over indexed types.
 You can find a summary of \Fi\ in this mid-course document in \S\ref{sec:Fi}.
 
+\paragraph{The programing language Nax.}
 I am also designing a surface language called Nax that supports
-non-recursive datatypes, a recursive type operator $\mu$, and
+non-recursive data types, a recursive type operator $\mu$, and
 Mendler style recursion combinators as language constructs.
 Nax supports Hindley-Milner style type inference, with a few type annotations
-for indexed types. Nax is designed to be embeddable into System \Fi. 
-You can find a summary of \Fi\ in this mid-course document in \S\ref{sec:Nax}.
+for indexed types. Nax is designed to be embedable into System \Fi. 
+You can find a summary of our progress in defining Nax in this mid-course document in \S\ref{sec:Nax}.
 

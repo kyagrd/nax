@@ -1,24 +1,38 @@
-\section{Mendler style recursion schemes}\label{sec:Mendler}
-I first describe the common pattern (or, general form) of the Mendler style
-recursion combinators that is going to appear in my dissertation
-(\S\ref{sec:mendler:intro}). Then, I introduce each specific family of
-the Mendler style combinators (\S\ref{sec:mendler:it}-\ref{sec:mendler:sf}),
-which I plan to support in the Nax language design. Lastly, I postulate on
-other possible generalizations and extensions (\S\ref{sec:mendler:etc}).
+\section{Mendler style recursion schemes}\label{sec:Mendler} I claim to
+have organized the Mendler-style operators into a natural hierarchy. We
+describe this hierarchy here. There are common patterns (or, general
+forms) of Mendler-style recursion combinators that I use in my
+dissertation (\S\ref{sec:mendler:intro}). These patterns have two
+dimensions. The first dimension describes what and how the operator
+computes, and the second dimension abstracts over the kind of a data
+type. We call all Mendler operators that compute the same way, but over
+different data types with different kinds,  a kind-indexed family of
+operators. Mendler operators that compute things using a different
+computation pattern belong to different families.
+
+Despite the fact that different families compute things differently, all
+families have a common structure. I discuss this common stucture first,
+then I introduce several families of Mendler-style combinators
+(\S\ref{sec:mendler:it}-\ref{sec:mendler:sf}) which I plan to support in
+the Nax language design. Lastly, I postulate on other possible
+generalizations and extensions (\S\ref{sec:mendler:etc}).
 
 \subsection{Two level types and Mendler style recursion combinators}
 \label{sec:mendler:intro}
-In this section, I introduce the general form of Mendler style recursion scheme
-before we look into each family of the Mendler style recursion combinators.
+In this section, I introduce the general pattern behind a Mendler-style recursion scheme.
+We formulate recursive types in two levels,  by applying the recursive type operator
+$\mu^\kappa$ to a non-recursive base structure $T$. 
+We illustrated this in Figure \ref{fig:approaches}
+in Section \ref{sec:relwork:other}. Figure \ref{fig:approaches}
+only illustrates regular datatypes without indices
+(i.e. where the $\kappa$ of $\mu^\kappa$ is kind $*$). Here, I will describe
+the most general form where $\kappa$ of $\mu^\kappa$ has the form $\vec{\kappa}_i -> *$
+(i.e. $(\vec{\kappa}_0 -> *)$ is $(*)$, and  $(\vec{\kappa}_1 -> *)$ is $(\kappa_1 -> *)$, and
+$(\vec{\kappa}_2 -> *)$ is  $(\kappa_1 -> \kappa_2 -> *)$ etc.).
 
-We formulate recursive types in two levels, as we have already shown
-in Figure \ref{fig:approaches}, by applying the recursive type operator
-$\mu^\kappa$ to a non-recursive base structure $T$. Figure \ref{fig:approaches}
-only illustrates regular datatypes without indices. Here, I will describe
-the most general form.
-
-The general form for non-recursive datatype, which is to be used
-as a base structure for recursive types, is the following:
+\paragraph{The pattern of recursive type construction.}
+The general form of a non-recursive data type definition, which is to be used
+as the base structure for a recursive types, is the following:
 \begin{align*}
 \textbf{data}~ T : \vec{\kappa}_p -> (\vec{\kappa}_i -> *) ->
                                       \vec{\kappa}_i -> *
@@ -29,58 +43,86 @@ as a base structure for recursive types, is the following:
 \end{align*}
 The datatype constructor $T$ expects a series of type arguments $\vec{p}$, $r$,
 and $\vec{i}$, whose kinds are $\vec{\kappa}_p$, $(\vec{\kappa}_i -> *)$, and
-$\vec{\kappa}_i$, respectively. Thus, a vaule of this datatype would have
-a type $T\,\vec{p}\,r\,\vec{i}$ where the type variables $\vec{p},r,\vec{i}$
-are instantiated to certain types (and, possible terms for $\vec{i}$\,).
-The list of type variables $\vec{p}$ stands for type parameters that
-always appear regularly (\ie, always $\vec{p}$\,) in the type siguatures of
-the data constructors $C_1,\cdots,C_n$. The type variable $r$ stands for
-recursive ocurrences. The list of type variables $\vec{i}$ stands for indices
-that can vary (\eg, $\vec{\tau_i}_1,\vec{\tau_i}_n$) in the type signatures of
-the data constructors $C_1,\cdots,C_n$. Note that parameters and indices are
-determined by their position of whether they come before or after $r$.
+$\vec{\kappa}_i$, respectively. Thus, a value of this datatype would have
+type $(T\,\vec{p}\,r\,\vec{i})$ where the type variables $\vec{p},r,\vec{i}$
+are instantiated to certain types (or in the case of the $\vec{i}$, terms or types).
+\begin{itemize}
+\item The sequence of type variables $\vec{p}$ stand for the type parameters of the
+type. Type parameters always appear regularly 
+(\ie, they are always the same type variables $\vec{p}$\
+no matter where they occur) in the type siguatures of
+the data constructors $C_1,\cdots,C_n$. 
 
-For non-parametrized types (or, monotypes) such as natural numbers,
+\item The type variable $r$ stands for
+recursive ocurrences. Note it can have a rather complicted kind $(\vec{\kappa}_i -> *)$.
+
+\item The sequence of type variables $\vec{i}$ stands for indices
+that can vary (\eg, $\vec{\tau_i}_1,\vec{\tau_i}_n$) in the type signatures of
+the data constructors $C_1,\cdots,C_n$. 
+
+\item Note that classifying whether an argument is a parameteror or an index is
+determined by its position-- whether it comes before or after $r$.
+
+\end{itemize}
+We discuss the pattern as it occurs for some common types
+\begin{enumerate}
+
+\item For non-parametrized types (or, monotypes) such as the natural numbers,
 there are no parameters and no indices. For instance, the base structure
-for natural numbers would have the form $N\;r$. For parametrized,
+for natural numbers would have the form $N\;r$. 
+
+\item For parametrized,
 but non-indexed, types (or, regular polymorphic types), there are parameters
 before $r$ but no indices after $r$. For instance, the base structure for
 polymorphic lists would have the form $L\;p\;r$ where $p$ is the type of
-the elements in the list. For indexed types, there are indices follwoing $r$.
+the elements in the list. 
+
+\item For indexed types, there are indices following $r$.
 For instance, the base structure for length indexed lists would have the
-form $V\;p\;r\;i$ where $p$ is the type of the elements in the list and
+form $Vector\;p\;r\;i$ where $p$ is the type of the elements in the list and
 $i$ is the index that specifies the length of the list.
 
-To define the recursive types, we apply recursive type operators to
-base structures. We have a family of recursive type operator $\mu^\kappa$
-superscripted by kind $\kappa$, and its constructor $\In^\kappa$ is also
+\end{enumerate}
+
+To define the recursive types, we apply the recursive type operator ($\mu$) to
+base structures. There is  family of recursive type operators $\mu^\kappa$
+superscripted by kind $\kappa$, and its term constructor $\In^\kappa$ is also
 superscripted by kind $\kappa$. The recursive type operator $\mu$
 for regular datatypes in Figure \ref{fig:approaches} corresponds to $\mu^{*}$,
-and its constructor is $\In^{*}$.
-We must use the recursive type operator of the appropriate kind,
-depending on the indices ($\vec{i}\,$) of the base structure
-For instance, $\mu^{*}N$ is the natural number type,
-$\mu^{*}(L\,p)$ is the list type, $\mu^{\textit{Nat}-> *}(V\,p)$.
-More generally, $\mu^\kappa : (\kappa -> \kappa) -> \kappa$ can be
+and its constructor is $\In^{*}$. In general the type operator $\mu^\kappa$
+has kind $(\kappa -> \kappa) -> \kappa$ and the term constructor
+$In^\kappa$ has type $f (\mu^\kappa\; f) -> \mu^\kappa\; f$ where
+$f$ has kind $(\kappa -> \kappa)$.
+
+One must use the recursive type operator of the appropriate kind,
+which depends on the indices ($\vec{i}\,$) of the base structure.
+For example, $\mu^{*}N$ is the natural number type;
+$\mu^{*}(L\,p)$ is the list type; $\mu^{\textit{Nat}-> *}(V\,p)$ is the length indexed vector type.
+
+In general, $\mu^\kappa : (\kappa -> \kappa) -> \kappa$ can be
 applied to $T\,\vec{p} : \kappa -> \kappa$ to form a recursive type
 (or, recursive type constructor, if there are indices)
-$\mu^\kappa(T\,\vec{p}) : \kappa$. Note that datatypes become a type,
-which is of kind kind $*$, when they are fully appled. That is,
-$T\,\vec{p}\,r\,\vec{i} : *$. Since we know that the recursive type is
+$\mu^\kappa(T\,\vec{p}) : \kappa$. Note that datatypes become a type of kind $*$, 
+only when they are fully appled. For example,
+$T\,\vec{p}\,r\,\vec{i} : *$. 
+
+Since we know that the recursive type is
 well formed only when $T\,\vec{p} : \kappa -> \kappa$,
 the next type argument $r$ must be of kind $\kappa$.
-Also, we know that $\kappa$ should always be of the form the form
+Also, we know that $\kappa$ should always be of the form
 $\vec{\kappa} -> *$ where each of $\vec{\kappa}$ is the kind for
-each of the indices $\vec{i}$.
+each of the indices $\vec{i}$. Note that in a well formed
+type, $(\mu^\kappa\; f)$ and $f$ always have the same
+kind $(\kappa -> \kappa)$.
 
-Mendler style recursion combinators have richer type structure than the
-conventional recursion combinators. In the Mendler style, we rely on
-higher-rank polymorphism to ensure normalization proprieties of the
-recursion combinators. Recall that, in Figure \ref{fig:approaches},
+\paragraph{The pattern of a Mendler-style operator type.}
+Mendler style recursion combinators rely on
+higher-rank polymorphism to ensure their normalization proprieties. 
+Recall that, in Figure \ref{fig:approaches},
 the type of $\varphi$ was required to be polymorphic over a type variable
 $X$ (which corresponds to $r$ in this section).
-The following is the general form for the type of Mendler style
-recursion combinators in the presence of type indices:
+The following is the general form of the type of a Mendler-style
+recursion combinator in the presence of type indices:
 \begin{multline*}
  \textsf{Mxxx} : \forall t . \forall a .
    \big(\, \forall r . \;
@@ -98,26 +140,33 @@ recursion combinators in the presence of type indices:
             (\forall\vec{i} . \cdots) -> \cdots }
    -> \overbraceset{\begin{smallmatrix}
                         \text{function body desc.:} \\
-                        \text{combines $r$-value} \\
+                        \text{combines a $t$ structure}\\
+                        \text{filled with $r$-values} \\
                         \text{into an answer}
                        \end{smallmatrix}}{
-            (\forall\vec{i} . r\,\vec{i}  -> a\,\vec{i}\,) }
+            (\forall\vec{i} . t\, r\, \vec{i}  -> a\,\vec{i}\,) }
    \big) \\
  -> \underbraceset{\text{resulting recursive function}}{
        (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,) }
 \end{multline*}
-We can conceptualize a Mendler style recursion combinator as a higher order
-function, which gives a recursive function as a result
-from the description of a function body using a set of abstract operations
-over the abstract recursive structure $r$ including the abstract recursive call.
-We can think of above as an encoding of the following
+
+Different families have diferent specifications as to the number and
+type of the {\it other abstract operations}. Members of the same family
+differ over the number and kind of the indices $\vec{i}$.
+
+One can think of a Mendler-style recursion combinator as a higher order
+function. It returns a recursive function when applied
+to a set of abstract operations. The operations are abstract over the 
+(possibly indexed) type $r$. These operations must never rely on the structure
+of $r$, and the higher-rank polymorphism enforces this.
+We can think of the above as an encoding of the following
 where $r$ is an abstract type:
 \begin{multline*}
  \textsf{Mxxx} : \forall t . \forall a .
  \exists r.
   \big(  (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
    \times (\forall\vec{i} . \cdots) \times \cdots
-   \times (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   \times (\forall\vec{i} . t\, r\,\vec{i} -> a\,\vec{i}\,)
    \big) \\
  -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
 \end{multline*}
