@@ -227,13 +227,15 @@ $xs$ since its type is an abstract recursive type ($r$) rather than
 a concrete list type ($List$). We shall see soon that the primitive recursion
 family is able to express such functions naturally.
 
-Before we move on for the primitive recursion family, let us look at some
-examples of Mendler style iteration, which involve indices. The following
-is the base structure for vectors, or length indexed lists:
+Mendler style recursion combinators generalize naturally to indexed types.
+Let us look at some examples of Mendler style iteration over indexed types.
+Before we move on for the primitive recursion family.
+
+The following is the base structure for vectors, or length indexed lists:
 \begin{align*}
 \textbf{data}~V : * -> (Nat -> *) -> Nat -> * ~\textbf{where}~~
 & \textit{VNil}~~\, : V\;p\;r\;\{`zero\} \\
-& \textit{VCons}    : r\;n -> p -> V\;p\;r\;\{`succ\;n\}
+& \textit{VCons}    : r\;\{n\} -> p -> V\;p\;r\;\{`succ\;n\}
 \end{align*}
 We use curly braces ($\{\dots\}$) to emphasize that they are \emph{term indices}
 (\ie, term used as indices) in order to distinguish them from ordinary
@@ -244,7 +246,7 @@ free type (or, index) variables (\eg, $p$,$r$,$n$) that may be generalized.
 Then, we can define the length function for vectors using the Mendler style
 iteration combinator as follows:
 \begin{align*}
-\textit{vlength}~l = \MIt^{\{n . \textit{Nat}\}}~l~\textbf{with}~~
+\textit{vlength}~l = \MIt^{\{\{n\} . \textit{Nat}\}}~l~\textbf{with}~~
 &  vlen ~\textit{VNil}~~~~~~~~~~~ = zero \\
 &  vlen \;(\textit{VCons}\;x\;xs) = succ\,(vlen\;xs)
 \end{align*}
@@ -253,7 +255,7 @@ the index transformer $\psi = \{n . \textit{Nat}\}$, which is a constant
 type level function that ignores the index $n$ and always returns the 
 type $\textit{Nat}$. In general, type inference for programs involving
 type indices are not possible. However, Nax can infer that
-$vlengh : \textit{Vec}\;p\;n -> \textit{Nat}$, where
+$vlengh : \textit{Vec}\;p\;\{n\} -> \textit{Nat}$, where
 \textit{Vec} is a type synonym defined as
 $\textit{Vec} = \mu^{\textit{Nat} -> *}(V\;p)$, based on the index transformer
 annotation on \MIt.
@@ -262,26 +264,56 @@ Append function for vectors illustrates a more interesting use of
 the index transformer annotation:
 \begin{align*}
 \textit{vappend}~\,l_1 =~ &
- \MIt^{\{n . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}}~l_1
+ \MIt^{\{\{n\} . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}}~l_1
  ~\textbf{with} \\
-&\qquad\qquad\quad  vapp ~\textit{VNil}~~~~~~~~~~~ ~ l_2 = l_2 \\
-&\qquad\qquad\quad  vapp \;(\textit{VCons}\;x\;xs) ~ l_2 = cons\;x\;(vapp\;xs\;l_2)
+&\qquad\qquad\qquad\qquad  vapp ~\textit{VNil}~~~~~~~~~~~ ~ l_2 = l_2 \\
+&\qquad\qquad\qquad\qquad  vapp \;(\textit{VCons}\;x\;xs) ~ l_2 = cons\;x\;(vapp\;xs\;l_2)
 \end{align*}
 where $nil = \In^{*} \textit{Nil}\;$ and
 $\,cons\;x\;xs = \In^{*}(\textit{Cons}\;x\;xs)$.
 The index transformer
-$\{n . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}$
+$\{\{n\} . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}$
 specifies that the append function applied to a list of length $n$,
 shall return a function, which expects a vector of length index is $m$
 and returns a vector of length $(plus\;n\;m)$, where $plus$ is the addition
 function for natural numbers.
+
+We can also use indexed types to encode mutually recursive types.
+For instance, consider the following definitions:
+\begin{align*}
+&\textbf{data}~ \textit{Parity} = E \mid O \\
+&\textbf{data}~ \textit{Pf}\, : (\textit{Nat} -> \textit{Parity} -> *) ->
+                                    \textit{Nat} -> \textit{Parity} -> *
+  ~\textbf{where}\\
+&\quad \textit{BaseE}\, : \textit{Pf}~\,r\;\{`zero\}\;\{E\} \\
+&\quad \textit{StepE}\; : r\;\{n\}\;\{O\} -> \textit{Pf}~\,r\;\{`succ\;n\}\;\{O\} \\
+&\quad \textit{StepO}\; : r\;\{n\}\;\{E\} -> \textit{Pf}~\,r\;\{`succ\;n\}\;\{O\}
+\end{align*}
+Let $\textit{Proof} = \mu^{\textit{Nat} -> \textit{Parity} -> *} \textit{Pf}$,
+$\textit{Even}\;\{n\} = \textit{Proof}~\{n\}\;\{E\}$, and
+$\textit{Odd}\;\{n\} = \textit{Proof}~\{n\}\;\{O\}$ be type synonyms.
+Then, \textit{Even} and \textit{Odd} are encodings of the following
+mutually recursive datatypes:
+\begin{align*}
+&\textbf{data}~\textit{Even} : \textit{Nat} -> \textit{Parity} -> *
+ ~\textbf{where} \\
+&\quad \textit{BaseE}\, : \textit{Even}\;\{`zero\}\\
+&\quad \textit{StepE}\; : \textit{Odd}\;\{n\} -> \textit{Even}\;\{`succ\;n\} \\
+&\textbf{data}~\textit{Odd} : \textit{Nat} -> \textit{Parity} -> *
+ ~\textbf{where} \\
+&\quad \textit{StepO}\; : \textit{Even}\;\{n\} -> \textit{Odd}\;\{`succ\;n\}
+\end{align*}
+I will also include examples involving mutually recursive datatypes
+in my dissertation.
 
 It is known that \MIt\ for regular datatypes and indexed types with ordinary
 type indices has a reduction preserving embedding into System \Fw\ (\ie, \MIt\
 is definable in \Fw\ with constant reduction step difference).
 In my dissertation, I will show that \MIt\ for term indexed types has a
 reduction preserving embedding into System \Fi, which is an extension of \Fw.
-Also, I will describe and prove properties of the inference algorithm of Nax.
+Also, I will describe and prove properties of the inference algorithm of Nax,
+and also discuss why index transformer is the sweet spot for the design of
+type system suppering type inference in the presence of indexed types.
 
 \subsection{Mendler style primitive recursion}\label{sec:mendler:pr}
 The primitive recursion family \MPr\ is has an additional casting operation,
@@ -348,9 +380,6 @@ preserving manner. Just as I extended from \Fw\ to \Fi\ in order to
 formalize the theory of \MIt\ involving term indices, I extend from \Fixw\
 to \Fixi\ in order to formalize the theory of \MPr\ involving term indices.
 
-I omit the discussion on the use of \MPr\ over indexed types
-since it is similar to the use of \MIt\ over indexed types.
-
 \subsection{Mendler style course of values iteration \& primitive recursion}
 Some computations are naturally expressed by recursing on multiple levels
 down the structure of the input value (\eg, predecessor of predecessor,
@@ -406,13 +435,13 @@ We can define the Fibonacci function using \McvIt\ as follows:
               \textit{Succ}\;n'  -> plus\;(\textit{fib}\;n')\;(\textit{fib}\;n)
 \end{align*}
 Recall that we cannot inspect the structure of the predecessor $n$ since
-its type is abstract ($n:r$). The $out : r -> \textit{Nat}$ operation opens up
-the abstract structure and reviles the base structure inside it. So, it
-becomes possible to destruct (or, pattern match against) $out n$, and have
-access to the processor of predecessor $n'$. If needed, we can traverse down
-three steps by applying $out$ to $n'$, and even further by repeatedly applying
-$out$ to the inner structure. We have examples that traverses down many
-number of steps.
+its type is abstract (\ie, $n:r$). The $out : r -> \textit{Nat}\,$ operation
+opens up the abstract structure ($r$) and reveals the base structure ($N$).
+So, it becomes possible to destruct (or, pattern match against) $out\;n$,
+and have access to the processor of predecessor $n'$. If needed, we can
+traverse down three steps by applying $out$ to $n'$, and even further by
+repeatedly applying $out$ to the inner structure. I also have examples
+that traverses down many number of steps, which will appear in my dissertation.
 
 An important aspect of the Mendler style course of values recursion is that
 it only grantees normalization over positive recursive types. One of our
@@ -422,14 +451,28 @@ precise, the type signatures of \textsf{McvIt} and \textsf{McvPr} need to
 be constrained ($\forall t \text{~such that~$t$ is positive}.\cdots$)
 instead of being unconstrainedly polymorphic on $t$.
 
-definition
-
-???
-conjecture that it would be possible to embed into \Fixw
+I strongly believe that we can have a reduction preserving embedding of
+\McvIt\ and \McvPr\ into \Fixw\, and \Fixi\ taking term indices into
+consideration.\footnote{I haven't written this down yet but I see it
+is going to be quite straightforward.} The embedding would different from
+the embedding of \MPr\ though. The embedding of a certain family of
+the Mendler style recursion combinator is a pair of translation --
+a translation of the recursive type operator and a translation of
+the Mendler style recursion combinator. In general, the translation of
+the recursive type operator $\mu^\kappa$ is different for each family
+of the Mendler style recursion combinators, even though their target
+calculi may coincide.
 
 \subsection{Mendler style iteration with syntactic inverse}
+Although \MIt\ is normalizing for negative recursive types, there exist
+certain class of total functions over negative recursive types, which is
+useful but not easily expressed in terms of \MIt. This class of functions
+were studied in the conventional setting. My recent contribution is
+the discovery of the new family of the Mendler style recursion combinators,
+which can express those class of functions. We call this new family \MsfIt,
+whose type is shown below:
 \label{sec:mendler:sf}
-\begin{multline*}
+\[
  \MsfIt : \forall t . \forall a .
    \big( \forall r.
             (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
@@ -441,36 +484,23 @@ conjecture that it would be possible to embed into \Fixw
    -> \;    (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
    \big)
  -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
-\end{multline*}
+\]
+In addition to the abstract recursive call, \MsfIt\ supports abstract
+inverse from answer values ($a$) to abstract recursive values ($r$).
+Several examples and detailed discussions on \MsfIt\ can be found in
+our recent work \cite{AhnShe11} (also known as \textit{msfcata}).
+We \cite{AhnShe11} proved normalization properties of \MsfIt\ by
+embeding \MsfIt\ into \Fw. I plan to extend the proof for \MsfIt\,
+taking term indexed types into consideration, by embedding \MsfIt\
+into \Fi, which is an extension of \Fw.
 
+I am also planning to write more complex examples in the Nax language using \MIt
+-- \emph{normalization by evaluation} and \emph{parallel reduction}.
 
+I will also discuss why we have not extended the primitive recursion family
+and the course of values family with syntactic inverse.
 
-\MsfIt\ example
-
-Definition
-
-\MsfIt\ in \Fw
-
-discussion on why \MsfPr\ is not quite right? useful?
-
-discussion on why \McvIt\ is nonsense???
-
-\subsection{Relation between the families}
-%% \section{N}
-b) Generalizing Mendler iterator to new iterators.
-
-\subsection{Mendler iterators for types with indices}
-
-    1) Index transformers (strong elimination)
-
-    2) Enables type inference (index transformers are the minimal type annotation)
-
-
-C2) Story of positive and negative types.
-
-    Coexistence, positive are less expressive, but have more properties (i.e. a map)
-
-\subsection{other possible extensions}\label{sec:mendler:etc}
+\subsection{Other possible extensions}\label{sec:mendler:etc}
 D) indexed types
 
 E) Extension in the presence of Definitional Equality constraints.
