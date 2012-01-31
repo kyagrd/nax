@@ -1,0 +1,486 @@
+\section{Mendler style recursion schemes}\label{sec:Mendler}
+I first describe the common pattern (or, general form) of the Mendler style
+recursion combinators that is going to appear in my dissertation
+(\S\ref{sec:mendler:intro}). Then, I introduce each specific family of
+the Mendler style combinators (\S\ref{sec:mendler:it}-\ref{sec:mendler:sf}),
+which I plan to support in the Nax language design. Lastly, I postulate on
+other possible generalizations and extensions (\S\ref{sec:mendler:etc}).
+
+\subsection{Two level types and Mendler style recursion combinators}
+\label{sec:mendler:intro}
+In this section, I introduce the general form of Mendler style recursion scheme
+before we look into each family of the Mendler style recursion combinators.
+
+We formulate recursive types in two levels, as we have already shown
+in Figure \ref{fig:approaches}, by applying the recursive type operator
+$\mu^\kappa$ to a non-recursive base structure $T$. Figure \ref{fig:approaches}
+only illustrates regular datatypes without indices. Here, I will describe
+the most general form.
+
+The general form for non-recursive datatype, which is to be used
+as a base structure for recursive types, is the following:
+\begin{align*}
+\textbf{data}~ T : \vec{\kappa}_p -> (\vec{\kappa}_i -> *) ->
+                                      \vec{\kappa}_i -> *
+~\textbf{where}~
+&~ C_1 : \vec{\tau}_1 -> T\,\vec{p}\;r\;\vec{\tau_i}_{1} \\
+&\quad \vdots \\
+&~ C_n : \vec{\tau}_n -> T\,\vec{p}\;r\;\vec{\tau_i}_{n}
+\end{align*}
+The datatype constructor $T$ expects a series of type arguments $\vec{p}$, $r$,
+and $\vec{i}$, whose kinds are $\vec{\kappa}_p$, $(\vec{\kappa}_i -> *)$, and
+$\vec{\kappa}_i$, respectively. Thus, a vaule of this datatype would have
+a type $T\,\vec{p}\,r\,\vec{i}$ where the type variables $\vec{p},r,\vec{i}$
+are instantiated to certain types (and, possible terms for $\vec{i}$\,).
+The list of type variables $\vec{p}$ stands for type parameters that
+always appear regularly (\ie, always $\vec{p}$\,) in the type siguatures of
+the data constructors $C_1,\cdots,C_n$. The type variable $r$ stands for
+recursive ocurrences. The list of type variables $\vec{i}$ stands for indices
+that can vary (\eg, $\vec{\tau_i}_1,\vec{\tau_i}_n$) in the type signatures of
+the data constructors $C_1,\cdots,C_n$. Note that parameters and indices are
+determined by their position of whether they come before or after $r$.
+
+For non-parametrized types (or, monotypes) such as natural numbers,
+there are no parameters and no indices. For instance, the base structure
+for natural numbers would have the form $N\;r$. For parametrized,
+but non-indexed, types (or, regular polymorphic types), there are parameters
+before $r$ but no indices after $r$. For instance, the base structure for
+polymorphic lists would have the form $L\;p\;r$ where $p$ is the type of
+the elements in the list. For indexed types, there are indices follwoing $r$.
+For instance, the base structure for length indexed lists would have the
+form $V\;p\;r\;i$ where $p$ is the type of the elements in the list and
+$i$ is the index that specifies the length of the list.
+
+To define the recursive types, we apply recursive type operators to
+base structures. We have a family of recursive type operator $\mu^\kappa$
+superscripted by kind $\kappa$, and its constructor $\In^\kappa$ is also
+superscripted by kind $\kappa$. The recursive type operator $\mu$
+for regular datatypes in Figure \ref{fig:approaches} corresponds to $\mu^{*}$,
+and its constructor is $\In^{*}$.
+We must use the recursive type operator of the appropriate kind,
+depending on the indices ($\vec{i}\,$) of the base structure
+For instance, $\mu^{*}N$ is the natural number type,
+$\mu^{*}(L\,p)$ is the list type, $\mu^{\textit{Nat}-> *}(V\,p)$.
+More generally, $\mu^\kappa : (\kappa -> \kappa) -> \kappa$ can be
+applied to $T\,\vec{p} : \kappa -> \kappa$ to form a recursive type
+(or, recursive type constructor, if there are indices)
+$\mu^\kappa(T\,\vec{p}) : \kappa$. Note that datatypes become a type,
+which is of kind kind $*$, when they are fully appled. That is,
+$T\,\vec{p}\,r\,\vec{i} : *$. Since we know that the recursive type is
+well formed only when $T\,\vec{p} : \kappa -> \kappa$,
+the next type argument $r$ must be of kind $\kappa$.
+Also, we know that $\kappa$ should always be of the form the form
+$\vec{\kappa} -> *$ where each of $\vec{\kappa}$ is the kind for
+each of the indices $\vec{i}$.
+
+Mendler style recursion combinators have richer type structure than the
+conventional recursion combinators. In the Mendler style, we rely on
+higher-rank polymorphism to ensure normalization proprieties of the
+recursion combinators. Recall that, in Figure \ref{fig:approaches},
+the type of $\varphi$ was required to be polymorphic over a type variable
+$X$ (which corresponds to $r$ in this section).
+The following is the general form for the type of Mendler style
+recursion combinators in the presence of type indices:
+\begin{multline*}
+ \textsf{Mxxx} : \forall t . \forall a .
+   \big(\, \forall r . \;
+      \overbraceset{\begin{smallmatrix}
+                        \text{abstract} \\
+                        \text{recursive call} \\
+                        \text{over $r$-structure}
+                       \end{smallmatrix}}{
+            (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,) }
+   -> \overbraceset{\begin{smallmatrix}
+                        \text{other} \\
+                        \text{abstract operations} \\
+                        \text{over $r$-structure}
+                       \end{smallmatrix}}{
+            (\forall\vec{i} . \cdots) -> \cdots }
+   -> \overbraceset{\begin{smallmatrix}
+                        \text{function body desc.:} \\
+                        \text{combines $r$-value} \\
+                        \text{into an answer}
+                       \end{smallmatrix}}{
+            (\forall\vec{i} . r\,\vec{i}  -> a\,\vec{i}\,) }
+   \big) \\
+ -> \underbraceset{\text{resulting recursive function}}{
+       (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,) }
+\end{multline*}
+We can conceptualize a Mendler style recursion combinator as a higher order
+function, which gives a recursive function as a result
+from the description of a function body using a set of abstract operations
+over the abstract recursive structure $r$ including the abstract recursive call.
+We can think of above as an encoding of the following
+where $r$ is an abstract type:
+\begin{multline*}
+ \textsf{Mxxx} : \forall t . \forall a .
+ \exists r.
+  \big(  (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   \times (\forall\vec{i} . \cdots) \times \cdots
+   \times (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   \big) \\
+ -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
+\end{multline*}
+The abstract recursive call operation is commonly available to
+all families of Mendler style recursion combinators. Each family (\textsf{xxx})
+is distinguished by what other additional abstraction operations are available.
+Note that we use abstract recursive structure $r$ while we describe
+the function body, but we can apply the resulting recursive function
+to a concrete recursive structure $(\mu^\kappa t)$. Regarding the dynamic
+semantics (or, at runtime), $r$-values are the same as $(\mu^\kappa t)$-values.
+By restricting the type information of the recursive structure ($r$ instead of
+$(\mu^\kappa t)$), well typed function descriptions for the Mendler style
+recursion combinators are guaranteed to normalize. Recall that we apply
+$\mu^\kappa$ to the datatype constructor partially applied to its parameters,
+which is all the arguments before $r$. So, the type variable $t$ is always
+instantiated to $T\,\vec{p}$.
+
+The type of \textsf{Mxxx} involves both higher-rank polymorphism and
+indexed types. Both of these features make type inference difficult.
+Firstly, type inference for higher-rank polymorphism is impossible in general.
+Recall that in the Hindley-Milner type inference, terms have monomorphic types
+by default and only limited form of polymorphic types (type schemes) are
+introduced by the designated \textbf{let}-syntax.  However, if we limit
+the use of higher-rank polymorphism only in Mendler style recursion combinators,
+considering \textsf{Mxxx} as a designated syntax, we can do type inference.
+Secondly, type inference for indexed types is impossible in general.
+This is why programming languages like Haskell cannot infer types of programs
+involving the GADTs extension, and proof assistant like Coq supporting
+dependent types cannot support type inference in general. In Nax, we support
+partial type inference (or, reconstruction) from small amount of annotations
+($\psi$) only required on the Mendler style recursion combinators
+($\textsf{Mxxx}^\psi$). We call these annotations ($\phi$) index transformers,
+since they are type level functions that specify how to construct
+the resulting type from the input indices. We shall see more cleary
+what index transformers are throughout the examples in
+\S\ref{sec:mendler:it}-\S\ref{sec:mendler:sf}.
+
+\subsection{Mendler style iteration}\label{sec:mendler:it}
+The iteration family \MIt\ is the most basic Mendler style recursion scheme,
+which only support one abstract operation, abstract recursive call.
+The type signature of \MIt\ is:
+\[ \MIt : \forall t . \forall a .
+   \big(\, \forall\, r\, . \;
+         \overbraceset{\begin{smallmatrix}
+                        \text{abstract} \\
+                        \text{recursive call} \\
+                        \text{over $r$-structure}
+                       \end{smallmatrix}}{
+            (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,) } \;
+   -> \; \overbraceset{\begin{smallmatrix}
+                        \text{function body desc.:} \\
+                        \text{combines $r$-value} \\
+                        \text{into an answer}
+                       \end{smallmatrix}}{
+            (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,) }
+   \big)
+ -> \; \overbraceset{\text{resulting recursive function}}{
+          (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,) } 
+\]
+\begin{figure}
+\begin{align*}
+\text{Base structure:}\qquad\qquad
+\textbf{data}~N : * -> * ~\textbf{where}~~
+& \textit{Zero} : N\;r\\
+& \textit{Succ} : r -> N\;r
+\end{align*}
+\[\text{Type synonym:}\qquad\qquad \textit{Nat} ~=~ \mu^{*} N\]
+\begin{align*}
+\text{Constructor functions:}\quad
+&zero~~\,~=~ \In^{*} \textit{Zero} \\
+&succ\;n ~=~ \In^{*} (\textit{Succ}\;n)
+\end{align*}
+\caption{Two level type definition of natural numbers and
+         their constructor functions}
+\label{fig:natdef}
+\end{figure}
+A typical example of is a length function for lists.
+We can define the base structure for lists as follows:
+\begin{align*}
+\textbf{data}~L : * -> * -> * ~\textbf{where}~~
+& \textit{Nil}~~\, : L\;p\;r \\
+& \textit{Cons}    : r -> p -> L\;p\;r
+\end{align*}
+Then, we can define the \textit{length} function using the Mendler style
+iteration combinator as follows:
+\begin{align*}
+\textit{length}~l = \MIt^{\{\}}~l~\textbf{with}~~
+&  len ~\textit{Nil}~~~~~~~~~~~ = zero \\
+&  len \;(\textit{Cons}\;x\;xs) = succ\,(len\;xs)
+\end{align*}
+Since the list type does not involve any indices, we give an empty index
+transformer annotation ($\{\}$) on \MIt. The type signature for the length
+function is $\textit{length}:\mu^{*}(L\;p) -> \mu^{*}N$ where $N$ is the
+base structure for the natural number type. Let us assume that we have
+type synonyms $\textit{List} = \mu^{*}(L\;p)$ and
+$\textit{Nat} = \mu^{*}N $.\footnote{Nax implementation supports type synonyms.}
+Then, we can say that $\textit{length}:\textit{List}\;p -> \textit{Nat}$.
+This type of \textit{length} can be inferred by the type system of
+the Nax language.
+
+It is worth emphasizing that $len : r -> \textit{Nat}$ is an abstract recursive
+call operation that expects $r$-values. Note $xs:r$ since the type signature
+for \textit{Cons} expects its first argument to be of type $r$. Therefore,
+Mendler style iteration does not have direct access to the tail of the list.
+That is one cannot define a constant time tail function by just returning
+$xs$ since its type is an abstract recursive type ($r$) rather than
+a concrete list type ($List$). We shall see soon that the primitive recursion
+family is able to express such functions naturally.
+
+Before we move on for the primitive recursion family, let us look at some
+examples of Mendler style iteration, which involve indices. The following
+is the base structure for vectors, or length indexed lists:
+\begin{align*}
+\textbf{data}~V : * -> (Nat -> *) -> Nat -> * ~\textbf{where}~~
+& \textit{VNil}~~\, : V\;p\;r\;\{`zero\} \\
+& \textit{VCons}    : r\;n -> p -> V\;p\;r\;\{`succ\;n\}
+\end{align*}
+We use curly braces ($\{\dots\}$) to emphasize that they are \emph{term indices}
+(\ie, term used as indices) in order to distinguish them from ordinary
+type indices (\ie, types used as indices). The backquotes ($`$) prefixed
+on $zero$ and $succ$ emphasizes that they are predefined values rather than
+free type (or, index) variables (\eg, $p$,$r$,$n$) that may be generalized.
+
+Then, we can define the length function for vectors using the Mendler style
+iteration combinator as follows:
+\begin{align*}
+\textit{vlength}~l = \MIt^{\{n . \textit{Nat}\}}~l~\textbf{with}~~
+&  vlen ~\textit{VNil}~~~~~~~~~~~ = zero \\
+&  vlen \;(\textit{VCons}\;x\;xs) = succ\,(vlen\;xs)
+\end{align*}
+Note, the Mendler style iteration combinator $\MIt^\psi$ is annotated by
+the index transformer $\psi = \{n . \textit{Nat}\}$, which is a constant
+type level function that ignores the index $n$ and always returns the 
+type $\textit{Nat}$. In general, type inference for programs involving
+type indices are not possible. However, Nax can infer that
+$vlengh : \textit{Vec}\;p\;n -> \textit{Nat}$, where
+\textit{Vec} is a type synonym defined as
+$\textit{Vec} = \mu^{\textit{Nat} -> *}(V\;p)$, based on the index transformer
+annotation on \MIt.
+
+Append function for vectors illustrates a more interesting use of
+the index transformer annotation:
+\begin{align*}
+\textit{vappend}~\,l_1 =~ &
+ \MIt^{\{n . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}}~l_1
+ ~\textbf{with} \\
+&\qquad\qquad\quad  vapp ~\textit{VNil}~~~~~~~~~~~ ~ l_2 = l_2 \\
+&\qquad\qquad\quad  vapp \;(\textit{VCons}\;x\;xs) ~ l_2 = cons\;x\;(vapp\;xs\;l_2)
+\end{align*}
+where $nil = \In^{*} \textit{Nil}\;$ and
+$\,cons\;x\;xs = \In^{*}(\textit{Cons}\;x\;xs)$.
+The index transformer
+$\{n . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}$
+specifies that the append function applied to a list of length $n$,
+shall return a function, which expects a vector of length index is $m$
+and returns a vector of length $(plus\;n\;m)$, where $plus$ is the addition
+function for natural numbers.
+
+It is known that \MIt\ for regular datatypes and indexed types with ordinary
+type indices has a reduction preserving embedding into System \Fw\ (\ie, \MIt\
+is definable in \Fw\ with constant reduction step difference).
+In my dissertation, I will show that \MIt\ for term indexed types has a
+reduction preserving embedding into System \Fi, which is an extension of \Fw.
+Also, I will describe and prove properties of the inference algorithm of Nax.
+
+\subsection{Mendler style primitive recursion}\label{sec:mendler:pr}
+The primitive recursion family \MPr\ is has an additional casting operation,
+which explicitly converts a value of the abstract recursive type ($r$-value)
+into a value of the concrete recursive type ($(\mu^\kappa t)$-value).
+The type signature of \MPr\ is:
+\begin{multline*}
+ \MPr : \forall t . \forall a .
+   \big(\; \forall\, r\, . \;
+         \overbraceset{\begin{smallmatrix}
+                        \text{abstract} \\
+                        \text{recursive call}
+                       \end{smallmatrix}}{
+            (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,) } \;
+   -> \; \overbraceset{\begin{smallmatrix}
+                        \text{cast from $r$-values} \\
+                        \text{to $(\mu^\kappa t)$-values} \\
+                       \end{smallmatrix}}{
+            (\forall\vec{i} . r\,\vec{i} -> (\mu^\kappa t)\,\vec{i}\,) } \;
+   -> \;    (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,) \,
+   \big) \\
+ -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
+\end{multline*}
+Since \MPr\ has more operations than \MIt, it can express all the functions
+that we can express with \MIt, but often more efficiently because of the
+additional casting operation.
+
+A typical example of primitive recursion is the factorial function:
+\begin{align*}
+\textit{factorial}~x = \MIt^{\{\}}~x~\textbf{with}~~
+&  \textit{fac} ~cast ~\textit{Zero}~~~~\; = succ~zero \\
+&  \textit{fac} ~cast \;(\textit{Succ}\;n) = mult~(succ\;(cast\;n))~(\textit{fac}\;n)
+\end{align*}
+where \textit{mult} is the multiplication function for natural numbers.
+In addition to the abstract recursive call $\textit{fac} : r -> \textit{Nat}$,
+\MPr\ supports the casting operation $cast : r -> \textit{Nat}$.
+Therefore, we can convert from an abstract value ($n : r$) to
+a concrete value ($cast\;n : \textit{Nat}$).
+
+The casting operation enables us to define a constant time tail function for
+lists as follows:
+\begin{align*}
+\textit{tail}~x = \MIt^{\{\}}~x~\textbf{with}~~
+&  tl ~cast~\textit{Nil}~~~~~~~~~~~ = nil \\
+&  tl ~cast\;(\textit{Cons}\;x\;xs) = cast\;xs
+\end{align*}
+We simply need to return $cast\;xs$ for the result
+without recursing on $xs$ using $tl$. Nax can infer that
+$\textit{tail} ~:~ \textit{List}\;p -> \textit{List}\;p$
+Note that we needed to return some default value ($nil$) for the empty list case
+($Nil$) because all functions defined via Mendler style recursion combinators
+must be total. However, for length index lists (or, vectors), we can imagine
+a version of a tail function
+$\textit{vtail}\,:\textit{Vec}\;p\;\{`succ\;n\} -> \textit{Vec}\;p\;\{n\}$,
+which only expects non-empty lists -- therefore, need not specify default
+values for the empty list case. To express functions like $vtail$, which has
+constraint on the input value, we need more advanced features in the type system
+than what we have been discussing so far. We will discuss such possible
+extensions to Mendler style recursion combinators in \S\ref{sec:mendler:etc}.
+
+The Mendler style primitive recursion family \MPr\ needs a more complicated
+calculus than \Fi, called \Fixw, in order to embed \MPr\ in a reduction
+preserving manner. Just as I extended from \Fw\ to \Fi\ in order to
+formalize the theory of \MIt\ involving term indices, I extend from \Fixw\
+to \Fixi\ in order to formalize the theory of \MPr\ involving term indices.
+
+I omit the discussion on the use of \MPr\ over indexed types
+since it is similar to the use of \MIt\ over indexed types.
+
+\subsection{Mendler style course of values iteration \& primitive recursion}
+Some computations are naturally expressed by recursing on multiple levels
+down the structure of the input value (\eg, predecessor of predecessor,
+tail of tail). Such patterns of recursion is called \emph{course of values}
+recursion. Course of values recursion often appears in number sequences
+defined by recurrence relations (\eg, Fibonacci's sequence).
+We can extend \MIt\ and \MPr\ with a new abstract operation, which enables
+us to express course of values recursive functions, as follows:
+\label{sec:mendler:cv}
+\begin{align*}
+\!\!\!\!\!\!\!\!
+ \McvIt\, :&\; \forall t . \forall a .
+   \big( \forall r .
+         (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   -> \overbraceset{\begin{smallmatrix}
+                     \text{open $r$-structure to} \\
+                     \text{reveal $t$-structure} \\
+                    \end{smallmatrix}}{
+         (\forall\vec{i} . r\,\vec{i} -> t\,r) }
+   ->    (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   \big) \\
+& -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,) \\
+\!\!\!\!\!\!\!\!
+ \McvPr :&\; \forall t . \forall a .
+   \big( \forall r .   
+         (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   -> \overbraceset{\begin{smallmatrix}
+                     \text{open $r$-structure to} \\
+                     \text{reveal $t$-structure} \\
+                    \end{smallmatrix}}{
+         (\forall\vec{i} . r\,\vec{i} -> t\,r) }
+   -> \overbraceset{\begin{smallmatrix}
+                     \text{cast from $r$-values} \\
+                     \text{to $(\mu^\kappa t)$-values} \\
+                    \end{smallmatrix}}{
+         (\forall\vec{i} . r\,\vec{i} -> (\mu^\kappa t)\,\vec{i}\,) }
+   ->    (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   \big)\\ 
+& -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
+\end{align*}
+\McvIt\ stands for Mendler style course of values iteration,
+and \McvPr\ stands for Mendler style course of values primitive recursion.
+
+We can define the Fibonacci function using \McvIt\ as follows:
+\begin{align*}
+\textit{fibonacci}~x = \McvIt^{\{\}}~x~\textbf{with}~~
+&  \textit{fib} ~out ~\textit{Zero}~~~~\; = succ~zero \\
+&  \textit{fib} ~out \;(\textit{Succ}\;n) =
+            \textbf{case}^{\{\}}~out\;n~\textbf{of} \\
+&\qquad\qquad\qquad\qquad\quad
+              \textit{Zero}~~~\, -> succ~zero \\
+&\qquad\qquad\qquad\qquad\quad
+              \textit{Succ}\;n'  -> plus\;(\textit{fib}\;n')\;(\textit{fib}\;n)
+\end{align*}
+Recall that we cannot inspect the structure of the predecessor $n$ since
+its type is abstract ($n:r$). The $out : r -> \textit{Nat}$ operation opens up
+the abstract structure and reviles the base structure inside it. So, it
+becomes possible to destruct (or, pattern match against) $out n$, and have
+access to the processor of predecessor $n'$. If needed, we can traverse down
+three steps by applying $out$ to $n'$, and even further by repeatedly applying
+$out$ to the inner structure. We have examples that traverses down many
+number of steps.
+
+An important aspect of the Mendler style course of values recursion is that
+it only grantees normalization over positive recursive types. One of our
+recent contribution is that we have reported a counterexample of \textsf{McvIt}
+involving negative recursive type, which does not normalize. So, to be more
+precise, the type signatures of \textsf{McvIt} and \textsf{McvPr} need to
+be constrained ($\forall t \text{~such that~$t$ is positive}.\cdots$)
+instead of being unconstrainedly polymorphic on $t$.
+
+definition
+
+???
+conjecture that it would be possible to embed into \Fixw
+
+\subsection{Mendler style iteration with syntactic inverse}
+\label{sec:mendler:sf}
+\begin{multline*}
+ \MsfIt : \forall t . \forall a .
+   \big( \forall r.
+            (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   -> \overbraceset{\begin{smallmatrix}
+                        \text{inverse from} \\
+                        \text{answers to $r$-values} \\
+                       \end{smallmatrix}}{
+            (\forall\vec{i} . a\,\vec{i} -> r\,\vec{i}\,) }
+   -> \;    (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   \big)
+ -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
+\end{multline*}
+
+
+
+\MsfIt\ example
+
+Definition
+
+\MsfIt\ in \Fw
+
+discussion on why \MsfPr\ is not quite right? useful?
+
+discussion on why \McvIt\ is nonsense???
+
+\subsection{Relation between the families}
+%% \section{N}
+b) Generalizing Mendler iterator to new iterators.
+
+\subsection{Mendler iterators for types with indices}
+
+    1) Index transformers (strong elimination)
+
+    2) Enables type inference (index transformers are the minimal type annotation)
+
+
+C2) Story of positive and negative types.
+
+    Coexistence, positive are less expressive, but have more properties (i.e. a map)
+
+\subsection{other possible extensions}\label{sec:mendler:etc}
+D) indexed types
+
+E) Extension in the presence of Definitional Equality constraints.
+
+F) Extension in the presence of provable equality (examples?)
+
+\subsection{summary???}
+G) Theory?
+   formalization, typing, dynamic semantics, type inference
+   statements (and perhaps proofs) of properties that should hold.
+   Strong normalization, soundness with respect to dynamic semantics,
+   logical soundness (F-omega argument)
+

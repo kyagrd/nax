@@ -1,0 +1,2558 @@
+\documentclass[letterpaper,12pt]{article}
+% \documentclass[letterpaper]{article}
+%% \usepackage[utf8x]{inputenc}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumerate}
+% \usepackage{abstract}
+
+%opening
+\title{The Mendler-style Recursion Combinators in Dependently Typed Languages}
+\author{Ki Yung Ahn}
+
+\newcommand{\TheThesis}{
+A type based approach (in particular, the Mendler-style approach),
+in contrast to the value based approach (structural recursion),
+to ensure termination in dependently typed functional languages
+is both possible and practical.
+It broadens the range of certified programming practices
+and provides an intuitive abstraction for expressing terminating recursion
+which generalizes naturally over many kinds of inductive datatypes.
+}
+\newcommand{\Fw}[0]{\ensuremath{\mathsf{F}_{\!\omega}}}
+\newcommand{\eg}[0]{e.g., }
+\newcommand{\ie}[0]{i.e., }
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+A promising approach to realizing certified programming (\ie writing programs
+along with formally verified properties of the programs) exploits
+the Curry-Howard correspondence in a dependently typed functional programming
+language.  Most of the current dependently typed languages supporting
+formal reasoning commonly use a termination analysis method called
+\emph{structural recursion}, which only works for positive datatypes. Thus,
+we cannot reason about programs involving negative datatypes in such systems.
+However, there are well studied and useful negative datatypes, and terminating
+recursive functions over those datatypes.  Therefore, we need a more general
+termination analysis method that works for negative datatypes as well
+as positive datatypes.
+
+The Mendler-style approach is a type based (or semantic) approach to
+ensure termination, which contrasts to a value based (or syntactic)
+approach such as structural recursion.  The Mendler-style approach has
+promising characteristics as a termination analysis method:
+(1) it provides an intuitive abstraction mechanism
+    for describing terminating recursions,
+(2) generalize naturally over many kinds of inductive datatypes
+(3) and, also works for negative datatypes.
+The Mendler-style approach is known to work well in the context of
+the polymorphic higher-order lambda calculus (\Fw).  However, whether
+the Mendler-style approach will extend to dependent types is an open question.
+In my dissertation, I will find ways to extend the Mendler-style approach
+to dependent types, and try to identify interaction between other features
+in the dependently typed language design space.
+\end{abstract}
+
+
+\section{Problem Statement and Thesis} \label{sec:intro}
+
+My dissertation is about adopting the Mendler-style approach
+(which is a type based approach) to ensure termination
+in dependently typed functional languages that support
+formal reasoning within a consistent logic. 
+In this section, I will briefly discuss why this is an interesting topic
+(\S\ref{sec:intro:ps}), and discuss the proposed thesis along with
+the list of goals I hope to accomplish in my dissertation
+(\S\ref{sec:intro:thesis}).
+Then, I will give a more detailed overview on the background related to
+the dissertation topic (\S\ref{sec:bg}) and layout the plan of my dissertation
+suggesting tentative approaches to the goals (\S\ref{sec:plan}).
+
+\subsection{Problem Statement} \label{sec:intro:ps}
+A promising approach to realizing certified programming is exploiting
+the Curry-Howard Correspondence in dependently typed functional programming
+languages.
+Most of the current dependently typed languages supporting formal reasoning
+have a common limitation of using a termination analysis method called
+\emph{structural recursion}. Structural recursion only works for
+positive datatypes. Thus, we cannot reason about programs using
+negative datatypes in such systems.
+However, there are well studied and useful negative datatypes and terminating
+recursive functions over those datatypes.  Therefore, we need a more general
+termination analysis method that also works for negative datatypes.
+
+\paragraph{A long sought vision for certified programming.}
+Writing programs along with their desired properties
+whose proofs are mechanically checked by a formal system,
+coined as \emph{certified} (or \emph{verified}) \emph{programming},
+has been a long cherished vision from the early age of computer science
+\cite{Dij76,Hoa86}.
+To realize this vision over a wide range of program properties, appearing
+in practical programs, written in general purpose programming languages,
+it is likely that various approaches should cooperate.  A typical way of
+cooperation is importing a well-established domain specific automated
+reasoning strategy (\eg linear equation solving, SAT solving, SMT solving,
+First-Order Logic automated theorem proving) as a module or a subsystem of
+a generic and powerful system (\eg proof assistant supporting
+Higher-Order Logic).  The systems with rich expressive power over general
+domains are automate.  They can express complex properties within
+a rich logic, but proof construction may require tedious human intervention.
+In contrast, the systems with limited expressive power over specific domains
+are more feasible automate.  By combining such different systems together as
+a certified programming platform, we can express and prove complex properties
+with a rich logic, while automating many parts of the proof construction.
+One concern in building such a platform is that a bug in one of the cooperating
+systems may affect the reliability of the proof -- in other words, the size of
+the trusted base may increase significantly.
+
+\paragraph{A promising approach: the Curry-Howard correspondence
+with dependent types.}
+Our focus is on the dependently typed functional languages, which exploit
+the Curry-Howard correspondence to state and prove properties of programs.
+Dependently typed functional languages have very attractive characteristics
+to serve as a base platform for certified programming.
+We can express a rich set of program properties and reason about them
+within a powerful logic, while being able to the keeping trusted base
+relatively small, even when we import external reasoning strategies.
+The Curry-Howard correspondence is the relation between a programming
+language and a logic, where a type in the programming language represents
+a formula (or property) in the logic and a program of that type represents
+a proof of that formula.
+A programming language for which the Curry-Howard correspondence holds
+provides a very rigorous foundation for certified programming in the sense
+that the trusted base is confined within the language, since the logic is
+internalized by the type system. That is, we do not have to worry about
+whether the external logic system correctly reflects the behavior of the
+programming language.  This allows us to import (or sometimes implement
+within the system) domain specific reasoning strategies without losing
+rigorousness because we can validate the result of the imported reasoning
+strategies.
+
+\paragraph{Termination is essential for logical consistency, but subtle.}
+One of the challenges that arise when reasoning about program properties
+by exploiting the Curry-Howard correspondence is to ensure termination of
+the programs which need to be interpreted as logical proofs.
+To interpret a program as a logical proof, the program must always terminate
+since non-terminating programs makes the logic inconsistent
+(i.e., prove arbitrary propositions).  For example, in Haskell, $loop = loop$
+is a valid definition which can have arbitrary type (\eg $loop + 1$,
+$loop ++ \text{\texttt{"world"}}$, and $loop~loop$ are all well typed
+in Haskell.)  In the Curry-Howard sense, $loop$ is a proof of an
+arbitrary proposition.
+An interesting fact is that we can construct non-terminating terms
+(or programs) without explicit recursion in an untyped lambda calculus
+One of the well known diverging terms is the self application $w\;w$ where
+the definition of $w=\lambda x.x\;x$ itself contains the self application
+$x\;x$ in its body.  Note, the reduction path of $w\;w$ is infinite:
+$w\;w = (\lambda x.x\;x)\;w \rightsquigarrow w\;w \rightsquigarrow \cdots$,
+every step reducing back to where we started.  Controlling termination
+is crucial to constructing sound proofs of program properties.
+
+\paragraph{Type systems can ensure termination in lambda calculi.}
+The typed lambda calculi, which are designed to describe proofs of logic,
+disallow such diverging terms by their type system. The self application 
+$x\;x$ appearing in $w=\lambda x.x\;x$ will be rejected in such typed lambda
+calculi since it will cause a type error: when $x$ has some type $\alpha$,
+the $x$ used as a function should have type $\alpha\to\alpha$ since it is
+applied to itself, but there exists no finite solution that unifies
+$\alpha$ with $\alpha\to\alpha$ because $\alpha$ occurs in $\alpha\to\alpha$.
+The typed lambda calculi serve as the basis for the design of
+typed functional languages.  We can view functional languages
+as extensions of lambda calculi with additional features.
+We should be careful when we add features to design a functional language,
+since the additional features may produce non-termination.
+
+\paragraph{Two commonly used additional features of functional languages are
+capable of producing non-termination.}
+Virtually all practical typed functional languages, both general purpose
+programming languages and formal proof assistants, commonly support
+two additional features, which are not present in the typed lambda calculi: recursive functions and inductive (or recursive) datatypes.
+Each of these additional features, when not carefully controlled, can
+break the consistency of the language even though the language design
+were based on a consistent typed lambda calculus.
+
+\paragraph{Recursive functions can cause non-termination.}
+With unrestricted general recursion in function definitions,
+we can write non-terminating programs in typed functional languages.
+In general purpose programming languages, whose design is not aimed at logical
+proof construction, this is intended since there are programs that we want to
+run forever, or at least as long as possible, like server programs or
+operating systems.  But, in languages that support proof construction
+should have a sound mechanism of controlling recursive function definitions
+to ensure termination for the programs, which can be interpreted as
+proofs.
+
+\paragraph{Inductive datatypes can cause non-termination.}
+In functional languages,
+it is natural to pass around functions just like any other value.
+Thus, virtually all typed functional languages supporting inductive datatypes
+allow functions to appear inside datatypes.  When a function
+embedded in a datatype requires an argument whose type is the very
+inductive datatype being defined, such a datatype is negative,
+or has a negative occurrence in its definition.
+The following are some examples of positive datatypes (\verb|T0|, \verb|T1|)
+and negative datatypes (\verb|T2|, \verb|T3|) in Haskell syntax:
+\begin{verbatim}
+data T0 = C0 (() -> ()) | B0 -- positive since no recursive occurrence
+data T1 = C1 (() -> T1) | B1 -- positive since T1 only occurs positively
+data T2 = C2 (T2 -> ()) | B2 -- negative since T2 only occurs negatively 
+data T3 = C3 (T3 -> T3) | B3 -- negative since T3 occurs both pos and neg
+\end{verbatim}
+Negative datatypes lead to inconsistency in functional languages just as
+the self application does in the untyped lambda calculus.
+We can encoding self application indirectly through the datatype,
+without even using recursive function definitions.
+Mendler observed this in his thesis [TODO cite].
+The following is Mendler's observation transcribed into Haskell:
+\begin{verbatim}
+data T = C (T -> ())
+p (C f) = f
+w t = (p t) t
+
+selfapp = w (C w) 
+\end{verbatim}
+The inductive datatype \verb|T| is negative, and \verb|p| and \verb|w| are
+well typed non-recursive functions. Note, we did not use any recursion above,
+yet \verb|selfapp| diverges:
+\verb|w (C w)| $\rightsquigarrow$ 
+\verb|(p (C w)) (C w)|  $\rightsquigarrow$
+\verb|w (C w)|  $\rightsquigarrow \cdots$.
+As you can see from the example above, it is certainly more
+challenging to ensure termination for negative datatypes
+than for positive datatypes.
+
+\paragraph{Structural recursion is a widespread approach
+to ensure termination.}
+Currently, the most popular approach to recover consistency in the languages
+which do care about logical proofs is to limit recursive function calls
+only to the structural subcomponents of their arguments. Such a pattern of
+recursion is called \emph{structural recursion}. Structural recursion covers
+a wide range of recursive function definitions, including the calculation of
+natural measures for datatypes (\eg length of lists, height of trees) and
+course of values recursive functions (\eg Fibonacci function).  When the
+base calculus is expressive enough, as in a dependently typed language, many
+of the functions which are not structurally recursive in their original
+definition can be turned into a structurally recursive definition
+by introducing an additional argument, which is usually a measure
+calculated from the other arguments (\eg merge sort is
+not structurally recursive, but having an additional length measure
+argument passed can make the merge sort definition structurally recursive
+on that measure argument).
+
+\paragraph{A limitation of structural recursion is that it
+only works for positive datatypes.}
+However, relying solely on structural recursion to ensure termination
+imposes unwanted restrictions on the inductive datatype definitions
+- the datatype must be positive.
+It is well known that structural recursion guarantees termination
+only for positive datatypes, but not for negative datatypes.
+We have already seen Mendler's observation that negative datatypes
+introduce inconsistency even without using recursive function definitions. 
+Therefore, many dependently typed formal reasoning systems simply reject
+all negative datatypes and the programs involving negative datatypes
+to avoid inconsistency.
+
+\paragraph{There are interesting and useful programs
+that use negative datatypes.}
+However, rejecting negative datatypes altogether is overkill
+for both practical and theoretical reasons.
+Practically, there exist well known and useful examples of negative datatypes
+(\eg Higher-Order Abstract Syntax (HOAS)) and total functions over
+those datatypes, which are well studied and used by the
+functional programming community.
+Theoretically, the problem of forbidding diverging terms caused by self
+application was solved by introducing type systems into the lambda calculi.
+It would be natural to conjecture that there exists a type based approach
+to reject all the diverging programs encoded by negative datatypes
+(\eg \verb|selfapp| in the Mendler's example) but still accept many of
+the useful terminating programs over negative datatypes.
+In \S\ref{sec:bg:showHOAS}, we will see an example of
+a terminating recursive function over a negative datatype,
+and how we can write the function in the Mendler-style.
+
+\subsection{Thesis and Goals} \label{sec:intro:thesis}
+I am proposing the following thesis:
+\begin{quote}\TheThesis\end{quote}
+To support my thesis, I have the following goals:
+\newcommand{\Goals}[0]{
+\begin{enumerate}[~~~\text{Goal} 1.]
+ \item Generalize Mendler-style recursion combinators to dependent types
+ \item Organize the hierarchy of the Mendler-stlye recursion combinators
+ \item Identify which of the features,
+       commonly found in dependently typed languages,
+       interact smoothly with or
+       conflict against (\ie potentially causing non-termination)
+       the Mendler-style recursion combinators
+\end{enumerate}
+}\Goals
+Accomplishing the first goal mainly supports that the Mendler-style approach
+is `possible'. Accomplishing the other two goals mainly support that it is
+`practical'.
+
+\paragraph{Goal 1.}
+Mendler discovered a terminating recursion combinator
+(a.k.a. Mendler-style catamorphsim), which ensure termination
+by a type based approach exploiting parametricity.
+His recursion combinator was able to ensure termination of programs
+over negative datatypes as well as the programs over positive datatypes.
+Mendler did not seem to notice that his approach works for negative datatypes;
+it was later observed and studied by others.
+Further details on the Mendler-style recursion combinators will be elaborated
+in \S\ref{sec:bg:mcata}.
+Mendler's work was originally on second-order lambda calculus
+(System $\mathsf{F}$), and it has been naturally extended to
+higher-order lambda calculus (\Fw).
+However, it has not yet been studied how Mendler-style recursion combinators
+could be extended to the languages with dependent types.
+Therefore, extending the Mendler-style recursion combinators for
+dependently typed languages is an important goal for my dissertation.
+The true value dependency (types depending on values) interact with
+Mendler-style recursion combinators in two dimensions:
+\begin{enumerate}
+ \item Defining a recursive function
+       whose result type depends on the argument value
+ \item Recursing over a datatype whose definition contains a true value dependency
+\end{enumerate}
+
+An example of the former is the function with the following type signature:
+\begin{verbatim}
+evenOrOdd : (n:Nat) -> Either (Even n) (Odd n) 
+\end{verbatim}
+which takes a natural number \verb|n| and
+produces either a proof that \verb|n| is  even or a proof that \verb|n| is odd.
+
+An example of the latter case is a data structure indexed by its maximum
+element:
+\begin{verbatim}
+data ListMax (n:Nat) where
+  One  : (n:Nat) -> ListMax n
+  Cons : (n:Nat) -> (m:Nat) -> ListMax m -> ListMax (max n m)
+\end{verbatim}
+Note, the return types of data constructors have true dependency on their
+argument values \verb|n| and \verb|m|.
+
+I believe that we would need significant generalization for the former
+while we can use the same recursion combinators that works on indexed datatypes
+(GADTs) for the latter.  I will explain how Mendler-style recursion combinators
+naturally extends to indexed datatypes in \S\ref{sec:bg:nonreg}, and
+I will propose a tentative approach to extending them further to work for
+functions with true value dependencies in \S\ref{sec:plan:depty}.
+
+\paragraph{Goal 2.}
+The catamorphism is not the only terminating recursion combinator.
+There are other terminating recursion combinators which capture
+other useful patterns of terminating recursion.  Our preliminary studies
+on these various terminating recursion combinators in the Mendler-style
+setting has clarified that some of them require a positivity assumption
+on the datatypes they recurse on to ensure termination,
+while the catamorphism doesn't.
+Organizing the hierarchy of Mendler-style recursion combinators
+is another goal of my dissertation.  More specifically, I will clarify
+\begin{enumerate}
+ \item 
+the relation between different kinds of combinators (some combinators are
+special instances of other more general combinators),
+ \item termination behaviors of the combinators and
+       proof strategies for termination (especially when there are
+       side conditions for termination such as positivity), and
+ \item which of the combinators can subsume structural recursion
+       when assuming the positivity condition.
+\end{enumerate}
+
+\paragraph{Goal 3.}
+Lastly, identifying which of the features,
+commonly found in dependently typed languages, interact smoothly with
+the Mendler-style recursion combinators,
+and which of the features conflict against (\ie potentially cause non-termination)
+the Mendler-style recursion combinators, is a goal for my dissertation.
+Some of the features of concern are equality types, erasability,
+logicality, and large eliminations.
+The interaction comes in several dimensions:
+\begin{enumerate}
+ \item Using these features to implement the Mendler-style recursion combinators
+and ensure their termination in a dependently typed language
+ \item Whether we need to further generalize the Mendler-style recursion combinators
+when these features are used in inductive datatype definitions
+ \item How the Mendler-style recursion combinators interact with
+       isomorphic datatype definitions using different features
+\end{enumerate}
+I am not planning to prove that all features work well within
+the Mendler-style approach and ensure termination - if that is the case
+it would be ideal, but it seems to be an unrealistic goal.
+What I am planning to do is identify which of the features are problematic,
+and  which of them work smoothly  with the Mendler-style recursion combinators.
+
+\paragraph{Non goals.}
+The dual constructions involving cofixpoints and corecursion
+are non-goals of my dissertation.
+
+
+\newpage
+\section{Background} \label{sec:bg}
+
+The functional programming community has traditionally focused on families of
+combinators that work well in Hindley-Milner languages, characterized by folds
+and catamorphisms. In this section, we explore a more expressive family called
+Mendler-style combinators.  The Mendler-style combinators were originally
+developed in the context of the Nuprl\cite{Con86} type system.  Nuprl made
+extensive use of dependent types.  General type checking in Nuprl was done by
+interactive theorem proving --- not by type inference.
+The Mendler-style combinators are considerably more expressive than
+the traditional Squiggol school.
+
+Recently, Mendler style combinators have been studied in the context of
+modern functional languages with advanced type system features, including
+higher-rank polymorphism and generalized algebraic data types
+\cite{UusVen99,UusVen00,vene00phd,AbeMatUus03,AbeMatUus05}.
+Some of the examples and proofs discussed in this section,
+which is written in Haskell, come from those work.
+
+\subsection{Conventional (or Squiggol-style) catamorphism} \label{sec:bg:cata}
+The conventional catamorhpism is a generalization of folds.
+We first introduce folds, and then show how they generalize to
+the conventional catamorhpism.
+Folds and the conventional catamorphism ensure termination since the recursion pattern they
+capture is a subset of structural recursion: the recursion only occur at direct
+subcomponents (e.g. tail of a list, children of a tree) of the argument.
+
+\subsubsection{Folds}
+Consider the following inductive datatype for lists,
+\begin{verbatim}
+data List p
+  = Nil
+  | Cons p (List p)
+\end{verbatim}
+and the recursive function that computes the length of the list:
+\begin{verbatim}
+len :: List p -> Int
+len Nil         = 0
+len (Cons x xs) = 1 + len xs
+\end{verbatim}
+Such pattern of recursion over lists are abstracted as \emph{folds}.
+The following is the definition of a fold function over lists:
+\begin{verbatim}
+foldList :: a -> (p->a->a) -> List p -> a
+foldList a f Nil         = a
+foldList a f (Cons x xs) = f x (foldList a f xs)
+\end{verbatim}
+Note, the fold function over list takes two arguments,
+one for each data constructors of \verb|List|,
+before taking the list argument to recurse on.
+The first argument \verb|a| is the answer value for \verb|Nil|.
+The second argument \verb|f| is the combining function for \verb|Cons|,
+where it combines the head of the list \verb|x| with the answer value
+for the tail \verb|xs|, that is \verb|(foldList a f xs)|.
+Instead of using general recursion, we can use \verb|foldList| to write
+the function \verb|len|, which computes the length of the list, as follows:
+\begin{verbatim}
+len = foldList 0 (\ x ans -> 1 + ans)
+\end{verbatim}
+
+Folds can be defined for other data structures.
+Consider the following binary tree datatype:
+\begin{verbatim}
+data Tree p
+  = Leaf p
+  | Node (Tree p) (Tree p)
+\end{verbatim}
+The fold function for \verb|Tree| is defined as follows:
+\begin{verbatim}
+foldTree :: (p->a) -> (a->a->a) -> Tree p -> a
+foldTree fL fN (Leaf x)     = fL x
+foldTree fL fN (Node tl tr) = fN (foldTree fL fN tl) (foldTree fL fN tr)
+\end{verbatim}
+Similarly to the fold for lists, \verb|foldTree|
+takes two arguments, one for each data constructors of \verb|Tree|,
+before taking the tree argument to recurse on.
+
+For more complex datatypes such as the following expression syntax datatype,
+\begin{verbatim}
+data Expr
+  = CONST Bool
+  | NOT Expr
+  | AND Expr Expr
+  | OR Expr Expr
+  | IF Expr Expr Expr
+\end{verbatim}
+the type signature of the fold function becomes quite verbose as follows:
+\begin{verbatim}
+foldExpr :: (Bool->a)    -- CONST b
+         -> (a->a->a)    -- NOT e
+         -> (a->a->a)    -- AND e1 e2
+         -> (a->a->a)    -- OR e1 e2
+         -> (a->a->a->a) -- IF e0 e1 e2
+         -> Expr -> a
+\end{verbatim}
+Increasing the number of data constructors and their arity in inductive
+datatypes makes the type of the fold functions more and more verbose.
+
+\subsubsection{Generalizing from folds to catamorphism}
+Catamorphism is a generalization of folds.
+It generalizes folds by breaking down an inductive datatype
+into a fixpoint and a base functor.
+For example, the inductive datatype for lists
+can be be defined using the datatype fixpoint \verb|Mu0|
+and the base functor \verb|L| as follows:
+\begin{verbatim}
+newtype Mu0 (f :: * -> *) = In0 { out0 :: f (Mu0 f) }
+
+data L p r = N | C p r
+type List p = Mu0 (L p)
+-- Nil       = In0 N
+-- Cons x xs = In0 (C x xs)
+\end{verbatim}
+The data constructors of the plain inductive type definitions can now
+be implemented in terms of \verb|N|, \verb|C|, and \verb|In0|.
+For example, \verb|Nil| is just a macro for \verb|(In0 N)|
+and  \verb|(Cons x xs)| for  \verb|(In0 (C x xs))|.
+We can define the catamorphism for \verb|List| as follows:
+\begin{verbatim}
+cataL :: (L p a -> a) -> List p -> a
+cataL phi (In0 N)        = phi N
+cataL phi (In0 (C x xs)) = phi (C x (cataL phi xs))
+\end{verbatim}
+It is similar to \verb|foldList|, but instead of taking two arguments,
+one for each data constructor, before the list argument, \verb|cataL|
+takes only one argument \verb|phi :: L p a -> a|.
+With \verb|cataL| we can define the list length function as follows:
+\begin{verbatim}
+len = cataL phi where
+  phi N         = 0
+  phi (C x ans) = 1 + ans
+\end{verbatim}
+The function \verb|phi| returns 0 for the nil-case (\verb|N|), and
+it adds 1 to the answer for the already computed length of the tail
+for the cons-case (\verb|C|).
+
+Similarly, we can define the binary tree datatype \verb|Tree|
+as a fixpoint of the base functor \verb|T|
+and its catamorphism \verb|cataT| as follows:
+\begin{verbatim}
+data T p r = L p | N r r
+type Tree p = Mu0 (T p)
+-- Leaf p     = In0 (L p)
+-- Node t1 t2 = In0 (N t1 t2)
+
+cataT :: (T p a -> a) -> Tree p -> a
+cataT phi (In0 (L p))     = phi (L p)
+cataT phi (In0 (T t1 t2)) = phi (T (cataT phi t1) (cataT phi t2))
+\end{verbatim}
+
+The verbosity in the type of folds over the complex inductive datatypes
+are abstracted away in the type of catamorphism by their base functors.
+We always need only one argument \verb|phi| before taking the value to
+recurse on.
+For example, the catamorphism for \verb|Expr| has the following type
+\begin{verbatim}
+cataE :: (E -> a) -> Expr -> a
+\end{verbatim}
+where \verb|E| is the base functor for \verb|Expr|.
+Although \verb|Expr| has more constructors than
+the list or the binary trees, the type of \verb|cataE| is
+no more verbose than \verb|cataL| or \verb|cataT|.
+
+We can further generalize all the catamorphisms by abstracting
+the occurrences of the recursive call.
+The recursive call of \verb|cataL| occurs only on the tail of the list,
+that is the second argument of the data constructor \verb|C| of the
+base functor \verb|L|.
+The recursive call of \verb|cataT| occur on both left and right child of
+the tree, that is both the first and the second argument of the data
+constructor \verb|N| of the base functor \verb|T|.
+
+In Haskell, we can express this as an overloaded function of a type class,
+which abstracts different behaviors depending on different types
+under the same function name.  The function that abstracts the occurrences
+of the recursion is called \verb|fmap| and
+the type class in which \verb|fmap| is defined is called \verb|Functor|.
+\begin{verbatim}
+class Functor f where
+  fmap :: (b->a) -> f b -> f a
+\end{verbatim}
+Given a function of type \verb|b->a|, which can turn \verb|b| values
+into \verb|a| values, the function \verb|fmap| can turn
+a \verb|f| structure containing \verb|b| values (\verb|f b|)
+into a \verb|f| structure containing \verb|a| values (\verb|f a|).
+Using \verb|fmap|, we can define the general version of catamorphism
+as follows:
+\begin{verbatim}
+cata :: Functor f => (f a->a) -> Mu0 f -> a
+cata phi (In0 x) = phi (fmap (cata phi) x)
+\end{verbatim}
+This definition works for any base functor \verb|f| which is an instance of
+the \verb|Functor| class, that is, when \verb|fmap| is properly defined
+for \verb|f|.
+Usage of \verb|cata| is same as the catamorphisms for specific types such as
+\verb|cataL| or \verb|cataT|.  All we need to do is use \verb|cata| in
+place of them.  For example, we can define the list length function
+using \verb|cata| as follows:
+\begin{verbatim}
+len = cata phi where
+  phi N         = 0
+  phi (C x ans) = 1 + ans
+\end{verbatim}
+
+The final piece we left out in the generalization is the definition of
+\verb|fmap| which abstracts the occurrences of the recursion.
+
+We can define the \verb|Functor| instance for \verb|L|,
+the base functor for the list, as follows: 
+\begin{verbatim}
+instance Functor (L p) where
+  fmap s N        = N
+  fmap s (C x xs) = C x (s xs)
+\end{verbatim}
+Note, that we apply the function argument (\verb|s :: r->a|)
+to the tail (\verb|xs :: r|).
+
+We can define the \verb|Functor| instance for \verb|T|,
+the base functor for the tree, as follows: 
+\begin{verbatim}
+instance Functor (T p) where
+  fmap s (L p)     = L p
+  fmap s (C t1 t2) = C (s t1) (s t2)
+\end{verbatim}
+Note, that we apply the function argument (\verb|s :: r->a|)
+to both the left and the right children (\verb|t1 :: r| and \verb|t2 :: r|).
+
+The \verb|Functor| instance for \verb|Expr| can be defined similarly,
+applying the function argument to every recursive occurrences.
+
+\subsubsection{Limitations of conventional style catamorphism}
+The conventional style catamorphism only works for positive regular datatypes,
+but not for non-regular datatypes and negative datatypes.
+This is because the bases, from which we generate
+inductive datatypes by taking their fixpoints, are required
+to be functors.\footnote{In category theoretic terms,
+bases must be initial algebras.} Functors are only defined
+for regular positive datatypes, and do not naturally extend
+to non-regular datatypes and negative datatypes.
+
+In contrast, the Mendler-style catamorphism naturally extends
+to non-regular datatypes and also works for negative datatypes.
+We will show some Mendler-style catamorphism examples for
+non-regular datatypes and negative datatypes
+in the following subsection.
+
+\begin{figure}[b]
+\begin{verbatim}
+newtype Mu0 (f:: *      -> *     )     = In0   { out0   :: f (Mu0 f)      }        
+newtype Mu1 (f:: (*->*) -> (*->*))   i = In1   { out1   :: f (Mu1 f)    i } 
+data   Rec0 (f:: *      -> *     ) a   = Roll0 { unRoll0:: f (Rec0 f a)   }
+                                       | Inverse0 a 
+data   Rec1 (f:: (*->*) -> (*->*)) a i = Roll1 { unRoll1:: f (Rec1 f a) i }
+                                       | Inverse1 a 
+\end{verbatim}
+\caption{Standard and inverse augmented datatype fixpoints for rank-0 and rank-1}
+\label{fig:datafix}
+\end{figure}
+
+\begin{figure}\small
+\begin{verbatim}
+cata    :: Functor f =>                          (f a->a)      -> Mu0 f   -> a
+
+mcata0  :: (forall r .                 (r->a) -> (f r->a)    ) -> Mu0 f   -> a
+mcata1  :: (forall r i.  (forall i. r i->a i) -> (f r i->a i)) -> Mu1 f i -> a i
+mhist0  :: (forall r .  (r->f r) ->    (r->a) -> (f r->a)    ) -> Mu0 f   -> a
+mhist1  :: (forall r i. (forall i. r i->f r i)
+                     -> (forall i. r i-> a i) -> (f r i->a i)) -> Mu1 f i -> a i
+
+msfcata0:: (forall r .   (a->r a)
+                      -> (r a->a)
+                      -> (f (r a)->a))
+        -> (forall a . Rec0 f a     ) -> a
+msfcata1:: (forall r i.  (forall i. a i->r (a i) i)
+                      -> (forall i. r (a i) i->a i)
+                      -> (f (r (a i)) i->a i))
+        -> (forall a. Rec1 f (a i) i) -> a i
+msfhist0:: (forall r .   (a->r a)
+                      -> (forall a . r a->f (r a))
+                      -> (r a->a)
+                      -> (f (r a)->a))
+        -> (forall a . Rec0 f a     ) -> a
+msfhist1:: (forall r i.  (forall i. a i->r (a i) i)
+                      -> (forall a i. r (a i) i->f (r (a i)) i)
+                      -> (forall i. r (a i) i->a i)
+                      -> (f (r (a i)) i->a i))
+        -> (forall a. Rec1 f (a i) i) -> a i
+\end{verbatim}
+\caption{Type signatures of recursive combinators.
+         Note the heavy use of rank-N types.}
+\label{fig:rcombty}
+\end{figure}
+
+\begin{figure}\small
+\begin{verbatim}
+cata    s    (In0 x)             = s (fmap (cata s) x)
+
+mcata0  phi  (In0 x)             = phi                    (mcata0 phi)   x
+mcata1  phi  (In1 x)             = phi                    (mcata1 phi)   x
+
+mhist0  phi  (In0 x)             = phi           out0     (mhist0 phi)   x
+mhist1  phi  (In1 x)             = phi           out1     (mhist1 phi)   x
+
+msfcata0  phi r = msfcata phi r where
+  msfcata phi (Roll0 x)          = phi Inverse0           (msfcata phi)  x
+  msfcata phi (Inverse0 z)       = z
+
+msfcata1  phi r = msfcata phi r  where
+  msfcata  :: (forall  r i.  (forall i. a i -> r (a i) i)
+                       ->    (forall i. r (a i) i -> a i)
+                       ->    (f (r (a i)) i -> a i)        ) ->  Rec1 f (a i) i  -> a i
+  msfcata phi    (Roll1 x)       = phi Inverse1           (msfcata phi)  x
+  msfcata phi    (Inverse1 z)    = z
+
+msfhist0  phi r = msfhist phi r  where
+  msfhist  :: (forall r.  (a -> r a)
+                      ->  (forall a . r a -> f (r a))
+                      ->  (r a -> a)                                   
+                      ->  (f (r a) -> a)                    ) ->  Rec0 f a        -> a
+  msfhist phi    (Roll0 x)       = phi Inverse0  unRoll0  (msfhist phi)  x
+  msfhist phi    (Inverse0 z)    = z
+
+msfhist1  phi r = msfhist phi r  where
+  msfhist  :: (forall  r i.  (forall i. a i -> r (a i) i)
+                       ->    (forall a i. r (a i) i -> f (r (a i)) i)
+                       ->    (forall i. r (a i) i -> a i)
+                       ->    (f (r (a i)) i -> a i)         ) ->  Rec1 f (a i) i  -> a i
+  msfhist phi    (Roll1 x)       = phi Inverse1  unRoll1  (msfhist phi)  x
+  msfhist phi    (Inverse1 z)    = z
+\end{verbatim}
+\caption{Definitions of recursive combinators.
+  Note identical textual definitions for the same operators at different ranks,
+  but with types specialized for that rank.} 
+\label{fig:rcombdef}
+\end{figure}
+
+
+\subsection{Mendler-style catamorphism} \label{sec:bg:mcata}
+In the Mendler-style approach, we define Mendler-style inductive datatypes
+as fixpoints of non-recursive base datatypes.  For example, the following is
+a side-by-side definition of the natural number type in general recursion
+style (left) and in Mendler-style (right).
+\begin{center}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+
+data Nat
+   =  Z
+   |  S Nat
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+data N r = Z | S r
+type Nat = Mu0 N
+zero     = In0 Z
+succ n   = In0 (S n)
+\end{verbatim}
+\end{minipage}
+\end{center}
+The \verb|Mu0| we use here is exactly the same one we used for in
+the conventional catamorhpism. That is,
+\verb|newtype Mu0 (f :: * -> *) = In0 { out0 :: f (Mu0 f) }|.
+Note, in the Mendler-style encoding of natural number datatype,
+we define \verb|Nat| by applying the fixpoint \verb|Mu0| to the base \verb|N|. 
+The type argument \verb|r| in the base \verb|N| is intended to denote
+the points of recursion in the inductive type.  Here, we have only
+one point of recursion at \verb|S|, the successor data constructor.
+Then, we define the shorthand constructors \verb|zero| and \verb|succ|,
+which correspond to the data constructors \verb|Z| and \verb|S| of
+the natural number type in general recursive encoding.
+We can express the number 2 as \texttt{S (S Z)} in general recursive encoding,
+and \texttt{succ (succ zero)} or \texttt{In0 (S (In0 (S (In0 Z))))} in Mendler-style encoding.
+
+We can also define parameterized datatypes, such as lists, in the Mendler-style,
+using the same datatype fixpoint \verb|Mu0|, provided that we consistently order
+the parameter arguments (\verb|p|) to come before the type argument that denotes
+the recursion points (\verb|r|) in the base datatype definition (\verb|L p r|):
+\begin{center}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+
+data List p
+   =  N
+   |  C p (List p)
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+data L p r = N | C p r
+type List p = Mu0 (L p)
+nil        = In0 N
+cons x xs  = In0 (C x xs)
+\end{verbatim}
+\end{minipage}
+\end{center}
+Note, we define \verb|List p| as \verb|Mu0 (L p)|, which is the fixpoint of
+the partial application of the base \verb|L| to the parameter \verb|p|.
+We can express the integer list with two elements 1 and 2 as
+\texttt{C 1 (C 2 N)}
+in general recursive enconding, and \texttt{cons 1 (cons 2 nil)} or
+\texttt{In0 (C 1 (In0 (C 2 (In0 N))))} in Mendler-style encoding.
+
+
+The definition of a Mendler-style catamorphism (for rank-0) is the following:
+\begin{verbatim}
+mcata0 :: (forall r . (r -> a) ->  (f r -> a)) -> Mu0 f ->  a
+mcata0 phi (In0 x) = phi (mcata0 phi) x
+\end{verbatim}
+Although we defined \verb|Mu0| as a newtype and \verb|mcata0|
+as a function in Haskell, you should consider them as an
+information hiding abstraction.
+The rules of the game are that you are only allowed to construct values
+using the \verb|In0| constructor (as in \verb|zero|, \verb|succ|,
+\verb|nil| and \verb|cons|),
+but you are not allowed to deconstruct those values by pattern matching
+against \verb|In0| (or, by using the selector function \verb|out0|).
+
+Note, \verb|mcata0| does not require \verb|Functor| class in its type signature.
+The Mendler catamorphism \verb|mcata0| lifts the restriction that the
+base type be a functor, but still maintains the strict termination
+behavior of \verb|cata|. This restriction is lifted by using two devices.
+\begin{itemize}
+  \item The combining function \verb|phi| becomes a function of 2 arguments
+        rather than 1. The first argument is a function that represents an
+        abstract recursive caller, the second the conventional base structure
+        that must be combined into an answer. The abstract recursive caller
+        allows the programmer to direct where recursive calls must be made.
+        The \verb|Functor| class requirement is lifted,
+        because no call to \verb|fmap|
+        is required in the definition of \verb|mcata0|:
+\begin{verbatim}
+mcata0 phi (In0 x) = phi (mcata0 phi) x
+\end{verbatim}
+  \item The second device uses rank-N polymorphism to insist that
+        the abstract caller, with type (\verb|r -> a|), and
+        the base structure, with type (\verb|f r|),
+        work over an abstract type, denoted by (\verb|r|). 
+\begin{verbatim}
+mcata0 :: (forall r. (r -> a) -> (f r -> a)) -> Mu0 f -> a
+\end{verbatim}
+\end{itemize}
+
+The intuitive reasoning behind the termination property of \verb|mcata0| for
+all positive inductive datatypes is that (1) \verb|mcata0| strips off one \verb|In0|
+constructor each time it is called, and (2) \verb|mcata0| only recurses on the
+direct subcomponents (e.g., tail of a list) of its argument (because the type
+of the abstract recursive caller won't allow it to be applied to anything else).
+Once we observe these two properties, it is obvious that \verb|mcata0| always
+terminates since those properties imply that every recursive call to \verb|mcata0|
+decreases the number of \verb|In0| constructors in its argument.\footnote{We assume
+that the values of inductive types are always finite. We can construct infinite
+values (or, co-inductive values) in Haskell exploiting lazyness, but we exclude
+such infinite values from our discussion in this work.}
+
+Writing the list length example in Mendler-style will give clearer
+intuition explained above. The following is a side-by-side definition of
+the list length function in general recursion style (left)
+and in Mendler-style (right).
+\begin{center}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+ 
+data List p
+   =  N
+   |  C p (List p)
+
+
+len :: List p -> Int
+len N         = 0
+len (C x xs)  = 1 + len xs
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+data L p r = N | C p r
+type List p = Mu0 (L p)
+nil        = In0 N
+cons x xs  = In0 (C x xs)
+
+lenm :: List p -> Int
+lenm = mcata0 phi where
+  phi len N         = 0
+  phi len (C x xs)  = 1 + len xs
+\end{verbatim}
+\end{minipage}
+\end{center}
+In the definition of \verb|lenm|,
+we name the first argument of \verb|phi|, the abstract recursive caller,
+to be \verb|len|.  We use this \verb|len| exactly where we would recursively
+call the recursive function in the general recursion style
+(\verb|len| on the left).
+
+However, unlike the general recursion style, it is not possible to call
+\verb|len::r->Int| on anything other than the tail \verb|xs::r|.
+Using general recursion, we could easily err (by mistake or by design)
+causing length to diverge, if we wrote its second equation as follows:
+\verb|len (C x xs) = 1 + len (C x xs)|.
+
+We cannot encode such diverging recursion in Mendler-style because
+\verb|len::r->Int| requires its argument to have the parametric type \verb|r|,
+while \verb|(C x xs) :: L p r| has more specific type than \verb|r|.
+The parametricity enforces weak structural induction.
+
+% The scheme of having the combining function \verb|phi| abstract over the
+% abstract recursive caller \verb|len| is a powerful one.  We will apply
+% this strategy as we further generalize \verb|mcata0| to become more expressive.
+
+The Mendler-style catamorphism also ensures termination for negative datatypes.
+In \S\ref{sec:bg:neg}, I will show an example of using \verb|mcata0| on negative
+datatypes and give an intuitive explanation why \verb|mcata0|
+terminates for negative datatypes.
+
+\subsection{Mendler-style hisomorphism} \label{sec:bg:mhist}
+
+Some computations are not easily expressible by a catamorphism,
+since a catamorphism only recurses on the direct subcomponents (e.g., tail
+of a list). Recursing on deeper subcomponents (e.g., tail of tail of a list)
+requires complex encodings in the conventional setting. Unfortunately,
+functional programmers often write simple recursive functions using
+nested pattern matching that recurse on deep subcomponents exposed by
+the nested patterns.  A typical example is the Fibonacci function:
+\begin{verbatim}
+fib Z          = 0
+fib (S Z)      = 1
+fib (S (S m))  = fib (S m) + fib m
+\end{verbatim}
+Note, in the third equation \verb|fib| recurses on both the predecessor \verb|(S m)|,
+which is a direcect subcomponent of the argument, and the predecessor of
+the predecessor \verb|m|, which is a deeper subcomponent of the argument.
+The Histomorphism \cite{UusVen99histo} captures such patterns of recursion
+often called a course-of-values recursion.
+
+In the conventional style, histomorphisms are defined through co-algebraic
+construction of an intermediate stream data structure that pairs up the
+current argument and the results from the previous steps.
+There are two ways of implementing this.  One is a memoizing bottom-up version,
+and the other is a non-memoizing version that repeats the computation of
+the previous steps.  We are not going to show or discuss those implementations
+here, but the point we want to make is that both versions need to be
+implimented through co-algebraic construction \cite{UusVen00,vene00phd}.
+Course-of-values recursion expressed in terms of this co-algebraic style will
+look very different from its equivalent in general recursion style. One needs
+to extract both the original arguments and the deep result values from the
+stream explicity calling on stream-head and stream-tail operations.
+However, in Mendler-style, we do not need such co-algebraic construction
+at the user level\footnote{The Mendler-style histormophism combinators
+implemented here are the non-memoizing ones. Vene\cite{vene00phd} suggests
+how to implement a memoizing  Mendler-style histomorphism -
+this memoizing version needs the co-algebraic construction.}.
+
+The definition of Mendler-style histomorphism (for rank-0) is the following:
+\begin{verbatim}
+mhist0 :: (forall r . (a -> f a) -> (r -> a) -> (f r) -> a) -> Mu0 f -> a
+mhist0 phi (In0 x) = phi out0 (mhist0 phi) x 
+\end{verbatim}
+In the Mendler-style Histomorphism, we play the same trick
+we played in the Mendler-style Catamorphism. We arrange for the
+combining function to take additional arguments.
+\begin{itemize}
+  \item The combining function \verb|phi| now becomes a function of 3 arguments. 
+        The first argument is a function that represents an
+        abstract unrolling function that projects out the value
+        embeded inside the data constructor \verb|In0| by accessing
+        the projection function \verb|out0| given in the definition.
+        As in \verb|mcata0|,
+        the next argument represents an abstract recursive caller, and
+        the last argument represents the base structure
+        that must be combined into an answer.
+
+  \verb|mhist0 phi (In0 x) = phi out0 (mhist0 phi) x|
+
+  \item Again we use rank-N polymorphism to insist that 
+        the abstract unrolling function, with type (\verb|r -> f r|),
+        the abstract recursive caller function, with type (\verb|r -> a|), and
+        the base structure, with type (\verb|f r|), only work
+        over an abstract type, denoted by (\verb|r|).
+
+  \verb|mhist0 :: (forall r . (a -> f a) -> (r -> a) -> (f r) -> a) -> ...|
+\end{itemize}  
+
+The Mendler-style histomorphism is much handier when expressing
+course-of-values recursion than the conventional histomorphism \cite{UusVen00}.
+For example, in Figure \ref{fig:fib}, the definition for the Fibonacci function
+in general recursion style (left) and the definition in Mendler-style (right)
+look almost identical.  Particularly, when we have unrolled the nested pattern
+matching in the general recursive definition into a case expression.
+The only difference between the two, is that in the Mendler-style (left),
+we pattern match over \verb|out n| in the case expression, in
+the Traditional-style (right) we
+pattern match over \verb|n|.  
+
+\begin{figure}
+$\!\!\!\!\!\!\!\!\!$
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+
+data Nat
+   =  Z
+   |  S Nat
+
+
+
+fib Z      = 0
+fib (S n)  =
+  case n of
+    Z     -> 1
+    S n'  -> fib n + fib n'
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.49\linewidth}
+%include Fib.lhs
+\begin{verbatim}
+data N r = Z | S r
+type Nat = Mu0 N
+zero     = In0 Z
+succ n   = In0 (S n) 
+
+fibm = mhist0 phi where
+  phi  out fib Z      = 0
+  phi  out fib (S n)  =
+         case out n of
+           Z     -> 1
+           S n'  -> fib n + fib n'
+\end{verbatim}
+\end{minipage}
+\caption{\texttt{mhist0} example: Fibonacci function}
+\label{fig:fib}
+\end{figure}
+
+We can visually relate the definition of \verb|mhist0|
+with second equation of \verb|phi| in the definition of
+the Fibonocci function as in Figure \ref{fig:mhist0rel}.
+\begin{figure}
+\begin{verbatim}
+mhist0 phi (In0 x) =  phi  out0         (mhist0 phi)     x
+                            .               .            .
+                            .               .            .
+                            .               .            .
+                      phi  out             fib         (S n)  =
+                          case out n of
+                            Z     -> 1
+                            S n'  -> fib n + fib n'
+\end{verbatim}
+\caption{
+Visually relating the formal arguments in the definition of \texttt{phi}
+with the real arguments being passed in the definitionof \texttt{mhist0}.}
+\label{fig:mhist0rel}
+\end{figure}      
+The abstract unrolling function \verb|out| and the abstract recursive caller \verb|fib|
+stand for the actual arguments \verb|out0| and \verb|(mhist0 phi)|, but the rank-N type of
+the combining function \verb|phi| ensures that they are only used in a safe manner.
+The abstract unrolling function \verb|out| enables us to discharge \verb|In0|
+as many times as we want inside \verb|phi|. 
+
+From the programmers perspective, \verb|out0| is a hidden primitive,
+hidden by the histomorphism abstraction.
+But, inside the definition of the combining function \verb|phi|,
+the programmer can actually access the functionality of \verb|out0|
+through the abstract unrolling function \verb|out|. The rank-N types limit
+the use of this abstract unrolling function \verb|out| to values of type \verb|r|.
+
+In a positive inductive datatype, the only functions with domain \verb|r|
+are the abstract unroller, and the abstract recursive caller.
+The programmer can only
+{\em whittle down} the \verb|r| values inside the base structure,
+of type (\verb|f r|), into smaller structures, of type (\verb|f r|).
+The programmer can then decompose these into even smaller \verb|r| values
+by pattern matching against the data constructors of the base \verb|f|.
+However, there is no way to combine any of these decomposed \verb|r| values
+to build up larger \verb|r| values.
+The only possible use of the decomposed \verb|r| values is to call
+the abstract recursive caller, with type (\verb|r -> a|).
+
+For example,
+in Figure \ref{fig:fib}, we pattern match over (\verb|out n|),
+discharging the hidden \verb|In0| constructor of \verb|n|.
+Note the types inside the \verb|(S n')| pattern matching branch: \verb|n :: r|; \verb|(out n) :: (N r)|; and \verb|n' :: r|.
+What can we possibly do with \verb|n| and \verb|n'|, of type \verb|r|?  The only
+possible computation is to call
+ \verb|fib :: r -> Int| on \verb|n| and \verb|n'|,  as we do in \verb|fib n + fib n'|.
+It is a type error to call \verb|fib :: r -> Int| on either \verb|(S n) :: N r|
+or \verb|(S n') :: N r|. This is why the termination property of \verb|mhist0| continues to hold for
+positive datatypes.
+
+
+For negative datatypes, however,
+we have additional functions with domain \verb|r|.
+Inside the \verb|phi| function passed to \verb|mhist0|,
+the embedded functions with negative occurences,
+will have type \verb|r| as their domain.
+These can be problematic to termination.
+The counterexample to termination of \verb|mhist0|
+is in Figure \ref{fig:LoopHisto}, which will dicussed in more detail
+in the following subsection.
+
+\subsection{Mendler-stlye cata- and histomorphism for negative datatypes}
+\label{sec:bg:neg}
+
+Let us revisit the negative inductive datatype \verb|T|
+(from \S\ref{sec:intro:ps})
+from which we constructed a diverging computation.
+We can define a Mendler-style version of \verb|T|, called \verb|T_m|, as follows:
+\begin{verbatim}
+data TBase r = C_m (r -> ())
+type T_m = Mu0 TBase
+\end{verbatim}
+If we can write two functions \verb|p_m :: T_m -> (T_m -> ())|,
+and \verb|w_m :: T_m -> ()|, corresponding to \verb|p| and \verb|w| from
+\S\ref{sec:intro:ps}, we can reconstruct the same diverging computation.
+The function
+\begin{verbatim}
+w_m x = (p_m x) x
+\end{verbatim}
+is easy. The function
+\verb|p_m| is problematic. By the rules of the game,
+we cannot pattern match on \verb|In0|
+(or use \verb|out0|) so we must resort to using one of the
+combinators, such as \verb|mcata0|.
+However, it is not possible to write \verb|p_m|
+in terms of \verb|mcata0|.
+Here is an attempt (seemingly the only one possible) that fails:
+\begin{verbatim}
+p_m :: T_m -> (T_m -> ())
+p_m =  mcata0 phi where
+         phi :: (r -> (T_m -> ())) -> TBase r -> (T_m -> ())
+         phi _ (C_m f) = f
+\end{verbatim}
+We write the explicit type signature for the combining function \verb|phi|
+(even though the type can be inferred from the type of \verb|mcata0|),
+to make it clear why this attempt fails to type check. The combining
+function \verb|phi| take two arguments. The recursive caller (for which we
+have used the pattern \verb|_|, since we don't intend to call it) and the
+base structure \verb|(Cm f)|, from which we can extract
+the function \verb|f :: r -> ()|. Note that \verb|r| is an abstract
+(universally quantified) type, and the result type of \verb|phi| requires
+\verb|f :: T_m -> ()|. The types \verb|t| and \verb|T_m| can never match, if \verb|r|
+is to remain abstract. Thus, \verb|p_m| fails to type check.
+
+There is a function, with the right type, that you can define:
+\begin{verbatim}
+pconst :: T_m -> (T_m -> ())
+pconst = mcata0 phi where phi g (C f) = const ()
+\end{verbatim}
+Not surprisingly, given the abstract pieces composed of
+the recursive caller \verb|g :: r -> ()|, the base structure \verb|(C f) :: TBase r|,
+and the function we can extract from the base structure \verb|f :: r -> ()|,
+the only function that returns a unit value (modulo extensional
+equivalence) is, in fact, the constant function returning the unit value.
+
+This illustrates the essence of how Mendler catamorphism guarantees
+normalization even in the presence of negative occurrences in the
+inductive type definition. By quantifying over the recursive type
+parameter of the base datatype (e.g. \verb|r| in \verb|TBase r|), it prevents an
+embedded function with a negative occurrence from flowing into any
+outside terms (especially terms embedding that function).
+
+Given these restrictions, the astute reader may ask, are types with
+embedded function with negative occurrences good for anything at all?
+Can we ever call such functions?  A simple example which uses an
+embedded function inside a negative inductive datatype is illustrated
+in Figure \ref{fig:LoopHisto}.  The datatype \verb|Foo| (defined as a fixpoint
+of \verb|FooF|) is a list-like data structure with two data constructors \verb|Noo|
+and \verb|Coo|.  The data constructor \verb|Noo| is like the nil and \verb|Coo| is like
+the cons.  Interestingly, the element (with type \verb|Foo->Foo|) contained \verb|Coo|
+is a function that transforms a \verb|Foo| value into another \verb|Foo| value.
+The function \verb|lenFoo|, defined with \verb|mcata0|, is a length like function,
+but it recurses on the transformed tail, \verb|(f xs)|,
+instead of the original tail \verb|xs|.
+The intuition behind the termination of \verb|mcata0| for this negative datatype
+\verb|Foo| is similar to the intuition for positive dataypes.  The embedded function
+\verb|f::r->r| can only apply to the direct subcomponent of its parent, or to its
+sibling, \verb|xs| and its transformed values (e.g. \verb|f xs|, \verb|f (f xs)|, $\ldots$),
+but no larger values that contains \verb|f| itself.  We illustrate a general proof
+on termination of \verb|mcata0| in Figure \ref{fig:proof}.
+
+\begin{figure}
+\begin{verbatim}
+type Mu0 f = forall a . (forall r . (r -> a) -> f r -> a) -> a
+
+mcata0 :: (forall r . (r -> a) -> f r -> a) -> Mu0 f -> a
+mcata0 phi r = r phi
+
+in0 :: f (Mu0 f) -> Mu0 f
+in0 r phi = phi (mcata0 phi) r
+\end{verbatim}
+\caption{$F_{\omega}$ encoding of \texttt{Mu0} and \texttt{mcata0} in Haskell}
+\label{fig:proof}
+\end{figure}
+
+\begin{figure}
+\begin{verbatim}
+data FooF r = Noo | Coo (r -> r) r
+type Foo = Mu0 FooF
+noo       = In0 Noo
+coo f xs  = In0 (Coo f xs)
+
+lenFoo :: Foo -> Int
+lenFoo = mcata0 phi where
+  phi len Noo         =  0
+  phi len (Coo f xs)  =  1 + len (f xs)
+
+loopFoo :: Foo -> Int
+loopFoo = mhist0 phi where
+  phi out len Noo         =  0
+  phi out len (Coo f xs)  =  case out xs of
+                               Noo       -> 1 + len (f   xs)
+                               Coo f' _  -> 1 + len (f'  xs)
+
+foo :: Foo -- loops for loopFoo
+foo = coo0 (coo1 noo) where   coo0 = coo id
+                              coo1 = coo coo0
+\end{verbatim}
+\caption{An example of a total function \texttt{lenFoo}
+         over a negative datatype \texttt{Foo} defined with \texttt{mcata0},
+     and a counterexample \texttt{loopFoo} illustrating that \texttt{mhist0}
+         can diverge for negative datatypes.}
+\label{fig:LoopHisto}
+\end{figure}
+The function \verb|loopFoo| defined with \verb|mhist0| is a counterexample, which
+shows that Mendler-style histomorphisms do not always terminate.
+Try evaluating \verb|loopFoo foo|.  It will loop.  This function \verb|loopFoo| is
+similar to \verb|lenFoo|, but has an additional twist.  At the very end of the
+function definition, we recurse on the transformed tail \verb|(f' xs)|,
+when we have more than two elements where the first and second elements
+are named \verb|f| and \verb|f'|, respectively.  Note, \verb|f'| is an element embedded
+inside the tail \verb|xs|.  Thus, \verb|(f' xs)| is dangerous since it applies \verb|f'|
+to a larger value \verb|xs|, which contains \verb|f'|.
+The abstract type of the unrolling function (\verb|out::r->f r|),
+prevents the recursive caller from being applied to a larger value, but it
+does not preclude the risk of embedded functions, with negative domains,
+being applied to larger values which contain the embedded function
+itself.
+
+\subsection{Mendler-style cata- and histomorphism for non-regular datatypes}
+\label{sec:bg:nonreg}
+
+\subsubsection{Nested datatypes} \label{sec:bg:nonreg:nested}
+The datatypes \verb|Nat| and \verb|List|, which we have seen in
+the examples in \S\ref{sec:bg:mcata} and \S\ref{sec:bg:mhist},
+are regular datatypes.  Non-recursive datatypes (e.g., \verb|Bool|) and
+recursive (or inductive) datatypes without any type arguments (e.g., \verb|Nat|)
+are always regular.  Among the recursive datatypes with type arguments,
+those datatypes where all of the recursive ocurrence on the right-hand side
+have exactly the same type argument as the left-hand side (in the same order)
+are considered regular.  For example, the list datatype
+\begin{verbatim}
+data List p = N | C p (List p)
+\end{verbatim}
+is regular since \verb|(List p)| appearing on right-hand side takes exactly the same
+argument \verb|p| as the \verb|(List p)| in the left-hand side (\verb|data List p = | ... ).
+
+Note, every concrete instantiation of the list datatype has an equivalent
+non-parameterized datatype definition.
+For instance, \verb|List Bool| is equivalent to the following datatype:
+\begin{verbatim}
+data ListBool = NBool | CBool Bool ListBool
+\end{verbatim}
+This property does {\em not} hold for the nested datatypes.
+
+Type arguments that never change in any recursive ocurrences
+in a datatype definition, are called type parameters.
+Type arguments that do change, are called type indices.
+Datatypes with only type parameters are always regular.
+Nested datatypes \cite{BirMee98} are non-regular datatypes where
+type arguments in some of the recursive occurrences in the recursive
+datatype equation differ from the left-hand side of the datatype equation.
+
+Such types can be expressed in Haskell and ML without using GADT extensions.
+We introduce two well-known examples, powerlists and bushes.
+We illustrate the Mendler-style by writing a function that sum up the elements
+in bushes (Figure \ref{fig:bsum}).  Nested datatypes require us to move from
+the rank-0 Mendler combinators to the rank-1 Mendler combinators.
+
+The powerlist datatype is defined as follows:
+\begin{verbatim}
+data Powl i = NP  | CP i (Powl (i,i))
+\end{verbatim}
+The type argument \verb|(i,i)| for \verb|Powl| occurring on the right-hand side is
+different from \verb|i| appearing on the left-hand side.  Type arguments that
+occur in variation on the right-hand side, like \verb|i|, are type indices.
+
+This single datatype equation for \verb|Powl| relates a family of datatypes:
+the tail of an \verb|i|-powerlist is a \verb|(i,i)|-powerlist,
+its tail is a \verb|((i,i),(i,i))|-powerlist, and so on.
+More concretely,
+\begin{verbatim}
+ps    = CP 1 ps'             :: Powl Int
+ps'   = CP (2,3) ps''        :: Powl (Int,Int)
+ps''  = CP ((4,5),(6,7)) NP  :: Powl ((Int,Int),(Int,Int))
+\end{verbatim}
+%%%% The tail of |ps| is |ps'|, and the tail of |ps'| is |ps''|.
+We can observe that the shape of elements includes deeper nested pairs
+as the type indices become more deeply nested.
+
+The bush datatype is defiend as follows (also in Figure \ref{fig:bsum}):
+\begin{verbatim}
+data Bush  i = NB  | CB i (Bush (Bush i))
+\end{verbatim}
+The type argument \verb|i| for \verb|Bush| is a type index as well, since
+the type argument \verb|(Bush i)| occurring on the right-hand side is
+different from \verb|i| appearing on the left-hand side.  What is more intriguing
+about \verb|Bush| is that the variation on the type index involves itself.
+Matthes\cite{Mat09} calls such datatypes, like \verb|Bush|,
+\emph{truly nested datatypes}.
+Here are some examples of bush values:
+\begin{verbatim}
+bs    = CB 1 bs'           :: Bush Int
+bs'   = CB (CB 2 NB) bs''  :: Bush (Bush Int)
+bs''                       :: Bush (Bush (Bush Int))
+bs''  = CB (CB (CB 3 NB) (CB (CB (CB 4 NB) NB) NB)) NB
+\end{verbatim}
+The tail of \verb|bs| is \verb|bs'|, and the tail of \verb|bs'| is \verb|bs''|.
+We can observe that the shape of the elements becomes more deeply nested as we
+move towards latter elements.
+
+We can define a function that sums up all the nested elements in a bush.
+Let us first take a look at the function \verb|bsum| in the general recursion style,
+on the left-hand side of Figure \ref{fig:bsum}.
+This function takes 2 parameters: a bush to sum up and a function that
+turns elements into integers.  The key part in the definition of \verb|bsum| is
+constructing the function \verb|(\ys->bsum ys f) :: Bush i -> Int|.  We must
+construct this function, on the fly, in order to make the recursive call of
+\verb|bsum| on its tail \verb|xs :: Bush (Bush i)|.  Without this function,
+the recursive call wouldn't know how to sum up bushed elements.
+%% Note this kind of recursive call is an instance of polymorphic recursion.
+
+We can specialize \verb|bsum|, for instance, for integer bushes as follows
+by supplying the identity function:
+\begin{verbatim}
+sumB :: Bush Int -> Int
+sumB xs = bsum xs id
+\end{verbatim}
+Using \verb|sumB|, we can sum up \verb|bs| defined above: \verb|sumB bs ~> 10|.
+
+Before discussing the Mendler-style version, let us take a look at yet another
+general recursive version of the function \verb|bsum'|, which explicitly wraps up
+the answer values of type \verb|(i->Int) -> Int| inside the newtype \verb|Ret i|.
+The relations between the plain vanilla version and the wrapped up version
+are simply:
+\begin{verbatim}
+       bsum  = unRet .  bsum'
+Ret .  bsum  =          bsum'
+\end{verbatim}
+The wrapped up version \verb|bsum'| has the same structure as the Mendler-style
+version \verb|bsumm| found on the right-hand side of Figure \ref{fig:bsum}.
+The wrapping of the answer type is for purely technical reasons:
+to avoid the need for higher-order unification.
+If we were to work with the unwrapped answer type in the Mendler-style,
+the type system would need to unify (\verb|a i|) with (\verb|(i->Int) -> Int|),
+which is a higher-order unification, whereas unifying (\verb|a i|) with
+the wrapped answer type (\verb|Ret i|) is first-order.  The type system of Haskell
+(and most other languages) do not support higher-order unification.\footnote{
+We may avoided this either by making the Mendler-style combinators
+language constructs (rather than functions) so that the type system
+treats them with specialized typing rules; or by providing a version of
+the combinators with syntactic Kan-extension as in \cite{AbeMatUus05}.}
+
+Finally, let us discuss the summation function for bushes using
+the Mendler-style, found on the right-hand side in Figure \ref{fig:bsum}.
+First, we give Mendler-style datatype definitions for bushes.  As usual,
+we define the datatype \verb|Bush| as a fixpoint of the base \verb|BushF|.
+However, an important difference that readers should notice is the use of
+fixpoint \verb|Mu1| for rank-1 bases, instead of \verb|Mu0|, for the rank-0 bases
+inducing regular datatypes.
+
+That the type argument \verb|i| in \verb|Powl i| and \verb|Bush i| is a type index that
+forces us to choose the rank-1 fixpoint (and its related recursion combinators).
+Note, in the definition of the base types \verb|PowlF| and \verb|BushF|,
+we place the index \verb|i| after the type argument \verb|r| for the recursion points.
+This is the convention we use.  We always write parameters (\verb|p|), before
+the recursion point arugment (\verb|r|), followed by indices (\verb|i|).  
+Figure \ref{fig:vec}, which we will shortly discuss in \S\ref{sec:bg:nonreg:indexed}
+in a datype (\verb|Vec p i|). 
+
+Getting back to the right-hand side of Figure \ref{fig:bsum},
+since we used \verb|Mu1| to define the inductive datatypes, we use \verb|mcata1|, the
+Mendler-style catamorphism combinator for rank-1, to define the functions.
+The beauty of the Mendler-style approach is that the implementation
+of the recursion combinators for
+higher-ranks are \emph{exactly the same} as their rank-0 counterparts. The
+definitions differ only in their type signatures. As you can see in Figures 
+\ref{fig:rcombty} and \ref{fig:rcombdef}, % TODO this does not have a figure
+\verb|mcata1| has a richer type than
+\verb|mcata0|, but their implementations are \emph{exactly the same}!
+This is not the case for the conventional approach.
+The definition of \verb|cata| won't generalize to nested datatypes in a trivial way.
+There has been several approaches \cite{BirPat99,MarGibBay04,Hin00}
+to extend folds or catamorphisms for nested datatypes
+in the conventional setting.
+
+\begin{figure}
+\begin{verbatim}
+-- plain vainla version ------------------------------------
+data Bush i  = NB  | CB i (Bush (Bush i))
+
+bsum :: Bush i -> (i -> Int) -> Int
+bsum NB         = (\ f -> 0)
+bsum (CB x xs)  = (\ f ->
+                f x + bsum xs (\ ys -> bsum ys f))
+
+-- wrapping the return type in a newtype -------------------
+newtype Ret i = Ret { unRet :: (i -> Int) -> Int }
+
+bsum' :: Bush i -> Ret i
+bsum'  NB         = Ret (\ f -> 0)
+bsum'  (CB x xs)  = Ret (\ f -> f x + bsum'' xs (\ ys -> bsum'' ys f))
+        where  bsum'' :: Bush i -> (i -> Int) -> Int                
+               bsum'' = unRet . bsum'       
+
+-- in Mendler-style ----------------------------------------
+data BushF r i  = NB  | CB i (r (r i))
+type Bush i = Mu1 BushF i
+nilb        = In1 NB
+consb x xs  = In1 (CB x xs)
+
+bsum :: Bush i -> (i -> Int) -> Int
+bsum = unRet . bsumm
+
+bsumm :: Bush i -> Ret i
+bsumm = mcata1 phi where
+  phi :: forall r i' . (forall i . r i -> Ret i) -> BushF r i' -> Ret i'
+  phi bsum'  NB         = Ret (\ f -> 0)
+  phi bsum'  (CB x xs)  = Ret (\ f -> f x + bsum'' xs (\ ys -> bsum'' ys f))
+               where  bsum'' :: r i -> (i -> Int) -> Int
+                      bsum'' = unRet . bsum'
+\end{verbatim}
+\caption{Summing up a bush (\texttt{Bush}), a recursively nested datatype,
+         expressed in terms of \texttt{mcata1}.}
+\label{fig:bsum}
+\end{figure}
+
+Although we have not shown here, we can also define the summation function on
+powerlists in a similar manner.
+
+
+\subsubsection{Indexed datatypes (GADTs)} \label{sec:bg:nonreg:indexed}
+
+A recent, popular extension to the GHC Haskell compiler is
+generalized algebraic datatypes (GADTs) \cite{She05}.
+GADTs are indexed datatypes, where the index may vary in the result types of
+the data constructors. In our nested examples, the variation of type indices
+always occurred in the arguments of the data constructors. Because of this,
+the GHC compiler had to extend the \verb|datatype| syntax, so that each datatype
+constructor is given its full type. The datatype definition for vectors
+(or size indexed lists) is a prime example:
+\begin{verbatim}
+
+data Vec p i where
+  NV :: Vec p Z
+  CV :: p -> Vec p i -> Vec p (S i)
+\end{verbatim}
+Note, the indices\footnote{The \texttt{Z} and \texttt{S} used in \texttt{Vec} are type level
+representations of natural numbers, which are empty types that are not
+inhabited by any value. They are only intend to be used as indices.
+We make this clear so that the reader may not confuse them with
+the data constructors \texttt{Z} and \texttt{S} of \texttt{Nat} at the value level,
+which we used in the previous examples.} vary in the \emph{result types} of
+the data constructors: \texttt{Z} in the type of \texttt{NV} and \texttt{(S i)} in the type of \texttt{CV}.
+The GHC's GADT datatype extension is more expressive than the recursive type
+equations of standard Haskell, since the assumption behind the type ``equation''
+syntax is that the result types are all ``equal''.
+
+Nested datatypes, which we discussed earlier, are a special case of
+indexed datatypes that happened to be expressible within
+the recursive type equation syntax of Haskell, because the indices only vary
+in the recursive arguments of the data constructors, but not in the result type.
+For a clearer comparison, we express the bush datatype in GADT syntax as
+follows: \footnote{We can translate any recursive type equation into
+a definition using the GADT syntax since GADTs are indeed \emph{generalized}
+algebraic datatypes.}
+
+\begin{verbatim}
+data Bush i where
+  NB :: Bush i
+  CB :: i -> Bush (Bush i) -> Bush i
+\end{verbatim}
+Note, the type argument varies in second argument of \verb|CB|,
+which is \verb|Bush (Bush i)|, but both the result type of
+\verb|NP| and \verb|CP| are \verb|Bush i|.
+
+In Figure \ref{fig:vec}, we define the vector datatype \verb|Vec| as
+\verb|Mu1 (V p) i|, in the Mendler-style.
+That is, we apply \verb|Mu1| to the partial application of the base \verb|V| to
+the parameter \verb|p|, and then applying the resulting fixpoint to the index \verb|i|.
+The base datatype \verb|V p r i| is a GADT with a parameter \verb|p| and an index \verb|i|.
+Recall that by convention we place the parameter \verb|p| before
+the type argument \verb|r| for recursion points, followed by the index \verb|i|.
+We can express the \verb|copy| function that traverses a given vector and
+reconstructing that vector with the same elements, in Mendler-style,
+using the rank-1 Mendler catamorphism combinator \verb|mcata1|.  We can express
+the \verb|switch2| function that switches every two elements of the given vector,
+in Mendler-style, using the rank-1 histomorphism combinator \verb|mhist1|.
+The definitions for \verb|mcata1| and \verb|mhist1| are exaclty the same as
+the definitions for \verb|mcata0| and \verb|mhist1|, except that \verb|mcata1| and \verb|mhist1|
+have richer type signatures
+(see Figures \ref{fig:rcombty} and \ref{fig:rcombdef}).
+Thus, defining functions using \verb|mcata1| and \verb|mhist1| is no more complicated
+than defining the functions for regluar datatypes using \verb|mcata0| and \verb|mhist0|.
+The one proviso to this statement is that we need to give explicit
+type signatures for \verb|phi| because GHC does not support type inference
+for rank-N types (i.e., types with inner \texttt{forall}s that are not top-level).
+Again, in a language where the Mendler-style combinators were
+language constructs rather than functions, we believe this annoying burden
+could be lifted.
+
+\begin{figure}
+\begin{minipage}{.5\textwidth}
+\begin{verbatim}
+data Z
+data S i
+
+
+
+data Vec p i where
+ NV:: Vec p Z
+ CV:: p -> Vec p i -> Vec p (S i)
+
+
+
+copy :: Vec p i -> Vec p i
+copy NV         = NV
+copy (CV x xs)  = CV x (copy xs)
+
+
+
+
+
+switch2 :: Vec p i -> Vec p i
+switch2  NV          =   NV
+switch2  (CV x xs)   =
+  case xs of
+    NV      ->  CV x NV
+    CV y ys ->  CV y
+                  (CV x
+                     (switch2 ys))
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+data V p r i where
+  NV  :: V p r Z
+  CV  :: p -> r i -> V p r (S i)
+
+type Vec p i = Mu1 (V p) i
+nilv        = In1 NV
+consv x xs  = In1 (CV x xs)
+
+copy :: Vec p i -> Vec p i
+copy = mcata1 phi where
+  phi :: (forall i . r i -> Vec p i)
+      -> V p r i -> Vec p i
+  phi cp NV        = nilv
+  phi cp (CV x xs) = consv x (cp xs)
+
+switch2 :: Vec p i -> Vec p i
+switch2 = mhist1 phi where
+  phi  :: (forall i . r i -> V p r i)
+       -> (forall i . r i -> Vec p i)
+       -> V p r i -> Vec p i
+  phi out sw2  NV          =   nilv
+  phi out sw2  (CV x xs)   =
+    case out xs of
+      NV       -> consv x nilv
+      CV y ys  -> consv y
+                       (consv x
+                             (sw2 ys))
+\end{verbatim}
+\end{minipage}
+\caption{Recursion (\texttt{copy}) and course-of-values recursion (\texttt{switch2})
+over size indexed lists (\texttt{Vec}) expressed in terms of \texttt{mcata1} and \texttt{mhist1}.}
+\label{fig:vec}
+\end{figure}
+
+\subsubsection{Mutually recursive datatypes}
+
+
+\begin{figure}
+\begin{minipage}{.5\textwidth}
+\begin{verbatim}
+type Name = String
+
+type Env = [(Name, Int)]
+{-""-}
+data Dec  =  Def Name Exp
+data Exp  =  Var Name
+          |  Val Int
+          |  Add Exp Exp
+          |  Let Dec Exp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+extend  :: Dec -> Env->Env
+extend (Def x e)  = \env ->
+      (x, eval e env) : env
+
+eval    :: Exp -> Env->Int
+eval (Var x)      = \env ->
+    fromJust (lookup x env)
+eval (Val v)      = \env -> v
+eval (Add e1 e2)  = \env ->
+    eval e1 env + eval e2 env
+
+
+
+
+
+
+
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.5\textwidth}
+\begin{verbatim}
+data D
+data E
+
+data DecExpF (r :: *->*) (i :: *) where
+  Def  :: Name -> r E  -> DecExpF r D
+  Var  :: Name         -> DecExpF r E
+  Val  :: Int          -> DecExpF r E
+  Add  :: r E -> r E   -> DecExpF r E
+  Let  :: r D -> r E   -> DecExpF r E
+
+type Dec  = Mu1 DecExpF D
+type Exp  = Mu1 DecExpF E
+
+data family Ret i :: *
+newtype instance Ret D = RetD (Env->Env)
+newtype instance Ret E = RetE (Env->Int)
+
+proj_D f = \x-> case f x of 
+                  RetD f_D -> f_D
+proj_E f = \x-> case f x of
+                  RetE f_E -> f_E
+
+extev :: Mu1 DecExpF i -> Ret i
+extev = mcata1 phi where
+  phi :: (forall i . r i -> Ret i)
+      -> DecExpF r i -> Ret i
+  phi f (Def x e)   = RetD  $ \env ->
+          (x, ev e env) : env
+         where ev = proj_E f
+
+  phi f (Var x)     = RetE  $ \env ->
+          fromJust (lookup x env)
+  phi f (Val v)     = RetE  $ \env -> v
+  phi f (Add e1 e2) = RetE  $ \env ->
+          ev e1 env + ev e2 env
+         where ev = proj_E f
+
+extend  :: Dec  -> Env -> Env
+extend  = proj_D  extev
+
+eval    :: Exp  -> Env -> Int
+eval    = proj_E  extev
+\end{verbatim}
+\end{minipage}
+\caption{Mutual recursion (\texttt{extend} and \texttt{eval} over \texttt{Dec} and \texttt{Exp})
+         expressed in terms of \texttt{mcata1} over an indexed datatype \texttt{DecExpF}}
+\label{fig:mutrec}
+\end{figure}
+
+We can express mutual recursion over mutually recursive datatypes
+in Mendler-style using an indexed base dataype.
+The context extension function \verb|extend| and
+the expression evaluation function \verb|eval| in Figure \ref{fig:mutrec}
+are mutually recursive functions over the mutually recursive datatypes of
+delcaration \verb|Dec| and expression \verb|Exp|.
+A declaration (\verb|Dec|) binds a name to an expression.\footnote{For
+simplicity, we have only one
+constructor for \texttt{Def}, There would be more than one ways to declare bindings in a more realistic
+programming language syntax tree.}  Expressions (\verb|Expr|) include variables,
+integer values, additions, and let-bidings, which contain a declaration.
+The general recursive version on left-hand side of Figure \ref{fig:mutrec}
+is a self-explanatory standard evaluator implementation for the expression.
+
+To express this in Mender-style (right), we first define the common base
+\verb|DecExpF| which is indexed by \verb|D| and \verb|E|.  Note, the data constructors of
+\verb|DecExpF| include both the data constructors of declarations (\verb|Def|) and
+expressions (\verb|Var|, \verb|Val|, \verb|Add|, and \verb|Let|).  The data constructor for
+declaration is indexed by \verb|D|, and the other data constructors for
+expressions are indexed by \verb|E| in their result types.
+Then, we can define \verb|Dec| as \verb|Mu1 DecExpF D| and \verb|Exp| as \verb|Mu1 DecExpF E|.
+We wrap up the return types of the \verb|eval| and \verb|extend| functions with
+the data family \verb|Ret|, for reasons similar to the ones in Figure\;\ref{fig:bsum}
+where we wrap up the result types of the summation functions for
+the nested datatypes.
+The datatype family \verb|Ret| is basically a GADT indexed by \verb|E| and \verb|D| as follows:
+\begin{verbatim}
+data Ret (i :: *) where
+  RetD  :: (Env->Env)  -> Ret D
+  RetE  :: (Env->Int)  -> Ret E
+\end{verbatim}
+The data family and newtype instance extensions enables GHC to optimize the
+GADT datatype above by compiling away \verb|RetD| and \verb|RetE| at compile time.
+We also define the projection functions \verb|proj_D :: Ret D -> (Env->Env)| and
+\verb|proj_E :: Ret E -> (Env->Int)| to open up the return type.
+Then, we can express the mutually recursive functions, both \verb|eval| and \verb|extend|,
+combined in one function definition \verb|extev| using \verb|mcata1|.
+You can observe that the definition of \verb|phi| is very close to the
+definitions of the general recursive version of \verb|extend| and \verb|eval| on the left.
+The difference is that we project out \verb|ev| from \verb|f|, which is the handle for
+combined mutualy recursive function, when we need to call the evaluation
+function for the recursion.  Once we have define the combined function \verb|extev|,
+we can project out \verb|extend| and \verb|eval| using \verb|proj_D| and \verb|proj_E|.
+
+\subsection{Formatting HOAS} \label{sec:bg:showHOAS}
+
+To lead up to the Mendler-style solution to formattting HOAS,
+we first review some earlier work on turning expressions, expressed in 
+Higher-Order Abstract Syntax (HOAS)\cite{Church40,PfeEll88}, into strings.
+This solution was suggested by Fegaras and Sheard\cite{FegShe96}.
+They were studying yet another abstract recursion scheme described by
+Paterson\cite{Pat93} and Meijer and Hutton\cite{MeiHut95} that could only be
+used if the combining function had a true inverse. This seemed a bit limiting,
+so Fegaras and Sheard introduced the idea of a syntactic inverse.
+The syntactic inverse was realized by augmenting the \verb|Mu0| type with a second
+constructor. This augmented \verb|Mu0| had the same structure as \verb|Rec0|
+in Figure \ref{fig:datafix}, but with a different type.
+
+The algorithm worked, but, the augmentation introduces junk.
+Washburn and Weirich\cite{bgb} eliminated the junk by exploiting parametricity.
+It is a coincidence that Mendler-style recursion schemes also use the same
+technique, parametricity, for a different purpose, to guarantee termination.
+Fortunately, these two approaches work together without getting in
+each other's way.  
+
+\begin{figure}
+\begin{verbatim}
+data Exp_g = Lam_g (Exp_g -> Exp_g) | App_g Exp_g Exp_g | Var_g String
+
+showExp_g :: Exp_g -> String
+showExp_g e = show' e vars where
+  show' (App_g x y)  = \vs      -> "("++ show' x vs ++" "
+                                      ++ show' y vs ++")"
+  show' (Lam_g z)    = \(v:vs)  -> "(\\"++v++"->"
+                                      ++ show' (z (Var_g v)) vs ++")"
+  show' (Var_g v)    = \vs      -> v
+\end{verbatim}
+\begin{verbatim}
+data ExpF r = Lam (r -> r) | App r r
+type Exp' a = Rec0 ExpF a
+type Exp = forall a . Exp' a
+lam e    = Roll0 (Lam e)
+app f e  = Roll0 (App f e)
+
+showExp :: Exp -> String
+showExp e = msfcata0  phi e vars where
+  phi :: (([String] -> String) -> r) -> (r -> ([String] -> String))
+      -> ExpF r -> ([String] -> String)
+  phi inv show' (App x y) = \vs     -> "("++ show' x vs ++" "
+                                          ++ show' y vs ++")"
+  phi inv show' (Lam z)   = \(v:vs) -> "(\\"++v++"->"
+                                 ++ show' (z (inv (const v))) vs ++")"
+\end{verbatim}
+\begin{verbatim}
+vars :: [String]
+vars = [ [i] | i <- ['a'..'z'] ] ++ [ i:show j | j<-[1..], i<-['a'..'z'] ]
+\end{verbatim}
+\caption{\texttt{msfcata0} example: String formatting function for Higher-Order Abstract Syntax (HOAS)}
+\label{fig:HOASshow}
+\end{figure}
+
+\subsubsection{A general recursive implementation for open HOAS}
+\label{sec:bg:showHOAS:recursive}
+
+The recursive datatype \verb|Exp_g| in Figure \ref{fig:HOASshow}
+is an open HOAS. By \emph{open}, we express that \verb|Exp_g| has
+a data constructor \verb|Var_g|, which enables us to introduce free variables.
+The constructor \verb|Lam_g| holds an embedded function of type
+\verb|(Exp_g -> Exp_g)|.
+This is called a shallow embedding, since we use functions in the host language,
+Haskell, to represent lambda abstractions in the object language \verb|Exp_g|.
+For example, using the Haskell lambda expressions,
+we can construct some \verb|Exp_g| representing lambda expressions as follows:
+\begin{verbatim}
+k_g   = Lam_g (\x -> Lam_g (\y -> x))
+s_g   = Lam_g (\x -> Lam_g (\y -> Lam_g (\z -> App_g x z `App_g` App_g y z)))
+skk_g = App_g s_g k_g `App_g` k_g
+w_g   = Lam_g (\x -> x `App_g` x)
+\end{verbatim}
+Since we can build any untyped lambda expressions with \verb|Exp_g|, 
+even the problematic self application expression \verb|w_g|,
+it is not possible to write a terminating evaluation function for \verb|Exp_g|.
+However, there are many  functions that recurse over the structure of
+\verb|Exp_g|, and when they terminate produce something useful.
+One of them is the string formatting function \verb|showExp_g| defined in
+Figure \ref{fig:HOASshow}.
+
+Given an expression (\verb|Exp_g|) and a list of fresh variable names
+(\verb|[String]|), the function \verb|show'| (defined in the \verb|where|
+clause of \verb|showExp_g|) returns a string (\verb|String|) that represents
+the given expression.  To format an application expression \verb|(App_g x y)|,
+we simply recuse over each of the subexpressions \verb|x| and \verb|y|.
+To format a lambda expression, we take a fresh name \verb|v| to represent
+the binder and we recurse over \verb|(z (Var_g v))|, which is the application of
+the embedded function \verb|(z :: Exp_g -> Exp_g)| to a variable expression
+\verb|(Var_g v :: Exp_g)| constucted from the fresh name.
+Note, we had to create a new variable expression to format the function body
+since we cannot look inside the function values of Haskell.
+To format a variable expression \verb|(Var_g v)|,
+we only need to return its name \verb|v|.  The local function is \verb|show'|
+(and hence also \verb|showExp_g|), is total as long as
+the function values embedded in the \verb|Lam_g| constructors are total.
+
+With \verb|showExp_g| we can format and print out the terms
+\verb|k_g|, \verb|s_g|, \verb|skk_g| and \verb|w_g| as follows:
+\begin{quote}\noindent
+$>$ \verb|putStrLn (showExp_g k_g)|\\
+\verb|(\a->(\b->a))|
+\end{quote}\vspace*{-1em}
+\begin{quote}\noindent
+$>$ \verb|putStrLn (showExp_g s_g)|\\
+\verb|(\a->(\b->(\c->((a c) (b c)))))|
+\end{quote}\vspace*{-1em}
+\begin{quote}\noindent
+$>$ \verb|putStrLn (showExp_g skk_g)|\\
+\verb|(((\a->(\b->(\c->((a c) (b c))))) (\a->(\b->a)))|\\
+\verb|(\a->(\b->a)))|
+\end{quote}\vspace*{-1em}
+\begin{quote}\noindent
+$>$ \verb|putStrLn (showExp_g w_g)|\\
+\verb|(\a->(a a))|
+\end{quote}\vspace*{-.5em}
+
+Note that \verb|show'| is not structurally inductive in the \verb|Lam_g| case.
+The recursive argument (\verb|z (Var_g v)|), in particular \verb|Var_g v|,
+is not a subexpression of (\verb|Lam_g z|).  Thus the recursive call to
+\verb|show'| may not terminate. This function terminated only because
+the embedded function \verb|z| was well behaved, and the argument we passed
+to \verb|z|, (\verb|Var_g v|), was well behaved. If we had applied \verb|z|
+to the expression (\verb|Lam_g (\x->x)|) in place of \verb|Var_g v|,
+or \verb|z| itself had been divergent, the recursive call would have diverged.
+If \verb|z| is divergent, then obviously \verb|show' (z x)| diverges for
+all \verb|x|. More interestingly, suppose \verb|z| is not divergent
+(perhaps something as simple as the identity function) and \verb|show'|
+was written to recurse on (\verb|Lam_g (\x->x)|), then what happens?
+\begin{verbatim}
+show' (Lam_g z) (v:  vs) = "(\\"++v++"->"
+                              ++ show' (z (Lam_g (\x->x)) vs ++")"
+\end{verbatim}
+The function is no longer total.  To format (\verb|z (Lam_g (\x->x))|)
+in the recursive call, it loops back to the \verb|Lam_g| case again,
+unless \verb|z| is a function that ignores its argument.
+This will form an infinite recursion, since this altered \verb|show'| forms
+yet another new \verb|Lam_g (\x->x)| expression and keeps on recursing.
+
+
+\subsubsection{A Mendler-style solution for closed HOAS}
+\label{sec:bg:showHOAS:msfcata}
+
+Our exploration of the code in Figure \ref{fig:HOASshow} illustrates
+three potential problems with the general recursive approach.
+\begin{itemize}
+\item The embedded functions may not terminate.
+\item In a recursive call, the arguments to an embedded function
+may introduce a constructor with another embedded function, leading to
+a non terminating cycle.
+\item We got lucky, in that the answer we required was a \verb|String|, and
+we happened to have a constructor \verb|Var_g :: String -> Exp_g|.
+In general we may not be so lucky.
+\end{itemize}
+
+In Figure \ref{fig:HOASshow}, we defined \verb|Exp_g| in anticipation of
+our need to write a function \verb|showExp_g| \verb|::| \verb|Exp_g -> String|,
+by including a constructor \verb|Var_g :: String -> Exp_g|.
+Had we anticipated another function \verb|f:: Exp_g -> Int|
+we would have needed another  constructor \verb|C :: Int -> Exp_g|.
+Clearly we need a better solution.  The solution is to generalize the kind of
+the datatype from \verb|Exp_g :: *| to \verb|Exp :: * -> *|, and add
+a universal inverse.
+\begin{verbatim}
+data Exp a   =  App (Exp a) (Exp a)
+             |  Lam (Exp a -> Exp a)
+             |  Inv a
+
+countLam:: Exp Int -> Int   
+countLam (Inv n) = n
+countLam (App x y) = countLam x + countLam y
+countLam (Lam f) = countLam(f (Inv 1))
+\end{verbatim}
+Generalizing from \verb|countLam| we can define a function from \verb|Exp|
+to any type. How do we lift this kind of solution to the Mendler-style?
+Fegaras and Sheard\cite{FegShe96} proposed moving the general inverse from
+the base type to the datatype fixpoint. Later this approach was refined by
+Washburn and Weirich\cite{bgb} to remove the junk introduced by
+that augmentation (i.e. things like \verb|App (Inv 1) (Inv 1)|).
+
+We use the same inverse augmented datatype fixpoint appearing in
+Washburn and Weirich\cite{bgb}. 
+Here, we call it \verb|Rec0| (see Figure \ref{fig:datafix}).
+The inverse augmented datatype fixpoint \verb|Rec0| is similar to
+the standard datatype fixpoint \verb|Mu0|.
+The difference is that \verb|Rec0| has an additional type index \verb|a|
+and an additional data constructor \verb|Inverse0 :: a -> Rec0 a i|,
+corresponding to the universal inverse.
+The data constructor \verb|Roll0| and the projection function \verb|unRoll0|
+correspond to \verb|In0| and \verb|out0| of the normal fixpoint \verb|Mu0|.
+As usual we restrict the use of \verb|unRoll0|, or pattern matching against
+\verb|Roll0|.
+
+We illustrate this in the second part of Figure \ref{fig:HOASshow}.
+As usual, we define \verb|Exp' a| as a fixpoint of the base datatype \verb|ExpF|
+and define shorthand constructors \verb|lam| and \verb|app|.
+Using the shorthand constructor functions,
+we can define some lambda expressions: %% as follows:
+\begin{verbatim}
+k    = lam  (\x -> lam (\y -> x))
+s    = lam  (\x -> lam (\y -> lam (\z -> app x z `app` app y z)))
+skk  = app s k `app` k
+w    = lam  (\x -> x `app` x)
+\end{verbatim}
+However, there is another way to construct \verb|Exp'| values that is
+problematic. Using the constructor \verb|Inverse0|, we can turn values of
+arbitrary type \verb|t| into values of \verb|Exp' t|.  For example, 
+|Inverse0 True :: Exp' Bool|. This value is junk, since it does 
+not coorespond to any lambda term. By design, we wish to hide \verb|Inverse0|
+behind an abstraction boundary. We should never allow the user to construct
+expressions such as \verb|Inverse0 True|, except for using them as placeholders
+for intermediate results during computation.
+
+
+We can distinguish pure expressions that are inverse-free
+from expressions that contain inverse values by exploiting parametricity.
+The expressions that do not contain inverses have a fully polymorphic type.
+For instance, \verb|k|, \verb|s|, \verb|skk| and \verb|w| are of type (\verb|Exp' a|).
+The expressions that contain \verb|Inverse0| have more specific type
+(e.g., \verb|(Inverse0 True) :: (Exp' Bool)|).
+Therefore, we define the type of \verb|Exp| to be \verb|forall a . Exp' a|.
+Then, expressions of type \verb|Exp| are guaranteed to be be inverse-free.
+Using parametricity to sort out junk introduced by the inverse is the key idea
+of Washburn and Weirich\cite{bgb}, and the inverse augmented fixpoint
+\verb|Rec0| is the key idea of Fegaras and Sheard\cite{FegShe96}.
+The contribution we make in this work is putting together these ideas
+in Mender-style setting.  By doing so, we are able define recursion combinators
+over types with negative occurrences, which have well understood
+termination properties enforced by parametricity. We define 4 such combinators:
+\verb|msfcata0|, \verb|msfhist0|, \verb|msfcata1|, and \verb|msfhist1|. 
+The combinator \verb|msfcata0| is the simplest, to define it
+we generalize over \verb|mcata0| by using the same device we used earlier,
+we abstract the combining function over an additional argument,
+this time an abstract inverse.
+
+\begin{itemize}
+  \item The combining function \verb|phi| becomes a function of 3 arguments.
+        An abstract inverse, an 
+        abstract recursive caller, and a base structure.
+\begin{verbatim}
+  msfcata0 phi (Roll0 x)    = phi Inverse0 (msfcata0 phi)  x
+  msfcata0 phi (Inverse0 z) = z
+\end{verbatim}
+  \item For inverse values, return the value inside \verb|Inverse0| as it is.
+
+  \item We use rank-N polymorphism to insist that 
+        the abstract inverse function, with type (\verb|a -> r a|),
+        the abstract recursive caller function, with type (\verb|r a -> a|), and
+        the base structure, with type (\verb|f (r a)|), only work
+        over an abstract type constructor, denoted by (\verb|r|).
+\begin{verbatim}
+msfcata0 :: (forall r. (a -> r a) ->
+                       (r a -> a) ->
+                       f (r a)    -> a) -> (forall a. Rec0 f a) -> a
+\end{verbatim}
+  \item Note, the abstract recursive type \verb|r| is parameterized by
+        the answer type \verb|a| because the augmented datatype fixpoint \verb|Rec0|
+        is parameterized by the answer type \verb|a|.
+
+        Also, note, the second argument of \verb|msfcata0|, the object being
+        operated on, has the rank-N type
+        \verb|(forall a . Rec0 f a)|, insisting the input value to be inverse-free
+        by enforcing \verb|a| to be abstract.
+\end{itemize}
+
+In Figure \ref{fig:HOASshow}, using \verb|msfcata0|, it is easy to define \verb|showExp|,
+the string formatting function for \verb|Exp|, as in Figure \ref{fig:HOASshow}.
+The \verb|App| case is similar to the general recursive implementation.
+The body of \verb|phi| is almost textually identical to the body of \verb|show'|
+in the general recursive solution, except we use the inverse expression
+\verb|inv (const v)| to create an abstract \verb|r| value to pass to
+the embedded function \verb|z|.  Note, \verb|const v| plays exactly
+the same roll as \verb|(Var_g v)| in \verb|show'|.
+
+Does \verb|msfcata0| really guarantee termination?  To prove this we need to
+address the first two of the three potential problems described at
+the beginning of \S\ref{sec:bg:showHOAS:msfcata}.  The first problem
+(embedded functions may be partial) is addressed using logicality analysis.
+The second problem (cyclic use of constructors as arguments to
+embedded functions) is addressed by the same argument we used
+in \S\ref{sec:bg:neg}.  The abstract type of the inverse
+doesn't allow it to be applied to constructors, they're not abstract enough. 
+Just as we couldn't define \verb|p_m| (in \S\ref{sec:bg:neg})
+we can't apply \verb|z| to things like {\small (\verb|Lam (\ x -> x)|)}.
+
+We provide an embedding of \verb|msfcata0|
+into the strongly normalizing language $F_\omega$.
+This constitutes a proof that \verb|msfcata| terminates for all
+inductive datatypes, even those with negative occurrences.
+
+\begin{figure}
+\begin{verbatim}
+type Rec0 f r a = (r a) :+: (((r a -> a) -> f (r a) -> a) -> a)
+
+newtype Id x = Id { unId :: x }
+
+msfcata  ::  (forall r . (a -> r a) -> (r a -> a) -> f (r a) -> a)
+         ->  (forall a . Rec0 f Id a) -> a
+msfcata phi x = caseSum x unId (\ f -> f (phi Id))
+
+lift :: ((Id a -> a) -> f (Id a) -> a) -> Rec0 f Id a -> Id a
+lift h x = caseSum x id (\ x -> Id(x h))
+\end{verbatim}
+\caption{$F_\omega$ encoding of |Rec0| and |msfcata0|}
+\label{fig:proofsf}
+\end{figure}
+
+\begin{figure}
+\begin{verbatim}
+type a :+: b =  forall c . (a ->  c) ->  (b -> c) ->  c
+inL :: a -> (a:+:b)
+inL a = \ f g -> f a
+inR :: b -> (a:+:b)
+inR b = \ f g -> g b
+caseSum :: (a:+:b) -> (a -> c) -> (b -> c) -> c
+caseSum x f g = x f g
+\end{verbatim}
+\caption{$F_\omega$ encoding of the sum type}
+\label{fig:sumdef}
+\end{figure}
+
+\begin{figure}
+\begin{verbatim}
+data ExpF x = App x x | Lam (x -> x)
+type Exp' a = Rec0 ExpF Id a
+type Exp = forall a . Exp' a
+app :: Exp' a -> Exp' a -> Exp' a
+app x y = inR (\h -> h unId (App (lift h x) (lift h y)))
+lam :: (Exp' a -> Exp' a) -> Exp' a
+lam f = inR (\h -> h unId (Lam (\x -> lift h(f(inL x))) ))
+
+showExp:: Exp -> String
+showExp e = msfcata phi e vars where
+  phi inv show' (App x y)  = \vs      ->
+                "("++ show' x vs ++" "++ show' y vs ++")"
+  phi inv show' (Lam z)    = \(v:vs)  ->
+                "(\\"++v++"->"++ show'(z (inv (const v))) vs ++")"
+\end{verbatim}
+
+\caption{HOAS string formatting example in $F_\omega$.}
+\label{fig:HOASshowFw}
+\end{figure}
+
+Figure \ref{fig:proofsf} is the $F_\omega$ encoding of the inverse augmented datatype
+\verb|Rec0| and its catamorphism \verb|msfcata0|.  We use the sum type to encode \verb|Rec0|
+since it consi]sts of two constructors, one for the inverse and the other for
+the recursion.  The newtype |Id| wraps answer values inside the inverse.
+The catamorphism combinator \verb|msfcata0| unwraps
+the result (\verb|unIn|) when \verb|x| is an inverse.  Otherwise, |msfcata0| runs the
+combining function \verb|phi| over the recursive structure \verb|(\f->f(phi Id))|.
+The utility function \verb|lift| abstracts a common pattern, useful
+when we define the shorthand constructors (\verb|lam| and \verb|app|).
+
+Figure \ref{fig:sumdef} is the $F_\omega$ encoding of the sum type \verb|(:+:)|
+and its constructors (or injection functions) \verb|inL| and \verb|inR|.
+The case expression \verb|caseSum| for the sum type is just binary function
+application. In the $F_\omega$ encoding, they could be omitted
+(i.e., \verb|caseSum x f g| simplifies to \verb|x f g|).  But, we choose to write
+in terms of \verb|caseSum| to make the definitions easier to read.
+
+In Figure \ref{fig:HOASshowFw}, we define both an inductive datatype for HOAS (\verb|Exp|), and the string formatting function
+(\verb|showExp|),
+with these $F_\omega$ encodings
+We can define simple expressions using the shorthand constructors and print out
+those expressions using \verb|showExp|.  For example,
+\begin{quote}\noindent
+$>$ \verb|putStrLn (showExp (lam(\x->lam(\y->x))))|\\
+\verb|(\a->(\b->a))|
+\end{quote}
+
+
+Just as we can have the catamorphism \verb|mcata1| for indexed datatypes
+defined with \verb|Mu1|, we can define \verb|msfcat1| similarly that works
+on \verb|Rec1|.
+
+\subsection{More Mendler-style recursion combinators} \label{sec:bg:more}
+There are other variants of Mendler-style recursion combinators.
+We introduce two of them here: a recursion combinator that recurses
+on multiple arguments simultaneously (\S\ref{sec:bg:more:mmult})
+and a recursion combinator that are able to write constant time predecessor functions (\S\ref{sec:bg:more:crawei}).
+They are interesting because the recursion patterns captured by
+these recursion combinators are also subsets of what structural recursion
+can handle, assuming positivity on datatypes.
+
+\subsubsection{Multimorphism} \label{sec:bg:more:mmult}
+Multimirphisms are the recursion patterns
+which recurse on multiple arguments simultaneously.
+Here we focus on the case of two arguments of regular datatypes.
+The definition of the multimorphism combinator for
+two regular datatype arguments is:
+\begin{verbatim}
+mmult0 :: (forall r1 r2 . (r1 -> r2 -> a) -> f1 r1 -> f2 r2 -> a)
+       -> Mu0 f1 -> Mu0 f2 -> a
+mmult0 f (In0 x1) (In0 x2) = f (mmult0 f) x1 x2
+\end{verbatim}
+The termination behavior of \verb|mmult0| is not well studied.
+It seems quite certain that \verb|mmult0| ensures termination
+for positive datatypes, but we do not know whether \verb|mmult0|
+will also ensure termination for negative datatypes.
+
+Some typical examples well described by the multimorphism
+combinator are the functions like \verb|zip| and \verb|take|.
+The following are the \verb|zip| and \verb|take| functions
+defined with general recursion:
+\begin{verbatim}
+zip :: List a -> List b -> List (a,b)
+zip Nil         Nil         = Nil
+zip Nil         (Cons y ys) = Nil
+zip (Cons x xs) Nil         = Nil
+zip (Cons x xs) (Cons y ys) = Cons (x,y) (zip xs ys)
+
+take :: Nat -> List a -> List a
+take Zero     Nil         = Nil
+take Zero     (Cons x xs) = Nil
+take (Succ n) Nil         = Nil
+take (Succ n) (Cons x xs) = Cons n (take n xs)
+\end{verbatim}
+We can write the functions above in the Mendler-style
+using \verb|mmult0| as follows:
+\begin{verbatim}
+zip_m = mmult0 phi where
+  phi N        N        = nil
+  phi N        (C y ys) = nil
+  phi (C x xs) N        = nil
+  phi (C x xs) (C y xs) = cons (x,y) (zip xs ys)
+
+take_m = mmult0 phi where
+  phi take Z     N        = nil
+  phi take Z     (C x xs) = nil
+  phi take (S n) N        = nil
+  phi take (S n) (C x xs) = cons x (take x xs)
+\end{verbatim}
+
+\subsubsection{A variant of the Mendler-style catamorphism}
+\label{sec:bg:more:crawei}
+
+One limitation of the catamorphism combinators, both the conventional
+and the Mendler-style, is that we cannot write constant time predecessor-like
+functions (\eg predecessor of a natural number, tail of a list, and
+one of the childrens of a tree), just as we cannot write constant time
+predecessor functions for the Church numerals in the lambda calculus.
+We must iterate through the structure to decompose the recursive structure
+just to rebuild the predecessor.  Let me demonstrate this using by using
+\verb|foldr| to calculate the tail of a list in a Haskell interactive
+environment (recall that the conventional catamorphism is a generalization
+of folds):
+\begin{verbatim}
+Prelude> :t foldr (\x (l1,l2) -> (x:l1,l1) ) ([],[])
+foldr (\x (l1,l2) -> (x:l1,l1) ) ([],[]) :: [a] -> ([a], [a])
+
+Prelude> foldr (\x (xs,_) -> (x:xs,xs)) ([],[]) [1,2,3,4]
+([1,2,3,4],[2,3,4])
+\end{verbatim}
+The answer type we get is the pair consisting of
+the reconstructed list in its first elements and
+the tail of that list.  To get the result pair above,
+it needs linear time proportional to the length of the input list
+since it is completely reconstructed again starting from \verb|([],[])|.
+In case of the conventional catamorphism, the recursion pattern hard-wired
+by \verb|fmap| enforces this behavior.\footnote{
+One approach to make it possible to return the predecessor in
+the conventional setting is to view a datatype as as a bialgebra,
+a pair of algebra and coalgebra\cite{Erw98}. }
+In case of the Mendler-style
+catamorphism, we cannot return the predecessor-like subcomponent in
+the \verb|phi| function definition because its type is abstract
+- the abstract type \verb|r| cannot be unified with any specific answer type.
+
+Crary and Weirich\cite{CraWei99} defined a variant of Mendler-style
+catamorphism as a primitive construct (the \verb|pr| recursion operator)
+in the language LX, which is an intermediate language supporting
+flexible type analysis.  The typing rule for this recursion operator
+allows the answer type to contain free ocurrences of the abstract type,
+and the typing rule substitutes the abstract type with its intended
+specific type, that is the fixpoint of the base, with the answer type.
+For example, one define the function \verb|tailSafe|, which returns nothing
+for the empty list and just the tail for non-empty lists in constant time,
+using the \verb|pr| operator as follows:
+\begin{verbatim}
+data L p r = N | C p r
+type List = Mu0 (L p)
+nil       = In0 N
+cons x xs = In0 (C x xs)
+
+tailSafe :: List p -> Maybe (List p)
+tailSafe = pr phi
+  where
+    phi :: L p r -> r -> Maybe r
+    phi N        = Nothing
+    phi (C x xs) = Just xs
+\end{verbatim}
+The typing rule for \verb|pr| substitutes the \verb|r| with \verb|(List p)|
+in \verb|Maybe r|. So, the result type it unifies with \verb|Maybe (List p)|.
+In the language LX, they assume that \verb|pr| only operate on
+positive datatypes. It has not been studied whether an operator like \verb|pr|
+could ensure termination for negative datatypes in general.
+
+% \newpage
+\section{Research plan} \label{sec:plan}
+Here, I discuss some proposed research directions and preliminary thoughts
+related to the goals we discussed earlier in \S\ref{sec:intro:ps}.
+I repeat those goals here:\Goals
+
+
+Before going into details, I want to note that the example program codes
+appearing in this section are pseudo codes. It is neither the Haskell syntax
+(which we used in \S\ref{sec:bg}) nor a syntax of any concrete
+dependently typed language.
+
+\subsection{Extending Mendler-stlye recursion combinators to dependent types}
+\label{sec:plan:depty}
+Consider the following dependently typed program
+which shows that every natural number is either even or odd:
+\begin{verbatim}
+data Nat where              -- inductive definition of natrual numbers
+  Zero : Nat
+  Succ : Nat -> Nat
+
+data Either (a:Type) (b:Type) where   -- the sum type
+  Left  : a -> Either a b
+  Right : b -> Either a b
+
+data Even (n:Nat) where               -- inductive definition of
+  EvenO : Even Zero                   -- the evenness property,
+  EvenS : Odd n -> Even (Succ n)      -- mutually recursive with Odd
+
+data Odd (n:Nat) where                -- inductive definition of
+  OddS : Even n -> Odd (Succ n)       -- the oddness property
+
+evenOrOdd : (n:Nat) -> Either (Even n) (Odd n)
+evenOrOdd Zero     = Left CZero
+evenOrOdd (Succ n) = case evenOrOdd n of
+                       Left p  -> Right (OddS p)
+                       Right p -> Left (EvenS p)
+\end{verbatim}
+The function \verb|evenOrOdd| takes a natural number \verb|n| and
+returns either a proof that \verb|n| is even or a proof that \verb|n| is odd.
+Except for the dependency using the value \verb|n| in the return type,
+the recursion pattern has the form of a catamorphism.
+It is an open question whether the Mendler-style catamorphism naturally extends
+to dependent types as it does to indexed types.
+Assuming that we were able write a dependent version of the Mendler-style
+catamorphism, say \verb|mcataD|, then we would be able to write
+\verb|evenOrOdd| in terms of \verb|mcataD| as follows:
+\begin{verbatim}
+data N r = Z | S r
+type Nat = Mu0 N
+
+evenOrOdd = mcataD phi where
+  phi eoo Z     = Left CZero
+  phi eoo (S n) = case eoo n of
+                    Left p  -> Right (OddS p)
+                    Right p -> Left (EvenS p)
+\end{verbatim}
+Recall that, in Mendler-style, we encode a datatypes (\eg \verb|Nat|)
+as a fixpoint (\eg \verb|Mu0|) of base functor (\eg \verb|N|).
+
+The main problem here is that the Mendler-style recursion combinators
+use parametricity to abstract the type of the argument value, but
+the return type of the function depends on the argument value.
+In the second equation of the \verb|phi| function above,
+\verb|(S n) :: N r|, and therefore \verb|n :: r|, where \verb|r|
+is abstract. But, what should be the type of the abstract recursive caller
+\verb|eoo|? It would look something like \texttt{
+eoo :: (n:r) -> Either (Even n) (Odd n)}.
+We can already see that this does not type check since
+\verb|Even :: Nat -> Type| and \verb|Odd :: Nat -> Type|
+but \verb|n :: r|.  Recall, we cannot unify \verb|r| with
+any specific type.  Thus \verb|(Even n)| and \verb|(Odd n)|
+are ill-typed (or ill-kinded).
+We see that it is hard to use a value without unveiling the details of its type.
+This problem is analogous to the problem of using abstract types for
+parameterized modules. We want to encode the type of modules to be
+abstract types, but we also want to know certain instances of
+the parameterized modules have share same parameter since we want
+a reasonable separate compilation scheme. Translucent types[TODO cite]
+were suggested to solve this problem when type checking modules.
+Here, we also need a translucency in the sense that we want the type of
+the arguemnt to be abstract when implementing the runtime behavior
+in the function definition to limit the dangerous recursion, but
+we want to know the type of the argument in the type signature of
+the function due to the true value dependency on the argument.
+
+My proposed attempt here tries to implement translucency using
+the features of the Trellys language. We do not know yet whether
+this is possible, or we need to add new feature to support
+translucency.  My preliminary thoughts on the type signature
+for the dependent Mendler-style catamorphism is the following:
+\begin{verbatim}
+mcataD : (forall (r:Type) . [tr: r->Mu0 f] -> [tfr: f r->Mu0 f]
+                         -> [pr: tr = id ] -> [pfr: tfr = In0 ]
+                         -> ((z:r) -> a (tr z)) -> (y:f r) -> a (tfr y))
+        -> (x:Mu f) -> a x
+\end{verbatim}
+This dependent version of the Mendler-stlye catamorphism combinator
+has four additional arguments for the \verb|phi| function
+(\verb|tr|, \verb|tfr|, \verb|pr|, and \verb|pfr|),
+when compared to \verb|mcata0|.
+Note, \verb|pr| has an equality proof involving \verb|tr| and
+\verb|prf| has an equality proof involving \verb|tfr|.
+
+Here, we use an interesting feature found in the Trellys language:
+we require those four arguments to be \emph{erasable agruments}
+by annotating them with square brackets. Erasable arguments can only be
+used for type checking purposes, but have no effect on the runtime behavior
+of the function.  The first two arguments,
+\verb|tr| and \verb|tfr|, are type casting functions that turn the abstract
+types \verb|r| and \verb|f r| into a concrete inductive datatype \verb|Mu0 f|.
+Since these type casting functions (\verb|tr| and \verb|tfr|) and
+their equality property proofs (\verb|pr| and \verb|pfr|) break parametricity
+of \verb|r|, we should limit their use in the runtime definition of
+the \verb|phi| function, but only allow their use in the type signatures
+and type casting purposes.
+
+Another interesting feature of Trellys we require in this proposed approach
+is the \emph{heterogeneous equality} in the equality types of \verb|pr| and
+\verb|pfr|.
+Note, the left- and right-hand sides of \verb|tr = id| and \verb|tfr = In0|
+have different types (e.g., \texttt{tfr:f r->Mu0 f} and
+\texttt{In0:f (Mu0 f)->Mu0 f}). 
+These heterogeneous equality makes it possible to type check the
+\verb|evenOrOdd| example.  Consider the case branch
+\verb|Left p -> Right (OddS p)|.  Since \verb|eoo n : a (tr n)|,
+\texttt{Left p : a (tr n)} and \verb|Right (OddS p) : a (In0 (S (tr n)))|.
+Since the final return type of \verb|phi| must be must be \verb|a (trf (S n)))|,
+we should show that \texttt{a (In0 (S (tr n))) = a (trf (S n)))}.
+Since \verb|tr = id|, the left-hand side is equivalent to \verb|a (In0 (S n))|.
+Since \verb|trf = In0|, the right-hand side is also equivalent to
+\verb|a (In0 (S n))|.
+
+% TODO list the types above like a table more visually and be done
+
+Note, the tentative approach discussed above is only a preliminary thought
+(which may or may not work) and we might end up with a better approach.
+I started with this tentative approach to understand the problem better,
+but not expecting this approach leads to complete success. The advantage
+of using existing language features, in contrast to inventing new features
+or language constructs, is that we do not need to worry about breaking the
+soundness and consistency of the type system, provided that the properties
+of the language features we rely on are well-studied.
+
+Once I get the Mendler-style catamorphism working for dependent types,
+I expect other recursion combinators could be defined similarly.
+
+\subsection{Organizing the hierarchy of the Mendler-style recursion combinators}
+We have organized the hierarchy of the Mendler-style recursion combinators,
+which we have been studying.  We organized them by their recursion patterns,
+termination conditions (\ie whether it requires positivity),
+subsumption relation (\eg \verb|mcata0| can be define in terms of \verb|mhist0|),
+and kinds of datatypes they operate on.
+We can summarize this as the following table:
+\begin{center}
+\begin{tabular}{llll}
+       & positive & negative & example\\\hline
+\verb|cata| & proof \cite{hagino87phd} & undefined & \verb|len| \S\ref{sec:bg:cata} \\
+\verb|mcata0| & proof: Figure \ref{fig:proof} & proof: Figure \ref{fig:proof} & \verb|len| \S\ref{sec:bg:mcata} \\
+\verb|mhist0| & proof: see \cite{vene00phd} & no & \verb|fib| Figure \ref{fig:fib} \\
+\verb|msfcata0| & proof: in \S\ref{sec:bg:showHOAS} & proof: in \S\ref{sec:bg:showHOAS} & \verb|showExp| Figure \ref{fig:HOASshow} \\
+\verb|msfhist0| & argument: \S\ref{sec:bg:mhist} & no & \verb|loopFoo| Figure \ref{fig:LoopHisto} \\
+\verb|mcata1| & proof: see \cite{AbeMatUus05} & proof: see \cite{AbeMatUus05} & \verb|bsum| Figure \ref{fig:bsum} \\
+         & & & \verb|extev| Figure \ref{fig:mutrec} \\
+\verb|mhist1| & ? (likely) & no & \verb|switch2| Figure \ref{fig:vec} \\
+\verb|msfcata1| &  similar to \verb|msfcata0|  & similar to \verb|msfcata0| & \\
+\verb|msfhist1| & ? (likely) &  no &  \\
+\end{tabular}
+\end{center}
+
+I will do the same thing for the recursion combinators, which are to be newly
+discovered, including the version of Mendler-style recursion combinators
+generalized to dependent types.
+
+\subsection{Identifying which language features interact smoothly
+and which features conflict against the Mendler-style approach}
+
+Here, I list preliminary thoughts on how some of the feature of
+dependently typed languages would interact with the Mendler-style approach.
+
+\paragraph{Erasability}: A program fragment is erasable when it is only used
+for type checking, but not needed to compute runtime values.  In Trellys, we
+annotate the function arguments whether they should be considered as erasable,
+so that the type systems can check that erasable arguments are only used in
+erasable terms. We have already seen this concept when we discussed
+the first goal of extending the Mendler-style catamorphsim to dependent types.
+I believe this feature will work well with the Mendler-style approach,
+and I even attempt to rely on this feature to encode the dependently typed
+version of the Mendler-style recursion combinators.
+
+\paragraph{Logicality}: A program fragment is logical when it can be
+interpreted as a logical proof.  This is a a characteristic feature in Trellys,
+that can distinguish and track program fragments that need to be interpreted
+as logic and that are not.  Logicality is not usually found in other
+dependently typed languages.  Or, we can view that most dependently
+typed languages makes all-or-nothing design decision for logicality:
+the general purpose language aimed at programming give up logicality,
+while the proof assistants require logicality everywhere.
+The Trellys language aims for both by selectively requiring logicality on
+the program fragments where we need to interpret them logically.
+Similar to the erasability annotation, the logicality is also
+annotated at the type signature for variable bindings in Trellys.
+We believe this feature will also work well and helpful to
+the Mendler-style approach, since functions that have logicality
+are guaranteed to be total.
+
+\paragraph{Equality types} are types interpreted as propositions stating
+that two terms are equal.  For example, \verb|1+x = x+1| is an equality type.
+When equality types are present in the typing context,
+it serves as a rewriting rule for types.
+Equality types can be used in type casting (or conversion).
+For example, consider the following example (which is rather degenerate):
+\begin{verbatim}
+silly : (p: 1+x = x+1) -> Vec (1+x) -> Vec (x+1)
+silly p vec = cast vec by p
+\end{verbatim}
+The partial application \verb|silly p| is effectively
+an identity function on non-empty vectors, but the
+second argument (\verb|Vec (1+x)|) and the result (\verb|Vec (x+1)|)
+have slightly different types.  Since the argument \verb|p| has
+the equality \verb|1+x = x+1|, we have the equality type \verb|1+x = x+1|
+in the typing context of the function body.
+Therefore, we can replace \verb|(1+x)| with \verb|(x+1)|.
+The syntax \verb|cast ... by ...| is a syntax in Trellys
+for type casting by using the equality proof.
+
+One difficulty the equality type introduces in the Mendler-style approach
+is that it becomes possible to have multiple datatypes definitions, which are
+effectively isomorphic. For example, the following are
+two effectively isomorphic definitions of vectors:
+\begin{center}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+data Vec (p:Type) (n:Nat) where
+  Nil  : Vec Z
+  Cons : p ->
+         (m:Nat) -> Vec p m ->
+         Vec p (S m)
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+data Vec (p:Type) (n:Nat) where
+  Nil  : n=0 -> Vec p n
+  Cons : p ->
+         (m:Nat) -> n=S m -> Vec p m ->
+         Vec p n
+\end{verbatim}
+\end{minipage}
+\end{center}
+The definition on the left is more succinct and reads more naturally.
+Nevertheless, the definition on the right has its advantages.
+The right becomes a more natural form when type checking a case branch
+over vectors, since the return type of both the constructors are syntactically
+identical (\verb|Vec p n|).
+
+
+
+Let us take a look at another example, which is more degenerate
+but illustrates the issue of interaction between with Mendler-style
+approach more clearly.  The following are two datatypes that are
+effectively equivalent definitions of plain lists:
+\begin{center}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+data List (p:Type) where
+  Nil  : List p
+  Cons : p -> List p -> List p
+\end{verbatim}
+\end{minipage}
+\begin{minipage}{.49\linewidth}
+\begin{verbatim}
+data List (p:Type) where
+  Nil  : (t:Type) -> t=p -> List t
+  Cons : (t:Type) -> t=p ->
+         p -> List t -> List p
+\end{verbatim}
+\end{minipage}
+\end{center}
+In the canonical definition on the left, all the occurrences of
+the inductive datatype \verb|List| have the same type argument \verb|p|.
+Recall that type arguments like \verb|p| are called a type parameters,
+and datatypes like \verb|List| which only have type parameters are called
+regular datatypes.
+In the definition on the right, \verb|List| does not look like
+a regular datatype syntactically, since \verb|List t| and \verb|List p|
+are syntactically different.  However, \verb|List t| and \verb|List p|
+are semantically equivalent since \verb|t=p|.
+This raises us the questions whether we should consider
+the type argument of \verb|List| on the right as a parameter or an index,
+and whether we should use \verb|Mu0| or \verb|Mu1| to encode the definition
+on the right.
+
+We can ensure termination regardless of whether we the fixpoint and the
+recursion combinator for higher-rank kinds (\eg \verb|Mu1| and \verb|mcata1|)
+or the fixpoint and the recursion combinator for lower-rank kinds
+(\eg \verb|Mu0| and \verb|mcata0|), since the former subsumes
+the behavior of the latter. However, there are other good reasons that
+makes me think that this is a concern.
+Firstly, the types get more verbose as we move up to the higher-kinds.
+It will be less pleasant to write the overly verbose type signatures
+when you know that it does not have to be that verbose.
+Secondly, some implementations may take the definitions with less
+equality types in the surface language and translate them into
+a version with more equality types in the core language. It does not
+seem to be the right design that the translation can bump up the rank
+of the kind for the fixpoint and the base that encodes a semantically
+the datatype. It is common to conceptualize such frontend translations
+to be type preserving.  When we allow different fixpoints before and
+after the translation, we should develop a theory of type equivalence
+between two different set of fixpoints and bases in order to talk about
+type preserving translation.
+
+\paragraph{Large eliminations} are function applications that produce types
+from values.  Consider the function \verb|mkSum| whose type signature is
+\texttt{mkSum : (n:Nat) -> nAryFun n Nat}.  This function is a variable-arity
+function which sums up \verb|n| natural numbers following the first argument
+\verb|n|.  That is, the type of this function instantiates as follows:
+\begin{verbatim}
+mkSum 0 :: Nat
+mkSum 1 :: Nat -> Nat
+mkSum 2 :: Nat -> Nat -> Nat
+...
+\end{verbatim}
+We can define the function \verb|nAryFun| used in the type signature of
+\verb|mkSum| as follows:
+\begin{verbatim}
+nAryFun : (n:Nat) -> (ty:Type) -> Type
+nAryFun Z     ty = ty
+nAryFun (S n) ty = ty -> nAryFun n ty 
+\end{verbatim}
+Note, this function computes a type from two arguments,
+where the first argument is a natural number value.
+Thus, \texttt{nAryFun n Nat} appearing in the type of \verb|mkSum|
+is a large elimination, since its result (which is a type) depends
+on \verb|n| (which is a value).
+
+It is known that large eliminations make termination proofs much more difficult.
+I will study whether uses of large elimination might make it more difficult
+to apply the Mendler-style recursion combinators.
+
+
+\bibliographystyle{plain}
+\bibliography{main}
+
+\end{document}

@@ -1,0 +1,49 @@
+\documentclass[letterpaper,12pt]{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{semantic}
+\usepackage[backref]{hyperref}
+\usepackage[all]{xy}
+\usepackage[sort&compress,square,comma,numbers,longnamesfirst]{natbib}
+\usepackage{xcolor}
+\usepackage{url}
+
+\newcommand{\Fw}[0]{\ensuremath{\mathsf{F}_{\!\omega}}}
+% \newcommand{\SystemF}[0]{System \ensuremath{\mathsf{F}}}
+\newcommand{\F}[0]{\ensuremath{\mathsf{F}}}
+\newcommand{\eg}[0]{e.g., }
+\newcommand{\ie}[0]{i.e., }
+\newcommand{\aka}[0]{a.k.a. }
+
+
+\newcommand{\ts}[1]{\textcolor{purple}{\textbf{[#1 ---TS]}}}
+
+\newcommand{\defeq}[0]{\ensuremath{\stackrel{\text{def}}{=}}}
+
+\begin{document}
+
+\title{Inductiveness of types and Normalization of terms}
+\author{Ki Yung Ahn}
+\maketitle
+
+\input{intro}
+
+\input{background}
+
+\input{prelimwork}
+
+\input{plan}
+
+\section*{Acknowledgements}
+Bob Harper's and Hugo Herbelin's OPLSS 2011 lectures\footnote{
+\url{http://www.cs.uoregon.edu/Activities/summerschool/summer11/curriculum.html}
+} and
+Alexandre Miquel's Types summer school 2005 lecture notes\footnote{
+\url{http://www.cse.chalmers.se/research/group/logic/Types/tutorials.html}
+} has been a great guide in writing background section.
+
+\bibliographystyle{plainnat}
+\bibliography{main}
+
+\end{document}

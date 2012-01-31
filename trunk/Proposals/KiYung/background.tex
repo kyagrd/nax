@@ -1,0 +1,683 @@
+\section{Background: Recursive types, Inductive types, and Normalization}
+\label{sec:bg}
+The literature which studies recursive types and inductive types can be
+categorized into two different paradigms: the recursive type paradigm
+(types in programs), and the inductive type paradigm (types in logic).
+
+The recursive type paradigm is a syntactic approach. It considers any type
+definition, constructed using a well formed syntax, as defining a valid type.
+The recursive type paradigm originated in the programming language community,
+where the primary interest was type safety. From this perspective, types are
+viewed as safety properties to be preserved throughout the execution of
+programs, which are possibly non-terminating. We discuss this perspective
+on recursive types in \S\ref{ssec:rectype}.
+
+The inductive type paradigm is a semantic approach. It admits only the types
+that have simple and well-behaved interpretations (\eg sets). The types are
+built up from basic types, whose interpretations are trivial (\eg finite sets),
+using well-understood connectives and induction principles, so that
+all definable types have well-behaved interpretations by construction.
+The inductive type paradigm originated in the constructive mathematics community, where the primary interest was logical consistency.
+In this perspective, types are viewed as propositions inhabited by proofs.
+A proof is a normal form which has the proposition as its type.
+Thus, only the normalizing programs, which produce normal forms interpreted
+as sound proofs, can be well typed. We discuss this perspective of
+inductive types in \S\ref{ssec:indtype}.
+
+There exist certain classes of recursive types, which cannot be admitted as
+valid types in the inductive type paradigm. One would naturally question
+``when do recursive types coincide with inductive types?'' And, ``how should
+recursive types be treated when they do not correspond to inductive types?''
+
+The literature attempting to answer these questions is rich, and with many more
+questions than answers, remains an area of active research. This document
+discusses the relationship between recursive types and inductive types
+in \S\ref{ssec:recVSind}, and exhibits some examples of recursive types
+that are not inductive types in \S\ref{ssec:nonindrec}.
+The general scope of the proposed thesis is to answer questions about how
+and when can programs involving recursive types in a programming language,
+can also be interpreted as proofs in a logic.
+
+\subsection{Recursive types}\label{ssec:rectype}
+
+\newcommand{\List}{ \mu\,\alpha . \mathsf{Unit} + (A \times \alpha) }
+\newcommand{\ListHole}[1]{ \mathsf{Unit} + (A \times (#1)) }
+
+In the recursive type paradigm, a recursive type operator $\mu$ is provided
+for defining recursive types. The typing rules for $\mu$ allow a recursive type
+to be unrolled (\ie the full type can be substituted for recursive occurrences
+in its body). This substitution can be used as many times as necessary.
+For example, a recursive type definition for lists containing elements of
+type $A$ is $\List$, which represents the solution of $X$ for
+the recursive type equation $X = \ListHole{X}$. That is, a list is either
+an empty list, represented by the value of type $\mathsf{Unit}$,
+or a non empty list, represented by a pair value of type $A$ (head) and
+type $\alpha$ (tail). Note, the type variable $\alpha$, bound by $\mu$, occurs
+where the recursive list type is expected (\ie tail of the list). We are
+allowed to unroll the list type as many times as we need (going downwards):
+\begin{quote}
+$\List$\\
+$\ListHole{\List}$\\
+$\ListHole{\ListHole{\List}}$\\
+$\ListHole{\ListHole{\ListHole{\List}}}$\\
+$\vdots$
+\end{quote}
+Conversely, we can roll the list type the other way (going upwards).
+The typing rules for unrolling and rolling recursive types are based purely on
+syntactic substitution (see Figure\;\ref{fig:isoVSequi}), regardless of whether
+a recursive type definition actually has a well behaved interpretation.
+In particular, it is well known that we can construct non-terminating terms
+with unrestricted use of recursive types, even without introducing unrestricted
+general recursion into the programming language. When our interest is
+not strong normalization but only type safety, having non-termination
+in the programming language is not a problem, as long as we can show
+type safety of the language. General purpose programming languages,
+which are Turing complete, should be able to express non-terminating
+computations anyway. Therefore, typed lambda calculi extended with
+recursive types have been studied as theoretic models for understanding
+general purpose programming languages. These studies include
+functional languages (e.g. ML, Haskell), object-oriented languages (e.g. Java),
+and imperative languages (e.g. Algol 68 \cite{ALGOL68}).
+
+There are two styles of typing rules for recursive types
+(Figure\;\ref{fig:isoVSequi}):
+\emph{equi-recursive types} and \emph{iso-recursive types}.
+The typing rules for equi-recursive types allow implicit rolling unrolling
+of recursive types. That is, equi-recursive types are not syntax directed,
+and the implementation of the type system should infer where to apply the
+rolling and unrolling of recursive types.
+The typing rules for iso-recursive types are syntax directed. The explicit
+term syntax, \textsf{roll} and \textsf{unroll}, guides exactly where to apply
+the rolling and unrolling rules. Thus, type checking does not become any more
+complicated by adding iso-recursive types into the language. However, we need
+an additional reduction rule, such as $\mathsf{unroll}\,(\mathsf{roll}~e)\to e$,
+for the extra term syntax introduced by adding iso-recursive types.
+
+\begin{figure}\centering
+\begin{minipage}{.45\textwidth}\centering
+equi-recursive types
+\[
+\inference[equi-roll]{\Gamma |- e:T[\mu\alpha.T/\alpha]}
+                     {\Gamma |- e:\mu\alpha.T} \]
+\[
+\inference[equi-unroll]{\Gamma |- e:\mu\alpha.T}
+                       {\Gamma |- e:T[\mu\alpha.T/\alpha]} \]
+\end{minipage}
+\begin{minipage}{.45\textwidth}\centering
+iso-recursive types
+\[
+\inference[iso-roll]{\Gamma |- e:T[\mu\alpha.T/\alpha]}
+                    {\Gamma |- \mathsf{roll}~e:\mu\alpha.T} \]
+\[
+\inference[iso-unroll]{\Gamma |- e:\mu\alpha.T}
+                      {\Gamma |- \mathsf{unroll}~e:T[\mu\alpha.T/\alpha]} \]
+\end{minipage}
+
+\caption{Typing rules for equi-recursive types and iso-recursive types}
+\label{fig:isoVSequi}
+\end{figure}
+
+System \F\ \cite{Gir71,Rey74} and its related extensions, such as \Fw, %% cite??
+are particularly interesting when studying the recursive type paradigm, since
+it is possible to embed all recursive type definitions inside these systems.
+Such embeddings are, of course, less expressive than having the recursive
+type operator $\mu$ as a primitive language construct, since languages like
+\F\ and \Fw\ are strongly normalizing. Embeddings of recursive types in
+such languages restrict certain \emph{uses} of these recursive types,
+while being able to \emph{define} all of them. More specifically,
+such embeddings amount to supporting arbitrary use of rolling,
+but restricting the use of unrolling. For functional programmers,
+this would amount to the free use of data constructors to construct values,
+but restricted use of pattern matching to destruct existing values.
+Such a pattern of terminating computation over recursive types is called
+\emph{iteration} in contrast to primitive recursion. We will discuss further
+on interation and recursion over non-inductive types in \S\ref{sec:prelim}.
+
+Another way of retaining strong normalization in typed lambda calculi,
+in the presence of recursive types, is to limit the recursive type definitions
+to only the well-behaved ones \cite{Mat98,Mat99,Mat01}.
+This alternative approach is closely related to the paradigm of inductive types.
+We discuss further the relationship between the recursive types and
+inductive types in \S\ref{ssec:recVSind}.
+
+\subsection{Inductive types}\label{ssec:indtype}
+
+In the inductive type paradigm, types must have well-behaved interpretations
+(\ie sets). Thus, types should be built from well-understood types using
+well-understood connectives, so that all types have well-behaved
+interpretations by construction. Martin-L\"of's Intuitionistic Type Theory
+\cite{Mar84itt} is the representative system using this paradigm. So, we
+often refer to the inductive type paradigm as the Martin-L\"of paradigm.
+In Martin-L\"of's type theory, finite sets (or, finite types) are given,
+and we can build other types by a dependent function connective ($\Pi$-type),
+a dependent pair connective ($\Sigma$-type), and a well-founded induction
+principle ($W$-type). This paradigm is suitable for designing type systems
+of formal proof assistants, which support logical reasoning by interpreting
+types as propositions and programs of those types as proofs (\aka Curry-Howard
+correspondence).
+
+Note, Martin-L\"of's type theory \cite{Mar84itt} is a very powerful system
+supporting transfinite induction ($W$-type) and dependent types ($\Pi$-type,
+$\Sigma$-type). The inductive type paradigm naturally incorporates
+dependent types by interpreting them as indexed families of sets.
+
+\subsection{Approaches to relating recursive types and inductive types}
+\label{ssec:recVSind}
+
+Not all recursive types are inductive types. That is, there are recursive types,
+which cannot be interpreted as types in the inductive type paradigm.
+For example, The recursive type $\mu \alpha . \alpha \to \alpha$ is
+a classic example of a recursive type without a well defined meaning as a set.
+Types whose definitions involve the function space over the type being defined
+often have this problem. Such types are often called \emph{reflexive types}.
+More specifically, recursive type definitions involving function spaces, which
+mention the recursive type being defined in the domain of a function space
+(\ie left-hand side of $\to$), do not correspond to inductive types. We will see
+more examples of such non-inductive recursive types in \S\ref{ssec:nonindrec}.
+
+Knowing that non-inductive recursive types exist, one would naturally question
+\begin{itemize}
+\item[]Question (1): when do recursive types coincide with inductive types, and
+\item[]Question (2): how should recursive types be treated when they don't.
+\end{itemize}
+There have been many studies around these questions, and the proposed
+thesis will hopefully answer some aspects of these questions.
+
+\subsubsection*{Question (1): When do recursive types coincide with inductive types?}
+
+A widely accepted answer to this question is that when the recursive type
+is \emph{strictly positive}. A recursive type is strictly positive when
+the recursive type variable does not appear free on the left-hand side
+of the $\to$ (\ie in the domain of the function space), but only on
+the right-hand side of the $\to$ (\ie in the range of the function space).
+For sum types and product types, both of their components should be
+strictly positive. Non-recursive types are strictly positive by default.
+\citet{Dyb97} showed that any strictly positive type definitions using
+single recursive variable (\ie only one $\mu$ appears in a type definition)
+can be represented using $W$-types.
+\citet{AbbAltGha05,AbbAltGha04} generalized Dyber's work \cite{Dyb97} to
+strictly positive type definitions using arbitrary number of recursive type
+variables (\ie many $\mu$ can appear in a type definition).
+\citet{GamHyl03} have generalized these results
+\cite{AbbAltGha05,AbbAltGha04,Dyb97} to dependently typed setting.
+\citet{CoqPau90} developed a similar construction based on
+Calculus of Constructions (CC, or CoC) \cite{CoqHue86}, but without relating
+the inductive definitions with $W$-types.
+
+However, the notion of strict positivity does not generalize well to richer
+families of datatypes in languages more expressive than System \F.
+Strict positivity is a syntactic condition, which makes good sense for
+recursive types in the context of System \F\ (and, of course, in more simple
+languages like the simply typed lambda calculus) where recursive type variables
+bound by $\mu$ have kind $\star$ (\ie range over types rather than
+type constructors). In more expressive languages like \Fw, it becomes unclear
+how we should generalize the syntactic condition of strict positivity, since
+we can also have recursive type operators for type constructors (of arbitrary
+kinds) as well as for types (of kind $\star$). That is, we have a family of
+recursive type operators $\mu_\kappa$ indexed by kind $\kappa$, which can
+express richer families of recursive types. For example, the $\mu$ operator for
+types corresponds to $\mu_{\star}$. In order to have $\mu_{\star}\alpha_0.T$
+be well kinded, the bound variable should be kinded: $\alpha_0:\star$,
+the body of the $\mu$ should be kinded: $T:\star$, and as a result 
+the complete $\mu$-expression is kined as $(\mu_{\star}\alpha_0.T):\star$.
+
+For type constructors of kind $\star\to\star$, which take one type argument to
+produce a type, we have the $\mu_{\star\to\star}$ operator to define recursive
+type constructors, or families of recursive types indexed by a type. In order to
+have $\mu_{\star\to\star}\alpha_1.F$ be well kinded, the bound variable should
+be kinded: $\alpha:\star\to\star$, the body of the $\mu$ should be kinded:
+$F:\star\to\star$, and as a result the complete $\mu$-expressions should be
+kinded: $(\mu_{\star\to\star}\alpha_1.F):\star\to\star$.
+
+Note, it is not enough to restrict $\alpha_1:\star\to\star$ to be used
+in strictly positive positions since it represents the type constructor
+defined by the recursive definition, which takes a type and produces a type.
+In the case of $\mu_\star$, where the type variable $\alpha_0$ ranges over
+simple types, it is okay to consider that $\alpha_0$ corresponds to well-behaved
+inductive types, provided that all the ground types in the language 
+(\eg $\mathsf{Unit}$) correspond to well-behaved inductive types.
+For the type variable $\alpha_1$ which is bound by $\mu_{\star\to\star}$
+(more generally, by $\mu_\kappa$ where $\kappa$ is not $\star$), which ranges
+over type constructors, we cannot make the same argument as we did for
+$\alpha_0$, since we don't really have ground type constructors to serve
+as a base case argument.
+
+%% TODO cite also Matthes' PhD thesis????
+\citet{Mat99} gives a remarkably good answer by relating extensions of
+System \F\ with inductive types and fixed-point types (\ie recursive types)
+using a notion of \emph{monotonicity}, and later generalizes the notion of
+monotonicity to an extension of System \Fw\ for type constructors of rank 2
+\cite{Mat01}. Instead of requiring syntactic constraints on $\mu\alpha.T$,
+only a \emph{monotonicity witness}, which is a term of type
+$\forall\alpha.\forall\beta(\alpha\to\beta)\to T\to T[\beta/\alpha]$,
+is required \cite{Mat99}. The primitive recursion over any recursive type
+(of rank 1, or kind $\star$) is guaranteed to terminate, once we can provide
+a monotonicity witness for that type. \citet{Mat01} generalizes the
+notion of monotonicity up to rank 2 type constructors, and poses the open
+question whether the notion of monotonicity could generalize further to
+type constructors of rank higher than 2.
+%% another open questions can monotonicity can work for course of values rec?
+
+Although monotone types are very good penalization of
+strictly positive datatypes and positive datatypes,
+sharing the same computational behavior in regards to primitive recursion,
+it is not the definitive answer for types being inductive.
+Being a monotone type makes it a good candidate for being an inductive type,
+but it is not a sufficient condition. The inductive type paradigm requires
+set theoretic interpretation of types to view them as propositions.
+Some positive, but not strictly positive, datatypes do not have set theoretic
+interpretations, although all positive datatypes are monotone. For instance,
+The recursive type $\mu \alpha.(\alpha\to\textsf{Bool})\to\textsf{Bool}$ is
+positive, but not strictly positive. This type, when interpreted as
+a set theoretic proposition, asserts an isomorphism between
+the powerset of powerset of $\alpha$ and $\alpha$ itself,
+which is a set theoretic nonsense.
+Whether and how monotone data constructors of higher-rank can be understood
+inside the inductive type paradigm is (to my knowledge) an open question.
+
+\subsubsection*{Question (2): How should non-inductive recursive types be treated?}
+
+Some recursive types do not correspond to inductive types. That is, there exist
+recursive types, which cannot be interpreted as sets. \citet{Mendler87}
+showed that reflexive types can introduce non-terminating computation
+even without having unrestricted general recursion in the language.
+\citet{ConMen85} suggested an approach of interpreting
+non-inductive recursive types as Scott domains, and the function space over
+such recursive types as partial functions over the Scott domains.
+Scott domains are mathematical models, developed by \citet{Sco76},
+for the languages capable of expressing non-terminating computations such as
+the untyped lambda calculus and languages with unrestricted general recursion.
+For example, in the type for infinitely branching trees
+$\mu \alpha. T + (\mathbb{N}\to\alpha)$, where the leaves contain values of
+type $T$, they use the usual arrow ($\to$) for total functions, and in
+the reflexive type $\mu \alpha. \alpha \rightsquigarrow \alpha$,
+which represents the semantics of the untyped lambda calculus,
+they use a different arrow ($\rightsquigarrow$) for partial functions.
+
+Although interpreting non-inductive recursive types as Scott domains
+is indeed a sound interpretation, it is, in a way, an over-approximation.
+Non-termination is not a characteristics of non-inductive types in general.
+Recall that the inductive type paradigm is all about insisting that types have
+simple interpretations as sets (more generally, indexed families of sets).
+When we are faithful to the design principles of inductive types,
+we get strong normalization of the language as a consequence. However,
+not all strongly normalizing languages belong to the inductive type paradigm.
+There exist well known strongly normalizing languages, which do not have
+set theoretic interpretations. \citet{ReyPlo93} proved
+the non-existence of a set theoretic interpretation for System \F\ using
+the encodings of non-strictly positive datatypes. Sets cannot be interpretations
+for some System \F\ types, but neither are Scott domains satisfactory, since
+all functions are total in System \F. Therefore, it is an over-approximation
+to categorize all the function spaces over non-inductive recursive types as
+partial functions of Scott's domain theory.
+
+Therefore, I strongly believe that a better approach is to separate concerns
+about termination of programs from concerns about the inductiveness of types
+definitions (recall Figure\;\ref{fig:probspace} discussed in
+\S\ref{sec:intro}). These two properties need not always be linked
+by design: inductiveness does require termination, but non-inductiveness
+does not imply non-termination. Let us first observe how certain desired
+properties are guaranteed for inductive types, and recognize that the same
+strategy can apply to recursive types.
+
+%% would "formation" be a better word than "definition" below ???
+%% would "elimination" be a better word than "use" below ???
+We should recognize that the type \emph{definition} itself does not guarantee
+types to be inductive (\ie interpreted as sets). We also need some restrictions
+on how we \emph{use} the terms of those types.  When we allow unrestricted
+general recursion in the language, types cannot be interpreted as sets,
+regardless of whether they are inductive or not. In the presence of unrestricted
+general recursion, all types need to be interpreted as Scott domains,
+in order to handle non-termination. Note, the type definitions,
+which look like inductive types, (or possibly inductive definitions)
+become truly inductive type definitions only when we stick to
+principled recursion schemes, which are known to guarantee termination
+(\eg primitive recursion, structural recursion). In other words, we must rely on
+principled \emph{use} of inductive types to guarantee desired properties such as
+termination and the Curry-Howard correspondence (\ie types are propositions and
+programs are proofs), as well as the inductiveness of their \emph{definitions}.
+
+Similarly, principled \emph{uses} of recursive types can guarantee certain
+desired properties such as termination. Although the termination property (or
+strong normalization) of recursive types has been observed in various contexts
+\cite{Mendler87, Mendler91, Geu92, Mat98, Mat05, Bla03, MeiHut95, FegShe96,
+DesPfeSch97, DesLel99, bgb, AbeMatUus03, AbeMatUus05, AhnShe11}, % TODO Harper
+it has not been put to use in a systematic way of handling termination
+separate from inductiveness in any language design we are aware of.
+There have been largely two approaches to handling non-termination
+in formal reasoning systems: using coinductive types and modeling types
+as domains. Neither of these two approaches handle all possible combinations of
+termination and inductiveness in a systematic way. The coinductive types
+approach are limited to strictly positive types, just as inductive types are.
+The types as domains approach has the problem of over-approximating
+non-termination as we discussed earlier.
+
+Many proof assistants (e.g. Cog, Agda, Epigram) support coinductive types
+as well as inductive types. Coinductive types (or, greatest fixpoint types),
+which are dual constructions of inductive types (or, least fixpoint types),
+can have values that are possibly infinite (\eg infinite lists). We can model
+certain class of non-terminating computations by principled corecursion schemes
+over such infinite structures (or, codinductive values).
+Nevertheless, coinductive types are limited to strictly positive datatypes,
+just as inductive types are. That is, even with coinductive types, we cannot
+directly express and reason about all recursive types in general, especially
+the non-inductive types.
+
+The types as domains approach originates from Scott's observation that types
+used in programs are different from types used in logic \cite{Sco69,Sco93}.
+The systems \cite{Mil72,GorMilWad79,MulNipOheSlo99} supporting Scott's
+Logic for Computable Functions (LCF) model types as domains to reason about
+possibly non-terminating programs. The functions in LCF are partial functions
+defined over Scott domains. However, LCF is not designed for reasoning about
+types in programs coincide with types in logic, or totality of functions
+defined by principled recursion schemes. In other words,
+using the four problem spaces we defined in \S\ref{sec:intro}, we can say
+that Scott's domain theory, or LCF, does not distinguish \REC\ from \RECbot.
+
+We will discuss some more details on the termination property of
+non-inductive recursive types in \S\ref{sec:prelim}.
+
+\subsection{Examples of non-inductive recursive types}
+\label{ssec:nonindrec}
+In this section, I introduce three example programs which make use of
+non-inductive recursive types:
+Scott numerals (\S\ref{sssec:ScottNum}),
+Higher-Order Abstract Syntax (\S\ref{sssec:HOAS}), and
+Normalization by Evaluation (\S\ref{sssec:NbE}).
+Here, and in the other parts of this document, we will use the
+{\em strictly positive types} as an example of inductive recursive types for simplicity,
+rather than examining the more general concept of monotonicity.
+We can categorize non-inductive recursive types, that is
+non-strictly positive datatypes, into two categories:
+(1) positive (but not strictly positive) datatypes, and (2) negative datatypes.
+The type for the Scott numerals is an example of a (not strictly) positive datatype
+(\aka covariant recursive types), and the others are examples of
+negative datatypes (\aka contravariant types).
+
+\subsubsection{Scott numerals} \label{sssec:ScottNum}
+
+ There are multiple ways of encoding the natural numbers
+in lambda calculi.
+The Church numerals are the most well known of those encodings.
+An alternate encoding in the untyped lamba calculus is one proposed by Scott.
+%% \cite{?} in the year ?.
+In 1993, \citet{AbaCarPlo93} wrote a note on assigning a type
+to the constructors of the Scott numerals in an extended System F 
+(extended with covariant recursive types, \ie positive datatypes). 
+
+You can observe
+the different encodings of zero ($\mathsf{0}$), successor ($\mathsf{succ}$),
+and the primitive conditional operations: $\mathsf{case}$ (for the Scott numerals),  
+and $\textsf{zero?}$ (for the Church numerals) in Figure\;\ref{fig:ScottNum}.
+The expression $\textsf{zero?}\;n$ reduces to
+$\textsf{T}$ when $n$ reduces to the Church numeral $\mathsf{0}$, and
+$\textsf{F}$ otherwise, where $\mathsf{T}\defeq\lambda x.\lambda y.x$
+and $\mathsf{F}\defeq\lambda x.\lambda y.y$ are the Church encodings of
+the boolean values, True and False.
+The expression $\textsf{case}\;n\;a\;f$, reduces to
+$a$, when $n$ reduces to the Scott numeral $\mathsf{0}$, and
+$f\,n'$ otherwise, where $n'$ is the predecessor of $n$.
+
+\paragraph{}
+Let us start the discussion in the context of untyped lambda calculus
+(see the upper row of Figure\;\ref{fig:ScottNum}). 
+
+The normal form for the Church numeral of value $n$ is
+$\lambda x.\lambda f.f^n\;x$, where $f^n\;x$ is an abbreviation for
+$n$ applications of $f$ to $x$. For instance, the normal form for
+the Church numeral $3$ is $\lambda x.\lambda f.f(f(f\;x))$.
+The normal form for the Scott numeral of value $n>0$ is
+$\lambda x.\lambda y.y\;n'$, where $n'$ is the normal form for
+the Scott numeral of value $n-1$ (\ie predecessor of $n$). For instance,
+the normal form for the Scott numeral $3$ is
+$\lambda x.\lambda y.
+ y(\lambda x.\lambda y.
+  y(\lambda x.\lambda y.
+   y(\lambda x.\lambda y.x)))$.
+
+One advantage of
+the Scott numerals over the Church numerals is the existence of
+the predecessor function $\lambda n.n\,\mathsf{0}\,\mathsf{id}$,
+where $\mathsf{id}\defeq\lambda x.x$, which reduces in a constant number of steps
+when applied to a Scott numeral in normal form. This is not the case for
+the predecessor function for Church numerals, which needs a number of reduction steps
+linearly proportional to the value of the applied argument.
+
+\begin{figure}\small\centering
+\begin{minipage}{.5\textwidth}
+Church numerals in untyped $\lambda$ calculus
+\begin{align*}
+\textsf{0}     &\defeq \lambda f.\lambda x. x \\
+\textsf{succ}  &\defeq \lambda n.\lambda f.\lambda x. f\,(n\,f\,x)\\
+\textsf{zero?} &\defeq \lambda n. n\,(\lambda x.\mathsf{F})\,\mathsf{T}
+\end{align*}
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+Scott numerals in untyped $\lambda$ calculus
+\begin{align*}
+\mathsf{0}    &\defeq \lambda x.\lambda y. x \\
+\mathsf{succ} &\defeq \lambda n.\lambda x.\lambda y. y\,n \\
+\mathsf{case} &\defeq \lambda n.\lambda a.\lambda f. n\,a\,f
+\end{align*}
+\end{minipage}
+\\~\\~\\
+\begin{minipage}{.5\textwidth}
+Church numerals in System $\F^{\phantom{+\mu\text{(equi)}}}$
+\begin{align*}
+        N &\defeq \forall\beta.(\beta\to\beta)\to\beta\to\beta\\
+\textsf{0}    &\defeq \Lambda\beta.
+                      \lambda f:(\beta\to\beta).\lambda x:\beta.x\\
+              &\;:\;N\\
+\textsf{succ} &\defeq \lambda n:N.
+                      \Lambda\beta.
+                      \lambda f:(\beta\to\beta).\lambda x:\beta.
+                      f\,(n\,\beta\,f\,x)\\
+              &\;:\;N\to N\\
+\textsf{zero?}&\defeq \lambda n:N.\Lambda\beta.n\,\beta\,(\mathsf{T}\,\beta)\,(\lambda x:\beta.\mathsf{F}\,\beta)\\
+              &\;:\;N\to B
+\end{align*}
+\end{minipage}
+\begin{minipage}{.45\textwidth}
+Scott numerals in System $\F^{+\mu\text{(equi)}}$
+\begin{align*}
+        S    &\defeq \mu\alpha.\forall\beta.\beta\to(\alpha\to\beta)\to\beta\\
+\mathsf{0}   &\defeq \Lambda\beta.\lambda x:\beta.\lambda y:(S\to\beta). x \\
+             &\;:\; S\\
+\mathsf{succ}&\defeq \lambda n:S.\Lambda\beta.\lambda x:\beta.\lambda y:(S\to\beta). y\,n \\
+             &\;:\; S\to S\\
+\mathsf{case}&\defeq \lambda n.\lambda a.\lambda f. n\,\alpha\,a\,f\\
+             &\;:\; S\to \forall \beta.\beta\to(S\to \beta)\to \beta
+\end{align*}
+\end{minipage}
+\caption{The Church numerals and the Scott numerals
+         in the untyped and typed $\lambda$ calculi}
+\label{fig:ScottNum}
+\vspace*{.5em}\hrule
+\end{figure}
+
+Now, let us shift our discussion to similar encodings in a typed calculi
+that are powerful enough to assign types to each of the different encodings of
+natural numbers (see the bottom row of Figure\;\ref{fig:ScottNum}). 
+
+On one hand, we can
+assign types to the Church numerals in System \F\ (without any extensions).
+The type $N$ for the Church numerals is
+$\forall\beta.(\beta\to\beta)\to\beta\to\beta$, which is
+an impredicative encoding (\ie $\beta$ can be instantiated with $N$ itself)
+of the natural number type. The boolean type ($B$) and
+its values (\textsf{T} and \textsf{F}) appearing in the definition of
+\textsf{zero?} are defined as: $B\defeq \forall\beta.\beta\to\beta\to\beta$,
+$\mathsf{T}\defeq \Lambda\beta.\lambda x:\beta.\lambda y:\beta.x$, and
+$\mathsf{F}\defeq \Lambda\beta.\lambda x:\beta.\lambda y:\beta.y$.
+
+On the other hand, we cannot assign proper types to the Scott numerals
+in System \F. We can assign types to the Scott numerals only when we have
+an extended System \F\ with positive datatypes. This extra power required
+for the type system, in order to type the Scott numerals, is due to
+the ability to define a constant time predecessor.\footnote{
+More generally, predecessor-like functions (\eg a tail function for lists) of
+constant reduction steps are not known to be definable in System \F. This is a
+characteristic that distinguishes iteration from (primitive) recursion.
+I will discuss this further in \S\ref{sec:prelim}.}
+
+The type $S$ for Scott Numerals is defined to be
+$\mu\alpha.\forall\beta.\beta\to(\alpha\to\beta)\to\beta$,
+which is a positive, but not strictly positive, datatype.
+Note, $\alpha$ appears in a double negative position, thus, positive.
+To make this clear, let us explicitly parenthesize the $\to$,
+which is right associative, as follows:
+$\mu\alpha.\forall\beta.\beta\to((\alpha\to\beta)\to\beta)$.
+Then, we can observe that $((\alpha\to\beta)\to\beta)$ is in a positive position
+since it appears to the right of $\to$. The subterm $(\alpha\to\beta)$ is in
+a negative position, since it is to the left of $\to$, and the variable $\alpha$
+is also in negative position inside the negative subterm $(\alpha\to\beta)$.
+Thus, the variable $\alpha$ is in a positive (or, covariant) position.
+
+\begin{figure}
+\begin{verbatim}
+{-# LANGUAGE RankNTypes #-}
+
+module Scott where
+
+data Scott = Scott 
+    (forall b . b                   -- return this if its zero
+                -> (Scott -> b)     -- how to preceed given the predecessor?
+                -> b)
+
+z   = Scott n  where n z s = z
+  
+s x = Scott n  where n :: b -> (Scott -> b) -> b
+                     n z s = s x
+
+scottCase:: Scott -> a -> (Scott -> a) -> a
+scottCase (Scott n) a f = n a f
+
+pred n = scottCase n z id
+
+pred2 (Scott n) = n z id
+\end{verbatim}
+\caption{Scott numerals in Haskell}\vspace*{.5em}\hrule
+\label{fig:ScottNum}
+\end{figure}
+
+Figure\;\ref{fig:ScottNum} may be helpful for understanding Scott numerals,
+if you are familliar with Haskell or any other similar functional language.
+
+\subsubsection{Higher-Order Abstract Syntax} \label{sssec:HOAS}
+An important example that uses a negative datatype is
+Higher-Order Abstract Syntax (HOAS) \cite{Church40,MilNad87,PfeEll88}.
+HOAS is a technique used to model an object-language with a syntactic
+form which is binding construct (the syntactic form binds a variable
+in the scope of another term). The technique uses a data structure in
+the host-language (or, meta-language) which employs a meta-language function
+embedded in the data structure to encode the binding construct.
+
+For instance, the recursive type definition of the HOAS for
+the untyped lambda calculus, which is the most simple HOAS, can be defined as
+$\mu\alpha.(\alpha\to\alpha)+(\alpha\times\alpha)$. Note, $\alpha$ appears
+in a negative position, left of $\to$ in $(\alpha\to\alpha)$. In this example
+the left summand $(\alpha\to\alpha)$ is used to encode the binding lambda, and
+the right summand $(\alpha\times\alpha)$ is used to encode
+the binary application. In Haskell we might encode this negative datatype
+as follows:
+\begin{verbatim}
+  data Term  =  Lam (Term -> Term)  |  App (Term, Term)
+\end{verbatim}
+
+When we use HOAS, we get capture avoiding substitution over
+the object-language terms, as a simple homomorphism. That is, HOAS lifts the burden of writing
+substitution functions in programming language implementations, and
+the burden of proving substitution lemmas in the mechanized metatheories of
+programming languages. For this reason, HOAS is used in implementations of
+interpreters and partial evaluators \cite{SumKob99,DanRhi00,CarKisSha09},
+and in mechanized theories \cite{Des95,HonMicSca01,Abe08,Chl08}.
+%% maybe TODO find more references and HOAS itself is a huge subject
+%% bgb paper and tech report have many good pointers
+
+\subsubsection{Normalization by Evaluation}\label{sssec:NbE}
+Another well-known use of contravariant recursive types (or, negative datatypes)
+appear in the work on Normalization by Evaluation (NbE) \cite{BerSch91}.
+The idea of NbE is to use an evaluator, or an interpreter,
+(\ie denotational semantics) for normalization. More specifically,
+NbE works by evaluating a syntactic term into a value in the semantic domain,
+and then reifying the resulting value of the evaluation back into
+a normalized syntactic term. The recursive type representing
+any interesting semantic domain involving functions is always
+a negative datatype, since the semantic domain would contain its function space
+(\ie $D \supseteq [D\to D]$). Recently, NbE has been popularized as
+an implementation technique for dependently typed languages
+\cite{LohMcbSwi07,AbeAehDyb07,AbeCoqDyb07}, some of which are
+specifically studied in the context of Martin-L\"of's type theory.
+Note, such implementations using NbE rely on recursive type definitions
+for semantic domains, which is not admissible in Martin-L\"of's type theory. 
+An amusing irony: to believe in the soundness of this kind of implementations
+for the Martin-L\"of's type theory, we also have to believe in the soundness of
+certain use of recursive types, which are outside the scope of
+the Martin-L\"of paradigm.
+
+
+
+
+%% =====================================\\
+%% TODO study about Bove-Capretta technique and Strong Computability used in
+%% the thesis of James Chapman http://www.ioc.ee/~james/Publications.html
+%% 
+%% ====================================\\
+%% \paragraph{}
+%% some recent article on delimited continuation.
+%% I think Sabry's paper contains an Haskell datatype definition for it.\\
+%% http://www.pps.jussieu.fr/~saurin/tpdc2011/\\
+%% I wonder whether this is an example of a non-monotonic rank-2 tycon or not.
+%% 
+%% \paragraph{}
+%% 
+%% Discussion from the types mailing list\\
+%% http://www.cis.upenn.edu/~bcpierce/types/archives/1993/msg00027.html\\
+%% http://www.cis.upenn.edu/~bcpierce/types/archives/1993/msg00032.html
+%% 
+%% \paragraph{}
+%% %%% TODO
+%% Inductive Datatype System\\
+%% http://www-rocq.inria.fr/~blanqui/papers/tcs02.pdf\\
+%% have a short introduction to the pointers of important papers
+%% 
+%% \paragraph{}
+%% ====================================\\
+%% TODO
+%% Computation is mainly centered around the semantic domain,
+%% which is an exotic recursive type. But, once the main computation
+%% (\ie evaluation) is done, it comes back to the syntactic terms,
+%% which is an inductive type. This pattern can be useful not only in NbE,
+%% but in many other situations. I think this is what we want to be able
+%% to express in Trellys. also related to extensional type theory
+
+%% TODO??? there is a more fundamental/philosophical issue why type theory
+%% should be based on set theory, but I'm not going into this unless I have
+%% excessive time
+
+%% TODO do we need discussions on extensional and intensional type theory???
+
+%% TODO find citations for applications of HOAS
+
+%% TODO find citations for applications of HOAS
+
+
+%% Types are not sets
+%% http://portal.acm.org/citation.cfm?doid=512927.512938
+
+%% Logical Framework and HOAS
+
+%% Delphin language and HOAS
+%% Programming with Higher-Order Abstract Syntax by Sch\"urmann
+
+%% inductive datatypes
+
+%% maybe sketch of type soundness proof of STLC + mu
+%% then System \F\ encoding of natural numbers and lists, and maybe mu???
+%% then \Fw\ encoding of mu and mcata
+%% induction is not derivable form etc
+%% cf. Mendler-style and conventional style later on in different section
+
+%% \subsection{TODO summary and discussions}
+%% summary and questions/discussions leading the following sections
+

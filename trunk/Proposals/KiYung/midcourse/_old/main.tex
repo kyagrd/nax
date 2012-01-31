@@ -1,0 +1,339 @@
+\documentclass[a4paper,12pt]{book}
+\usepackage{fullpage}
+\usepackage{amssymb}
+\usepackage[fleqn]{amsmath}
+\usepackage{semantic}
+\usepackage[backref]{hyperref}
+\usepackage[sort&compress,square,comma,numbers,longnamesfirst]{natbib}
+\usepackage[all]{xy}
+\usepackage{xcolor}
+\usepackage{url}
+
+\title{Normalizing calculi with recursive types}
+\author{Ki Yung Ahn}
+
+\newcommand{\Fw}[0]{\ensuremath{F_\omega}}
+\newcommand{\ie}[0]{{i.e.},\;}
+\newcommand{\eg}[0]{{e.g.},\;}
+\newcommand{\calT}[0]{\ensuremath{\mathcal{T}}}
+\newcommand{\calC}[0]{\ensuremath{\mathcal{C}}}
+\newcommand{\calB}[0]{\ensuremath{\mathcal{B}}}
+\newcommand{\inl}[0]{\ensuremath{\mathsf{inl}}}
+\newcommand{\inr}[0]{\ensuremath{\mathsf{inr}}}
+\newcommand{\case}[0]{\ensuremath{\mathsf{case}}}
+\newcommand{\fst}[0]{\ensuremath{\mathsf{fst}}}
+\newcommand{\snd}[0]{\ensuremath{\mathsf{snd}}}
+\newcommand{\unit}[0]{\ensuremath{\mathsf{unit}}}
+\newcommand{\Unit}[0]{\ensuremath{\mathsf{Unit}}}
+\newcommand{\Void}[0]{\ensuremath{\mathsf{Void}}}
+\newcommand{\miter}[0]{\ensuremath{\mathsf{mit}}}
+\newcommand{\mrec}[0]{\ensuremath{\mathsf{mrec}}}
+\newcommand{\mcvit}[0]{\ensuremath{\mathsf{mcvit}}}
+\newcommand{\mcvrec}[0]{\ensuremath{\mathsf{mcvrec}}}
+\newcommand{\msfit}[0]{\ensuremath{\mathsf{msfit}}}
+\newcommand{\msfcvit}[0]{\ensuremath{\mathsf{msfcvit}}}
+\newcommand{\msfrec}[0]{\ensuremath{\mathsf{msfrec}}}
+\newcommand{\msfcvrec}[0]{\ensuremath{\mathsf{msfcvrec}}}
+\newcommand{\In}[0]{\ensuremath{\mathsf{in}}}
+\newcommand{\out}[0]{\ensuremath{\mathsf{out}}}
+\newcommand{\Inv}[0]{\ensuremath{\mathsf{inv}}}
+
+\newcommand{\Prog}[0]{\ensuremath{\mathsf{Prog}}}
+\newcommand{\Log}[0]{\ensuremath{\mathsf{Log}}}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\part{Motivation}
+\chapter{ABC}
+Nax to allow polymorhpism, recursive types and normalization
+
+The motivation behind the Nax language design arose in the context of
+the Trellys project. The goal of the Trellys project is to design and
+implement a dependently typed language, named Trellys, that is both
+a functional programming language and a logical reasoning system.
+More specifically, Trellys consists of two sublanguages:
+a programmatic sublanguage (\Prog) and a logical sublanguge (\Log).
+Or, we can view Trellys having two modes of type checking
+($|-_{\!\!\!_\Prog}$ and $|-_{\!\!\!_\Log}$).
+A Trellys expression may be considered as a program when it type checks
+programatically ($\Gamma |-_{\!\!\!_\Prog} e : t$).
+A Trellys expression may be considered as a proof when it type checks
+logically ($\Gamma |-_{\!\!\!_\Log} e : t$).
+We want Trellys to be a unified system, where programs in \Prog\ and
+proofs in \Log\ can refer to each other. That is, in Trellys, we should
+be able to construct logical proofs reasoning about properties of programs
+(\emph{freedom of speech}), and, conversely, we should be able to write
+programs computing over data containing proofs (\emph{certified programming}).
+
+What are the minimal requirements for \Prog\ and \Log\, when designing
+a language like Trellys?
+For \Prog\, we have a pretty good idea from the beginning. Since \Prog\ is
+intended to be a general purpose typed functional programming language,
+it should support all the features commonly found in functional programming
+languages like ML or Haskell (e.g., first class functions, recursive types,
+polymorhpism). In addtion, we want \Prog\ to have dependent types, or at least
+indexed types since we want to support \emph{certified programming}.
+For \Log\, we have two minimal requirements.
+Firstly, \Log\ must be normalizing.
+Secondly, \Log\ must support all the types that \Prog\ supports.
+
+\part{Recursive Types and Normalization}
+\chapter{Recursive Types}
+\section{iso-recursive types}
+\section{equi-recursive types}
+\section{polarity}
+\section{}
+\chapter{Normalization}
+\chapter{TODO}
+\chapter{Dependent types and Induction}
+
+\part{Mendler-style Iteration and Recursion Combinators}
+
+\part{Nax}
+
+\section{$F_2$ (System F) with some extensions}
+
+\paragraph{Syntax}
+\begin{align*}
+Dec  ::=&~ F\,\overline{X}\,X.\{\,\overline{C\,\overline{T}}\,\} \\
+Decs ::=&~ \cdot \mid Dec;Decs
+\\ ~ \\
+T ::=&~ F\,\overline{T}\,T
+ \mid   T -> T
+ \mid   X 
+ \mid   \forall X . T
+ \mid   \mu(F\,\overline{T})
+\\ ~ \\
+M ::=&~ x \mid C
+ \mid   \case\,M\,\{\,\overline{C\,\overline{x}.M}\,\}
+ \mid   \lambda x . M
+ \mid   M M
+%% \mid   \Lambda X. M
+%% \mid   M [T]
+\\
+ \mid&~ \In\,M
+ \mid   \miter\,M
+ \mid   \mrec\,M
+ \mid   \mcvit\,M
+ \mid   \mcvrec\,M
+ \mid   \msfit\,M \\
+ \mid&~ \out
+ \mid   \Inv ~~~\text{-\,\!- these are transient objects cannot apppear in source code }
+\\ ~ \\
+Program ::=&~ Decs; M
+\end{align*}
+
+\paragraph{Typing rules}
+\[ \inference[dec]
+      {\Gamma, F:\star^n->\star->\star,
+       \overline{C:\forall\overline{X}^n.\forall X.\overline{T}->F\,\overline{X}^n\,X}
+       |- Decs \mid M : T}
+      {\Gamma
+       |- F\,\overline{X}^n\,X.\{\,\overline{C\,\overline{T}}\,\};Decs \mid M : T}
+\]
+
+\[ \inference[dec0]{\Gamma |- M : T}{\Gamma |- \cdot \mid M : T}
+   ~~~~~~~~
+   \inference[var]{(x:T) \in \Gamma}{\Gamma |- x:T}
+   ~~~~~~~~
+   \inference[ctor]{(C:T) \in \Gamma}{\Gamma |- C:T}
+\]
+
+\[ \inference[case]
+      { \Gamma |- M : F\,\overline{T'} & Ctors(F) = \{ \overline{C_k} \}
+      & \overline{\Gamma |- C_k : \overline{T_i} -> F\,\overline{T'}}
+      & \overline{ \Gamma, \overline{x_i:T_i} |- M_k : T }
+      }{\Gamma |- \case\,M\,\{\,\overline{C_k\,\overline{x_i}.M_k}\,\} : T}
+\]
+
+\[ \inference[abs]{\Gamma |- x |- M : T}
+                  {\Gamma |- \lambda x .M : T' -> T}
+   ~~~~~~~~
+   \inference[app]{\Gamma |- M : T' -> T & \Gamma |- M' : T'}
+                  {\Gamma |- M\,M' : T}
+\]
+
+\[ \inference[tabs]{\Gamma, X:\star |- M : T}
+                   {\Gamma |- M : \forall X.T}
+   ~~~~~~~~
+   \inference[tapp]{\Gamma |- M : \forall X.T}
+                   {\Gamma |- M : T[T'/X]}
+\]
+
+\[ \inference[in]{\Gamma |- M : F\,\overline{T}\,(\mu(F\,\overline{T}))}
+                 {\Gamma |- \In\,M : \mu(F\,\overline{T})}
+   ~~~~~~~~
+   \inference[mit]{\Gamma, X:\star |- M : (X->T') -> F\,\overline{T}\,X -> T'}
+                    {\Gamma |- \miter\,M : \mu(F\,\overline{T}) -> T'}
+\]
+
+\[
+   \inference[mrec]{\Gamma, X:\star |- M : (X->\mu(F\,\overline{T})) -> (X->T') -> F\,\overline{T}\,X -> T'}
+                   {\Gamma |- \mrec\,M : \mu(F\,\overline{T}) -> T'}
+\]
+
+\[ \inference[mcvit]
+     { \Gamma, X:\star,
+       |- M : (X->F\,\overline{T}\,X) -> (X -> T') -> F\,\overline{T}\,X -> T'
+     \\ F \text{ is positive} }
+     {\Gamma |- \mcvit\,M : \mu(F\,\overline{T}) -> T'}
+\]
+
+\[ \inference[mcvrec]
+     { \Gamma, X:\star,
+       |- M : (X->F\,\overline{T}\,X) -> (X->F\,\overline{T}\,X) -> (X -> T') -> F\,\overline{T}\,X -> T'
+     \\ F \text{ is positive} }
+     {\Gamma |- \mcvrec\,M : \mu(F\,\overline{T}) -> T'}
+\]
+
+
+\[ \inference[msfit]
+     {\Gamma, X:\star |- M : (T'->X) -> (X->T') -> F\,\overline{T}\,X -> T'}
+     {\Gamma |- \msfit\,M : \mu(F\,\overline{T}) -> T'}
+\]
+
+\[ \inference[msfit']
+     {\Gamma, X':\star->\star,
+      |- M : (T'->X'\,T') -> (X'\,T'->T') -> F\,\overline{T}\,(X'\,T') -> T'}
+     {\Gamma |- \msfit\,M : \mu(F\,\overline{T}) -> T'}
+\]
+
+
+The typing rule msfit' will be safe (\ie normalizing) since it has an easy
+embedding into \Fw. However, the type signature for $M$ revealed to the user
+is a bit ugly, and we need to introduce a type variable $X'$ of kind
+$\star->\star$, which is a bit outside $F_2$.
+So, it would be nice to know whether the simplified rule msfit is enough
+to guarantee normalization for \msfit\ as a language primitive.
+
+We know that System F + msfit' is normalizing by embedding into Fw.
+We want to show that System F + msfit is normalizing by embedding it
+into System F + msfit'.
+
+A semi formal proof illustrated in Haskell
+\begin{verbatim}
+type T' = ()
+
+m' :: (T' -> x) -> (x -> T') -> f x -> T'
+m' = undefined
+
+m :: (T' -> x' T') -> (x' T' -> T') -> f (x' T') -> T'
+m = m'
+\end{verbatim}
+Every $M$ of type that appears in msfit can be typed with the type of msfit'
+as well!
+
+There can be rules for \msfcvit\, \msfrec\ and \msfcvrec\ as well
+(haven't written them down). \msfcvit\ will have the same requirement for
+positivity (or, monotonicity) on the flat datatype $F$ as \mcvit does.
+I am not yet sure how to formulate the recursion opererators \msfrec\ and
+\msfcvrec\ since I don't have clear thoughts on the $\mu$ object injected
+inside $M$ by the casting operator.
+
+
+
+We need some basic side conditions for well-formed (or, well-kinded) types,
+but omiterted here. Those conditions would be needed for $F$ things and $C$
+things are well-defined and well-kinded. The will-kindedness condition is
+pretty straightforward since we are dealing with extension of $F_2$:
+(1) every type $T$,
+    type variable $X$, and
+    the type application $F\,\overline{T}\,X$
+    is of kind $\star$
+    (\ie except for $X'$ in the rule msfit,
+          the identifier $F$ for flat non-recursive structure definition, and
+          its partial application $F\,\overline{T}$), and
+(2) $F$ does not appear in $\overline{T}$ in the rule dec.
+
+\paragraph{Reduction rules}
+\begin{align*}
+(\lambda x.M) M' -->&~ M[M'/x] \\
+%%% (\Lambda X:\star.M)[T] -->&~ M[T/X] \\
+%%% C[T] -->&~ C\\
+\miter\,M\,(\In\,M') -->&~ M\,(\miter\,M)\,M' \\
+\mrec\,M\,(\In\,M') -->&~ M\,(\lambda x.x)\,(\mrec\,M)\,M' \\
+\mcvit\,M\,(\In\,M') -->&~ M\,\out\,(\mcvit\,M)\,M' \\
+\mcvrec\,M\,(\In\,M') -->&~ M\,(\lambda x.x)\,\out\,(\mcvrec\,M)\,M' \\
+\out\,(\In\,M') -->&~ M' \\
+\msfit\,M\,(\In\,M') -->&~ M\,\Inv\,(\msfit\,M)\,M' \\
+\msfit\,M\,(\Inv\,M') -->&~ M'
+\end{align*}
+\[ \inference{M --> M'}{E[M] --> E[M']} \]
+\[ E ::= ... \]
+
+\newpage
+\paragraph{Metatheory}
+
+type safety should be easy to show
+
+
+
+\section{\Fw}
+TODO allow quantification over type constructors
+
+\paragraph{Syntax}
+\begin{align*}
+Dec  ::=&~ F\,\overline{(X:K)}\,(X:K) : K.\{\,\overline{C\,\overline{T}}\,\} \\
+Decs ::=&~ \cdot \mid Dec;Decs
+\\ ~ \\
+K ::=&~ \star \mid K \to K
+\\ ~ \\
+T ::=&~ F \mid T\,T
+ \mid   T -> T
+ \mid   X 
+ \mid   \forall(X:K) . T
+ \mid   \mu(F\overline{T})
+\\ ~ \\
+M ::=&~ x \mid C
+ \mid   \case\,M\,\{\,\overline{C\,\overline{x}.M}\,\}
+ \mid   \lambda(x:T). M
+ \mid   M M
+ \mid   \Lambda(X:K). M
+ \mid   M [T] \\
+ \mid&~ \In\,M
+ \mid   \miter\,M
+ \mid   \mcvit\,M
+ \mid   \msfit\,M
+\end{align*}
+
+\section{dependent calculus}
+extending it with true value dependencies
+
+The lift datatype???
+
+\section{Note on Abel and Matthes' CSL'04 paper}
+
+Just trying factorial example (a simple example for $\kappa=\star$).
+
+\begin{verbatim}
+MRec : (forall r. (r->Mu f) -> (r -> a) -> f r -> a) -> Mu f -> a
+
+data N r = X 
+type Nat = Mu N
+zero      = In Z
+succ x xs = In (S x xs)
+
+factorial = MRec ( \i: x -> Nat . \fac: x -> Nat . \n: N x .
+                   case n of  Z   -> succ zero
+                              S m -> i(succ m) * fac m )
+\end{verbatim}
+
+
+\paragraph{Other notes}
+
+Comparison of iteration and recursion in Mendler style
+
+Iteration: only have access to abstract recursive values and answers
+
+Recursion: additional \emph{casting operator} from an abstract recursive type
+to a concrete recursive type
+
+Course of values is about how deep the recursive call be pushed in
+
+\bibliographystyle{plainnat}
+\bibliography{main}
+
+\end{document}

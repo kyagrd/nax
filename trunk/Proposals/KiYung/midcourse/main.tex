@@ -1,0 +1,72 @@
+\documentclass[letterpaper,12pt]{article}
+\usepackage{fullpage}
+\usepackage{amssymb}
+\usepackage[fleqn]{amsmath}
+\usepackage[backref]{hyperref}
+\usepackage[sort&compress,square,comma,numbers,longnamesfirst]{natbib}
+\usepackage{url}
+\usepackage{semantic}
+\usepackage[hang]{caption}
+
+%opening
+\title{Mid-course document}
+\author{Ki Yung Ahn}
+
+\newcommand{\cf}[0]{{cf.}}
+\newcommand{\eg}[0]{{e.g.}}
+\newcommand{\ie}[0]{{i.e.}}
+\newcommand{\aka}[0]{{a.k.a.}}
+\newcommand{\Fw}[0]{\ensuremath{\mathsf{F}_\omega}}
+\newcommand{\Fi}[0]{\ensuremath{\mathsf{F}_i}}
+\newcommand{\Fixw}[0]{\ensuremath{\mathsf{Fix}_\omega}}
+\newcommand{\Fixi}[0]{\ensuremath{\mathsf{Fix}_i}}
+\newcommand{\In}[0]{\textsf{In}}
+\newcommand{\unIn}[0]{\textsf{unIn}}
+\newcommand{\It}[0]{\textsf{It}}
+\newcommand{\PR}[0]{\textsf{Pr}}
+\newcommand{\MIt}[0]{\textsf{MIt}}
+\newcommand{\MPr}[0]{\textsf{MPr}}
+\newcommand{\McvIt}[0]{\textsf{McvIt}}
+\newcommand{\McvPr}[0]{\textsf{McvPr}}
+\newcommand{\MsfIt}[0]{\textsf{MsfIt}}
+\newcommand{\MsfPr}[0]{\textsf{MsfPr}}
+
+\newcommand{\defeq}[0]{\overset{\text{\tiny def}}{=}}
+\newcommand{\overbraceset}[2]{\overset{#1}{\overbrace{#2}}}
+\newcommand{\underbraceset}[2]{\underset{#1}{\underbrace{#2}}}
+
+\begin{document}
+
+\maketitle
+
+% \begin{abstract}
+% This is a mid-course document for my dissertation.
+% \end{abstract}
+
+\input{intro}
+
+\input{relwork}
+
+\input{mendler}
+
+\input{fi}
+
+\input{nax}
+
+\input{fixi}
+
+\section{Further extensions to Nax}\label{sec:ext}
+What's next
+
+
+Full dependency
+case analysis inside of index transformers
+Mixing the logic and the programming language.
+
+
+\cite{bgb} just a dummy citation.
+\bibliographystyle{plainnat}
+% \bibliographystyle{plain}
+\bibliography{main}
+
+\end{document}
