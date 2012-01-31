@@ -608,11 +608,43 @@ I will also discuss why we have not extended the primitive recursion family
 and the course of values family with syntactic inverse.
 
 \subsection{Other possible extensions}\label{sec:mendler:etc}
-D) indexed types
 
-E) Extension in the presence of Definitional Equality constraints.
+In section \S\ref{sec:mendler:pr}, I mentioned that we need
+need to extend the type system to express the tail function,
+which is only applicable to non-empty vectors (or, length indexed lists).
+In particular, we need \emph{equality constraints} and
+the \emph{unreachable} term.
+\begin{align*}
+\textit{vtail}~x =~& \MIt^{\{ n=`succ\;m \,|\, \{n\}. \textit{Vec}\;p\;\{n\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
+&\qquad  tl ~cast~\textit{VNil}~~~~~~~~~~~ = \textit{unreachable} \\
+&\qquad  tl ~cast\;(\textit{VCons}\;x\;xs) = cast\;xs
+\end{align*}
+Since we have the equality constraint ($n=`succ\;m$), the length index of
+the input list ($n$) must be non-zero. When the type checker reaches
+the \textit{unreachable}, it should try to show that the constraints
+are unsatisfiable. In first equation, we know that $n$ is zero because
+\textit{VNil}'s type is indexed by zero. Since $zero=succ\;m$ is not
+satisfiable, \textit{unreachable} should type check. If we have
+some syntactic sugar that inlines the equality constraint and
+omits the equation when its right hand side is unreachable, we
+would be able to write the $vtail$ functions as follows:
+\begin{align*}
+\textit{vtail}~x =~& \MIt^{\{ \{`succ\;m\}. \textit{Vec}\;p\;\{`succ\;m\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
+&\qquad  tl ~cast\;(\textit{VCons}\;x\;xs) = cast\;xs
+\end{align*}
+In my dissertation, I plan to study such extensional features that enables
+us to write useful functions like $vtail$.
 
-F) Extension in the presence of provable equality (examples?)
+The $vtail$ example above involves definitional equality by conversion.
+As we reason about more complicated functions with more interesting properties,
+we will need provable equality. A representative example of the provable
+equality is the associativity of natural numbers. The two terms
+$(plus\;(plus\;n_1\;n_2)\;n_3$ and $(plus\;n_1\;(plus\;n_2\;n_3))$,
+where $plus$ is a standard definition of addition for unary natural numbers,
+are not convertible but we can prove by induction that they are always equal
+for any three natural numbers $n_1$, $n_2$, and $n_3$.
+
+Mention Marcelo's idea on richer calculi????
 
 \subsection{summary???}
 G) Theory?
