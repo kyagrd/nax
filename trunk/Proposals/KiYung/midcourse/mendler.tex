@@ -170,18 +170,19 @@ where $r$ is an abstract type:
    \big) \\
  -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
 \end{multline*}
-The abstract recursive call operation is commonly available to
-all families of Mendler style recursion combinators. Each family (\textsf{xxx})
+The abstract recursive call operation $(\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)$ is available in
+all the Mendler-style families we study. Each family (\textsf{xxx})
 is distinguished by what other additional abstraction operations are available.
-Note that we use abstract recursive structure $r$ while we describe
+Note that the abstract operations manipulate values of type $r$ when we describe
 the function body, but we can apply the resulting recursive function
-to a concrete recursive structure $(\mu^\kappa t)$. Regarding the dynamic
-semantics (or, at runtime), $r$-values are the same as $(\mu^\kappa t)$-values.
-By restricting the type information of the recursive structure ($r$ instead of
-$(\mu^\kappa t)$), well typed function descriptions for the Mendler style
-recursion combinators are guaranteed to normalize. Recall that we apply
-$\mu^\kappa$ to the datatype constructor partially applied to its parameters,
-which is all the arguments before $r$. So, the type variable $t$ is always
+to a concrete structure of type $(\mu^\kappa t)$. At runtime
+$r$-values really are $(\mu^\kappa t)$-values, but
+by using an abstract type $r$ while type-checking, we
+can restrict the use of the recursive caller to those uses that are guaranteed to normalize. 
+
+Recall that we apply
+$\mu^\kappa$ to the datatype constructor after it is partially applied to its parameters 
+(all the arguments of $T$ before $r$). So, the type variable $t$ is always
 instantiated to $T\,\vec{p}$.
 
 The type of \textsf{Mxxx} involves both higher-rank polymorphism and
