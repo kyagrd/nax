@@ -1,16 +1,43 @@
-\section{System \Fi}\label{sec:Fi}
+\section{System \Fi and \Fixi}\label{sec:Fi}
+
+System \Fi\ is an extension of \Fw\ by term indexed types.
+The key design principle of \Fi\ is that we extend the kind syntax of \Fw\
+by allowing predefined types ($\tau : *$) to appear in domain of arrow kinds
+($\tau -> *$), as follows:
+\begin{align*}
+\text{\Fw\ kinds} ~~~ \kappa ::= ~ & * \mid \kappa -> \kappa \\
+\text{\Fi\; kinds}~~~ \kappa ::= ~ & * \mid \kappa -> \kappa \mid \tau -> \kappa
+\end{align*}
+We allow $\tau$ to appear in only the domain, but not in the range, of
+arrow kinds, since we want the kinds to be either $*$ or arrow kinds
+that eventually result in $*$ (\ie, $\vec{\kappa} -> *$) -- recall that
+type constructors eventually become types when they are fully applied.
+Extensions to the type and term syntax follow from this extension to
+the kind syntax. I am working with on a paper (to be submitted to an
+appropriate venue) that describes the details of System \Fi. I plan to
+reformat and extend the contents of this paper into a chapter in my
+thesis.
+
+System \Fixi\ is an extension of \Fixw\ by term indexed types.
+\Fixw\ is a calculus developed to give a reduction preserving embedding of
+the Mendler style primitive recursion family. \Fixw\ extends \Fw\ with
+polarized kinds and equi-recursive types. In \Fixi, they track polarities of
+kinds so that they may only take fixpoints of positive polarities.
+\Fixi\ is an extension of \Fixw\ by term indexed types. The key design principle
+of \Fixi\ is pretty much the same as the key design principle of \Fi.
+We extend the kind syntax with predefined types in the domain of arrow kinds,
+while keeping track of polarities, as follows:
+\begin{align*}
+\text{\Fixw\ kinds} ~~~ \kappa ::= ~ & * \mid \kappa^p -> \kappa \\
+\text{\Fixi\; kinds}~~~ \kappa ::= ~ & * \mid \kappa^p -> \kappa \mid \tau^p -> \kappa
+\end{align*}
+where the polarity $p$ may be either $+$, $-$, or $\circ$.
+Although \Fixi\ is still in its early stage of development, I foresee that
+most of the important properties of \Fi\ would naturally transfer to \Fixi,
+with minor changes in the proofs regarding the bookkeeping of polarities.
 
 
-H) Dependent types (indexing is a weak form of dependency)
-
-Proof of concept - Implementation
-
-Examples
-    functional programming
-    indexing
-    mutual recursion (even and odd)
-    *-kinded indexes (nested datatypes, powerlists bush)
-    Simple proof like objects using (more than even or odd)
+TODO
 
 The embedding would be different from
 the embedding of \MPr\ though. The embedding of some families of
