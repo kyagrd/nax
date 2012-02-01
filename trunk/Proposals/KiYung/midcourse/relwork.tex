@@ -479,7 +479,7 @@ data Succ x
 
 data Vector a n where
   Nil:: Vector a Zero
-  Cons:: a -> Vector a n => Vector a (Succ n)
+  Cons:: a -> Vector a n -> Vector a (Succ n)
 \end{verbatim}  
 
 Within System \Fi, we can rigorously define types indexed by terms
