@@ -45,7 +45,7 @@ The datatype constructor $T$ expects a series of type arguments $\vec{p}$, $r$,
 and $\vec{i}$, whose kinds are $\vec{\kappa}_p$, $(\vec{\kappa}_i -> *)$, and
 $\vec{\kappa}_i$, respectively. Thus, a value of this datatype would have
 type $(T\,\vec{p}\,r\,\vec{i})$ where the type variables $\vec{p},r,\vec{i}$
-are instantiated to certain types (or in the case of the $\vec{i}$, terms or types).
+are instantiated to certain types (or in the case of the $\vec{i}$, they are instantiated to either terms or types).
 \begin{itemize}
 \item The sequence of type variables $\vec{p}$ stand for the type parameters of the
 type. Type parameters always appear regularly 
@@ -60,8 +60,8 @@ recursive ocurrences. Note it can have a rather complicted kind $(\vec{\kappa}_i
 that can vary (\eg, $\vec{\tau_i}_1,\vec{\tau_i}_n$) in the type signatures of
 the data constructors $C_1,\cdots,C_n$. 
 
-\item Note that classifying whether an argument is a parameteror or an index is
-determined by its position-- whether it comes before or after $r$.
+\item Note that classifying whether an argument is a parameter or an index is
+determined soley by its position-- whether it comes before or after $r$.
 
 \end{itemize}
 We discuss the pattern as it occurs for some common types
@@ -78,8 +78,8 @@ polymorphic lists would have the form $L\;p\;r$ where $p$ is the type of
 the elements in the list. 
 
 \item For indexed types, there are indices following $r$.
-For instance, the base structure for length indexed lists would have the
-form $Vector\;p\;r\;i$ where $p$ is the type of the elements in the list and
+For instance, the base structure for length indexed lists (see Section \ref{sec:mendler:it}) would have the
+form $V\;p\;r\;i$ where $p$ is the type of the elements in the list and
 $i$ is the index that specifies the length of the list.
 
 \end{enumerate}
@@ -116,6 +116,8 @@ type, $(\mu^\kappa\; f)$ and $f$ always have the same
 kind $(\kappa -> \kappa)$.
 
 \paragraph{The pattern of a Mendler-style operator type.}
+In this section we illustrate that even Mendler-style operations that
+compute different things still have much in common.
 Mendler style recursion combinators rely on
 higher-rank polymorphism to ensure their normalization proprieties. 
 Recall that, in Figure \ref{fig:approaches},
@@ -150,7 +152,9 @@ recursion combinator in the presence of type indices:
        (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,) }
 \end{multline*}
 
-Different families have diferent specifications as to the number and
+
+The two dimensions of our hierarchy are both illustrated here.
+Different families have different specifications as to the number and
 type of the {\it other abstract operations}. Members of the same family
 differ over the number and kind of the indices $\vec{i}$.
 
@@ -160,7 +164,7 @@ to a set of abstract operations. The operations are abstract over the
 (possibly indexed) type $r$. These operations must never rely on the structure
 of $r$, and the higher-rank polymorphism enforces this.
 We can think of the above as an encoding of the following
-where $r$ is an abstract type:
+where $r$ is an abstract type, and each of the functions in the product, a different operation over $r$.
 \begin{multline*}
  \textsf{Mxxx} : \forall t . \forall a .
  \exists r.
@@ -221,7 +225,7 @@ With these special design parameters, we can do type inference on Nax programs.
 
 
 
-\subsection{Mendler style iteration}\label{sec:mendler:it}
+\subsection{Mendler-style iteration}\label{sec:mendler:it}
 The iteration family \MIt\ is the most basic Mendler-style recursion scheme.
 It supports one abstract operation, abstract recursive call.
 The type signature of \MIt\ is:
@@ -486,8 +490,8 @@ formalize the theory of \MIt\ involving term indices, I extend \Fixw\
 to \Fixi\ in order to formalize the theory of \MPr\ involving term indices.
 
 \subsection{Mendler style course of values iteration and its extensions}
-Some computations are naturally expressed by recursing substructure
-of the input value which is not immediate substructure (\eg, predecessor of predecessor,
+Some computations are naturally expressed by recursing over substructure
+of the input value which is not the immediate substructure (\eg, predecessor of predecessor,
 or tail of tail). This pattern of recursion is called \emph{course of values}
 recursion. Course of values recursion often appears in number sequences
 defined by recurrence relations (\eg, Fibonacci's sequence).
@@ -503,7 +507,7 @@ us to express course of values recursive functions, as follows:
                      \text{open $r$-structure to} \\
                      \text{reveal $t$-structure} \\
                     \end{smallmatrix}}{
-         (\forall\vec{i} . r\,\vec{i} -> t\,r) }
+         (\forall\vec{i} . r\,\vec{i} -> t\,r\, i) }
    ->    (\forall\vec{i} . t\, r\,\vec{i} -> a\,\vec{i}\,)
    \big) \\
 & -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,) \\
@@ -515,7 +519,7 @@ us to express course of values recursive functions, as follows:
                      \text{open $r$-structure to} \\
                      \text{reveal $t$-structure} \\
                     \end{smallmatrix}}{
-         (\forall\vec{i} . r\,\vec{i} -> t\,r) }
+         (\forall\vec{i} . r\,\vec{i} -> t\,r\,i) }
    -> \overbraceset{\begin{smallmatrix}
                      \text{cast from $r$-values} \\
                      \text{to $(\mu^\kappa t)$-values} \\
@@ -540,7 +544,7 @@ We can define the Fibonacci function using \McvIt\ as follows:
               \textit{Succ}\;n'  -> plus\;(\textit{fib}\;n')\;(\textit{fib}\;n)
 \end{align*}
 Recall that we cannot inspect the structure of the predecessor $n$ since
-its type is abstract (\ie, $n:r$). The $out : r -> \textit{Nat}\,$ operation
+its type is abstract (\ie, $n:r$). The $out : r -> \textit{N r}\,$ operation
 opens up the abstract structure ($r$), and reveals the base structure ($N$).
 So, it becomes possible to destruct (or, pattern match against) $out\;n$,
 and have access to the predecessor of predecessor $n'$. If needed, we can
@@ -572,12 +576,14 @@ calculi may coincide.
 
 \subsection{Mendler style iteration with syntactic inverse}
 Although \MIt\ is normalizing for negative recursive types, there exist
-certain class of total functions over negative recursive types, which is
-useful but not easily expressed in terms of \MIt. This class of functions
-were studied in the conventional setting. My recent contribution is
-the discovery of the new family of the Mendler style recursion combinators,
-which can express those class of functions. We call this new family \MsfIt,
-whose type is shown below:
+many total functions over negative recursive types, which are
+useful, but not easily expressed in terms of \MIt. Most of these functions
+were first studied in the conventional setting, and have definitions as
+recursive functions. My recent contribution is
+the discovery of a new family of the Mendler style recursion combinators,
+which can express these functions. We call this new family \MsfIt.
+The generic type (abstracting over the number and kind of indices) 
+of this family is shown below:
 \label{sec:mendler:sf}
 \[
  \MsfIt : \forall t . \forall a .
@@ -588,61 +594,68 @@ whose type is shown below:
                         \text{answers to $r$-values} \\
                        \end{smallmatrix}}{
             (\forall\vec{i} . a\,\vec{i} -> r\,\vec{i}\,) }
-   -> \;    (\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)
+   -> \;    (\forall\vec{i} . t \, r\,\vec{i} -> a\,\vec{i}\,)
    \big)
  -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
 \]
-In addition to the abstract recursive call, \MsfIt\ supports abstract
-inverse from answer values ($a$) to abstract recursive values ($r$).
-Several examples and detailed discussions on \MsfIt\ can be found in
-our recent work \cite{AhnShe11} (also known as \textit{msfcata}).
+In addition to the abstract recursive call, \MsfIt\ supports an abstract
+inverse from answer values ($a \,\vec{i}$) to abstract recursive values ($r\,\vec{i}$).
+Several examples and a detailed discussion about \MsfIt\ can be found in
+our recent work \cite{AhnShe11} (where we call this family \textit{msfcata}).
 We \cite{AhnShe11} proved normalization properties of \MsfIt\ by
 embeding \MsfIt\ into \Fw. I plan to extend the proof for \MsfIt\,
-taking term indexed types into consideration, by embedding \MsfIt\
+to a language with term-indexed types, by embedding \MsfIt\
 into \Fi, which is an extension of \Fw.
 
-I am also planning to write more complex examples in the Nax language using \MIt
+I am also planning to write more complex examples in the Nax language using \MIt.
 -- \emph{normalization by evaluation} and \emph{parallel reduction}.
 
 I will also discuss why we have not extended the primitive recursion family
-and the course of values family with syntactic inverse.
+and the course of values family with syntactic inverse (such exensions lead to possible non-termination).
 
 \subsection{Other possible extensions}\label{sec:mendler:etc}
 
-In section \S\ref{sec:mendler:pr}, I mentioned that we need
-need to extend the type system to express the tail function,
-which is only applicable to non-empty vectors (or, length indexed lists).
+In section \S\ref{sec:mendler:pr}, I mentioned that we 
+need to extend the type system to express the tail function which can only 
+be applied to non-empty vectors (or, length indexed lists).
 In particular, we need \emph{equality constraints} and
-the \emph{unreachable} term.
+the \emph{unreachable} term (evidence of a logical contradiction).
 \begin{align*}
 \textit{vtail}~x =~& \MIt^{\{ n=`succ\;m \,|\, \{n\}. \textit{Vec}\;p\;\{n\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
 &\qquad  tl ~cast~\textit{VNil}~~~~~~~~~~~ = \textit{unreachable} \\
 &\qquad  tl ~cast\;(\textit{VCons}\;x\;xs) = cast\;xs
 \end{align*}
-Since we have the equality constraint ($n=`succ\;m$), the length index of
-the input list ($n$) must be non-zero. When the type checker reaches
-the \textit{unreachable}, it should try to show that the constraints
+Under the equality constraint ($n=`succ\;m$), the length index of
+the input list ($n$) must be non-zero. When the type checker types
+the term \textit{unreachable}, it should try to show that the current constraints
 are unsatisfiable. In first equation, we know that $n$ is zero because
 \textit{VNil}'s type is indexed by zero. Since $zero=succ\;m$ is not
-satisfiable, \textit{unreachable} should type check. If we have
-some syntactic sugar that inlines the equality constraint and
-omits the equation when its right hand side is unreachable, we
-would be able to write the $vtail$ functions as follows:
+satisfiable, \textit{unreachable} should type check vacuously, since it marks a path
+that will never be taken in a well-typed program. It might be possible
+to use some syntactic sugar, that inlines the equality constraint, and
+checks that every omitted equation is unreachable. Then we could write the
+$vtail$ functions as follows:
 \begin{align*}
 \textit{vtail}~x =~& \MIt^{\{ \{`succ\;m\}. \textit{Vec}\;p\;\{`succ\;m\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
 &\qquad  tl ~cast\;(\textit{VCons}\;x\;xs) = cast\;xs
 \end{align*}
-In my dissertation, I plan to study such extensional features that enables
-us to write useful functions like $vtail$.
+In my dissertation, I plan to study such extensional features that enable
+programmers to write useful functions like $vtail$.
 
-The $vtail$ example above involves definitional equality by conversion.
-As we reason about more complicated functions with more interesting properties,
-we will need provable equality. A representative example of the provable
-equality is the associativity of natural numbers. The two terms
-$(plus\;(plus\;n_1\;n_2)\;n_3$ and $(plus\;n_1\;(plus\;n_2\;n_3))$,
-where $plus$ is a standard definition of addition for unary natural numbers,
-are not convertible but we can prove by induction that they are always equal
-for any three natural numbers $n_1$, $n_2$, and $n_3$.
+The $vtail$ example above involves converting the type of terms using definitional equality.
+As we reason about more complicated functions, with more interesting properties,
+we will need to represent provable equality. An example of provable
+equality is the associativity of natural numbers over addition. 
+Using the standard definition of addition (call it $plus$) for unary natural numbers,
+the two terms
+$(plus\;(plus\;n_1\;n_2)\;n_3)$ and $(plus\;n_1\;(plus\;n_2\;n_3))$,
+are not convertible. But, we can prove by induction that they are always equal
+for any three natural numbers $n_1$, $n_2$, and $n_3$. The addition of
+provable equality will extend the programs we can type. Of course, to construct such
+proofs, we will need an induction principle. Fortunately, every Mendler-style operator
+is an induction principle. This is one reason why a language built on Mendler-style
+operators make a perfect substrate for a sound logical reasoning system. Which, in case
+you don't recall, is the first part of my thesis statement!
 
 Mention Marcelo's idea on richer calculi????
 
