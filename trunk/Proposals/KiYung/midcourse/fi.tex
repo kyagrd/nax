@@ -16,7 +16,7 @@ By curry style, we mean that lambda terms at term level are unannotated.
 That is, the term syntax of \Fi\ and \Fw\, in the Curry style, are
 the same as the term syntax of the untyped lambda calculus.
 The key design principle of \Fi\ is that the kind syntax of \Fw\ is extended
-by allowing predefined types ($\tau : *$) to appear in the domain of arrow kinds
+by allowing types ($\tau : *$) to appear in the domain of arrow kinds
 ($\tau -> *$), as follows:
 \begin{align*}
 \text{\Fw\ kinds} ~~~ \kappa ::= ~ & * \mid \kappa -> \kappa \\
@@ -32,13 +32,14 @@ same terms.
 The extensions to \Fi\ enable users to express term indexed types.
 In \S\ref{sec:mendler}, we saw several examples of term index types, such as
 the length indexed list type $\textit{Vec}$, whose kind is $\textit{Nat} -> *$.
-Note that \textit{Nat} is a predefined type appearing in the domain of
-the arrow kind ($\textit{Nat} -> *$).
+Note that \textit{Nat} is a type appearing in the domain of the arrow kind
+($\textit{Nat} -> *$).
 
 I am working with on a paper (to be submitted to an appropriate venue) that
 describes the details of System \Fi. I plan to reformat and extend
 the contents of this paper in a chapter in my thesis. Here, I summarize
-the three key properties of \Fi. I will provide proofs in my thesis of these properties.
+the three key properties of \Fi. I will provide proofs in my thesis of
+these properties.
 \begin{description}
 \item[\quad Type safety.]
 \Fi\ must have the usual type safety properties (\ie, progress and preservation).
@@ -68,7 +69,7 @@ time predecessors.
 
 \Fixi\ is an extension of \Fixw\ by term indexed types. The key design principles
 of \Fixi\ are pretty much the same as the key design principles of \Fi.
-We extend the kind syntax with predefined types in the domain of arrow kinds,
+We extend the kind syntax with types in the domain of arrow kinds,
 while keeping track of polarities, as follows:
 \begin{align*}
 \text{\Fixw\ kinds} ~~~ \kappa ::= ~ & * \mid \kappa^p -> \kappa \\
