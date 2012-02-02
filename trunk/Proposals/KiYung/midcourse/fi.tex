@@ -1,13 +1,12 @@
 \section{Systems \Fi\ and \Fixi}\label{sec:Fi}
 
 In this document I have proposed that Mendler-style operators have translations
-into strongly normalizing $\lambda$-calculi. The stratgey is to develop
+into strongly normalizing $\lambda$-calculi. The strategy is to develop
 a sequence of calculi of increasing expressiveness. Several papers by other
-researchers have
-begun this process. Mendler's orginal work extended System \textsf{F},
-Abel and Mathhes extended System \Fw\ to get \Fixw. In my thesis I will
-follow in these footsteps by introducing System \Fi\ (a more expressive
-extension to \Fw) and System \Fi\ (an extension to \Fixi).
+researchers have begun this process. Mendler's ordinal work \cite{Mendler87}
+extended System \textsf{F}, \citet{AbeMat04} extended System \Fw\ to get \Fixw.
+In my thesis, I will follow in these footsteps by introducing System \Fi\
+(a more expressive extension to \Fw) and System \Fixi\ (an extension to \Fixw).
 
 
 \subsection{Introduction to Systems \Fi\ and \Fixi, and their key properties}
@@ -64,7 +63,7 @@ calculus developed to give a reduction preserving embedding of the Mendler
 style primitive recursion family. \Fixw\ extends \Fw\ with polarized kinds
 and equi-recursive types. In \Fixi, polarities of kinds are tracked so that
 only the fixpoints of types with kinds of positive polarity can be taken.
-Interesting propoerties of \Fixw\ include the ability to define constant
+Interesting properties of \Fixw\ include the ability to define constant
 time predecessors.
 
 \Fixi\ is an extension of \Fixw\ by term indexed types. The key design principles
@@ -82,7 +81,7 @@ naturally transfer to \Fixi\ with only minor changes to proof structure
 regarding the bookkeeping of polarities.
 
 \subsection{Embeddings of the Mendler style recursion combinators} In
-addition to proving the three key properties of Systems \Fi\ and Sytem
+addition to proving the three key properties of System \Fi\ and System
 \Fixi, we also need to demonstrate that there exist reduction preserving
 embeddings of the Mendler-style recursion combinators into either \Fi\ or
 \Fixi. Showing that there are reduction preserving embeddings of \MIt in
@@ -90,9 +89,9 @@ embeddings of the Mendler-style recursion combinators into either \Fi\ or
 the literature on Mendler-style recursion schemes. In my thesis
 I will follow this design pattern.
 
-The embedding of a kind-indexed family of Mendler-style operators
-is a pair of translations -- a translation of the recursive type operator ($\mu^\kappa$),
-and a translation of the Mendler style recursion combinator. 
+The embedding of a kind-indexed family of Mendler-style operators is
+a pair of translations -- a translation of the recursive type operator
+($\mu^\kappa$), and a translation of the Mendler style recursion combinator. 
 I have extended embeddings of \MIt\ and \MPr, taking term indexed
 types into consideration, by introducing new calculi \Fi\ and \Fixw,
 which are extensions of \Fw\ and \Fixi with term indices. In addition,
@@ -101,11 +100,16 @@ also have reduction preserving embeddings into either \Fi\ or \Fixi.
 In particular, \MsfIt\ will be embedded in \Fi, and the course of values
 recursion combinators (\McvIt\ and \McvPr) will be embedded in \Fixi.
 
-
-The details of the embedding may be different for each family even though some of
-them embed into the same target calculi. For instance, the target
+The details of the embedding may be different for each family even though
+some of them embed into the same target calculi. For instance, the target
 calculi for \MIt\ and \MsfIt\ are both \Fi. However, the embeddings
-of \MIt\ and \MsfIt\ are different. In general,
-the translation of the recursive type operator $\mu^\kappa$ is different for
-each family, even though the target language of the translation may be the same.
+of \MIt\ and \MsfIt\ are different. Generally, the translation of
+the recursive type operator $\mu^\kappa$ is different for each family,
+even though the target calculus of the translation may be the same.
+In practice, we may want to use several different families of Mendler style
+recursion combinators in one program. Therefore, we need to reconcile
+these different encodings into a coherent theory to build a usful language,
+we call Nax, which supports several different families of Mendler style
+redcursion combinators. I will berifely introduce the Nax language
+in the following section.
 

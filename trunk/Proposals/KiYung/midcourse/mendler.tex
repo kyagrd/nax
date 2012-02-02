@@ -631,8 +631,8 @@ are unsatisfiable. In first equation, we know that $n$ is zero because
 satisfiable, \textit{unreachable} should type check vacuously, since it marks a path
 that will never be taken in a well-typed program. It might be possible
 to use some syntactic sugar, that inlines the equality constraint, and
-checks that every omitted equation is unreachable. Then we could write the
-$vtail$ functions as follows:
+checks that every omitted equation is unreachable. Then, we could write
+the $vtail$ function as follows:
 \begin{align*}
 \textit{vtail}~x =~& \MIt^{\{ \{`succ\;m\}. \textit{Vec}\;p\;\{`succ\;m\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
 &\qquad  tl ~cast\;(\textit{VCons}\;x\;xs) = cast\;xs
