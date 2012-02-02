@@ -1,60 +1,73 @@
 \section{Systems \Fi\ and \Fixi}\label{sec:Fi}
 
+In this document I have proposed that Mendler-style operators have translations
+into strongly normalizing $\lambda$-calculi. The stratgey is to develop
+a sequence of calculi of increasing expressiveness. Several papers by other
+researchers have
+begun this process. Mendler's orginal work extended System \textsf{F},
+Abel and Mathhes extended System \Fw\ to get \Fixw. In my thesis I will
+follow in these footsteps by introducing System \Fi\ (a more expressive
+extension to \Fw) and System \Fi\ (an extension to \Fixi).
+
+
 \subsection{Introduction to Systems \Fi\ and \Fixi, and their key properties}
 System \Fi\ is an extension of a Curry style \Fw\ by term indexed types.
 By curry style, we mean that lambda terms at term level are unannotated.
 That is, the term syntax of \Fi\ and \Fw\, in the Curry style, are
 the same as the term syntax of the untyped lambda calculus.
-The key design principle of \Fi\ is that we extend the kind syntax of \Fw\
-by allowing predefined types ($\tau : *$) to appear in domain of arrow kinds
+The key design principle of \Fi\ is that the kind syntax of \Fw\ is extended
+by allowing predefined types ($\tau : *$) to appear in the domain of arrow kinds
 ($\tau -> *$), as follows:
 \begin{align*}
 \text{\Fw\ kinds} ~~~ \kappa ::= ~ & * \mid \kappa -> \kappa \\
 \text{\Fi\; kinds}~~~ \kappa ::= ~ & * \mid \kappa -> \kappa \mid \tau -> \kappa
 \end{align*}
-We allow $\tau$ to appear in only the domain, but not in the range, of
-arrow kinds, since we want the kinds to be either $*$ or arrow kinds
+Types, $\tau$, can appear only in the domain, but not in the range of
+arrow kinds, since all kinds should be either $*$ or arrow kinds
 that eventually result in $*$ (\ie, $\vec{\kappa} -> *$) -- recall that
-type constructors eventually become types when they are fully applied.
-The extension to the type syntax follow from the extension to the kind syntax.
-However, the term syntax does not change -- \Fi\ and \Fw\ has exactly the
-same term.
-The extensions we make to \Fi\ enables us to express term indexed types.
-In \S\ref{sec:mendler}, we have seen examples of term index types such as
+type constructors eventually become types (\ie\ have kind $*$) when they are fully applied.
+The extension to the type syntax follows directly from the extension to the kind syntax.
+However, the term syntax does not change -- \Fi\ and \Fw\ have exactly the
+same terms.
+The extensions to \Fi\ enable users to express term indexed types.
+In \S\ref{sec:mendler}, we saw several examples of term index types, such as
 the length indexed list type $\textit{Vec}$, whose kind is $\textit{Nat} -> *$.
 Note that \textit{Nat} is a predefined type appearing in the domain of
 the arrow kind ($\textit{Nat} -> *$).
 
 I am working with on a paper (to be submitted to an appropriate venue) that
 describes the details of System \Fi. I plan to reformat and extend
-the contents of this paper into a chapter in my thesis. Here, I summarize
-the three key properties of \Fi, which I will provide proofs in my thesis:
+the contents of this paper in a chapter in my thesis. Here, I summarize
+the three key properties of \Fi. I will provide proofs in my thesis of these properties.
 \begin{description}
-\item[\quad Type safety]
-\Fi\ must have the usual type safety property (\ie, progress and preservation).
+\item[\quad Type safety.]
+\Fi\ must have the usual type safety properties (\ie, progress and preservation).
 
-\item[\quad Index erasure]
-Index erasure is a property that well-typed terms in \Fi\ is also 
-well-typed in \Fw\, and its type in \Fw\ is given by the index erasure
-of the type in \Fi. That is, if $\Gamma |-_{\Fi} t : \tau$ then
+\item[\quad Index erasure.]
+Index erasure is a property that well-typed terms in \Fi\ are also 
+well-typed in \Fw\, and their types in \Fw\ are given by the index erasure
+of their types in \Fi. That is, if $\Gamma |-_{\Fi} t : \tau$ then
 $\Gamma^\circ |-_{\Fw} t : \tau^\circ$, where $\circ$ is the notation
 for index erasure. The index erasure property implies that the indices are
 only relevant for type checking at compile time, but computationally irrelevant
 at runtime. For instance, length indexed lists should behave exactly the same as
 regular (non-indexed) lists at runtime.
 
-\item[\quad Strong normalization]
-The proof of strong normalization almost automatically follows from
+\item[\quad Strong normalization.]
+The proof of strong normalization follows almost automatically from
 index erasure, since we know that \Fw\ is normalizing.
 \end{description}
 
-System \Fixi\ is an extension of \Fixw\ by term indexed types.
-\Fixw\ is a calculus developed to give a reduction preserving embedding of
-the Mendler style primitive recursion family. \Fixw\ extends \Fw\ with
-polarized kinds and equi-recursive types. In \Fixi, they track polarities of
-kinds so that they may only take fixpoints of positive polarities.
-\Fixi\ is an extension of \Fixw\ by term indexed types. The key design principle
-of \Fixi\ is pretty much the same as the key design principle of \Fi.
+System \Fixi\ is an extension of \Fixw\ by term indexed types. \Fixw\ is a
+calculus developed to give a reduction preserving embedding of the Mendler
+style primitive recursion family. \Fixw\ extends \Fw\ with polarized kinds
+and equi-recursive types. In \Fixi, polarities of kinds are tracked so that
+only the fixpoints of types with kinds of positive polarity can be taken.
+Interesting propoerties of \Fixw\ include the ability to define constant
+time predecessors.
+
+\Fixi\ is an extension of \Fixw\ by term indexed types. The key design principles
+of \Fixi\ are pretty much the same as the key design principles of \Fi.
 We extend the kind syntax with predefined types in the domain of arrow kinds,
 while keeping track of polarities, as follows:
 \begin{align*}
@@ -62,33 +75,36 @@ while keeping track of polarities, as follows:
 \text{\Fixi\; kinds}~~~ \kappa ::= ~ & * \mid \kappa^p -> \kappa \mid \tau^p -> \kappa
 \end{align*}
 where the polarity $p$ may be either $+$, $-$, or $\circ$.
-Although \Fixi\ is still in its early stage of development, I foresee that
-the work on proving the three key properties of \Fi\ would
-naturally transfer to \Fixi with minor changes to proof structure
+Although \Fixi\ is still in the early stages of development, I foresee 
+that the work on proving the three key properties of \Fi\ will
+naturally transfer to \Fixi\ with only minor changes to proof structure
 regarding the bookkeeping of polarities.
 
-\subsection{Embeddings of the Mendler style recursion combinators}
-In addition to showing the three key properties of Systems \Fi\ and \Fixi,
-we also need demonstrate that there exist reduction preserving embeddings
-of the Mendler style recursion combinators into either \Fi\ or \Fixi.
-Showing that there can be reduction preserving embedding of \MIt in \Fw\
-and \MPr\ in \Fixw, was the purpose of introducing \Fw\ and \Fixw\
-in the literature on Mendler style recursion schemes.
+\subsection{Embeddings of the Mendler style recursion combinators} In
+addition to proving the three key properties of Systems \Fi\ and Sytem
+\Fixi, we also need to demonstrate that there exist reduction preserving
+embeddings of the Mendler-style recursion combinators into either \Fi\ or
+\Fixi. Showing that there are reduction preserving embeddings of \MIt in
+\Fw\ and \MPr\ in \Fixw, was the sole purpose of introducing \Fw\ and \Fixw\ in
+the literature on Mendler-style recursion schemes. In my thesis
+I will follow this design pattern.
 
-I have extended these embeddings of \MIt\ and \MPr, taking term indexed
+The embedding of a kind-indexed family of Mendler-style operators
+is a pair of translations -- a translation of the recursive type operator ($\mu^\kappa$),
+and a translation of the Mendler style recursion combinator. 
+I have extended embeddings of \MIt\ and \MPr, taking term indexed
 types into consideration, by introducing new calculi \Fi\ and \Fixw,
 which are extensions of \Fw\ and \Fixi with term indices. In addition,
-I will show that other families of the Mendler style recursion combinators
+I will show that other families of the Mendler-style recursion combinators
 also have reduction preserving embeddings into either \Fi\ or \Fixi.
-In particular, \MsfIt\ is embedded into \Fi and the course of values
-recursion combinators (\McvIt\ and \McvPr) are embedded into \Fixi.
+In particular, \MsfIt\ will be embedded in \Fi, and the course of values
+recursion combinators (\McvIt\ and \McvPr) will be embedded in \Fixi.
 
-The embedding may be different for each family even though some of
+
+The details of the embedding may be different for each family even though some of
 them embed into the same target calculi. For instance, the target
-calculi for \MIt\ and \MsfIt\ are both \Fi. However, the embedding
-of \MIt\ and \MsfIt\ is different. The embedding of a certain family
-is a pair of translations -- a translation of the recursive type operator,
-and a translation of the Mendler style recursion combinator. In general,
+calculi for \MIt\ and \MsfIt\ are both \Fi. However, the embeddings
+of \MIt\ and \MsfIt\ are different. In general,
 the translation of the recursive type operator $\mu^\kappa$ is different for
-each family, even though their target calculi may coincide.
+each family, even though the target language of the translation may be the same.
 

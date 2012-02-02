@@ -161,13 +161,13 @@ Different families have different specifications as to the number and
 type of the {\it other abstract operations}. Members of the same family
 differ over the number and kind of the indices $\vec{i}$.
 
-One can think of a Mendler-style recursion combinator as a higher order
-function. It returns a recursive function when applied
-to a set of abstract operations. The operations are abstract over the 
-(possibly indexed) type $r$. These operations must never rely on the structure
-of $r$, and the higher-rank polymorphism enforces this.
-We can think of the above as an encoding of the following
-where $r$ is an abstract type, and each of the functions in the product, a different operation over $r$.
+One can think of a Mendler-style recursion combinator as a higher order function.
+It returns a recursive function when applied to a set of abstract operations. The
+operations are abstract over the (possibly indexed) type $r$. These operations must
+never rely on the structure of $r$, and the higher-rank polymorphism enforces this.
+We can think of the above as an encoding of the following where $r$ is an abstract
+type, and each of the functions in the product, a different abstract operation over $r$.
+
 \begin{multline*}
  \textsf{Mxxx} : \forall t . \forall a .
  \exists r.
