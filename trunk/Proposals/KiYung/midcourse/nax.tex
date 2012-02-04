@@ -9,19 +9,89 @@ However, they are far from practical programming purposes since even very simple
 datatypes, such as boolean type, must be defined via impredicative encodings
 (\eg, an encoding for the boolean type is $\forall a . a -> a -> a$).
 
-We design Nax to be friendly for functional programmers in several ways:
+We are designing Nax to be friendly for functional programmers in several ways:
 Nax has a Haskell-like syntax, conservatively extends Hindley-Milner
-type inference, and support type synonyms and macros for defining
+type inference, and supports type synonyms and derivation macros for defining
 recursive types more conveniently. The examples in \S\ref{sec:mendler}
 are pretty formatted Nax programs. If you know Haskell, you can tell
 that their syntax are similar to Haskell. I mentioned how we do
 type inference (or, reconstruction) based on the user provided
 index transformers annotations on Mendler style recursion combinators.
-I also mentioned that Nax supports type synonyms, but have not shown
-its concrete syntax in \S\ref{sec:mendler}. So, let us see an example
-illustrating the syntax for type synonyms, and also the syntax for macros,
-which makes recursive type definitions more convenient.
+I also mentioned that Nax supports type synonyms, but have not shown its
+concrete syntax in \S\ref{sec:mendler}. Here, in Figure \ref{fig:naxmacros},
+I illustrate the syntax for type synonyms and derivation macros, which make
+recursive type definitions more convenient. The two versions of
+a recursive type definition, one with type synonym and
+the other with a derivation macro, are essentially the same.
+The derivation macro version is expanded into the type synonym version
+by the Nax implementation.
 
+In the type synonym definition, we abbreviate the fixpoint $\mu^{*}(L\;a)$
+as a type synonym $List$, and define constructor functions
+$\textit{nil} : a -> \textit{List}\;a$ and
+$\textit{cons} : a -> \textit{List}~a -> \textit{List}~a$.
+Recall that we define a recursive type in two levels in Nax,
+by taking a fixpoint of the base structure (\eg, $L$) for the recursive type.
+The type synonym (\textit{List}) and its constructor functions
+(\textit{nil} and \textit{cons}) correspond to the Haskell definition of
+the recursive datatype (\textit{List}) and its data constructors
+(\textit{Nil} and \textit{Cons}).
+
+In the derivation macro definition, the derivation macro
+(\textbf{deriving fixpoint} \textit{List}) attached to
+the definition of the base datatype ($L$) instructs
+the Nax implementation to automatically generate the type synonym 
+(\textit{List}) for the recursive type and its constructor functions
+(\textit{nil} and \textit{cons}) with the lowercase names.
+
+\begin{figure}
+\begin{tabular}{c|c|c}
+Haskell  & Nax with synonyms &  Nax with derivation \\
+\hline
+
+\begin{minipage}[t]{.28\linewidth}
+\small\vspace{.1em}
+\textbf{data} \textit{List} $a$\\
+$~~~$ $=$ \textit{Nil}\\ 
+$~~~$ $\;|\;$ \textit{Cons} $a$ (\textit{List} a)
+\vspace{4.9em}\\
+$x = \textit{Cons}~3~(\textit{Cons}~2~\textit{Nil}\,)$
+\end{minipage} 
+
+& 
+
+\begin{minipage}[t]{.32\linewidth}
+\small\vspace{.1em}
+\textbf{data} $L : * -> * -> *$ \textbf{where}\\
+$~~~$  \textit{Nil}$~~\; :$ $L\;a\;r$\\
+$~~~$  \textit{Cons}    $:$ $a -> r -> L\;a\;r$
+\vspace{.3em}\\
+\textbf{synonym} \textit{List} $a = \mu^{*} (L\;a)$
+\vspace{.3em}\\
+\textit{nil}$~~~~~~~~~= \In^{*} \textit{Nil}$ \\
+\textit{cons}  $x\;xs = \In^{*} (Cons\;x\;xs)$
+\vspace{.5em}\\
+$x = \textit{cons}~3~(\textit{cons}~2~\textit{nil}\,)$
+\end{minipage}
+
+&
+
+\begin{minipage}[t]{.32\linewidth}
+\small\vspace{.1em}
+\textbf{data} $L : * -> * -> *$ \textbf{where}\\
+$~~~$  \textit{Nil}$~~\; :$ $L\;a\;r$\\
+$~~~$  \textit{Cons}    $:$ $a -> r -> L\;a\;r$\\
+$~~$ \textbf{deriving} \textbf{fixpoint} \textit{List}
+\vspace{3.5em}\\
+$x = \textit{cons}~3~(\textit{cons}~2~\textit{nil}\,)$
+\end{minipage}
+
+\end{tabular}
+\caption{Two versions of a recursive type definition of \textit{List} in Nax --
+         with a \textit{type synonym} and with a \emph{derivation macro}
+         (\cf\ Haskell definition of $List$)}
+\label{fig:naxmacros}
+\end{figure}
 
 
 metatheory / properties of Nax
