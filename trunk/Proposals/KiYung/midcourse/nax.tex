@@ -1,7 +1,40 @@
 \section{The Nax language}\label{sec:Nax}
+
+Nax is a language, which supports non-recursive datatypes, recursive type
+operators ($\mu^\kappa$), and Mendler style recursion combinators (\MIt, \MPr,
+\McvIt, \McvPr, \MsfIt) as language constructs. The calculi (\Fi\ and \Fixi)
+we discussed in the previous section are theoretically powerful enough to
+capture the semantics of recursive types and Mendler style recursion schemes.
+However, they are far from practical programming purposes since even very simple
+datatypes, such as boolean type, must be defined via impredicative encodings
+(\eg, an encoding for the boolean type is $\forall a . a -> a -> a$).
+
+We design Nax to be friendly for functional programmers in several ways:
+Nax has a Haskell-like syntax, conservatively extends Hindley-Milner
+type inference, and support type synonyms and macros for defining
+recursive types more conveniently. The examples in \S\ref{sec:mendler}
+are pretty formatted Nax programs. If you know Haskell, you can tell
+that their syntax are similar to Haskell. I mentioned how we do
+type inference (or, reconstruction) based on the user provided
+index transformers annotations on Mendler style recursion combinators.
+I also mentioned that Nax supports type synonyms, but have not shown
+its concrete syntax in \S\ref{sec:mendler}. So, let us see an example
+illustrating the syntax for type synonyms, and also the syntax for macros,
+which makes recursive type definitions more convenient.
+
+
+
+metatheory / properties of Nax
+
+give semantics by translation into \Fi\ or \Fixw\ is \\
+
+properties about type inference \\
+syntax directed type system (conversion is inlined) \\
+type inference algorithm is sound and complete \\
+most general type w.r.t. index transformer annotation
+
 Design of Nax
     Design Macros - 2 level types plus type (and term) synonyms
     Static choices (Mu *)  (In *->*)   index transformers
     kind and type inference.
-
 

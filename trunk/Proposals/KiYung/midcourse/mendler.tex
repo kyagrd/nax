@@ -619,18 +619,18 @@ be applied to non-empty vectors (or, length indexed lists).
 In particular, we need \emph{equality constraints} and
 the \emph{unreachable} term (evidence of a logical contradiction).
 \begin{align*}
-\textit{vtail}~x =~& \MIt^{\{ n=`succ\;m \,|\, \{n\}. \textit{Vec}\;p\;\{n\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
+\textit{vtail}~x =~& \MIt^{\{\{n\} \,|\, n=`succ\;m \; . \, \textit{Vec}\;p\;\{n\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
 &\qquad  tl ~cast~\textit{VNil}~~~~~~~~~~~ = \textit{unreachable} \\
 &\qquad  tl ~cast\;(\textit{VCons}\;x\;xs) = cast\;xs
 \end{align*}
 Under the equality constraint ($n=`succ\;m$), the length index of
 the input list ($n$) must be non-zero. When the type checker types
-the term \textit{unreachable}, it should try to show that the current constraints
-are unsatisfiable. In first equation, we know that $n$ is zero because
-\textit{VNil}'s type is indexed by zero. Since $zero=succ\;m$ is not
-satisfiable, \textit{unreachable} should type check vacuously, since it marks a path
-that will never be taken in a well-typed program. It might be possible
-to use some syntactic sugar, that inlines the equality constraint, and
+the term \textit{unreachable}, it should try to show that the current
+constraints are unsatisfiable. In first equation, we know that $n$ is zero
+because \textit{VNil}'s type is indexed by zero. Since $zero=succ\;m$ is not
+satisfiable, \textit{unreachable} should type check vacuously, since it marks
+a path that will never be taken in a well-typed program. It might be possible
+to use some syntactic sugar that inlines the equality constraint and
 checks that every omitted equation is unreachable. Then, we could write
 the $vtail$ function as follows:
 \begin{align*}
@@ -640,20 +640,21 @@ the $vtail$ function as follows:
 In my dissertation, I plan to study such extensional features that enable
 programmers to write useful functions like $vtail$.
 
-The $vtail$ example above involves converting the type of terms using definitional equality.
-As we reason about more complicated functions, with more interesting properties,
-we will need to represent provable equality. An example of provable
-equality is the associativity of natural numbers over addition. 
-Using the standard definition of addition (call it $plus$) for unary natural numbers,
-the two terms
+The $vtail$ example above involves converting the type of terms using
+definitional equality (\ie, $\beta$-conversion). As we reason about more
+complicated functions, with more interesting properties, we will need to
+represent provable equality. An example of provable equality is
+the associativity of natural numbers over addition. Using the standard
+definition of addition (call it $plus$) for unary natural numbers, the two terms
 $(plus\;(plus\;n_1\;n_2)\;n_3)$ and $(plus\;n_1\;(plus\;n_2\;n_3))$,
 are not convertible. But, we can prove by induction that they are always equal
 for any three natural numbers $n_1$, $n_2$, and $n_3$. The addition of
-provable equality will extend the programs we can type. Of course, to construct such
-proofs, we will need an induction principle. Fortunately, every Mendler-style operator
-is an induction principle. This is one reason why a language built on Mendler-style
-operators make a perfect substrate for a sound logical reasoning system. Which, in case
-you don't recall, is the first part of my thesis statement!
+provable equality will extend the programs we can type. Of course,
+to construct such proofs, we will need an induction principle. Fortunately,
+every Mendler-style operator is an induction principle. This is one reason
+why a language built on Mendler-style recursion combinators make a perfect
+substrate for a sound logical reasoning system. Which, in case you don't recall,
+is the first part of my thesis statement!
 
 %%%% TODO Mention Marcelo's idea on richer calculi????
 
@@ -663,4 +664,4 @@ you don't recall, is the first part of my thesis statement!
 %%    statements (and perhaps proofs) of properties that should hold.
 %%    Strong normalization, soundness with respect to dynamic semantics,
 %%    logical soundness (F-omega argument)
-%% 
+
