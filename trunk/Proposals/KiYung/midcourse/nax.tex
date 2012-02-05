@@ -99,13 +99,22 @@ $x = \textit{cons}~3~(\textit{cons}~2~\textit{nil}\,)$
 \label{fig:naxmacros}
 \end{figure}
 
-\subsection{Properties of Nax}\ref{sec:Nax:theory}
-As a typed programming language, Nax should be type safe.
+\subsection{Properties of Nax}\label{sec:Nax:theory}
+\paragraph{Type saftey:}
+Nax, being a typed programming language, should be type safe.
 I will prove type safety of Nax in the thesis.
-metatheory / properties of Nax
 
-give semantics by translation into \Fi\ or \Fixw\ is \\
+\paragraph{Normalization:}
+I will prove normalization of Nax by a reduction preserving embedding into
+either \Fi\ or \Fixw, depending on which families of Mendler style recursion
+combinators we decide to include in Nax. Since it is likely that we want
+primitive recursion most of the time, the target of the embedding would
+eventually be \Fixw. But, for simplicity of illustration, I will first
+illustrate an embedding of a small version of Nax, with \MIt\ and \MsfIt\
+families only, into \Fi. Then, I will illustrate an embedding of Nax,
+including other families, into \Fixw, with gradually increasing complexity.
 
+\paragraph{Type inference}
 properties about type inference \\
 syntax directed type system (conversion is inlined) \\
 type inference algorithm is sound and complete \\
