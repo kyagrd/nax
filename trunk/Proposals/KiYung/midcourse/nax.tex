@@ -1,54 +1,65 @@
 \section{The Nax language}\label{sec:Nax}
 
-Nax is a language, which supports non-recursive datatypes, recursive type
-operators ($\mu^\kappa$), and Mendler style recursion combinators (\MIt, \MPr,
-\McvIt, \McvPr, \MsfIt) as language constructs. The calculi (\Fi\ and \Fixi)
-we discussed in the previous section are theoretically powerful enough to
-capture the semantics of recursive types and Mendler style recursion schemes.
-However, they are far from practical programming purposes since even very simple
-datatypes, such as boolean type, must be defined via impredicative encodings
-(\eg, an encoding for the boolean type is $\forall a . a -> a -> a$). To be
-programmer friendly, Nax supports datatypes and Mendler style recursion
+To validate the second part of my thesis -- the Mendler-style can support 
+a simple and expressive programming language, we have designed the
+programming language Nax.
+
+Nax supports non-recursive datatypes, the recursive type
+operator ($\mu^\kappa$), and the Mendler-style recursion combinators (\MIt, \MPr,
+\McvIt, \McvPr, \MsfIt). The calculi, \Fi\ and \Fixi,
+discussed in the previous sections, are theoretically powerful enough to
+capture the semantics of both recursive types and Mendler-style recursion schemes.
+However, they are far from practical programming languages. Even very simple
+datatypes, such as the boolean type, must be defined via impredicative 
+Church-style encodings
+(\eg, an encoding for the boolean type is $\forall a . a -> a -> a$). 
+Fortunately, it is possible to provide a more user friendly layer of abstraction
+over these calculi. Nax supports datatypes and Mendler style recursion
 combinators as primitive constructs of the language. I will introduce other
 programmer friendly features of the Nax language in \S\ref{sec:Nax:tysym}.
 Then, in \S\ref{sec:Nax:theory}, I will discuss the desired properties of Nax,
-which is to be proven in the thesis.
+which will be demonstrated in the thesis.
 
 \subsection{Type synonyms and macro derivations}\label{sec:Nax:tysym}
-We are designing Nax to be friendly for functional programmers in several ways:
-Nax has a Haskell-like syntax, conservatively extends Hindley-Milner
-type inference, and supports type synonyms and derivation macros for defining
-recursive types more conveniently. The examples in \S\ref{sec:mendler}
-are pretty formatted Nax programs. If you know Haskell, you can tell
-that their syntax are similar to Haskell. I mentioned how we do
-type inference (or, reconstruction) based on the user provided
-index transformers annotations on Mendler style recursion combinators.
-I also mentioned that Nax supports type synonyms, but have not shown its
-concrete syntax in \S\ref{sec:mendler}. Here, in Figure \ref{fig:naxmacros},
-I illustrate the syntax for type synonyms and derivation macros, which make
-recursive type definitions more convenient. The two versions of
-a recursive type definition, one with type synonym and
-the other with a derivation macro, are essentially the same.
-The derivation macro version is expanded into the type synonym version
-by the Nax implementation.
 
-In the type synonym definition, we abbreviate the fixpoint $\mu^{*}(L\;a)$
-as a type synonym $List$, and define constructor functions
+Nax was designed with two goals in mind. First it must be
+directly definable in terms of these calculi, and it must exhibit a user friendly
+interface to programmers. Towards these goals, 
+Nax has a Haskell-like syntax, and conservatively extends Hindley-Milner
+type inference. It also supports type synonyms and term macros. and a mechanism to
+automatically derive macros to make defining
+recursive types more convenient. The examples in \S\ref{sec:mendler}
+are really reformatted Nax programs. If you know Haskell, you will see
+that the Nax syntax is similar to Haskell. We have already discussed how Nax performs
+type inference (or, type reconstruction) based on user provided
+index transformers attached to Mendler-style recursion combinators.
+I also mentioned that Nax supports type synonyms, but did not
+show any details of the concrete syntax in \S\ref{sec:mendler}. In Figure \ref{fig:naxmacros},
+I illustrate the syntax for type synonyms and derivation macros, which make
+recursive type definitions more convenient. In the figure I give three
+versions. The first is a Haskell version for reference. The other
+two versions are both Nax programs. The first Nax version makes explicit the type synonyms
+and macros. In the the second Nax version we use the derivation facility.
+The two versions define equivalent programs..
+
+In the type synonym version, we abbreviate the fixpoint $\mu^{*}(L\;a)$
+using the type synonym $List$, and define constructor functions
 $\textit{nil} : a -> \textit{List}\;a$ and
 $\textit{cons} : a -> \textit{List}~a -> \textit{List}~a$.
-Recall that we define a recursive type in two levels in Nax,
-by taking a fixpoint of the base structure (\eg, $L$) for the recursive type.
-The type synonym (\textit{List}) and its constructor functions
-(\textit{nil} and \textit{cons}) correspond to the Haskell definition of
+Recall, that we define recursive types using two levels in Nax.
+We take the fixpoint of the base structure (\eg, $L$) to define a recursive type.
+The type synonym (\textit{List}), and its constructor functions
+\textit{nil} and \textit{cons}, correspond to the Haskell definition of
 the recursive datatype (\textit{List}) and its data constructors
 (\textit{Nil} and \textit{Cons}).
 
-In the derivation macro definition, the derivation macro
+In the the third version using derivation, the declaration
 (\textbf{deriving fixpoint} \textit{List}) attached to
 the definition of the base datatype ($L$) instructs
 the Nax implementation to automatically generate the type synonym 
 (\textit{List}) for the recursive type and its constructor functions
-(\textit{nil} and \textit{cons}) with the lowercase names.
+(\textit{nil} and \textit{cons}) with names derived by dropping the case
+of the initial alphabetic character.
 
 \begin{figure}
 \begin{tabular}{c|c|c}
@@ -100,6 +111,10 @@ $x = \textit{cons}~3~(\textit{cons}~2~\textit{nil}\,)$
 \end{figure}
 
 \subsection{Properties of Nax}\label{sec:Nax:theory}
+
+Nax is designed to demonstrate my thesis. As such, the Nax language must exhibit
+a number of properties. I list a few of them here.
+
 \paragraph{Type saftey:}
 Nax, being a typed programming language, should be type safe.
 I will prove type safety of Nax in the thesis.
@@ -107,10 +122,10 @@ I will prove type safety of Nax in the thesis.
 \paragraph{Normalization:}
 I will prove normalization of Nax by a reduction preserving embedding into
 either \Fi\ or \Fixw, depending on which families of Mendler style recursion
-combinators we decide to include in Nax. Since it is likely that we want
-primitive recursion most of the time, the target of the embedding would
-eventually be \Fixw. But, for simplicity of illustration, I will first
-illustrate an embedding of a small version of Nax, with \MIt\ and \MsfIt\
+combinators we decide to include in Nax. Since it is likely that 
+primitive recursion is most useful, the eventual target of the embedding will
+be \Fixw. But, for simplicity of illustration, I will initially
+illustrate an embedding of a subset of Nax, with \MIt\ and \MsfIt\
 families only, into \Fi. Then, I will illustrate an embedding of Nax,
 including other families, into \Fixw, with gradually increasing complexity.
 
