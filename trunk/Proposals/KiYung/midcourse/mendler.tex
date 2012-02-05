@@ -6,7 +6,7 @@ dissertation (\S\ref{sec:mendler:intro}). These patterns have two
 dimensions. The first dimension describes what and how the operator
 computes, and the second dimension abstracts over the kind of a data
 type. We call all Mendler operators that compute the same way, but over
-different data types with different kinds,  a kind-indexed family of
+different types with different kinds,  a kind-indexed family of
 operators. Mendler operators that compute things using a different
 computation pattern belong to different families.
 
@@ -33,7 +33,7 @@ $\kappa_1 \cdots \kappa_n$, $(\vec{\kappa} -> *)$ means
 $(\kappa_1 -> \cdots -> \kappa_n -> *)$).
 
 \paragraph{The pattern of recursive type construction.}
-The general form of a non-recursive data type definition, which is to be used
+The general form of a non-recursive datatype definition, which is to be used
 as the base structure for a recursive types, is the following:
 \begin{align*}
 \textbf{data}~ T : \vec{\kappa}_p -> (\vec{\kappa}_i -> *) ->

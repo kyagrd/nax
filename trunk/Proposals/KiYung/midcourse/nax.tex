@@ -7,8 +7,14 @@ we discussed in the previous section are theoretically powerful enough to
 capture the semantics of recursive types and Mendler style recursion schemes.
 However, they are far from practical programming purposes since even very simple
 datatypes, such as boolean type, must be defined via impredicative encodings
-(\eg, an encoding for the boolean type is $\forall a . a -> a -> a$).
+(\eg, an encoding for the boolean type is $\forall a . a -> a -> a$). To be
+programmer friendly, Nax supports datatypes and Mendler style recursion
+combinators as primitive constructs of the language. I will introduce other
+programmer friendly features of the Nax language in \S\ref{sec:Nax:tysym}.
+Then, in \S\ref{sec:Nax:theory}, I will discuss the desired properties of Nax,
+which is to be proven in the thesis.
 
+\subsection{Type synonyms and macro derivations}\label{sec:Nax:tysym}
 We are designing Nax to be friendly for functional programmers in several ways:
 Nax has a Haskell-like syntax, conservatively extends Hindley-Milner
 type inference, and supports type synonyms and derivation macros for defining
@@ -93,7 +99,9 @@ $x = \textit{cons}~3~(\textit{cons}~2~\textit{nil}\,)$
 \label{fig:naxmacros}
 \end{figure}
 
-
+\subsection{Properties of Nax}\ref{sec:Nax:theory}
+As a typed programming language, Nax should be type safe.
+I will prove type safety of Nax in the thesis.
 metatheory / properties of Nax
 
 give semantics by translation into \Fi\ or \Fixw\ is \\
