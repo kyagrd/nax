@@ -6,7 +6,7 @@ ps: main.ps
 
 dvi: main.dvi
 
-INCSRC = intro.tex relwork.tex mendler.tex fi.tex nax.tex fixi.tex
+INCSRC = intro.tex relwork.tex mendler.tex fi.tex nax.tex ext.tex summary.tex
 
 main.pdf: main.tex main.aux main.bbl $(INCSRC)
 	pdflatex main
