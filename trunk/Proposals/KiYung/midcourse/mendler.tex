@@ -163,8 +163,15 @@ differ over the number and kind of the indices $\vec{i}$.
 
 One can think of a Mendler-style recursion combinator as a higher order function.
 It returns a recursive function when applied to a set of abstract operations. The
-operations are abstract over the (possibly indexed) type $r$. These operations must
-never rely on the structure of $r$, and the higher-rank polymorphism enforces this.
+operations are abstract over the (possibly indexed) type $r$. These operations
+must never rely on the structure of $r$, and the higher-rank polymorphism enforces
+this.
+
+In general one thinks of the {\em abstract recursive call} and the {\em other
+abstract operations} as given, and the user must supply the definition of the body
+which {\em combines a t-structure filled with r-values into an answer}.
+
+
 We can think of the above as an encoding of the following where $r$ is an abstract
 type, and each of the functions in the product, a different abstract operation over $r$.
 
