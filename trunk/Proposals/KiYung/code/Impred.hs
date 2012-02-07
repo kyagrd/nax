@@ -27,7 +27,7 @@ import LayoutToken -- Replaces Text.ParserCombinators.Parsec.Token
                    
 import Monads(FIO(..),handle,runFIO,fio,nextInteger,writeln
              ,unionByM,lift1,lift2,lift3,lift4,foldrM,when,anyM
-             ,newRef,writeRef,readRef
+             ,newRef,writeRef,readRef,failFIOwith,handleP
              )
              
 import Debug.Trace             
@@ -77,7 +77,7 @@ data Expr
    | ETuple [Expr]
    | ELet (Decl Name Expr (Maybe (SourcePos,PTyp))) Expr
    | ECase Expr [(Pat Name PTyp,Expr)]
-   | EPoly Expr (Maybe PTyp)
+   | EPolyStar Expr  -- (Maybe PTyp)
    | Epoly [Name] Expr PTyp
    | EInst Expr (Maybe PTyp)
 
@@ -90,6 +90,7 @@ data PTyp
    | PTyTuple [PTyp]
    | PTyCon Name 
    | PTyAll [Name] PTyp 
+
    
 --------------------------------------------
 -- Typed things
@@ -112,9 +113,11 @@ data Fomega
    | FApp Fomega Fomega                                   
    | FAbs (Pat Var Typ) Fomega
    | FLet (Decl Var Fomega Typ) Fomega
-   | FCase Fomega [(Pat Var Typ,Fomega)]   
+   | FCase Fomega [(Pat Var Typ,Fomega)] 
+   | FTuple [Fomega]
    | FTypApp Fomega [Typ]
    | FTypAbs [Bind] Fomega
+   | FCast Typ Typ Fomega
    
     
 data Typ 
@@ -126,6 +129,7 @@ data Typ
    | TyAll [Bind] Typ
    | TcTv (Uniq,Pointer Typ,Kind)
 --    | TyCast Coercion Typ
+
 
 -----------------------------------------------------------
 
@@ -172,6 +176,7 @@ compose xs ys = do { zs <- (mapM f ys); return(zs++xs)}
   where f (ExprPS p e) = lift1 (ExprPS p) (subbTExpr ([],xs) e)
         f (TypePS p t) = lift1 (TypePS p) (subbTyp  ([],xs) t)
         f (KindPS p k) = lift1 (KindPS p) (subbKind ([],xs) k)
+
    
 solve:: [PSub] -> [(Typ,Typ,Int,TEqual)] -> FIO (Tree [PSub])
 solve sub [] = return(One sub)
@@ -191,7 +196,7 @@ solve sub (x:more) =
             defer = solve sub (more ++ [(TcTv v,w,n+1,p)])
     (t1@(TyAll bs t),t2@(TyAll cs s),n,p) -> 
       do { (skol,skTy) <- skolem cs s
-         ; (genproof,freshTy) <- instanGen t1
+         ; (_,genproof,freshTy) <- instanGen t1
          ; (ptrs,names2) <- getVarsTyp t1
          ; let free = map unPtr ptrs
                good u x = (not(elem u free)) || (not(elem (unName x) skol))
@@ -203,7 +208,7 @@ solve sub (x:more) =
          ; filterTree p tree }         
     (t1@(TyAll bs t),w@(TcTv v),n,p) -> return(Choice sub (x:more) [instan,pick,defer])
       where instan = 
-              do { (genproof,freshTy) <- instanGen t1
+              do { (_,genproof,freshTy) <- instanGen t1
                  ; solve sub ((freshTy,w,n,p):more) }
             pick = 
               do { sub2 <- compose [TypePS v t1] sub
@@ -211,14 +216,36 @@ solve sub (x:more) =
 	         ; solve sub2 more2 }
             defer = solve sub (more ++ [(TcTv v,w,n+1,p)])
     (t1@(TyAll bs t),w,n,p) -> 
-      do { (genproof,freshTy) <- instanGen t1
+      do { (_,genproof,freshTy) <- instanGen t1
          ; solve sub ((freshTy,w,n,p):more)  }     
     (w,TcTv v,n,p) -> 
       do { sub2 <- compose [TypePS v w] sub
          ; more2 <- subL ([],sub2) more
          ; solve sub2 more2 }
     (x,y,n,p) -> return (Fail ("NO MATCH "++show x++" =/= "++show y))
-    
+
+
+ 
+
+-------------------------------------------------
+
+instance Eq Typ where
+ (TyVar (n,_)) == (TyVar (m,_)) = n==m
+ (TyApp f x) == (TyApp g y) = f==g && x==y
+ (TyArr f x) == (TyArr g y) = f==g && x==y 
+ (TyTuple xs) == (TyTuple ys) = xs==ys
+ (TyCon n _) == (TyCon m _) = n==m
+ (TcTv (u1,_,_)) == (TcTv (u2,_,_)) = u1 == u2
+ (TyAll bs t) == (TyAll cs s) = same bs cs && t==s
+   where same [][] = True
+         same (x:xs)(y:ys) = ok x y && same xs ys
+         same _ _ = False
+         ok (TypeB n _) (TypeB m _) = n==m
+         ok (ExprB n _) (ExprB m _) = n==m
+         ok (KindB n ) (KindB m) = n==m
+         ok _ _ = False
+ x == y = False
+ 
        
 
 -------------------------------------------------------
@@ -278,6 +305,9 @@ data Value
    | VFun (Value -> Value)
 
 data GenPoint = Asterix | Bullet
+lub Asterix Asterix = Asterix
+lub _ _ = Bullet
+
 
 instance Show GenPoint where
   show Asterix = "I"
@@ -289,6 +319,10 @@ data Env = Env { tcon ::  [(Name,Schema Kind)]
                , lamBnd::  [(Name,Typ)] -- A subset of evar
                , runtime:: [(Name,Value)]
                }
+
+envStar env = env{evar = filter p (evar env)}
+  where p (nm,(t,Asterix)) = True
+        p (nm,(t,Bullet)) = False
 
 --------------------------------------------------------
 -- we want these types to be predefined
@@ -414,13 +448,196 @@ addTypVar (KindS nm k)   (ts,es) = (ts,es)
 -- Type Checking
 ------------------------------------------------------------
 
+castArg (x,Nothing) = return x
+castArg (x,Just(t1,t2)) | t1==t2 = return x
+castArg (x,Just(t1@(TyAll _ _),t2)) = 
+   do { (ts,genproof,t3) <- instanGen t1
+      ; p <- unifyT [] Pos t2 t3
+      ; zonkFomega (FTypApp x ts)}
+castArg (x,Just(t1,t2)) = error ("uncast arg "++show x++"Actual "++show t1++" Needed "++show t2)
+
+castFun (f,Nothing) x = return(FApp f x,Nothing)
+castFun (f,Just(t1,t2))x | t1==t2 = return(FApp f x,Nothing)
+castFun (f,Just(TyArr a b,TyArr c d)) x | a==c = return(FApp f x,Just(b,d))
+castFun (f,Just(t1@(TyAll _ _),t2)) x = 
+   do { (ts,genproof,t3) <- instanGen t1
+      ; p <- unifyT [] Pos t2 t3
+      ; lift1 (,Nothing) (zonkFomega (FApp (FTypApp f ts) x))}
+castFun (f,Just(t1,t2)) x = error ("uncast fun "++show (FApp f x)++"\nActual "++show t1++"\nNeeded "++show t2)
+      
+
+uncast:: Fomega -> FIO(Fomega,Maybe(Typ,Typ))
+uncast (FCast t1 t2 t) = do { s1 <- zonkTyp t1; s2 <- zonkTyp t2
+                            ; return(t,Just(s1,s2)) }
+uncast (FLit p x) = return(FLit p x,Nothing)
+uncast (FVar v) = return(FVar v,Nothing)
+uncast (FApp f x) = 
+  do { infof <- uncast f
+     ; infox <- uncast x
+     ; y <- castArg infox
+     ; castFun infof y }
+uncast (FAbs pat body) = 
+  do { infob <- uncast body
+     ; case infob of
+         (b,Nothing) -> return(FAbs pat b,Nothing)
+         (b,Just(t1,t2)) | t1==t2 -> return(FAbs pat b,Nothing)
+         (b,Just(t1,t2)) -> error ("uncast Abs "++show b++"Actual "++show t1++" Needed "++show t2)
+     }
+uncast (FTuple es) = 
+  do { infos <- mapM uncast es
+     ; let combine (x,Nothing) = return x
+           combine (x,Just(t1,t2)) | t1==t2 = return x
+           combine (x,Just(t1,t2)) = fail ("uncast Tuple element "++show x++"Actual "++show t1++" Needed "++show t2)
+     ; xs <- mapM combine infos
+     ; return(FTuple xs,Nothing) }
+uncast (FTypAbs bs e) = 
+  do { infob <- uncast e
+     ; case infob of
+         (b,Nothing) -> return(FTypAbs bs b,Nothing)
+         (b,Just(t1,t2)) | t1 == t2 -> return(FTypAbs bs b,Nothing)
+         (b,Just(t1,t2)) -> error ("uncast FTyAbs "++show b++"Actual "++show t1++" Needed "++show t2)}
+uncast (FTypApp e ts) = 
+  do { infob <- uncast e
+     ; case infob of
+         (b,Nothing) -> return(FTypApp b ts,Nothing)
+         (b,Just(t1,t2)) | t1 == t2 -> return(FTypApp b ts,Nothing)
+         (b,Just(t1,t2)) -> error ("uncast FTypApp "++show b++"Actual "++show t1++" Needed "++show t2)}
+
+uncast x = error ("Not yet in uncast\n"++show x)         
+
+
+
+inferFomega :: [String] -> Env -> Constraints -> Expr -> FIO (Typ,Fomega,Constraints)
+inferFomega mess env cs e = 
+  do { r <- fio(newIORef (TyVar (Nm("?",noPos),Star)))
+     ; (e',ds) <- typeFomega mess env cs e (Infer r)
+     ; rho <- fio (readIORef r)
+     ; lift1 (,e',ds) (pruneTyp rho) }
+                                  
+                                  
+fTypApp x [] = x
+fTypApp x bs = FTypApp x bs
+fTypAbs [] e = e
+fTypAbs bs e = FTypAbs bs e
+
+typeFomega:: [String] -> Env -> Constraints -> Expr -> Expected Typ -> FIO(Fomega,Constraints)
+typeFomega mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show expect) >>
+  case e of
+    ELit pos c -> 
+      do { let typeOf (Left n) = intT
+               typeOf (Right c) = charT
+         ; p <- unifyExpect mess (typeOf c) expect
+         ; return(FLit pos c,cs) }  
+    EVar nm -> 
+      case lookup nm (evar env) of
+        Just (t,Asterix) ->  
+           do { (ts,genproof,t3) <- instanGen t
+              ; p <- unifyExpect mess t3 expect
+              ; return(fTypApp (FVar (nm,t)) ts,cs)} 
+        Just(t,Bullet) -> 
+           do { let fresh (Check t) = return t
+                    fresh (Infer ref) = do { t <- freshTyp Star; fio(writeIORef ref t); return t}
+              ; alpha <- fresh expect
+              ; p1 <- freshTEqual
+              -- ; writeln("\n-----------\nTypeExp Var Bullet case "++show e++"\nexpect   "++show expect)
+              ; cs2 <- addCon nm (alpha,p1) cs
+              -- in a second pass (uncast) we resolve the differences between t and alpha
+              ; return(FCast t alpha (FVar (nm,t)),cs2) } 
+        Nothing -> failFIOwith (loc nm) 5 "NotInScope" (show nm ++ " not in scope.")         
+    (EApp f x) ->
+      do { (t,f2,cs2) <- inferFomega mess env cs f
+         ; (dom,rng,p1,ts) <- unifyFun (("While checking the application\n   "++ show e++"\nhas type "++show expect):mess) t
+         ; (x2,cs3) <- typeFomega (("While checking the argument\n   "++show x++"\nhas type "++show dom++"\nin the application\n   "++show e):mess)
+                           env cs2 x (Check dom)
+         -- ; when (genVar env f && (not (mono p1)))
+         --       (matchErr((near f++"Lambda bound variable used at more than one type "++show p1++"\n "++show f++" (case 2)"):mess))
+         ; p2 <- unifyExpect mess rng expect         
+         ; return(FApp (fTypApp f2 ts) x2,cs3) }    
+    (term@(EAbs p body)) ->
+      case expect of
+        Check (TyAll bs t) -> 
+          do { -- writeln("\nTyAll case of EAbs\n  "++show expect);
+               (exp2,cs2) <- typeFomega mess env cs (EAbs p body) (Check t)               
+             ; p <- escapeTyAllCheck mess env bs expect e (TRefl t)
+             ; return(FTypAbs bs exp2,cs2)}                                              
+        Check t ->
+          do { (dom,rng,p1,ts) <- unifyFun mess t  -- t is not TyAll, so ts must be []
+             ; (p2,frag) <- bindPat env ((dom,p),([],[]))
+             ; (body2,cs2) <- typeFomega mess (extendPatEnv env frag) (pushFrag frag cs) body (Check rng)
+            -- ; let ans = (teCast (tSym p1) (TEAbs p2 body2))
+             ; return(FAbs p2 body2,popFrag frag cs2)}
+        Infer ref ->
+          do { dom <- freshTyp Star
+             ; (p2,frag) <- bindPat env ((dom,p),([],[]))
+	     ; (rng,body2,cs2) <- inferFomega mess (extendPatEnv env frag) (pushFrag frag cs) body
+             ; fio(writeIORef ref (TyArr dom rng))
+             ; return(FAbs p2 body2,popFrag frag cs2)} 
+    (ETuple es) -> 
+      do { let acc e (ts,xs,cs2) = 
+                   do { (t,x,cs3) <- inferFomega mess env cs2 e
+                      ; return(t:ts,x:xs,cs3)}
+         ; (ts,xs,cs2) <- foldrM acc ([],[],cs) es
+         ; p <- unifyExpect mess (TyTuple (reverse ts)) expect
+         ; return(FTuple (reverse xs),cs2)} 
+    ELet d e -> error ("Not yet ELet in typeFomega")
+    ECase scr arms -> 
+      do { (dom,scr2,cs2) <- inferFomega mess env cs scr
+         ; let typArm (pat,exp) (arms,cs) =
+                 do { (p2,frag) <- bindPat env ((dom,pat),([],[]))
+                    ; (body2,cs3) <- typeFomega mess (extendPatEnv env frag) cs exp expect
+                    ; return((p2,body2):arms,cs3)}
+         ; (arms2,cs3) <- foldrM typArm ([],cs2) arms
+         ; return(FCase scr2 arms2,cs3)}
+    EPolyStar (EVar nm) ->
+      case lookup nm (evar env) of
+       Just(t,Asterix) -> do { p <- unifyExpect mess t expect
+                             ; return(FVar (nm,t),cs)}
+       Just(t,Bullet) -> matchErr ((near nm ++ "Non Asterix bound term varaible: "++show nm++" used in poly."):mess)
+       Nothing -> matchErr ((near nm ++ "Term varaible: "++show nm++" not in scope."):mess)                                           
+    EPolyStar term -> 
+      do { (typ,term2,cs2) <- inferFomega mess env cs term
+         -- we want 'typ' to be an instance of 'expect'
+         ; let fresh (Check t) = return t
+	       fresh (Infer ref) = do { t <- freshTyp Star; fio(writeIORef ref t); return t}
+         ; expect1 <- fresh expect
+         ; typ2 <- zonkTyp typ
+         -- so massge 'typ' and 'expect' and then solve
+         ; tree <- solve [] [(expect1,typ2,0,TRefl expect1)]
+	 ; sols <- bfs [tree]
+	 ; sub <- case sols of
+	            [] -> matchErr ((near term++"\nIn "++show e++"\nwe can't make the type of "++show term2++"\n  "++show typ2++"\nan instance of the expected type\n  "++show expect):mess)
+	            (x:xs) -> return x
+	 ; typ3 <- subbTyp ([],sub) typ2
+	 ; (alltyp,p1,bs) <- generalizeR env typ3
+	 -- ; writeln("In poly "++show term2++"\nmono  "++show typ++"\nexpect  "++show expect++"\nANS  "++show typ3)
+         ; term3 <- zonkFomega term2
+         ; return(fTypAbs bs term3,cs2)}
+       
+    Epoly ns e pt -> 
+      do { let f nm = lift1 (h nm) freshKind 
+               h nm k = (nm,(TyVar (nm,k),k))
+               hh (nm,(t,k)) = TypeB nm k
+         ; delta <- mapM f ns
+         ; let env2 = env{tvar= delta ++ (tvar env)}
+         ; (pt2,kind) <- wellFormedType mess env2 pt
+         ; let binds = map hh delta
+         ; typeFomega mess env cs e (Check (TyAll binds pt2)) }
+    EInst e (Just t) -> undefined
+    EInst e Nothing -> undefined
+         
+             
+         
+
+
+
+--------------------------------------------
 inferTerm :: [String] -> Env -> Constraints -> Expr -> FIO (Typ,TExpr,Constraints)
 inferTerm mess env cs e = 
   do { r <- fio(newIORef (TyVar (Nm("?",noPos),Star)))
      ; (e',ds) <- typeTerm mess env cs e (Infer r)
      ; rho <- fio (readIORef r)
      ; lift1 (,e',ds) (pruneTyp rho) }
-
+                                  
 typeTerm:: [String] -> Env -> Constraints -> Expr -> Expected Typ -> FIO(TExpr,Constraints)
 typeTerm mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show expect) >>
   case e of
@@ -428,18 +645,28 @@ typeTerm mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show exp
       do { let typeOf (Left n) = intT
                typeOf (Right c) = charT
          ; p <- unifyExpect mess (typeOf c) expect
-         ; return(teCast p (TELit pos c),cs) }
-    EPoly (EVar nm) Nothing ->
+         ; return(teCast p (TELit pos c),cs) }         
+    EPolyStar (EVar nm) ->
       case lookup nm (evar env) of
-       Just(t,_) -> do { p <- unifyExpect mess t expect
-                       ; return(teCast p (TEVar (nm,t)),cs)}
+       Just(t,Asterix) -> do { p <- unifyExpect mess t expect
+                        ; return(teCast p (TEVar (nm,t)),cs)}
+       Just(t,Bullet) -> matchErr ((near nm ++ "Non Asterix bound term varaible: "++show nm++" used in poly."):mess)
        Nothing -> matchErr ((near nm ++ "Term varaible: "++show nm++" not in scope."):mess)                                        
-    Epoly ns e pt -> error ("No Epoly in typeTerm yet")
+    Epoly ns e pt -> 
+      do { let f nm = lift1 (h nm) freshKind 
+               h nm k = (nm,(TyVar (nm,k),k))
+               hh (nm,(t,k)) = TypeB nm k
+         ; delta <- mapM f ns
+         ; let env2 = env{tvar= delta ++ (tvar env)}
+         ; (pt2,kind) <- wellFormedType mess env2 pt
+         ; let binds = map hh delta
+         ; typeTerm mess env cs e (Check (TyAll binds pt2)) }
+               
     EInst e pt -> error ("No EInst in typeTerm yet")
     EVar nm -> 
       case lookup nm (evar env) of
         Just (t,Asterix) ->  
-           do { (genproof,t3) <- instanGen t
+           do { (_,genproof,t3) <- instanGen t
               ; p <- unifyExpect mess t3 expect
               ; return(teCast (tComp p genproof) (TEVar (nm,t)),cs)} 
         Just(t,Bullet) -> 
@@ -447,10 +674,11 @@ typeTerm mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show exp
                     fresh (Infer ref) = do { t <- freshTyp Star; fio(writeIORef ref t); return t}
               ; alpha <- fresh expect
               ; p1 <- freshTEqual
-              -- ; writeln("\n-----------\nTypeExp Var Bullet case "++show e++"\nexpect   "++show expect++"\ncomputed "++show t2++"\nno zonk "++show t)
+              -- ; writeln("\n-----------\nTypeExp Var Bullet case "++show e++"\nexpect   "++show expect)
               ; cs2 <- addCon nm (alpha,p1) cs
               ; return(teCast p1 (TEVar (nm,alpha)),cs2) } 
-        Nothing -> matchErr ((near nm ++ "Term varaible: "++show nm++" not in scope."):mess)
+        Nothing -> failFIOwith (loc nm) 5 "NotInScope" (show nm)
+        
     (term@(EAbs p body)) ->
       case expect of
         Check (TyAll bs t) -> 
@@ -459,7 +687,7 @@ typeTerm mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show exp
              ; p <- escapeTyAllCheck mess env bs expect e (TRefl t)
              ; return(teCast p exp2,cs2)}                                              
         Check t ->
-          do { (dom,rng,p1) <- unifyFun mess t
+          do { (dom,rng,p1,_) <- unifyFun mess t
              ; (p2,frag) <- bindPat env ((dom,p),([],[]))
              ; (body2,cs2) <- typeTerm mess (extendPatEnv env frag) (pushFrag frag cs) body (Check rng)
              ; let ans = (teCast (tSym p1) (TEAbs p2 body2))
@@ -472,7 +700,7 @@ typeTerm mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show exp
              ; return(TEAbs p2 body2,popFrag frag cs2)} 
     (EApp f x) ->
       do { (t,f2,cs2) <- inferTerm mess env cs f
-         ; (dom,rng,p1) <- unifyFun (("While checking the application\n   "++ show e++"\nhas type "++show expect):mess) t
+         ; (dom,rng,p1,_) <- unifyFun (("While checking the application\n   "++ show e++"\nhas type "++show expect):mess) t
          ; (x2,cs3) <- typeTerm (("While checking the argument\n   "++show x++"\nhas type "++show dom++"\nin the application\n   "++show e):mess)
                            env cs2 x (Check dom)
          -- ; when (genVar env f && (not (mono p1)))
@@ -483,7 +711,7 @@ typeTerm mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show exp
       do { let acc e (ts,xs,cs2) = do { (t,x,cs3) <- inferTerm mess env cs2 e; return(t:ts,x:xs,cs3)}
          ; (ts,xs,cs2) <- foldrM acc ([],[],cs) es
          ; p <- unifyExpect mess (TyTuple ts) expect
-         ; return(teCast p (TETuple xs),cs)}
+         ; return(teCast p (TETuple xs),cs2)}
     ECase scr arms -> 
       do { (dom,scr2,cs2) <- inferTerm mess env cs scr
          ; let typArm (pat,exp) (arms,cs) =
@@ -493,8 +721,30 @@ typeTerm mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show exp
          ; (arms2,cs3) <- foldrM typArm ([],cs2) arms
          ; return(TECase scr2 arms2,cs3)}         
              
-           
+-- Typable where all variables are kown to be Asterix
 
+typeTermStar:: [String] -> Env -> Constraints -> Expr -> Expected Typ -> FIO(TExpr,Constraints,Bool)
+typeTermStar mess env cs e expect = handleP p 6 try1 errF1
+  where p x = x == "NotInScope"
+        errF1 loc nm = handleP (\ _ -> True) 100 try2 errF2
+        errF2 loc nm = matchErr ((near loc++" Term variable: "++nm++" not in scope."):mess)
+        try1 = do { (e1,cs1) <- typeTerm mess (envStar env) cs e expect
+                  ; return (e1,cs1,True)}
+        try2 = do { (e1,cs1) <- typeTerm mess env cs e expect
+                  ; return (e1,cs1,False)}
+                  
+inferTermStar :: [String] -> Env -> Constraints -> Expr -> FIO (Typ,TExpr,Constraints,Bool)
+inferTermStar mess env cs e = 
+  do { r <- fio(newIORef (TyVar (Nm("?",noPos),Star)))
+     ; (e',ds,b) <- typeTermStar mess env cs e (Infer r)
+     ; rho <- fio (readIORef r)
+     ; lift1 (,e',ds,b) (pruneTyp rho) }
+ 
+
+
+
+
+-- ===========================================================
 -- Infering and computing the type of a parsed Expr, and 
 -- returning a typed expression, TExpr, where all variables 
 -- are tagged with their types, and all type casts are explicit
@@ -530,7 +780,7 @@ typeExp mess env e expect = -- writeln("\nTypeExp "++show e++" : "++show expect)
     EVar nm -> 
       case lookup nm (evar env) of
         Just (t,Asterix) ->  
-           do { (genproof,t3) <- instanGen t
+           do { (_,genproof,t3) <- instanGen t
               ; p <- unifyExpect mess t3 expect
               ; return(teCast (tComp p genproof) (TEVar (nm,t)))} 
         Just(t,Bullet) -> 
@@ -548,28 +798,30 @@ typeExp mess env e expect = -- writeln("\nTypeExp "++show e++" : "++show expect)
              -}
              }
         Nothing -> matchErr ((near nm ++ "Term varaible: "++show nm++" not in scope."):mess)        
-    EPoly (EVar nm) Nothing ->
+    EPolyStar (EVar nm) ->
       case lookup nm (evar env) of
        Just(t,_) -> do { p <- unifyExpect mess t expect
                        ; return(teCast p (TEVar (nm,t)))}
        Nothing -> matchErr ((near nm ++ "Term varaible: "++show nm++" not in scope."):mess)                               
-    EPoly term Nothing ->
+    EPolyStar term ->
       do { (typ,term2) <- inferExp mess env term
-         ; (alltyp,p1) <- generalizeR env typ
+         ; (alltyp,p1,_) <- generalizeR env typ
          -- ; writeln("In poly "++show term++"\n  "++show typ++"\n  "++show alltyp)
          ; p2 <- unifyExpect mess alltyp expect
          ; return(teCast (tComp p1 p2) term2)}
-    EPoly term (Just sigma) -> 
+{-
+    EPolyStar term (Just sigma) -> 
       do { (sigma2,kind) <- wellFormedType mess env sigma
          ; (typ,term2) <- inferExp mess env term
          ; p <- canGeneralize env mess term typ sigma2
          ; p2 <- unifyExpect mess sigma2 expect
          ; return(teCast (tComp p p2) term2) }
+-}
     Epoly ns e pt -> error ("No Epoly in typeExp yet")
     EInst e pt -> error ("No EInst in typeExp yet")    
     EApp f x ->
       do { (t,f2) <- inferExp mess env f
-         ; (dom,rng,p1) <- unifyFun (("While checking the application\n   "++ show e++"\nhas type "++show expect):mess) t
+         ; (dom,rng,p1,_) <- unifyFun (("While checking the application\n   "++ show e++"\nhas type "++show expect):mess) t
          ; x2 <- typeExp (("While checking the argument\n   "++show x++"\nhas type "++show dom++"\nin the application\n   "++show e):mess)
                          env x (Check dom)
          ; when (genVar env f && (not (mono p1)))
@@ -584,7 +836,7 @@ typeExp mess env e expect = -- writeln("\nTypeExp "++show e++" : "++show expect)
              ; p <- escapeTyAllCheck mess env bs expect e (TRefl t)
              ; return(teCast p exp2)}                                              
         Check t ->
-          do { (dom,rng,p1) <- unifyFun mess t
+          do { (dom,rng,p1,_) <- unifyFun mess t
              ; (p2,frag) <- bindPat env ((dom,p),([],[]))
              ; body2 <- typeExp mess (extendPatEnv env frag) body (Check rng)
              ; let ans = (teCast (tSym p1) (TEAbs p2 body2))
@@ -603,11 +855,14 @@ typeExp mess env e expect = -- writeln("\nTypeExp "++show e++" : "++show expect)
                     ; return(p2,body2)}
          ; arms2 <- mapM typArm arms
          ; return(TECase scr2 arms2)}
+{-
     ELet d e -> 
       do { (d2,env2) <- elab False (d,env)
          ; e2 <- typeExp mess env2 e expect
          ; return(TELet d2 e2) }
+-}
     ETuple es -> error ("No ETuple in typeExp yet")         
+
          
 canGeneralize env mess term x (TyAll vs y) =
   do { p1 <- canGeneralize env mess term x y
@@ -637,13 +892,13 @@ zonkConstraints name (xs,ys) =
       ; bs <- mapM zonkConst ys
       ; let all = (as++bs)
             input = toSolverInput all
-      ; writeln("Constraints for "++show name++ render(ppConstraints pi0 all))
+      ; writeln("\nConstraints for "++show name++ render(ppConstraints pi0 all))
 
       ; tree <- solve [] input 
       ; sols <- bfs [tree]
       ; let sh [] = writeln("No solution\n")
             sh [[]] = writeln("The identity sub is a solution\n")
-            sh [x] = do { writeln("Solution\n" ++render(pf x)++"\n")
+            sh [x] = do { writeln("\nSolution\n" ++render(pf x)++"\n")
                         ; ps <- mapM pushSol x 
                         ; return () }
             pushSol (TypePS p t) = unifyT [] Pos (TcTv p) t
@@ -656,7 +911,7 @@ zonkConstraints name (xs,ys) =
             pf xs = text "{" <> PP.sep(map (ppPSub pi0) xs) <> text "}"
             shTree x = do { mess <- disptree 0 0 pf x
                           ; writeln("\nTree\n"++render mess) }                        
-      ; shTree tree
+      -- ; shTree tree
       ; sh (take 1 sols)
       ; return all
       }
@@ -670,31 +925,37 @@ toSolverInput zs = concat (map f zs)
   where f (nm,t,ps) = map g ps
              where g (t2,eq) = (t,t2,0,eq)
 
-elab:: Bool -> (Decl Name Expr (Maybe(SourcePos,PTyp)),Env) -> FIO (Decl Var TExpr Typ,Env)
+elab:: Bool -> (Decl Name Expr (Maybe(SourcePos,PTyp)),Env) -> FIO (Decl Var Fomega Typ,Env)
 elab topLevel (Intro pos (Just(p1,ty)) nm e,env) =
   do { (typ,kind) <- wellFormedType [near p1++"Checking the well formedness of the type of "++show nm] env ty
      ; p2 <- unifyK [near pos++"Checking the kind of the type of "++show nm] kind Star
      ; let eplus = propExp env e (Just ty)
-     ; writeln ("Propogated\n"++show eplus)   
-     ; (e2,cs) <- typeTerm [near pos++"Checking the type of the body of "++show nm] 
+     ; writeln ("\n-----------------------------\nOriginal Decl term "++show nm++"\n"++show e)
+     ; writeln ("\nPropogated\n"++show eplus)   
+     ; (e2,cs) <- typeFomega [near pos++"Checking the type of the body of "++show nm] 
                            env ([],[]) eplus (Check typ)
-     -- ; fail ("STOP WITH\n"++show eplus)                           
+     -- ; fail ("STOP WITH\n"++show eplus)   
      ; cs2 <- zonkConstraints nm cs
-     ; (t2,proof) <- generalizeR env typ
-     ; d2 <- zonkDecl(Intro pos t2 (nm,t2) (teCast proof e2))
+     ; (t2,proof,bs) <- generalizeR env typ
+     ; d2 <- zonkDeclF (Intro pos t2 (nm,t2) (fTypAbs bs e2))
+     ; writeln("\nFinal term\n"++show d2)
+     ; qqq <- uncast (fTypAbs bs e2)
+     ; writeln("\nUncasted term\n"++show qqq)
      ; return(d2,env{evar = (nm,(t2,Asterix)):(evar env)})}
 elab topLevel (Intro pos Nothing nm e,env) =
   do { let eplus = propExp env e Nothing
-     ; writeln ("Propogated\n"++show eplus)    
-     ; (typ,e2,cs) <- inferTerm [near pos++"Checking the type of the body of "++show nm]
+     ; writeln ("\n-----------------------------\nOriginal Intro term "++show nm++"\n"++show e)
+     ; writeln ("\nPropogated\n"++show eplus)    
+     ; (typ,e2,cs) <- inferFomega [near pos++"Checking the type of the body of "++show nm]
                                 env ([],[]) eplus
-                                   
      ; cs2 <- zonkConstraints nm cs                           
      ; if topLevel -- only toplevel decls can be generalized without an explict poly type
-          then (do { (t2,proof) <- generalizeR env typ 
-                   ; d2 <- zonkDecl(Intro pos t2 (nm,t2) (teCast proof e2))
+          then (do { (t2,proof,bs) <- generalizeR env typ 
+                   ; (full,_) <- uncast (fTypAbs bs e2)
+                   ; d2 <- zonkDeclF (Intro pos t2 (nm,t2) full)
+                   ; writeln("\nFinal term\n"++show d2)  
                    ; return(d2,env{evar = (nm,(t2,Asterix)):(evar env)})})
-          else (do { d2 <- zonkDecl(Intro pos typ (nm,typ) e2)
+          else (do { d2 <- zonkDeclF (Intro pos typ (nm,typ) e2)
                    ; return(d2,env{evar = (nm,(typ,Bullet)):(evar env)})}) }         
 elab topLevel (TypeSig pos nm t,env) = nakedTypeSig pos nm t
 
@@ -780,24 +1041,28 @@ test3 p3 = do { ; writeln ("Entering test3 "++show p3)
 -- Here are the two places that instantiation is performed 
 -- 1) in function applications, and 2) in variables with Asterix tags
 
+-- unifyFun :: [String] -> Typ -> FIO (Typ, Typ, TEqual, [Typ])
 unifyFun mess x = do { x2 <- pruneTyp x; help mess x2 }
-  where help mess (t@(TyArr dom rng)) = return(dom,rng,TRefl t)
+  where help mess (t@(TyArr dom rng)) = return(dom,rng,TRefl t,[])
         help mess (t@(TyAll ds body)) = 
-           do { (p1,body2) <- instanGen t
-              ; (dom,rng,p2) <- unifyFun mess body2
-              ; return(dom,rng,tComp p1 p2)}
+           do { (ts,p1,body2) <- instanGen t
+              ; (dom,rng,p2,ss) <- unifyFun mess body2
+              ; return(dom,rng,tComp p1 p2,ts++ss)}
         help mess (t@(TcTv r)) =
            do { dom <- freshTyp Star
               ; rng <- freshTyp Star
               ; p <- unifyT mess Both t (TyArr dom rng)
-              ; return(dom,rng,p)}
+              ; return(dom,rng,p,[])}
         help mess t = matchErr (("Not a function type: "++show t) : mess)
 
 instanGen (t1@(TyAll bs t)) =
  do { sub <- freshBinder (bs,([],[]))
     ; t3 <- subbTyp sub t
-    ; return(tSpec t (fst sub) t3,t3)}
-instanGen t = return(TRefl t,t)    
+    ; let f (TypeS nm t k) = t
+          f (ExprS nm e t) = error ("No expr types in instanGen")
+          f (KindS nm k) = error ("No kind types in instanGen")
+    ; return(map f (fst sub),tSpec t (fst sub) t3,t3)}
+instanGen t = return([],TRefl t,t)    
 
 -----------------------------------------------------------------------
 -- making sure we never instantiate Bullet tagged variables
@@ -889,7 +1154,8 @@ alphaSameVars mess (ExprB n1 k1 : m1) (ExprB n2 k2 : m2) (xs,ys,bs) =
          (ExprS n1 (TEVar (n3,k1)) k1 : xs
          ,ExprS n2 (TEVar (n3,k2)) k2 : ys
          ,ExprB n3 k2 : bs)}
-alphaSameVars mess left right ans = matchErr(("Forall type binders don't match" : mess))     
+alphaSameVars mess left right ans = 
+    matchErr(("Forall type binders don't match\n  "++show (map unBind left)++"\n  "++show (map unBind right)): mess)    
 
 -----------------------------------------------------
 -- helper functions for constructing Expr
@@ -1127,7 +1393,7 @@ applyExpression =
 polyExpression = do { keyword "poly"; e <- simpleExpression; oneExp e }
   where oneExp (EVar x) = oneVar x
         oneExp e = oneTyp e
-        oneTyp e = do { z <- option Nothing (fmap Just typP); return(EPoly e z)}
+        oneTyp e = return(EPolyStar e) -- do { z <- option Nothing (fmap Just typP); return(EPolyStar e z)}
         oneVar x = try (more x) <|> (oneTyp (EVar x)) 
         more x = do { xs <- many nameP
                     ; sym "."
@@ -1253,9 +1519,12 @@ propExp :: Env -> Expr -> Maybe PTyp -> Expr
 propExp env x t = help env x t where
   help env (EAbs p body) (Just(PTyArr dom rng)) 
    = EAbs (PTyp p dom) (propExp env body (Just rng))
-  help env (EAbs p b) (Just (PTyAll ns t)) 
-   = trace ("STOPE HERE ") (Epoly ns (propExp env (EAbs p b) (Just t)) t)
-  help env (EVar n) (Just (PTyAll ns t)) = Epoly ns (propExp env (EVar n) (Just t)) t
+--  help env (EAbs p b) (Just (PTyAll ns t)) 
+--   = trace ("STOPE HERE ") (Epoly ns (propExp env (EAbs p b) (Just t)) t)
+  help env anyexp (Just (PTyAll ns t)) 
+   =  -- trace ("STOPE HERE ") 
+     (Epoly ns (propExp env anyexp (Just t)) t)   
+--  help env (EVar n) (Just (PTyAll ns t)) = Epoly ns (propExp env (EVar n) (Just t)) t
   help env (t@(EApp f x)) anytyp 
    | Just(fname,tyvars,pairs,rng) <- varAsFunction env f [x]
    = let body = applyE (EVar fname : map (uncurry (propExp env)) pairs)
@@ -1283,7 +1552,9 @@ typToPTyp (TcTv p) = error ("Mutable type variable in typToPTyp.")
 -- PTyp
 
 
-simpleT = tycon <|> typevariable <|> parenS(allP <|> typP)
+simpleT = tycon <|> typevariable <|> parenS(allP <|> try tups <|> typP)
+
+tups = do { xs <- sepBy1 typP (sym ",") ; return(PTyTuple xs)}
 
 allP = do { keyword "forall"
           ; x <- many nameP
@@ -1357,9 +1628,9 @@ ppExpr p e =
     (ECase e ms) -> 
        (text "case" <+> parenExpr p e <+> text "of") $$
                  (PP.nest 2 (PP.vcat (map (ppMatch p pName (\ p x -> text ":" <> (ppPTyp p x)) ppExpr) ms)))
-    (EPoly nm Nothing) -> PP.parens(text "Poly" <+> parenExpr p nm)
-    (EPoly nm (Just t)) | needsPParens t -> PP.parens(text "Poly" <+> parenExpr p nm<+> (PP.parens (ppPTyp p t)))           
-    (EPoly nm (Just t)) -> PP.parens(text "Poly" <+> parenExpr p nm<+> ppPTyp p t)           
+    (EPolyStar nm) -> PP.parens(text "poly*" <+> parenExpr p nm)
+    --(EPolyStar nm (Just t)) | needsPParens t -> PP.parens(text "EPolyStar1" <+> parenExpr p nm<+> (PP.parens (ppPTyp p t)))           
+    --(EPolyStar nm (Just t)) -> PP.parens(text "EPolyStar3" <+> parenExpr p nm<+> ppPTyp p t)           
     (Epoly ns e pt) -> PP.parens(PP.sep[text "poly" <+> PP.sep (map ppName ns) 
                                        ,PP.nest 3 (text ".")
                                        ,PP.nest 3 (parenExpr p e)<>text ":"
@@ -1416,11 +1687,16 @@ ppFomega p e =
     (FCase e ms) -> 
        (text "case" <+> parenFomega p e <+> text "of") $$
                  (PP.nest 2 (PP.vcat (map (ppMatch p qName (\ _ _ -> PP.empty) ppFomega) ms))) 
+    (FTuple es) -> ppSepByParen (map (ppFomega p) es) ","                      
     (FTypApp x ts) -> PP.sep[ppFomega p x,PP.brackets(ppSepBy (map (ppTyp p) ts) ",")]
     (FTypAbs bs x) -> PP.parens(PP.sep[text "/\\"
                                       ,PP.sep (map (ppBind p) bs)
                                       ,text "."
                                       ,ppFomega p x])
+    (FCast c c2 t) -> PP.parens(PP.vcat[text "cast"
+                                     ,PP.nest 3 (ppTyp p c)
+                                     ,PP.nest 3 (ppTyp p c2)
+                                     ,ppFomega p t])                                          
     
     
 -----------------------------------------------------
@@ -1580,10 +1856,14 @@ instance Show Expr where
   show d = render(ppExpr pi0 d)
 instance Show TExpr where
   show d = render(ppTExpr pi0 d)  
+instance Show Fomega where
+  show d = render(ppFomega pi0 d)    
 instance Show (Decl Name Expr (Maybe(SourcePos,PTyp))) where
   show d = render(ppDecl pi0 pName ppExpr ppParsedSig d)
 instance Show (Decl Var TExpr Typ) where
   show d = render(ppDecl pi0 qName ppTExpr ppSig d)  
+instance Show (Decl Var Fomega Typ) where
+  show d = render(ppDecl pi0 qName ppFomega ppSig d)    
 instance Show (Pat Name PTyp) where
   show t = render(ppPat pName (\ p x -> text ":" <> ppPTyp p x) pi0 t)  
 instance Show (Pat Name Typ) where
@@ -1656,7 +1936,7 @@ expLoc (EAbs x zs) = loc x
 expLoc (ELet d x) = decLoc d
 expLoc (ETuple es) = loc es
 expLoc (ECase x ms) = expLoc x
-expLoc (EPoly n _) = loc n
+expLoc (EPolyStar n) = loc n
 expLoc (Epoly ns e pt) = bestPos (loc ns) (loc e)
 expLoc (EInst e pt) = loc e
  
@@ -2212,7 +2492,7 @@ tvsEnv env = foldrM f ([],[]) monoSchemes
         f s (ps,ns) = do { (ptrs,names) <- getVarsTyp s; return (ptrs++ps,names++ns) } 
 
         
-generalizeR:: Env -> Typ -> FIO(Typ,TEqual)
+generalizeR:: Env -> Typ -> FIO(Typ,TEqual, [Bind])
 generalizeR env rho =
   do { (envPtrs,envNames) <- tvsEnv env
      ; (freePtrs,freeNames) <- getVarsTyp rho
@@ -2223,7 +2503,7 @@ generalizeR env rho =
      ; zapPtrs subst
      ; r3 <- zonkTyp rho
      ; ans <- zonkTyp (tyall bs r2)
-     ; return(ans,tGen bs (TRefl r3))
+     ; return(ans,tGen bs (TRefl r3),bs)
      } 
 
 zapPtrs(_,zs) = mapM_ f zs
@@ -2235,6 +2515,28 @@ tyall [] x = x
 tyall bs (TyAll cs x) = TyAll (bs++cs) x     
 tyall bs x = TyAll bs x
 
+
+-----------------------------------------------------
+zonkFomega:: Fomega -> FIO Fomega
+zonkFomega (FLit p x) = return(FLit p x)
+zonkFomega (FVar (v,t)) = lift1 (\ x -> FVar (v,x)) (zonkTyp t)
+zonkFomega (FApp x y) = lift2 FApp (zonkFomega x) (zonkFomega y)
+zonkFomega (FAbs p e) = lift2 FAbs (zonkPat p) (zonkFomega e)
+zonkFomega (FLet d e) = lift2 FLet (zonkDeclF d) (zonkFomega e)
+zonkFomega (FCase e xs) = lift2 FCase (zonkFomega e) (mapM f xs)
+  where f (p,e) = lift2 (,) (zonkPat p) (zonkFomega e)
+zonkFomega (FTuple es) = lift1 FTuple (mapM zonkFomega es)  
+zonkFomega (FTypApp e ts) = lift2 FTypApp (zonkFomega e) (mapM zonkTyp ts)
+zonkFomega (FTypAbs bs e) =  do { (Poly bs2 ts2) <- zonkPoly zonkFomega (Poly bs e)
+                                ; return(FTypAbs bs2 ts2)}
+zonkFomega (FCast p1 p2 e) = lift3 FCast (zonkTyp p1) (zonkTyp p2) (zonkFomega e)
+
+zonkDeclF::  (Decl Var Fomega Typ) -> FIO  (Decl Var Fomega Typ)
+zonkDeclF (Intro pos t (nm,s) e) = 
+   lift3 (\ t s e -> Intro pos t (nm,s) e)
+         (zonkTyp t) (zonkTyp s) (zonkFomega e)
+zonkDeclF (TypeSig pos nm t) = return(TypeSig pos nm t)    
+        
 ----------------------------------------------------------------------
 -- TExpr
 
@@ -2447,7 +2749,7 @@ checkThenEvalOneAtATime ref (d:ds) envs =
 loadProgram ds = 
   do { envs <- initialEnvs
      ; ref <- newRef(envs,[])
-     ; let errF message = do { writeln message; readRef ref }
+     ; let errF loc message = do { writeln message; readRef ref }
      ; handle  5 (checkThenEvalOneAtATime ref ds (envs,[])) errF
      ; readRef ref }
 

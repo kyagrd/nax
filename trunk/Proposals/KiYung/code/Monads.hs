@@ -50,14 +50,16 @@ instance Functor FIO where
 
 failFIO loc n s = FIO(return(Fail loc n "" s))
 
+failFIOwith loc n failureTag s = FIO(return(Fail loc n failureTag s))
+
 handleP :: (String -> Bool) -> Int -> FIO a ->
-           (String -> FIO a) -> FIO a
+           (SourcePos -> String -> FIO a) -> FIO a
 handleP p m (FIO x) f = FIO w
   where w = do { a <- x
                ; case a of
                    Fail loc n k s ->
                        if (m > n) && (p k)
-                          then unFIO(f s)
+                          then unFIO(f loc s)
                           else return(Fail loc n k s)
                    ok -> return(ok)}
 

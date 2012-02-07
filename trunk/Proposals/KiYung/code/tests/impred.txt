@@ -1,14 +1,22 @@
-h2 (x:(forall a. a -> Int)) = x 6
+-- h2 (x:(forall a. a -> Int)) = x 6
 g2 (x:(forall a. a -> a)) = (x 5)
-h3 (x:(forall a b . a -> b)) = x 5
+g3 (x:Int->Int) = x 9
+g4 (x:(forall a. a -> a -> (a,a))) = (x 5)
+-- h3 (x:(forall a b . a -> b)) = x 5
 id x = x
 -- ex4 x = (x 5,x 2)
 -- ex4 x = (h2 x,h3 x)
-h5: (forall a . a -> Int) -> Int
-h5 f = f True
-ex4 x y = (h2 x,x 4,x True,g2 y,y 4, x y)
+-- h5: (forall a . a -> Int) -> Int
+-- h5 f = f True
+-- ex4 x y = (h2 x,x 4,x True,g2 y,y 4, x y)
 -- ex4 x = (id x 3, x True)
 
+-- ex5 x = (g2 (x 2), x 1 True,g3 (x 0),x)
+
+
+-- ex6 = g2 (poly (\ x -> x))
+-- ex7 = g2 (poly id)
+ex8 = g4 (poly (\ x y -> (x,y)))
 
 
 
