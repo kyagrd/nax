@@ -1,45 +1,137 @@
 \section{Summary}\label{sec:summary}
 My dissertation will consist of ten chapters.
-Tentative titles of the chapters are listed below:
+Tentative titles of the chapters and important topics I plan to cover in each
+chapter are listed below. Much of this (about 35\%) has already been written down
+(in this document, in published papers, and in papers being prepared
+for publication). 
 \begin{quote}
 \begin{enumerate}[1.]
 \item Introduction
-\item Polymorphic type systems (System \textsf{F}, System \Fw, Hindley-Milner)
+\begin{itemize}
+\item My thesis and motivation for my work
+\item Discusion of the role of typed systems
+   \begin{itemize}
+     \item Logics and reasoning systems
+     \item Typed programming languages
+     \item The Curry-Howard correspondence
+   \end{itemize}
+\item Previous work on defining recursive types in Logic and Programs
+\item The role of induction
+\end{itemize}
+
+\item Polymorphic type systems 
+ \begin{itemize}
+     \item System \textsf{F}
+     \item System \Fw
+     \item Hindley-Milner
+ \end{itemize}
+ 
 \item Mendler style recursion schemes
+  \begin{itemize}
+     \item Historical progression
+     \item Kind indexed families
+     \item The zoo of Mendler-style operators
+     \item Inventing new families
+     \item Termination proofs by Embedding in strongly normalizing calculi
+  \end{itemize}
+
 \item System \Fi
+  \begin{itemize}
+     \item Design principles and goals (Type indexed kinds)
+     \item Syntax, Types, and Semantics
+     \item Proof of strong normalization
+     \item Embedding recursive types
+     \item Embedding Mendler-style operations
+  \end{itemize}
+  
 \item System \Fixi
+  \begin{itemize}
+     \item Design principles and goals (Constant time predecessors)
+     \item Syntax, Types, and Semantics
+     \item Proof of strong normalization
+     \item Embedding recursive types
+     \item Embedding Primitive recursion
+  \end{itemize}
+  
 \item The Nax language
+  \begin{itemize}
+    \item Goals for a programming language
+    \item Structure of Mendler-Operators without Higher order polymorphism
+    \item Index transformers
+    \item Type Safety
+    \item Type inference
+    \item Embedding into \Fixw
+  \end{itemize}
+  
 \item Case studies
+  \begin{itemize}
+    \item Lists and Natural numbers
+    \item Term indexed types
+    	\begin{itemize}
+    	  \item Data structures with invariants (length indexed lists, balanced trees, etc)
+    	  \item Languages, substitution, progress and type safety
+    	\end{itemize}
+    \item Higher order abstract syntax
+    \item Normalization by reduction
+  \end{itemize}
+
 \item Related work
+  \begin{itemize}
+    \item Logical systems
+    \item Strong normalization
+    \item Indexed types
+    \item GADTs
+    \item Dependently typed systems
+  \end{itemize}
+  
 \item Future work
+  \begin{itemize}
+    \item Trellys -- combining logic and programming
+    \item Extension to a dependently typed framework.
+ \end{itemize}
+ 
 \item Conclusion
 \end{enumerate}
 \end{quote}
 
 In the introduction, I will state my thesis and motivation for my work.
-Also, I plan to give a summary on the history of typed programming languages
-and formal reasoning. in particular, I will cover the subjects including
-Curry-Howard correspondence, recursive types, and induction.
+Also, I plan to give a summary on the history of typed programming
+languages and formal reasoning. in particular, I will cover the Curry-
+Howard correspondence, recursive types, and induction.
 
 Then, I will review System \textsf{F}, System \Fw, and the Hindley-Milner
-type system, in order to lead the discussions in the following sections
-on Mendler style recursion schemes, System \Fi, System \Fixi, and
-the Nax langauge.
+type system, in order to lead up to the discussions in the following
+sections on Mendler style recursion schemes, System \Fi, System \Fixi, and
+the Nax language.
 
-In the case studies section, I will demonstrate larger examples of Nax programs
-to demonstrate the expressiveness of Nax. One of the examples I have in mind
-is normalization by evaluation.
+In the case studies section, I will introduce many Nax programs to
+demonstrate the expressiveness of Nax. Some of these will considerably
+larger than the examples in this document. One of the examples I have in
+mind is normalization by evaluation.
 
-In thre related work section, I will provide further details on what I have
-summeraized in the introduction secction, and also discuss some recent work
+In the related work section, I will provide further details on what I have
+summarized in the introduction section, and also discuss some recent work
 related to my approach.
 
 Then, I will discuss future work, which will mainly be discussion on further
 extensions to the Nax language, and their ramifications to
-the target calculi and the type inference algorithm.
+the target calculi and the type inference algorithm. I wile also
+outline how this work relates to the larger Trellys project.
 
 Finally, I will summarize and conclude my thesis.
 
-%% \paragraph{Achivements, progress, and plans:}
-%% TODO
+\paragraph{The role of this document.} This mid-course document
+was prepared as a requirement set by my thesis committee after
+my thesis proposal paper and talk. I hope that it satisfies my
+committee -- providing concrete
+information about the goals, focus, and scope of my thesis. I would like
+to thank the committee for the time they invested in my research, as I believe this
+exercise
+has focused my research in a manner that would not have been possible had
+I not written it.
+
+I would also like to thank professors Marcello Fiore and Andrew Pitts for
+the many hours I spent with them between October 1st and December 31, 2011
+while I visited Cambridge University. I would also like to thank my Trellys
+team members and the NSF which supported this work (under grant 0613969).
 
