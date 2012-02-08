@@ -1,14 +1,14 @@
 \section{The Nax language}\label{sec:Nax}
 
-To validate the second part of my thesis -- the Mendler-style can support 
+To validate the second part of my thesis -- the Mendler style can support 
 a simple and expressive programming language, we have designed the
 programming language Nax.
 
 Nax supports non-recursive datatypes, the recursive type operator
-($\mu^\kappa$), and the Mendler-style recursion combinators (\MIt, \MPr,
+($\mu^\kappa$), and the Mendler style recursion combinators (\MIt, \MPr,
 \McvIt, \McvPr, \MsfIt). The calculi, \Fi\ and \Fixi, discussed
 in the previous sections, are theoretically powerful enough to capture
-the semantics of both recursive types and Mendler-style recursion schemes.
+the semantics of both recursive types and Mendler style recursion schemes.
 However, they are far from practical programming languages. Even very simple
 datatypes, such as the boolean type, must be defined via impredicative 
 Church-style encodings (\eg, an encoding for the boolean type is
@@ -31,7 +31,7 @@ recursive types more conveniently. The examples in \S\ref{sec:mendler} are
 really reformatted Nax programs. If you know Haskell, you will see that
 the Nax syntax is similar to Haskell. We have already discussed how Nax
 performs type inference (or, type reconstruction) based on user provided
-index transformers attached to Mendler-style recursion combinators. I also
+index transformers attached to Mendler style recursion combinators. I also
 mentioned that Nax supports type synonyms, but did not show any details of
 the concrete syntax in \S\ref{sec:mendler}. In Figure \ref{fig:naxderiving},
 I illustrate the syntax for type synonyms and fixpoint derivations, which make

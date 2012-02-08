@@ -226,12 +226,12 @@ the language is indeed normalizing. However, we can neither write
 interesting (\ie, recursive) programs that involves recursive types nor
 inductively reason about those programs, unless we have principled recursion
 schemes that are guaranteed to normalize. One such recursion scheme is called
-iteration (\aka, catamorphism). The typing rules for the conventional iteration
+iteration (\aka\ catamorphism). The typing rules for the conventional iteration
 \It\ are illustrated in Figure \ref{fig:approaches}. Note, we have the typing
 rule {\small(\It)} and the reduction rule {\small(\It-\In)} for \It\,
 in addition to the rules for the recursive type operator $\mu$.
 
-\paragraph{Recursive types in the Mendler-style approach to consistent logic.}
+\paragraph{Recursive types in the Mendler style approach to consistent logic.}
 In the Mendler style approach, we allow arbitrary formation
 (\ie, datatype definition) of recursive types, but we restrict
 the elimination (\ie, pattern matching) over the values of recursive types. 
@@ -350,7 +350,7 @@ Then, they show that \Fixw\ is strongly normalizing.
 Abel, Matthes, and Uustalu \cite{AbeMatUus03,AbeMatUus05} studied
 a kind-indexed family of iteration combinators, along with examples
 involving nested datatypes that make use of those combinators.
-Iteration (\aka, catamorphism) is a recursion scheme, which has the same
+Iteration (\aka\ catamorphism) is a recursion scheme, which has the same
 computational power as primitive recursion (\ie, both can be defined
 in terms of each other), but has different algorithmic complexity. 
 
@@ -367,7 +367,7 @@ embedding into \Fw. \citet{AbeMat04} needed a more involved embedding of
 \textsf{MRec} into \Fixw, which has a richer structure than \Fw.
 
 Although Matthes, Uustalu, and others, were well aware of the fact that
-the Mendler-style iteration family and the primitive-recursion family both
+the Mendler style iteration family and the primitive-recursion family both
 normalize for negative recursive, they did not explore or document actual
 examples. They postponed ``the search for exciting examples of negative
 recursive types" until another time. They stated that the normalization
@@ -394,7 +394,7 @@ recursive types. Identifying additional Mendler style operators that work
 naturally, and are more expressive than iteration, has been an important result
 of my thesis work.
 
-Interesting examples of Mendler-style operators over negative recursive types
+Interesting examples of Mendler style operators over negative recursive types
 have been neglected in the literature. One of the reasons, I think, is because
 it is possible to encode negative recursive types into positive recursive ones. Because conventional iteration and primitive recursion normalize for
 positive recursive types we can use standard techniques on these encodings
@@ -405,11 +405,11 @@ structure, which were evident in the negative data type, become obscured by
 the encoding.
 
 A series of papers \cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} studied 
-techniques that define recursion schemes over negative recursive types
-in the conventional setting. In our recent work \cite{AhnShe11}, we discovered
-that this work can be naturally captured as a kind-indexed family of
-Mendler style combinator. The \MIt\ combinator (\aka\ verb+msfcata+) corresponds
-to the conventional recursion combinator discovered by \citet{FegShe96} and
+techniques that define recursion schemes over negative recursive types in
+the conventional setting. In our recent work \cite{AhnShe11}, we discovered
+that this work can be naturally captured as a kind-indexed family of Mendler
+tyle combinator. The \MsfIt\ combinator (\aka\ \textit{msfcata}) corresponds to
+the conventional recursion combinator discovered by \citet{FegShe96} and
 later refined by \citet{bgb}. With this new family, we were able to write many
 interesting programs, involving negative recursive types, that are impossible,
 or very unnatural, to write with just Mendler style iteration.
@@ -426,7 +426,7 @@ that a datatype uses only positive occurrences (the normal case for first-order
 data) more expressive terminating Mendler style operators are possible.
 
 \paragraph{Examples involving indexed datatypes.} 
-We \cite{AhnShe11} have illustrated that Mendler-style recursion combinators
+We \cite{AhnShe11} have illustrated that Mendler style recursion combinators
 can be defined not only for nested datatypes but also for arbitrary indexed
 datatypes, whose can index may vary in the result types of the
 data constructors as well as in the argument types of the data constructors.
@@ -439,8 +439,8 @@ the Mendler style \cite{AbeMatUus03,AbeMatUus05,AbeMat04} used examples
 involving nested datatypes, a particularly simple kind of indexing
 where the variation of indices are restricted to the argument types of
 the data constructors. In order to handle nested datatypes, the translation of
-the Mendler-style combinators into System \textsf{F}, had to be extended to
-translation into \Fw. To translate Mendler-style combinators over arbitrary
+the Mendler style combinators into System \textsf{F}, had to be extended to
+translation into \Fw. To translate Mendler style combinators over arbitrary
 indexed types including term indices we have to extend \Fw, to a new calculus
 we call \Fi, and prove that this new calculus is also strongly normalizing.
 I have identified what the extensions must look like and have been developing

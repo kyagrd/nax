@@ -1,7 +1,7 @@
 \section{Mendler style recursion schemes}\label{sec:mendler} I claim to
-have organized the Mendler-style operators into a natural hierarchy. We
+have organized the Mendler style operators into a natural hierarchy. We
 describe this hierarchy here. There are common patterns (or, general
-forms) of Mendler-style recursion combinators that I use in my
+forms) of Mendler style recursion combinators that I use in my
 dissertation (\S\ref{sec:mendler:intro}). These patterns have two
 dimensions. The first dimension describes what and how the operator
 computes, and the second dimension abstracts over the kind of a data
@@ -12,14 +12,14 @@ computation pattern belong to different families.
 
 Despite the fact that different families compute things differently, all
 families have a common structure. I discuss this common stucture first,
-then I introduce several families of Mendler-style combinators
+then I introduce several families of Mendler style combinators
 (\S\ref{sec:mendler:it}-\ref{sec:mendler:sf}) which I plan to support in
 the Nax language design. Lastly, I postulate on other possible
 generalizations and extensions (\S\ref{sec:mendler:etc}).
 
 \subsection{Two level types and Mendler style recursion combinators}
 \label{sec:mendler:intro}
-In this section, I introduce the general pattern behind a Mendler-style recursion scheme.
+In this section, I introduce the general pattern behind a Mendler style recursion scheme.
 We formulate recursive types in two levels,  by applying the recursive type operator
 $\mu^\kappa$ to a non-recursive base structure $T$. 
 We illustrated this in Figure \ref{fig:approaches}
@@ -118,15 +118,15 @@ each of the indices $\vec{i}$. Note that in a well formed
 type, $(\mu^\kappa\; f)$ and $f$ always have the same
 kind $(\kappa -> \kappa)$.
 
-\paragraph{The pattern of a Mendler-style operator type.}
-In this section we illustrate that even Mendler-style operations that
+\paragraph{The pattern of a Mendler style operator type.}
+In this section we illustrate that even Mendler style operations that
 compute different things still have much in common.
 Mendler style recursion combinators rely on
 higher-rank polymorphism to ensure their normalization proprieties. 
 Recall that, in Figure \ref{fig:approaches},
 the type of $\varphi$ was required to be polymorphic over a type variable
 $X$ (which corresponds to $r$ in this section).
-The following is the general form of the type of a Mendler-style
+The following is the general form of the type of a Mendler style
 recursion combinator in the presence of type indices:
 \begin{multline*}
  \textsf{Mxxx} : \forall t . \forall a .
@@ -161,7 +161,7 @@ Different families have different specifications as to the number and
 type of the {\it other abstract operations}. Members of the same family
 differ over the number and kind of the indices $\vec{i}$.
 
-One can think of a Mendler-style recursion combinator as a higher order function.
+One can think of a Mendler style recursion combinator as a higher order function.
 It returns a recursive function when applied to a set of abstract operations. The
 operations are abstract over the (possibly indexed) type $r$. These operations
 must never rely on the structure of $r$, and the higher-rank polymorphism enforces
@@ -185,7 +185,7 @@ type, and each of the functions in the product, a different abstract operation o
  -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
 \end{multline*}
 The abstract recursive call operation $(\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)$ is available in
-all the Mendler-style families we study. Each family (\textsf{xxx})
+all the Mendler style families we study. Each family (\textsf{xxx})
 is distinguished by what other additional abstract operations are available.
 Note that the abstract operations manipulate values of type $r$ when we describe
 the function body, but we can apply the resulting function
@@ -219,19 +219,19 @@ The exclusions include supporting the use of higher-rank polymorphism only in
 Mendler style recursion combinators, and the use of a special syntax to define
 them. To support type inference over index types Nax includes a small amount of
 type annotation ($\psi$). These annotations are necessary only on language
-features that analyze data -- the case statement and Mendler-style recursion
+features that analyze data -- the case statement and Mendler style recursion
 combinators. They are required only when the data being analyzed has
 type indices. We call these annotations ($\psi$) index transformers,
 since they are type level functions that specify how to construct
 the resulting type from the indices of the value being analyzed.
-There are many uses of the special syntax for Mendler-style combinators,
+There are many uses of the special syntax for Mendler style combinators,
 and many uses of index transformers throughout the examples in
-\S\ref{sec:mendler:it}-\S\ref{sec:mendler:sf}. 
+\S\ref{sec:mendler:it}-\S\ref{sec:mendler:ix}. 
 With these special design parameters, we can do type inference on Nax programs.
 
 
-\subsection{Mendler-style iteration}\label{sec:mendler:it}
-The iteration family \MIt\ is the most basic Mendler-style recursion scheme.
+\subsection{Mendler style iteration}\label{sec:mendler:it}
+The iteration family \MIt\ is the most basic Mendler style recursion scheme.
 It supports one abstract operation, abstract recursive call.
 The type signature of \MIt\ is:
 \[ \MIt : \forall t . \forall a .
@@ -289,12 +289,12 @@ The type signature of \MIt\ is:
 \end{figure}
 A typical example of iteration is the length function for lists which
 returns a natural number. Lists and natural numbers are introduced as two-level types
-in Figure \ref{fig:natdef}. We define the \textit{length} function using the Mendler-style
+in Figure \ref{fig:natdef}. We define the \textit{length} function using the Mendler style
 iteration combinator as follows:
 \begin{align*}
 \textit{length}~l = \MIt^{\{\}}~l~\textbf{with}~~
 &  len ~\textit{Nil}~~~~~~~~~~~ = zero \\
-&  len \;(\textit{Cons}\;x\;xs) = succ\,(len\;xs)
+&  len \;(\textit{Cons}\;x\;\textit{xs}) = succ\,(len\;\textit{xs})
 \end{align*}
 Since the list type does not involve any indices, we give an empty index
 transformer annotation ($\{\}$) on \MIt. We use the \textbf{with} clause special
@@ -316,117 +316,24 @@ result, since \textit{length} has a Hindley-Milner type.
 
 It is worth emphasizing that $len : r -> \textit{Nat}$ is
 an abstract recursive call operation that consumes only $r$-values.
-Note $xs:r$ since the type signature for \textit{Cons} expects
+Note $\textit{xs}:r$ since the type signature for \textit{Cons} expects
 its second argument to be of type $r$. Therefore, Mendler style iteration
 does not have direct access to the tail of the list. One cannot define
-a constant time tail function by just returning $xs$ since its type $r$ is
-an abstract recursive type ($r$) rather than the concrete list type
-($List p$ a synonym for $\mu^{*}(L\;p)$). 
+a constant time tail function by just returning \textit{xs} since its type $r$
+is an abstract recursive type ($r$) rather than the concrete list type
+($\textit{List}\;p$, a synonym for $\mu^{*}(L\;p)$). 
 
-We shall see soon see that the primitive recursion Mendler-style
-family is able to express such functions naturally.
-But, before we move on to the primitive recursion family,
-let us look at some examples of Mendler style iteration over indexed types.
-Mendler style recursion combinators generalize naturally to indexed types.
+In the next subsection, we shall see that the primitive recursion
+Mendler style family is able to natrually express such functions having
+direct acess to the predcessor values.
 
-The following is the base structure for vectors, or length indexed lists:
-\begin{align*}
-\textbf{data}~V : * -> (Nat -> *) -> Nat -> * ~\textbf{where}~~
-& \textit{VNil}~~\, : V\;p\;r\;\{`zero\} \\
-& \textit{VCons}    : r\;\{n\} -> p -> V\;p\;r\;\{`succ\;n\}
-\end{align*}
-We use curly braces ($\{\dots\}$) to emphasize that
-\{`zero\} and 
-\{`succ\;n\}
-are \emph{term indices}
-(\ie, term used as indices) in order to distinguish them from ordinary
-type indices (\ie, types used as indices). The backquotes ($`$) prefixed
-on $zero$ and $succ$ emphasizes that they are predefined values, bound
-in the current term environment mapping term-variables to values. Other
-variables (\eg, $p$,$r$,and $n$) are
-free type (or, index) variables that will be generalized.
-
-We define the length function for vectors using the Mendler style
-iteration combinator as follows:
-\begin{align*}
-\textit{vlength}~l = \MIt^{\{\{n\} . \textit{Nat}\}}~l~\textbf{with}~~
-&  vlen ~\textit{VNil}~~~~~~~~~~~ = zero \\
-&  vlen \;(\textit{VCons}\;x\;xs) = succ\,(vlen\;xs)
-\end{align*}
-Note, the Mendler-style iteration combinator $\MIt^\psi$ is annotated by
-the index transformer $\psi = \{\{n\} . \textit{Nat}\}$. This is
-a type-level constant function that ignores the index $n$ and always returns
-the type $\textit{Nat}$. In general, type inference for programs involving
-type indices is undecidable without some annotation describing how the indices
-vary over each of the \textsf{with} clauses. However, with the
-index transformer annotation, Nax can infer that
-$vlengh : \textit{Vec}\;p\;\{n\} -> \textit{Nat}$,
-where \textit{Vec} is a type synonym defined as
-$\textit{Vec} = \mu^{\textit{Nat} -> *}(V\;p)$.
-Index transformers describe the minimal amount of type information required,
-and also describe where such information us necessary (on constructs that
-analyze data -- \textbf{case} and Mendler-style combinators).
-They are required only on data that has indices, and are conservative over
-Hindley-Milner type inference. That is, every program typable using
-Hindley-Milner has a Nax counterpart which also requires no type annotation
-whatsoever.
-
-
-The append function for vectors illustrates a more interesting use of
-the index transformer annotation:
-\begin{align*}
-\textit{vappend}~\,l_1 =~ &
- \MIt^{\{\{n\} . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}}~l_1
- ~\textbf{with} \\
-&\qquad\qquad\qquad\qquad  vapp ~\textit{VNil}~~~~~~~~~~~ ~ l_2 = l_2 \\
-&\qquad\qquad\qquad\qquad  vapp \;(\textit{VCons}\;x\;xs) ~ l_2 = vcons\;x\;(vapp\;xs\;l_2)
-\end{align*}
-where $vcons\;x\;xs = \In^{Nat -> *}(\textit{VCons}\;x\;xs)$.
-The index transformer
-$\{\{n\} . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}$
-specifies that the append function applied to a list of length $n$,
-shall return a function, which expects a vector with length index $m$
-and returns a vector with length index $(plus\;n\;m)$, where $plus$ is the addition
-function for natural numbers.
-
-We can also use indexed types to encode mutually recursive types.
-For instance, consider the following definitions:
-\begin{align*}
-&\textbf{data}~ \textit{Parity} = E \mid O \\
-&\textbf{data}~ \textit{Pf}\, : (\textit{Nat} -> \textit{Parity} -> *) ->
-                                    \textit{Nat} -> \textit{Parity} -> *
-  ~\textbf{where}\\
-&\quad \textit{BaseE}\, : \textit{Pf}~\,r\;\{`zero\}\;\{E\} \\
-&\quad \textit{StepE}\; : r\;\{n\}\;\{O\} -> \textit{Pf}~\,r\;\{`succ\;n\}\;\{O\} \\
-&\quad \textit{StepO}\; : r\;\{n\}\;\{E\} -> \textit{Pf}~\,r\;\{`succ\;n\}\;\{O\}
-\end{align*}
-Let $\textit{Proof} = \mu^{\textit{Nat} -> \textit{Parity} -> *} \textit{Pf}$,
-$\textit{Even}\;\{n\} = \textit{Proof}~\{n\}\;\{E\}$, and
-$\textit{Odd}\;\{n\} = \textit{Proof}~\{n\}\;\{O\}$ be type synonyms.
-Then, \textit{Even} and \textit{Odd} are encodings of the following
-mutually recursive datatypes:
-\begin{align*}
-&\textbf{data}~\textit{Even} : \textit{Nat} -> \textit{Parity} -> *
- ~\textbf{where} \\
-&\quad \textit{BaseE}\, : \textit{Even}\;\{`zero\}\\
-&\quad \textit{StepE}\; : \textit{Odd}\;\{n\} -> \textit{Even}\;\{`succ\;n\} \\
-&\textbf{data}~\textit{Odd} : \textit{Nat} -> \textit{Parity} -> *
- ~\textbf{where} \\
-&\quad \textit{StepO}\; : \textit{Even}\;\{n\} -> \textit{Odd}\;\{`succ\;n\}
-\end{align*}
-In the thesis, I will include other examples involving indexing and
-mutually recursive datatypes.
-
-
-\paragraph{The theory of term-indexed types.}
-It is known that \MIt\ for regular datatypes and indexed types with ordinary
-type indices has a reduction preserving embedding into System \Fw\ (\ie, \MIt\
-is definable in \Fw\ with a constant reduction step difference).
-In my dissertation, I will show that \MIt\ for term-indexed types has a
-reduction preserving embedding into System \Fi, which is an extension of \Fw.
-Also, I will describe and prove properties of the inference algorithm of Nax,
-and also discuss why the index transformer is a sweet spot for the design of
-type systems suppering type inference in the presence of indexed types.
+The examples we discussed so far were all about regular datatypes
+(natrual numbers and lists), which do not involve any indices.
+I will continue the discussion on Mendler style recursion combinators
+over indexed types in \S\ref{sec:mendler:ix}.
+But, before we move on to indexed types, let us have a tour on other
+Mendler style families (\S\ref{sec:mendler:pr}-\S\ref{sec:mendler:sf}),
+starting from the primitive recursion family.
 
 \subsection{Mendler style primitive recursion}\label{sec:mendler:pr}
 The primitive recursion family \MPr\ is has an additional abstract operation,
@@ -473,13 +380,13 @@ lists as follows:
 \begin{align*}
 \textit{tail}~x = \MIt^{\{\}}~x~\textbf{with}~~
 &  tl ~cast~\textit{Nil}~~~~~~~~~~~ = nil \\
-&  tl ~cast\;(\textit{Cons}\;x\;xs) = cast\;xs
+&  tl ~cast\;(\textit{Cons}\;x\;\textit{xs}) = cast\;\textit{xs}
 \end{align*}
-We simply need to return $cast\;xs$ for the result
-without recursing on $xs$ using $tl$. Nax can infer that
+We simply need to return $cast\;\textit{xs}$ for the result
+without recursing on \textit{xs} using $tl$. Nax can infer that
 $\textit{tail} ~:~ \textit{List}\;p -> \textit{List}\;p$.
 Note that we needed to return some default value ($nil$) for the empty list case
-($Nil$) because all functions defined with Mendler-style recursion combinators
+($Nil$) because all functions defined with Mendler style recursion combinators
 must be total. 
 
 However, for length index lists (or, vectors), we can imagine
@@ -493,13 +400,13 @@ we need additional features in our type system, advanced beyond
 what we have been discussing so far. We will discuss such possible
 extensions to Mendler style recursion combinators in \S\ref{sec:mendler:etc}.
 
-In order to translate Mendler-style primitive recursion
+In order to translate Mendler style primitive recursion
 into a normalizing calculus, we need a more complicated
 calculus than \Fi, one we call \Fixi. Just as I extended \Fw\ to \Fi\ in order to
 formalize the theory of \MIt\ involving term indices, I extend \Fixw\
 to \Fixi\ in order to formalize the theory of \MPr\ involving term indices.
 
-\subsection{Mendler style course of values iteration and its extensions}
+\subsection{Mendler style course of values iteration \& primitive recursion}
 \label{sec:mendler:cv}
 Some computations are naturally expressed by recursing over substructure
 of the input value which is not the immediate substructure (\eg, predecessor of predecessor,
@@ -601,13 +508,13 @@ of this family is shown below:
  -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
 \]
 In addition to the abstract recursive call, \MsfIt\ supports an abstract
-inverse from answer values ($a \,\vec{i}$) to abstract recursive values ($r\,\vec{i}$).
-Several examples and a detailed discussion about \MsfIt\ can be found in
-our recent work \cite{AhnShe11} (where we call this family \textit{msfcata}).
-We \cite{AhnShe11} proved normalization properties of \MsfIt\ by
-embeding \MsfIt\ into \Fw. I plan to extend the proof for \MsfIt\,
-to a language with term-indexed types, by embedding \MsfIt\
-into \Fi, which is an extension of \Fw.
+inverse from answer values ($a \,\vec{i}\,$) to abstract recursive values
+($r\,\vec{i}\,$). Several examples and a detailed discussion about \MsfIt\
+can be found in our recent work \cite{AhnShe11} (where we call this family
+\textit{msfcata}). We \cite{AhnShe11} proved normalization properties of
+\MsfIt\ by embeding \MsfIt\ into \Fw. I plan to extend the proof for \MsfIt\,
+to a language with term-indexed types, by embedding \MsfIt\ into \Fi, which is
+an extension of \Fw.
 
 I plan to construct more complex examples
 (\emph{normalization by evaluation} and \emph{parallel reduction})
@@ -616,6 +523,113 @@ in the Nax language using \MsfIt.
 I will also discuss why we have not extended the primitive recursion family
 and the course of values family with syntactic inverse (such exensions
 may lead to possible non-termination).
+
+\subsection{Mender style recursion combinators over indexed types}
+\label{sec:mendler:ix}
+Mendler style recursion combinators generalize naturally to indexed types.
+In this section, I will illustrate the use of Mendler style
+recursion combinators over indexed types. Here, the examples will only
+involve the interation family (\MIt), but you will have not diffuclty
+imagining how to uses of other families over indexed types, since all
+Mendler style recursion combinators generalize naturally to indexed types
+in the same fasion.
+
+The following is the base structure for vectors, or length indexed lists:
+\begin{align*}
+\textbf{data}~V : * -> (Nat -> *) -> Nat -> * ~\textbf{where}~~
+& \textit{VNil}~~\, : V\;p\;r\;\{`zero\} \\
+& \textit{VCons}    : r\;\{n\} -> p -> V\;p\;r\;\{`succ\;n\}
+\end{align*}
+We use curly braces ($\{\dots\}$) to emphasize that $\{`zero\}$ and
+$\{`succ\;n\}$ are \emph{term indices} (\ie, term used as indices) in order to
+distinguish them from ordinary type indices (\ie, types used as indices).
+The backquotes ($`$) prefixed on $zero$ and $succ$ emphasizes that
+they are predefined values, bound in the current term environment
+mapping term-variables to values. Other variables (\eg, $p$,$r$,and $n$)
+are free type (or index) variables that will be generalized.
+
+We define the length function for vectors using the Mendler style
+iteration combinator as follows:
+\begin{align*}
+\textit{vlength}~l = \MIt^{\{\{n\} . \textit{Nat}\}}~l~\textbf{with}~~
+&  vlen ~\textit{VNil}~~~~~~~~~~~ = zero \\
+&  vlen \;(\textit{VCons}\;x\;\textit{xs}) = succ\,(vlen\;\textit{xs})
+\end{align*}
+Note, the Mendler style iteration combinator $\MIt^\psi$ is annotated by
+the index transformer $\psi = \{\{n\} . \textit{Nat}\}$. This is
+a type-level constant function that ignores the index $n$ and always returns
+the type $\textit{Nat}$. In general, type inference for programs involving
+type indices is undecidable without some annotation describing how the indices
+vary over each of the \textsf{with} clauses. However, with the
+index transformer annotation, Nax can infer that
+$vlengh : \textit{Vec}\;p\;\{n\} -> \textit{Nat}$,
+where \textit{Vec} is a type synonym defined as
+$\textit{Vec} = \mu^{\textit{Nat} -> *}(V\;p)$.
+Index transformers describe the minimal amount of type information required,
+and also describe where such information us necessary (on constructs that
+analyze data -- \textbf{case} and Mendler style combinators).
+They are required only on data that has indices, and are conservative over
+Hindley-Milner type inference. That is, every program typable using
+Hindley-Milner has a Nax counterpart which also requires no type annotation
+whatsoever.
+
+
+The append function for vectors illustrates a more interesting use of
+the index transformer annotation:
+\begin{align*}
+\textit{vappend}~\,l_1 =~ &
+ \MIt^{\{\{n\} . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}}~l_1
+ ~\textbf{with} \\
+&\qquad\qquad\qquad\qquad  vapp ~\textit{VNil}~~~~~~~~~~~ ~ l_2 = l_2 \\
+&\qquad\qquad\qquad\qquad  vapp \;(\textit{VCons}\;x\;\textit{xs}) ~ l_2 = vcons\;x\;(vapp\;\textit{xs}\;l_2)
+\end{align*}
+where $vcons\;x\;\textit{xs} = \In^{\textit{Nat} -> *}(\textit{VCons}\;x\;\textit{xs})$.
+The index transformer
+$\{\{n\} . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}$
+specifies that the append function applied to a list of length $n$,
+shall return a function, which expects a vector with length index $m$
+and returns a vector with length index $(plus\;n\;m)$, where $plus$ is the addition
+function for natural numbers.
+
+We can also use indexed types to encode mutually recursive types.
+For instance, consider the following definitions:
+\begin{align*}
+&\textbf{data}~ \textit{Parity} = E \mid O \\
+&\textbf{data}~ \textit{Pf}\, : (\textit{Nat} -> \textit{Parity} -> *) ->
+                                    \textit{Nat} -> \textit{Parity} -> *
+  ~\textbf{where}\\
+&\quad \textit{BaseE}\, : \textit{Pf}~\,r\;\{`zero\}\;\{E\} \\
+&\quad \textit{StepE}\; : r\;\{n\}\;\{O\} -> \textit{Pf}~\,r\;\{`succ\;n\}\;\{O\} \\
+&\quad \textit{StepO}\; : r\;\{n\}\;\{E\} -> \textit{Pf}~\,r\;\{`succ\;n\}\;\{O\}
+\end{align*}
+Let $\textit{Proof} = \mu^{\textit{Nat} -> \textit{Parity} -> *} \textit{Pf}$,
+$\textit{Even}\;\{n\} = \textit{Proof}~\{n\}\;\{E\}$, and
+$\textit{Odd}\;\{n\} = \textit{Proof}~\{n\}\;\{O\}$ be type synonyms.
+Then, \textit{Even} and \textit{Odd} are encodings of the following
+mutually recursive datatypes:
+\begin{align*}
+&\textbf{data}~\textit{Even} : \textit{Nat} -> \textit{Parity} -> *
+ ~\textbf{where} \\
+&\quad \textit{BaseE}\, : \textit{Even}\;\{`zero\}\\
+&\quad \textit{StepE}\; : \textit{Odd}\;\{n\} -> \textit{Even}\;\{`succ\;n\} \\
+&\textbf{data}~\textit{Odd} : \textit{Nat} -> \textit{Parity} -> *
+ ~\textbf{where} \\
+&\quad \textit{StepO}\; : \textit{Even}\;\{n\} -> \textit{Odd}\;\{`succ\;n\}
+\end{align*}
+In the thesis, I will include other examples involving indexing and
+mutually recursive datatypes.
+
+
+\paragraph{The theory of term-indexed types.}
+It is known that \MIt\ for regular datatypes and indexed types with ordinary
+type indices has a reduction preserving embedding into System \Fw\ (\ie, \MIt\
+is definable in \Fw\ with a constant reduction step difference).
+In my dissertation, I will show that \MIt\ for term-indexed types has a
+reduction preserving embedding into System \Fi, which is an extension of \Fw.
+Also, I will describe and prove properties of the inference algorithm of Nax,
+and also discuss why the index transformer is a sweet spot for the design of
+type systems suppering type inference in the presence of indexed types.
+
 
 
 \subsection{Other possible extensions}\label{sec:mendler:etc}
@@ -628,7 +642,7 @@ the \emph{unreachable} term (evidence of a logical contradiction).
 \begin{align*}
 \textit{vtail}~x =~& \MIt^{\{\{n\} \,|\, n=`succ\;m \; . \, \textit{Vec}\;p\;\{n\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
 &\qquad  tl ~cast~\textit{VNil}~~~~~~~~~~~ = \textit{unreachable} \\
-&\qquad  tl ~cast\;(\textit{VCons}\;x\;xs) = cast\;xs
+&\qquad  tl ~cast\;(\textit{VCons}\;x\;\textit{xs}) = cast\;\textit{xs}
 \end{align*}
 Under the equality constraint ($n=`succ\;m$), the length index of
 the input list ($n$) must be non-zero. When the type checker types
@@ -642,7 +656,7 @@ checks that every omitted equation is unreachable. Then, we could write
 the $vtail$ function as follows:
 \begin{align*}
 \textit{vtail}~x =~& \MIt^{\{ \{`succ\;m\}. \textit{Vec}\;p\;\{`succ\;m\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
-&\qquad  tl ~cast\;(\textit{VCons}\;x\;xs) = cast\;xs
+&\qquad  tl ~cast\;(\textit{VCons}\;x\;\textit{xs}) = cast\;\textit{xs}
 \end{align*}
 In my dissertation, I plan to study such extensional features that enable
 programmers to write useful functions like $vtail$.
@@ -658,8 +672,8 @@ are not convertible. But, we can prove by induction that they are always equal
 for any three natural numbers $n_1$, $n_2$, and $n_3$. The addition of
 provable equality will extend the programs we can type. Of course,
 to construct such proofs, we will need an induction principle. Fortunately,
-every Mendler-style operator is an induction principle. This is one reason
-why a language built on Mendler-style recursion combinators make a perfect
+every Mendler style operator is an induction principle. This is one reason
+why a language built on Mendler style recursion combinators make a perfect
 substrate for a sound logical reasoning system. Which, in case you don't recall,
 is the first part of my thesis statement!
 
