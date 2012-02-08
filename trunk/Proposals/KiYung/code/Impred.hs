@@ -189,11 +189,6 @@ solve sub (x:more) =
     (TyArr t x,TyArr s y,n,p) -> 
       do { p1 <- freshTEqual; p2 <- freshTEqual; solve sub ((s,t,n,p1):(x,y,n,p2):more) }
     (TyCon n _,TyCon m _,_,p) | n==m -> solve sub more    
-    (TcTv v,w,n,p) -> return(Choice sub (x:more) [pick,defer])
-      where pick = do { sub2 <- compose [TypePS v w] sub
-                      ; more2 <- subL ([],sub2) more
-                      ; solve sub2 more2 }
-            defer = solve sub (more ++ [(TcTv v,w,n+1,p)])
     (t1@(TyAll bs t),t2@(TyAll cs s),n,p) -> 
       do { (skol,skTy) <- skolem cs s
          ; (_,genproof,freshTy) <- instanGen t1
@@ -205,7 +200,9 @@ solve sub (x:more) =
                escape (TypePS (u,p,k) t) = do { (ps,ns) <- getVarsTyp t ; return(all (good u) ns)}
                escape (KindPS (u,p) k)   = do { (ps,ns) <- getVarsKind k; return(all (good u) ns)}
                escape (ExprPS (u,p,t) e) = do { (ps,ns) <- getVarsExpr e; return(all (good u) ns)}
-         ; filterTree p tree }         
+         ; filterTree p tree } 
+    (TyTuple xs,TyTuple ys,n,p) | length xs == length ys -> solve sub (foldr acc more (zip xs ys))
+       where acc (x,y) ans = (x,y,n,p):ans
     (t1@(TyAll bs t),w@(TcTv v),n,p) -> return(Choice sub (x:more) [instan,pick,defer])
       where instan = 
               do { (_,genproof,freshTy) <- instanGen t1
@@ -217,15 +214,26 @@ solve sub (x:more) =
             defer = solve sub (more ++ [(TcTv v,w,n+1,p)])
     (t1@(TyAll bs t),w,n,p) -> 
       do { (_,genproof,freshTy) <- instanGen t1
-         ; solve sub ((freshTy,w,n,p):more)  }     
+         ; solve sub ((freshTy,w,n,p):more)  }          
     (w,TcTv v,n,p) -> 
       do { sub2 <- compose [TypePS v w] sub
          ; more2 <- subL ([],sub2) more
          ; solve sub2 more2 }
+    (TcTv v,w,n,p) -> 
+         return(Choice sub (x:more) [pick,defer])
+      where pick = do { sub2 <- compose [TypePS v w] sub
+                      ; more2 <- subL ([],sub2) more
+                      ; solve sub2 more2 }
+            defer = solve sub (more ++ [(TcTv v,w,n+1,p)])             
     (x,y,n,p) -> return (Fail ("NO MATCH "++show x++" =/= "++show y))
 
+-- after solving, we might want to propogate the information from
+-- the pure substitution to the statefull IORef substitution
 
- 
+pushSol (TypePS p t) = unifyT [] Pos (TcTv p) t
+pushSol (KindPS p k) = fail ("no KindPS in pushSol")
+pushSol (ExprPS p e) = fail ("no ExprPS in pushSol")
+
 
 -------------------------------------------------
 
@@ -520,6 +528,8 @@ fTypApp x bs = FTypApp x bs
 fTypAbs [] e = e
 fTypAbs bs e = FTypAbs bs e
 
+
+
 typeFomega:: [String] -> Env -> Constraints -> Expr -> Expected Typ -> FIO(Fomega,Constraints)
 typeFomega mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show expect) >>
   case e of
@@ -539,7 +549,7 @@ typeFomega mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show e
                     fresh (Infer ref) = do { t <- freshTyp Star; fio(writeIORef ref t); return t}
               ; alpha <- fresh expect
               ; p1 <- freshTEqual
-              -- ; writeln("\n-----------\nTypeExp Var Bullet case "++show e++"\nexpect   "++show expect)
+              -- ; writeln("\n-----------\nTypeExp Var Bullet case "++show e++"\nexpect   "++show alpha++"\n actual "++show t)
               ; cs2 <- addCon nm (alpha,p1) cs
               -- in a second pass (uncast) we resolve the differences between t and alpha
               ; return(FCast t alpha (FVar (nm,t)),cs2) } 
@@ -597,20 +607,23 @@ typeFomega mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show e
     EPolyStar term -> 
       do { (typ,term2,cs2) <- inferFomega mess env cs term
          -- we want 'typ' to be an instance of 'expect'
-         ; let fresh (Check t) = return t
+         ; let fresh (Check t) = zonkTyp t
 	       fresh (Infer ref) = do { t <- freshTyp Star; fio(writeIORef ref t); return t}
          ; expect1 <- fresh expect
          ; typ2 <- zonkTyp typ
-         -- so massge 'typ' and 'expect' and then solve
+         -- so massage 'typ' and 'expect' and then solve
          ; tree <- solve [] [(expect1,typ2,0,TRefl expect1)]
 	 ; sols <- bfs [tree]
 	 ; sub <- case sols of
-	            [] -> matchErr ((near term++"\nIn "++show e++"\nwe can't make the type of "++show term2++"\n  "++show typ2++"\nan instance of the expected type\n  "++show expect):mess)
+	            [] -> matchErr ((near term++"\nIn "++show e++
+	                             "\nwe can't make the type of "++show term2++
+	                             "\nwhich is\n  "++show typ2++
+	                             "\nan instance of the expected type\n  "++show expect1):mess)
 	            (x:xs) -> return x
-	 ; typ3 <- subbTyp ([],sub) typ2
-	 ; (alltyp,p1,bs) <- generalizeR env typ3
-	 -- ; writeln("In poly "++show term2++"\nmono  "++show typ++"\nexpect  "++show expect++"\nANS  "++show typ3)
-         ; term3 <- zonkFomega term2
+	 ; typ3 <- subbTyp ([],sub) typ2  -- push effects of sil into type
+	 ; mapM pushSol sub               -- push effects into stateful sub
+         ; (alltyp,p1,bs) <- generalizeR env typ3
+	 ; term3 <- zonkFomega term2      -- make sure the effects show up in the term
          ; return(fTypAbs bs term3,cs2)}
        
     Epoly ns e pt -> 
@@ -622,8 +635,40 @@ typeFomega mess env cs e expect = -- writeln("\nTypeExp "++show e++" : "++show e
          ; (pt2,kind) <- wellFormedType mess env2 pt
          ; let binds = map hh delta
          ; typeFomega mess env cs e (Check (TyAll binds pt2)) }
-    EInst e (Just t) -> undefined
-    EInst e Nothing -> undefined
+    EInst term (Just t) -> 
+      do { (typ,kind) <- wellFormedType mess env t
+         ; let notStar Star = False
+               notStar x = True
+         ; when (notStar kind)
+                (matchErr ((near e++"\ninstan term\n  "++show e++
+	 	            "\nhas type\n  "++show typ++
+	 	            "\nwhich does not have kind *\n  "++show kind):mess))
+         ; (term2,cs2) <- typeFomega mess env cs term (Check typ)
+         ; (ts,genproof,t3) <- instanGen typ
+         ; p <- unifyExpect mess t3 expect                   
+	 ; term3 <- typApp term2 ts []
+         ; return(term3,cs2)}        
+    EInst term Nothing ->
+      do { (typ,term2,cs2) <- inferFomega mess env cs term
+         ; let notTyAll (TyAll _ _) = False
+               notTyAll x = True
+         ; when (notTyAll typ)
+                (matchErr ((near e++"\ninstan* term\n  "++show e++
+	 	            "\ndoes not have a polymorphic type\n  "++show typ):mess))
+         ; (ts,genproof,t3) <- instanGen typ
+         ; p <- unifyExpect mess t3 expect                   
+	 ; term3 <- typApp term2 ts []
+         ; return(term3,cs2)}         
+
+-- Carry out explicit type-beta reduction when 
+-- an abstraction is applied to a list of types
+typApp (FTypAbs (b:bs) body) (t:ts) sub = typApp (FTypAbs bs body) ts (add b t sub)
+  where add (TypeB nm k) t sub = (TypeS nm t k : sub)
+        add _ _ sub = sub
+typApp (FTypAbs bs body) ts sub = 
+   do { body2 <- subbFomega (sub,[]) body
+      ; return (fTypApp body2 ts) }
+typApp term ts [] = return(fTypApp term ts)
          
              
          
@@ -901,9 +946,7 @@ zonkConstraints name (xs,ys) =
             sh [x] = do { writeln("\nSolution\n" ++render(pf x)++"\n")
                         ; ps <- mapM pushSol x 
                         ; return () }
-            pushSol (TypePS p t) = unifyT [] Pos (TcTv p) t
-            pushSol (KindPS p k) = fail ("no KindPS in pushSol")
-            pushSol (ExprPS p e) = fail ("no ExprPS in pushSol")
+            
             
             -- ff (var,TcTv p,pairs) = 
             
@@ -2468,6 +2511,25 @@ subbTyp env x = do { a <- pruneTyp x; f env a }
           do { (bs2,env2) <- alphaBinder (bs,env)
 	     ; x2 <- subbTyp env2 t
 	     ; return(TyAll bs2 x2)}	
+
+subbFomega:: ([Sub],[PSub]) -> Fomega -> FIO Fomega
+subbFomega sub (FLit p x) = return(FLit p x)
+subbFomega sub (FVar (v,t)) = lift1 (\ x -> FVar (v,x)) (subbTyp sub t)
+subbFomega sub (FApp x y) = lift2 FApp (subbFomega sub x) (subbFomega sub y)
+subbFomega sub (FAbs p e) = lift2 FAbs (subPat sub p) (subbFomega sub e)
+subbFomega sub (FLet d e) = lift2 FLet (subbDecl sub d) (subbFomega sub e)
+subbFomega sub (FCase e xs) = lift2 FCase (subbFomega sub e) (mapM f xs)
+  where f (p,e) = lift2 (,) (subPat sub p) (subbFomega sub e)
+subbFomega sub (FTuple es) = lift1 FTuple (mapM (subbFomega sub) es)  
+subbFomega sub (FTypApp e ts) = lift2 FTypApp (subbFomega sub e) (mapM (subbTyp sub) ts)
+subbFomega sub (FTypAbs bs e) =  do { (Poly bs2 ts2) <- subPoly subbFomega sub (Poly bs e)
+                                    ; return(FTypAbs bs2 ts2)}
+subbFomega sub (FCast p1 p2 e) = 
+   do { t1 <- (subbTyp sub p1)
+      ; t2 <- (subbTyp sub p2)
+      ; if t1==t2
+           then (subbFomega sub e)
+           else lift1 (FCast t1 t2) (subbFomega sub e)}
 	     
 ---------------------------------------------
 -- Env and operations
@@ -2529,7 +2591,12 @@ zonkFomega (FTuple es) = lift1 FTuple (mapM zonkFomega es)
 zonkFomega (FTypApp e ts) = lift2 FTypApp (zonkFomega e) (mapM zonkTyp ts)
 zonkFomega (FTypAbs bs e) =  do { (Poly bs2 ts2) <- zonkPoly zonkFomega (Poly bs e)
                                 ; return(FTypAbs bs2 ts2)}
-zonkFomega (FCast p1 p2 e) = lift3 FCast (zonkTyp p1) (zonkTyp p2) (zonkFomega e)
+zonkFomega (FCast p1 p2 e) = 
+   do { t1 <- (zonkTyp p1)
+      ; t2 <- (zonkTyp p2)
+      ; if t1==t2
+           then (zonkFomega e)
+           else lift1 (FCast t1 t2) (zonkFomega e)}
 
 zonkDeclF::  (Decl Var Fomega Typ) -> FIO  (Decl Var Fomega Typ)
 zonkDeclF (Intro pos t (nm,s) e) = 
@@ -2570,6 +2637,7 @@ zonkBind (TypeB nm typ) = lift1 (TypeB nm) (zonkKind typ)
 zonkBind (KindB nm) = return (KindB nm)
 
 subbTExpr sub x = error ("No subbExpr yet")
+subbDecl sub x = error ("No subbDecl yet")
  
 
 ------------------------------------------------------------------

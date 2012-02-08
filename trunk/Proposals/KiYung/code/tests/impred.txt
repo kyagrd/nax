@@ -1,9 +1,10 @@
 -- h2 (x:(forall a. a -> Int)) = x 6
-g2 (x:(forall a. a -> a)) = (x 5)
-g3 (x:Int->Int) = x 9
-g4 (x:(forall a. a -> a -> (a,a))) = (x 5)
+-- g2 (x:(forall a. a -> a)) = (x 5)
+-- g3 (x:Int->Int) = x 9
+-- g4 (x:(forall a. a -> a -> (a,a))) = (x 5)
 -- h3 (x:(forall a b . a -> b)) = x 5
 id x = x
+g5 (x:Int) = poly id
 -- ex4 x = (x 5,x 2)
 -- ex4 x = (h2 x,h3 x)
 -- h5: (forall a . a -> Int) -> Int
@@ -16,7 +17,10 @@ id x = x
 
 -- ex6 = g2 (poly (\ x -> x))
 -- ex7 = g2 (poly id)
-ex8 = g4 (poly (\ x y -> (x,y)))
+-- ex8 = g4 (poly (\ x y -> (x,y))) 2
+
+-- ex9 = instan (\ x y -> (x,y)) : (forall a . a -> Int -> (a,Int))
+ex10 = (instan (g5 0)) 8
 
 
 
