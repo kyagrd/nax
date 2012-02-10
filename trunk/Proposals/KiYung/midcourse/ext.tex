@@ -74,7 +74,7 @@ to allow case expressions in the body of an index transformer, which examines
 a term and returns a type. For example, consider the following definition:
 \begin{align*}
 \textit{foo}~x =
- \MIt^{\left\{\{n\} . \begin{smallmatrix}\textbf{case}\;n\;\textbf{of}
+ \MIt^{\left\{\{n\} . \begin{smallmatrix}\textbf{case}^{\{\}}\;n\;\textbf{of}
                                         &\textit{Zero}~~~  -> \textit{Bool} \\
                                         &\textit{Succ}\;m\;-> \textit{Nat}\;
                                         \end{smallmatrix}

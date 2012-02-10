@@ -303,10 +303,10 @@ The type signature of \MIt\ is:
          the definition of their constructor functions as \In\ terms.}
 \label{fig:natdef}
 \end{figure}
-A typical example of iteration is the length function for lists which
-returns a natural number. Lists and natural numbers are introduced as two-level types
-in Figure \ref{fig:natdef}. We define the \textit{length} function using the Mendler style
-iteration combinator as follows:
+A typical example of iteration is the length function for lists which returns
+a natural number. Lists and natural numbers are introduced as two-level types
+in Figure \ref{fig:natdef}. We define the \textit{length} function using
+the Mendler-style iteration combinator as follows:
 \begin{align*}
 \textit{length}~l = \MIt^{\{\}}~l~\textbf{with}~~
 &  len ~\textit{Nil}~~~~~~~~~~~ = zero \\
@@ -531,7 +531,7 @@ inverse from answer values ($a \,\vec{i}\,$) to abstract recursive values
 can be found in our recent work \cite{AhnShe11} (where we call this family
 \textit{msfcata}). We \cite{AhnShe11} proved normalization properties of
 \MsfIt\ by embedding \MsfIt\ into \Fw. I plan to extend the proof for \MsfIt\,
-to a language with term-indexed types, by embedding \MsfIt\ into \Fi, which is
+to a language with term indexed types, by embedding \MsfIt\ into \Fi, which is
 an extension of \Fw.
 
 I plan to construct more complex examples
@@ -638,11 +638,11 @@ In the thesis, I will include other examples involving indexing and
 mutually recursive datatypes.
 
 
-\paragraph{The theory of term-indexed types.}
+\paragraph{The theory of term indexed types.}
 It is known that \MIt\ for regular datatypes and indexed types with ordinary
 type indices has a reduction preserving embedding into System \Fw\ (\ie, \MIt\
 is definable in \Fw\ with a constant reduction step difference).
-In my dissertation, I will show that \MIt\ for term-indexed types has a
+In my dissertation, I will show that \MIt\ for term indexed types has a
 reduction preserving embedding into System \Fi, which is an extension of \Fw.
 Also, I will describe and prove properties of the inference algorithm of Nax,
 and also discuss why the index transformer is a sweet spot for the design of

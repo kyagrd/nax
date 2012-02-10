@@ -252,9 +252,9 @@ You can think of the rule {\small(\MIt)} as replacing both the elimination rule
 {\small($\mu$-elim)} and the typing rule for conventional iteration
 {\small(\It)}, but in a safe way that guarantees normalization.
 
-\subsection{Justification of the Mendler style as a design choice.}
+\subsection{Justification of the Mendler-style as a design choice.}
 I choose to base my approach to the design of a seamless synthesis of both
-logic and programming on the Mendler style. It restricts the elimination (\ie,
+logic and programming on the Mendler-style. It restricts the elimination (\ie,
 pattern matching) over values of recursive types, rather restricting the
 formation (\ie, datatype definition) of recursive types (a more conventional
 approach). The impact of this design choice is that it enables the logic to
@@ -284,7 +284,7 @@ properties. Since the Mendler-style approach does not restrict recursive
 datatype definitions, we can directly refer to the types of programs that use
 negative recursive types.
 
-The Mendler style is a promising approach to building a unified system because
+The Mendler-style is a promising approach to building a unified system because
 all the recursive types, both positive and negative, are definable in the
 logic. Although the conventional approach is widely followed in the design of
 formal reasoning systems based on the Curry-Howard correspondence (\eg, Coq,
@@ -296,7 +296,7 @@ encodings do not meet our goal of designing a seamless unified system for both
 programming and reasoning -- programmers should not have to pre-process their
 programs in order to reason about them.
 
-Another benefit of the Mendler style, is that Mendler recursion combinators
+Another benefit of the Mendler-style, is that Mendler recursion combinators
 are both useful and well-behaved (\ie, guaranteed to normalize) for arbitrary
 recursive types. A Mendler combinator is an induction principle
 (principled recursion scheme). It would not be meaningful to have
@@ -320,11 +320,11 @@ summary of the Mendler-style recursive schemes in this mid-course document
 in \S\ref{sec:mendler}.
 
 
-\subsection{A summary of studies on the Mendler style}
+\subsection{A summary of studies on the Mendler-style}
 \label{sec:relwork:bg}
 
 \citet{Mendler87} discovered an interesting way of formalizing
-primitive recursion, which was later dubbed ``the Mendler style'',
+primitive recursion, which was later dubbed ``the Mendler-style'',
 while he was formalizing a logic that extended System \textsf{F} with
 primitive recursion. Interestingly, Mendler did not seem to notice
 (or maybe, just did not bother to mention) that his style of formalizing
@@ -376,7 +376,7 @@ only''\cite{UusVen99}. So, until recently, the study on Mendler-style recursion
 combinators focused on examples of positive recursive types with type (rather than term) based indexing.
 
 \subsection{Recent contributions of my thesis work}
-I have developed several new contributions to the study of the Mendler style
+I have developed several new contributions to the study of the Mendler-style
 in my thesis work. These contributions fall into 3 broad categories.
 \begin{itemize}
 \item Some Mendler operators terminate for negative datatypes, and are also quite expressive.
@@ -435,7 +435,7 @@ a popular extension to the type system of Haskell, involves indexed datatypes
 beyond the scope of nested datatypes.
 
 Previous work, that promoted the expressiveness and generality of
-the Mendler style \cite{AbeMatUus03,AbeMatUus05,AbeMat04} used examples
+the Mendler-style \cite{AbeMatUus03,AbeMatUus05,AbeMat04} used examples
 involving nested datatypes, a particularly simple kind of indexing
 where the variation of indices are restricted to the argument types of
 the data constructors. In order to handle nested datatypes, the translation of
@@ -468,7 +468,7 @@ The thesis will also contain two chapters on work in progress.
 
 \paragraph{System \Fi.}
 I am developing a typed lambda calculus called System \Fi\, which is an
-extension of System \Fw\ with term-indexed types. Term-indexed types
+extension of System \Fw\ with term indexed types. Term indexed types
 naturally support the Curry-Howard isomorphism, as a type constructor can be
 seen as a relation between one or more terms.  This kind of expressiveness is
 available in dependently typed languages (where there is no distinction between
