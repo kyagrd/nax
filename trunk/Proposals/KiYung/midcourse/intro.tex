@@ -11,7 +11,7 @@ The following is my thesis statement, which summarizes my
 approach:
 \begin{quote}
 A language equipped with \emph{term indexed types} and
-\emph{Mendler style recursion combinators} can be 
+\emph{Mendler-style recursion combinators} can be 
 (1) a basis for \emph{sound and consistent logic}
 suitable for reasoning about properties of (functional) programs
 and also
@@ -22,7 +22,7 @@ suitable for writing the (functional) programs to be reasoned about.
 I believe such an approach is promising because, under the design I will
 promote, both the logic and the programming language share many
 common features. Amongst those features are the two design concepts
-of indexed types and Mendler style recursion combinators.
+of indexed types and Mendler-style recursion combinators.
 
 \emph{Term indexed types} are types indexed by terms. The concept of
 term indexed types can be informally understood by contrasting the traditional
@@ -41,9 +41,9 @@ include \textsf{Vec Int} 3, and \textsf{Vec Bool} $(2+3)$. Types like
 With term indexed types, we can express many fine-grained properties of
 programs (\eg, reversing a length indexed list preserves its length).
 
-\emph{Mendler style recursion combinators} are principled recursion schemes,
+\emph{Mendler-style recursion combinators} are principled recursion schemes,
 which are used as induction principles in the logic, and recursion operators
-in the programming language. There exist many families of Mendler style
+in the programming language. There exist many families of Mendler-style
 recursion combinators. Each member of a family performs the same kind of
 operation, but is specialized to work over type constructors with
 a particular kind. The primitive recursion combinator family was first
@@ -51,14 +51,14 @@ discovered by Mendler \cite{Mendler87}. Since that time, several other
 kind-dependant families \cite{vene00phd,AbeMatUus03,AhnShe11} have been
 discovered to be both expressive and useful.
 
-Mendler style recursion combinators do have counterparts in the conventional
+Mendler-style recursion combinators do have counterparts in the conventional
 (sometime called the Squiggol) style. The conventional style combinators are
-more widely known and used. But, Mendler style combinators have several
-advantages when compared to conventional style combinators. Mendler style
+more widely known and used. But, Mendler-style combinators have several
+advantages when compared to conventional style combinators. Mendler-style
 recursion combinators have uniform representation over both non-indexed types
-and term indexed types, and some families of the Mendler style recursion
+and term indexed types, and some families of the Mendler-style recursion
 combinators are normalizing for non-positive recursive types as well as
-positive recursive types. Detailed discussion on the Mendler style recursion
+positive recursive types. Detailed discussion on the Mendler-style recursion
 combinators can be found in \S\ref{sec:mendler}.
 
 Throughout my dissertation, I will support my thesis by designing a series of
@@ -89,7 +89,7 @@ requires normalization, System \Fi, the language to be developed for the sound
 and consistent logic, is indeed a normalizing typed lambda calculus. I will
 discuss the features of \Fi\ in detail in \S\ref{sec:Fi}. Then, in my
 dissertation, I will gradually extend \Fi\ to a more expressive calculi \Fixi\
-in order to support the Mendler style combinators of the primitive recursion
+in order to support the Mendler-style combinators of the primitive recursion
 family. The features of \Fixi\ are also outlined in \S\ref{sec:Fi}.
 
 
@@ -106,7 +106,7 @@ a small amount of type annotation, in predictable syntactic positions,
 which will be required by the language syntax.
 
 By ``\emph{expressive}'', I mean we can write a wide range of examples in Nax.
-Since Nax is equipped with Mendler style recursion combinators, we can write
+Since Nax is equipped with Mendler-style recursion combinators, we can write
 many useful programs over values with both term indexed types and
 negative recursive types, as well as over values with non-indexed types and
 positive recursive types. I will discuss the details of Nax in \S\ref{sec:Nax}.

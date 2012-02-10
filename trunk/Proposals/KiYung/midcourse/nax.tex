@@ -5,16 +5,16 @@ a simple and expressive programming language, we have designed the
 programming language Nax.
 
 Nax supports non-recursive datatypes, the recursive type operator
-($\mu^\kappa$), and the Mendler style recursion combinators (\MIt, \MPr,
+($\mu^\kappa$), and the Mendler-style recursion combinators (\MIt, \MPr,
 \McvIt, \McvPr, \MsfIt). The calculi, \Fi\ and \Fixi, discussed
 in the previous sections, are theoretically powerful enough to capture
-the semantics of both recursive types and Mendler style recursion schemes.
+the semantics of both recursive types and Mendler-style recursion schemes.
 However, they are far from practical programming languages. Even very simple
 datatypes, such as the boolean type, must be defined via impredicative 
 Church-style encodings (\eg, an encoding for the boolean type is
 $\forall a . a -> a -> a$). Fortunately, it is possible to provide
 a more user friendly layer of abstraction over these calculi. Nax supports
-datatypes and Mendler style recursion combinators as primitive constructs of
+datatypes and Mendler-style recursion combinators as primitive constructs of
 the language. I will introduce other programmer friendly features of
 the Nax language in \S\ref{sec:Nax:tysym}. Then, in \S\ref{sec:Nax:theory},
 I will discuss the desired properties of Nax, which will be demonstrated
@@ -31,7 +31,7 @@ recursive types more conveniently. The examples in \S\ref{sec:mendler} are
 really reformatted Nax programs. If you know Haskell, you will see that
 the Nax syntax is similar to Haskell. We have already discussed how Nax
 performs type inference (or, type reconstruction) based on user provided
-index transformers attached to Mendler style recursion combinators. I also
+index transformers attached to Mendler-style recursion combinators. I also
 mentioned that Nax supports type synonyms, but did not show any details of
 the concrete syntax in \S\ref{sec:mendler}. In Figure \ref{fig:naxderiving},
 I illustrate the syntax for type synonyms and fixpoint derivations, which make
@@ -120,7 +120,7 @@ I will prove type safety of Nax in the thesis.
 
 \paragraph{Normalization:}
 I will prove normalization of Nax by a reduction preserving embedding into
-either \Fi\ or \Fixw, depending on which families of Mendler style recursion
+either \Fi\ or \Fixw, depending on which families of Mendler-style recursion
 combinators we decide to include in Nax. Since it is likely that 
 primitive recursion is useful in most cases, the eventual target of
 the embedding will be \Fixw. But, for simplicity of illustration, I will

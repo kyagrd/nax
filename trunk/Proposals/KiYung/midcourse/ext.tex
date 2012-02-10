@@ -1,18 +1,73 @@
-\section{Possibilities for further extensions}\label{sec:ext}
+\section{Possibilities for further work}\label{sec:ext}
 There are many extensions that would make Nax more attractive
 as a programming language. Here, I list some of them.
 
-\paragraph{Extending the syntax of index transformer annotations:}
-In \S\ref{sec:mendler:etc}, we have already seen that we need extend
-to the index transformer syntax to support
-\emph{equality constraints}.
 
-Another possible extension to the index transformer syntax is to allow
+
+
+% \subsection{Other possible extensions}\label{sec:mendler:etc}
+
+\paragraph{Equality types.}
+In section \S\ref{sec:mendler:pr}, I mentioned that we 
+need to extend the type system to express the tail function which can only 
+be applied to non-empty vectors (or, length indexed lists).
+In particular, we need \emph{equality constraints} and
+the \emph{unreachable} term (evidence of a logical contradiction).
+\begin{align*}
+\textit{vtail}~x =~& \MIt^{\{\{n\} \,|\, n=`succ\;m \; . \, \textit{Vec}\;p\;\{n\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
+&\qquad  tl ~cast~\textit{VNil}~~~~~~~~~~~ = \textit{unreachable} \\
+&\qquad  tl ~cast\;(\textit{VCons}\;x\;\textit{xs}) = cast\;\textit{xs}
+\end{align*}
+Under the equality constraint ($n=`succ\;m$), the length index of
+the input list ($n$) must be non-zero. When the type checker types
+the term \textit{unreachable}, it should try to show that the current
+constraints are unsatisfiable. In first equation, we know that $n$ is zero
+because \textit{VNil}'s type is indexed by zero. Since $zero=succ\;m$ is not
+satisfiable, \textit{unreachable} should type check vacuously, since it marks
+a path that will never be taken in a well-typed program. It might be possible
+to use some syntactic sugar that in lines the equality constraint and
+checks that every omitted equation is unreachable. Then, we could write
+the $vtail$ function as follows:
+\begin{align*}
+\textit{vtail}~x =~& \MIt^{\{ \{`succ\;m\}. \textit{Vec}\;p\;\{`succ\;m\} -> \textit{Vec}\;p\;\{m\}\}}~x~\textbf{with}\\
+&\qquad  tl ~cast\;(\textit{VCons}\;x\;\textit{xs}) = cast\;\textit{xs}
+\end{align*}
+In my dissertation, I plan to study such extensional features that enable
+programmers to write useful functions like $vtail$.
+
+
+\paragraph{Proveable Equality.}
+The $vtail$ example above involves converting the type of terms using
+definitional equality (\ie, $\beta$-conversion). As we reason about more
+complicated functions, with more interesting properties, we will need to
+represent provable equality. An example of a provable equality is
+the associativity of natural numbers over addition. Using the standard
+definition of addition (call it $plus$) for unary natural numbers, the two terms
+$(plus\;(plus\;n_1\;n_2)\;n_3)$ and $(plus\;n_1\;(plus\;n_2\;n_3))$,
+are not convertible. But, we can prove by induction that they are always equal
+for any three natural numbers $n_1$, $n_2$, and $n_3$. The addition of
+provable equality will extend the programs we can type. Of course,
+to construct such proofs, we will need an induction principle. Fortunately,
+every Mendler-style operator is an induction principle. This is one reason
+why a language built on Mendler-style recursion combinators make a perfect
+substrate for a sound logical reasoning system. Which, in case you don't recall,
+is the first part of my thesis statement!
+
+
+
+
+
+\paragraph{Computational index transformers:}
+Earlier in this section we saw good reasons to extend
+the index transformer syntax to support \emph{equality constraints}.
+Another possible extension to index transformers is to allow
 \emph{type level computations}, which eventually reduced to a type,
 to appear in the body of an index transformer. The current index
-transformer syntax only allow the body of index transformers to be a type.
-The only possible variation on the return type would be the term indices
-when the return type is a term indexed type. However, we can imagine
+transformer syntax only allows the body of an index transformers to be a type.
+The only possible variation of the return type is variation over
+the term indices used as inputs in the index transformer
+when the return type is indexed by some of the inputs. However, we can imagine
+(and justify in our formal systems) 
 a function that returns totally unrelated types (\eg, \textit{Bool} and Nat)
 depending on the input indices. To support functions of such type, we need
 to allow case expressions in the body of an index transformer, which examines
@@ -28,15 +83,19 @@ a term and returns a type. For example, consider the following definition:
 &\quad  f \;(\textit{VCons}\;x\;xs) = zero
 \end{align*}
 %% (\eg, \textbf{case} n \textbf{of} \textit{Zero} )
-The function $foo$ taking a length indexed list as an input, and returns
-$\textit{True} : \textit{Bool}$ when the list is empty, but returns
-$zero : \textit{Nat}$ otherwise. Such an extension is not a problem regarding
-type safety and logical consistency, since the target calculi \Fi\ and \Fixi\
-already has the ability to express type level computation. However, we are
-unsure of its ramifications over the type inference algorithm of Nax. In my
-thesis, I will elaborate on the argument that such an extension does not
-interfere with type safety and logical consistency, and also investigate
-its ramifications over the type inference algorithm of Nax.
+
+The function $foo$ takes a length indexed list as an input, and returns
+$\textit{True} : \textit{Bool}$ when the list is empty, but returns $zero
+: \textit{Nat}$ otherwise.  This ability to write functions whose types
+vary computationally (rather than just parametrically) over their inputs
+is often called a large elimination. Such an extension is not a problem
+to either the type safety or logical consistency of Nax, since the target
+calculi \Fi\ and \Fixi\ already have the ability to express type level
+computation. However, we are unsure of its ramifications on the type
+inference algorithm of Nax. In my thesis, I will elaborate on the
+argument that such extensions do not interfere with type safety and
+logical consistency of Nax, and also investigate the ramifications 
+of such an extension the type inference algorithm of Nax.
 
 \paragraph{Allowing non-termination in the language:}
 Recall that the motivation behind my thesis is to contribute to 
@@ -51,38 +110,40 @@ logic and programming by a modal type system. This will give a better context
 for the Nax language and its contributions.
 
 \paragraph{Kind polymorphism:}
-The calculi \Fi\ and \Fixi\ are polymorphic at type level but monomorphic at
-kind level, just like \Fw. Support for polymorphism at kind level is another
-dimension of a language extension. When we have kind polymorphism, we can
-have one recursive type operator $\mu$, which has a polymorphic kind, instead
-of family recursive type operator superscripted by kinds ($\mu^\kappa$).
+The calculi \Fi\ and \Fixi\ are polymorphic at the type level but monomorphic at
+the kind level, just like \Fw. Support for polymorphism at the kind level is another
+dimension to the extension of Nax. With kind polymorphism, one can
+have a single recursive type operator $\mu$, which has a polymorphic kind, instead
+of family recursive type operators super scripted by kinds ($\mu^\kappa$).
 Recently, \citet{YorWeiCrePeyVytMag12} proposed $F_C^{\uparrow}$, which is
-an extension to $F_C$ (the core language of Glasgow Haskell Compiler)
+an extension to $F_C$ (the core language of the Glasgow Haskell Compiler)
 with kind polymorphism and a limited form of term indexed types.
 Although the kind polymorphism extension enables further generalizations and
-abstractions over the type structure, we need extra caution when we consider
-logical consistency -- too much (impredicative) polymorphism at kind level may
+abstractions over the type structure, we will need extra caution when we consider
+logical consistency -- too much (impredicative) polymorphism at the kind level may
 lead to inconsistency. Dependently typed proof assistants, such as Coq and Agda,
-need not consider this issue of kind polymorphism (or, more generally,
+need not consider the issue of kind polymorphism (or, more generally,
 universe polymorphism) affecting consistency, since they simply limit
-impredicative polymorphism, being based on predicative type systems.
+impredicative polymorphism, because they are based on predicative type systems.
 However, I choose to base the theory Nax on an impredicative type system,
-extending from \Fw, since I believe impredicative polymorphism is
+extending \Fw, since I believe impredicative polymorphism is
 more natural for typing programs, which might not necessarily be proofs.
 
-Although I don't plan to include kind polymorphism in the Nax design for
-my thesis work, I will certainly summarize the related work and try to
-contemplate on what considerations we may need when we try to adopt
+Although I don't plan to include kind polymorphism in Nax design in
+my thesis work, I will certainly summarize the related work, and try to
+contemplate on what considerations are needed, if we were to adopt
 extensions like kind polymorphism in Nax.
 
 \paragraph{Other possible extensions:}
-Some extensions to Hindley-Milner type system, such as first class polymorphism
-and qualified types, would also be posisble for Nax. I won't go into any
-details on these issues in the thesis, but I will give pointers to related work
-on those subjects.
 
-Mendler style recursion schemes for full dependent types are well defined for
-positive datatypes\footnote{Not in published work, but a well-known folklore
-among researchers who studied the Mendler style.}. I will briefly introduce
-Mendler style recursion combinator in a dependently typed setting in my thesis.
+Some extensions to the Hindley-Milner type system, such as first class
+polymorphism, existential types, or qualified types, would also be possible for Nax. I
+won't go into much detail on these issues in the thesis, but I will give pointers
+to related work on these subjects.
+
+Mendler-style recursion schemes for full dependent types are known to be well
+defined for positive datatypes\footnote{Not in published work, but a well-known
+folklore among researchers who studied the Mendler-style.}. I will briefly
+introduce Mendler-style recursion combinators in a dependently typed setting in my
+thesis.
 
