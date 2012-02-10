@@ -257,9 +257,9 @@ The type signature of \MIt\ is:
 {\bf Natural Numbers}
 \begin{align*}
 \text{Base structure:}\qquad\qquad
-\textbf{data}~N : * -> * ~\textbf{where}~~
-& \textit{Zero} : N\;r\\
-& \textit{Succ} : r -> N\;r
+&\textbf{data}~N : * -> * ~\textbf{where} \\
+&\qquad \textit{Zero} : N\;r\\
+&\qquad \textit{Succ} : r -> N\;r
 \end{align*}
 \[\text{Type synonym:}\qquad\qquad \textit{Nat} ~=~ \mu^{*} N\]
 \begin{align*}
@@ -271,19 +271,34 @@ The type signature of \MIt\ is:
 {\bf Polymorphic Lists}
 \begin{align*}
 \text{Base structure:}\qquad\qquad
-\textbf{data}~L : * -> * -> * ~\textbf{where}~~
-& \textit{Nil}~~\, : L\;p\;r \\
-& \textit{Cons}    : r -> p -> L\;p\;r
+&\textbf{data}~L : * -> * -> * ~\textbf{where} \\
+&\qquad \textit{Nil}~~\, : L\;p\;r \\
+&\qquad \textit{Cons}    : r -> p -> L\;p\;r
 \end{align*}
 \[\text{Type synonym:}\qquad\qquad \textit{List} \; a  ~=~ \mu^{*} (L\;a)\]
 \begin{align*}
 \text{Constructor functions:}\quad
-&nil~~\,~=~ \In^{*} \textit{Nil} \\
-&cons\;x\;xs ~=~ \In^{*} (\textit{Cons}\;x\;xs)
+&nil~~~~~~~~\,~=~ \In^{*} \textit{Nil} \\
+&cons\;x\;xs  ~=~ \In^{*} (\textit{Cons}\;x\;xs)
 \end{align*}
 
-\caption{Two level type definition of natural numbers and lists
-         as the fixpoints of their base structures, and
+{\bf Length indexed Lists}
+\begin{align*}
+\text{Base structure:}\qquad\qquad
+&\textbf{data}~V : * -> (* -> *) -> * -> * ~\textbf{where} \\
+&\qquad \textit{VNil}~~\, : V\;p\;r\;\{`zero\} \\
+&\qquad \textit{VCons}    : r\;\{i\} -> p -> V\;p\;r\;\{`succ\;i\}
+\end{align*}
+\[\text{Type synonym:}\qquad\qquad \textit{Vec}\;a\;i  ~=~ \mu^{* -> *} (L\;a) \;i\]
+\begin{align*}
+\text{Constructor functions:}\quad
+&vnil~~~~~~~~\,~=~ \In^{*} \textit{VNil} \\
+&vcons\;x\;xs  ~=~ \In^{*} (\textit{VCons}\;x\;xs)
+\end{align*}
+
+
+\caption{Two level type definition of natural numbers, lists, and
+	 length indexed lists as the fixpoints of their base structures, and
          the definition of their constructor functions as \In\ terms.}
 \label{fig:natdef}
 \end{figure}
@@ -329,6 +344,8 @@ direct acess to the predcessor values.
 
 The examples we discussed so far were all about regular datatypes
 (natrual numbers and lists), which do not involve any indices.
+Mendler style recursion combinators generalize natrually for term indexed
+types (\eg, length indexed lists, see Figure \ref{fig:natdef}).
 I will continue the discussion on Mendler style recursion combinators
 over indexed types in \S\ref{sec:mendler:ix}.
 But, before we move on to indexed types, let us have a tour on other
@@ -337,8 +354,9 @@ starting from the primitive recursion family.
 
 \subsection{Mendler style primitive recursion}\label{sec:mendler:pr}
 The primitive recursion family \MPr\ is has an additional abstract operation,
-which we call cast, which explicitly converts a value of the abstract recursive type ($r$-value)
-into a value of the concrete recursive type $(\mu^\kappa t)$.
+which we call cast, which explicitly converts
+a value of the abstract recursive type ($r$-value) into
+a value of the concrete recursive type $(\mu^\kappa t)$.
 
 The type signature of \MPr\ is:
 \begin{multline*}
@@ -393,26 +411,26 @@ However, for length index lists (or, vectors), we can imagine
 a version of a tail function
 $\textit{vtail}\,:\textit{Vec}\;p\;\{`succ\;n\} -> \textit{Vec}\;p\;\{n\}$,
 which only expects non-empty lists -- therefore, we need not specify a default
-value for the empty list case. In fact we need not supply an empty-list case
-since by type considerations it is unreachable. To express functions like $vtail$, which have
-a constraint on the input value index (i.e. it must be \{`succ\;n\}), 
-we need additional features in our type system, advanced beyond
-what we have been discussing so far. We will discuss such possible
+value for the empty list case. In fact, we need not supply an empty-list case
+since by type considerations it is unreachable. To express functions like
+$vtail$, which have a constraint on the input index (\ie, it must be
+$\{`succ\;n\}$), we need additional features in our type system, which advance
+beyond what we have been discussing so far. We will discuss such possible
 extensions to Mendler style recursion combinators in \S\ref{sec:mendler:etc}.
 
-In order to translate Mendler style primitive recursion
-into a normalizing calculus, we need a more complicated
-calculus than \Fi, one we call \Fixi. Just as I extended \Fw\ to \Fi\ in order to
-formalize the theory of \MIt\ involving term indices, I extend \Fixw\
-to \Fixi\ in order to formalize the theory of \MPr\ involving term indices.
+In order to translate Mendler style primitive recursion into
+a normalizing calculus, we need a more complicated calculus than \Fi,
+one we call \Fixi. Just as I extended \Fw\ to \Fi\ in order to formalize
+the theory of \MIt\ involving term indices, I extend \Fixw\ to \Fixi\
+in order to formalize the theory of \MPr\ involving term indices.
 
 \subsection{Mendler style course of values iteration \& primitive recursion}
 \label{sec:mendler:cv}
 Some computations are naturally expressed by recursing over substructure
-of the input value which is not the immediate substructure (\eg, predecessor of predecessor,
-or tail of tail). This pattern of recursion is called \emph{course of values}
-recursion. Course of values recursion often appears in number sequences
-defined by recurrence relations (\eg, Fibonacci's sequence).
+of the input value which is not the immediate substructure (\eg, predecessor
+of predecessor, or tail of tail). This pattern of recursion is called
+\emph{course of values} recursion. Course of values recursion often appears
+in number sequences defined by recurrence relations (\eg, Fibonacci's sequence).
 We can extend \MIt\ and \MPr\ with a new abstract operation, which enables
 us to express course of values recursive functions, as follows:
 \begin{align*}
@@ -484,15 +502,14 @@ I strongly believe that a reduction preserving embedding of
 quite straightforward.)
 
 \subsection{Mendler style iteration with syntactic inverse}
-Although \MIt\ is normalizing for negative recursive types, there exist
-many total functions over negative recursive types, which are
-useful, but not easily expressed in terms of \MIt. Most of these functions
-were first studied in the conventional setting, and have definitions as
-recursive functions. My recent contribution is
-the discovery of a new family of the Mendler style recursion combinators,
-which can express these functions. We call this new family \MsfIt.
-The generic type (abstracting over the number and kind of indices) 
-of this family is shown below:
+Although \MIt\ is normalizing for negative recursive types, there exist many
+total functions over negative recursive types, which are useful, but not easily
+expressed in terms of \MIt. Most of these functions were first studied in
+the conventional setting, and have definitions as recursive functions.
+My recent contribution is the discovery of a new family of the Mendler style
+recursion combinators, which can express these functions. We call this new
+family \MsfIt. The generic type (abstracting over the number and kind of
+indices) of this family is shown below:
 \label{sec:mendler:sf}
 \[
  \MsfIt : \forall t . \forall a .
@@ -512,7 +529,7 @@ inverse from answer values ($a \,\vec{i}\,$) to abstract recursive values
 ($r\,\vec{i}\,$). Several examples and a detailed discussion about \MsfIt\
 can be found in our recent work \cite{AhnShe11} (where we call this family
 \textit{msfcata}). We \cite{AhnShe11} proved normalization properties of
-\MsfIt\ by embeding \MsfIt\ into \Fw. I plan to extend the proof for \MsfIt\,
+\MsfIt\ by embedding \MsfIt\ into \Fw. I plan to extend the proof for \MsfIt\,
 to a language with term-indexed types, by embedding \MsfIt\ into \Fi, which is
 an extension of \Fw.
 
@@ -521,7 +538,7 @@ I plan to construct more complex examples
 in the Nax language using \MsfIt.
 
 I will also discuss why we have not extended the primitive recursion family
-and the course of values family with syntactic inverse (such exensions
+and the course of values family with syntactic inverse (such extensions
 may lead to possible non-termination).
 
 \subsection{Mender style recursion combinators over indexed types}
@@ -529,10 +546,10 @@ may lead to possible non-termination).
 Mendler style recursion combinators generalize naturally to indexed types.
 In this section, I will illustrate the use of Mendler style
 recursion combinators over indexed types. Here, the examples will only
-involve the interation family (\MIt), but you will have not diffuclty
+involve the iteration family (\MIt), but you will have not difficulty
 imagining how to uses of other families over indexed types, since all
 Mendler style recursion combinators generalize naturally to indexed types
-in the same fasion.
+in the same fashion.
 
 The following is the base structure for vectors, or length indexed lists:
 \begin{align*}
@@ -588,8 +605,8 @@ The index transformer
 $\{\{n\} . \textit{Vec}\;p\;\{m\} \, -> \, \textit{Vec}\;p\;\{`plus\;n\;m\}\}$
 specifies that the append function applied to a list of length $n$,
 shall return a function, which expects a vector with length index $m$
-and returns a vector with length index $(plus\;n\;m)$, where $plus$ is the addition
-function for natural numbers.
+and returns a vector with length index $(plus\;n\;m)$, where $plus$ is
+the addition function for natural numbers.
 
 We can also use indexed types to encode mutually recursive types.
 For instance, consider the following definitions:
