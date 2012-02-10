@@ -11,11 +11,11 @@ operators. Mendler operators that compute things using a different
 computation pattern belong to different families.
 
 Despite the fact that different families compute things differently, all
-families have a common structure. I discuss this common stucture first,
+families have a common structure. I discuss this common structure first,
 then I introduce several families of Mendler-style combinators
 (\S\ref{sec:mendler:it}-\ref{sec:mendler:sf}) which I plan to support in
-the Nax language design. Lastly, I postulate on other possible
-generalizations and extensions (\S\ref{sec:mendler:etc}).
+the Nax language design. Later on, towards the end of this document,
+I postulate on other possible generalizations and extensions (\S\ref{sec:ext}).
 
 \subsection{Two level types and Mendler-style recursion combinators}
 \label{sec:mendler:intro}
@@ -52,38 +52,37 @@ are instantiated to certain types (or in the case of the $\vec{i}$, they are ins
 \item The sequence of type variables $\vec{p}$ stand for the type parameters of the
 type. Type parameters always appear regularly 
 (\ie, they are always the same type variables $\vec{p}$\
-no matter where they occur) in the type siguatures of
+no matter where they occur) in the type signatures of
 the data constructors $C_1,\cdots,C_n$. 
 
-\item The type variable $r$ stands for
-recursive ocurrences. Note it can have a rather complicted kind $(\vec{\kappa}_i -> *)$.
+\item The type variable $r$ stands for recursive occurrences.
+	Note it can have a rather complected kind $(\vec{\kappa}_i -> *)$.
 
-\item The sequence of type variables $\vec{i}$ stands for indices
-that can vary (\eg, $\vec{\tau_i}_1,\vec{\tau_i}_n$) in the type signatures of
-the data constructors $C_1,\cdots,C_n$. 
+\item The sequence of type variables $\vec{i}$ stands for indices that can
+	vary (\eg, $\vec{\tau_i}_1,\vec{\tau_i}_n$) in the type signatures of
+	the data constructors $C_1,\cdots,C_n$. 
 
 \item Note that classifying whether an argument is a parameter or an index is
-determined soley by its position-- whether it comes before or after $r$.
+	determined soler by its position -- whether it comes before or after $r$.
 
 \end{itemize}
 We discuss the pattern as it occurs for some common types
 \begin{enumerate}
 
 \item For non-parametrized types (or, monotypes) such as the natural numbers,
-there are no parameters and no indices. For instance, the base structure
-for natural numbers would have the form $N\;r$. 
+	there are no parameters and no indices. For instance, the base structure
+	for natural numbers would have the form $N\;r$. 
 
-\item For parametrized,
-but non-indexed, types (or, regular polymorphic types), there are parameters
-before $r$ but no indices after $r$. For instance, the base structure for
-polymorphic lists would have the form $L\;p\;r$ where $p$ is the type of
-the elements in the list. 
+\item For parametrized, but non-indexed, types (or, regular polymorphic types),
+	there are parameters before $r$ but no indices after $r$. For instance,
+	the base structure for polymorphic lists would have the form $L\;p\;r$
+	where $p$ is the type of the elements in the list. 
 
-\item For indexed types, there are indices following $r$.
-For instance, the base structure for length indexed lists
-(see Section \ref{sec:mendler:it}) would have the
-form $V\;p\;r\;i$ where $p$ is the type of the elements in the list and
-$i$ is the index that specifies the length of the list.
+\item For indexed types, there are indices following $r$. For instance,
+	the base structure for length indexed lists
+	(see Section \ref{sec:mendler:it}) would have the form $V\;p\;r\;i$
+	where $p$ is the type of the elements in the list
+	and $i$ is the index that specifies the length of the list.
 
 \end{enumerate}
 
@@ -169,11 +168,12 @@ this.
 
 In general one thinks of the {\em abstract recursive call} and the {\em other
 abstract operations} as given, and the user must supply the definition of the body
-which {\em combines a t-structure filled with r-values into an answer}.
+which {\em combines a $t$-structure filled with $r$-values into an answer}.
 
 
-We can think of the above as an encoding of the following where $r$ is an abstract
-type, and each of the functions in the product, a different abstract operation over $r$.
+We can think of the above as an encoding of the following where $r$ is
+an abstract type, and each of the functions in the product,
+a different abstract operation over $r$.
 
 \begin{multline*}
  \textsf{Mxxx} : \forall t . \forall a .
@@ -184,7 +184,8 @@ type, and each of the functions in the product, a different abstract operation o
    \big) \\
  -> (\forall\vec{i} . (\mu^\kappa t)\,\vec{i} -> a\,\vec{i}\,)
 \end{multline*}
-The abstract recursive call operation $(\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)$ is available in
+The abstract recursive call operation
+$(\forall\vec{i} . r\,\vec{i} -> a\,\vec{i}\,)$ is available in
 all the Mendler-style families we study. Each family (\textsf{xxx})
 is distinguished by what other additional abstract operations are available.
 Note that the abstract operations manipulate values of type $r$ when we describe
@@ -339,12 +340,12 @@ is an abstract recursive type ($r$) rather than the concrete list type
 ($\textit{List}\;p$, a synonym for $\mu^{*}(L\;p)$). 
 
 In the next subsection, we shall see that the primitive recursion
-Mendler-style family is able to natrually express such functions having
-direct acess to the predcessor values.
+Mendler-style family is able to naturally express such functions having
+direct aces to the predecessor values.
 
 The examples we discussed so far were all about regular datatypes
-(natrual numbers and lists), which do not involve any indices.
-Mendler-style recursion combinators generalize natrually for term indexed
+(natural numbers and lists), which do not involve any indices.
+Mendler-style recursion combinators generalize naturally for term indexed
 types (\eg, length indexed lists, see Figure \ref{fig:natdef}).
 I will continue the discussion on Mendler-style recursion combinators
 over indexed types in \S\ref{sec:mendler:ix}.
@@ -416,7 +417,7 @@ since by type considerations it is unreachable. To express functions like
 $vtail$, which have a constraint on the input index (\ie, it must be
 $\{`succ\;n\}$), we need additional features in our type system, which advance
 beyond what we have been discussing so far. We will discuss such possible
-extensions to Mendler-style recursion combinators in \S\ref{sec:mendler:etc}.
+extensions to Mendler-style recursion combinators in \S\ref{sec:ext}.
 
 In order to translate Mendler-style primitive recursion into
 a normalizing calculus, we need a more complicated calculus than \Fi,
@@ -492,9 +493,9 @@ An important aspect of the Mendler-style course of values recursion is that
 it only guarantees normalization over positive recursive types. One of our
 recent contribution is that we have reported a counterexample of \textsf{McvIt}
 involving negative recursive type, which does not normalize. So, to be more
-precise, the type signatures of \textsf{McvIt} and \textsf{McvPr} need to
-be constrained ($\forall t \text{~such that~$t$ is positive}.\cdots$)
-instead of being unconstrainedly polymorphic on $t$.
+precise, the types of \textsf{McvIt} and \textsf{McvPr} need to be constrained
+($\forall t \text{~such that~$t$ is positive}.\cdots$) instead of being
+unconstrainedly polymorphic over $t$.
 
 I strongly believe that a reduction preserving embedding of
 \McvIt\ and \McvPr\ into \Fixw\, and \Fixi\ are possible.

@@ -195,7 +195,7 @@ We can actually implement \textsf{fix}, using $\mu$, as follows
 & w \,:\, \mu(T\;a) -> a ~~ \qquad \qquad
           \texttt{-}\texttt{-}~\text{\small an encoding of the untyped
                                      $(\lambda x.x\;x)$
-                                     in the typed $\lambda$-calculus}~ \\
+                                     in a typed language}~ \\
 & w = \lambda x . \,\textbf{case}~\unIn~x~\textbf{of}~C\;f -> f\;x \\
 & \textsf{fix} \,:\, (a -> a) -> a \qquad \qquad
           \texttt{-}\texttt{-}~\text{\small an encoding of 
@@ -205,7 +205,7 @@ We can actually implement \textsf{fix}, using $\mu$, as follows
 \end{align*}
 
 Thus, to avoid the loss of termination guarantees, we need to alter the rules
-for $\mu$, in someway, to ensure a consistent logic. One way, is to restrict
+for $\mu$, in someways, to ensure a consistent logic. One way, is to restrict
 the rule {\small $\mu$-form}; the other way, is to restrict the rule
 {\small $\mu$-elim}. Once we decide which of these two alterations of the
 rules we will use, the design of principled recursion combinators (\eg, \It\
@@ -368,7 +368,7 @@ embedding into \Fw. \citet{AbeMat04} needed a more involved embedding of
 
 Although Matthes, Uustalu, and others, were well aware of the fact that
 the Mendler-style iteration family and the primitive-recursion family both
-normalize for negative recursive, they did not explore or document actual
+normalize for negative recursive types, they did not explore or document actual
 examples. They postponed ``the search for exciting examples of negative
 recursive types" until another time. They stated that the normalization
 of negative types ``may have a theoretical value
@@ -408,7 +408,7 @@ A series of papers \cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} studied
 techniques that define recursion schemes over negative recursive types in
 the conventional setting. In our recent work \cite{AhnShe11}, we discovered
 that this work can be naturally captured as a kind-indexed family of Mendler
-tyle combinator. The \MsfIt\ combinator (\aka\ \textit{msfcata}) corresponds to
+style combinator. The \MsfIt\ combinator (\aka\ \textit{msfcata}) corresponds to
 the conventional recursion combinator discovered by \citet{FegShe96} and
 later refined by \citet{bgb}. With this new family, we were able to write many
 interesting programs, involving negative recursive types, that are impossible,
@@ -432,7 +432,7 @@ datatypes, whose can index may vary in the result types of the
 data constructors as well as in the argument types of the data constructors.
 For example, many examples using Generalized Algebraic DataTypes (GADTs),
 a popular extension to the type system of Haskell, involves indexed datatypes
-beyound the scope of nested datatypes.
+beyond the scope of nested datatypes.
 
 Previous work, that promoted the expressiveness and generality of
 the Mendler style \cite{AbeMatUus03,AbeMatUus05,AbeMat04} used examples
