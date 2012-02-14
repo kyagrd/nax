@@ -11,7 +11,6 @@
 \usepackage{fancybox}
 \usepackage{framed}
 \usepackage{comment}
-\usepackage{ifthen}
 
 \definecolor{grey}{rgb}{0.8,0.8,0.8}
 
