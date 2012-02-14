@@ -17,7 +17,7 @@ manipulated. Deconstruction of recursive data can only be performed with
 Mendler-style combinators to ensure strong normalization.
 \end{itemize}
 
-\subsection{Two level types}\label{2level}
+\subsection{Two-level types}\label{2level}
 Non recursive datatypes are introduced by the |data| declaration.
 The data declaration can include arguments. The kind and separation of
 arguments into parameters and a indices is inferred. For example, 
@@ -274,9 +274,8 @@ the scrutinee |x|.
 \begin{tabular}{l || l}
 \begin{minipage}[t]{.42\linewidth}
 \begin{code}
-casei{} x of
-  Nil        -> e1
-  Cons x xs  -> e2
+casei{} x of  Nil        -> e1
+              Cons x xs  -> e2
 \end{code}
 \end{minipage}
 
@@ -284,9 +283,8 @@ casei{} x of
 
 \begin{minipage}[t]{.50\linewidth}
 \begin{code}
-MIt{} x with
-  (NEWFI f) (Cons x xs)  =  e1
-  (NEWFI f) Nil          =  e2
+MIt{} x with  (NEWFI f) (Cons x xs)  =  e1
+              (NEWFI f) Nil          =  e2
 \end{code}
 \end{minipage}
 \end{tabular}
@@ -665,9 +663,8 @@ is an integer. Such a function has type: |Vector a {n} -> Int|.
 We can write this as follows:
 
 \begin{code}
-vlen x =  MIt{{i} . Int} x with
-            len Vnil          = 0
-            len (Vcons x xs)  = 1 + len xs
+vlen x =  MIt{{i} . Int} x with  len Vnil          = 0
+                                 len (Vcons x xs)  = 1 + len xs
 \end{code}
 
 Let's study an example with a more interesting index transformation.
@@ -692,21 +689,22 @@ flop x =  MIt {{t} {i} . Proof {`flip t} {`succ i}} x with
 \end{code}
 
 
-For our last term-indexed example, every length-indexed list has a length, which
-is either even or odd. We can witness this fact by writing a function with type:
-|Vector a {n} -> Either (Even {n}) (Odd {n})|. Here, |Even| and |Odd|
-are synonyms for particular kinds of |Proof|. To write this function,
-we need the index transformation: |{ {n} . Either (Even {n}) (Odd {n}) }|.
+For our last term-indexed example, every length-indexed list has a length,
+which is either even or odd. We can witness this fact by writing a function
+with type: |Vector a {n} -> Either (Even {n}) (Odd {n})|.
+Here, |Even| and |Odd| are synonyms for particular kinds of |Proof|.
+To write this function, we need the index transformation:
+|{ {n} . Either (Even {n}) (Odd {n}) }|.
 
 \begin{code}    
-synonym Even x = Proof {E} {x}
-synonym Odd  x = Proof {O} {x}
+synonym Even  {x} = Proof {E} {x}
+synonym Odd   {x} = Proof {O} {x}
 
-polarity x =  MIt { {n} . Either (Even {n}) (Odd {n})} x with
-                pol Vnil          =  Left base
-                pol (Vcons x xs)  =  casei{} pol xs of
-                                       Left p   -> Right(stepE p)
-                                       Right p  -> Left(stepO p)  
+proveEvenOrOdd x =  MIt { {n} . Either (Even {n}) (Odd {n})} x with
+                      prEOO Vnil          =  Left base
+                      prEOO (Vcons x xs)  =  casei{} prEOO xs of
+                                               Left p   -> Right(stepE p)
+                                               Right p  -> Left(stepO p)  
 \end{code}
 
 \subsection{Recursive types of unrestricted polarity but restricted elimination}
@@ -793,9 +791,8 @@ new n = cat["x",show n]   {-" "-}
                           {-" "-} -- |(\ n -> new m): Int -> String|
 showHelp x =
    MsfIt{} x with 
-    sh inv (App x y) m = cat ["(", sh x m, " ", sh y m, ")"]
-    sh inv (Abs f) m = 
-       cat["(fn ", new m, " => ", sh (f (inv (\ n -> new m))) (m+1), ")"]
+    sh inv (App x y)  = \ m -> cat ["(", sh x m, " ", sh y m, ")"]
+    sh inv (Abs f)    = \ m -> cat ["(fn ", new m, " => ", sh (f (inv (\ n -> new m))) (m+1), ")"]
 showTerm x = showHelp x 0
 
 showTerm apply : List Char = "(fn x0 => (fn x1 => (x0 x1)))"
@@ -817,13 +814,13 @@ is quite expressive. It supports a wide variety of types including
 the regular types (|Nat| and |List|), nested types (|PowerTree|),
 {\small GADT}s (|Vector|), and mutually recursive types (|Even| and |Odd|).
 
-\item Two level types, while expressive, are a pain to program with (all those
+\item Two-level types, while expressive, are a pain to program with (all those
 |Mu[kappa]| and |In[kappa]| annotations), so a strong synonym or macro
 facility is necessary. With syntactic support, one hardly even notices.
 
 \item The use of term-indexed types allows programmers to write types that
 act as logical relations, and form the basis for reasoning about programs.
-Formalizing this is a large part of sequel of this paper.
+Formalizing this is a large part of a sequel to this paper.
 
 \item Using Mendler-style combinators is expressive, and with syntactic support
 (the |with| equations of the Mendler operations), is easy to use. In
@@ -835,10 +832,10 @@ is supplied in any of the Nax examples. The Nax compiler reconstructs
 all type information.
 
 \item Index transformers are the minimal information needed to extend 
-Hindley Milner type inference over GADTs. One can always predict
+Hindley-Milner type inference over GADTs. One can always predict
 where they are needed, and the compiler can enforce that the
 programmer supplies them. They are never needed for non-indexed types.
-Nax faithfully extends Hindley Milner type inference.
+Nax faithfully extends Hindley-Milner type inference.
 
 \end{itemize}
 
