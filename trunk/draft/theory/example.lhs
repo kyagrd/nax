@@ -609,8 +609,8 @@ MIt{psi} x with
   f p_i = e_i
 \end{code}
 \begin{tabular}{l||clcl}
-|psi : kappa -> *|           & & |{a . (a -> Int) -> Int}| & : & |* -> *| \\
-|T : (kappa -> *) -> k -> *| & & |Nest| & : & |(* -> *) -> * -> *| \\
+|psi : kappa -> *|               & & |{a . (a -> Int) -> Int}| & : & |* -> *| \\
+|T : (kappa -> *) -> kappa -> *| & & |Nest| & : & |(* -> *) -> * -> *| \\
 |x : (Mu[kappa -> *] T) a|   & & |t|    & : & |(Mu[* -> *] Nest) a| \\
 |f : forall (a : kappa) . r a -> psi a| & & |sum| & : & |forall (a : *). r a -> (a -> Int) -> Int| \\
 |p_i : T r a| & & |Fork x|     & : & |Nest r a| \\
@@ -634,7 +634,7 @@ like |*|, or kinds for terms, like |Nat| or |Tag|).
 \begin{code}
 T    : (kappa1 -> kappa2 -> *) -> (kappa1 -> kappa2 -> *)
 psi  : kappa1 -> kappa2 -> *
-x    : Mu[kappa1 -> kappa2 -> *] T) a b
+x    : (Mu[kappa1 -> kappa2 -> *] T) a b
 f    : forall (a:kappa1)(b:kappa2) . r a b -> psi a b
 p_i  : T r a b
 e_i  : psi a b
