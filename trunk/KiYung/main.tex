@@ -1,0 +1,81 @@
+\documentclass[12pt]{report}
+%% \usepackage[latin1]{inputenc}
+\usepackage{psu-thesis}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+%% \usepackage{txfonts}
+%% \usepackage{pxfonts}
+%% \usepackage{eulervm}
+
+%% http://www.latex-community.org/forum/viewtopic.php?f=37&t=6637
+
+%% \usepackage{blindtext}
+%% %% http://www.latex-community.org/forum/viewtopic.php?f=48&t=6262
+%% %% http://www.phil.cam.ac.uk/teaching_staff/Smith/logicmatters/l4llogiciansnew.html
+%% \DeclareSymbolFont{symbolsC}{U}{txsyc}{m}{n}
+%% \DeclareMathSymbol{\strictif}{\mathrel}{symbolsC}{74}
+%% \DeclareMathSymbol{\boxright}{\mathrel}{symbolsC}{128}
+
+\begin{document}
+\title{How to Write Theses \\ With Two Line Titles}
+\titleline{How to Write Theses With Two Line Titles}
+
+\author{Ki Yung Ahn}
+\principaladviser{Tim Sheard}{\ }
+\firstreader{James Hook}
+\secondreader{Mark P. Jones}
+\thirdreader{Andrew Tolmach}
+\graduaterepresentative{Douglas V. Hall}
+\departmenthead{Aragorn TODO Dept Head}
+\grantdate{June}{30}{5012}
+
+%%%% %% case (PAPER DISSERTATION)
+%%%% \abstractpage
+%%%%     Your abstract goes here...
+%%%% \titlep
+%%%% \prefatory
+%%%% \dedication
+%%%%     I dedicate this thesis to...
+%%%% \prefacesection{Acknowledgments}
+%%%%     I would like to thank...
+%% case (ELECTRONIC DISSERTATION)
+\titlep
+\prefatory
+\prefacesection{Abstract}
+    Your abstract goes here...
+\prefacesection{Dedication}
+    I dedicate this thesis to...
+\prefacesection{Acknowledgments}
+    I would like to thank...
+%%%% %% esac
+
+\afterpreface
+\body
+
+\newcommand{\Fw}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\!\omega}}}}
+\newcommand{\Fi}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\lowercase{i}}}}}
+\newcommand{\Fixw}[0]{{\ensuremath{\mathsf{\uppercase{F}\lowercase{ix}}_{\omega}}}}
+\newcommand{\Fixi}[0]{{\ensuremath{\mathsf{\uppercase{F}\lowercase{ix}}_{\lowercase{i}}}}}
+
+\include{intro}   %% Introduction                          {ch:intro}
+\include{poly}    %% Polymorphic type systems              {ch:poly}
+\include{mendler} %% Mendler-style recursion schemes       {ch:mendler}
+\include{fi}      %% System Fi                             {ch:fi}
+\include{fixi}    %% System Fixi                           {ch:fixi}
+\include{casestd} %% Case studies                          {ch:casestd}
+\include{relwork} %% Related work                          {ch:relwork}
+\include{futwork} %% Future work                           {ch:futwork}
+\include{concl}   %% Conclusion                            {ch:concl}
+
+\bibliographystyle{plain}
+\bibliography{main}
+
+\appendix
+\chapter{A Long Proof}
+\chapter{A Source Code}
+
+\end{document}
+
+
