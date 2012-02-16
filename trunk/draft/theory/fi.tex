@@ -7,13 +7,13 @@ The complete syntax and rules of \Fi\ are described in \Fig{Fi} and
 are the extensions new to \Fi, which are not originally part of \Fw.
 That is, the system we obtain by excluding all the grey boxes from \Fig{Fi}
 and \Fig{eqFi} is a version of \Fw. In particular, it is a version of \Fw\
-with Curry style terms and typing contexts sparated into two zones
-(\ie, type level and term level). Temrs are curry style. That is,
+with Curry style terms and typing contexts separated into two zones
+(\ie, type level and term level). Terms are Curry style. That is,
 term level abstractions are unannotated ($\lambda x.t$), and
 type generalization ($\forall I$) and type instantiation ($\forall E$) are
 implicit at term level. Types remain Church style as usual. That is,
 type level abstractions are annotated by kinds ($\lambda X^\kappa.F$).
-Typing contexts are separted into type level contexts ($\Delta$) and
+Typing contexts are separated into type level contexts ($\Delta$) and
 term level contexts ($\Gamma$). We expect readers to be familiar to \Fw\
 and focus on describing new constructs of \Fi, which are in grey boxes.
 
@@ -272,7 +272,7 @@ an indexed arrow kind $A -> \kappa$ is well-sorted when $A$ is well-kinded
 under the empty type level context ($\cdot$) and $\kappa$ is well-sorted.
 We avoid dependent kinds (\ie, kinds depending on type level or value level
 bindings) by requiring $\cdot |- A$. The type $A$ appearing in
-the index arrow kind $A -> \kappa$ must be well kindined under
+the index arrow kind $A -> \kappa$ must be well-kinded under
 the empty type level context ($\cdot$), since no bindings are
 introduced at kind level in \Fi.
 

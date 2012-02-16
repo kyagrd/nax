@@ -2,7 +2,7 @@
 \Fixi\ is an extension of \Fixw\ with indexed types.
 To have indexed types we need to extend the kinds.
 We limit only the first-order types can be used as indices
-(e.g. boolean, natrual numbers).
+(e.g. boolean, natural numbers).
 For simplicity, let us consider $\mathsf{Bool}$
 (that is, $\forall X^*.X\to X\to X$) only for now.
 
@@ -10,7 +10,7 @@ For simplicity, let us consider $\mathsf{Bool}$
 The syntax for kinds and types for \Fixw\ is
 \begin{figure}
 \begin{align*}
-&\text{Polaries}
+&\text{Polarities}
 	& p		&~ ::= ~ + \mid - \mid \oz
 \\
 &\text{Kinds}
@@ -38,7 +38,7 @@ The syntax for kinds and types for \Fixw\ is
 
 \begin{figure}
 \begin{align*}
-&\text{Polaries}
+&\text{Polarities}
 	& p			&~ ::= ~ + \mid - \mid \oz
 \\
 &\text{Kinds}
@@ -96,7 +96,7 @@ The syntax for kinds and types for \Fixi\ is TODO
    \inference{\hat\Delta |- t : \iota}{\Delta |- \{t\} : \iota}
 \]
 
-\paragraph{Wellformed typing context}
+\paragraph{Well-formed typing context}
 \[ \inference{}{|-\cdot}
  ~~~~
    \inference{|-\Delta}{|-\Delta,X^{\oz\ka}}

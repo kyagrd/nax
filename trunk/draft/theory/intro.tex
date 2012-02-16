@@ -88,7 +88,7 @@ towards the other, it may be useful to start the design process from scratch,
 of course, all the while keeping in mind not only these issues, but also
 all the valuable lessons learned from previous systems. Design goals
 \begin{itemize}
-\item Type inference and type reconstruction whereever possible. Keep type
+\item Type inference and type reconstruction wherever possible. Keep type
 annotations light weight and minimal (minimal might be hard to tie down precisely).
 
 \item Use dependent types to state and ensure properties of programs. Our strategy
@@ -120,13 +120,13 @@ macro forms can be automatically derived. This is illustrated in \S\ref{macro}.
 \item[Indexed types with static term indices.]
 A type constructor is applied to arguments. Arguments
 are either parameters or indices. A datatype is polymorphic over
-its parameters (in the sense that parametricty theorems hold over parameters).
+its parameters (in the sense that parametricity theorems hold over parameters).
 Parameters are always types.
 Indexed arguments can be either types or terms. An index usually
 encodes a static property about the shape or form of a value with
 that type. We use different kinding rules to separate
 term indices from type indices. For instance a length indexed list, \verb+x+,
-might have type (\verb+List Int 2+). The \verb+Int+ is a paramter, indicating
+might have type (\verb+List Int 2+). The \verb+Int+ is a parameter, indicating
 the list contains integers, but the \verb+2+ is an index indicating
 that the list, \verb+x+, has exactly two elements.  
 Types are static in Nax. Types are only used for type checking

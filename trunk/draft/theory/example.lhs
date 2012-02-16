@@ -515,7 +515,7 @@ number indices     & 1 (type)      & 1 (term)           & 2 (term,term)
 Recall, indices are used to track static properties about values
 with those types. A well formed (|PowerTree x|) contains a balanced
 set of parenthesized binary tuples of elements. The index, |x|, describes
-what kind of vaules are nested in the parentheses. The invariant is that the
+what kind of values are nested in the parentheses. The invariant is that the
 number of items nested is always an exact power of 2. A (|Vector a {n}|) is
 a list of elements of type |a|, with length exactly equal to |n|, and
 a (|Proof {E} {n}|) witnesses that the natural number |n| is even, and
@@ -576,11 +576,11 @@ that the type of the result depends upon the index, the type of the different
 components of the abstract datatype implementing the Mendler-style combinator
 also depend upon the index. In fact, everything depends upon the index
 in a uniform way. The index transformer captures this uniformity.
-One cannot abstract over the index tranformer in Nax. Each Mendler-style combinator,
+One cannot abstract over the index transformer in Nax. Each Mendler-style combinator,
 over an indexed type, must be supplied with a concrete clause (inside
 the braces) that describe how the results depend upon the index.  To see how
-the tranformer is used, study the types of the terms in the following paragraph.
-Can you see the relation bewteen the types and the transformer?
+the transformer is used, study the types of the terms in the following paragraph.
+Can you see the relation between the types and the transformer?
 
 The scrutinee |t| has type (|PowerTree a|) which is a synonym for
 (|(Mu[* -> *] Nest) a|). The recursive caller |sum| has type

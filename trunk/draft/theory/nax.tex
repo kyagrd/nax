@@ -361,13 +361,13 @@ conditions for typing contexts.
 \Fig{NaxTyping} illustrates sorting, kinding, and typing rules.
 
 \paragraph{Typing contexts}
-The typing context of Nax is spearated into three zones. In addition to
+The typing context of Nax is separated into three zones. In addition to
 the two zones of \Fi (the type level context $\Delta$ and
 the term level context $\Gamma$), we have top level contexts ($\Sigma$).
 The top level contexts can contain three kinds of bindings:
 type constructor bindings ($T:\kappa$), data constructor bindings ($C:\sigma$),
 and top level variable bindings ($`x:\sigma$). These bindings are introduced
-from delcarations ($D$). Type constructor bindings ($T:\kappa$) and
+from declarations ($D$). Type constructor bindings ($T:\kappa$) and
 data constructor bindings ($C:\sigma$) are introduced from datatype declarations
 ($\<data> T:\dots \<where> \dots$). Top level variable bindings ($`x:\sigma$)
 are introduced from top level definitions ($`x = t$).
@@ -434,7 +434,7 @@ for the variables and the rule ($:i$) for index variables.
 All these four rules ($:$), ($:i$), ($:C$), and ($:`$) for
 identifiers look up a certain context (one of the three zones $\Sigma$,
 $\Delta$, and $\Gamma$). Since the Nax type system is in flavour of
-Hindley-Milner, identifiers are bound to type schems ($\sigma$) and
+Hindley-Milner, identifiers are bound to type schemes ($\sigma$) and
 the typing rules for the identifiers instantiate type schemes to types ($A$).
 Note, a type instantiation ($\Sigma;\Delta |- A\prec\sigma$) is a judgement
 under the top level context ($\Sigma$) and the type level context ($\Delta$),
@@ -448,14 +448,14 @@ The typing rule for let bindings is the (let) rule.
 
 Eliminators for datatypes ($\varphi^\psi$), or case-terms, are
 case branches ($\varphi$) annotated by index transformers ($\psi$).
-For non-indexed types, case-terms are the usual single level patterm matching
+For non-indexed types, case-terms are the usual single level pattern matching
 expressions in functional languages. For example, a Nax case-term applied to
 non-indexed typed term ($\varphi^\cdot~s$) corresponds to a Haskell
 case-expression over that term ($\mathbf{case}~s~\mathbf{of}~\{\varphi\}$).
 Note, we give trivial index transformer annotation (\ie, $\psi=\cdot$) for
 non-indexed types (\eg, booleans, natural numbers) since there are no indices
 to worry about. For indexed types, the indexed transformer annotations
-privide useful information for type reconstruction. For example, consider
+proivide useful information for type reconstruction. For example, consider
 the following datatype declaration:
 \begin{align*}
 \<data> \mathtt{Judgement : Bool -> *} \<where>
@@ -568,7 +568,7 @@ it is non-ambiguous which $\overline{D}$ to use for reducing $`x$.
 In case when it is ambiguous, we could use a notation like
 $t\stackrel{\overline{D}}\rightsquigarrow t'$ to make it more precise.
 
-The other rules, following the top level varaibel reduction rule
+The other rules, following the top level variable reduction rule
 ($`x\rightsquigarrow t$), are context rules to make a reduction step
 for the terms whose redexes appear inside their subterms.
 
@@ -581,7 +581,7 @@ syntax directed since the conversion rules ($Conv$) and ($=$) are not syntax
 directed. These conversion rules can apply to anywhere regardless of the
 syntactic category of terms and types.
 
-We can easly adapt the system to be syntax directed by embedding
+We can easily adapt the system to be syntax directed by embedding
 the conversion rules into application-like rules (\eg, ($@i$), ($->$$E$)).
 \KYA{We need to prove that the syntax directed system are equivalent to
 the standard system modulo conversion}
