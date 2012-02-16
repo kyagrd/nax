@@ -1,6 +1,6 @@
 \section{Nax by Example}\label{sec:bg}
-In this section we introduce programming in our implementation of Nax
-by providing examples. An example usually consists of several parts.
+We introduce programming in our implementation of Nax by providing examples.
+An example usually consists of several parts.
 
 \begin{itemize}
 \item Introducing data definitions to describe the data of interest.
@@ -56,18 +56,17 @@ data Maybe : * -> * where
 \end{code}
 \end{minipage}
 \end{tabular}
-
 \vspace*{0.1in}
 Note the kind information (|Bool: *|) declares |Bool| to be a type,
 (|Either: * -> * -> *|) declares |Either| to be a type constructor
-with two type arguments, and (|Maybe: * -> *|) declares |Maybe| to
-a type constructor with one type argument. To introduce a recursive type,
-we first introduce a non recursive datatype that uses a parameter where
-the usual recursive components occur. By design, normal parameters of
-the introduced type are written first (|a| in |L|) and the type argument
-to stand for the recursive component is written last (the |r| of |Nat|,
-and the |r| of |L|).
+with two type arguments, and (|Maybe: * -> *|) declares |Maybe| to be
+a type constructor with one type argument.
 
+To introduce a recursive type, we first introduce a non recursive datatype
+that uses a parameter where the usual recursive components occur. By design,
+normal parameters of the introduced type are written first (|a| in |L| below)
+and the type argument to stand for the recursive component is written last
+(the |r| of |N|, and the |r| of |L| below).
 \vspace*{0.1in}\noindent
 \begin{tabular}{l||l}
 \begin{minipage}[t]{.40\linewidth}
@@ -75,9 +74,9 @@ and the |r| of |L|).
 -- The fixpoint of |N| will 
 -- be the natural numbers.
 
-data N : * where
-  Zero  : N a
-  Succ  : a -> N a
+data N : * -> * where
+  Zero  : N r
+  Succ  : r -> N r
 \end{code}
 \end{minipage}
 
@@ -150,7 +149,7 @@ cons x xs  = In[*] (Cons x xs)
 This is such a common occurrence that recursive synonyms and
 recursive constructor functions can be automatically derived.
 With automatic synonym and constructor derivation using Nax is
-both concise and simple. The clause ``|deriving fixpoint List|"
+both concise and simple. The clause ``|deriving fixpoint List|" (below right)
 causes the |synonym| for |List| to be automatically defined.
 It also defines the constructor functions |nil| and |cons|.  By convention,
 the constructor functions are named by dropping the initial upper-case letter
@@ -383,18 +382,18 @@ a Mendler-style combinator works in practice.
 
 \vspace*{.1in}
 \begin{code}
-length y     = MIt{} y    with  len Nil          = 0
-                                len (Cons x xs)  = 1 + len xs
+length y     = MIt{} y    with  len Nil          = zero
+                                len (Cons x xs)  = (succ zero) + len xs
                           
-tail x       = MPr{} x    with  tl cast Nil          = []
+tail x       = MPr{} x    with  tl cast Nil          = nil
                                 tl cast (Cons y ys)  = cast ys
                           
 factorial x  = MPr{} x    with  fact cast Zero      = succ zero
                                 fact cast (Succ n)  = times (succ (cast n)) (fact n)
                           
-fibonocci x  = McvIt{} x  with  fib out Zero      =  1
+fibonacci x  = McvIt{} x  with  fib out Zero      =  succ zero
                                 fib out (Succ n)  =  casei{} (out n) of
-                                                       Zero    -> 1
+                                                       Zero    -> succ zero
                                                        Succ m  -> fib n + fib m 
 \end{code}
 
@@ -410,7 +409,7 @@ The abstract type mechanism gives the pattern |(Cons x xs)| the type |(L a r)|,
 so (|x: a|) and (|xs: r|) for some abstract type |r|. The abstract operation,
 (|len: r -> Int|), can safely be applied to |xs|, obtaining the length of
 the tail of the original list. This value is incremented, and then returned.
-The |MIt| abstraction provides a safe way allow the user to make
+The |MIt| abstraction provides a safe way to allow the user to make
 recursive calls, |len|, but the abstract type, |r|, limits its use to
 direct subcomponents, so termination is guaranteed.
 
@@ -433,11 +432,11 @@ the recursive caller is not even used.
 Some recursive functions need direct access, not only to the direct
 subcomponents, but even deeper subcomponents. The Mendler-style combinator |McvIt|
 provides a safe, yet abstract mechanism, to support this.
-The function |fibonocci| is a classic example of this kind of recursion.
+The function |fibonacci| is a classic example of this kind of recursion.
 The Mendler |McvIt| provides two abstract operations. The recursive caller
 with type (|r -> ans|) and a projection function with type (|r -> T r|).
 The projection allows the programmer to observe the hidden |T| structure
-inside a value of the abstract type |r|.  In the |fibonocci| function above,
+inside a value of the abstract type |r|.  In the |fibonacci| function above,
 we name the projection |out|. It is used to observe if the abstract predecessor,
 |n|, of the input, |x|, is either zero, or the successor of
 the second predecessor, |m|, of |x|. Note how recursive calls are made on
@@ -461,10 +460,10 @@ define synonyms for its fix point and recursive constructor functions.
 By convention, in each example, the argument that abstracts the recursive
 components is called |r|. By design, arguments appearing before |r| are
 understood to be parameters, and arguments appearing after |r| are understood
-to be indices. To define a recursive type with indices, it is necessary give
-the argument, |r|, a higher order kind. That is, |r| should take indices
+to be indices. To define a recursive type with indices, it is necessary to
+give the argument, |r|, a higher-order kind. That is, |r| should take indices
 as well, since it abstracts over a recursive type which takes indices.
-
+\vspace*{0.1in}
 \begin{code}
 data Nest: (* -> *) -> * -> * where
    Tip   : a -> Nest r a
@@ -479,12 +478,11 @@ data V: * -> (Nat -> *) -> Nat -> * where
 data Tag = E | O
 
 data P: (Tag -> Nat -> *) -> Tag -> Nat -> * where
-  Base   : P r {E} {In[*] Zero} 
+  Base   : P r {E} {`zero} 
   StepO  : r {O} {i} -> P r {E} {`succ i}
   StepE  : r {E} {i} -> P r {O} {`succ i}
     deriving fixpoint Proof
-\end{code}
-
+\end{code}~\\
 Note, to distinguish type indices from term indices (and to make parsing
 unambiguous), we enclose term indices in braces (|{ ... }|). We also
 backquote (|`|) variables in terms that we expect to be bound in
@@ -500,18 +498,16 @@ the same as the kind of the recursive argument |r|. If the non-recursive type
 has parameters, the kind of the fixpoint will be composed of the parameters
 |->| the kind of the recursive argument |r|. For example, study the kinds of
 the fixpoints for the non-recursive types declared above in the table below.
-
-\vspace*{0.1in}
+\begin{center}
 \begin{tabular}{l||c||c||c}
 non-recursive type & |Nest|        & |V|                & |P|        \\
 recursive type     & |PowerTree|   & |Vector|           & |Proof|    \\ \hline
 kind of |T|        & |* -> *|      & |* -> Nat -> *|    & |Tag -> Nat -> *|  \\ 
 kind of |r|        &  |* -> *|     & |Nat -> *|         & |Tag -> Nat -> *|  \\
-number parameters  & 0             & 1                  & 0                  \\ 
-number indices     & 1 (type)      & 1 (term)           & 2 (term,term)
+number of parameters  & 0             & 1                  & 0                  \\ 
+number of indices     & 1 (type)      & 1 (term)           & 2 (term,term)
 \end{tabular}
-
-\vspace*{0.1in}
+\end{center}
 Recall, indices are used to track static properties about values
 with those types. A well formed (|PowerTree x|) contains a balanced
 set of parenthesized binary tuples of elements. The index, |x|, describes
@@ -521,7 +517,7 @@ a list of elements of type |a|, with length exactly equal to |n|, and
 a (|Proof {E} {n}|) witnesses that the natural number |n| is even, and
 a (|Proof {O} {m}|) witnesses that the natural number |m| is odd.
 Some example value with these types are given below.
-
+~\\
 \begin{code}
 tree1  : PowerTree Int = tip 3
 tree2  : PowerTree Int = fork (tip (2, 5))
@@ -532,7 +528,7 @@ v2 : Vector Int {succ (succ zero)} = (vcons 3 (vcons 5 vnil))
 p1  : P {O} {succ zero}         = stepE base
 p2  : P {E} {succ (succ zero)}  = stepO (stepE base)
 \end{code}
-
+~\\
 Note that in the types of the terms above, the indices in braces (|{ ... }|)
 are ordinary terms (not types).  In these example we use natural numbers (\eg,
 |succ (succ zero)|) and elements (|E| and |O|) of the two-valued type |Tag|.
@@ -552,10 +548,10 @@ then later abstracted to its full general form.
 Recall, a value of type (|PowerTree Int|) is a nested, parenthesized \KYA{what does parenthesized mean?}, set
 of integers, where the number of integers is an exact power of 2. Consider
 a function that adds up all those integers. One wants a function of type
-(|PowerTree Int -> Int|). One strategy to writing this function is write
-a more general function of type (|PowerTree a -> (a -> Int) -> a|). In Nax,
+(|PowerTree Int -> Int|). One strategy to writing this function is to write
+a more general function of type (|PowerTree a -> (a -> Int) -> Int|). In Nax,
 we can do this as follows:
-
+~\\
 \begin{code}
 genericSum t =  MIt { a . (a -> Int) -> Int } t with
                   sum (Tip x)   = \ f -> f x
@@ -563,7 +559,7 @@ genericSum t =  MIt { a . (a -> Int) -> Int } t with
 
 sumTree t = genericSum t (\ x -> x)
 \end{code}
-
+~\\
 In general, the type of the result of a function over an indexed type,
 can depend upon what the index is. Thus, a Mendler-style combinator over a value
 with an indexed type, must be type-specialized to that value's index.
@@ -622,11 +618,10 @@ and with multiple indices. To illustrate this we give the generic schemes for
 type constructors with 2 or 3 indices. In the table the variables |kappa1|,
 |kappa2|, and |kappa3|, stand for arbitrary kinds (either kinds for types,
 like |*|, or kinds for terms, like |Nat| or |Tag|).
-
+\begin{center}
 %{
 %format p_i
 %format e_i
-\vspace*{0.05in}
 \begin{tabular}{l||l}
 \begin{minipage}[l]{.45\linewidth}
 \begin{code}
@@ -652,20 +647,20 @@ e_i  : psi a b c
 \end{code}
 \end{minipage}
 \end{tabular}
-\vspace*{0.05in}
 %}
-
+\end{center}
 The simplest form of index transformation, is where the transformation
 is a constant function. This is the case of the function that computes
 the integer length of a natural-number, length-indexed, list
 (what we called a |Vector|). Independent of the length the result
 is an integer. Such a function has type: |Vector a {n} -> Int|.
 We can write this as follows:
-
+~\\
 \begin{code}
 vlen x =  MIt{{i} . Int} x with  len Vnil          = 0
                                  len (Vcons x xs)  = 1 + len xs
 \end{code}
+~\\
 
 Let's study an example with a more interesting index transformation.
 A term with type (|Proof {E} {n}|), which is synonymous with the type 
@@ -677,7 +672,7 @@ generalize this by writing a function which has both of the types below: \\
 We can capture this dependency by defining the term-level function |flip|,
 and using an |MIt| with the index transformer:
 |{{t} {i} . Proof {`flip t} {`succ i}}|.
-
+~\\
 \begin{code}
 flip E = O
 flip O = E
@@ -687,7 +682,7 @@ flop x =  MIt {{t} {i} . Proof {`flip t} {`succ i}} x with
             f (StepO p)  = stepE(f p)
             f (StepE p)  = stepO(f p)
 \end{code}
-
+~\\
 
 For our last term-indexed example, every length-indexed list has a length,
 which is either even or odd. We can witness this fact by writing a function
@@ -695,7 +690,7 @@ with type: |Vector a {n} -> Either (Even {n}) (Odd {n})|.
 Here, |Even| and |Odd| are synonyms for particular kinds of |Proof|.
 To write this function, we need the index transformation:
 |{ {n} . Either (Even {n}) (Odd {n}) }|.
-
+~\\
 \begin{code}    
 synonym Even  {x} = Proof {E} {x}
 synonym Odd   {x} = Proof {O} {x}
@@ -716,7 +711,7 @@ Terms in the $\lambda$-calculus are either variables, applications, or abstracti
 In a HOAS representation, one uses Nax functions to encode abstractions. We
 give a two level description for recursive $\lambda$-calculus |Term|s, by taking
 the fixpoint of the non-recursive |Lam| datatype. 
-
+~\\
 \begin{code}    
 data Lam : * -> * where
   App  :: r -> r -> Lam r
@@ -725,6 +720,7 @@ data Lam : * -> * where
  
 apply = abs (\ f -> abs (\ x -> app f x)) 
 \end{code}
+~\\
 Note that we don't need to include a constructor for variables,
 as variables are represented by Nax variables, bound by Nax
 functions. For example the lambda term: ($\lambda f . \lambda x . f\; x$)
@@ -746,7 +742,7 @@ recursive types with negative operations. We call this operator |MsfIt|.
 This operator is based upon an interesting programming trick, first described
 by Sheard and Fegaras \cite{}, hence the ``\textsf{sf}'' in the name |MsfIt|.
 The abstraction supported by |MsfIt| is as follows:
-
+\begin{center}
 %{
 %format p_i
 %format e_i
@@ -769,8 +765,7 @@ e_i  : ans
 \end{minipage}
 \end{tabular}
 %}
-
-\vspace*{0.1in}  
+\end{center}
 
 To use |MsfIt| the inverse allows one to cast an answer into an abstract value.
 To see how this works, study the function that turns a |Term| into a string.
@@ -780,7 +775,7 @@ new variable, \texttt{x}$n$ (see the function |new|), where $n$ is the current
 value of the integer variable. When we make a recursive call, we increment
 the integer. In the comments (the rest of a line after |--|), we give
 the type of a few terms, including the abstract operations |sh| and |inv|.
-
+~\\
 \begin{code}
                           {-" "-} -- |cat           : List String -> String|
                           {-" "-} -- |new           : Int -> String|
@@ -797,7 +792,7 @@ showTerm x = showHelp x 0
 
 showTerm apply : List Char = "(fn x0 => (fn x1 => (x0 x1)))"
 \end{code}
-
+~\\
 The final line of the example above illustrates applying |showTerm| to |apply|.
 Recall that |apply = abs (\ f -> abs (\ x -> app f x))|, which is the HOAS
 representation of the $\lambda$-calculus term ($\lambda f . \lambda x . f\; x$).
