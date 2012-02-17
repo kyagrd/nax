@@ -1,9 +1,84 @@
 \chapter{Polymorphic type systems}\label{ch:poly}
 
-\section{STLC}
+\section{Simply-typed lambda calculus}
+\begin{figure}
+\begin{singlespace}
+\begin{minipage}{.46\textwidth}
+	\begin{center}Church-style\end{center}
+\small
+\begin{align*}
+\textbf{term syntax} \\
+t,s ::= &~ C           & \text{constant}    \\
+      | &~ x           & \text{variable}    \\
+      | &~ \l(x:A) . t & \text{abstraction} \\
+      | &~ t ~ s       & \text{application} \\
+\\
+\textbf{type syntax} \\
+A,B ::= &~ A -> B  & \text{function type} \\
+      | &~ T       & \text{ground type}   \\
+\\
+\textbf{typing rules}
+\end{align*}
+\vspace*{-2.5em}
+\begin{align*}\qquad
+& \inference[\sc Con]{C:T \in \Sigma}{\Gamma |- C:T} \\
+& \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
+& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \lambda(x:A).t : A -> B} \\
+& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B} \\
+\end{align*}
+\end{minipage}
+\begin{minipage}{.46\textwidth}
+	\begin{center}Curry-style\end{center}
+\small
+\begin{align*}
+\textbf{term syntax} \\
+t,s ::= &~ C           \\
+      | &~ x           \\
+      | &~ \l x    . t \\
+      | &~ t ~ s       \\
+\\
+\textbf{type syntax} \\
+A,B ::= &~ A -> B \\
+      | &~ T      \\
+\\
+\textbf{typing rules}
+\end{align*}
+\vspace*{-2.5em}
+\begin{align*}\qquad
+& \inference[\sc Con]{C:T \in \Sigma}{\Gamma |- C:T} \\
+& \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
+& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \lambda x   .t : A -> B} \\
+& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B} \\
+\end{align*}
+\end{minipage}
+\caption{Simply-typed lambda calculus in Church-style and Curry-style}
+\label{fig:stlc}
+\end{singlespace}
+\end{figure}
 
-\section{System \textsf{F}}
+type checking in Church-style
+type inference in Curry-style
+
+\section{System \F}
+\begin{figure} \F
+\begin{singlespace}
+	abc
+	abc
+\caption{System \F\ in Church-style and Curry-style}
+\label{fig:f}
+\end{singlespace}
+\end{figure}
+
+
 
 \section{System \Fw}
+%% \begin{figure}
+%% \begin{singlespace}
+%% 	abc
+%% 	abc
+%% \caption{System \Fw\ in Church-style and Curry-style}
+%% \label{fig:fw}
+%% \end{singlespace}
+%% \end{figure}
 
-\section{Hindly-Milner}
+\section{Hindley-Milner}
