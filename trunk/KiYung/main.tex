@@ -8,11 +8,11 @@
 %% \usepackage{pxfonts}
 %% \usepackage{eulervm}
 \usepackage{lmodern}
-\usepackage{hyperref}
+\usepackage[backref]{hyperref}
+\usepackage[sort&compress,square,comma,numbers,longnamesfirst]{natbib}
 \usepackage{semantic}
 \usepackage[hang]{caption}
 
-\renewcommand{\l}{\lambda}
 
 %% http://www.latex-community.org/forum/viewtopic.php?f=37&t=6637
 
@@ -59,6 +59,13 @@
 \afterpreface
 \body
 
+\newcommand{\cf}[0]{{cf.}}
+\newcommand{\eg}[0]{{e.g.}}
+\newcommand{\ie}[0]{{i.e.}}
+\newcommand{\aka}[0]{{a.k.a.}}
+
+\renewcommand{\l}{\lambda}
+
 \newcommand{\F}[0]{{\ensuremath{\mathsf{\uppercase{F}}}}}
 \newcommand{\Fw}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\!\omega}}}}
 \newcommand{\Fi}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\lowercase{i}}}}}
@@ -75,7 +82,7 @@
 \include{futwork} %% Future work                           {ch:futwork}
 \include{concl}   %% Conclusion                            {ch:concl}
 
-\bibliographystyle{plain}
+\bibliographystyle{plainnat}
 \bibliography{main}
 
 \appendix
