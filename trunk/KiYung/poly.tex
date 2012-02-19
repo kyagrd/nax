@@ -15,16 +15,14 @@ t,s ::= &~ C           & \text{constant}    \\
       | &~ t ~ s       & \text{application} \\
 \\
 \textbf{type syntax} \\
-A,B ::= &~ A -> B  & \text{function type} \\
+A,B ::= &~ A -> B  & \text{arrow type} \\
       | &~ T       & \text{ground type}   \\
-\\
-\textbf{typing rules}
 \end{align*}
-\vspace*{-1.5em}
+\[ \textbf{typing rules} \] \vspace*{-1em}
 \begin{align*}\quad
 & \inference[\sc Con]{C:T \in \Sigma}{\Gamma |- C:T} \\
 & \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
-& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \lambda(x:A).t : A -> B} \\
+& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l(x:A).t : A -> B} \\
 & \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B}
 \end{align*}
 \end{minipage}
@@ -42,19 +40,18 @@ t,s ::= &~ C           \\
 \textbf{type syntax} \\
 A,B ::= &~ A -> B \\
       | &~ T      \\
-\\
-\textbf{typing rules}
 \end{align*}
-\vspace*{-1.5em}
+\[ \textbf{typing rules} \]\vspace*{-1em}
 \begin{align*}\quad
 & \inference[\sc Con]{C:T \in \Sigma}{\Gamma |- C:T} \\
 & \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
-& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \lambda x   .t : A -> B} \\
+& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} \\
 & \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B}
 \end{align*}
 \end{minipage}
-\end{singlespace}
+~\\
 \caption{Simply-typed lambda calculus in Church-style and Curry-style}
+\end{singlespace}
 \label{fig:stlc}
 \end{figure}
 
@@ -62,25 +59,188 @@ type checking in Church-style
 type inference in Curry-style
 
 \section{System \F}
-\begin{figure} \F
+\begin{figure}
 \begin{singlespace}
-	abc
-	abc
+\begin{minipage}{.46\textwidth}
+	\begin{center}Church-style\end{center}
+\def\baselinestretch{0}
+\small
+\begin{align*}
+\textbf{term syntax} \\
+t,s ::= &~ x           & \text{variable}    \\
+      | &~ \l(x:A) . t & \text{abstraction} \\
+      | &~ t ~ s       & \text{application} \\
+      | &~ \L X    . t & \text{type abstraction} \\
+      | &~ t [A]       & \text{type application} \\
+\\
+\textbf{type syntax} \\
+A,B ::= &~ X           & \text{variable type}   \\
+      | &~ A -> B      & \text{arrow type} \\
+      | &~ \forall X.B & \text{forall type}   \\
+\end{align*}
+\[ \textbf{kinding rules} \]\vspace*{-1em}
+\begin{align*}
+& \inference[\sc TVar]{X \in \Delta}{\Delta |- X} \\
+& \inference[\sc TArr]{\Delta |- A & \Delta |- B}{\Delta |- A -> B} \\
+& \inference[\sc TAll]{\Delta,X |- B}{\Delta |- \forall X.B} \\
+\end{align*}
+\[ \textbf{typing rules} \]\vspace*{-1em}
+\begin{align*}
+& \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
+& \inference[\sc Abs]{\Delta |- A & \Delta;\Gamma,x:A |- t : B}
+	             {\Delta;\Gamma |- \l(x:A).t : A -> B} \\
+& \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
+		     {\Delta;\Gamma |- t~s : B} \\
+& \inference[\sc TyAbs]{\Delta,X;\Gamma |- t : B}
+		       {\Delta;\Gamma |- \L X.t : \forall X.B} \\
+& \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X.B & \Delta |- A}
+		       {\Delta;\Gamma |- t[A] : B[A/X]}
+\end{align*}
+\end{minipage}
+\begin{minipage}{.46\textwidth}
+	\begin{center}Curry-style\end{center}
+\def\baselinestretch{0}
+\small
+\begin{align*}
+\textbf{term syntax} \\
+t,s ::= &~ x           \\
+      | &~ \l x    . t \\
+      | &~ t ~ s       \\
+      \phantom{|} &~ \\
+      \phantom{|} &~ \\
+\\
+\textbf{type syntax} \\
+A,B ::= &~ X \\
+      | &~ A -> B \\
+      | &~ \forall X . B \\
+\end{align*}
+\[ \textbf{kinding rules} \]\vspace*{-1em}
+\begin{align*}
+& \inference[\sc TVar]{X \in \Delta}{\Delta |- X} \\
+& \inference[\sc TArr]{\Delta |- A & \Delta |- B}{\Delta |- A -> B} \\
+& \inference[\sc TAll]{\Delta,X |- B}{\Delta |- \forall X.B} \\
+\end{align*}
+\[ \textbf{typing rules} \] \vspace*{-1em}
+\begin{align*}
+& \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
+& \inference[\sc Abs]{\Delta |- A & \Delta;\Gamma,x:A |- t : B}
+		     {\Delta;\Gamma |- \l x   .t : A -> B} \\
+& \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
+		     {\Delta;\Gamma |- t~s : B} \\
+& \inference[\sc TyAbs]{\Delta,X;\Gamma |- t : B}
+		       {\Delta;\Gamma |- t : \forall X.B} \\
+& \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X.B & \Delta |- A}
+		       {\Delta;\Gamma |- t : B[A/X]}
+\end{align*}
+\end{minipage}
+~\\
 \caption{System \F\ in Church-style and Curry-style}
-\label{fig:f}
 \end{singlespace}
+\label{fig:f}
 \end{figure}
 
 
 
 \section{System \Fw}
-%% \begin{figure}
-%% \begin{singlespace}
-%% 	abc
-%% 	abc
-%% \caption{System \Fw\ in Church-style and Curry-style}
-%% \label{fig:fw}
-%% \end{singlespace}
-%% \end{figure}
+\begin{figure}
+\begin{singlespace}
+\begin{minipage}{.46\textwidth}
+	\begin{center}Church-style\end{center}
+\def\baselinestretch{0}
+\small
+\begin{align*}
+\textbf{term syntax} \\
+t,s ::= &~ x               & \text{variable}    \\
+      | &~ \l(x:A) . t     & \text{abstraction} \\
+      | &~ t ~ s           & \text{application} \\
+      | &~ \L X^\kappa . t & \text{type abstraction} \\
+      | &~ t [G]           & \text{type application} \\
+\\
+\textbf{type syntax} \\
+F,G,A,B ::= &~ A -> B             & \text{arrow type} \\
+          | &~ \forall X^\kappa.B & \text{forall type}   \\
+          | &~ \l X^\kappa.B      & \text{lambda type}   \\
+          | &~ F ~ G              & \text{application type}   \\
+\textbf{kind syntax} \\
+\kappa ::= &~ \kappa -> \kappa' & \text{arrow kind} \\
+         | &~ *                 & \text{star kind}   \\
+\end{align*}
+\[ \textbf{kinding rules} \]\vspace*{-1em}
+\begin{align*}
+& \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
+& \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
+& \inference[\sc TAll]{\Delta,X^\kappa |- B:*}
+		      {\Delta |- \forall X^\kappa.B:*} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- B:*}
+		      {\Delta |- \l X^\kappa.B:\kappa -> *} \\
+& \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
+		      {\Delta |- F ~ G : \kappa'} \\
+\end{align*}
+\[ \textbf{typing rules} \]\vspace*{-1em}
+\begin{align*}
+& \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
+& \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
+		     {\Delta;\Gamma |- \l(x:A).t : A -> B} \\
+& \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
+		     {\Delta;\Gamma |- t~s : B} \\
+& \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
+		       {\Delta;\Gamma |- \L X^\kappa.t : \forall X^\kappa.B} \\
+& \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X^\kappa.B & \Delta |- G:\kappa}
+		       {\Delta;\Gamma |- t[G] : B[G/X]} \\
+& \inference[\sc Conv]{\Delta;\Gamma |- t : A & \Delta |- A = A' : *}
+		      {\Delta;\Gamma |- t : A'}
+\end{align*}
+\end{minipage}
+\begin{minipage}{.46\textwidth}
+	\begin{center}Curry-style\end{center}
+\def\baselinestretch{0}
+\small
+\begin{align*}
+\textbf{term syntax} \\
+t,s ::= &~ x           \\
+      | &~ \l x    . t \\
+      | &~ t ~ s       \\
+      \phantom{|} &~ \\
+      \phantom{|} &~ \\
+\\
+\textbf{type syntax} \\
+F,G,A,B ::= &~ A -> B             \\
+          | &~ \forall X^\kappa.B \\
+          | &~ \l X^\kappa.B      \\
+          | &~ F ~ G              \\
+\textbf{kind syntax} \\
+\kappa ::= &~ \kappa -> \kappa' \\
+         | &~ *                 \\
+\end{align*}
+\[ \textbf{kinding rules} \]\vspace*{-1em}
+\begin{align*}
+& \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
+& \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
+& \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X^\kappa.B:*} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- B:*}
+		      {\Delta |- \l X^\kappa.B:\kappa -> *} \\
+& \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
+		      {\Delta |- F ~ G : \kappa'} \\
+\end{align*}
+\[ \textbf{typing rules} \] \vspace*{-1em}
+\begin{align*}
+& \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
+& \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
+		     {\Delta;\Gamma |- \l x   .t : A -> B} \\
+& \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
+		     {\Delta;\Gamma |- t~s : B} \\
+& \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
+		       {\Delta;\Gamma |- t : \forall X^\kappa.B} \\
+& \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X^\kappa.B & \Delta |- G:\kappa}
+		       {\Delta;\Gamma |- t : B[G/X]} \\
+& \inference[\sc Conv]{\Delta;\Gamma |- t : A & \Delta |- A = A' : *}
+		      {\Delta;\Gamma |- t : A'}
+\end{align*}
+\end{minipage}
+~\\
+\caption{System \Fw\ in Church-style and Curry-style}
+\end{singlespace}
+\label{fig:fw}
+\end{figure}
 
 \section{Hindley-Milner}
