@@ -1,6 +1,10 @@
 \chapter{Polymorphic type systems}\label{ch:poly}
+We first review the simply-typed lambda calculus (\S\ref{sec:stlc}),
+which is a non-polymorphic type system, to motivate the discussions
+on a series of polymorphic type systems -- System \F\ (\S\ref{sec:f}),
+System \Fw\ (\S\ref{sec:fw}), and Hindley-Milner type system (\S\ref{sec:hm}).
 
-\section{Simply-typed lambda calculus}
+\section{Simply-typed lambda calculus}\label{sec:stlc}
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
@@ -47,14 +51,15 @@ A,B ::= &~ A -> B \\
 \end{minipage}
 ~\\
 \caption{Simply-typed lambda calculus in Church-style and Curry-style}
-\end{singlespace}
 \label{fig:stlc}
+\end{singlespace}
 \end{figure}
 
 type checking in Church-style
+
 type inference in Curry-style
 
-\section{System \F}
+\section{System \F} \label{sec:f}
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
@@ -131,13 +136,13 @@ A,B ::= &~ X \\
 \end{minipage}
 ~\\
 \caption{System \F\ in Church-style and Curry-style}
-\end{singlespace}
 \label{fig:f}
+\end{singlespace}
 \end{figure}
 
 
 
-\section{System \Fw}
+\section{System \Fw} \label{sec:fw}
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
@@ -237,8 +242,8 @@ F,G,A,B ::= &~ X                  \\
 \end{minipage}
 ~\\
 \caption{System \Fw\ in Church-Church-style and Curry-Church-style}
-\end{singlespace}
 \label{fig:fw}
+\end{singlespace}
 \end{figure}
 
 \begin{figure}
@@ -339,33 +344,60 @@ F,G,A,B ::= &~ X                  \\
 \end{minipage}
 ~\\
 \caption{System \Fw\ in Curry-Church-style and Curry-Curry-style}
-\end{singlespace}
 \label{fig:fw2}
+\end{singlespace}
 \end{figure}
 
+
 \paragraph{From Curry-Church-style to Curry-Curry-style}
-All other typing rules may remain the same, but the rules
-\rulename{TyAbs} and \rulename{TyApp} need to be changed, since
-the only change we made to the type syntax is on the forall type
-and the lambda type. How should we write the new \rulename{TyAbs} rule
-and \rulename{TyApp} rule? Your first attempt may be just dropping
-the kind annotation to adjust to change of the type syntax, as below:
+We can also have a version of \Fw\ where type syntax is also in Curry style.
+That is, the forall type ($\forall X.B$) and the lambda type ($\l X.B$)
+do not have kind annotations. We call this version of \Fw, where both terms
+and types are unannotated, the Curry-Curry-style \Fw. In Figure \ref{fig:fw2},
+the Curry-Curry-style \Fw\ (right) is laid out side-by-side to
+the Curry-Church-style \Fw\ (left).
+
+Since we changed the type syntax of forall types and lambda types
+in the Curry-Curry-style \Fw, we need to adjust the we need to adjust the rules
+involving forall types and lambda types. The rules we need to adjust are
+the kinding rules \rulename{TAll} and \rulename{TLam}, and
+the typing rules \rulename{TyAbs} and \rulename{TyApp}.
+
+For the kinding rules \rulename{TAll} and \rulename{TLam}, all we need to do
+is simply dropping the kind annotations appearing in the forall type and
+the lambda type in each rule. In Figure \ref{fig:fw2}, you can see that
+\rulename{TAll} and \rulename{TLam} in left (Curry-Church-style) and
+right (Curry-Curry-style) are identical except for the kind annotations on
+the forall type and the lambda type.
+
+How should we adjust the typing rules \rulename{TyAbs} and \rulename{TyApp}
+in the Curry-Curry-style \Fw? Our first attempt may be just dropping
+the kind annotations (just as we did for the kinding rules) to adjust to
+the changes to the type syntax as below:
 \begin{align*}
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
 		       {\Delta;\Gamma |- t : \forall X.B}
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X.B & \Delta |- G:\kappa}
 		       {\Delta;\Gamma |- t : B[G/X]}
 \end{align*}
-The \rulename{TyAbs} above rule is fine.
-However, the \rulename{TyApp} above is problematic because the rule fails to
-require that $X$ must also be of kind $\kappa$ as well as $G$. To ensure that
-$X$ is of kind $\kappa$, we need to adjust the rule as follows:
+The \rulename{TyAbs} rule above is fine. However, the \rulename{TyApp} rule
+above is problematic because it fails to require that $X$ must be of kind
+$\kappa$ as well as $G$. To ensure that $X$ is of kind $\kappa$, we need to
+adjust the \rulename{TyApp} rule as follows:
 \begin{align*}
 & \phantom{ \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
                                  {\Delta;\Gamma |- t : \forall X.B} }
 & \inference[\sc TyApp]{\Delta,X^\kappa;\Gamma |- t : B & \Delta |- G:\kappa}
 			{\Delta;\Gamma |- t : B[G/X]}
 \end{align*}
+Note, the first premise ($\Delta,X^\kappa;\Gamma |- t : B$) of
+the \rulename{TyApp} rule is exactly the same as the premise of
+the \rulename{TyAbs} rule.
 
+\paragraph{Church-Curry-style \Fw}
+Although not illustrated in Figures \ref{fig:fw} and \ref{fig:fw2},
+we can imagine yet another version of \Fw\ with annotated terms
+and unannotated types -- namely, the Church-Curry-style \Fw.
 
-\section{Hindley-Milner}
+\section{Hindley-Milner type system} \label{sec:hm}
+
