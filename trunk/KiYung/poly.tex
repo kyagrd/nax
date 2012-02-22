@@ -2,9 +2,11 @@
 We first review the simply-typed lambda calculus (\S\ref{sec:stlc}),
 which is a non-polymorphic type system, to motivate the discussions
 on a series of polymorphic type systems -- System \F\ (\S\ref{sec:f}),
-System \Fw\ (\S\ref{sec:fw}), and Hindley-Milner type system (\S\ref{sec:hm}).
+System \Fw\ (\S\ref{sec:fw}), and the Hindley-Milner type system
+(\S\ref{sec:hm}). We assume the reader to have some familiarity with
+lambda calculi, at least with the untyped lambda calculus.
 
-\section{Simply-typed lambda calculus}\label{sec:stlc}
+\section{The simply-typed lambda calculus}\label{sec:stlc}
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
@@ -21,11 +23,22 @@ t,s ::= &~ x           & \text{variable}    \\
 A,B ::= &~ A -> B  & \text{arrow type} \\
       | &~ \iota   & \text{ground type}   \\
 \end{align*}
-\[ \textbf{typing rules} \] \vspace*{-1em}
+\[ \textbf{typing rules}
+	\qquad\qquad\qquad\qquad \framebox{$\Gamma |- t : A$} \]
+\vspace*{-1em}
 \begin{align*}\quad
 & \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l(x:A).t : A -> B} \\
-& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B}
+& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B} \\
+\end{align*}
+\[ \textbf{reduction rules}
+	\qquad\qquad\qquad\quad \framebox{$t --> t'$} \]
+\vspace*{-1em}
+\begin{align*}\quad
+& \inference[\sc RedBeta]{}{(\l(x:A).t)~s --> t[s/x]} \\
+& \inference[\sc RedAbs]{t --> t'}{\l(x:A).t --> \l(x:A).t'} \\
+& \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
 \end{align*}
 \end{minipage}
 \begin{minipage}{.46\textwidth}
@@ -46,7 +59,14 @@ A,B ::= &~ A -> B \\
 \begin{align*}\quad
 & \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} \\
-& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B}
+& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B} \\
+\end{align*}
+\[ \textbf{reduction rules} \] \vspace*{-1em}
+\begin{align*}\quad
+& \inference[\sc RedBeta]{}{(\l x   .t)~s --> t[s/x]} \\
+& \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'} \\
+& \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
 \end{align*}
 \end{minipage}
 ~\\
@@ -54,10 +74,177 @@ A,B ::= &~ A -> B \\
 \label{fig:stlc}
 \end{singlespace}
 \end{figure}
+\begin{figure}
+\begin{singlespace}
+\[ \textbf{typing contexts} \qquad \Gamma ~::=~ \cdot ~\mid~ \Gamma, x:A \]
+\[ \textbf{well-formed typing contexts}
+	\quad \framebox{$ |- \Gamma $}\]
+\[ \qquad \inference[\sc TyCtxEmp]{}{ |- \cdot }
+   \qquad \inference[\sc TyCtxExt]{ |- \Gamma & \Gamma |- A }
+                                  { |- \Gamma, x:A }
+			  (x\notin \mathop{\mathrm{dom}}(\Gamma)) \]
+\caption{Syntax and well-formedness rules for typing contexts}
+\label{fig:tyctx}
+\end{singlespace}
+\end{figure}
 
-type checking in Church-style
+We illustrate two styles of the simply-typed lambda calculus (STLC)
+in Figure \ref{fig:stlc}. In both styles, a term can either be a variable,
+an abstraction (\aka lambda term), or an application; and, a type can
+either be an arrow type or a ground type. The distinction between
+the two style comes from whether the abstraction has type annotation
+in the term syntax. The difference in typing rules and reduction rules
+follows from this difference in the term syntax. The type syntax are
+exactly the same for both styles.
+
+\paragraph{Remark on the ground type:}
+Before we elaborate on each style, I'd like to make a remarks on 
+the type syntax, in particular, on the ground type ($\iota$).
+There would be no question for arrow types, which are types for functions,
+since abstractions represent (certain implementations of) functions.
+We need some ground types to populate types. Otherwise, if there weren't
+any ground types, we won't have any types\footnote{If we allow infinite
+types, then it is possible to do away with ground types. There exist
+exotic lambda calculi with infinite types, but rather uncommon.}
+-- then, such version of STLC will be very uninteresting since there cannot
+be any well-typed terms satisfying the typing judgement according to
+the typing rules. Here, I provide the most simple ground type ($\iota$),
+which does not inhabit any terms (\aka the void type). Note that there
+exists no term of type $\iota$. We can have functions over $\iota$,
+such as ($\l(x:\iota).x$), the identity on $\iota$ .\footnote{Here,
+	I present examples in Church-style since it is more succinct than
+	writing typing judgments (\eg, $(\l x.t) : \iota -> \iota$)
+	in the Curry-style.  But, the remark on the ground type $\iota$
+	holds the same for both styles.}
+However, there exist no term, to which we cannot apply ($\l x:\iota.x$).
+What we can do is to apply higher-order functions
+(\eg, $\l(x_{f}:\iota -> \iota).\l(x_a:\iota).x_f~x_a$, which expects
+an argument of type $\iota -> \iota$) to the functions over $\iota$.
+
+When we use STLC as a model of a programming language (with simple types),
+we usually need to provide richer set of ground types other than
+the void type (\eg, unit, boolean, natural numbers). In such versions of
+STLC with further extension to the type syntax, we also need to extend
+the term syntax by providing normal terms for the ground types
+(\eg, \textsf{true} and \textsf{false} for the boolean type)
+and eliminators (\eg, if-then-else expression for booleans)
+that can examine the normal terms. Here, having just the void type is enough
+for my purpose of leading up the discussion for the polymorphic type systems,
+without complicating the term syntax.
+
+\paragraph{In Church style,} the variable ($x$) in an abstraction
+($\l(x:A).t$) has a type annotation ($A$). Intuitively, we may think of
+the abstraction ($\l(x:A).t$) as a function that expects an argument of
+the type ($A$) specified by the type annotation.
+
+Some interesting properties of Church style, which does not hold
+
+\emph{Uniqueness of typing}, described below, holds in the Church-style STLC.
+\[ \inference{\Gamma |- t : A & \Gamma |- t : A'}{A = A'} \]
+More specifically, given a well-formed typing context $\Gamma$ and
+a term $t$, if the term is well-typed, that is, $\Gamma |- t : A$,
+then $A$ is the unique such type. We can prove this by induction
+on the derivation of the typing judgment. For variables, it trivially holds
+from the well-formedness of the typing context (see Figure \ref{fig:tyctx}).
+For abstractions, we use induction on the derivation. To use the induction
+hypothesis we should make sure that the typing context ($\Gamma,x:A$)
+and the term $t$ of the premise is uniquely determined. It is easy to see
+that they are uniquely determined since all the peaces appearing in the
+input (\ie, the typing context and the term) $\Gamma$, $A$, and $t$ are
+part of the input, in particular the term, of the conclusion. Therefore,
+by induction hypothesis, $B$ is uniquely determined, and, as a consequence,
+$A -> B$ is uniquely determined. For application, it is easy to show by
+induction for each of the premise. This proof describes the essence of
+the type reconstruction algorithm for the Church-style STLC.
+
+Another property (the latter below)
+\begin{align*}
+\inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}
+ &\qquad \text{type preservation, or, subject reduction} \\
+\inference{\Gamma |- t' : A' & t --> t' & \Gamma |- t : A}{A = A'}
+ &\qquad \text{Well-typed expansion preserve types}
+\end{align*}
+\KYA{ In general, well-typeness is not preserved under $\beta$-expansion
+	-- there is a well-known $KI\Omega$ example.  Therefore,
+	type preservation for $\beta$-expansion, or, subject expansion
+	does not hold even in Church style. However, if both sides of $-->$
+	are well-typed (or, we can just say Well-typed expansion
+	since for redeuction it is just consequence of subject reduction
+	and uniqueness of typing. In fact it is just a consequence of them.)
+	types are preserved in Church style
+	but definitely not in Curry style.
+     }
+
+\paragraph{In Curry style,} there is no annotation on the variable in
+an abstraction. Since the variable binding in the abstraction is no longer
+fixed to a specific type, \emph{uniqueness of typing} does not hold,
+unlike in Church style. For instance, the identity function ($\l x.x$)
+could have one of any type that has of the form $A -> A$, such as:
+\begin{quote}\vspace*{-1em}
+\begin{singlespace}
+$\iota -> \iota$ \\
+$(\iota -> \iota) -> (\iota -> \iota)$ \\
+$(\iota -> (\iota -> \iota)) -> (\iota -> (\iota -> \iota))$ \\
+$((\iota -> \iota) -> \iota) -> ((\iota -> \iota) -> \iota)$ \\
+$((\iota -> \iota) -> (\iota -> \iota)) -> ((\iota -> \iota) -> (\iota -> \iota))$ \\
+$~~~~ \vdots $
+\end{singlespace}
+\end{quote}
+So, we read the typing judgment $\Gamma |- t : A$ in Curry style as
+\begin{quote}
+$t$ \emph{can have type} $A$ under the typing context $\Gamma$,
+\end{quote}
+unlike in Church style where we read the typing judgment as
+\begin{quote}
+$t$ \emph{has the type} $A$ under the typing context $\Gamma$.
+\end{quote}
+However, we don't consider the Curry-style STLC to be
+a polymorphic type system since the typing for a variable
+under a well-typed context is still unique. That is,
+\[ \inference{\Gamma |- x : A & \Gamma |- x : A'}{A = A'} \]
+
+%%%% need to rewrite this
+%%%%%%%%%%%% Well-typed expansion does not preserve types in the Curry style.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Type preservation for $\beta$-expansion does not to hold either,
+%% unlike in Church style. More fundamentally, well-typedness is not preserved
+%% for inverse $\beta$-reduction. The reason for this is exactly because
+%% uniqueness of typing does not hold in Curry style. Consider the following
+%% $\beta$-reduction:
+%% \[(\l x_I. (x_I~s_1)~(x_I~s_2)) (\l x.x) --> ((\l x.x)~s_1)~((\l x.x)~s_2)\]
+%% This is a perfectly fine reduction according to the reduction rules for the
+%% Curry-style STLC in Figure \ref{fig:stlc}. However, there exist $s_1$ and
+%% $s_2$ such that the right-hand side is well-typed but the left-hand side
+%% is not.
+%% 
+%% The left-hand side cannot be well-typed, regardless of $s_1$ and $s_2$.
+%% The variable $x_I$ appearing in the abstraction must have a type of the form
+%% $A -> A$, since the abstraction is applied to the identity term $(\l x.x)$.
+%% In the body of the abstraction, which is an application
+%% $(x_I~s_1)~(x_I~s_2)$, we have a problem. Since $x_I$ has an arrow type
+%% that expects an agrument of type $A$ and returns a result of type $A$,
+%% both $(x_I~s_1)$ and $(x_I~s_2)$ have the same type $A$.  Thus,
+%% the application $(x_I~s_1)~(x_I~s_2)$ cannot be well-typed, since
+%% the function $(x_I~s_1)$ applied to the argument $(x_I~s_2)$ of type $A$
+%% must have type $A -> A$. But, we know that $(x_I~s_1)$ has type $A$.
+%% The fact that uniqeness of typing does not hold won't help us resolve
+%% the contraticting typing requrements of $(x_I~s_1)$ here, because
+%% the typing of a variable is still unique under a well-formed context.
+%% There is no way to satisfy both $\Gamma |- x_I : A -> A$ and 
+%% $\Gamma |- x_I : (A -> A) -> (A -> A)$ even in the Curry-style STLC.
+%% 
+%% There exist $s_1$ and $s_2$ such that the right-hand side is well-typed.
+%% Actually, there are many such $s_1$ and $s_2$. I will just give two
+%% instances of them. Try to justify them yourself. They are easy exercises.
+%% One instance is to let $s_1 = (\l x_I . \l x . x_I~x)$, which is
+%% a higher-order function, and $s_2 = (\l x. x)$. Since uniqueness typing
+%% does not hold, we are able to find approprite types for each occcurence of
+%% ($\l x.x$) appearing in the right-hand side. Another instance is having
+%% both of them to be the identity term, that is, let $s_1 = (\l x . x)$ and
+%% $s_2 = (\l x . x)$ as well.
 
 type inference in Curry-style
+
 
 \section{System \F} \label{sec:f}
 \begin{figure}
@@ -353,12 +540,12 @@ F,G,A,B ::= &~ X                  \\
 We can also have a version of \Fw\ where type syntax is also in Curry style.
 That is, the forall type ($\forall X.B$) and the lambda type ($\l X.B$)
 do not have kind annotations. We call this version of \Fw, where both terms
-and types are unannotated, the Curry-Curry-style \Fw. In Figure \ref{fig:fw2},
-the Curry-Curry-style \Fw\ (right) is laid out side-by-side to
-the Curry-Church-style \Fw\ (left).
+and types are unannotated, the Curry-Curry-style \Fw.
+In Figure \ref{fig:fw2}, the Curry-Curry-style \Fw\ (right) is laid out
+side-by-side to the Curry-Church-style \Fw\ (left).
 
-Since we changed the type syntax of forall types and lambda types
-in the Curry-Curry-style \Fw, we need to adjust the we need to adjust the rules
+Since we changed the type syntax of forall types and lambda types in
+the Curry-Curry-style \Fw, we need to adjust the we need to adjust the rules
 involving forall types and lambda types. The rules we need to adjust are
 the kinding rules \rulename{TAll} and \rulename{TLam}, and
 the typing rules \rulename{TyAbs} and \rulename{TyApp}.
@@ -399,5 +586,5 @@ Although not illustrated in Figures \ref{fig:fw} and \ref{fig:fw2},
 we can imagine yet another version of \Fw\ with annotated terms
 and unannotated types -- namely, the Church-Curry-style \Fw.
 
-\section{Hindley-Milner type system} \label{sec:hm}
+\section{The Hindley-Milner type system} \label{sec:hm}
 
