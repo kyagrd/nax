@@ -303,7 +303,7 @@ the kinding rule \newFi{\forall i}, which is very similar to
 the formation rule ($\forall$) for ordinary polymorphic types.
 
 In addition to the rules ($\lambda i$), ($@ i$), and ($\forall i$),
-we need a conversion rule \newFi{($Conv$)} at kind level. This is because
+we need a conversion rule \newFi{(Conv)} at kind level. This is because
 the new extension to the kind syntax $A -> \kappa$ involves types.
 Since kind syntax involves types, we need more than simple structural
 equality over kinds. The equality over kinds is the usual structural
@@ -372,15 +372,79 @@ justified by the following derivation:
 
 \subsection{Metatheory?}
 
-\begin{proposition}[well-formed type level context ensures well-sorted kinding judgemnet]
-\[ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa }
+\begin{proposition}[well-formed type level context ensures well-sorted kinding judgement]
+\[ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa:\square }
 \]
 \end{proposition}
+\begin{proof}
+Mutual induction on the derivation on the kinding judgement
+and the typing judgement \KYA{since proof of this proposition and the next
+proposition depends on each other, but I'm a little bit confusing what
+exactly I need to induct on.}
+\begin{itemize}
+\item[case] ($Var$)
+	Trivial by the second well-formedness rule of $\Delta$.
+\item[case] ($Conv$)
+	By induction and a helper lemma that kind equality rules ensure
+	that both sides of equality are well-sorted. This lemma should
+	be straightforward to prove, but this lemma also is needs
+	mutual induction with the lemma that type equality rules ensure
+	that both sides of equality are well-kinded.
+\item[case] ($\lambda$)
+	By induction and the second well-formedness rule of $\Delta$
+\item[case] ($@$)
+	By induction.
+\item[case] ($\lambda i$)
+	By induction and the third well-formedness rule of $\Delta$.
+\item[case] ($@i$)
+	By induction provided that we can prove the next proposition that
+	well-formed term level context ensures well-kinded typing judgement.
+\item[case] ($->$)
+	Trivial since $|- * : \square$.
+\item[case] ($\forall$)
+	Trivial since $|- * : \square$.
+\item[case] ($\forall i$)
+	Trivial since $|- * : \square$.
+\end{itemize}
+\end{proof}
 
 \begin{proposition}[well-formed term level context ensures well-kinded typing judgement]
 \[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * }
 \]
 \end{proposition}
+\begin{proof}
+The same induction principle as the previous proposition since the proof
+of these propositions are mutually recursive.
+\KYA{this fact should be stated as a corollary of the previous proposition.}
+\begin{itemize}
+\item[case] ($:$)
+	Trivial by the second well-formedness rule of $\Gamma$.
+\item[case] ($:i$)
+	Trivial by the third the well-formedness rule of $\Delta$.
+\item[case] ($=$)
+	By induction and a helper lemma that type equality rules ensure
+	that both sides of equality are well-kinded. This lemma should
+	be straightforward to prove, but mutually inductive proof with
+	the lemma on kind equality rules, which we used in the proof of
+	the previous proposition.
+\item[case] ($->$$I$)
+	By induction and well-formedness of $\Gamma$.
+\item[case] ($->$$E$)
+	By induction.
+\item[case] ($\forall I$)
+	By induction and well-formedness of $\Delta$.
+\item[case] ($\forall E$)
+	TODO some sort of substitution lemma?
+\item[case] ($\forall Ii$)
+	By induction and well-formedness of $\Delta$.
+\item[case] ($\forall Ei$)
+	TODO some sort of substitution lemma?
+\end{itemize}
+\end{proof}
+\KYA{After going through the proof sketch for the two propositions above,
+I relaized that the rules for \Fi\ needs more well-typeness and well-kindness
+conditions (\eg, in ($\forall I$) and ($\forall Ii$)), unlike \Fw.
+We need some adjustment on the \Fi\ rules.}
 
 \begin{proposition}[anti-dependency on arrow kinds]
 \[ \inference{ |- \Delta,X^\kappa
