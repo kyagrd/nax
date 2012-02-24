@@ -4,7 +4,9 @@
 ##        example.lhs
 
 TEXSRC=main.tex \
-       intro.tex poly.tex mendler.tex \
+       intro.tex \
+       poly.tex poly_stlc.tex poly_f.tex poly_fw.tex poly_hm.tex \
+       mendler.tex \
        fi.tex fixi.tex nax.tex casestd.tex \
        relwork.tex futwork.tex concl.tex
 
