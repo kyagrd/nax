@@ -112,30 +112,28 @@ such as ($\l(x:\iota).x$), the identity on $\iota$ .\footnote{Here,
 	writing typing judgments (\eg, $(\l x.t) : \iota -> \iota$)
 	in the Curry-style.  But, the remark on the ground type $\iota$
 	holds the same for both styles.}
-However, there exist no term, to which we cannot apply ($\l x:\iota.x$).
+However, there exist no term, to which we cannot apply ($\l(x:\iota).x$).
 What we can do is to apply higher-order functions
 (\eg, $\l(x_{f}:\iota -> \iota).\l(x_a:\iota).x_f~x_a$, which expects
 an argument of type $\iota -> \iota$) to the functions over $\iota$.
 
-When we use STLC as a model of a programming language (with simple types),
-we usually need to provide richer set of ground types other than
-the void type (\eg, unit, boolean, natural numbers). In such versions of
-STLC with further extension to the type syntax, we also need to extend
-the term syntax by providing normal terms for the ground types
-(\eg, \textsf{true} and \textsf{false} for the boolean type)
-and eliminators (\eg, if-then-else expression for booleans)
-that can examine the normal terms. Here, having just the void type is enough
-for my purpose of leading up the discussion for the polymorphic type systems,
-without complicating the term syntax.
+When people use STLC to model a programming language (with simple types),
+they usually provide richer set of ground types other than the void type
+(\eg, unit, boolean, natural numbers). In such versions of STLC with further
+extensions to the type syntax, they also need to extend the term syntax
+by providing normal terms for the ground types (\eg, \textsf{true} and
+\textsf{false} for booleans) and eliminators (\eg, if-then-else expression for
+booleans) that can examine the normal terms. Here, having just the void type
+is good enough for my purpose of leading up the discussion for
+the polymorphic type systems, without complicating the term syntax.
 
 \paragraph{Well-known properties of STLC (in both styles):}
 type preservation (\aka\ subject reduction)
 reduction preserves type
 \begin{align*}
 \inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}
- &\qquad \text{type preservation, or, subject reduction} \\
+ &\qquad \text{type preservation, or, subject reduction}
 \end{align*}
-
 Strong normalization
 
 \paragraph{In Church style,} the variable ($x$) in an abstraction
@@ -143,45 +141,119 @@ Strong normalization
 the abstraction ($\l(x:A).t$) as a function that expects an argument of
 the type ($A$) specified by the type annotation.
 
-There are some interesting properties that holds in Church style,
-but not in Curry style -- \emph{Uniqueness of typing} and
-\emph{type preservation over well-typed $\beta$-equivalence}.
-
-\emph{Uniqueness of typing}, described below, holds in the Church-style STLC.
+There are some interesting properties that hold in Church style,
+but not in Curry style. Here, I discuss two of them:
+\begin{itemize}
+\item \emph{Uniqueness of typing}
 \[ \inference{\Gamma |- t : A & \Gamma |- t : A'}{A = A'} \]
-More specifically, given a well-formed typing context $\Gamma$ and
-a term $t$, if the term is well-typed, that is, $\Gamma |- t : A$,
-then $A$ is the unique such type. We can prove this by induction
-on the derivation of the typing judgment. For variables, it trivially holds
-since the variables appearing in the typing contexts are unique.
-For abstractions, we use induction on the derivation. To use the induction
-hypothesis we should make sure that the typing context ($\Gamma,x:A$)
-and the term $t$ of the premise is uniquely determined. It is easy to see
-that they are uniquely determined since all the peaces appearing in the
-input (\ie, the typing context and the term) $\Gamma$, $A$, and $t$ are
-part of the input, in particular the term, of the conclusion. Therefore,
-by induction hypothesis, $B$ is uniquely determined, and, as a consequence,
-$A -> B$ is uniquely determined. For application, it is easy to show by
-induction for each of the premise. This proof describes the essence of
-the type reconstruction algorithm for the Church-style STLC.
 
-Another property (the latter below)
+\item \emph{Type preservation over well-typed $\beta$-equivalence}
+\begin{align*}
+& \inference{t =_{\beta} t' & \Gamma |- t : A & \Gamma |- t' : A'}{A = A'} \\
+& \text{where $=_{\beta}$ is the reflexive symmetric transitive closure of $-->$.}
+\end{align*}
+\end{itemize}
+
+\emph{Uniqueness of typing}, described in the first item above,
+holds in the Church-style STLC.  More specifically, given
+a well-formed typing context $\Gamma$ and a term $t$ as input,
+if the term is well-typed, that is, $\Gamma |- t : A$ for some type $A$,
+then that $A$ is the unique such type. We can prove this by induction on
+the derivation of the typing judgment.
+For variables, it trivially holds since the variables appearing in
+the typing contexts are unique.
+For abstractions, we use induction on the derivation.
+To use the induction hypothesis we should make sure that
+the typing context ($\Gamma,x:A$) and the term $t$ of the premise
+is uniquely determined. It is easy to see that they are uniquely determined
+since all the peaces appearing in the input (\ie, the typing context and
+the term) of the premise (in particular, $\Gamma$, $A$, and $t$) are
+part of the input (in particular the term $\l(x:A).t$) of the conclusion.
+Therefore, by induction hypothesis, $B$ is uniquely determined, and,
+as a consequence, $A -> B$ is uniquely determined.
+For applications, it is easy to show by induction for each of the premise.
+This proof describes the essence of the type reconstruction algorithm for
+the Church-style STLC.
+
+Proving \emph{type preservation over well-typed $\beta$-equivalence},
+described in the second item above, amounts to proving
+\emph{type preservation over well-typed
+$\beta$-reduction and $\beta$-expansion}, described below:
+\begin{align}
+\inference{t --> t' & \Gamma |- t : A & \Gamma |- t' : A'}{A = A'}
+	\label{eqn:welltypedarrow}
+\end{align}
+That is, when a well-typed term ($t$) \emph{reduces} to
+another well-typed term ($t'$) in single step ($t --> t'$),
+the types of those two terms are identical ($A=A'$).
+Since the claim above is symmetric, we can also say: when a well-typed term
+($t'$) expands to another well-typed term ($t$) in single step ($t' <-- t$),
+the types of those two terms are identical ($A'=A$).
+Let us break down the claim (\ref{eqn:welltypedarrow}) above into two parts:
+\[
+\inference{t --> t' & \Gamma |- t : A}
+          {\Gamma |- t' : A' ~~\text{implies}\quad A = A'} \qquad
+	\begin{smallmatrix}
+		\text{type preservation over} \\
+  		\text{well-typed $\beta$-reduction}
+	\end{smallmatrix}
+\]
+\[
+\inference{t --> t' & \Gamma |- t' : A'}
+          {\Gamma |- t : A \quad\text{implies}\quad A = A'} \qquad
+	\begin{smallmatrix}
+		\text{type preservation over} \\
+  		\text{well-typed $\beta$-expansion}
+	\end{smallmatrix}
+\]~\vspace*{-3em}\\
+
+We know that the former (type preservation over well-typed $\beta$-reduction)
+holds because we already know of a stronger property,
+type preservation over $\beta$-reduction, which we discussed earlier
+(repeated below) that it is one of the properties that commonly hold
+in both Church style and in Curry style.
 \begin{align*}
 \inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}
- &\qquad \text{type preservation, or, subject reduction} \\
-\inference{\Gamma |- t' : A' & t --> t' & \Gamma |- t : A}{A = A'}
- &\qquad \text{Well-typed expansion preserve types}
+ &\qquad \text{type preservation, or, subject reduction}
 \end{align*}
-\KYA{ In general, well-typeness is not preserved under $\beta$-expansion
-	-- there is a well-known $KI\Omega$ example.  Therefore,
-	type preservation for $\beta$-expansion, or, subject expansion
-	does not hold even in Church style. However, if both sides of $-->$
-	are well-typed (or, we can just say Well-typed expansion
-	since for redeuction it is just consequence of subject reduction
-	and uniqueness of typing. In fact it is just a consequence of them.)
-	types are preserved in Church style
-	but definitely not in Curry style.
-     }
+
+\begin{figure}
+\begin{singlespace}
+\begin{tabular}{lp{7cm}}
+$t <-- (\l(x:\iota).x)~t$ &
+relying on the property of the void type
+that $\iota$ is not inhabited by any term
+\\ ~ \\
+$t <-- (\l(x:\iota -> \iota).t)~(\l(x:\iota).x~x)$ &
+without relying on the property of $\iota$ : \par
+apply a constant function to an already ill-typed term (self application)
+\end{tabular}
+\end{singlespace}
+\caption{$\beta$-expansion to ill-typed terms}
+\label{ill-typed_expand}
+\end{figure}
+
+So, what is interesting about the Church style STLC, in contrast to
+the Curry-style STLC, is the latter part of the claim that
+well-typed $\beta$-expansion preserves type. Unlike the former part of
+the claim on $\beta$-reduction, where reduced term is always well-typed
+(corollary of subject reduction), we really need the condition that
+expanded term is well-typed ($\Gamma |- t : A$). This is because a well-typed
+term can be expanded to a ill-typed term. In fact, we can always expand any
+well-typed term to ill-typed terms (see Figure \ref{ill-typed_expand}).
+
+The proof of (\ref{eqn:welltypedarrow}) is very simple.
+Recall that we are that $t --> t'$, $\Gamma |- t : A$,
+and $\Gamma |- t' : A'$; and we want to show $A = A'$.
+We prove by using \emph{subject reduction} and \emph{uniqueness of typing},
+as follows:
+\[ \inference[(\emph{uniqueness of typing})]
+	{ \inference[(\emph{subject reduction})\!\!\!]
+		{t --> t' & \Gamma |- t : A}
+		{\Gamma |- t' : A \phantom{a_f}} 
+	& \Gamma |- t' : A' }
+	{ A = A' }
+\]
 
 \paragraph{In Curry style,} there is no annotation on the variable in
 an abstraction. Since the variable binding in the abstraction is no longer
