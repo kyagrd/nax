@@ -23,22 +23,29 @@ t,s ::= &~ x           & \text{variable}    \\
 A,B ::= &~ A -> B  & \text{arrow type} \\
       | &~ \iota   & \text{ground type}   \\
 \end{align*}
-\[ \textbf{typing rules}
-	\qquad\qquad\qquad\qquad \framebox{$\Gamma |- t : A$} \]
-\vspace*{-1em}
+\[ \textbf{typing context} \]\vspace*{-1em}
 \begin{align*}\quad
+\Gamma ::= &~ \cdot \\
+	 | &~ \Gamma, x:A \quad (x\notin \dom(\Gamma)) \\
+\end{align*}
+\[ \textbf{typing rules}
+	\qquad \framebox{$\Gamma |- t : A$} \]
+\vspace*{-1em}
+\begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
-& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l(x:A).t : A -> B} \\
-& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B} \\
+& \inference[\sc Abs]{\Gamma,x:A |- t : B}
+		     {\Gamma |- \l(x:A).t : A -> B} \\
+& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}
+		     {\Gamma |- t~s : B} \\
 \end{align*}
 \[ \textbf{reduction rules}
-	\qquad\qquad\qquad\quad \framebox{$t --> t'$} \]
+	\quad \framebox{$t --> t'$} \]
 \vspace*{-1em}
-\begin{align*}\quad
+\begin{align*}
 & \inference[\sc RedBeta]{}{(\l(x:A).t)~s --> t[s/x]} \\
 & \inference[\sc RedAbs]{t --> t'}{\l(x:A).t --> \l(x:A).t'} \\
 & \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
-& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'} \\
 \end{align*}
 \end{minipage}
 \begin{minipage}{.46\textwidth}
@@ -55,18 +62,29 @@ t,s ::= &~ x           \\
 A,B ::= &~ A -> B \\
       | &~ \iota  \\
 \end{align*}
-\[ \textbf{typing rules} \]\vspace*{-1em}
+\[ \textbf{typing context} \]\vspace*{-1em}
 \begin{align*}\quad
-& \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
-& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} \\
-& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t~s : B} \\
+\Gamma ::= &~ \cdot \\
+	 | &~ \Gamma, x:A \quad (x\notin \dom(\Gamma)) \\
 \end{align*}
-\[ \textbf{reduction rules} \] \vspace*{-1em}
-\begin{align*}\quad
+\[ \textbf{typing rules}
+	\qquad \framebox{$\Gamma |- t : A$} \]
+\vspace*{-1em}
+\begin{align*}
+& \inference[\sc Var]{x:A \in \Gamma}{\Gamma |- x:A} \\
+& \inference[\sc Abs]{\Gamma,x:A |- t : B}
+		     {\Gamma |- \l x   .t : A -> B} \\
+& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}
+		     {\Gamma |- t~s : B} \\
+\end{align*}
+\[ \textbf{reduction rules}
+	\quad \framebox{$t --> t'$} \]
+\vspace*{-1em}
+\begin{align*}
 & \inference[\sc RedBeta]{}{(\l x   .t)~s --> t[s/x]} \\
 & \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'} \\
 & \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
-& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'} \\
 \end{align*}
 \end{minipage}
 ~\\
@@ -74,23 +92,9 @@ A,B ::= &~ A -> B \\
 \label{fig:stlc}
 \end{singlespace}
 \end{figure}
-\begin{figure}
-\begin{singlespace}
-\[ \textbf{typing contexts} \qquad \Gamma ~::=~ \cdot ~\mid~ \Gamma, x:A \]
-\[ \textbf{well-formed typing contexts}
-	\quad \framebox{$ |- \Gamma $}\]
-\[ \qquad \inference[\sc TyCtxEmp]{}{ |- \cdot }
-   \qquad \inference[\sc TyCtxExt]{ |- \Gamma & \Gamma |- A }
-                                  { |- \Gamma, x:A }
-			  (x\notin \mathop{\mathrm{dom}}(\Gamma)) \]
-\caption{Syntax and well-formedness rules for typing contexts}
-\label{fig:tyctx}
-\end{singlespace}
-\end{figure}
-
 We illustrate two styles of the simply-typed lambda calculus (STLC)
 in Figure \ref{fig:stlc}. In both styles, a term can either be a variable,
-an abstraction (\aka lambda term), or an application; and, a type can
+an abstraction (\aka\ lambda term), or an application; and, a type can
 either be an arrow type or a ground type. The distinction between
 the two style comes from whether the abstraction has type annotation
 in the term syntax. The difference in typing rules and reduction rules
@@ -109,7 +113,7 @@ exotic lambda calculi with infinite types, but rather uncommon.}
 -- then, such version of STLC will be very uninteresting since there cannot
 be any well-typed terms satisfying the typing judgement according to
 the typing rules. Here, I provide the most simple ground type ($\iota$),
-which does not inhabit any terms (\aka the void type). Note that there
+which does not inhabit any terms (\aka\ the void type). Note that there
 exists no term of type $\iota$. We can have functions over $\iota$,
 such as ($\l(x:\iota).x$), the identity on $\iota$ .\footnote{Here,
 	I present examples in Church-style since it is more succinct than
@@ -132,12 +136,24 @@ that can examine the normal terms. Here, having just the void type is enough
 for my purpose of leading up the discussion for the polymorphic type systems,
 without complicating the term syntax.
 
+\paragraph{Well-known properties of STLC (in both styles):}
+type preservation (\aka\ subject reduction)
+reduction preserves type
+\begin{align*}
+\inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}
+ &\qquad \text{type preservation, or, subject reduction} \\
+\end{align*}
+
+Strong normalization
+
 \paragraph{In Church style,} the variable ($x$) in an abstraction
 ($\l(x:A).t$) has a type annotation ($A$). Intuitively, we may think of
 the abstraction ($\l(x:A).t$) as a function that expects an argument of
 the type ($A$) specified by the type annotation.
 
-Some interesting properties of Church style, which does not hold
+There are some interesting properties that holds in Church style,
+but not in Curry style -- \emph{Uniqueness of typing} and
+\emph{type preservation over well-typed $\beta$-equivalence}.
 
 \emph{Uniqueness of typing}, described below, holds in the Church-style STLC.
 \[ \inference{\Gamma |- t : A & \Gamma |- t : A'}{A = A'} \]
@@ -145,7 +161,7 @@ More specifically, given a well-formed typing context $\Gamma$ and
 a term $t$, if the term is well-typed, that is, $\Gamma |- t : A$,
 then $A$ is the unique such type. We can prove this by induction
 on the derivation of the typing judgment. For variables, it trivially holds
-from the well-formedness of the typing context (see Figure \ref{fig:tyctx}).
+since the variables appearing in the typing contexts are unique.
 For abstractions, we use induction on the derivation. To use the induction
 hypothesis we should make sure that the typing context ($\Gamma,x:A$)
 and the term $t$ of the premise is uniquely determined. It is easy to see
@@ -266,13 +282,22 @@ A,B ::= &~ X           & \text{variable type}   \\
       | &~ A -> B      & \text{arrow type} \\
       | &~ \forall X.B & \text{forall type}   \\
 \end{align*}
-\[ \textbf{kinding rules} \]\vspace*{-1em}
+\[ \textbf{kinding \& typing contexts} \]\vspace*{-1em}
+\begin{align*}\quad
+\Delta ::= &~ \cdot \\
+	 | &~ \Delta, x:A & (X\notin \dom(\Delta)) \\
+\Delta;\Gamma ::= &~ \Delta;\cdot \\
+	        | &~ \Delta,X;\Gamma    & (X\notin \ran(\Gamma)) \\
+	        | &~ \Delta;\Gamma, x:A & (x\notin \dom(\Gamma)) \\
+\end{align*}
+\[ \textbf{kinding rules} \quad \framebox{$ \Delta |- A $} \]\vspace*{-1em}
 \begin{align*}
 & \inference[\sc TVar]{X \in \Delta}{\Delta |- X} \\
 & \inference[\sc TArr]{\Delta |- A & \Delta |- B}{\Delta |- A -> B} \\
 & \inference[\sc TAll]{\Delta,X |- B}{\Delta |- \forall X.B} \\
 \end{align*}
-\[ \textbf{typing rules} \]\vspace*{-1em}
+\[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
+\vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A & \Delta;\Gamma,x:A |- t : B}
@@ -302,13 +327,22 @@ A,B ::= &~ X \\
       | &~ A -> B \\
       | &~ \forall X . B \\
 \end{align*}
-\[ \textbf{kinding rules} \]\vspace*{-1em}
+\[ \textbf{kinding \& typing contexts} \]\vspace*{-1em}
+\begin{align*}\quad
+\Delta ::= &~ \cdot \\
+	 | &~ \Delta, x:A & (X\notin \dom(\Delta)) \\
+\Delta;\Gamma ::= &~ \Delta;\cdot \\
+	        | &~ \Delta,X;\Gamma    & (X\notin \ran(\Gamma)) \\
+	        | &~ \Delta;\Gamma, x:A & (x\notin \dom(\Gamma)) \\
+\end{align*}
+\[ \textbf{kinding rules} \quad \framebox{$ \Delta |- A $}\]\vspace*{-1em}
 \begin{align*}
 & \inference[\sc TVar]{X \in \Delta}{\Delta |- X} \\
 & \inference[\sc TArr]{\Delta |- A & \Delta |- B}{\Delta |- A -> B} \\
 & \inference[\sc TAll]{\Delta,X |- B}{\Delta |- \forall X.B} \\
 \end{align*}
-\[ \textbf{typing rules} \] \vspace*{-1em}
+\[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
+\vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A & \Delta;\Gamma,x:A |- t : B}
@@ -333,7 +367,7 @@ A,B ::= &~ X \\
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
-	\begin{center}Church-Church-style\end{center}
+	\begin{center}Church-Church-style\end{center}\vspace*{-1em}
 \def\baselinestretch{0}
 \small
 \begin{align*}
@@ -343,7 +377,6 @@ t,s ::= &~ x               & \text{variable}    \\
       | &~ t ~ s           & \text{application} \\
       | &~ \L X^\kappa . t & \text{type abstraction} \\
       | &~ t [G]           & \text{type application} \\
-\\
 \textbf{type syntax} \\
 F,G,A,B ::= &~ X                  & \text{variable type} \\
           | &~ A -> B             & \text{arrow type} \\
@@ -354,7 +387,7 @@ F,G,A,B ::= &~ X                  & \text{variable type} \\
 \kappa ::= &~ \kappa -> \kappa' & \text{arrow kind} \\
          | &~ *                 & \text{star kind}   \\
 \end{align*}
-\[ \textbf{kinding rules} \]\vspace*{-1em}
+\[ \textbf{kinding rules} \quad \framebox{$ \Delta |- F:\kappa $} \]\vspace*{-1em}
 \begin{align*}
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
@@ -362,10 +395,11 @@ F,G,A,B ::= &~ X                  & \text{variable type} \\
 		      {\Delta |- \forall X^\kappa.B:*} \\
 & \inference[\sc TLam]{\Delta,X^\kappa |- B:*}
 		      {\Delta |- \l X^\kappa.B:\kappa -> *} \\
-& \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
+& \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
-\[ \textbf{typing rules} \]\vspace*{-1em}
+\[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
+\vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
@@ -381,7 +415,7 @@ F,G,A,B ::= &~ X                  & \text{variable type} \\
 \end{align*}
 \end{minipage}
 \begin{minipage}{.46\textwidth}
-	\begin{center}Curry-Church-style\end{center}
+	\begin{center}Curry-Church-style\end{center}\vspace*{-1em}
 \def\baselinestretch{0}
 \small
 \begin{align*}
@@ -391,7 +425,6 @@ t,s ::= &~ x           \\
       | &~ t ~ s       \\
       \phantom{|} &~ \\
       \phantom{|} &~ \\
-\\
 \textbf{type syntax} \\
 F,G,A,B ::= &~ X                  \\
           | &~ A -> B             \\
@@ -402,17 +435,18 @@ F,G,A,B ::= &~ X                  \\
 \kappa ::= &~ \kappa -> \kappa' \\
          | &~ *                 \\
 \end{align*}
-\[ \textbf{kinding rules} \]\vspace*{-1em}
+\[ \textbf{kinding rules} \quad \framebox{$ \Delta |- F:\kappa$}\]\vspace*{-1em}
 \begin{align*}
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X^\kappa.B:*} \\
 & \inference[\sc TLam]{\Delta,X^\kappa |- B:*}
 		      {\Delta |- \l X^\kappa.B:\kappa -> *} \\
-& \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
+& \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
-\[ \textbf{typing rules} \] \vspace*{-1em}
+\[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
+\vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
@@ -444,9 +478,6 @@ F,G,A,B ::= &~ X                  \\
 t,s ::= &~ x           & \text{variable}    \\
       | &~ \l x    . t & \text{abstraction} \\
       | &~ t ~ s       & \text{application} \\
-      \phantom{|} &~   \\
-      \phantom{|} &~   \\
-\\
 \textbf{type syntax} \\
 F,G,A,B ::= &~ X                  & \text{variable type}    \\
           | &~ A -> B             & \text{arrow type}       \\   
@@ -457,7 +488,7 @@ F,G,A,B ::= &~ X                  & \text{variable type}    \\
 \kappa ::= &~ \kappa -> \kappa' & \text{arrow kind} \\
          | &~ *                 & \text{star kind}   \\
 \end{align*}
-\[ \textbf{kinding rules} \]\vspace*{-1em}
+\[ \textbf{kinding rules} \quad \framebox{$ \Delta |- F:\kappa $} \]\vspace*{-1em}
 \begin{align*}
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
@@ -467,7 +498,8 @@ F,G,A,B ::= &~ X                  & \text{variable type}    \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
-\[ \textbf{typing rules} \] \vspace*{-1em}
+\[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
+\vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
@@ -491,9 +523,6 @@ F,G,A,B ::= &~ X                  & \text{variable type}    \\
 t,s ::= &~ x           \\
       | &~ \l x    . t \\
       | &~ t ~ s       \\
-      \phantom{|} &~   \\
-      \phantom{|} &~   \\
-\\
 \textbf{type syntax} \\
 F,G,A,B ::= &~ X                  \\
           | &~ A -> B             \\   
@@ -504,7 +533,7 @@ F,G,A,B ::= &~ X                  \\
 \kappa ::= &~ \kappa -> \kappa'  \\
          | &~ *                  \\
 \end{align*}
-\[ \textbf{kinding rules} \]\vspace*{-1em}
+\[ \textbf{kinding rules} \quad \framebox{$ \Delta |- F:\kappa $} \]\vspace*{-1em}
 \begin{align*}
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
@@ -514,7 +543,8 @@ F,G,A,B ::= &~ X                  \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
-\[ \textbf{typing rules} \] \vspace*{-1em}
+\[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
+\vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
@@ -585,6 +615,7 @@ the \rulename{TyAbs} rule.
 Although not illustrated in Figures \ref{fig:fw} and \ref{fig:fw2},
 we can imagine yet another version of \Fw\ with annotated terms
 and unannotated types -- namely, the Church-Curry-style \Fw.
+I am not sure when one would need this style, though.
 
 \section{The Hindley-Milner type system} \label{sec:hm}
 
