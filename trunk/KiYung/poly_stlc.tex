@@ -211,7 +211,7 @@ We know that the former (type preservation over well-typed $\beta$-reduction)
 holds because we already know of a stronger property,
 type preservation over $\beta$-reduction, which we discussed earlier
 (repeated below) that it is one of the properties that commonly hold
-in both Church style and in Curry style.
+in both Church style and Curry style.
 \begin{align*}
 \inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}
  &\qquad \text{type preservation, or, subject reduction}
@@ -262,11 +262,11 @@ unlike in Church style. For instance, the identity function ($\l x.x$)
 could have one of any type that has of the form $A -> A$, such as:
 \begin{quote}\vspace*{-1em}
 \begin{singlespace}
-$\iota -> \iota$ \\
-$(\iota -> \iota) -> (\iota -> \iota)$ \\
-$(\iota -> (\iota -> \iota)) -> (\iota -> (\iota -> \iota))$ \\
-$((\iota -> \iota) -> \iota) -> ((\iota -> \iota) -> \iota)$ \\
-$((\iota -> \iota) -> (\iota -> \iota)) -> ((\iota -> \iota) -> (\iota -> \iota))$ \\
+$\Gamma |- \l x.x : \iota -> \iota$ \\
+$\Gamma |- \l x.x : (\iota -> \iota) -> (\iota -> \iota)$ \\
+$\Gamma |- \l x.x : (\iota -> (\iota -> \iota)) -> (\iota -> (\iota -> \iota))$ \\
+$\Gamma |- \l x.x : ((\iota -> \iota) -> \iota) -> ((\iota -> \iota) -> \iota)$ \\
+$\Gamma |- \l x.x : ((\iota -> \iota) -> (\iota -> \iota)) -> ((\iota -> \iota) -> (\iota -> \iota))$ \\
 $~~~~ \vdots $
 \end{singlespace}
 \end{quote}
@@ -282,6 +282,43 @@ However, we don't consider the Curry-style STLC to be
 a polymorphic type system since the typing for a variable
 under a well-formed context is still unique. That is,
 \[ \inference{\Gamma |- x : A & \Gamma |- x : A'}{A = A'} \]
+
+
+Type preservation over well-typed $\beta$-reduction and $\beta$-expansion 
+does not hold either, unlike in Church style. Even when a well-typed term
+reduces to another well-typed term, they may be given different types.
+Consider the reduction $(\l x'.x')(\l x.x) --> \l x.x$.
+We can give different types to the term before the recuction and the
+term after the reduction.
+\[\setpremisesend{.1em} 
+\inference[\sc App]
+ {
+   \inference[\sc Lam]
+     { \inference[\sc Var]
+         {x' : \iota -> \iota ~\in~ \cdot, x' : \iota -> \iota}
+         {\cdot,x' : \iota -> \iota |- x': \iota -> \iota}
+     }
+     {\cdot |- \l x'.x' : (\iota -> \iota) -> (\iota -> \iota)}
+ &
+   \inference[\sc Lam]
+     {\inference[\sc Var]{x:\iota ~\in~ \cdot,x:\iota}
+                         {\cdot,x:\iota |- x:\iota} \phantom{x'}}
+     {\cdot |- \l x.x : \iota -> \iota \phantom{(x')}}
+ }
+ {\cdot |- (\l x'.x')(\l x.x) : \iota -> \iota}
+\]
+\[\qquad\qquad\qquad\quad
+\inference[\sc Lam]
+  {\inference[\sc Var]{x:\iota->\iota ~\in~ \cdot,x:\iota->\iota}
+                      {\cdot,x:\iota->\iota |- x:\iota->\iota} }
+  {\cdot |- \l x.x : (\iota -> \iota) -> (\iota -> \iota)}
+\]
+
+%% does the set of possible types get larger after reduction even when
+%% the only ground type is the void type? I am not sure. So, I won't
+%% elaborate on this.
+
+\KYA{TODO motivation for principal type scheme}
 
 %%%% need to rewrite this
 %%%%%%%%%%%% Well-typed expansion does not preserve types in the Curry style.
@@ -322,7 +359,4 @@ under a well-formed context is still unique. That is,
 %% ($\l x.x$) appearing in the right-hand side. Another instance is having
 %% both of them to be the identity term, that is, let $s_1 = (\l x . x)$ and
 %% $s_2 = (\l x . x)$ as well.
-
-type inference in Curry-style
-
 
