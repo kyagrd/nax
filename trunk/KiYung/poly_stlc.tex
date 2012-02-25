@@ -127,14 +127,28 @@ booleans) that can examine the normal terms. Here, having just the void type
 is good enough for my purpose of leading up the discussion for
 the polymorphic type systems, without complicating the term syntax.
 
-\paragraph{Well-known properties of STLC (in both styles):}
-type preservation (\aka\ subject reduction)
-reduction preserves type
+\paragraph{Properties of STLC (that hold in both styles):}~\\
+We discuss two things type preservation and strong normalization.
+
+Type preservation (\aka\ subject reduction) is a property
+that reduction preserves type, as stated below:
 \begin{align*}
 \inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}
  &\qquad \text{type preservation, or, subject reduction}
 \end{align*}
-Strong normalization
+We can prove subject reduction (or, type preservation over reduction) by
+induction on the derivation of the reduction rules. The only interesting case
+is the \rulename{RedBeta} rule. Proof for all the other rules are simply done
+by applying the induction hypothesis. Proof for the \rulename{RedBeta} rule
+amounts to proving the substitution lemma:
+\[ \inference{\Gamma,x:A |- t : B  & \Gamma |- s : A}{\Gamma |- t[s/x] : B}
+   \qquad \text{substitution lemma} \]
+Proof of the substitution lemma is a straightforward induction on
+the derivation of the typing judgement.
+
+Strong normalization \KYA{
+TODO it is worth discussing some details of the normalization proof
+since we are going to do similar thing over and over with growing complexity}
 
 \paragraph{In Church style,} the variable ($x$) in an abstraction
 ($\l(x:A).t$) has a type annotation ($A$). Intuitively, we may think of
