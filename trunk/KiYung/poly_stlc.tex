@@ -136,19 +136,140 @@ that reduction preserves type, as stated below:
 \inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}
  &\qquad \text{type preservation, or, subject reduction}
 \end{align*}
-We can prove subject reduction (or, type preservation over reduction) by
-induction on the derivation of the reduction rules. The only interesting case
-is the \rulename{RedBeta} rule. Proof for all the other rules are simply done
-by applying the induction hypothesis. Proof for the \rulename{RedBeta} rule
-amounts to proving the substitution lemma:
+That is, when a well typed term takes a reduction step, then the reduce term
+also has the same type. We can prove subject reduction (or, type preservation
+over reduction) by induction on the derivation of the reduction rules.
+The only interesting case is the \rulename{RedBeta} rule. Proof for all
+the other rules are simply done by applying the induction hypothesis.
+Proof for the \rulename{RedBeta} rule amounts to proving the substitution lemma:
 \[ \inference{\Gamma,x:A |- t : B  & \Gamma |- s : A}{\Gamma |- t[s/x] : B}
    \qquad \text{substitution lemma} \]
 Proof of the substitution lemma is a straightforward induction on
 the derivation of the typing judgement.
 
-Strong normalization \KYA{
-TODO it is worth discussing some details of the normalization proof
-since we are going to do similar thing over and over with growing complexity}
+When people use STLC to model a programming language,
+they usually consider another property called \emph{progress},
+which states that well-typed terms are either values or
+can take an evaluation step. An evaluation is a certain subset of
+the reduction relation, which is often deterministic. Values are
+terms that meet certain syntactic criteria, which is intended not
+to take further evaluation steps. In such a setting, type safety
+means subject reduction together with progress. However, as a calculus
+considering reduction and normal terms, rather than evaluation and values,
+type safety is no more than subject reduction.
+
+Strong normalization is another important property of STLC.
+The proof strategy we present here is to define a strongly normalizing set of
+terms, which may or may not be well-typed, and show that all well-typed terms
+belong to that set.
+\KYA{we do this for Curry style but can we can do it similarly for Church style
+TODO cite Geuvers ``a short and flexible proof of String Normalization for CC''
+and also Matthes' CSL 04 paper on \Fixw}
+A straightforward definition of the strongly normalizing set of terms would be:
+\[
+\inference{s_1,\ldots,s_n\in\SN}{x~s_1~\cdots~s_n \in \SN}
+\qquad
+\inference{t \in \SN}{\l x.t \in \SN}
+\qquad
+\inference{t' \in \SN & t --> t'}{t \in \SN}
+\]
+That is:
+Variables and applications of a variable to strongly normalizing terms are
+in $\SN$; abstractions are in $\SN$ when their bodies are in $\SN$; and
+terms that reduce to $\SN$ are also in $\SN$.
+Relying on the fact that normal order reduction (\ie, reduce outermost
+leftmost redex first) of a term always leads to a normal form if the term
+has a normal form, we alter the last part of inductive definition
+more syntactically, and yet defining the same set $\SN$, as follows:
+\[
+\inference{s_1,\ldots,s_n\in\SN}{x~s_1~\cdots~s_n \in \SN}
+\quad
+\inference{t \in \SN}{\l x.t \in \SN}
+\quad
+\inference{t[s/x]~s_1~\cdots~s_n\in \SN & s\in\SN}
+	{(\lambda x.t)~s~s_1~\cdots~s_n \in \SN}
+\]
+
+A set $\mathcal{A}$ is saturated when it is closed under adding
+strongly normalizing neutral terms and strongly normalizing weak head expansion:
+\[
+\inference{s_1,\ldots,s_n\in\SN}{x~s_1~\cdots~s_n \in \mathcal{A}}
+\qquad\qquad\qquad\qquad\quad
+\inference{t[s/x]~s_1~\cdots~s_n\in \mathcal{A} & s\in\mathcal{A}}
+	  {(\lambda x.t)~s~s_1~\cdots~s_n \in \mathcal{A}}
+\]
+We can easily observe that $\SN$ is a saturated set by definition
+since we can get the first and last part of the inductive definition for $\SN$
+when $\mathcal{A}=\SN$.
+
+We define an arrow operator on saturated sets
+\[ \mathcal{A} -> \mathcal{B} = \{ t \in \SN \mid t~s \in \mathcal{B} ~\text{for all}~ s \in \mathcal{A} \} \]
+which is also known to be saturated when both $\mathcal{A}$ and $\mathcal{B}$
+are saturated.
+
+Interpretation of types:
+\begin{align*}
+[| \iota  |] &= \text{the minimal saturated set} \\
+[| A -> B |] &= [| A |] -> [| B |]
+\end{align*}
+
+Interpretation of typing contexts:
+\[ [| \Gamma |] =
+	\{\; \rho\,\in\,\dom(\Gamma) -> \SN ~\mid~
+             \rho(x) \in [|\Gamma(x)|] ~\text{for all}~x\in\dom(\Gamma) \;\}
+\]
+
+Interpretation of terms:
+\begin{align*}
+[|x|]_\rho      &= \rho(x) \\
+[|\l x.t|]_\rho &= \l x.[|t|]  \qquad (x\notin\dom(\rho)) \\
+[|t~s|]_\rho    &= [|t|]_\rho~[|s|]_\rho
+\end{align*}
+
+Proof of strong normalization amounts to proving
+\[ \inference{\Gamma|- t:A & \rho \in [|\Gamma|]}{[|t|]_\rho \in [|A|]} \]
+\begin{proof}
+We can prove above by induction on the typing derivation ($\Gamma|- t:A$).
+
+For variables, it is trivial to show that
+\[ \inference{\Gamma |- x:A & \rho \in [|\Gamma|]}{[|x|]_\rho \in [|A|]} \]
+Due to the \rulename{Var} rule, we know that $x:A \in \Gamma$.
+So, $[|x|]_\rho =\rho(x)\in[|\Gamma(x)|] = [|A|]$.
+
+For abstractions, we need to show that
+\[ \inference{\Gamma |- \l x.t : A -> B & \rho \in [|\Gamma|]}
+	     {[|\l x.t|]_\rho \in [|A -> B|]} \]
+Since $[|\l x.t|]_\rho = \l x.[|t|]_\rho$ and
+$[|A -> B|] = \{ t\in \SN \mid t~s\in[|B|]~\text{for all}~s\in[|A|] \}$,
+what we need to show is equivalent to the following:
+\[ \inference{\Gamma |- \l x.t : A -> B & \rho \in [|\Gamma|]}
+	     {\l x.[|t|]_\rho \in
+		\{ t\in \SN \mid t~s\in[|B|] ~\text{for all}~ s\in[|A|] \} }
+\]
+By induction, we know the following:
+\[ \inference{\Gamma,x:A |- t : B & \rho' \in [|\Gamma,x:A|]}
+	     {[|t|]_{\rho'} \in [|B|]} \]
+
+Since this holds for all $\rho' \in [|\Gamma,x:A|]$, it also holds
+for particular $\rho' = \rho[x \mapsto s]$ for any $s \in [|A|]$.
+So, $[|t|]_\rho[x\mapsto s] = ([|t|]_\rho)[s/x]\in[|B|]$ for any $s\in[|A|]$.
+Since saturated sets are closed under normalizing weak head expansion,
+$(\l x.[|t|]_\rho)~s \in[|B|]$ for any $s\in[|A|]$.
+Therefore, $\l x.[|t|]_\rho$ is obviously in the very set,
+which we wanted it to be in (\ie,
+$\l x.[|t|]_\rho\in\{t\in \SN \mid t~s\in[|B|] ~\text{for all}~ s\in[|A|]\}$).
+
+For applications, we need to show that
+\[ \inference{\Gamma |- t~s : B & \rho\in[|\Gamma|]}{[|t~s|]_\rho \in [|B|]} \]
+By induction we know that
+\[
+\inference{\Gamma |- t : A -> B & \rho\in[|\Gamma|]}{[|t|]_\rho \in [|A -> B|]}
+\qquad
+\inference{\Gamma |- s : A & \rho\in[|\Gamma|]}{[|s|]_\rho \in [|A|]}
+\]
+Then, it is straightforward to see that $[|t~s|]_\rho\in[|B|]$
+by definition of $[|A -> B|]$.
+\end{proof}
 
 \paragraph{In Church style,} the variable ($x$) in an abstraction
 ($\l(x:A).t$) has a type annotation ($A$). Intuitively, we may think of
@@ -303,7 +424,7 @@ does not hold either, unlike in Church style. Even when a well-typed term
 reduces to another well-typed term, they may be given different types.
 Consider the reduction $(\l x'.x')(\l x.x) --> \l x.x$.
 We can give different types to the term before the recuction and the
-term after the reduction.
+term after the reduction. For example,
 \[\setpremisesend{.1em} 
 \inference[\sc App]
  {
