@@ -141,20 +141,20 @@ Church style and Curry style --
 \emph{subject reduction} (\aka\ type preservation after reduction, or,
 simply \emph{type preservation}) and \emph{strong normalization}.
 
-\paragraph{Subject reduction} (or, type preservation) is a property
-that reduction preserves type, as stated below:
-\begin{align*}
-\inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}
- &\qquad \text{subject reduction, or, type preservation}
-\end{align*}
+\paragraph{Subject reduction} is a property that reduction preserves type,
+as stated below:
+\begin{theorem}[subject reduction]
+	$\inference{\Gamma |- t : A  & t --> t'}{\Gamma |- t' : A}$
+\end{theorem}
 That is, when a well typed term takes a reduction step, then the reduce term
-also has the same type. We can prove subject reduction (or, type preservation)
+also has the same type. We can prove subject reduction (\aka\ type preservation)
 by induction on the derivation of the reduction rules.
 The only interesting case is the \rulename{RedBeta} rule. Proof for all
 the other rules are simply done by applying the induction hypothesis.
 Proof for the \rulename{RedBeta} rule amounts to proving the substitution lemma:
-\[ \inference{\Gamma,x:A |- t : B  & \Gamma |- s : A}{\Gamma |- t[s/x] : B}
-   \qquad \text{substitution lemma} \]
+\begin{lemma}[substitution]
+$ \inference{\Gamma,x:A |- t : B  & \Gamma |- s : A}{\Gamma |- t[s/x] : B} $
+\end{lemma}
 Proof of the substitution lemma is a straightforward induction on
 the derivation of the typing judgement.
 
@@ -268,8 +268,8 @@ of its type. That is, if $x : A \in \Gamma$ then any $\rho \in \Gamma$ should
 satisfy that $\rho(x) \in [|A|]$.
 
 \begin{figure}
-\begin{theorem}[soundness of typing with respect to interpretation]
-\[ \inference{\Gamma|- t:A & \rho \in [|\Gamma|]}{[|t|]_\rho \in [|A|]} \]
+\begin{theorem}[soundness of typing]
+$ \inference{\Gamma|- t:A & \rho \in [|\Gamma|]}{[|t|]_\rho \in [|A|]} $
 \end{theorem}
 \begin{proof}
 We prove by induction on the typing derivation ($\Gamma|- t:A$).
@@ -319,6 +319,9 @@ $.
 Then, it is straightforward to see that $[|t~s|]_\rho\in[|B|]$
 by definition of $[|A -> B|]$.\\
 \end{proof}
+\begin{corollary}[strong normalization]
+	$\inference{\Gamma |- t : A}{t \in \SN}$
+\end{corollary}
 \begin{singlespace}
 \caption[Strong normalization proof for STLC]{
 	A proof of strong normalization for STLC via proving
@@ -434,7 +437,7 @@ without relying on the property of $\iota$ : \par
 apply a constant function to an already ill-typed term (self application)
 \end{tabular}
 \end{singlespace}
-\caption{$\beta$-expansion to ill-typed terms}
+\caption{Examples of $\beta$-expansions to ill-typed terms}
 \label{ill-typed_expand}
 \end{figure}
 
