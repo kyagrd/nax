@@ -105,3 +105,20 @@ TODO encoding of polymorphic regular recursive datatypes is possible
 TODO compare curry style and church style
 
 
+\subsection{Subject reduction and strong normalziation}\label{sec:f:srsn}
+\paragraph{Subject reduction}
+
+\paragraph{Strong normalization}
+
+\begin{description}
+\item[Interpretation of types] as saturated set of normalizing terms:
+\begin{align*}
+[| X |]_\xi           &= \xi(X) \\ 
+[| A -> B |]_\xi      &= [|A|]_\xi -> [|B|]_\xi \\
+[| \forall X.B |]_\xi &= [|B|]_\xi \qquad\qquad\qquad (X\notin\dom(\xi))
+\end{align*}
+\item[Interpretation of typing contexts] as set of valuations ($\rho$):
+
+\item[Interpretation of terms] as terms themselves whose free variables are
+	substitued according to the given valuation ($\rho$):
+\end{description}
