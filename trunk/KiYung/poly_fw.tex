@@ -256,3 +256,22 @@ and unannotated types -- namely, the Church-Curry-style \Fw.
 I am not sure when one would need this style, though.
 
 
+
+\subsection{Subject reduction and strong normalziation}\label{sec:f:srsn}
+\paragraph{Subject reduction}
+\begin{theorem}[subject reduction]
+$\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
+\end{theorem}
+
+
+\paragraph{Strong normalization}
+
+\begin{theorem}[soundness of typing]
+$ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
+	    {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
+\end{theorem}
+
+\begin{corollary}[strong normalization]
+	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
+\end{corollary}
+

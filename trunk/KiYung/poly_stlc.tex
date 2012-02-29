@@ -225,13 +225,13 @@ are saturated.
 \begin{figure}
 \begin{singlespace}
 \begin{description}
-\item[Interpretation of types] as saturated set of normalizing terms:
+\item[Interpretation of types] as saturated sets of normalizing terms:
 \begin{align*}
 [| \iota  |] &= \bot \qquad\qquad (\text{the minimal saturated set}) \\
 [| A -> B |] &= [| A |] -> [| B |]
 \end{align*}
 
-\item[Interpretation of typing contexts] as set of valuations ($\rho$):
+\item[Interpretation of typing contexts] as sets of valuations ($\rho$):
 \[ [| \Gamma |] =
 	\{\; \rho\,\in\,\dom(\Gamma) -> \SN ~\mid~
              \rho(x) \in [|\Gamma(x)|] ~\text{for all}~x\in\dom(\Gamma) \;\}

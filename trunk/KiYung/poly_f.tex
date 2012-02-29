@@ -107,18 +107,51 @@ TODO compare curry style and church style
 
 \subsection{Subject reduction and strong normalziation}\label{sec:f:srsn}
 \paragraph{Subject reduction}
+\begin{theorem}[subject reduction]
+$\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
+\end{theorem}
 
 \paragraph{Strong normalization}
 
+\begin{figure}
+\begin{singlespace}
 \begin{description}
-\item[Interpretation of types] as saturated set of normalizing terms:
+\item[Interpretation of types] as saturated sets of normalizing terms
+	whose free type variables are substituted according to
+	the given type valuation ($\xi$):
 \begin{align*}
 [| X |]_\xi           &= \xi(X) \\ 
 [| A -> B |]_\xi      &= [|A|]_\xi -> [|B|]_\xi \\
 [| \forall X.B |]_\xi &= [|B|]_\xi \qquad\qquad\qquad (X\notin\dom(\xi))
 \end{align*}
-\item[Interpretation of typing contexts] as set of valuations ($\rho$):
-
+\item[Interpretation of kinding and typing contexts]
+		       as sets of type and term valuations ($\xi$ and $\rho$):
+\begin{align*}
+[| \Delta        |] &= \dom(\Delta) -> \SAT \\
+[| \Delta;\Gamma |] &= \{ \xi;\rho \mid \xi\in[|\Delta|], \rho\in[|\Gamma|]_\xi \} \\
+[| \Gamma        |]_\xi\ &= \{ \rho : \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
+\end{align*}
 \item[Interpretation of terms] as terms themselves whose free variables are
-	substitued according to the given valuation ($\rho$):
+	substitued according to the given pair of valuations ($\xi$;$\rho$):
+\begin{align*}
+[| x      |]_{\xi;\rho} &= \rho(x) \\
+[| \l x.t |]_{\xi;\rho} &= \l x . [|t|]_{\xi;\rho} \qquad (x\notin\dom(\rho)) \\
+[| t ~ s  |]_{\xi;\rho} &= [| t |]_{\xi;\rho} ~ [| s |]_{\xi;\rho}
+\end{align*}
 \end{description}
+\caption[Interpretation of System \F\ for proving strong normalization]
+	{Interpretation of types, typing contexts, and terms of System \F\
+         for the proof of strong normalization}
+\label{fig:interpF}
+\end{singlespace}
+\end{figure}
+
+\begin{theorem}[soundness of typing]
+$ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
+	    {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
+\end{theorem}
+
+\begin{corollary}[strong normalization]
+	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
+\end{corollary}
+
