@@ -104,12 +104,57 @@ TODO encoding of polymorphic regular recursive datatypes is possible
 
 TODO compare curry style and church style
 
+Since the terms of the Curry-style System \F\ is identical to the terms of
+the Curry-style STLC, the reduction rules for Curry-style System \F\ is exactly
+the same as the reduction rules for the Curry-style STLC (repeated below).
+\vspace*{-.7em}
+\begin{align*}
+& \inference[\sc RedBeta]{}{(\l x   .t)~s --> t[s/x]} \\
+& \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'} \\
+& \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
+\end{align*}
 
-\subsection{Subject reduction and strong normalziation}\label{sec:f:srsn}
-\paragraph{Subject reduction}
+The reduction rules for the Church-style System \F\ has all the reduction rules
+for the Church-style STLC, and, in addition, three more reduction rules
+(\rulename{RedTy}, \rulename{RedTyAbs}, and \rulename{RedTyApp}) involving
+type abstractions and type applications. The following is the list of
+reduction rules for the Church-style System \F:
+\begin{align*}
+& \inference[\sc RedBeta]{}{(\l(x:A).t)~s --> t[s/x]}
+&&\inference[\sc RedTy]{}{(\L X   .t)[A] --> t[A/X]} \\
+& \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'}
+&&\inference[\sc RedTyAbs]{t --> t'}{\L X   .t --> \L X   .t'} \\
+& \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s}
+&&\inference[\sc RedTyApp]{t --> t'}{t[A] --> t'[A]} \\
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
+\end{align*}
+
+
+\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
+We can prove subject reduction for the Curry-style System \F\ in a similar
+fashion to the proof of subject reduction for the Curry-style STLC,
+by induction on the derivation of the reduction rules.
+
 \begin{theorem}[subject reduction]
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{theorem}
+Proof for all other cases except for the \rulename{RedBeta} rule, are simply
+done by applying the induction hypothesis. The only complication we have,
+compared to STLC, is that the typing rules are not syntax directed 
+
+The most interesting case of the proof is, of course,
+the \rulename{RedBeta} rule.
+
+
+Other cases
+
+\begin{lemma}[substitution]
+$ \inference{\Delta;\Gamma,x:A |- t : B  & \Delta;\Gamma |- s : A}
+	{\Delta;\Gamma |- t[s/x] : B} $
+\end{lemma}
+
+Church-style
 
 \paragraph{Strong normalization}
 
