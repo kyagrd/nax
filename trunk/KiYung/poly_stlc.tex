@@ -298,7 +298,7 @@ $ \inference{\Gamma,x:A |- t : B & \rho' \in [|\Gamma,x:A|]}
 
 Since this holds for all $\rho' \in [|\Gamma,x:A|]$, it also holds
 for particular $\rho' = \rho[x \mapsto s]$ for any $s \in [|A|]$.
-So, $[|t|]_\rho[x\mapsto s] = ([|t|]_\rho)[s/x]\in[|B|]$ for any $s\in[|A|]$.
+So, $[|t|]_{\rho[x\mapsto s]} = ([|t|]_\rho)[s/x]\in[|B|]$ for any $s\in[|A|]$.
 Since saturated sets are closed under normalizing weak head expansion,
 $(\l x.[|t|]_\rho)~s \in[|B|]$ for any $s\in[|A|]$.
 Therefore, $\l x.[|t|]_\rho$ is obviously in the very set,
