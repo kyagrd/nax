@@ -97,23 +97,8 @@ A,B ::= &~ X \\
 \end{singlespace}
 \end{figure}
 
-
-TODO explain what extension we have made from STLC to F
-
-TODO encoding of polymorphic regular recursive datatypes is possible
-
-TODO compare curry style and church style
-
-
-\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
-To discuss subject reduction, we need to know what are the reduction rules
-for System \F, which is missing for Figure \ref{fig:f}.
-
-The reduction rules for the Church-style System \F\ has all the reduction rules
-for the Church-style STLC, and, in addition, three more reduction rules
-(\rulename{RedTy}, \rulename{RedTyAbs}, and \rulename{RedTyApp}) involving
-type abstractions and type applications. The following is the list of
-reduction rules for the Church-style System \F:
+\begin{figure}
+\paragraph{Reduction rules for the Church-style System \F}
 \begin{align*}
 & \inference[\sc RedBeta]{}{(\l(x:A).t)~s --> t[s/x]}
 &&\inference[\sc RedTy]{}{(\L X   .t)[A] --> t[A/X]} \\
@@ -123,19 +108,45 @@ reduction rules for the Church-style System \F:
 &&\inference[\sc RedTyApp]{t --> t'}{t[A] --> t'[A]} \\
 & \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
 \end{align*}
-
-The reduction rules for Curry-style System \F\ is exactly the same as
-the reduction rules for the Curry-style STLC (repeated below),
-since the terms of the Curry-style System \F\ and STLC are identical.
-\vspace*{-.7em}
+\paragraph{Reduction rules for the Curry-style System \F}
 \begin{align*}
 & \inference[\sc RedBeta]{}{(\l x   .t)~s --> t[s/x]} \\
 & \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'} \\
 & \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
 & \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
 \end{align*}
+\caption{Reduction rules for System \F}
+\label{fig:redf}
+\end{figure}
 
-The subject reduction theorem for System \F\ can be stated as follows:
+System \F\ extends the type syntax of STLC with type variables ($X$) and
+forall types ($\forall X.B$), which enables us to express polymorphic types.
+However, System \F\ does not have a dedicated syntax for ground types,
+such as the void type $\iota$ in STLC, since we can populate types from
+forall types such as $\forall X.X$. (this type is, in fact, an encoding of
+the void type. We will discuss that System \F\ can encode certain class of
+datatypes in \S\ref{sec:f:data}).
+$\forall X.X'$
+unbound type variable
+
+The reduction rules for the Church-style System \F\ has all the reduction rules
+for the Church-style STLC, and, in addition, three more reduction rules
+(\rulename{RedTy}, \rulename{RedTyAbs}, and \rulename{RedTyApp}) involving
+type abstractions and type applications. The following is the list of
+reduction rules for the Church-style System \F:
+
+The reduction rules for Curry-style System \F\ (Figure \ref{fig:redf})
+is exactly the same as the reduction rules for the Curry-style STLC
+(Figure \ref{fig:stlc}) since the terms of the Curry-style System \F\
+and the terms of the Curry-style STLC are identical.
+
+\subsection{TODO impredicative encoding Church encoding Girard encoding}
+\S\ref{sec:f:data}
+TODO encoding of polymorphic regular recursive datatypes is possible
+
+\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
+
+the subject reduction theorem for System \F\ can be stated as follows:
 \begin{theorem}[subject reduction]
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{theorem}
