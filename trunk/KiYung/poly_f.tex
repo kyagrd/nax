@@ -22,9 +22,8 @@ A,B ::= &~ X           & \text{variable type}   \\
 \begin{align*}\quad
 \Delta ::= &~ \cdot \\
 	 | &~ \Delta, x:A & (X\notin \dom(\Delta)) \\
-\Delta;\Gamma ::= &~ \Delta;\cdot \\
-	        | &~ \Delta,X;\Gamma    & (X\notin \ran(\Gamma)) \\
-	        | &~ \Delta;\Gamma, x:A & (x\notin \dom(\Gamma)) \\
+\Gamma ::= &~ \Delta;\cdot \\
+	 | &~ \Delta;\Gamma, x:A & (x\notin \dom(\Gamma)) \\
 \end{align*}
 \[ \textbf{kinding rules} \quad \framebox{$ \Delta |- A $} \]\vspace*{-1em}
 \begin{align*}
@@ -41,7 +40,8 @@ A,B ::= &~ X           & \text{variable type}   \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
 		     {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X;\Gamma |- t : B}
-		       {\Delta;\Gamma |- \L X.t : \forall X.B} \\
+		       {\Delta;\Gamma |- \L X.t : \forall X.B} ~
+		       (X\notin\ran(\Gamma)) \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X.B & \Delta |- A}
 		       {\Delta;\Gamma |- t[A] : B[A/X]}
 \end{align*}
@@ -67,9 +67,8 @@ A,B ::= &~ X \\
 \begin{align*}\quad
 \Delta ::= &~ \cdot \\
 	 | &~ \Delta, x:A & (X\notin \dom(\Delta)) \\
-\Delta;\Gamma ::= &~ \Delta;\cdot \\
-	        | &~ \Delta,X;\Gamma    & (X\notin \ran(\Gamma)) \\
-	        | &~ \Delta;\Gamma, x:A & (x\notin \dom(\Gamma)) \\
+\Gamma ::= &~ \cdot \\
+	 | &~ \Gamma, x:A & (x\notin \dom(\Gamma)) \\
 \end{align*}
 \[ \textbf{kinding rules} \quad \framebox{$ \Delta |- A $}\]\vspace*{-1em}
 \begin{align*}
@@ -86,7 +85,8 @@ A,B ::= &~ X \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
 		     {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X;\Gamma |- t : B}
-		       {\Delta;\Gamma |- t : \forall X.B} \\
+		       {\Delta;\Gamma |- t : \forall X.B} ~
+		       (X\notin\ran(\Gamma)) \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X.B & \Delta |- A}
 		       {\Delta;\Gamma |- t : B[A/X]}
 \end{align*}
@@ -104,16 +104,10 @@ TODO encoding of polymorphic regular recursive datatypes is possible
 
 TODO compare curry style and church style
 
-Since the terms of the Curry-style System \F\ is identical to the terms of
-the Curry-style STLC, the reduction rules for Curry-style System \F\ is exactly
-the same as the reduction rules for the Curry-style STLC (repeated below).
-\vspace*{-.7em}
-\begin{align*}
-& \inference[\sc RedBeta]{}{(\l x   .t)~s --> t[s/x]} \\
-& \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'} \\
-& \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
-& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
-\end{align*}
+
+\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
+To discuss subject reduction, we need to know what are the reduction rules
+for System \F, which is missing for Figure \ref{fig:f}.
 
 The reduction rules for the Church-style System \F\ has all the reduction rules
 for the Church-style STLC, and, in addition, three more reduction rules
@@ -130,17 +124,46 @@ reduction rules for the Church-style System \F:
 & \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
 \end{align*}
 
+The reduction rules for Curry-style System \F\ is exactly the same as
+the reduction rules for the Curry-style STLC (repeated below),
+since the terms of the Curry-style System \F\ and STLC are identical.
+\vspace*{-.7em}
+\begin{align*}
+& \inference[\sc RedBeta]{}{(\l x   .t)~s --> t[s/x]} \\
+& \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'} \\
+& \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
+\end{align*}
 
-\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
-We can prove subject reduction for the Curry-style System \F\ in a similar
-fashion to the proof of subject reduction for the Curry-style STLC,
-by induction on the derivation of the reduction rules.
-
+The subject reduction theorem for System \F\ can be stated as follows:
 \begin{theorem}[subject reduction]
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{theorem}
-Proof for all other cases except for the \rulename{RedBeta} rule, are simply
-done by applying the induction hypothesis. The only complication we have,
+We can prove subject reduction for the System \F\, in a similar fashion
+to the proof of subject reduction for STLC,
+by induction on the derivation of the reduction rules.
+
+In Church style, proof for all other cases except for the rules
+\rulename{RedBeta} and \rulename{RedTy} are simply done by applying
+the induction hypothesis. We use the substitution lemma for proving
+the \rulename{RedBeta} case and the type substitution lemma for
+proving the \rulename{RedTy} case. The substitution lemma and
+the type substitution lemma are stated below:
+
+\begin{lemma}[substitution]
+$ \inference{\Delta;\Gamma,x:A |- t : B  & \Delta;\Gamma |- s : A}
+	{\Delta;\Gamma |- t[s/x] : B} $
+\end{lemma}
+
+\begin{lemma}[type substitution]
+$ \inference{\Delta,X;\Gamma |- t : B  & \Delta |- A}
+	{\Delta;\Gamma |- t[A/X] : B[A/X]} ~ (X\notin\ran(\Gamma))$
+\end{lemma}
+
+In Curry style, the most interesting case is the \rulename{RedBeta} rule,
+which we the substitution lemma to prove.
+The other rules 
+The only complication we have,
 compared to STLC, is that the typing rules are not syntax directed 
 
 The most interesting case of the proof is, of course,
@@ -149,10 +172,8 @@ the \rulename{RedBeta} rule.
 
 Other cases
 
-\begin{lemma}[substitution]
-$ \inference{\Delta;\Gamma,x:A |- t : B  & \Delta;\Gamma |- s : A}
-	{\Delta;\Gamma |- t[s/x] : B} $
-\end{lemma}
+
+
 
 Church-style
 
