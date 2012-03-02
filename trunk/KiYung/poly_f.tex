@@ -224,7 +224,7 @@ difficult to see that each typing derivation in Curry style corresponds to
 a unique Church-style term, and, that a reduction step in Curry style
 corresponds to one or more reduction steps in Church style.\footnote{
 It is not always one step to one step since the reduction rules
-\rulename{RedTyAbs} and \rulename{RedTyApp} in Church style correspond to
+{\sc RedTyAbs} and {\sc RedTyApp} in Church style correspond to
 zero reduction step in Curry style.}
 
 \subsubsection*{Strong Normalization}
@@ -299,7 +299,7 @@ We need to show that
 $ \inference{\Delta;\Gamma |- \l x.t : A -> B & \xi;\rho \in [|\Delta;\Gamma|]}
 	{[|\l x.t|]_{\xi;\rho} \in [|A -> B|]_\xi} $.
 
-By induction, we know that:
+By induction, we know that
 $ \inference{\Delta;\Gamma,x:A |- t : B & \xi';\rho' \in [|\Delta;\Gamma,x:A|]}
 	     {[|t|]_{\xi';\rho'} \in [|B|]_\xi} $.
 
@@ -353,7 +353,9 @@ So, we know that
 	\quad \text{for all}~\mathcal{A}\in\SAT \]
 By set theoretic definition, this is exactly what we wanted to show:
 \[ [|t|]_{\xi;\rho} \in
-	\bigcap_{\mathcal{A}\in\SAT} [|B|]_{\xi[X:=\mathcal{A}]} \]
+	\bigcap_{\mathcal{A}\in\SAT} [|B|]_{\xi[X:=\mathcal{A}]}
+	= [|\forall X.B|]_\xi
+\]
 
 \paragraph{Case (\rulename{TyApp})}
 We need to show that
@@ -361,11 +363,16 @@ $ \inference{\Delta;\Gamma |- t : B[A/X] & \xi;\rho\in[|\Delta;\Gamma|]}
 	{[|t|]_{\xi;\rho} \in [|B[A/X]|]_\xi} $
 
 By induction, we know that
-\[ \inference{\Delta;\Gamma |- t : \forall X.B & \xi';\rho'\in[|\Delta;\Gamma|]}
+$ \inference{\Delta;\Gamma |- t : \forall X.B & \xi';\rho'\in[|\Delta;\Gamma|]}
 	{[|t|]_{\xi';\rho'} \in [|\forall X.B|]_{\xi'}}
-\]
+$.
 
-TODO easy
+Since this holds for all $\xi';\rho' \in [|\Delta,\Gamma|]$,
+it also holds for $\xi'=\xi$ and $\rho'=\rho$. Then, we are done:
+$ [|t|]_{\xi;\rho} \in [|\forall X.B|]_{\xi}
+	= \bigcap_{\mathcal{A}\in\SAT} [|B|]_{\xi[X:=\mathcal{A}]}
+	\subset [|B|]_{\xi[X:=[|A|]_\xi]} = [|B[A/X]|]_\xi
+$.
 \end{proof}
 \begin{corollary}[strong normalization]
 	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$

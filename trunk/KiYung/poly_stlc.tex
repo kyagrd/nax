@@ -254,12 +254,12 @@ are saturated.
 We interpret types as saturated subsets (\ie, subsets that are saturated) of
 $\SN$ as in Figure \ref{fig:interpSTLC}. We interpret the void type as
 the minimal saturated set ($\bot$), which is saturated from the empty set.
-We choose the symbol $\bot$ since saturated sets from a complete lattice
+We choose the symbol $\bot$ since saturated sets form a complete lattice
 under the subset relation as the partial order. We may denote $\SN$ as $\top$
-since it is the maximal element of the lattice. Note, $\bot$, or $[|\iota|]$,
-does not include any abstraction since $\iota$ is not type of a function.
-Arrow types ($A -> B$)are interpreted as the arrow over the interpretation of
-the domain type and the range type ($[|A|] -> [|B|]$).
+since it is the maximal element of the lattice. Note that $\bot$,
+or $[|\iota|]$, does not include any abstraction since $\iota$ is not
+a type of a function. Arrow types ($A -> B$)are interpreted as the arrow over
+the interpretation of the domain type and the range type ($[|A|] -> [|B|]$).
 
 We interpret a typing context as a set of valuations which map
 each variable of the typing context to a term, which belongs to interpretation
