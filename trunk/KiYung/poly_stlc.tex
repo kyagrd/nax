@@ -137,9 +137,8 @@ the polymorphic type systems, without complicating the term syntax.
 
 \subsection{Subject reduction and strong normalization}\label{sec:stlc:srsn}
 We discuss two important properties of STLC, which holds in both
-Church style and Curry style --
-\emph{subject reduction} (\aka\ type preservation after reduction, or,
-simply \emph{type preservation}) and \emph{strong normalization}.
+Church style and Curry style -- \emph{subject reduction} (\aka\
+\emph{type preservation}) and \emph{strong normalization}.
 
 \paragraph{Subject reduction} is a property that reduction preserves type,
 as stated below:
@@ -331,7 +330,7 @@ by definition of $[|A -> B|]$.\\
 \end{singlespace}
 \end{figure}
 
-Proof of strong normalization amounts to proving
+The Proof of strong normalization amounts to proving
 \[ \inference{\Gamma|- t:A & \rho \in [|\Gamma|]}{[|t|]_\rho \in [|A|]}
 \quad \text{soundness of typing with respect to interpretation.}
 \]

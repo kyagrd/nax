@@ -22,8 +22,8 @@ A,B ::= &~ X           & \text{variable type}   \\
 \begin{align*}\quad
 \Delta ::= &~ \cdot \\
 	 | &~ \Delta, x:A & (X\notin \dom(\Delta)) \\
-\Gamma ::= &~ \Delta;\cdot \\
-	 | &~ \Delta;\Gamma, x:A & (x\notin \dom(\Gamma)) \\
+\Gamma ::= &~ \cdot \\
+	 | &~ \Gamma, x:A & (x\notin \dom(\Gamma)) \\
 \end{align*}
 \[ \textbf{kinding rules} \quad \framebox{$ \Delta |- A $} \]\vspace*{-1em}
 \begin{align*}
@@ -55,8 +55,8 @@ A,B ::= &~ X           & \text{variable type}   \\
 t,s ::= &~ x           \\
       | &~ \l x    . t \\
       | &~ t ~ s       \\
-      \phantom{|} &~ \\
-      \phantom{|} &~ \\
+        &~\phantom{| \L X}  \\
+        &~\phantom{| t [A]\vspace*{.1em}} \\
 \\
 \textbf{type syntax} \\
 A,B ::= &~ X \\
@@ -85,7 +85,7 @@ A,B ::= &~ X \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
 		     {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X;\Gamma |- t : B}
-		       {\Delta;\Gamma |- t : \forall X.B} ~
+		       {\Delta;\Gamma |- t : \forall X.B \phantom{\L X}} ~
 		       (X\notin\ran(\Gamma)) \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X.B & \Delta |- A}
 		       {\Delta;\Gamma |- t : B[A/X]}
@@ -125,28 +125,65 @@ However, System \F\ does not have a dedicated syntax for ground types,
 such as the void type $\iota$ in STLC, since we can populate types from
 forall types such as $\forall X.X$. (this type is, in fact, an encoding of
 the void type. We will discuss that System \F\ can encode certain class of
-datatypes in \S\ref{sec:f:data}).
-$\forall X.X'$
-unbound type variable
+datatypes in \S\ref{sec:f:data}). In System \F, not all types constructed by
+the type syntax make sense, unlike in STLC. Since we have type variables
+in System \F, we need to make sure that types are well-kinded. That is,
+we should make share that all the type variables appearing in types are
+properly bound by universal quantifiers ($\forall$). For instance, consider
+two types $\forall X.X$ and $\forall X.X'$. Under the empty kinding context,
+$\forall X.X$ is well-kinded since $X$ is bounded by $\forall$, but
+$\forall X.X'$ is ill-kinded since $X'$ is an unbound type variable.
+So, we have kinding rules to determine whether a type is well-kinded.
+In the kinding  rules and typing rules, we use kinding context ($\Delta$)
+to keep track of bound type variables. The complete syntax, kinding rules,
+and typing rules of System \F, for both Church style and Curry style, are
+illustrated in Figure \ref{fig:f}. The reduction rules are shown
+in Figure \ref{fig:redf} separately due to the space limitation.
+
+Similarly to STLC, the term syntax of the abstraction differ between
+the two styles. The Church-style System \F\ has type annotation in
+the abstraction but the Curry-style System \F\ has not.
+Furthermore, the Church-style System \F\ has additional syntax
+for type abstractions and type applications. The differences in
+typing rules and reduction rules between the two styles follow
+from this difference in the term syntax.
+
+The typing rules \rulename{Var}, \rulename{Abs}, and \rulename{App} are
+pretty much the same as in STLC except that we carry around the kinding context
+($\Delta$) along with the typing context ($\Gamma$). What is new in System \F\
+are the typing rules for type abstractions (\rulename{TyAbs}) and
+type applications (\rulename{TyApp}), which enable us to introduce
+forall types and instantiate forall types to a specific type.
+In Church style, uses of these two rules, \rulename{TyAbs} and
+\rulename{TyAbs}, are guided by the term syntax of type abstractions
+($\L X.t$) and type applications ($t[A]$). So, the typing rules of
+the Church-style STLC are syntax directed. In Curry style, on the contrary,
+there are no term syntax to guide the uses of \rulename{TyAbs} and
+\rulename{TyAbs}. So, the typing rules of the Curry-style STLC are
+not syntax directed.
 
 The reduction rules for the Church-style System \F\ has all the reduction rules
 for the Church-style STLC, and, in addition, three more reduction rules
 (\rulename{RedTy}, \rulename{RedTyAbs}, and \rulename{RedTyApp}) involving
-type abstractions and type applications. The following is the list of
-reduction rules for the Church-style System \F:
+type abstractions and type applications.
 
-The reduction rules for Curry-style System \F\ (Figure \ref{fig:redf})
+The reduction rules for the Curry-style System \F\
 is exactly the same as the reduction rules for the Curry-style STLC
 (Figure \ref{fig:stlc}) since the terms of the Curry-style System \F\
 and the terms of the Curry-style STLC are identical.
 
-\subsection{TODO impredicative encoding Church encoding Girard encoding}
-\S\ref{sec:f:data}
+\subsection{Encoding datatypes in System \F}
+\label{sec:f:data}
 TODO encoding of polymorphic regular recursive datatypes is possible
 
-\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
 
-the subject reduction theorem for System \F\ can be stated as follows:
+\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
+We discuss two important properties of System \F, which holds in both
+Church style and Curry style -- \emph{subject reduction} (\aka\
+\emph{type preservation}) and \emph{strong normalization}.
+
+\subsubsection*{Subject reduction}
+The subject reduction theorem for System \F\ can be stated as follows:
 \begin{theorem}[subject reduction]
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{theorem}
@@ -156,39 +193,50 @@ by induction on the derivation of the reduction rules.
 
 In Church style, proof for all other cases except for the rules
 \rulename{RedBeta} and \rulename{RedTy} are simply done by applying
-the induction hypothesis. We use the substitution lemma for proving
-the \rulename{RedBeta} case and the type substitution lemma for
-proving the \rulename{RedTy} case. The substitution lemma and
+the induction hypothesis. Since the typing rules in Church style are
+syntax directed, there is no ambiguity on which typing rule to be used
+in the derivation for a certain judgment. For the \rulename{RedBeta} case,
+we use the substitution lemma. For proving the \rulename{RedTy} case,
+we use the type substitution lemma. The substitution lemma and
 the type substitution lemma are stated below:
-
 \begin{lemma}[substitution]
 $ \inference{\Delta;\Gamma,x:A |- t : B  & \Delta;\Gamma |- s : A}
 	{\Delta;\Gamma |- t[s/x] : B} $
 \end{lemma}
-
 \begin{lemma}[type substitution]
 $ \inference{\Delta,X;\Gamma |- t : B  & \Delta |- A}
 	{\Delta;\Gamma |- t[A/X] : B[A/X]} ~ (X\notin\ran(\Gamma))$
 \end{lemma}
 
 In Curry style, the most interesting case is the \rulename{RedBeta} rule,
-which we the substitution lemma to prove.
-The other rules 
-The only complication we have,
-compared to STLC, is that the typing rules are not syntax directed 
+which we the substitution lemma to prove. The other rules are basically
+done by applying the induction hypothesis, but there is a little complication
+in the proof, compared to the proof in Church style, since the typing rules
+are not syntax directed. Although we have less rules to consider than
+the Church-style STLC, we need to deal with the ambiguity of which rule
+to apply for a typing judgement. For example,
 
-The most interesting case of the proof is, of course,
-the \rulename{RedBeta} rule.
+An alternative way to prove subject reduction for the Curry-style STLC is
+by translating the subject reduction property of the Curry-style STLC into
+the subject reduction property of the Church-style STLC. That is, we extract
+a Church-style term from a typing derivation in Curry style. It is not
+difficult to see that each typing derivation in Curry style corresponds to
+a unique Church-style term, and, that a reduction step in Curry style
+corresponds to one or more reduction steps in Church style.\footnote{
+It is not always one step to one step since the reduction rules
+\rulename{RedTyAbs} and \rulename{RedTyApp} in Church style correspond to
+zero reduction step in Curry style.}
 
-
-Other cases
-
-
-
-
-Church-style
-
-\paragraph{Strong normalization}
+\subsubsection*{Strong Normalization}
+For the proof of strong normalization, we use the same proof strategy of
+interpreting types as saturated sets of normalizing terms as in the proof of
+strong normalization of STLC in \S\ref{sec:stlc:srsn}. The interpretation of
+types, contexts, and terms of System \F\ are illustrated in
+Figure \ref{fig:interpF}. Since we have type variables we need a type valuation
+($\xi$), which maps type variables to interpretations of types. So, the
+interpretation of types are indexed by the type valuation ($\xi$), and
+the interpretation of terms are indexed by the pair of term and type valuations
+($\xi;\rho$).
 
 \begin{figure}
 \begin{singlespace}
@@ -199,7 +247,7 @@ Church-style
 \begin{align*}
 [| X |]_\xi           &= \xi(X) \\ 
 [| A -> B |]_\xi      &= [|A|]_\xi -> [|B|]_\xi \\
-[| \forall X.B |]_\xi &= [|B|]_\xi \qquad\qquad\qquad (X\notin\dom(\xi))
+[| \forall X.B |]_\xi &= \bigcap_{\mathcal{A}\in\SAT} [|B|]_{\xi[X:=\mathcal{A}]} \qquad\qquad\qquad (X\notin\dom(\xi))
 \end{align*}
 \item[Interpretation of kinding and typing contexts]
 		       as sets of type and term valuations ($\xi$ and $\rho$):
@@ -209,7 +257,7 @@ Church-style
 [| \Gamma        |]_\xi\ &= \{ \rho : \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
 \end{align*}
 \item[Interpretation of terms] as terms themselves whose free variables are
-	substitued according to the given pair of valuations ($\xi$;$\rho$):
+	substituted according to the given pair of valuations ($\xi$;$\rho$):
 \begin{align*}
 [| x      |]_{\xi;\rho} &= \rho(x) \\
 [| \l x.t |]_{\xi;\rho} &= \l x . [|t|]_{\xi;\rho} \qquad (x\notin\dom(\rho)) \\
@@ -223,14 +271,32 @@ Church-style
 \end{singlespace}
 \end{figure}
 
+The Proof of strong normalization amounts to proving
+\[ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
+		{[|t|]_{\xi;\rho} \in [|A|]_\xi}
+	\quad \text{soundness of typing}
+\]
+The details of the proof is illustrated in Figure \ref{fig:SNproofF}.
+Once we have proved the soundness of typing with respect to interpretation,
+it is easy to see that STLC is strongly normalizing by giving a trivial
+interpretation such that $\xi(X)=X$ and $\rho(x) = x$ for all the free variables. Note that
+$[|t|]_\rho = t \in [|A|] \subset \SN$ under the trivial interpretation.
+
+\begin{figure}
+\begin{singlespace}
 \begin{theorem}[soundness of typing]
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
 	    {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
 \end{theorem}
 \begin{proof}
 \end{proof}
-
 \begin{corollary}[strong normalization]
 	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
 \end{corollary}
-
+\caption[Strong normalization proof for System \F]{
+	A proof of strong normalization for System \F\ via proving
+	soundness of typing with respect to the interpretation
+        where types are interpreted as saturated sets.}
+\label{fig:SNproofF}
+\end{singlespace}
+\end{figure}
