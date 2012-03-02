@@ -266,7 +266,7 @@ each variable of the typing context to a term, which belongs to interpretation
 of its type. That is, if $x : A \in \Gamma$ then any $\rho \in \Gamma$ should
 satisfy that $\rho(x) \in [|A|]$.
 
-\begin{figure}
+The Proof of strong normalization amounts to proving the following theorem:
 \begin{theorem}[soundness of typing]
 $ \inference{\Gamma|- t:A & \rho \in [|\Gamma|]}{[|t|]_\rho \in [|A|]} $
 \end{theorem}
@@ -318,27 +318,16 @@ $.
 Then, it is straightforward to see that $[|t~s|]_\rho\in[|B|]$
 by definition of $[|A -> B|]$.\\
 \end{proof}
+
 \begin{corollary}[strong normalization]
 	$\inference{\Gamma |- t : A}{t \in \SN}$
 \end{corollary}
-\begin{singlespace}
-\caption[Strong normalization proof for STLC]{
-	A proof of strong normalization for STLC via proving
-	soundness of typing with respect to the interpretation
-        where types are interpreted as saturated sets.}
-\label{fig:SNproofSTLC}
-\end{singlespace}
-\end{figure}
-
-The Proof of strong normalization amounts to proving
-\[ \inference{\Gamma|- t:A & \rho \in [|\Gamma|]}{[|t|]_\rho \in [|A|]}
-\quad \text{soundness of typing with respect to interpretation.}
-\]
-The details of the proof is illustrated in Figure \ref{fig:SNproofSTLC}.
 Once we have proved the soundness of typing with respect to interpretation,
 it is easy to see that STLC is strongly normalizing by giving a trivial
 interpretation such that $\rho(x) = x$ for all the free variables. Note that
 $[|t|]_\rho = t \in [|A|] \subset \SN$ under the trivial interpretation.
+
+
 
 \subsection{Characteristics of the Church-style STLC}\label{sec:stlc:church}
 In Church style, the variable ($x$) in an abstraction

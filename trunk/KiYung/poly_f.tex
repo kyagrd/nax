@@ -85,7 +85,7 @@ A,B ::= &~ X \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
 		     {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X;\Gamma |- t : B}
-		       {\Delta;\Gamma |- t : \forall X.B \phantom{\L X}} ~
+		       {\Delta;\Gamma |- t : \forall X.B} ~
 		       (X\notin\ran(\Gamma)) \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X.B & \Delta |- A}
 		       {\Delta;\Gamma |- t : B[A/X]}
@@ -228,16 +228,6 @@ It is not always one step to one step since the reduction rules
 zero reduction step in Curry style.}
 
 \subsubsection*{Strong Normalization}
-For the proof of strong normalization, we use the same proof strategy of
-interpreting types as saturated sets of normalizing terms as in the proof of
-strong normalization of STLC in \S\ref{sec:stlc:srsn}. The interpretation of
-types, contexts, and terms of System \F\ are illustrated in
-Figure \ref{fig:interpF}. Since we have type variables we need a type valuation
-($\xi$), which maps type variables to interpretations of types. So, the
-interpretation of types are indexed by the type valuation ($\xi$), and
-the interpretation of terms are indexed by the pair of term and type valuations
-($\xi;\rho$).
-
 \begin{figure}
 \begin{singlespace}
 \begin{description}
@@ -254,10 +244,11 @@ the interpretation of terms are indexed by the pair of term and type valuations
 \begin{align*}
 [| \Delta        |] &= \dom(\Delta) -> \SAT \\
 [| \Delta;\Gamma |] &= \{ \xi;\rho \mid \xi\in[|\Delta|], \rho\in[|\Gamma|]_\xi \} \\
-[| \Gamma        |]_\xi\ &= \{ \rho : \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
+[| \Gamma        |]_\xi\ &= \{ \rho \in \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
 \end{align*}
 \item[Interpretation of terms] as terms themselves whose free variables are
-	substituted according to the given pair of valuations ($\xi$;$\rho$):
+	substituted according to the given pair of type and term valuations
+	($\xi$;$\rho$):
 \begin{align*}
 [| x      |]_{\xi;\rho} &= \rho(x) \\
 [| \l x.t |]_{\xi;\rho} &= \l x . [|t|]_{\xi;\rho} \qquad (x\notin\dom(\rho)) \\
@@ -270,33 +261,118 @@ the interpretation of terms are indexed by the pair of term and type valuations
 \label{fig:interpF}
 \end{singlespace}
 \end{figure}
+For the proof of strong normalization, we use the same proof strategy of
+interpreting types as saturated sets of normalizing terms as in the proof of
+strong normalization of STLC in \S\ref{sec:stlc:srsn}. The interpretation of
+types, contexts, and terms of System \F\ are illustrated in
+Figure \ref{fig:interpF}. Since we have type variables we need a type valuation
+($\xi$), which maps type variables to interpretations of types. So, the
+interpretation of types are indexed by the type valuation ($\xi$), and
+the interpretation of terms are indexed by the pair of term and type valuations
+($\xi;\rho$). A type valuation $\xi$ is a function from $\dom(\Delta)$,
+the set of bound type variables in $\Delta$, to $\SAT$, the set of all
+saturated sets.
 
-The Proof of strong normalization amounts to proving
-\[ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
-		{[|t|]_{\xi;\rho} \in [|A|]_\xi}
-	\quad \text{soundness of typing}
-\]
-The details of the proof is illustrated in Figure \ref{fig:SNproofF}.
-Once we have proved the soundness of typing with respect to interpretation,
-it is easy to see that STLC is strongly normalizing by giving a trivial
-interpretation such that $\xi(X)=X$ and $\rho(x) = x$ for all the free variables. Note that
-$[|t|]_\rho = t \in [|A|] \subset \SN$ under the trivial interpretation.
+Any type interpretation is a saturated set. Since $\xi$ maps a type variable
+to a saturated set, $[|X|]_\xi \in \SAT$. We know $[|A -> B|]_\xi \in \SAT$
+since saturated sets are closed under the arrow operation ($->$), as we
+mentioned in \S\ref{sec:stlc:srsn}. $[|\forall X.B|]_\xi \in \SAT$ since
+it is known that saturated sets are closed under set indexed intersection.
 
-\begin{figure}
-\begin{singlespace}
+The Proof of strong normalization amounts to proving the following theorem:
 \begin{theorem}[soundness of typing]
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
 	    {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
 \end{theorem}
 \begin{proof}
+We prove by induction on the typing derivation ($\Delta;\Gamma|- t:A$).
+\paragraph{Case (\rulename{Var})}
+It is trivial to show that
+$ \inference{\Delta;\Gamma |- x:A & \xi;\rho \in [|\Delta;\Gamma|]}
+	{[|x|]_{\xi;\rho} \in [|A|]_\xi} $.
+
+We know that $x:A \in \Gamma$ from the \rulename{Var} rule.
+So, $[|x|]_{\xi;\rho} =\rho(x)\in[|\Gamma(x)|]_\xi = [|A|]_\xi$.
+
+\paragraph{Case (\rulename{Abs})}
+We need to show that
+$ \inference{\Delta;\Gamma |- \l x.t : A -> B & \xi;\rho \in [|\Delta;\Gamma|]}
+	{[|\l x.t|]_{\xi;\rho} \in [|A -> B|]_\xi} $.
+
+By induction, we know that:
+$ \inference{\Delta;\Gamma,x:A |- t : B & \xi';\rho' \in [|\Delta;\Gamma,x:A|]}
+	     {[|t|]_{\xi';\rho'} \in [|B|]_\xi} $.
+
+Since this holds for all $\xi';\rho' \in [|\Delta;\Gamma,x:A|]$, it also holds
+for particular $\xi';\rho'$ such that $\xi'=\xi$ and
+$\rho' = \rho[x \mapsto s]$ for any $s \in [|A|]_\xi' = [|A|]_\xi$.
+Since saturated sets are closed under normalizing weak head expansion,
+$(\l x.[|t|]_{\xi;\rho})~s \in[|B|]_\xi$ for any $s\in[|A|]_\xi$.
+Therefore, $\l x.[|t|]_{\xi;\rho}$ is obviously in the very set,
+which we wanted it to be in. That is,
+\[
+[|\l x.t|]_{\xi;\rho} = \l x.[|t|]_{\xi;\rho}
+\in \{t\in \SN \mid t~s\in[|B|] ~\text{for all}~ s\in[|A|]\} 
+= [|A -> B|]_\xi
+\]
+
+\paragraph{Case (\rulename{App})}
+We need to show that
+$ \inference{\Delta;\Gamma |- t~s : B & \xi;\rho\in[|\Delta;\Gamma|]}{[|t~s|]_{\xi;\rho} \in [|B|]_\xi} $.
+
+By induction we know that
+\[
+\inference{\Delta;\Gamma |- t : A -> B & \xi;\rho\in[|\Delta;\Gamma|]}{[|t|]_{\xi;\rho} \in [|A -> B|]_\xi}
+\qquad
+\inference{\Delta;\Gamma |- s : A & \xi;\rho\in[|\Delta;\Gamma|]}{[|s|]_{\xi;\rho} \in [|A|]_\xi}
+\]
+Then, it is straightforward to see that $[|t~s|]_{\xi;\rho}\in[|B|]_\xi$
+by definition of $[|A -> B|]_\xi$.
+
+\paragraph{Case (\rulename{TyAbs})}
+We need to show that
+$ \inference{\Delta;\Gamma |- t : \forall X.B & \xi;\rho\in[|\Delta;\Gamma|]}
+	{[|t|]_{\xi;\rho} \in [|\forall X.B|]_\xi} $
+
+By induction, we know that
+\[ \inference{\Delta,X;\Gamma |- t : B & \xi';\rho'\in[|\Delta,X;\Gamma|]}
+	{[|t|]_{\xi';\rho'} \in [|B|]_{\xi'}} ~
+	(X\notin\ran(\Gamma))
+\]
+Since this holds for all $\xi';\rho' \in [|\Delta,X;\Gamma|]$ where
+$X\notin\ran(\Gamma)$, it also holds for particular subset such that
+$\xi' = \xi[X:=\mathcal{A}]$ and $\rho'=\rho$ for all $\mathcal{A}\in\SAT$.
+That is,
+\[ [|t|]_{\xi[X:=\mathcal{A}];\rho} \in [|B|]_{\xi[X:=\mathcal{A}]}
+   \quad \text{for all}~\mathcal{A}\in\SAT \]
+From $X\notin\ran(\Gamma)$, we know that
+$[|t|]_{\xi[X:=\mathcal{A}];\rho} = [|t|]_{\xi;\rho}$
+because $\rho$ is independent of what $X$ maps to.
+So, we know that
+\[ [|t|]_{\xi;\rho} \in [|B|]_{\xi[X:=\mathcal{A}]}
+	\quad \text{for all}~\mathcal{A}\in\SAT \]
+By set theoretic definition, this is exactly what we wanted to show:
+\[ [|t|]_{\xi;\rho} \in
+	\bigcap_{\mathcal{A}\in\SAT} [|B|]_{\xi[X:=\mathcal{A}]} \]
+
+\paragraph{Case (\rulename{TyApp})}
+We need to show that
+$ \inference{\Delta;\Gamma |- t : B[A/X] & \xi;\rho\in[|\Delta;\Gamma|]}
+	{[|t|]_{\xi;\rho} \in [|B[A/X]|]_\xi} $
+
+By induction, we know that
+\[ \inference{\Delta;\Gamma |- t : \forall X.B & \xi';\rho'\in[|\Delta;\Gamma|]}
+	{[|t|]_{\xi';\rho'} \in [|\forall X.B|]_{\xi'}}
+\]
+
+TODO easy
 \end{proof}
 \begin{corollary}[strong normalization]
 	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
 \end{corollary}
-\caption[Strong normalization proof for System \F]{
-	A proof of strong normalization for System \F\ via proving
-	soundness of typing with respect to the interpretation
-        where types are interpreted as saturated sets.}
-\label{fig:SNproofF}
-\end{singlespace}
-\end{figure}
+Once we have proved the soundness of typing with respect to interpretation,
+it is easy to see that STLC is strongly normalizing by giving a trivial term
+interpretation $\rho(x) = x$ for all the free variables.
+Note that $[|t|]_{\xi;\rho} = t \in [|A|]_\xi \subset \SN$
+under the trivial interpretation.
+
