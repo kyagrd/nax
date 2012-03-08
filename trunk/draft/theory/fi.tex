@@ -91,15 +91,15 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
                        {\Delta |- A : \kappa'} }
 \]
 \[
-   \inference[($\lambda$)]{\Delta,X^\kappa |- F : \kappa'}
-                          {\Delta |- \lambda X^\kappa.F : \kappa->\kappa'}
+  \inference[($\lambda$)]{|- \kappa & \Delta,X^\kappa |- F : \kappa'}
+                          {\Delta |- \lambda X^\kappa.F : \kappa -> \kappa'}
  ~~~~
    \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
                     & \Delta |- G : \kappa }
                     {\Delta |- F\,G : \kappa'}
 \]
 \[ \newFi{
-   \inference[($\lambda i$)]{\Delta,i^A |- F : \kappa}
+  \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}
                             {\Delta |- \lambda i^A.F : A->\kappa} }
  ~~~~ \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
@@ -109,10 +109,10 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
 \[ \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
                      {\Delta |- A -> B : * }
  ~~~~
-   \inference[($\forall$)]{\Delta, X^\kappa |- B : *}
+   \inference[($\forall$)]{|- \kappa & \Delta, X^\kappa |- B : *}
                           {\Delta |- \forall X^\kappa . B : *}
  ~~~~ \newFi{
-   \inference[($\forall i$)]{\Delta, i^A |- B : *}
+   \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}
                             {\Delta |- \forall i^A . B : *} }
 \]
 
@@ -127,23 +127,26 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
                     {\Delta;\Gamma |- t : B}
 \]
 \[
-   \inference[($->$$I$)]{\Delta;\Gamma,x:A |- t : B}
+   \inference[($->$$I$)]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
                         {\Delta;\Gamma |- \lambda x.t : A -> B}
- ~~~~ ~~~~ ~~~~ ~~~~
+ ~~~~ ~~~~
    \inference[($->$$E$)]{\Delta;\Gamma |- r : A -> B & \Delta;\Gamma |- s : A}
                         {\Delta;\Gamma |- r\;s : B}
 \]
-\[ \inference[($\forall I$)]{\Delta, X^\kappa;\Gamma |- t : B}
+\[ \inference[($\forall I$)]{|- \kappa & \Delta, X^\kappa;\Gamma |- t : B}
                             {\Delta;\Gamma |- t : \forall X^\kappa.B}
- ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~
+			    (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
    \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
                             & \Delta |- G:\kappa }
                             {\Delta;\Gamma |- t : [G/X]B}
 \]
 \[ \newFi{
-   \inference[($\forall I i$)]{\Delta, i^A;\Gamma |- t : B}
+   \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}
                               {\Delta;\Gamma |- t : \forall i^A.B}
-     \big( i\notin\FV(t) \big) }
+   \left(\begin{matrix}
+		i\notin\FV(t),\\
+		i\notin\FV(\Gamma)\end{matrix}\right) }
  ~~~~ \newFi{
    \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
                               & \Delta;\cdot |- s:A}
@@ -183,7 +186,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
    \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
              {\Delta |- (\lambda i^A.F)\,\{s\} = [s/x]F:\kappa} }
 \]
-\[ \inference{\Delta,X^\kappa |- F=F' : \kappa'}
+\[ \inference{|- \kappa & \Delta,X^\kappa |- F=F' : \kappa'}
              {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
  ~~~~
    \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
@@ -191,21 +194,21 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
 \]
  ~~~~
 \[ \newFi{
-   \inference{\Delta,i^A |- F=F' : \kappa}
+   \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}
              {\Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa} }
  ~~~~ \newFi{
    \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
              {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
 \]
-\[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
- ~~~~
-   \inference{\Delta,X^\kappa |- B=B':*}
+\[ \inference{|- \kappa & \Delta,X^\kappa |- B=B':*}
              {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
  ~~~~ \newFi{
-   \inference{\Delta,i^A |- B=B':*}
+   \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}
              {\Delta |- \forall i^A.B=\forall i^A.B':*} }
 \]
-\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+\[ \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+ ~~~~
+   \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
  ~~~~
    \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
              {\Delta |- F = F'' : \kappa}
@@ -217,7 +220,10 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
    \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
              {\Delta;\Gamma |- (\lambda x.t)s=[s/x]t : B}
 \]
-\[ \inference{\Delta;\Gamma |- r=r':A-> B & \Delta;\Gamma |- s=s':A}
+\[ \inference{\Delta |- A:* & \Delta;\Gamma,x:A |- t=t':B}
+             {\Delta;\Gamma |- \lambda x.t = \lambda x.t'\;s':B}
+ ~~~~
+   \inference{\Delta;\Gamma |- r=r':A-> B & \Delta;\Gamma |- s=s':A}
              {\Delta;\Gamma |- r\;s=r'\;s':B}
 \]
 \[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
@@ -225,16 +231,36 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
    \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
              {\Delta;\Gamma |- t=t'':A}
 \]
+\[ \inference{|- \kappa & \Delta, X^\kappa;\Gamma |- t=t' : B}
+             {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
+	     (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
+             & \Delta |- G:\kappa }
+             {\Delta;\Gamma |- t=t' : [G/X]B}
+\]
+\[ \newFi{
+   \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
+             {\Delta;\Gamma |- t=t' : \forall i^A.B}
+   \left(\begin{smallmatrix}
+		i\notin\FV(t),\\
+		i\notin\FV(t'),\\
+		i\notin\FV(\Gamma)\end{smallmatrix}\right) }
+ ~~~~ \newFi{
+   \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
+             & \Delta;\cdot |- s:A}
+             {\Delta;\Gamma |- t=t' : [s/x]B} }
+\]
 ~\\
 \paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
-\[ \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
+$ \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
  ~~~~
    \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
    \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
  ~~~~
    \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
-\]
+$
 \end{framed}
 \caption{Equality rules and Reduction rules for \Fi}
 \label{fig:eqFi}
@@ -547,6 +573,14 @@ then $\Delta^\circ |- F^\circ : \kappa^\circ$.
 If $\Delta |- \Gamma$ and $\Delta;\Gamma |- t : A$
 then $\Delta^\circ;\Gamma^\circ |- t : A^\circ$.
 \end{theorem}
+
+%%%%% TODO
+%% Some simple index erasure example
+%% 
+%% Subject reduction
+%% 
+%% Lectures on Curry Howard Isomrophism --
+
 
 \begin{comment}
 \subsection{\Fi\ in regards to PTS}
