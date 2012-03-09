@@ -91,7 +91,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
                        {\Delta |- A : \kappa'} }
 \]
 \[
-  \inference[($\lambda$)]{|- \kappa & \Delta,X^\kappa |- F : \kappa'}
+  \inference[($\lambda$)]{|- \kappa:\square & \Delta,X^\kappa |- F : \kappa'}
                           {\Delta |- \lambda X^\kappa.F : \kappa -> \kappa'}
  ~~~~
    \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
@@ -109,7 +109,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
 \[ \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
                      {\Delta |- A -> B : * }
  ~~~~
-   \inference[($\forall$)]{|- \kappa & \Delta, X^\kappa |- B : *}
+   \inference[($\forall$)]{|- \kappa:\square & \Delta, X^\kappa |- B : *}
                           {\Delta |- \forall X^\kappa . B : *}
  ~~~~ \newFi{
    \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}
@@ -133,7 +133,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
    \inference[($->$$E$)]{\Delta;\Gamma |- r : A -> B & \Delta;\Gamma |- s : A}
                         {\Delta;\Gamma |- r\;s : B}
 \]
-\[ \inference[($\forall I$)]{|- \kappa & \Delta, X^\kappa;\Gamma |- t : B}
+\[ \inference[($\forall I$)]{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t : B}
                             {\Delta;\Gamma |- t : \forall X^\kappa.B}
 			    (X\notin\FV(\Gamma))
  ~~~~ ~~~~
@@ -186,7 +186,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
    \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
              {\Delta |- (\lambda i^A.F)\,\{s\} = [s/x]F:\kappa} }
 \]
-\[ \inference{|- \kappa & \Delta,X^\kappa |- F=F' : \kappa'}
+\[ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}
              {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
  ~~~~
    \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
@@ -200,7 +200,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
    \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
              {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
 \]
-\[ \inference{|- \kappa & \Delta,X^\kappa |- B=B':*}
+\[ \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}
              {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
  ~~~~ \newFi{
    \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}
@@ -231,7 +231,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
    \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
              {\Delta;\Gamma |- t=t'':A}
 \]
-\[ \inference{|- \kappa & \Delta, X^\kappa;\Gamma |- t=t' : B}
+\[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}
              {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
 	     (X\notin\FV(\Gamma))
  ~~~~ ~~~~
@@ -385,7 +385,8 @@ index variables already in scope. For example, $\lambda i^A.F\{i\}$ should be
 well-kinded under a context where $F$ is well-kinded,
 justified by the following derivation:
 \[ \inference[($\lambda i$)]
-      { \inference[($@i$)]{ \Delta, i^A |- F : A -> \kappa
+      { \cdot |- A:* &
+	\inference[($@i$)]{ \Delta, i^A |- F : A -> \kappa
                           & \inference[($:i$)]{ i^A\in \Delta,i^A
                                               & \Delta |- \cdot }
                                               {\Delta,i^A;\cdot |- i:A}
@@ -398,15 +399,42 @@ justified by the following derivation:
 
 \subsection{Metatheory?}
 
-\begin{proposition}[well-formed type level context ensures well-sorted kinding judgement]
+Before go on we prove subjected reduction and strong normalization,
+we need to check some basic well-fromeness properties of the sorting, kinding,
+and typing rules of \Fi\ such that dervations under well fromed contexts
+entail well-formed results. More specifically, we want to make sure that
+three propositions hold: sotring derivations entail well-formed sorts
+(Proposition \ref{prop:wfsort}), kinding derivations under well-formed
+type level contexts entail well-sorted kinds (Proposition \ref{prop:wfkind}),
+and typing derivations under well-formed type and term level contexts entail
+well-kinded types (Proposition \ref{prop:wftype}). Techincally, to be rigourous
+about the induction principle for the proof, these three properties should be
+considered as projections of one a big conjucted property -- a derivation
+for a judgment of either sorting, kinding, or typing under well-formed contexts
+entail either a well-formed sort (when it is a sorting judgment),
+a well-sorted kind (when it is a kinding judgment), or
+a well-kinded type (when it is a typing judgment) -- since the definition
+of sorting, kinding, and typing rules are mutually recursive. Thus, we can
+prove this well-formeness property of \Fi\ by induction on the derivation
+of a judgment, which can be either one of the three forms. Here, I illustrate
+the proof for the three propositions as if they were sepreate proofs mutually
+referencing each other, since they are easier to understand that way. But,
+techicall, when I say ``by induction'' during the proofs of these propositions,
+what I really mean is the induction hypothesis of that big conjucted property.
+
+\begin{proposition}[sorting derivations entail well-formed sorts]
+\label{prop:wfsort}
+$ \inference{ |- \kappa : \mathfrak{s}}{ \mathfrak{s}=\square } $
+\end{proposition}
+\begin{proof}Obvious since $\square$ is the only sort in \Fi.\end{proof}
+
+\begin{proposition}[kinding derivations under well-formed type level context
+	       	entails well-sorted kinds]
+\label{prop:wfkind}
 \[ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa:\square }
 \]
 \end{proposition}
 \begin{proof}
-Mutual induction on the derivation on the kinding judgement
-and the typing judgement \KYA{since proof of this proposition and the next
-proposition depends on each other, but I'm a little bit confusing what
-exactly I need to induct on.}
 \begin{itemize}
 \item[case] ($Var$)
 	Trivial by the second well-formedness rule of $\Delta$.
@@ -417,14 +445,31 @@ exactly I need to induct on.}
 	mutual induction with the lemma that type equality rules ensure
 	that both sides of equality are well-kinded.
 \item[case] ($\lambda$)
-	By induction and the second well-formedness rule of $\Delta$
+	By induction and Proposition \ref{prop:wfsort} we know
+	that $|- \kappa:\square$.
+	By the second well-formedness rule of $\Delta$,
+	we know that $|- \Delta,X^\kappa$
+	since we alredy know that $|- \kappa:\square$ and $|- \Delta$.
+	By induction, we know that $|- \kappa':\square$
+	since we already know that $|- \Delta,X^\kappa$ and
+	we know that $\Delta,X^\kappa|- F:\kappa'$ from induciton hyphothesis.
+	By the sorting rule ($R$), we know that $|- \kappa -> \kappa':\square$
+	since we already know that $|- \kappa:\square$ and $|- \kappa':\square$.
 \item[case] ($@$)
-	By induction.
+	By induction, easy.
 \item[case] ($\lambda i$)
-	By induction and the third well-formedness rule of $\Delta$.
+	By induction and Proposition \ref{prop:wftype} we know
+	that $\cdot|- A:*$ since we already know that $|- \Delta$.
+	By the third well-formedness rule of $\Delta$,
+	we know that $|- \Delta,i^A$
+	since we alredy know that $\cdot|- A:*$ and $|- \Delta$.
+	By induction, we know that $|- \kappa:\square$
+	since we already know that $|- \Delta,i^A$ and
+	we know that $\Delta,i^A|- F:\kappa$ by induction hypothesis.
+	By the sorting rule ($Ri$), we know that $|- A -> \kappa:\square$
+	since we already know that $\cdot |- A:*$ and $|- \kappa:\square$.
 \item[case] ($@i$)
-	By induction provided that we can prove the next proposition that
-	well-formed term level context ensures well-kinded typing judgement.
+	By induction and Proposition \ref{prop:wftype}, easy.
 \item[case] ($->$)
 	Trivial since $|- * : \square$.
 \item[case] ($\forall$)
@@ -435,6 +480,7 @@ exactly I need to induct on.}
 \end{proof}
 
 \begin{proposition}[well-formed term level context ensures well-kinded typing judgement]
+\label{prop:wftype}
 \[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * }
 \]
 \end{proposition}
