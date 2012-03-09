@@ -150,7 +150,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
  ~~~~ \newFi{
    \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
                               & \Delta;\cdot |- s:A}
-                              {\Delta;\Gamma |- t : [s/x]B} }
+                              {\Delta;\Gamma |- t : [s/i]B} }
 \]
 \end{framed}
 \caption{Syntax and Typing rules of \Fi}
@@ -402,70 +402,66 @@ justified by the following derivation:
 Before go on we prove subjected reduction and strong normalization,
 we need to check some basic well-fromeness properties of the sorting, kinding,
 and typing rules of \Fi\ such that dervations under well fromed contexts
-entail well-formed results. More specifically, we want to make sure that
-three propositions hold: sotring derivations entail well-formed sorts
+give well-formed results. More specifically, we want to make sure that
+three propositions hold: sotring derivations result in well-formed sorts
 (Proposition \ref{prop:wfsort}), kinding derivations under well-formed
-type level contexts entail well-sorted kinds (Proposition \ref{prop:wfkind}),
-and typing derivations under well-formed type and term level contexts entail
+type level contexts result in well-sorted kinds (Proposition \ref{prop:wfkind}),
+and typing derivations under well-formed type and term level contexts result in
 well-kinded types (Proposition \ref{prop:wftype}). Techincally, to be rigourous
 about the induction principle for the proof, these three properties should be
 considered as projections of one a big conjucted property -- a derivation
 for a judgment of either sorting, kinding, or typing under well-formed contexts
-entail either a well-formed sort (when it is a sorting judgment),
+results in either a well-formed sort (when it is a sorting judgment),
 a well-sorted kind (when it is a kinding judgment), or
 a well-kinded type (when it is a typing judgment) -- since the definition
 of sorting, kinding, and typing rules are mutually recursive. Thus, we can
 prove this well-formeness property of \Fi\ by induction on the derivation
 of a judgment, which can be either one of the three forms. Here, I illustrate
-the proof for the three propositions as if they were sepreate proofs mutually
-referencing each other, since they are easier to understand that way. But,
-techicall, when I say ``by induction'' during the proofs of these propositions,
-what I really mean is the induction hypothesis of that big conjucted property.
+the proof for the three propositions as if they were separate proofs mutually
+referencing each other, since they are easier to understand that way.
+But, technically, when I say ``by induction'' during the proofs, what I
+really mean is the induction hypothesis of that big conjuncted property.
 
-\begin{proposition}[sorting derivations entail well-formed sorts]
+\begin{proposition}[sorting derivations result in well-formed sorts]
 \label{prop:wfsort}
 $ \inference{ |- \kappa : \mathfrak{s}}{ \mathfrak{s}=\square } $
 \end{proposition}
 \begin{proof}Obvious since $\square$ is the only sort in \Fi.\end{proof}
 
-\begin{proposition}[kinding derivations under well-formed type level context
-	       	entails well-sorted kinds]
+\begin{proposition}[kinding derivations under well-formed contexts
+	       	result in well-sorted kinds]
 \label{prop:wfkind}
 \[ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa:\square }
 \]
 \end{proposition}
-\begin{proof}
+\begin{proof} By induction on the derivation.
 \begin{itemize}
 \item[case] ($Var$)
 	Trivial by the second well-formedness rule of $\Delta$.
-\item[case] ($Conv$)
-	By induction and a helper lemma that kind equality rules ensure
-	that both sides of equality are well-sorted. This lemma should
-	be straightforward to prove, but this lemma also is needs
-	mutual induction with the lemma that type equality rules ensure
-	that both sides of equality are well-kinded.
-\item[case] ($\lambda$)
+\item[case] ($Conv$) \\
+	By induction and Lemma \ref{lem:wfeqkind}.
+\item[case] ($\lambda$) \\
 	By induction and Proposition \ref{prop:wfsort} we know
-	that $|- \kappa:\square$.
+	that $|- \kappa:\square$.\\
 	By the second well-formedness rule of $\Delta$,
-	we know that $|- \Delta,X^\kappa$
-	since we alredy know that $|- \kappa:\square$ and $|- \Delta$.
+	we know that $|- \Delta,X^\kappa$ since we already know
+	that $|- \kappa:\square$ and $|- \Delta$ from the property statement.\\
 	By induction, we know that $|- \kappa':\square$
 	since we already know that $|- \Delta,X^\kappa$ and
-	we know that $\Delta,X^\kappa|- F:\kappa'$ from induciton hyphothesis.
+	that $\Delta,X^\kappa|- F:\kappa'$ from induction hypothesis.\\
 	By the sorting rule ($R$), we know that $|- \kappa -> \kappa':\square$
 	since we already know that $|- \kappa:\square$ and $|- \kappa':\square$.
 \item[case] ($@$)
 	By induction, easy.
-\item[case] ($\lambda i$)
+\item[case] ($\lambda i$)\\
 	By induction and Proposition \ref{prop:wftype} we know
-	that $\cdot|- A:*$ since we already know that $|- \Delta$.
+	that $\cdot|- A:*$.
 	By the third well-formedness rule of $\Delta$,
-	we know that $|- \Delta,i^A$
-	since we alredy know that $\cdot|- A:*$ and $|- \Delta$.
+	we know that $|- \Delta,i^A$ since we already know that $\cdot|- A:*$ and
+	that $|- \Delta$ from the property statement.\\
 	By induction, we know that $|- \kappa:\square$
 	since we already know that $|- \Delta,i^A$ and
-	we know that $\Delta,i^A|- F:\kappa$ by induction hypothesis.
+	that $\Delta,i^A|- F:\kappa$ from the induction hypothesis.\\
 	By the sorting rule ($Ri$), we know that $|- A -> \kappa:\square$
 	since we already know that $\cdot |- A:*$ and $|- \kappa:\square$.
 \item[case] ($@i$)
@@ -479,25 +475,25 @@ $ \inference{ |- \kappa : \mathfrak{s}}{ \mathfrak{s}=\square } $
 \end{itemize}
 \end{proof}
 
-\begin{proposition}[well-formed term level context ensures well-kinded typing judgement]
+The basic structure of the proof for the following proposition is similar to
+above. So, I illustrate the proof for most of the cases, which can be done
+by applying the induction hypothesis, rather bravely. I elaborate more on
+interesting cases ($\forall E$) and ($\forall Ei$) which involve substitutions
+in the types entailed from the typing judgments.
+\begin{proposition}[typing derivations under well-formed contexts result in
+	well-sorted kinds]
 \label{prop:wftype}
 \[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * }
 \]
 \end{proposition}
-\begin{proof}
-The same induction principle as the previous proposition since the proof
-of these propositions are mutually recursive.
+\begin{proof} By induction on the derivation.
 \begin{itemize}
 \item[case] ($:$)
 	Trivial by the second well-formedness rule of $\Gamma$.
 \item[case] ($:i$)
 	Trivial by the third the well-formedness rule of $\Delta$.
 \item[case] ($=$)
-	By induction and a helper lemma that type equality rules ensure
-	that both sides of equality are well-kinded. This lemma should
-	be straightforward to prove, but mutually inductive proof with
-	the lemma on kind equality rules, which we used in the proof of
-	the previous proposition.
+	By induction and Lemma \ref{lem:wfeqtype}.
 \item[case] ($->$$I$)
 	By induction and well-formedness of $\Gamma$.
 \item[case] ($->$$E$)
@@ -505,17 +501,61 @@ of these propositions are mutually recursive.
 \item[case] ($\forall I$)
 	By induction and well-formedness of $\Delta$.
 \item[case] ($\forall E$)
-	TODO some sort of substitution lemma?
+	By induction we know that $\Delta |- \forall X^\kappa.B : *$.
+	By the kinding rule ($\forall$), which is the only kinding rule
+	able to derive $\Delta |- \forall X^\kappa.B : *$, we know
+	that $\Delta,X^\kappa |- B : *$.
+	Then, we use the type substitution lemma (\ref{lem:tysubst}).
 \item[case] ($\forall Ii$)
 	By induction and well-formedness of $\Delta$.
 \item[case] ($\forall Ei$)
-	TODO some sort of substitution lemma?
+	By induction we know that $\Delta |- \forall i^A.B : *$.
+	By the kinding rule ($\forall$), which is the only kinding rule
+	able to derive $\Delta |- \forall i^A.B : *$, we know
+	that $\Delta,i^A |- B : *$.
+	Then, we use the index substitution lemma (\ref{lem:ixsubst}).
 \end{itemize}
 \end{proof}
-\KYA{After going through the proof sketch for the two propositions above,
-I relaized that the rules for \Fi\ needs more well-typeness and well-kindness
-conditions (\eg, in ($\forall I$) and ($\forall Ii$)), unlike \Fw.
-We need some adjustment on the \Fi\ rules.}
+
+\begin{lemma}\label{lem:wfeqkind}
+$ \inference{|- \kappa = \kappa':\square}
+	{|- \kappa:\square \quad |- \kappa':\square} $
+\end{lemma}
+\begin{proof}
+	By induction on the derivation of kind equality
+	and using the kinding rules.
+\end{proof}
+
+\begin{lemma}\label{lem:wfeqtype}
+$ \inference{\Delta |- F = F':\kappa}
+	{\Delta |- F:\kappa \quad \Delta |- F':\kappa} $
+\end{lemma}
+\begin{proof}
+	By induction on the derivation of type equality
+	and using the kinding rules.
+\end{proof}
+
+\begin{lemma}\label{lem:wfeqterm}
+$ \inference{\Delta,\Gamma |- t = t':\kappa}
+	{\Delta,\Gamma |- t:\kappa \quad \Delta,\Gamma |- t':\kappa} $
+\end{lemma}
+\begin{proof}
+	By induction on the derivation of term equality
+	and using the typing rules.
+\end{proof}
+
+\begin{lemma}[type substitution]\label{lem:tysubst}
+$ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+	{\Delta |- [G/X]F:\kappa'} $
+\end{lemma}
+
+\begin{lemma}[index substitution]\label{lem:ixsubst}
+$ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+	{\Delta |- [s/i]F:\kappa} $
+\end{lemma}
+
+
+
 
 \begin{proposition}[anti-dependency on arrow kinds]
 \[ \inference{ |- \Delta,X^\kappa
@@ -695,23 +735,6 @@ That is, CC is an instance of PTS where
   \calR=\{(*,*,*),(\square,*,*),(\square,\square,\square)
          ,(*,\square,\square)\}\]
 
-%% \KYA{ below is what I understood marcelo maybe wrong}
-%% \Fi\ is also an extension of \Fw\, but a restriction of CC.  Instead of
-%% allowing full value dependency (given by $(*,\square,\square)$ in CC),
-%% we only allow value dependency partially via special syntax as follows:
-%% \[
-%%  \inference[Let]{\Gamma |- a:A & \Gamma, x:A |- b:B}
-%%                 {\Gamma |- \mathsf{let}~x:A=a~\mathsf{in}~b : [a/x]B}
-%% \]
-%% \[
-%%  \inference[Pi$_{(*,\square,\square)}$]
-%%      {\Gamma |- A:* & \Gamma |- B:\square}
-%%      {\Gamma |- (x:A)-> B : \square}
-%% \]
-%% The Let rule can be derived in CC by combining Pi rule and App rule.  However,
-%% we only allow value dependency $(*,\square,\square)$ in this limited form,
-%% but disallow arbitrary lambda abstractions to form value dependent functions
-%% by limiting the Pi rule on $(*,\square,\square)$.
 
 Normalization of \Fi\ is automatic since \Fi\ is a strict subset of CC,
 which is known to be strongly normalizing.
