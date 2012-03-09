@@ -500,19 +500,19 @@ in the types entailed from the typing judgments.
 	By induction.
 \item[case] ($\forall I$)
 	By induction and well-formedness of $\Delta$.
-\item[case] ($\forall E$)
-	By induction we know that $\Delta |- \forall X^\kappa.B : *$.
+\item[case] ($\forall E$)\\
+	By induction we know that $\Delta |- \forall X^\kappa.B : *$.\\
 	By the kinding rule ($\forall$), which is the only kinding rule
 	able to derive $\Delta |- \forall X^\kappa.B : *$, we know
-	that $\Delta,X^\kappa |- B : *$.
+	that $\Delta,X^\kappa |- B : *$.\\
 	Then, we use the type substitution lemma (\ref{lem:tysubst}).
 \item[case] ($\forall Ii$)
 	By induction and well-formedness of $\Delta$.
-\item[case] ($\forall Ei$)
-	By induction we know that $\Delta |- \forall i^A.B : *$.
-	By the kinding rule ($\forall$), which is the only kinding rule
+\item[case] ($\forall Ei$)\\
+	By induction we know that $\Delta |- \forall i^A.B : *$.\\
+	By the kinding rule ($\forall i$), which is the only kinding rule
 	able to derive $\Delta |- \forall i^A.B : *$, we know
-	that $\Delta,i^A |- B : *$.
+	that $\Delta,i^A |- B : *$.\\
 	Then, we use the index substitution lemma (\ref{lem:ixsubst}).
 \end{itemize}
 \end{proof}
