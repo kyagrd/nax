@@ -397,9 +397,9 @@ justified by the following derivation:
 
 
 
-\subsection{Metatheory?}
+\subsection{Metatheory}
 
-Before go on we prove subjected reduction and strong normalization, we need to
+Before go on to prove subjected reduction and strong normalization, we need to
 check some basic well-formedness properties for the derivations of \Fi.
 We want to show that the sorting, kinding, and typing derivations give
 well-formed results under well-formed contexts. That is, sorting derivations
@@ -449,6 +449,7 @@ a well-sorted kind (when it is a kinding judgment), or
 a well-kinded type (when it is a typing judgment),
 under well-formed contexts for the judgment (no context for sorting judgments,
 $\Delta$ for kinding judgments, and $\Delta;\Gamma$ for typing judgments).
+
 We can prove the big well-formedness property of \Fi\ by induction on
 the derivation of a judgment, which can be either one of the three forms.
 Here, I illustrate the proof for the three propositions as if they were
@@ -554,7 +555,7 @@ in the types entailed from the typing judgments.
 \end{itemize}
 \end{proof}
 
-\begin{lemma}\label{lem:wfeqkind}
+\begin{lemma}[kind equality is well-sorted]\label{lem:wfeqkind}
 $ \inference{|- \kappa = \kappa':\square}
 	{|- \kappa:\square \quad |- \kappa':\square} $
 \end{lemma}
@@ -563,26 +564,34 @@ $ \inference{|- \kappa = \kappa':\square}
 	and using the sorting rules.
 \end{proof}
 
-\begin{lemma}\label{lem:wfeqtype}
+\begin{lemma}[type equality is well-kinded]\label{lem:wfeqtype}
 $ \inference{\Delta |- F = F':\kappa}
 	{\Delta |- F:\kappa \quad \Delta |- F':\kappa} $
 \end{lemma}
 \begin{proof}
 	By induction on the derivation of type equality
 	and using the kinding rules.
+
 	Also use the type substitution lemma (Lemma \ref{lem:tysubst})
 	and the index substitution lemma (Lemma \ref{lem:ixsubst}).
 \end{proof}
 
-\begin{lemma}\label{lem:wfeqterm}
-$ \inference{\Delta,\Gamma |- t = t':\kappa}
-	{\Delta,\Gamma |- t:\kappa \quad \Delta,\Gamma |- t':\kappa} $
+\begin{lemma}[term equality is well-typed]\label{lem:wfeqterm}
+$ \inference{\Delta,\Gamma |- t = t':A}
+	{\Delta,\Gamma |- t:A \quad \Delta,\Gamma |- t':A} $
 \end{lemma}
 \begin{proof}
 	By induction on the derivation of term equality
 	and using the typing rules.
+
 	Also use the term substitution lemma (Lemma \ref{lem:tmsubst}).
 \end{proof}
+
+The proofs for the three lemmas above are straightforward
+once we have dealt with the interesting cases for the equality rules
+involving substitution. We can prove those cases by the substitution lemmas.
+All the other cases are trivial since the other equality rules follow the
+same structure of the sorting, kinding, and typing rules.
 
 \begin{lemma}[type substitution]\label{lem:tysubst}
 $ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
@@ -596,9 +605,8 @@ $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
 
 \begin{lemma}[term substitution]\label{lem:tmsubst}
 $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
-	{\Delta,\Gamma |- [s/x]B:\kappa} $
+	{\Delta,\Gamma |- [s/x]t:B} $
 \end{lemma}
-
 
 
 
@@ -608,6 +616,12 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
              { X\notin\FV(\kappa') }
 \]
 \end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
+	Note that $|- \kappa'$ does not involve any type level context.
+
+	Therefore, $X$ cannot appear free in $\kappa'$.
+\end{proof}
 
 \begin{proposition}[anti-dependency on indexed arrow kinds]
 \[ \inference{ |- \Delta,i^A
@@ -615,6 +629,12 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
              { i\notin\FV(\kappa) }
 \]
 \end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
+	Note that $|- \kappa'$ does not involve any type level context.
+
+	Therefore, $i$ cannot appear free in $\kappa'$.
+\end{proof}
 
 \begin{proposition}[anti-dependency on arrow types]
 \[ \inference{ \Delta |- \Gamma,x:A
@@ -622,11 +642,19 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
              { x\notin\FV(B) }
 \]
 \end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wftype}, $\Delta |- B$.
+	Note that $\Delta |- \kappa'$ does not involve any term level context.
+
+	Therefore, $x$ cannot appear free in $B$.
+\end{proof}
+
 
 \begin{remark} Our system is more strong??? than anti-dependency on arrow types
 TODO
 \end{remark}
 
+\paragraph{}
 \begin{definition}[index erasure]
 \[ \fbox{$\kappa^\circ$}
  ~~~~
@@ -683,26 +711,25 @@ TODO
 \end{definition}
 
 \begin{lemma}[index erasure on well-formed type level contexts]
-If $|- \Delta$ then $|- \Delta^\circ$.
+	$\inference{|- \Delta}{|- \Delta^\circ}$
 \end{lemma}
 
 \begin{lemma}[index erasure on well-formed term level contexts]
-If $\Delta |- \Gamma$ then $\Delta^\circ |- \Gamma^\circ$.
+	$\inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ}$
 \end{lemma}
 
-\begin{lemma}[index erasure on well-sorted kinds]
-If $|- \Delta$ and $\Delta |- \kappa : \square$
-then $\Delta^\circ |- \kappa^\circ : \square$.
-\end{lemma}
+\begin{theorem}[index erasure on well-sorted kinds]
+	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$.
+\end{theorem}
 
-\begin{lemma}[index erasure on well-kinded type constructors]
-If $|- \Delta$ and $\Delta |- F : \kappa$
-then $\Delta^\circ |- F^\circ : \kappa^\circ$.
-\end{lemma}
+\begin{theorem}[index erasure on well-kinded type constructors]
+	$\inference{|- \Delta & \Delta |- F : \kappa}
+		{\Delta^\circ |- F^\circ : \kappa^\circ}$.
+\end{theorem}
 
 \begin{theorem}[index erasure on well-typed terms]
-If $\Delta |- \Gamma$ and $\Delta;\Gamma |- t : A$
-then $\Delta^\circ;\Gamma^\circ |- t : A^\circ$.
+	$\inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}$.
 \end{theorem}
 
 %%%%% TODO
