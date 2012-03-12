@@ -710,6 +710,13 @@ TODO
 \]
 \end{definition}
 
+\begin{theorem}[index erasure on well-sorted kinds]
+	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$.
+\end{theorem}
+\begin{proof}
+	By induction on the sorting derivation.
+\end{proof}
+
 \begin{lemma}[index erasure on well-formed type level contexts]
 	$\inference{|- \Delta}{|- \Delta^\circ}$
 \end{lemma}
@@ -717,10 +724,6 @@ TODO
 \begin{lemma}[index erasure on well-formed term level contexts]
 	$\inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ}$
 \end{lemma}
-
-\begin{theorem}[index erasure on well-sorted kinds]
-	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$.
-\end{theorem}
 
 \begin{theorem}[index erasure on well-kinded type constructors]
 	$\inference{|- \Delta & \Delta |- F : \kappa}
