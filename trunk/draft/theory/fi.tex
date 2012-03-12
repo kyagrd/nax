@@ -332,8 +332,8 @@ In addition to the rules ($\lambda i$), ($@ i$), and ($\forall i$),
 we need a conversion rule \newFi{(Conv)} at kind level. This is because
 the new extension to the kind syntax $A -> \kappa$ involves types.
 Since kind syntax involves types, we need more than simple structural
-equality over kinds. The equality over kinds is the usual structural
-equality extended by type equality when comparing indexed arrow kinds
+equality over kinds. The equality over kinds is the usual structural equality
+extended by type constructor equality when comparing indexed arrow kinds
 (see \Fig{eqFi}).
 
 \paragraph{Terms and their typing rules}
@@ -417,7 +417,7 @@ the induction principle used in the proof.
 		roughly\footnote{Technically,
     this is not yet completely rigorous since there are three more forms of
     judgments in the mutually recursive definition. The \emph{kind equality},
-    \emph{type equality}, and \emph{term equality} rules are part of
+    \emph{type considered equality}, and \emph{term equality} rules are part of
     the mutually recursive definition along with the sorting, kinding, and
     typing rules. So, the complete description of the big well-formedness
     property will consist of six cases, which correspond to
@@ -513,13 +513,13 @@ $ \inference{ |- \kappa : \mathfrak{s} }{ \mathfrak{s}=\square } $
 \end{itemize}
 \end{proof}
 
-The basic structure of the proof for the following proposition is similar to
-above. So, I illustrate the proof for most of the cases, which can be done
-by applying the induction hypothesis, rather bravely. I elaborate more on
-interesting cases ($\forall E$) and ($\forall Ei$) which involve substitutions
-in the types entailed from the typing judgments.
+The basic structure of the proof for the following proposition on typing
+derivations is similar to above. So, I illustrate the proof for most of
+the cases, which can be done by applying the induction hypothesis, rather
+bravely. I elaborate more on interesting cases ($\forall E$) and ($\forall Ei$)
+which involve substitutions in the types resulting from the typing judgments.
 \begin{proposition}[typing derivations under well-formed contexts result in
-	well-sorted kinds]
+	well-kinded types]
 \label{prop:wftype}
 \[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * }
 \]
@@ -564,12 +564,12 @@ $ \inference{|- \kappa = \kappa':\square}
 	and using the sorting rules.
 \end{proof}
 
-\begin{lemma}[type equality is well-kinded]\label{lem:wfeqtype}
+\begin{lemma}[type constructor equality is well-kinded]\label{lem:wfeqtype}
 $ \inference{\Delta |- F = F':\kappa}
 	{\Delta |- F:\kappa \quad \Delta |- F':\kappa} $
 \end{lemma}
 \begin{proof}
-	By induction on the derivation of type equality
+	By induction on the derivation of type constructor equality
 	and using the kinding rules.
 
 	Also use the type substitution lemma (Lemma \ref{lem:tysubst})
@@ -711,29 +711,62 @@ TODO
 \end{definition}
 
 \begin{theorem}[index erasure on well-sorted kinds]
-	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$.
+\label{thm:ierasesorting}
+	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
 \end{theorem}
 \begin{proof}
 	By induction on the sorting derivation.
 \end{proof}
+\begin{remark}
+For any well-sorted kind $\kappa$ in \Fi,
+$\kappa^\circ$ is a kind in \Fw.
+\end{remark}
 
-\begin{lemma}[index erasure on well-formed type level contexts]
+\begin{theorem}[index erasure on well-formed type level contexts]
+\label{thm:ierasetyctx}
 	$\inference{|- \Delta}{|- \Delta^\circ}$
-\end{lemma}
+\end{theorem}
+\begin{proof}
+	By induction on the derivation for well-formed type level context
+	and using Theorem \ref{thm:ierasesorting}.
+\end{proof}
+\begin{remark}
+For any well-formed type level context $\Delta$ in \Fi,
+$\Delta^\circ$ is a well-fomred type level context in \Fw.
+\end{remark}
 
-\begin{lemma}[index erasure on well-formed term level contexts]
+\begin{theorem}[index erasure on well-formed term level contexts]
+\label{thm:ierasetmctx}
 	$\inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ}$
-\end{lemma}
+\end{theorem}
 
 \begin{theorem}[index erasure on well-kinded type constructors]
+\label{thm:ierasekinding}
 	$\inference{|- \Delta & \Delta |- F : \kappa}
-		{\Delta^\circ |- F^\circ : \kappa^\circ}$.
+		{\Delta^\circ |- F^\circ : \kappa^\circ}$
 \end{theorem}
 
 \begin{theorem}[index erasure on well-typed terms]
+\label{thm:ierasetyping}
 	$\inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
-		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}$.
+		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}$
 \end{theorem}
+
+\begin{theorem}[index erasure on kind equality]
+	$\inference{|- \kappa=\kappa':\square}
+		{|- \kappa^\circ=\kappa'^\circ:\square}$
+\end{theorem}
+
+\begin{theorem}[index erasure on type constructor equality]
+	$\inference{\Delta |- F=F':\kappa}
+		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}$
+\end{theorem}
+
+\begin{theorem}[index erasure on term equality]
+	$\inference{\Delta;\Gamma |- t=t':A}
+		{\Delta^\circ;\Gamma^\circ |- t=t':A^\circ}$
+\end{theorem}
+
 
 %%%%% TODO
 %% Some simple index erasure example
