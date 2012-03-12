@@ -399,32 +399,69 @@ justified by the following derivation:
 
 \subsection{Metatheory?}
 
-Before go on we prove subjected reduction and strong normalization,
-we need to check some basic well-fromeness properties of the sorting, kinding,
-and typing rules of \Fi\ such that dervations under well fromed contexts
-give well-formed results. More specifically, we want to make sure that
-three propositions hold: sotring derivations result in well-formed sorts
-(Proposition \ref{prop:wfsort}), kinding derivations under well-formed
-type level contexts result in well-sorted kinds (Proposition \ref{prop:wfkind}),
-and typing derivations under well-formed type and term level contexts result in
-well-kinded types (Proposition \ref{prop:wftype}). Techincally, to be rigourous
-about the induction principle for the proof, these three properties should be
-considered as projections of one a big conjucted property -- a derivation
-for a judgment of either sorting, kinding, or typing under well-formed contexts
+Before go on we prove subjected reduction and strong normalization, we need to
+check some basic well-formedness properties for the derivations of \Fi.
+We want to show that the sorting, kinding, and typing derivations give
+well-formed results under well-formed contexts. That is, sorting derivations
+result in well-formed sorts (Proposition \ref{prop:wfsort}),
+kinding derivations result in well-sorted kinds under well-formed
+type level contexts (Proposition \ref{prop:wfkind}), and typing derivations
+result in well-kinded types under well-formed type and term level contexts
+(Proposition \ref{prop:wftype}).
+
+Since the definitions of sorting, kinding, and typing rules are
+mutually recursive, these three properties should really be considered as
+one big property (illustrated below) in order to be more rigorous about
+the induction principle used in the proof.
+\begin{proposition*}[The big well-formedness propoerty of \Fi,
+		roughly\footnote{Technically,
+    this is not yet completely rigorous since there are three more forms of
+    judgments in the mutually recursive definition. The \emph{kind equality},
+    \emph{type equality}, and \emph{term equality} rules are part of
+    the mutually recursive definition along with the sorting, kinding, and
+    typing rules. So, the complete description of the big well-formedness
+    property will consist of six cases, which correspond to
+    Proposition \ref{prop:wfsort}, Proposition \ref{prop:wfkind},
+    Proposition \ref{prop:wftype}, Lemma \ref{lem:wfeqkind},
+    Lemma \ref{lem:wfeqtype}, and Lemma \ref{lem:wfeqterm}.  }  ]~
+\begin{quote}
+\begin{itemize}
+\item[case] \fbox{$ |- \kappa : \square $}\qquad\quad
+ $ \inference{ |- \kappa : \mathfrak{s} }{ \mathfrak{s}=\square } $
+ \qquad\qquad\qquad~~ \text{(corresponds to Proposition \ref{prop:wfsort})} \\
+\item[case] \fbox{$ \Delta |- F : \kappa $}\qquad\quad
+ $ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa:\square } $
+ \qquad \text{(corresponds to Proposition \ref{prop:wfkind})}\\
+\item[case] \fbox{$ \Delta;\Gamma |- t:A $}\quad
+ $ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * } $
+ \qquad \text{(corresponds to Proposition \ref{prop:wftype})}\\
+\end{itemize}
+\end{quote}
+\end{proposition*}\noindent
+The big well-formedness property about derivations for a judgment,
+which can be either one of the three forms --
+\fbox{$ |- \kappa : \square $} (sorting),
+\fbox{$ \Delta |- F : \kappa $} (kinding), and
+\fbox{$ \Delta;\Gamma |- t:A $} typing.
+That is, a derivation for a judgment of either sorting, kinding, or typing
 results in either a well-formed sort (when it is a sorting judgment),
 a well-sorted kind (when it is a kinding judgment), or
-a well-kinded type (when it is a typing judgment) -- since the definition
-of sorting, kinding, and typing rules are mutually recursive. Thus, we can
-prove this well-formeness property of \Fi\ by induction on the derivation
-of a judgment, which can be either one of the three forms. Here, I illustrate
-the proof for the three propositions as if they were separate proofs mutually
-referencing each other, since they are easier to understand that way.
-But, technically, when I say ``by induction'' during the proofs, what I
-really mean is the induction hypothesis of that big conjuncted property.
+a well-kinded type (when it is a typing judgment),
+under well-formed contexts for the judgment (no context for sorting judgments,
+$\Delta$ for kinding judgments, and $\Delta;\Gamma$ for typing judgments).
+We can prove the big well-formedness property of \Fi\ by induction on
+the derivation of a judgment, which can be either one of the three forms.
+Here, I illustrate the proof for the three propositions as if they were
+separate proofs. During the proof description, the proof for each proposition
+references the other properties (which is yet another application of the
+induction hypothesis of the big well-formedness property), since it gives
+more intuitive proof sketch that way. So, when I say ``by induction''
+during the proofs, what I really mean is the induction hypothesis of
+the big well-formedness property.
 
 \begin{proposition}[sorting derivations result in well-formed sorts]
 \label{prop:wfsort}
-$ \inference{ |- \kappa : \mathfrak{s}}{ \mathfrak{s}=\square } $
+$ \inference{ |- \kappa : \mathfrak{s} }{ \mathfrak{s}=\square } $
 \end{proposition}
 \begin{proof}Obvious since $\square$ is the only sort in \Fi.\end{proof}
 
@@ -505,7 +542,7 @@ in the types entailed from the typing judgments.
 	By the kinding rule ($\forall$), which is the only kinding rule
 	able to derive $\Delta |- \forall X^\kappa.B : *$, we know
 	that $\Delta,X^\kappa |- B : *$.\\
-	Then, we use the type substitution lemma (\ref{lem:tysubst}).
+	Then, we use the type substitution lemma (Lemma \ref{lem:tysubst}).
 \item[case] ($\forall Ii$)
 	By induction and well-formedness of $\Delta$.
 \item[case] ($\forall Ei$)\\
@@ -513,7 +550,7 @@ in the types entailed from the typing judgments.
 	By the kinding rule ($\forall i$), which is the only kinding rule
 	able to derive $\Delta |- \forall i^A.B : *$, we know
 	that $\Delta,i^A |- B : *$.\\
-	Then, we use the index substitution lemma (\ref{lem:ixsubst}).
+	Then, we use the index substitution lemma (Lemma \ref{lem:ixsubst}).
 \end{itemize}
 \end{proof}
 
@@ -523,7 +560,7 @@ $ \inference{|- \kappa = \kappa':\square}
 \end{lemma}
 \begin{proof}
 	By induction on the derivation of kind equality
-	and using the kinding rules.
+	and using the sorting rules.
 \end{proof}
 
 \begin{lemma}\label{lem:wfeqtype}
@@ -533,6 +570,8 @@ $ \inference{\Delta |- F = F':\kappa}
 \begin{proof}
 	By induction on the derivation of type equality
 	and using the kinding rules.
+	Also use the type substitution lemma (Lemma \ref{lem:tysubst})
+	and the index substitution lemma (Lemma \ref{lem:ixsubst}).
 \end{proof}
 
 \begin{lemma}\label{lem:wfeqterm}
@@ -542,6 +581,7 @@ $ \inference{\Delta,\Gamma |- t = t':\kappa}
 \begin{proof}
 	By induction on the derivation of term equality
 	and using the typing rules.
+	Also use the term substitution lemma (Lemma \ref{lem:tmsubst}).
 \end{proof}
 
 \begin{lemma}[type substitution]\label{lem:tysubst}
@@ -552,6 +592,11 @@ $ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
 \begin{lemma}[index substitution]\label{lem:ixsubst}
 $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
 	{\Delta |- [s/i]F:\kappa} $
+\end{lemma}
+
+\begin{lemma}[term substitution]\label{lem:tmsubst}
+$ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
+	{\Delta,\Gamma |- [s/x]B:\kappa} $
 \end{lemma}
 
 

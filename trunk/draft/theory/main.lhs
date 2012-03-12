@@ -63,6 +63,7 @@ Marcelo P. Fiore \quad\qquad Andrew M. Pitts
 
 \theoremstyle{plain}
 \newtheorem{proposition}{Proposition}
+\newtheorem*{proposition*}{Proposition}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 
