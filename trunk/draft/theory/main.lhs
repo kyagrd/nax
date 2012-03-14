@@ -58,7 +58,7 @@ Marcelo P. Fiore \quad\qquad Andrew M. Pitts
 \def\titlerunning{title running}
 \def\authorrunning{KY. Ahn, T. Sheard \& M. P. Fiore, A. M. Pitts}
 
-%%%%% cammands for comments
+%%%%% commands for comments
 \newcommand{\KYA}[1]{\textcolor{magenta}{#1 --KYA}}
 
 \theoremstyle{plain}
@@ -66,6 +66,7 @@ Marcelo P. Fiore \quad\qquad Andrew M. Pitts
 \newtheorem*{proposition*}{Proposition}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
 
 \theoremstyle{remark}
 \newtheorem{remark}{Remark}

@@ -53,7 +53,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
  ~~~~ ~~~~
    \inference{}{|- \cdot}
  ~~~~
-   \inference{|- \Delta & \Delta |- \kappa:\square}
+   \inference{|- \Delta & |- \kappa:\square}
              {|- \Delta,X^\kappa}
       \big( X\notin\dom(\Delta) \big)
  ~~~~ \newFi{
@@ -184,7 +184,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
              {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
  ~~~~ \newFi{
    \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
-             {\Delta |- (\lambda i^A.F)\,\{s\} = [s/x]F:\kappa} }
+             {\Delta |- (\lambda i^A.F)\,\{s\} = [s/i]F:\kappa} }
 \]
 \[ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}
              {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
@@ -589,9 +589,15 @@ $ \inference{\Delta,\Gamma |- t = t':A}
 
 The proofs for the three lemmas above are straightforward
 once we have dealt with the interesting cases for the equality rules
-involving substitution. We can prove those cases by the substitution lemmas.
-All the other cases are trivial since the other equality rules follow the
-same structure of the sorting, kinding, and typing rules.
+involving substitution. We can prove those interesting cases
+by applying the substitution lemmas. The other cases fall into two
+categories: firstly, the equality rules following the same structure of
+the sorting, kinding, and typing rules; and secondly, the reflexive
+rules and the transitive rules. The proof for the equality rules
+following the same structure of the sorting, kinding, and typing rules
+can be proved by induction and applying the correspoinding
+sorting, kinding, and typing rules. The proof for the reflexive rules
+and the transitive rules can be proved simply by induction.
 
 \begin{lemma}[type substitution]\label{lem:tysubst}
 $ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
@@ -732,18 +738,131 @@ $\kappa^\circ$ is a kind in \Fw.
 \end{proof}
 \begin{remark}
 For any well-formed type level context $\Delta$ in \Fi,
-$\Delta^\circ$ is a well-fomred type level context in \Fw.
+$\Delta^\circ$ is a well-formed type level context in \Fw.
 \end{remark}
 
-\begin{theorem}[index erasure on well-formed term level contexts]
-\label{thm:ierasetmctx}
-	$\inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ}$
+\begin{theorem}[index erasure on kind equality]\label{thm:ierasekindeq}
+	$\inference{|- \kappa=\kappa':\square}
+		{|- \kappa^\circ=\kappa'^\circ:\square}$
 \end{theorem}
+\begin{proof}
+	By induction on the kind equality judgement.
+\end{proof}
+\begin{remark}
+For any well-sorted kind equality $|- \kappa=\kappa':\square$ in \Fi,
+$|- \kappa^\circ=\kappa'^\circ:\square$ is a well-sorted kind equality in \Fw.
+\end{remark}
+
+The three theorems above on kinds are rather simple to prove since there is
+no need to consider mutual recursion in the definition of kinds due to
+the erasure operation on kinds. Recall that the erasure operation on kinds
+discards the type ($A$) appering in the index arrow type ($A -> \kappa$).
+So, there is no need to consider the types appearing in kinds
+and the index terms appearing in those types, after the erasure.\\
 
 \begin{theorem}[index erasure on well-kinded type constructors]
 \label{thm:ierasekinding}
 	$\inference{|- \Delta & \Delta |- F : \kappa}
 		{\Delta^\circ |- F^\circ : \kappa^\circ}$
+\end{theorem}
+\begin{proof}
+	By induction on the kinding derivation.
+\begin{itemize}
+\item[case] ($Var$)
+	Use Theorem \ref{thm:ierasetyctx}.
+
+\item[case] ($Conv$)
+	By induction and using Theorem \ref{thm:ierasekindeq}.
+
+\item[case] ($\lambda$)
+	By induction and using Theorem \ref{thm:ierasesorting}.
+
+\item[case] ($@$)
+	By induction.
+
+\item[case] ($\lambda i$)
+
+	We need to show that
+	$\Delta^\circ |- (\lambda i^A.F)^\circ : (A -> \kappa)^\circ$,
+	which is the same as $\Delta^\circ |- F^\circ : \kappa^\circ$.
+
+	By induction, we know that
+	$(\Delta,i^A)^\circ |- F^\circ : \kappa^\circ $,
+	which is the same as $\Delta^\circ |- F^\circ : \kappa^\circ$.
+
+\item[case] ($@ i$)
+
+	We need to show that
+	$\Delta^\circ |- (F\;\{s\})^\circ : \kappa^\circ$,
+	which is the same as $\Delta^\circ |- F^\circ : \kappa^\circ$.
+
+	By induction we know that
+	$\Delta^\circ |- F^\circ : (A -> \kappa)^\circ$,
+	which is the same as $\Delta^\circ |- F^\circ : \kappa^\circ$.
+
+\item[case] ($->$)
+	By induction.
+
+\item[case] ($\forall$)
+
+	We need to show that
+	$\Delta^\circ |- (\forall X^\kappa.B)^\circ : *^\circ$,
+	which is the same as
+	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$.
+
+	Using Theorem \ref{thm:ierasesorting}, we know that
+	$|- \kappa^\circ : \square$.
+
+	By induction we know that
+	$(\Delta,X^\kappa)^\circ |- B^\circ : *^\circ$,
+	which is the same as
+	$\Delta^\circ,X^{\kappa^\circ} |- B^\circ : *$.
+
+	Using the kinding rule ($\forall$), we get exactly
+	what we need to show:
+	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$.
+
+\item[case] ($\forall i$)
+
+	We need to show that
+	$\Delta^\circ |- (\forall i^A.B)^\circ : *^\circ$,
+	which is the same as $\Delta^\circ |- B^\circ : *$.
+
+	By induction we know that
+	$(\Delta,i^A)^\circ |- B^\circ : *^\circ$,
+	which is the same as $\Delta^\circ |- B^\circ : *$.
+
+\end{itemize}
+\end{proof}
+
+\begin{theorem}[index erasure on type constructor equality]
+	$\inference{\Delta |- F=F':\kappa}
+		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}$
+\end{theorem}
+\begin{proof}
+By induction on the derivation of type constructor equality.
+
+Most of the cases are done by applying the induction hypothesis
+and sometimes using Proposition \ref{prop:wfkind}.
+
+The only interesting cases, which are worth elaborating, are
+the equality rules involving substitution.
+
+TODO the first case is done by induction and appyling the equality rule again.
+
+TODO the second case is done by induction and the fact that $([s/i]F)^\circ = F^\circ$
+\end{proof}
+
+The proofs for the two theorems above on types need not consider
+mutual recursion in the definition of type constructors due to
+the erasure operation on type constructors. Recall that
+the erasure operation on type constructors discards the index term ($s$)
+appearing in the index application $(F\;\{s\})$. So, there is no need to
+consider the index terms appearing in the types after the erasure.
+
+\begin{theorem}[index erasure on well-formed term level contexts]
+\label{thm:ierasetmctx}
+	$\inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ}$
 \end{theorem}
 
 \begin{theorem}[index erasure on well-typed terms]
@@ -752,15 +871,6 @@ $\Delta^\circ$ is a well-fomred type level context in \Fw.
 		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}$
 \end{theorem}
 
-\begin{theorem}[index erasure on kind equality]
-	$\inference{|- \kappa=\kappa':\square}
-		{|- \kappa^\circ=\kappa'^\circ:\square}$
-\end{theorem}
-
-\begin{theorem}[index erasure on type constructor equality]
-	$\inference{\Delta |- F=F':\kappa}
-		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}$
-\end{theorem}
 
 \begin{theorem}[index erasure on term equality]
 	$\inference{\Delta;\Gamma |- t=t':A}
