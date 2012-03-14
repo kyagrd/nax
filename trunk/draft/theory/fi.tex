@@ -180,7 +180,7 @@ and focus on describing new constructs of \Fi, which are in grey boxes.
 \paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
 \[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
  ~~~~
-   \inference{\Delta,X^\kappa |- F:\kappa & \Delta |- G:\kappa}
+   \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
              {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
  ~~~~ \newFi{
    \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
@@ -847,10 +847,40 @@ and sometimes using Proposition \ref{prop:wfkind}.
 
 The only interesting cases, which are worth elaborating, are
 the equality rules involving substitution.
+There are two such rules.
 
-TODO the first case is done by induction and appyling the equality rule again.
+\begin{itemize}
+\item
+  $\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+             {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}$ \\
 
-TODO the second case is done by induction and the fact that $([s/i]F)^\circ = F^\circ$
+We need to show that
+$ \Delta^\circ |- ((\lambda X^\kappa.F)\,G)^\circ = ([G/X]F)^\circ : \kappa'^\circ $,\\
+which is the same as
+$ \Delta^\circ |- (\lambda X^{\kappa^\circ}.F^\circ)\,G^\circ = ([G/X]F)^\circ : \kappa'^\circ $.
+
+By induction, we know that $(\Delta,X^\kappa)^\circ |- F^\circ : \kappa'^\circ$,
+which is the same as $\Delta^\circ,X^{\kappa^\circ} |- F^\circ : \kappa'^\circ$.
+
+Using the kinding rule ($\lambda$), we get
+$\Delta^\circ |- \lambda X^{\kappa^\circ} F^\circ : \kappa^\circ -> \kappa'^\circ$.
+
+Using the kinding rule ($@$), we get
+$\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ : \kappa^\circ$.
+
+Using the very equality rule of this case, we get 
+$\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ = [G^\circ/X] F^\circ : \kappa^\circ$.
+
+All we need to check is $([G/X]F)^\circ = [G^\circ/X] F^\circ$,
+which is easy to see.
+
+
+\item
+  $\inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+             {\Delta |- (\lambda i^A.F)\,\{s\} = [s/i]F:\kappa}$ \\
+
+TODO this case is done by induction and the fact that $([s/i]F)^\circ = F^\circ$
+\end{itemize}
 \end{proof}
 
 The proofs for the two theorems above on types need not consider
