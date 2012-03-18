@@ -509,7 +509,7 @@ number of indices     & 1 (type)      & 1 (term)           & 2 (term,term)
 \end{tabular}
 \end{center}
 Recall, indices are used to track static properties about values
-with those types. A well formed (|PowerTree x|) contains a balanced
+with those types. A well-formed (|PowerTree x|) contains a balanced
 set of parenthesized binary tuples of elements. The index, |x|, describes
 what kind of values are nested in the parentheses. The invariant is that the
 number of items nested is always an exact power of 2. A (|Vector a {n}|) is

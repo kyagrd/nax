@@ -756,7 +756,7 @@ $|- \kappa^\circ=\kappa'^\circ:\square$ is a well-sorted kind equality in \Fw.
 The three theorems above on kinds are rather simple to prove since there is
 no need to consider mutual recursion in the definition of kinds due to
 the erasure operation on kinds. Recall that the erasure operation on kinds
-discards the type ($A$) appering in the index arrow type ($A -> \kappa$).
+discards the type ($A$) appearing in the index arrow type ($A -> \kappa$).
 So, there is no need to consider the types appearing in kinds
 and the index terms appearing in those types, after the erasure.\\
 
@@ -784,7 +784,8 @@ and the index terms appearing in those types, after the erasure.\\
 
 	We need to show that
 	$\Delta^\circ |- (\lambda i^A.F)^\circ : (A -> \kappa)^\circ$,
-	which is the same as $\Delta^\circ |- F^\circ : \kappa^\circ$.
+	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$
+	by Definition \ref{def:ierase}.
 
 	By induction, we know that
 	$(\Delta,i^A)^\circ |- F^\circ : \kappa^\circ $,
