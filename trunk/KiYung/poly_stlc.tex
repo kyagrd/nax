@@ -99,7 +99,34 @@ in the term syntax.
 
 A type can be either an arrow type or a ground type.
 The type syntax is exactly the same in both styles.
-%% TODO discuss about void type
+There should be no questions regarding arrow types as they are types for
+functions. For instance, abstractions have arrow types. We need some
+ground types in order to populate the types, as a base case for
+the inductive definition of types. Otherwise, if there were no ground types,
+we would not have any types\footnote{If we allow infinite types, then it is
+	possible to populate types without ground types. There exist exotic
+	lambda calculi with infinite types, but rather uncommon.}
+%% Then, such version of STLC will be very uninteresting since there cannot
+%% be any well-typed terms because there are no types to begin with.
+Here, I choose to include only the most simple ground type $\iota$,
+which also known as the void type. Note that there exist any closed term of
+type $\iota$. The only way to construct terms of type $\iota$ is when we
+have a bound variable known to have type $\iota$ in the typing context.
+Having just the void type as a ground type is enough for my purpose of
+motivating the discussions for the polymorphic type systems, without
+complicating the term syntax of the STLC.
+
+When people use STLC to model a programming language (with simple types),
+they usually provide richer set of ground types other than the void type
+(\eg, unit, boolean, natural numbers). In such versions of STLC, whose
+type syntax is extended with richer set of ground types, they also need to
+extend the term syntax by providing normal terms (or, constants) for
+those ground types (\eg, \textsf{true} and \textsf{false} for booleans) and
+eliminators (\eg, if-then-else expression for booleans) that can examine
+the normal terms. Later on, we shall see that polymorphic type systems
+such as System \F\ (\S\ref{sec:f}) and \Fw (\S\ref{sec:fw}) are expressive
+enough to encode those ground types without introducing them as primitive
+constructs of the calculi.
 
 Typing rules are the rules to derive (or prove) typing judgments.
 A typing judgment $\Gamma |- t : A$ means that the term $t$ has type $A$
@@ -108,63 +135,33 @@ under the typing context $\Gamma$. We say $t$ is well-typed
 a typing judgment $\Gamma |- t : A$ for some $A$ according to the typing rules.
 There are three typing rules --
 one typing rule for each item of the term syntax.
-Therefore, the typing rules of the STLC are syntax directed.
+Therefore, the typing rules of the STLC are syntax directed in both styles.
 That is, there is always only one rule to choose for the typing derivation
 by examining the shape of the term.
  
-The reduction rules in Figure \ref{fig:stlc} describes $\beta$-reduction.
-The \rulename{RedBeta} rule describes the key concept $\beta$-reduction on
-the $\beta$-redex. A $\beta$-redex is an application of an abstraction to
-another term. The other three rules describes the idea that a redex may
-appear in subterms although the term itself is not a redex. The reduction
-rules of the STLC are virtually the same as the reduction rules of
-the untyped lambda calculus.
+The reduction rules in Figure \ref{fig:stlc} describes the $\beta$-reduction
+for the STLC. The \rulename{RedBeta} rule describes the key concept
+the $\beta$-reduction on the $\beta$-redex. A $\beta$-redex is an application
+of an abstraction to another term. The other three rules describe the idea
+that a redex may appear in subterms although the term itself is not a redex.
+The reduction rules of the STLC are virtually the same as the reduction rules
+of the $\beta$-reduction the untyped lambda calculus. Note that reduction rules
+are not deterministic. There is no preferred order when there are more than one
+redex in a term. For instance, when there are redexes in both $t$ and $s$
+in the application $t s$, one may apply any of the two rules \rulename{RedApp1}
+and \rulename{RedApp2}.
 
-We first discuss two important properties of STLC
+\paragraph{}
+We first discuss two important properties of the STLC
 (subject reduction and strong normalization), which hold
 in both Curry style and Church style (\S\ref{sec:stlc:srsn}).
 Then, we discuss distinctive characteristics of each style
 (\S\ref{sec:stlc:church},\S\ref{sec:stlc:curry}).
 Finally, we motivate the discussion of polymorphic type systems
-by reviewing the limitations of STLC (\S\ref{sec:stlc:topoly}).
-
-\paragraph{Remark on the ground type:}
-Before we discuss other properties of STLC, I would like to make a remark on
-the type syntax, in particular, on the ground type ($\iota$). There should be
-no questions regarding arrow types as they are types for functions.
-For instance, abstractions have arrow types. We need some ground types
-in order to populate the types. Otherwise, if there were no ground types,
-we would not have any types\footnote{If we allow infinite types,
-	then it is possible to populate types without ground types.
-	There exist exotic lambda calculi with infinite types, but
-	rather uncommon.}
-Then, such version of STLC will be very uninteresting since there cannot
-be any well-typed terms because there are no types to begin with. Here,
-our version of STLC comes with the most simple ground type ($\iota$),
-which does not inhabit any term (\aka\ the void type). Note that there exist
-no term of type $\iota$. We can have functions over $\iota$, such as
-the identity over the ground type ($\l(x:\iota).x$).\footnote{Here,
-	I present examples in Church style since it is more succinct than
-	writing typing judgments (\eg, $(\l x.t) : \iota -> \iota$)
-	in Curry style.  But, the remark on the ground type $\iota$
-	holds the same for Curry style as well.}
-However, there exist no term, to which we cannot apply ($\l(x:\iota).x$).
-What we can have are higher-order functions
-(\eg, $\l(x_{f}:\iota -> \iota).\l(x_a:\iota).x_f~x_a$, which expects
-an argument of type $\iota -> \iota$) applicable to the functions over $\iota$.
-
-When people use STLC to model a programming language (with simple types),
-they usually provide richer set of ground types other than the void type
-(\eg, unit, boolean, natural numbers). In such versions of STLC with further
-extensions to the type syntax, they also need to extend the term syntax
-by providing normal terms for the ground types (\eg, \textsf{true} and
-\textsf{false} for booleans) and eliminators (\eg, if-then-else expression for
-booleans) that can examine the normal terms. Here, having just the void type
-is good enough for my purpose of leading up the discussion for
-the polymorphic type systems, without complicating the term syntax.
+by reviewing the limitations of the STLC (\S\ref{sec:stlc:topoly}).
 
 \subsection{Subject reduction and strong normalization}\label{sec:stlc:srsn}
-We discuss two important properties of STLC, which holds in both
+We discuss two important properties of the STLC, which holds in both
 Church style and Curry style -- \emph{subject reduction} (\aka\
 \emph{type preservation}) and \emph{strong normalization}.
 
@@ -196,20 +193,20 @@ subject reduction together with progress. However, in a calculus considering
 reductions to normal terms, rather than evaluations to values, type safety is
 no more than subject reduction since normal terms are irreducible by definition.
 
-\paragraph{Strong normalization} is another important property of STLC,
-when we intend to consider terms of STLC as a proof of a propositional logic
+\paragraph{Strong normalization} is another important property of the STLC,
+when we intend to consider terms of the STLC as a proof of a propositional logic
 by the Curry-Howard correspondence. The proof strategy we present here is
 to define the set of strongly normalizing terms, which may or may not be
-well typed, and show that all well-typed terms belong to that set
+well typed, and show that all well-typed terms belong to this set.
 We shall continue the discussion on strong normalization using
 the Curry-style term syntax, but this proof strategy also works well
-for the Church-style STLC\footnote{This proof strategy generallize well
+for the Church-style STLC\footnote{This proof strategy generalizes well
 	to more complicated systems such as System \F, System \Fw, and
 	even for dependently-typed calculi, such as
 	the Calculus of Constructions\cite{Geuvers94}.}.
 In fact, this strategy originates from Girard's strong normalization proof
 for System \F\ using reducibility candidates \cite{Gir71}, and later rephrased
-using Tait's satruated sets \cite{Tait75}. In particular, I adopt
+using Tait's saturated sets \cite{Tait75}. In particular, I adopt
 the notations from the work of \citet{AbeMat04}, which includes
 a strong normalization proof for an extension of \Fw\ using saturated sets.
 The strong normalization proofs for System \F\ (\S\ref{sec:f}) and
