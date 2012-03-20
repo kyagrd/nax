@@ -661,7 +661,7 @@ TODO
 \end{remark}
 
 \paragraph{}
-\begin{definition}[index erasure]
+\begin{definition}[index erasure]\label{def:ierase}
 \[ \fbox{$\kappa^\circ$}
  ~~~~
  *^\circ =
@@ -789,17 +789,20 @@ and the index terms appearing in those types, after the erasure.\\
 
 	By induction, we know that
 	$(\Delta,i^A)^\circ |- F^\circ : \kappa^\circ $,
-	which is the same as $\Delta^\circ |- F^\circ : \kappa^\circ$.
+	which simplifies $\Delta^\circ |- F^\circ : \kappa^\circ$
+	by Definition \ref{def:ierase}.
 
 \item[case] ($@ i$)
 
 	We need to show that
 	$\Delta^\circ |- (F\;\{s\})^\circ : \kappa^\circ$,
-	which is the same as $\Delta^\circ |- F^\circ : \kappa^\circ$.
+	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$
+	by Definition \ref{def:ierase}.
 
 	By induction we know that
 	$\Delta^\circ |- F^\circ : (A -> \kappa)^\circ$,
-	which is the same as $\Delta^\circ |- F^\circ : \kappa^\circ$.
+	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$.
+	by Definition \ref{def:ierase}.
 
 \item[case] ($->$)
 	By induction.
@@ -808,16 +811,18 @@ and the index terms appearing in those types, after the erasure.\\
 
 	We need to show that
 	$\Delta^\circ |- (\forall X^\kappa.B)^\circ : *^\circ$,
-	which is the same as
+	which simplifies to
 	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$.
+	by Definition \ref{def:ierase}.
 
 	Using Theorem \ref{thm:ierasesorting}, we know that
 	$|- \kappa^\circ : \square$.
 
 	By induction we know that
 	$(\Delta,X^\kappa)^\circ |- B^\circ : *^\circ$,
-	which is the same as
+	which simplifies to
 	$\Delta^\circ,X^{\kappa^\circ} |- B^\circ : *$.
+	by Definition \ref{def:ierase}.
 
 	Using the kinding rule ($\forall$), we get exactly
 	what we need to show:
@@ -827,11 +832,13 @@ and the index terms appearing in those types, after the erasure.\\
 
 	We need to show that
 	$\Delta^\circ |- (\forall i^A.B)^\circ : *^\circ$,
-	which is the same as $\Delta^\circ |- B^\circ : *$.
+	which simplifies to $\Delta^\circ |- B^\circ : *$.
+	by Definition \ref{def:ierase}.
 
 	By induction we know that
 	$(\Delta,i^A)^\circ |- B^\circ : *^\circ$,
-	which is the same as $\Delta^\circ |- B^\circ : *$.
+	which simplifies $\Delta^\circ |- B^\circ : *$.
+	by Definition \ref{def:ierase}.
 
 \end{itemize}
 \end{proof}
@@ -857,11 +864,13 @@ There are two such rules.
 
 We need to show that
 $ \Delta^\circ |- ((\lambda X^\kappa.F)\,G)^\circ = ([G/X]F)^\circ : \kappa'^\circ $,\\
-which is the same as
+which simplifies to 
 $ \Delta^\circ |- (\lambda X^{\kappa^\circ}.F^\circ)\,G^\circ = ([G/X]F)^\circ : \kappa'^\circ $.
+	by Definition \ref{def:ierase}.
 
 By induction, we know that $(\Delta,X^\kappa)^\circ |- F^\circ : \kappa'^\circ$,
-which is the same as $\Delta^\circ,X^{\kappa^\circ} |- F^\circ : \kappa'^\circ$.
+which simplifies to $\Delta^\circ,X^{\kappa^\circ} |- F^\circ : \kappa'^\circ$.
+	by Definition \ref{def:ierase}.
 
 Using the kinding rule ($\lambda$), we get
 $\Delta^\circ |- \lambda X^{\kappa^\circ} F^\circ : \kappa^\circ -> \kappa'^\circ$.
