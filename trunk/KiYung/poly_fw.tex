@@ -28,8 +28,8 @@ F,G,A,B ::= &~ X                  & \text{variable type} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}
 		      {\Delta |- \forall X^\kappa.B:*} \\
-& \inference[\sc TLam]{\Delta,X^\kappa |- B:*}
-		      {\Delta |- \l X^\kappa.B:\kappa -> *} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- B:\kappa'}
+		      {\Delta |- \l X^\kappa.B:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
@@ -75,8 +75,8 @@ F,G,A,B ::= &~ X                  \\
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X^\kappa.B:*} \\
-& \inference[\sc TLam]{\Delta,X^\kappa |- B:*}
-		      {\Delta |- \l X^\kappa.B:\kappa -> *} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- B:\kappa'}
+		      {\Delta |- \l X^\kappa.B:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
@@ -128,8 +128,8 @@ F,G,A,B ::= &~ X                  & \text{variable type}    \\
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X^\kappa.B:*} \\
-& \inference[\sc TLam]{\Delta,X^\kappa |- B:*}
-		      {\Delta |- \l X^\kappa.B:\kappa -> *} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- B:\kappa'}
+		      {\Delta |- \l X^\kappa.B:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
@@ -173,8 +173,8 @@ F,G,A,B ::= &~ X                  \\
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X.B:*} \\
-& \inference[\sc TLam]{\Delta,X^\kappa |- B:*}
-		      {\Delta |- \l X.B:\kappa -> *} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- B:\kappa'}
+		      {\Delta |- \l X.B:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
@@ -255,13 +255,55 @@ I am not sure when one would need this style, though.
 
 
 \subsection{Subject reduction and strong normalziation}\label{sec:f:srsn}
-\paragraph{Subject reduction}
+\subsection*{Subject reduction}
 \begin{theorem}[subject reduction]
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{theorem}
 
 
-\paragraph{Strong normalization}
+\subsection*{Strong normalization}
+\begin{figure}
+\begin{singlespace}
+\begin{description}
+\item[Interpretation of type constructors] TODO
+	as saturated sets of normalizing terms
+	whose free type variables are substituted according to
+	the given type constructor valuation ($\xi$):
+\begin{align*}
+[| X |]_\xi      &= \xi(X) \\ 
+[| A -> B |]_\xi &= [|A|]_\xi -> [|B|]_\xi \\
+[| \forall X^\kappa . B |]_\xi
+	&= \bigcap_{\mathcal{F}\in\SAT^\kappa} [|B|]_{\xi[X\mapsto\mathcal{F}]}
+		\qquad\qquad\qquad (X\notin\dom(\xi)) \\
+[| \l X^\kappa . B |]_\xi &= \bbl(\mathcal{G} \in \SAT^\kappa) . [|B|]_{\xi[X\mapsto\mathcal{G}]} \\
+[| F \; G |]_\xi &= [|F|]_\xi ( [|G|]_\xi )
+\end{align*}
+\item[Interpretation of kinding and typing contexts]
+	as sets of type constructor valuations and term valuations
+	($\xi$ and $\rho$):
+\begin{align*}
+[| \Delta        |] &= \{ \xi \in \dom(\Delta) -> \bbSAT \mid \xi(x)\in\SAT^{\Delta(x)} ~\text{for all}~x\in\dom(\Delta) \} \\
+[| \Delta;\Gamma |] &= \{ \xi;\rho \mid \xi\in[|\Delta|], \rho\in[|\Gamma|]_\xi \} \\
+[| \Gamma        |]_\xi\ &= \{ \rho \in \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
+\end{align*}
+\[\text{where}~ \bbSAT = \bigcup_{\kappa} \SAT^\kappa \]
+\item[Interpretation of terms]
+	as terms themselves whose free variables are substituted according to
+	the given pair of type constuctor and term valuations
+	($\xi$;$\rho$):
+\begin{align*}
+[| x      |]_{\xi;\rho} &= \rho(x) \\
+[| \l x.t |]_{\xi;\rho} &= \l x . [|t|]_{\xi;\rho} \qquad (x\notin\dom(\rho)) \\
+[| t ~ s  |]_{\xi;\rho} &= [| t |]_{\xi;\rho} ~ [| s |]_{\xi;\rho}
+\end{align*}
+\end{description}
+\caption[Interpretation of System \Fw\ for proving strong normalization]
+	{Interpretation of type constructors, kinding and typing contexts,
+		and terms of System \Fw\ for the proof of strong normalization}
+\label{fig:interpFw}
+\end{singlespace}
+\end{figure}
+
 
 \begin{theorem}[soundness of typing]
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
