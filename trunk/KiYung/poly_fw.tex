@@ -1,4 +1,9 @@
 \section{System \Fw} \label{sec:fw}
+System \Fw\ extends the type syntax of System \F\ with lambda types and
+application types.
+%%          | &~ \l X^\kappa.B      & \text{lambda type}   \\
+%%          | &~ F ~ G              & \text{application type}   \\
+
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
@@ -262,11 +267,12 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 
 
 \subsection*{Strong normalization}
+Curry-Church-style System \Fw
 \begin{figure}
 \begin{singlespace}
 \begin{description}
-\item[Interpretation of type constructors] TODO
-	as saturated sets of normalizing terms
+\item[Interpretation of type constructors]
+	as pointwise function space over saturated sets of normalizing terms
 	whose free type variables are substituted according to
 	the given type constructor valuation ($\xi$):
 \begin{align*}
@@ -275,18 +281,19 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 [| \forall X^\kappa . B |]_\xi
 	&= \bigcap_{\mathcal{F}\in\SAT^\kappa} [|B|]_{\xi[X\mapsto\mathcal{F}]}
 		\qquad\qquad\qquad (X\notin\dom(\xi)) \\
-[| \l X^\kappa . B |]_\xi &= \bbl(\mathcal{G} \in \SAT^\kappa) . [|B|]_{\xi[X\mapsto\mathcal{G}]} \\
+[| \l X^\kappa . B |]_\xi
+	&= \bbl(\mathcal{G} \in \SAT^\kappa) . [|B|]_{\xi[X\mapsto\mathcal{G}]}
+		\qquad\quad~ (X\notin\dom(\xi)) \\
 [| F \; G |]_\xi &= [|F|]_\xi ( [|G|]_\xi )
 \end{align*}
 \item[Interpretation of kinding and typing contexts]
 	as sets of type constructor valuations and term valuations
 	($\xi$ and $\rho$):
 \begin{align*}
-[| \Delta        |] &= \{ \xi \in \dom(\Delta) -> \bbSAT \mid \xi(x)\in\SAT^{\Delta(x)} ~\text{for all}~x\in\dom(\Delta) \} \\
+[| \Delta        |] &= \{ \xi \in \dom(\Delta) -> \bigcup_{\kappa} \SAT^\kappa \mid \xi(x)\in\SAT^{\Delta(x)} ~\text{for all}~x\in\dom(\Delta) \} \\
 [| \Delta;\Gamma |] &= \{ \xi;\rho \mid \xi\in[|\Delta|], \rho\in[|\Gamma|]_\xi \} \\
 [| \Gamma        |]_\xi\ &= \{ \rho \in \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
 \end{align*}
-\[\text{where}~ \bbSAT = \bigcup_{\kappa} \SAT^\kappa \]
 \item[Interpretation of terms]
 	as terms themselves whose free variables are substituted according to
 	the given pair of type constuctor and term valuations
