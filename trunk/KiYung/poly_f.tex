@@ -185,6 +185,7 @@ the terms of the Curry-style STLC.
 System \F\ is  powerful enough to encode polymorphic regular recursive datatypes
 within its type system.
 
+~\\
 \begin{tabular}{llll}
 	& encoding of type & constructors & eliminators
 	\\
@@ -205,10 +206,10 @@ number	& $\forall X. X -> (X -> X) -> X$
 list	& $\forall X_a.\forall X. X -> (X_a -> X -> X) -> X$
 	\\
 
-pair	& $\forall X_1.\forall X_2. X_1 -> X_2 -> X$
+pair	& $\forall X_1.\forall X_2.\forall X. X_1 -> X_2 -> X$
 	\\
 
-sum	& $\forall X_1.\forall X_2. X_1 -> X_2 -> X$
+sum	& $\forall X_1.\forall X_2.\forall X. (X_1 -> X) -> (X_2 -> X) -> X$
 \end{tabular}
 
 \subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
@@ -248,7 +249,8 @@ done by applying the induction hypothesis, but there is a little complication
 in the proof, compared to the proof in Church style, since the typing rules
 are not syntax directed. Although we have less rules to consider than
 the Church-style STLC, we need to deal with the ambiguity of which rule
-to apply for a typing judgement. For example,
+to apply for a typing judgement. The ambiguity is due to the rules
+\rulename{TyAbs} and \rulename{TyApp}.
 
 An alternative way to prove subject reduction for the Curry-style STLC is
 by translating the subject reduction property of the Curry-style STLC into
