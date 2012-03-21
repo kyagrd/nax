@@ -1,8 +1,69 @@
 \section{System \Fw} \label{sec:fw}
 System \Fw\ extends the type syntax of System \F\ with lambda types and
-application types.
-%%          | &~ \l X^\kappa.B      & \text{lambda type}   \\
-%%          | &~ F ~ G              & \text{application type}   \\
+application types (see Figure \ref{fig:fw}). Lambda types ($\l X^\kappa.F$)
+and application types ($F\;G$) at type level are analogous to lambda terms
+and applications at term level. Type constructors are like functions, but
+at type level. Type constructors are categorized by kinds, just as termes
+are categorized by types. A type constructor of kind $\kappa -> \kappa'$
+expects another type constructor of kind $\kappa$ as an argument to produce
+yet another type constructor of kind $\kappa'$, just as a function of type
+$A -> B$ expects another term of type $A$ as an argument to produce yet another
+term of type $B$. Types of the star kind ($*$) are type constructors that
+do not expect any arguments. Type constructors that expect an argument
+are of arrow kinds ($\kappa -> \kappa'$).
+
+We can think of System \F\ as a restriction of System \Fw\ where we only
+allow types of the star kind ($*$). So, all the type variables appearing in
+well-kinded types in System \F\ are of the star kind. Since there exist only
+one kind ($*$) in System \F, the kinding rules of System \F\ only need to make
+sure that type variables are bounded (\ie, member of $\Delta$). 
+Since the kind structure of System \Fw\ is richer than System \F, we need to
+keep track of the kind of the type variables in the kinding context ($\Delta$).
+So, the kinding context is extended by a type variable annotated by its kind
+($X^\kappa$). The kinding rules of System \Fw\ keep track of the kinds of
+type constructors as well as making sure that the type variables are bounded.
+The kinding rules \rulename{TVar}, \rulename{TArr}, \rulename{TAll}
+are similar to the kinding rules of System \F. The kinding rules
+\rulename{TLam} and \rulename{TApp} states when lambda types and
+application types are well-kinded.
+
+Typing rules of System \Fw\ are almost identical to the typing rules of
+System \F, except for one new rule \rulename{Conv}. The \rulename{Conv} rule
+supports conversion between equivalent types beyond $\alpha$-equivalence
+(\ie, up to change of bound type variable names).
+In STLC, types are equal when they are syntactically identical.
+In System \F, types are equal when they are $\alpha$-equivalent. For example,
+$\forall X.X$ and $\forall X'.X'$ are considered to be same types in System \F.
+In System \Fw, we expect richer notion of equality, such as $\beta$-equivalence,
+since the type syntax of System \Fw\ is analogous to a STLC at type level.
+For instance, we want $(\lambda X^{*}.X) A = A$. TODO
+
+%% syntax directed formalism???
+%% http://pauillac.inria.fr/~herbelin/talks/cic.ps
+%% there is a slide the refers to other paper and say that CIC is okay
+%% since CIC is full. Is Fw also?
+
+The complete syntax, kinding rules, and typing rules of System \Fw
+are illustrated in Figure \ref{fig:fw}. The left column describes
+the Church-Church-style System \F\ and the right column describes
+the Curry-Church-style System \F. Since lambda types exist at type level
+in System \Fw, we also have a choice of either Church style (kind annotations
+on lambda types) or Curry style (no kind annotations on lambda types) for
+the type syntax. The Church-Church-style System \Fw\ is a version System \Fw\ 
+with the Church-style term syntax and the Church-style type syntax.
+The Curry-Church-style System \Fw\ is a version of System \Fw\ 
+with the Curry-style term syntax and the Church-style type syntax.
+Another version of System \Fw, the Curry-Curry-style System \Fw,
+with Curry-style term syntax and Curry style type syntax is described
+in the left column of Figure \ref{fig:fw2}.
+
+The reduction rules of System \Fw\ (Figure \ref{fig:redfw}) are
+almost identical to the reduction rules of System \F\ since the term syntax of
+System \Fw\ is almost identical to the term syntax of System \F.
+The Church-style term syntax only differs from the term syntax of System \F\ 
+that there is a kind annotation on the type variable appearing in
+the type abstraction ($\L X^\kappa.t$). The Church-style term syntax is
+exactly the same as the term syntax of System \F.
 
 \begin{figure}
 \begin{singlespace}
@@ -21,7 +82,7 @@ t,s ::= &~ x               & \text{variable}    \\
 F,G,A,B ::= &~ X                  & \text{variable type} \\
           | &~ A -> B             & \text{arrow type} \\
           | &~ \forall X^\kappa.B & \text{forall type}   \\
-          | &~ \l X^\kappa.B      & \text{lambda type}   \\
+          | &~ \l X^\kappa.F      & \text{lambda type}   \\
           | &~ F ~ G              & \text{application type}   \\
 \textbf{kind syntax} \\
 \kappa ::= &~ \kappa -> \kappa' & \text{arrow kind} \\
@@ -33,8 +94,8 @@ F,G,A,B ::= &~ X                  & \text{variable type} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}
 		      {\Delta |- \forall X^\kappa.B:*} \\
-& \inference[\sc TLam]{\Delta,X^\kappa |- B:\kappa'}
-		      {\Delta |- \l X^\kappa.B:\kappa -> \kappa'} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- F:\kappa'}
+		      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
@@ -69,7 +130,7 @@ t,s ::= &~ x           \\
 F,G,A,B ::= &~ X                  \\
           | &~ A -> B             \\
           | &~ \forall X^\kappa.B \\
-          | &~ \l X^\kappa.B      \\
+          | &~ \l X^\kappa.F      \\
           | &~ F ~ G              \\
 \textbf{kind syntax} \\
 \kappa ::= &~ \kappa -> \kappa' \\
@@ -80,8 +141,8 @@ F,G,A,B ::= &~ X                  \\
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X^\kappa.B:*} \\
-& \inference[\sc TLam]{\Delta,X^\kappa |- B:\kappa'}
-		      {\Delta |- \l X^\kappa.B:\kappa -> \kappa'} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- F:\kappa'}
+		      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
@@ -122,7 +183,7 @@ t,s ::= &~ x           & \text{variable}    \\
 F,G,A,B ::= &~ X                  & \text{variable type}    \\
           | &~ A -> B             & \text{arrow type}       \\   
           | &~ \forall X^\kappa.B & \text{forall type}      \\
-          | &~ \l X^\kappa.B      & \text{lambda type}      \\
+          | &~ \l X^\kappa.F      & \text{lambda type}      \\
           | &~ F ~ G              & \text{application type} \\
 \textbf{kind syntax} \\
 \kappa ::= &~ \kappa -> \kappa' & \text{arrow kind} \\
@@ -133,8 +194,8 @@ F,G,A,B ::= &~ X                  & \text{variable type}    \\
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X^\kappa.B:*} \\
-& \inference[\sc TLam]{\Delta,X^\kappa |- B:\kappa'}
-		      {\Delta |- \l X^\kappa.B:\kappa -> \kappa'} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- F:\kappa'}
+		      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
@@ -167,7 +228,7 @@ t,s ::= &~ x           \\
 F,G,A,B ::= &~ X                  \\
           | &~ A -> B             \\   
           | &~ \forall X.B \\
-          | &~ \l X.B      \\
+          | &~ \l X.F      \\
           | &~ F ~ G              \\
 \textbf{kind syntax} \\
 \kappa ::= &~ \kappa -> \kappa'  \\
@@ -178,8 +239,8 @@ F,G,A,B ::= &~ X                  \\
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X.B:*} \\
-& \inference[\sc TLam]{\Delta,X^\kappa |- B:\kappa'}
-		      {\Delta |- \l X.B:\kappa -> \kappa'} \\
+& \inference[\sc TLam]{\Delta,X^\kappa |- F:\kappa'}
+		      {\Delta |- \l X.F:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
 		      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
@@ -205,6 +266,27 @@ F,G,A,B ::= &~ X                  \\
 \end{singlespace}
 \end{figure}
 
+\begin{figure}
+\paragraph{Reduction rules for the Church-$*$-style System \Fw}
+\begin{align*}
+& \inference[\sc RedBeta]{}{(\l(x:A).t)~s --> t[s/x]}
+&&\inference[\sc RedTy]{}{(\L X   .t)[A] --> t[A/X]} \\
+& \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'}
+&&\inference[\sc RedTyAbs]{t --> t'}{\L X^\kappa   .t --> \L X^\kappa   .t'} \\
+& \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s}
+&&\inference[\sc RedTyApp]{t --> t'}{t[A] --> t'[A]} \\
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
+\end{align*}
+\paragraph{Reduction rules for the Curry-$*$-style System \Fw}
+\begin{align*}
+& \inference[\sc RedBeta]{}{(\l x   .t)~s --> t[s/x]} \\
+& \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'} \\
+& \inference[\sc RedApp1]{t --> t'}{t~s --> t'~s} \\
+& \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
+\end{align*}
+\caption{Reduction rules for System \Fw}
+\label{fig:redfw}
+\end{figure}
 
 \paragraph{From Curry-Church-style to Curry-Curry-style}
 We can also have a version of \Fw\ where type syntax is also in Curry style.
@@ -267,7 +349,6 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 
 
 \subsection*{Strong normalization}
-Curry-Church-style System \Fw
 \begin{figure}
 \begin{singlespace}
 \begin{description}
@@ -279,7 +360,7 @@ Curry-Church-style System \Fw
 [| X |]_\xi      &= \xi(X) \\ 
 [| A -> B |]_\xi &= [|A|]_\xi -> [|B|]_\xi \\
 [| \forall X^\kappa . B |]_\xi
-	&= \bigcap_{\mathcal{F}\in\SAT^\kappa} [|B|]_{\xi[X\mapsto\mathcal{F}]}
+	&= \bigsqcap_{\mathcal{F}\in\SAT^\kappa} [|B|]_{\xi[X\mapsto\mathcal{F}]}
 		\qquad\qquad\qquad (X\notin\dom(\xi)) \\
 [| \l X^\kappa . B |]_\xi
 	&= \bbl(\mathcal{G} \in \SAT^\kappa) . [|B|]_{\xi[X\mapsto\mathcal{G}]}
@@ -310,7 +391,15 @@ Curry-Church-style System \Fw
 \label{fig:interpFw}
 \end{singlespace}
 \end{figure}
+For the proof of strong normalization of System \Fw, we use the same
+proof strategy of interpreting types as saturated sets of normalizing terms
+as we did for System \F. However, we need to generalize the interpertation
+of types to the interpretation of type constuctors. The interpretation of
+type constructors, contexts, and terms of System \Fw\ are illustrated
+in Figure \ref{fig:interpFw}. 
 
+
+Curry-Church-style System \Fw
 
 \begin{theorem}[soundness of typing]
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}

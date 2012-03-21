@@ -119,13 +119,13 @@ A,B ::= &~ X \\
 \label{fig:redf}
 \end{figure}
 
-System \F\ extends the type syntax of STLC with type variables ($X$) and
-forall types ($\forall X.B$), which enables us to express polymorphic types.
-However, System \F\ does not have a dedicated syntax for ground types,
-such as the void type $\iota$ in STLC. In System \F, we can populate types from
-forall types such as $\forall X.X$. This this type is, in fact, an encoding of
-the void type. We can encode large class of datatypes in System \F
-(\S\ref{sec:f:data})
+System \F\ extends the type syntax of STLC with type variables ($X$)
+and forall types ($\forall X.B$), which enables us to express polymorphic types
+(see Figure \ref{fig:f}). However, System \F\ does not have a dedicated syntax
+for ground types, such as the void type $\iota$ in STLC. In System \F, we can
+populate types from forall types such as $\forall X.X$. This type is, in fact,
+an encoding of the void type. We shall see that encode large class of datatypes
+in System \F (\S\ref{sec:f:data})
 
 Unlike in STLC, not all types constructed by the type syntax of System \F\
 make sense. Since we have type variables in System \F, we need to
@@ -182,8 +182,34 @@ the terms of the Curry-style STLC.
 
 \subsection{Encoding datatypes in System \F}
 \label{sec:f:data}
-TODO encoding of polymorphic regular recursive datatypes is possible
+System \F\ is  powerful enough to encode polymorphic regular recursive datatypes
+within its type system.
 
+\begin{tabular}{llll}
+	& encoding of type & constructors & eliminators
+	\\
+
+void	& $\forall X.X$
+	\\
+
+unit	& $\forall X.X -> X$
+	\\
+
+boolean & $\forall X.X -> X -> X$
+	\\
+
+natural
+number	& $\forall X. X -> (X -> X) -> X$
+	\\
+
+list	& $\forall X_a.\forall X. X -> (X_a -> X -> X) -> X$
+	\\
+
+pair	& $\forall X_1.\forall X_2. X_1 -> X_2 -> X$
+	\\
+
+sum	& $\forall X_1.\forall X_2. X_1 -> X_2 -> X$
+\end{tabular}
 
 \subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
 We discuss two important properties of System \F, which holds in both
