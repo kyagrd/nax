@@ -120,12 +120,12 @@ A,B ::= &~ X \\
 \end{figure}
 
 System \F\ extends the type syntax of STLC with type variables ($X$)
-and forall types ($\forall X.B$), which enables us to express polymorphic types
+and forall types ($\forall X.B$), which enable us to express polymorphic types
 (see Figure \ref{fig:f}). However, System \F\ does not have a dedicated syntax
 for ground types, such as the void type $\iota$ in STLC. In System \F, we can
 populate types from forall types such as $\forall X.X$. This type is, in fact,
-an encoding of the void type. We shall see that encode large class of datatypes
-in System \F (\S\ref{sec:f:data})
+an encoding of the void type. We shall see that large class of datatypes are
+encodable in System \F (\S\ref{sec:f:data})
 
 Unlike in STLC, not all types constructed by the type syntax of System \F\
 make sense. Since we have type variables in System \F, we need to
@@ -191,9 +191,9 @@ More interestingly, we can also encode recursive datatypes
 that are either simply-typed (natural numbers) or parametrized (lists).
 All of these datatypes are \emph{regular datatypes}.
 These datatypes are classified as \emph{regular datatypes}.
-All non-mutually recursive regular datatypes can be encoded in System \F.
-To encode mutually recursive datatypes, we need features beyond System \F\
-(\eg, subtyping as in $\F_{<:}$ or higher-kinded type constructors as in \Fw).
+All regular datatypes that are not mutually recursive can be
+encoded in System \F. Encodings of mutually recursive datatypes require
+more expressive type systems such as System \Fw\ (\S\ref{sec:fw}).
 
 \begin{table}
 \begin{tabular}{p{17mm}|l p{80mm}}
