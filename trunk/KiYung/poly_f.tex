@@ -182,8 +182,18 @@ the terms of the Curry-style STLC.
 
 \subsection{Encoding datatypes in System \F}
 \label{sec:f:data}
-System \F\ is  powerful enough to encode polymorphic regular recursive datatypes
-within its type system.
+System \F\ is  powerful enough to encode fairly large class of datatypes
+within its type system. Encodings of well-known datatypes are listed in
+Table \ref{tbl:dataF}. In System \F, we can encode non-recursive datatypes
+that are either simply-typed (\eg, void, unit, and booleans)
+or parametrized (or, polymorphic) (\eg, pairs and sums).
+More interestingly, we can also encode recursive datatypes
+that are either simply-typed (natural numbers) or parametrized (lists).
+All of these datatypes are \emph{regular datatypes}.
+These datatypes are classified as \emph{regular datatypes}.
+All non-mutually recursive regular datatypes can be encoded in System \F.
+To encode mutually recursive datatypes, we need features beyond System \F\
+(\eg, subtyping as in $\F_{<:}$ or higher-kinded type constructors as in \Fw).
 
 \begin{table}
 \begin{tabular}{p{17mm}|l p{80mm}}
@@ -196,41 +206,45 @@ unit
 & constructor		& $\l x.x$ \\
 & eliminator		& $\l x.\l x'.x\;x'$
 	\\\hline
-boolean
+booleans
 & encoding of type	& $\forall X.X -> X -> X$ \\
 & constructors		& $\mathtt{True}\,\,\, = \l x_1.\l x_2. x_1$ \par
 			$\mathtt{False} = \l x_1.\l x_2. x_2$ \\
-& eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$  %% if $t$ then $s_1$ else $s_2$ $t~s_1~s_2$
+& eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \par
+			\textbf{if} $x$ \textbf{then} $x_1$ \textbf{else} $x_2$
 	\\\hline
-pair
+pairs
 & encoding of type	& $\forall X_1.\forall X_2.\forall X. (X_1 -> X_2 -> X) -> X$ \\
 & constructor		& $\mathtt{Pair} = \l x_1.\l x_2.\l x'.x'\,x_1\,x_2$ \\
-& eliminiator		& $\l x.\l x'.x\;x'$ \par
+& eliminator		& $\l x.\l x'.x\;x'$ \par
 			$\mathtt{fst} = \l x.x(\l x_1.\l x_2.x_1)$ \par
 			$\mathtt{snd} = \l x.x(\l x_1.\l x_2.x_2)$
 	\\\hline
-sum
+sums
 & encoding of type	& $\forall X_1.\forall X_2.\forall X. (X_1 -> X) -> (X_2 -> X) -> X$\\
 & constructors		& $\mathtt{Inl} = \l x. \l x_1. \l x_2 . x_1\,x$ \par
 			$\mathtt{Inr} = \l x. \l x_2. \l x_2 . x_2\,x$ \\
-& eliminiator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ %% case $t$ of \{Inl $x -> s_1\,x$; Inl $x -> s_2\,x$\} $t\,s_1\,s_2$
+& eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \par
+			\textbf{case} $x$ \textbf{of}
+				\{$\mathtt{Inl}~x' -> x_1\;x'$;
+				  $\mathtt{Inr}~x' -> x_2\;x'$\}
 	\\\hline
 natural
 & encoding of type	& $\forall X. (X -> X) -> X -> X$ \\
 numbers
 & constructors		& $\mathtt{Zero} = \l x_s. \l x_z. x_z$ \par
 			$\mathtt{Succ} = \l x. \l x_s. \l. x_z. x_s (x\;x_s\,x_z)$ \\
-& eliminiator		& $\l x.\l x_z. \l x_s.x\;x_s\,x_z$
+& eliminator		& $\l x.\l x_z. \l x_s.x\;x_s\,x_z$
 	\\\hline
-list
+lists
 & encoding of type	& $\forall X_a.\forall X. (X_a -> X -> X) -> X -> X$ \\
 & constructors		& $\mathtt{Nil}\;\, = \l x_c.\l x_n.\l x_n$ \par
 			$\mathtt{Cons} = \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n)$ \\
 & eliminator		& $\l x.\l x_c. \l x_n.x\;x_c\,x_n$
 	\\\hline
 \end{tabular}
-\caption{Church encodings of datatypes in System \F}
-\label{tbl:encodingF}
+\caption{Church encodings of regular datatypes in System \F}
+\label{tbl:dataF}
 \end{table}
 
 \subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
