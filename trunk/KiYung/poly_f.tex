@@ -189,41 +189,44 @@ that are either simply-typed (\eg, void, unit, and booleans)
 or parametrized (or, polymorphic) (\eg, pairs and sums).
 More interestingly, we can also encode recursive datatypes
 that are either simply-typed (natural numbers) or parametrized (lists).
-All of these datatypes are \emph{regular datatypes}.
-These datatypes are classified as \emph{regular datatypes}.
-All regular datatypes that are not mutually recursive can be
-encoded in System \F. Encodings of mutually recursive datatypes require
+All of these datatypes are classified as \emph{regular datatypes}.\footnote{
+	We will discuss further on regular datatypes
+	and non-regular datatypes in \S\ref{sec:fw}. }
+All regular datatypes that are not mutually recursive are encodable
+in System \F. Encodings of mutually recursive datatypes require
 more expressive type systems such as System \Fw\ (\S\ref{sec:fw}).
 
 \begin{table}
-\begin{tabular}{p{17mm}|l p{80mm}}
+\begin{tabular}{p{15mm}|lp{92mm}}
 	\hline
 void
-& encoding of type	& $\forall X.X$
+& encoding of type	& $\textit{Void} = \forall X.X$ \\
+& constructor		& \\
+& eliminator		& $\l x.x$
 	\\\hline
 unit
-& encoding of type	& $\forall X.X -> X$	\\
+& encoding of type	& $\textit{Unit} = \forall X.X -> X$	\\
 & constructor		& $\mathtt{Unit} = \l x.x$ \\
 & eliminator		& $\l x.\l x'.x\;x'$
 	\\\hline
 booleans
-& encoding of type	& $\forall X.X -> X -> X$ \\
-& constructors		& $\mathtt{True}\,\,\, = \l x_1.\l x_2. x_1$ \par
+& encoding of type	& $\textit{Bool} = \forall X.X -> X -> X$ \\
+& constructors		& $\mathtt{True} = \l x_1.\l x_2. x_1$,\quad
 			$\mathtt{False} = \l x_1.\l x_2. x_2$ \\
-& eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \par
+& eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \qquad
 			(\textbf{if} $x$ \textbf{then} $x_1$ \textbf{else} $x_2$)
 	\\\hline
 pairs
-& encoding of type	& $\forall X_1.\forall X_2.\forall X. (X_1 -> X_2 -> X) -> X$ \\
+& encoding of type	& $ X_1\times X_2 = \forall X. (X_1 -> X_2 -> X) -> X$ \\
 & constructor		& $\mathtt{Pair} = \l x_1.\l x_2.\l x'.x'\,x_1\,x_2$ \\
 & eliminator		& $\l x.\l x'.x\;x'$ \par
-			(by specializing $x'$, we get\par
-			\quad $\mathtt{fst} = \l x.x(\l x_1.\l x_2.x_1)$ \par
-			\quad $\mathtt{snd} = \l x.x(\l x_1.\l x_2.x_2)$ )
+			(by passing appropriate values to $x'$, we get\par
+			~~$\textit{fst} = \l x.x(\l x_1.\l x_2.x_1)$,
+			$\textit{snd} = \l x.x(\l x_1.\l x_2.x_2)$ )
 	\\\hline
 sums
-& encoding of type	& $\forall X_1.\forall X_2.\forall X. (X_1 -> X) -> (X_2 -> X) -> X$\\
-& constructors		& $\mathtt{Inl} = \l x. \l x_1. \l x_2 . x_1\,x$ \par
+& encoding of type	& $X_1+X_2 = \forall X. (X_1 -> X) -> (X_2 -> X) -> X$ \\
+& constructors		& $\mathtt{Inl} = \l x. \l x_1. \l x_2 . x_1\,x$,\quad
 			$\mathtt{Inr} = \l x. \l x_2. \l x_2 . x_2\,x$ \\
 & eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \par
 			(\textbf{case} $x$ \textbf{of}
@@ -231,17 +234,19 @@ sums
 				  $\mathtt{Inr}~x' -> x_2\;x'$\})
 	\\\hline
 natural
-& encoding of type	& $\forall X. (X -> X) -> X -> X$ \\
+& encoding of type	& $\textit{Nat} = \forall X. (X -> X) -> X -> X$ \\
 numbers
-& constructors		& $\mathtt{Zero} = \l x_s. \l x_z. x_z$ \par
-			$\mathtt{Succ} = \l x. \l x_s. \l. x_z. x_s (x\;x_s\,x_z)$ \\
-& eliminator		& $\l x.\l x_z. \l x_s.x\;x_s\,x_z$
+& constructors		& $\mathtt{Succ} = \l x. \l x_s. \l. x_z. x_s (x\;x_s\,x_z)$,\par
+			$\mathtt{Zero} = \l x_s. \l x_z. x_z$ \\
+& eliminator		& $\l x.\l x_z. \l x_s.x\;x_s\,x_z$ \quad
+			(iteration on natural num.)
 	\\\hline
 lists
-& encoding of type	& $\forall X_a.\forall X. (X_a -> X -> X) -> X -> X$ \\
-& constructors		& $\mathtt{Nil}\;\, = \l x_c.\l x_n.\l x_n$ \par
-			$\mathtt{Cons} = \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n)$ \\
-& eliminator		& $\l x.\l x_c. \l x_n.x\;x_c\,x_n$
+& encoding of type	& $\textit{List}\;X_a = \forall X. (X_a -> X -> X) -> X -> X$ \\
+& constructors		& $\mathtt{Cons} = \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n)$,\par
+			$\mathtt{Nil}\;\, = \l x_c.\l x_n.\l x_n$ \\
+& eliminator		& $\l x.\l x_c. \l x_n.x\;x_c\,x_n$ \quad
+			(\textit{foldr} $x_z$ $x_c$ $x$ in Haskell)
 	\\\hline
 \end{tabular}
 \caption{Church encodings of regular datatypes being well-typed in System \F}
@@ -252,14 +257,135 @@ lists
 in the untyped lambda calculus, based on the idea that the natural number $n$
 is represented by a higher-order function ($\l x_s.\l x_z.x_s^n~x_z$), which
 applies the first argument ($x_s$) $n$ times to the second argument ($x_z$).
-Such an encoding of natural numbers is called Church numerals. More generally
-term encodings of the objects of datatypes based on similar idea are called
-Church encodings. In the Curry-style System \F, we can also give encodings of
-types, which make the term encodings of those datatypes and the operations on
-those encoded objects be well-typed, as in Table \ref{tbl:dataF}.
-Encoding of types, constructors, and eliminators
-for each datatype are listed in Table \ref{tbl:dataF}.
+Such an encoding of natural numbers is called Church numerals, named after
+Alonzo Church. More generally, term encodings of the objects of datatypes
+based on similar idea are called Church encodings. In System \F,
+we can also give encodings of types, which make the term encodings of
+those datatypes and the operations on those encoded objects be well-typed,
+as in Table \ref{tbl:dataF}. Such encoding of types in System \F\ for
+datatypes are called impredicative encoding. Encoding of types,
+constructors, and eliminators for several well-known datatypes
+are listed in Table \ref{tbl:dataF}. We use the Curry-style System \F
+in Table \ref{tbl:dataF}, since the constructors and the eliminators are
+exactly the same as the Church encodings in the untyped lambda calculus.
+If we were to use the Church-style System \F, we would need to adjust
+the constructors and the eliminators by adding type abstractions and
+type applications in appropriate places.
 
+Constructors produce objects of a datatype. Nullary constants
+(\aka\ constants) are objects by themselves. For example,
+$\mathtt{Unit}$ is a unit, $\mathtt{True}$ is a boolean,
+$\mathtt{Zero}$ is a natural number, and $\mathtt{Nil}$ is a list.
+That is,
+\[
+|- \mathtt{Unit}:\textit{Unit} \qquad
+|- \mathtt{True}:\textit{Bool} \qquad
+|- \mathtt{Zero}:\textit{Nat} \qquad
+|- \textit{Nil}:\forall X_a.\textit{List}\;X_a
+\]
+where $Unit$ is a shorthand notations for $\forall X.X -> X$, $Bool$ is
+for $\forall X.X -> X -> X$, and so on, as described in Figure \ref{tbl:dataF}.
+Other (non-nullary) constructors expect some arguments to produce objects.
+For example, $\mathtt{Pair}$ expects two arbitrary arguments to produce a pair,
+$\mathtt{Succ}$ expects a natural number argument to produce another
+natural number, and $\mathtt{Nil}$ expects a new element and a list as
+arguments to produce another list. That is,
+\begin{align*}
+& |- \mathtt{Pair} : \forall X_1. \forall X_2. X_1 -> X_2 -> X_1\times X_2
+&& |- \mathtt{Succ} : \textit{Nat} -> \textit{Nat} \\ &
+|- \mathtt{Cons} : \forall X_a. X_a -> \mathit{List}\;X_a -> \mathit{List}\;X_a
+\end{align*}
+where ${X_1 \times X_2}$, $\mathit{Nat}$, and $\mathit{List\,X_a}$
+are shorthand notations for encodings of the datatypes,
+as described in Figure \ref{tbl:dataF}.
+
+We can deduce the number of constructors for a datatype and the types
+of those constructors from the impredicative encoding of the datatype.
+The general form of the encodings for the simply typed datatypes is:
+\[D = \forall X. A_1 -> \cdots -> A_n -> X
+	\qquad\text{where}~~ A_i = A_{i1} -> \cdots -> A_{ik} -> X \]
+Then, the number of constructors is $n$ and
+the type of the $i$th constructor is $A_i[D/X]$.\footnote{
+	Note, $D$ is a shorthand notation for the entire encoding of the type.
+	Expanding the shorthand, $A_i[D/X]$ is
+	$A_i[(\forall X. A_1 -> \cdots -> A_n -> X)/ X]$.
+	Note that $X$ is part of $A_i$, which again is part of $D$.
+	In System \F, we are able to substitute the universally quantified
+	type variable $X$ with the very type containing $X$. For this ability,
+	we say ``System \F\ is \emph{impredicative}''. Impredicative encodings
+	of datatypes rely on the impredicative nature (or, impredicativity)
+	of System \F.}
+Similarly, the general form for the encodings of the parametrized datatypes is
+$D\,X_1 \cdots X_k = \forall X. A_1 -> \cdots -> A_n -> X$. Then,
+the number of constructors is $n$ and the type of the $i$th constructor
+is $\forall X_1.\cdots\forall.X_n.A_i[D/X]$.
+
+Eliminators consume objects of a datatype for computation.
+An eliminator for a datatype expects an object of the datatype
+as its first argument followed by arguments of computations
+to be performed for each of the constructors. For instance,
+the eliminator for void expects only one argument since void has no constructor,
+the eliminator for unit expect two arguments since unit has one constructor, and
+the eliminator for booleans expect three arguments since there are two
+boolean constructors.
+
+Eliminators examine the shape of the object (\ie, by which constructor it is
+constructed) to perform the computation, which corresponds to the shape
+of the object. For instance, the eliminator for booleans amounts to the
+well-known if-then-else expression.
+For recursive types, computations are performed recursively due to
+the definition of the constructors that expect recursive arguments.
+For instance, note that $(x~x_s~x_z)$ appearing in the definition of
+$\mathtt{Succ}$ coincides with the body of the eliminator for natural numbers.
+Eliminators for recursive types are also known as iterators or folds.
+
+The impredicative encoding of a datatype specifies what it needs to eliminate
+an object of the datatype. Recall the general form for the encoding of
+the simply typed datatypes:
+\[D = \forall X. A_1 -> \cdots -> A_n -> X
+	\qquad\text{where}~~ A_i = A_{i1} -> \cdots -> A_{ik} -> X \]
+We can understand this encoding as follows:
+\begin{quote}
+To compute the result of type $X$ from an object of type $D$,
+we need $n$ pieces of computations, whose types are $A_1,\dots,A_n$.
+When the object is constructed by $i$th constructor, we use the $i$th peice of
+computation, whose type is $A_i$, that is, $A_{i1} -> \cdots -> A_{ik} -> X$.
+This peice of computation gathers all the $k$ arguments of types
+$A_{i1},\dots,A_{ik}$ supplied to $i$th constructor for the object construction,
+in order to computes the result of type $X$ from those argument.
+\end{quote}
+
+For constants, eliminator simply returns the argument being passed to handle
+the constnat, as it is. For example, the unit eliminator
+$(\l x .\l x'.x\;x')$ will return what is passed into $x'$. That is,
+\[   (\l x .\l x'.x\;x')~\mathtt{Unit}~s
+ --> (\l x'.\mathtt{Unit}\;x')~s
+ --> \mathtt{Unit}~s
+ --> s
+\] since $\texttt{Unit}=\l x.x$.
+Similarly, the boolean eliminator $(\l x.\l x_1.\l x_2.x~x_1\;x_2)$
+simply returns $x_1$ when $x$ is $\mathtt{True}$
+and returns $x_2$ when $x$ is $\mathtt{False}$,
+due to the definition of $\mathtt{True}$ and $\mathtt{False}$.
+
+For non-nullary constructors, the argument being passed to the eliminator
+to handle the constructor must be a function that collects the argument used
+for the object construction. The pair elimininator $(\l x.\l x'.x\;x')$ expects
+the argument $x'$ be of type $X_1 -> X_2 -> X$ where $X$ is the result type
+you want to compute. For example, you may pass an addition function 
+($\textit{Nat} -> \textit{Nat} -> \textit{Nat}\,$) to $x'$ to compute
+the sum of the first element and the second element of a pair of
+natrual numbers ($\textit{Nat}\times\textit{Nat}\,$). We can define
+selector functions $fst$ and $snd$ for pairs by providing an appropriate
+argument for $x'$ as described in Table \ref{tbl:dataF}.
+
+The key idea of Church encoinding is that objects can be defined by
+how they are going to be eliminated. That is, the Church encoded objects
+are, in fact, eliminators. Readers fammiliar with lambda calculi may have
+noticed that all the eliminators in Table \ref{tbl:dataF} are
+$\eta$-expansions of the identity function. The formulation of elimiantors
+in Table \ref{tbl:dataF} is just to emphasize how many arguments
+each eliminator expects.
 
 \subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
 We discuss two important properties of System \F, which holds in both
