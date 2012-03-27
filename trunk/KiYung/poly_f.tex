@@ -182,15 +182,15 @@ the terms of the Curry-style STLC.
 
 \subsection{Encoding datatypes in System \F}
 \label{sec:f:data}
-System \F\ is  powerful enough to encode fairly large class of datatypes
+System \F\ is  powerful enough to encode a fairly large class of datatypes
 within its type system. Encodings of well-known datatypes are listed in
 Table \ref{tbl:dataF}. In System \F, we can encode non-recursive datatypes
 that are either simply-typed (\eg, void, unit, and booleans)
-or parametrized (or, polymorphic) (\eg, pairs and sums).
+or parametrized, or polymorphic, (\eg, pairs and sums).
 More interestingly, we can also encode recursive datatypes
 that are either simply-typed (natural numbers) or parametrized (lists).
 All of these datatypes are classified as \emph{regular datatypes}.\footnote{
-	We will discuss further on regular datatypes
+	We will discuss regular datatypes
 	and non-regular datatypes in \S\ref{sec:fw}. }
 All regular datatypes that are not mutually recursive are encodable
 in System \F. Encodings of mutually recursive datatypes require
@@ -259,21 +259,24 @@ is represented by a higher-order function ($\l x_s.\l x_z.x_s^n~x_z$), which
 applies the first argument ($x_s$) $n$ times to the second argument ($x_z$).
 Such an encoding of natural numbers is called Church numerals, named after
 Alonzo Church. More generally, term encodings of the objects of datatypes
-based on similar idea are called Church encodings. In System \F,
+based on similar a idea are called Church encodings. In System \F,
 we can also give encodings of types, which make the term encodings of
 those datatypes and the operations on those encoded objects be well-typed,
-as in Table \ref{tbl:dataF}. Such encoding of types in System \F\ for
+as in Table \ref{tbl:dataF}.
+%%% carry over to aaaaaaa just about the terms
+%%% F well typed F
+Such encoding of types in System \F\ for
 datatypes are called impredicative encoding. Encoding of types,
 constructors, and eliminators for several well-known datatypes
-are listed in Table \ref{tbl:dataF}. We use the Curry-style System \F
+are listed in Table \ref{tbl:dataF}. We use the Curry-style System \F\ 
 in Table \ref{tbl:dataF}, since the constructors and the eliminators are
 exactly the same as the Church encodings in the untyped lambda calculus.
 If we were to use the Church-style System \F, we would need to adjust
 the constructors and the eliminators by adding type abstractions and
-type applications in appropriate places.
+type applications in appropriate places. %%% example 
 
-Constructors produce objects of a datatype. Nullary constants
-(\aka\ constants) are objects by themselves. For example,
+Constructors produce objects of a datatype. Nullary constructors
+(\aka\ constants) are objects by themselves. For example, %% actual incondings
 $\mathtt{Unit}$ is a unit, $\mathtt{True}$ is a boolean,
 $\mathtt{Zero}$ is a natural number, and $\mathtt{Nil}$ is a list.
 That is,
@@ -281,14 +284,15 @@ That is,
 |- \mathtt{Unit}:\textit{Unit} \qquad
 |- \mathtt{True}:\textit{Bool} \qquad
 |- \mathtt{Zero}:\textit{Nat} \qquad
-|- \textit{Nil}:\forall X_a.\textit{List}\;X_a
+|- \mathtt{Nil}:\forall X_a.\textit{List}\;X_a
 \]
 where $Unit$ is a shorthand notations for $\forall X.X -> X$, $Bool$ is
 for $\forall X.X -> X -> X$, and so on, as described in Figure \ref{tbl:dataF}.
+%%% say it is a function
 Other (non-nullary) constructors expect some arguments to produce objects.
 For example, $\mathtt{Pair}$ expects two arbitrary arguments to produce a pair,
 $\mathtt{Succ}$ expects a natural number argument to produce another
-natural number, and $\mathtt{Nil}$ expects a new element and a list as
+natural number, and $\mathtt{Cons}$ expects a new element and a list as
 arguments to produce another list. That is,
 \begin{align*}
 & |- \mathtt{Pair} : \forall X_1. \forall X_2. X_1 -> X_2 -> X_1\times X_2
@@ -298,16 +302,18 @@ arguments to produce another list. That is,
 where ${X_1 \times X_2}$, $\mathit{Nat}$, and $\mathit{List\,X_a}$
 are shorthand notations for encodings of the datatypes,
 as described in Figure \ref{tbl:dataF}.
+%%% maybe type syn ???
 
 We can deduce the number of constructors for a datatype and the types
 of those constructors from the impredicative encoding of the datatype.
 The general form of the encodings for the simply typed datatypes is:
 \[D = \forall X. A_1 -> \cdots -> A_n -> X
 	\qquad\text{where}~~ A_i = A_{i1} -> \cdots -> A_{ik} -> X \]
+	%% k is the arity of ith ctor
 Then, the number of constructors is $n$ and
 the type of the $i$th constructor is $A_i[D/X]$.\footnote{
 	Note, $D$ is a shorthand notation for the entire encoding of the type.
-	Expanding the shorthand, $A_i[D/X]$ is
+	Expanding $A_i[D/X]$ is
 	$A_i[(\forall X. A_1 -> \cdots -> A_n -> X)/ X]$.
 	Note that $X$ is part of $A_i$, which again is part of $D$.
 	In System \F, we are able to substitute the universally quantified
@@ -318,14 +324,14 @@ the type of the $i$th constructor is $A_i[D/X]$.\footnote{
 Similarly, the general form for the encodings of the parametrized datatypes is
 $D\,X_1 \cdots X_k = \forall X. A_1 -> \cdots -> A_n -> X$. Then,
 the number of constructors is $n$ and the type of the $i$th constructor
-is $\forall X_1.\cdots\forall.X_n.A_i[D/X]$.
+is $\forall X_1.\cdots\forall X_n.A_i[D/X]$.
 
 Eliminators consume objects of a datatype for computation.
 An eliminator for a datatype expects an object of the datatype
 as its first argument followed by arguments of computations
 to be performed for each of the constructors. For instance,
-the eliminator for void expects only one argument since void has no constructor,
-the eliminator for unit expect two arguments since unit has one constructor, and
+the eliminator for void (TODO) expects only one argument since void has no constructor,
+the eliminator for unit (TODO) expect two arguments since unit has one constructor, and
 the eliminator for booleans expect three arguments since there are two
 boolean constructors.
 
@@ -345,7 +351,7 @@ the simply typed datatypes:
 \[D = \forall X. A_1 -> \cdots -> A_n -> X
 	\qquad\text{where}~~ A_i = A_{i1} -> \cdots -> A_{ik} -> X \]
 We can understand this encoding as follows:
-\begin{quote}
+\begin{quote} %% smaller
 To compute the result of type $X$ from an object of type $D$,
 we need $n$ pieces of computations, whose types are $A_1,\dots,A_n$.
 When the object is constructed by $i$th constructor, we use the $i$th peice of
@@ -355,7 +361,7 @@ $A_{i1},\dots,A_{ik}$ supplied to $i$th constructor for the object construction,
 in order to computes the result of type $X$ from those argument.
 \end{quote}
 
-For constants, eliminator simply returns the argument being passed to handle
+For constants, the eliminator simply returns the argument being passed to handle
 the constnat, as it is. For example, the unit eliminator
 $(\l x .\l x'.x\;x')$ will return what is passed into $x'$. That is,
 \[   (\l x .\l x'.x\;x')~\mathtt{Unit}~s
@@ -376,10 +382,11 @@ you want to compute. For example, you may pass an addition function
 ($\textit{Nat} -> \textit{Nat} -> \textit{Nat}\,$) to $x'$ to compute
 the sum of the first element and the second element of a pair of
 natrual numbers ($\textit{Nat}\times\textit{Nat}\,$). We can define
-selector functions $fst$ and $snd$ for pairs by providing an appropriate
+selector functions $\mathit{fst}$ and $\mathit{snd}$ for pairs by
+providing an appropriate
 argument for $x'$ as described in Table \ref{tbl:dataF}.
 
-The key idea of Church encoinding is that objects can be defined by
+The key idea of Church encoinding is that objects are be defined by
 how they are going to be eliminated. That is, the Church encoded objects
 are, in fact, eliminators. Readers fammiliar with lambda calculi may have
 noticed that all the eliminators in Table \ref{tbl:dataF} are
