@@ -288,6 +288,14 @@ F,G,A,B ::= &~ X                  \\
 \label{fig:redfw}
 \end{figure}
 
+\begin{figure}
+\[ \inference[\sc EqTVar]{X^\kappa \in \Delta}{\Delta |- X = X : \kappa}
+\]
+
+\caption{Type constructor equality rules for System \Fw}
+\label{fig:eqtyfw}
+\end{figure}
+
 \paragraph{From Curry-Church-style to Curry-Curry-style}
 We can also have a version of \Fw\ where type syntax is also in Curry style.
 That is, the forall type ($\forall X.B$) and the lambda type ($\l X.B$)
@@ -352,18 +360,20 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \begin{figure}
 \begin{singlespace}
 \begin{description}
+\item[Interpretation of kinds] as pointwise generalization of $\SAT$
+	\[ [| \kappa |] = \SAT_\kappa \]
 \item[Interpretation of type constructors]
-	as pointwise function space over saturated sets of normalizing terms
+	as function spaces over saturated sets of normalizing terms
 	whose free type variables are substituted according to
 	the given type constructor valuation ($\xi$):
 \begin{align*}
 [| X |]_\xi      &= \xi(X) \\ 
 [| A -> B |]_\xi &= [|A|]_\xi -> [|B|]_\xi \\
 [| \forall X^\kappa . B |]_\xi
-	&= \bigcap_{\mathcal{F}\in\SAT_\kappa} [|B|]_{\xi[X\mapsto\mathcal{F}]}
+	&= \bigcap_{\mathcal{F}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{F}]}
 		\qquad\qquad\qquad (X\notin\dom(\xi)) \\
 [| \l X^\kappa . F |]_\xi
-	&= \bbl(\mathcal{G} \in \SAT_\kappa) . [|F|]_{\xi[X\mapsto\mathcal{G}]}
+	&= \bbl(\mathcal{G} \in [|\kappa|]) . [|F|]_{\xi[X\mapsto\mathcal{G}]}
 		\qquad\quad~ (X\notin\dom(\xi)) \\
 [| F \; G |]_\xi &= [|F|]_\xi ( [|G|]_\xi )
 \end{align*}
@@ -371,13 +381,13 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 	as sets of type constructor valuations and term valuations
 	($\xi$ and $\rho$):
 \begin{align*}
-[| \Delta        |] &= \{ \xi \in \dom(\Delta) -> \bigcup_{\kappa} \SAT_\kappa \mid \xi(x)\in\SAT_{\Delta(x)} ~\text{for all}~x\in\dom(\Delta) \} \\
+[| \Delta        |] &= \{ \xi \in \dom(\Delta) -> \bigcup_{\kappa} [|\kappa|] \mid \xi(x)\in[|\Delta(x)|] ~\text{for all}~x\in\dom(\Delta) \} \\
 [| \Delta;\Gamma |] &= \{ \xi;\rho \mid \xi\in[|\Delta|], \rho\in[|\Gamma|]_\xi \} \\
 [| \Gamma        |]_\xi\ &= \{ \rho \in \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
 \end{align*}
 \item[Interpretation of terms]
 	as terms themselves whose free variables are substituted according to
-	the given pair of type constuctor and term valuations
+	the given pair of type constructor and term valuations
 	($\xi$;$\rho$):
 \begin{align*}
 [| x      |]_{\xi;\rho} &= \rho(x) \\
@@ -393,8 +403,8 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{figure}
 For the proof of strong normalization of System \Fw, we use the same strategy
 of interpreting types as saturated sets of normalizing terms as we did for
-System \F. However, we need to generalize the interpertation of types to
-the interpretation of type constuctors. In the strong normalization proof
+System \F. However, we need to generalize the interpretation of types to
+the interpretation of type constructors. In the strong normalization proof
 of System \F, we had a complete lattice $(\SAT,\subseteq)$.
 We generalize this to an arbitrary kind $\kappa$ such that
 $(\SAT_\kappa,\sqsubseteq_\kappa)$ from a complete lattice for any $\kappa$.
@@ -409,12 +419,19 @@ such that
 	\mathcal{F}(\mathcal{G}) \sqsubseteq_{\kappa'} \mathcal{F'}(\mathcal{G})
 	~\text{for all}~\mathcal{G}\in\SAT_\kappa
 \end{align*}
-The interpretation of type constructors, contexts, and terms of System \Fw\ 
-are illustrated in Figure \ref{fig:interpFw}. 
+Then, we can give interpretation of kind $\kappa$ as $\SAT_\kappa$.
+That is, $[| \kappa |] = \SAT_\kappa$.
+The interpretation of kinds, type constructors, contexts, and
+terms of System \Fw\ are illustrated in Figure \ref{fig:interpFw}. 
 
-We use the Curry-Church-style System \Fw\ to present
-the strong normalizing proof.
+We use the Curry-Church-style System \Fw\ to present the strong normalization
+proof. It is more convenient to interpret terms in Curry style since
+the Curry-style terms syntax is simpler than the Church-style term syntax.
+It is more convenient to interpret type constructors in Curry style since
+the kind annotation makes it clear how to interpret the bound type variable $X$
+in forall types and lambda types (\ie, for $X^\kappa$ choose from $[|\kappa|]$).
 
+The proof of strong normalization amounts to proving the following theorem:
 \begin{theorem}[soundness of typing]
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
 	    {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
@@ -423,4 +440,85 @@ $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
 \begin{corollary}[strong normalization]
 	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
 \end{corollary}
+\begin{proof}
+We prove by induction on the typing derivation ($\Delta;\Gamma |- t:A$).
 
+The cases for \rulename{Var}, \rulename{Abs}, and \rulename{App} are pretty
+much the same as the strong normalization proof for System \F.
+The cases for \rulename{TyAbs} and \rulename{TyApp} is almost the same
+as the strong normalization proof for System \F, except that the type variable
+can be of some kind $\kappa$ other than just the star kind.
+We need to consider one more rule \rulename{Conv}, which is new in System \Fw.
+
+\paragraph{Case (\rulename{TyAbs})}
+We need to show that
+$ \inference{\Delta;\Gamma |- t : \forall X.B & \xi;\rho\in[|\Delta;\Gamma|]}
+	{[|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_\xi} $
+
+By induction, we know that
+\[ \inference{\Delta,X^\kappa;\Gamma |- t:B & \xi';\rho'\in[|\Delta,X;\Gamma|]}
+	{[|t|]_{\xi';\rho'} \in [|B|]_{\xi'}} ~
+	(X\notin\FV(\Gamma))
+\]
+Since this holds for all $\xi';\rho' \in [|\Delta,X^\kappa;\Gamma|]$ where
+$X\notin\FV(\Gamma)$, it also holds for particular subset such that
+$\xi' = \xi[X\mapsto\mathcal{F}]$ and $\rho'=\rho$ for all $\mathcal{F}\in[|\kappa|]$.
+That is,
+\[ [|t|]_{\xi[X\mapsto\mathcal{F}];\rho} \in [|B|]_{\xi[X\mapsto\mathcal{F}]}
+	\quad \text{for all}~\mathcal{F}\in[|\kappa|] \]
+From $X\notin\FV(\Gamma)$, we know that
+$[|t|]_{\xi[X\mapsto\mathcal{F}];\rho} = [|t|]_{\xi;\rho}$
+because $\rho$ is independent of what $X$ maps to.
+So, we know that
+\[ [|t|]_{\xi;\rho} \in [|B|]_{\xi[X\mapsto\mathcal{F}]}
+	\quad \text{for all}~\mathcal{F}\in[|\kappa|] \]
+By set theoretic definition, this is exactly what we wanted to show:
+\[ [|t|]_{\xi;\rho} \in
+	\bigcap_{\mathcal{F}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{F}]}
+	= [|\forall X^\kappa.B|]_\xi
+\]
+
+\paragraph{Case (\rulename{TyApp})}
+We need to show that
+$ \inference{\Delta;\Gamma |- t : B[G/X] & \xi;\rho\in[|\Delta;\Gamma|]}
+	{[|t|]_{\xi;\rho} \in [|B[G/X]|]_\xi} $
+
+By induction, we know that
+$ \inference{\Delta;\Gamma |- t : \forall X^\kappa.B & \xi';\rho'\in[|\Delta;\Gamma|]}
+	{[|t|]_{\xi';\rho'} \in [|\forall X^\kappa.B|]_{\xi'}}
+$.
+
+Since this holds for all $\xi';\rho' \in [|\Delta,\Gamma|]$,
+it also holds for $\xi'=\xi$ and $\rho'=\rho$. Then, we are done:
+$ [|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_{\xi}
+	= \bigcap_{\mathcal{G}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{G}]}
+	\subseteq [|B|]_{\xi[X\mapsto[|G|]_\xi]} = [|B[G/X]|]_\xi
+$.
+
+\paragraph{Case (\rulename{Conv})}
+We need to show that
+$ \inference{\Delta;\Gamma |- t : A' & \xi;\rho\in[|\Delta;\Gamma|]}
+	{[|t|]_{\xi;\rho} \in [|A'|]_\xi} $
+
+By induction we know that 
+$ \inference{\Delta;\Gamma |- t : A & \xi;\rho\in[|\Delta;\Gamma|]}
+	{[|t|]_{\xi;\rho} \in [|A|]_\xi} $
+
+If we can show that $[|A|]_\xi = [|A'|]_\xi$, we are done.
+
+To show that $[|A|]_\xi = [|A'|]_\xi$, we use Lemma \ref{lem:fw:soundtyeq}.
+\end{proof}
+
+\begin{lemma}[soundness of type equality] \label{lem:fw:soundtyeq}
+\[ \inference{\Delta |- F = F' : \kappa & \xi\in[|\Delta|]}
+	{[|F|]_\xi = [|F'|]_\xi} \]
+\end{lemma}
+\begin{proof}
+	TODO
+\end{proof}
+
+\begin{theorem}[soundness of kinding]
+$ \inference{\Delta |- F : \kappa & \xi\in[|\Delta|]}{[|F|]_\xi\in[|\kappa|]} $
+\end{theorem}
+%% \begin{proof} TODO \end{proof}
+TODO this seems to be true but do we need this anywhere???

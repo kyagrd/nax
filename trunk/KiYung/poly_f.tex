@@ -497,7 +497,7 @@ since saturated sets are closed under the arrow operation ($->$), as we
 mentioned in \S\ref{sec:stlc:srsn}. $[|\forall X.B|]_\xi \in \SAT$ since
 it is known that saturated sets are closed under set indexed intersection.
 
-The Proof of strong normalization amounts to proving the following theorem:
+The proof of strong normalization amounts to proving the following theorem:
 \begin{theorem}[soundness of typing]
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
 	    {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
@@ -589,7 +589,7 @@ Since this holds for all $\xi';\rho' \in [|\Delta,\Gamma|]$,
 it also holds for $\xi'=\xi$ and $\rho'=\rho$. Then, we are done:
 $ [|t|]_{\xi;\rho} \in [|\forall X.B|]_{\xi}
 	= \bigcap_{\mathcal{A}\in\SAT} [|B|]_{\xi[X\mapsto\mathcal{A}]}
-	\subset [|B|]_{\xi[X\mapsto[|A|]_\xi]} = [|B[A/X]|]_\xi
+	\subseteq [|B|]_{\xi[X\mapsto[|A|]_\xi]} = [|B[A/X]|]_\xi
 $.
 \end{proof}
 \begin{corollary}[strong normalization]
