@@ -360,10 +360,10 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 [| X |]_\xi      &= \xi(X) \\ 
 [| A -> B |]_\xi &= [|A|]_\xi -> [|B|]_\xi \\
 [| \forall X^\kappa . B |]_\xi
-	&= \bigsqcap_{\mathcal{F}\in\SAT^\kappa} [|B|]_{\xi[X\mapsto\mathcal{F}]}
+	&= \bigcap_{\mathcal{F}\in\SAT_\kappa} [|B|]_{\xi[X\mapsto\mathcal{F}]}
 		\qquad\qquad\qquad (X\notin\dom(\xi)) \\
-[| \l X^\kappa . B |]_\xi
-	&= \bbl(\mathcal{G} \in \SAT^\kappa) . [|B|]_{\xi[X\mapsto\mathcal{G}]}
+[| \l X^\kappa . F |]_\xi
+	&= \bbl(\mathcal{G} \in \SAT_\kappa) . [|F|]_{\xi[X\mapsto\mathcal{G}]}
 		\qquad\quad~ (X\notin\dom(\xi)) \\
 [| F \; G |]_\xi &= [|F|]_\xi ( [|G|]_\xi )
 \end{align*}
@@ -371,7 +371,7 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 	as sets of type constructor valuations and term valuations
 	($\xi$ and $\rho$):
 \begin{align*}
-[| \Delta        |] &= \{ \xi \in \dom(\Delta) -> \bigcup_{\kappa} \SAT^\kappa \mid \xi(x)\in\SAT^{\Delta(x)} ~\text{for all}~x\in\dom(\Delta) \} \\
+[| \Delta        |] &= \{ \xi \in \dom(\Delta) -> \bigcup_{\kappa} \SAT_\kappa \mid \xi(x)\in\SAT_{\Delta(x)} ~\text{for all}~x\in\dom(\Delta) \} \\
 [| \Delta;\Gamma |] &= \{ \xi;\rho \mid \xi\in[|\Delta|], \rho\in[|\Gamma|]_\xi \} \\
 [| \Gamma        |]_\xi\ &= \{ \rho \in \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
 \end{align*}
@@ -391,15 +391,29 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \label{fig:interpFw}
 \end{singlespace}
 \end{figure}
-For the proof of strong normalization of System \Fw, we use the same
-proof strategy of interpreting types as saturated sets of normalizing terms
-as we did for System \F. However, we need to generalize the interpertation
-of types to the interpretation of type constuctors. The interpretation of
-type constructors, contexts, and terms of System \Fw\ are illustrated
-in Figure \ref{fig:interpFw}. 
+For the proof of strong normalization of System \Fw, we use the same strategy
+of interpreting types as saturated sets of normalizing terms as we did for
+System \F. However, we need to generalize the interpertation of types to
+the interpretation of type constuctors. In the strong normalization proof
+of System \F, we had a complete lattice $(\SAT,\subseteq)$.
+We generalize this to an arbitrary kind $\kappa$ such that
+$(\SAT_\kappa,\sqsubseteq_\kappa)$ from a complete lattice for any $\kappa$.
+The set $\SAT_\kappa$ are generalization of $\SAT$ such that $\SAT_{*}=\SAT$
+and $\SAT_{\kappa -> \kappa'} = \SAT_\kappa -> \SAT_{\kappa'}$
+(\ie, functions from $\SAT_\kappa$ to $\SAT_\kappa'$).
+The relation $\sqsubseteq_\kappa$ is a pointwise generalization of $\subseteq$
+such that
+\begin{align*}
+\mathcal{A} \sqsubseteq_{*} \mathcal{A'} &= \mathcal{A} \subseteq \mathcal{A'}\\
+\mathcal{F} \sqsubseteq_{\kappa -> \kappa'} \mathcal{F'} &=
+	\mathcal{F}(\mathcal{G}) \sqsubseteq_{\kappa'} \mathcal{F'}(\mathcal{G})
+	~\text{for all}~\mathcal{G}\in\SAT_\kappa
+\end{align*}
+The interpretation of type constructors, contexts, and terms of System \Fw\ 
+are illustrated in Figure \ref{fig:interpFw}. 
 
-
-Curry-Church-style System \Fw
+We use the Curry-Church-style System \Fw\ to present
+the strong normalizing proof.
 
 \begin{theorem}[soundness of typing]
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
