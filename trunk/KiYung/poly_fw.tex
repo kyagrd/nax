@@ -36,7 +36,12 @@ In System \F, types are equal when they are $\alpha$-equivalent. For example,
 $\forall X.X$ and $\forall X'.X'$ are considered to be same types in System \F.
 In System \Fw, we expect richer notion of equality, such as $\beta$-equivalence,
 since the type syntax of System \Fw\ is analogous to a STLC at type level.
-For instance, we want $(\lambda X^{*}.X) A = A$. TODO
+For instance, we want $(\lambda X^{*}.X) A = A$. The equality rules over
+type constructors are illustrated in Figure \ref{fig:eqtyfw}.
+The \rulename{EqTBeta} rule describes the essence of $\beta$-equivalence.
+Other rules describe structural nature of equality (\rulename{EqTVar},
+\rulename{EqTArr}, \rulename{EqTAll}, \rulename{EqTLam}, \rulename{EqTApp}.)
+and transitivity of equality (\rulename{EqTTrans}).
 
 %% syntax directed formalism???
 %% http://pauillac.inria.fr/~herbelin/talks/cic.ps
@@ -289,10 +294,26 @@ F,G,A,B ::= &~ X                  \\
 \end{figure}
 
 \begin{figure}
-\[ \inference[\sc EqTVar]{X^\kappa \in \Delta}{\Delta |- X = X : \kappa}
-\]
-
-\caption{Type constructor equality rules for System \Fw}
+\begin{align*}
+& \inference[\sc EqTBeta]
+	{\Delta,X^\kappa |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
+	{\Delta |- (\l X^\kappa.F)\;G = F[G/X] : \kappa'} \\
+& \inference[\sc EqTVar]{X^\kappa \in \Delta}{\Delta |- X = X : \kappa} \\
+& \inference[\sc EqTArr]{\Delta |- A=A':* & \Delta |- B=B':*}
+			{\Delta |- A -> B=A' -> B':*} \\
+& \inference[\sc EqTAll]{\Delta,X^\kappa |- B=B':*}
+			{\Delta |- \forall X^\kappa.B=B':*} \\
+& \inference[\sc EqTLam]
+	{\Delta,X^\kappa |- F=F':\kappa'}
+        {\Delta |- \l X^\kappa.F=\l X^\kappa.F':\kappa -> \kappa'} \\
+& \inference[\sc EqTApp]
+	{\Delta |- F=F' : \kappa -> \kappa' & \Delta |- G=G' : \kappa}
+        {\Delta |- F ~ G = F' ~ G' : \kappa'} \\
+& \inference[\sc EqTTrans]
+	{\Delta |- F=F' : \kappa & \Delta |- F'=F'' : \kappa}
+        {\Delta |- F=F'' : \kappa'}
+\end{align*}
+\caption{Type constructor equality rules for $*$-Church-style System \Fw}
 \label{fig:eqtyfw}
 \end{figure}
 
@@ -436,10 +457,6 @@ The proof of strong normalization amounts to proving the following theorem:
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
 	    {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
 \end{theorem}
-
-\begin{corollary}[strong normalization]
-	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
-\end{corollary}
 \begin{proof}
 We prove by induction on the typing derivation ($\Delta;\Gamma |- t:A$).
 
@@ -449,6 +466,8 @@ The cases for \rulename{TyAbs} and \rulename{TyApp} is almost the same
 as the strong normalization proof for System \F, except that the type variable
 can be of some kind $\kappa$ other than just the star kind.
 We need to consider one more rule \rulename{Conv}, which is new in System \Fw.
+Let us elaboreate on the three cases of
+\rulename{TyAbs} and \rulename{TyApp}, and \rulename{Conv}.
 
 \paragraph{Case (\rulename{TyAbs})}
 We need to show that
@@ -481,19 +500,19 @@ By set theoretic definition, this is exactly what we wanted to show:
 \paragraph{Case (\rulename{TyApp})}
 We need to show that
 $ \inference{\Delta;\Gamma |- t : B[G/X] & \xi;\rho\in[|\Delta;\Gamma|]}
-	{[|t|]_{\xi;\rho} \in [|B[G/X]|]_\xi} $
+	{[|t|]_{\xi;\rho} \in [|B[G/X]|]_\xi} $.
 
 By induction, we know that
-$ \inference{\Delta;\Gamma |- t : \forall X^\kappa.B & \xi';\rho'\in[|\Delta;\Gamma|]}
-	{[|t|]_{\xi';\rho'} \in [|\forall X^\kappa.B|]_{\xi'}}
-$.
+$ \inference
+	{ \Delta;\Gamma |- t : \forall X^\kappa.B
+	& \xi';\rho'\in[|\Delta;\Gamma|] }
+	{[|t|]_{\xi';\rho'} \in [|\forall X^\kappa.B|]_{\xi'}} $.
 
 Since this holds for all $\xi';\rho' \in [|\Delta,\Gamma|]$,
 it also holds for $\xi'=\xi$ and $\rho'=\rho$. Then, we are done:
 $ [|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_{\xi}
 	= \bigcap_{\mathcal{G}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{G}]}
-	\subseteq [|B|]_{\xi[X\mapsto[|G|]_\xi]} = [|B[G/X]|]_\xi
-$.
+	\subseteq [|B|]_{\xi[X\mapsto[|G|]_\xi]} = [|B[G/X]|]_\xi $.
 
 \paragraph{Case (\rulename{Conv})}
 We need to show that
@@ -506,19 +525,108 @@ $ \inference{\Delta;\Gamma |- t : A & \xi;\rho\in[|\Delta;\Gamma|]}
 
 If we can show that $[|A|]_\xi = [|A'|]_\xi$, we are done.
 
-To show that $[|A|]_\xi = [|A'|]_\xi$, we use Lemma \ref{lem:fw:soundtyeq}.
+To show that $[|A|]_\xi = [|A'|]_\xi$,
+we use the soundness of type constructor equality lemma
+(Lemma \ref{lem:fw:soundtyeq}).
 \end{proof}
+
+\begin{corollary}[strong normalization]
+	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
+\end{corollary}
 
 \begin{lemma}[soundness of type equality] \label{lem:fw:soundtyeq}
-\[ \inference{\Delta |- F = F' : \kappa & \xi\in[|\Delta|]}
-	{[|F|]_\xi = [|F'|]_\xi} \]
+$ \inference{\Delta |- F = F' : \kappa & \xi\in[|\Delta|]}
+	{[|F|]_\xi = [|F'|]_\xi} $
 \end{lemma}
 \begin{proof}
-	TODO
+The only interesting case is the \rulename{EqTBeta} rule.
+The \rulename{EqTVar} is trivial and all other rules are handled by induction.
+Let us elaborate on the \rulename{EqTBeta} case.
+
+\paragraph{Case (\rulename{EqTBeta})} We need to show that
+\[ \inference
+	{ \Delta |- (\l X^\kappa.F)\;G = F[G/X] : \kappa' & \xi\in[|\Delta|] }
+	{ [| (\l X^\kappa.F)\;G |]_\xi = [| F[G/X] |]_\xi }
+\]
+
+By applying the soundness of kinding lemma (Lemma \ref{lem:fw:soundki})
+to the premises, we know that
+\[ \inference
+	{\Delta,X^\kappa |- F : \kappa -> \kappa' & \xi'\in[|\Delta,X^\kappa|]}
+	{[|F|]_{\xi'} \in [|\kappa'|]}
+\quad\text{and}\quad
+   \inference{\Delta |- G : \kappa & \xi\in[|\Delta|]}{[|G|]_\xi \in [|\kappa|]}
+\]
+
+Since it should hold for arbitrary $\xi'$, it should also hold for
+a particular $\xi'$ such that $\xi'=\xi[X\mapsto\mathcal{G}]$
+for any $\mathcal{G} \in [|\kappa|]$. Therefore, we can rewrite
+the left-hand side of the conclusion, which what we wanted to show,
+into the right-hand side as follows:
+\begin{align*}
+[| (\l X^\kappa.F)\;G |]_\xi
+&=[|(\l X^\kappa.F)|]_\xi ([|G|]_\xi) \\
+&=(\bbl(\mathcal{G}\in[|\kappa|]).[|F|]_{\xi[X\mapsto\mathcal{G}]})([|G|]_\xi)\\
+&=[|F|]_{\xi[X\mapsto[|G|]_\xi]} \\
+&=[|F[G/X]|]_\xi
+\end{align*}
 \end{proof}
 
-\begin{theorem}[soundness of kinding]
+System \Fw\ has richer kind structure than System \F, which only has one and
+the only the star kind. So, the interpretation of type constructors would only
+be well-defined when the type constructors are well-kinded. For example,
+the interpretation of a type constructor application $[|F~G|]_\xi$
+would only make sense when $[|F|]_\xi\in[|\kappa -> \kappa'|]$
+and $[|G|]_\xi\in[|\kappa|]$ for some $\kappa$ and $\kappa'$.
+The soundness of kinding lemma below states the property that
+well-kinded type constructors indeed have well-defined interpretation.
+\begin{lemma}[soundness of kinding]  \label{lem:fw:soundki}
 $ \inference{\Delta |- F : \kappa & \xi\in[|\Delta|]}{[|F|]_\xi\in[|\kappa|]} $
-\end{theorem}
-%% \begin{proof} TODO \end{proof}
-TODO this seems to be true but do we need this anywhere???
+\end{lemma}
+\begin{proof}
+We prove by induction on the kinding judgment.
+\paragraph{Case (\rulename{TVar})}
+Straightforward by definition of $[|\Delta|]$.
+
+$[|X|]_\xi=\xi(X) \in [|\kappa|]$
+since $\xi(X)\in[|\kappa|]$ for any $\xi\in[|\Delta|]$
+when $X^\kappa \in [|\Delta|]$.
+
+\paragraph{Case (\rulename{TArr})} By induction, straightforward.
+
+\paragraph{Case (\rulename{TAll})}
+We need to show that
+$ \inference{\Delta |- \forall X^\kappa.B:* & \xi\in[|\Delta|]}
+	{[|\forall X^\kappa.B|]_\xi\in[|*|]} $.
+
+By induction, we know that
+$ \inference{\Delta,X^\kappa |- B:* & \xi'\in[|\Delta,X^\kappa|]}
+	{[|B|]_{\xi'} \in [|*|]} $.
+
+Since it should hold for any $\xi'$, it also holds for
+$\xi'=\xi[X\mapsto\mathcal{G}]$ for any $\mathcal{G}\in[|\kappa|]$.
+
+Therefore,
+$  [|\forall X^\kappa.B|]_\xi
+ = \bigcap{\mathcal{G}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{G}]}\in[|*|] $.
+
+\paragraph{Case (\rulename{TLam})}
+We need to show that
+$ \inference{\Delta |- \l X^\kappa.B:* & \xi\in[|\Delta|]}
+	{[|\forall X.B|]_\xi\in[|*|]} $.
+
+By induction, we know that 
+$ \inference{\Delta,X^\kappa |- F:\kappa' & \xi'\in[|\Delta,X^\kappa|]}
+	{[|F|]_{\xi'} \in [|\kappa'|]} $.
+
+Since it should hold for any $\xi$, it also holds for
+$\xi'=\xi[X\mapsto\mathcal{G}]$ for any $\mathcal{G}\in[|\kappa|]$.
+
+Therefore,
+$  [|\l X^\kappa.F|]_\xi
+ = \bbl(\mathcal{G}\in[|\kappa|]).[|F|]_{\xi[X\mapsto\mathcal{G}]}
+ 	\in [|\kappa -> \kappa'|]$.
+
+\paragraph{Case (\rulename{TApp})} By induction, straightforward.
+\end{proof}
+
