@@ -9,9 +9,11 @@ are categorized by types. A type constructor of kind $\kappa -> \kappa'$
 expects another type constructor of kind $\kappa$ as an argument to produce
 yet another type constructor of kind $\kappa'$, just as a function of type
 $A -> B$ expects another term of type $A$ as an argument to produce yet another
-term of type $B$. Types of the star kind ($*$) are type constructors that
-do not expect any arguments. Type constructors that expect an argument
-are of arrow kinds ($\kappa -> \kappa'$).
+term of type $B$. Type constructors of the star kind ($*$), or just
+\emph{types}, do not expect any arguments. Type constructors that expect
+an argument are of arrow kinds ($\kappa -> \kappa'$). By convention,
+$A$ and $B$ stands for types (\ie, type concstructors of kind $*$),
+and $F$ and $G$ stands for type constructors or arbitrary kinds.
 
 We can think of System \F\ as a restriction of System \Fw\ where we only
 allow types of the star kind ($*$). So, all the type variables appearing in
@@ -369,8 +371,35 @@ we can imagine yet another version of \Fw\ with annotated terms
 and unannotated types -- namely, the Church-Curry-style \Fw.
 I am not sure when one would need this style, though.
 
+\subsection{Encodings of datatypes in System \Fw}
+TODO
+\[
+\mu =
+ \l X_{\!f}^{* -> *}.
+ \forall X_a^{*}.(\forall X_r^{*}.(X_r -> X_a) -> X_{\!f}\,X_r -> X_a) -> X_a
+\]
+\begin{verbatim}
+
+mu = \f . forall a . (forall r. (r -> a) -> f r -> a) -> a
 
 
+Nat is when f = \ r . forall x' . (r -> x') -> (1 -> x') -> x'
+
+So,
+Nat = forall a .
+  (forall r. (r->a) ->
+             (forall x'.(r->x') -> (1->x') -> x') -> a) ->  a
+
+Nat = forall a .
+  (forall r.(r->a) -> (forall x'.(r->x') -> x' -> x') -> a) ->  a
+
+
+how to show this is this isomorphic to the System F encoding?
+
+Nat = forall x . (x -> x) -> (1 -> x) -> x
+Nat = forall x . (x -> x) -> x -> x
+
+\end{verbatim}
 \subsection{Subject reduction and strong normalziation}\label{sec:f:srsn}
 \subsection*{Subject reduction}
 \begin{theorem}[subject reduction]
