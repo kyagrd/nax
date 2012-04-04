@@ -372,7 +372,78 @@ and unannotated types -- namely, the Church-Curry-style \Fw.
 I am not sure when one would need this style, though.
 
 \subsection{Encodings of datatypes in System \Fw}
-TODO
+\label{sec:fw:data}
+In System \Fw, we can encode all the datatypes encodable in System \F\ (see
+\S\ref{sec:f:data}) and more. We can encode datatype constructors and
+datatype constructors of higher-kinds. Datatype constructors of higher-kinds
+can express nested datatypes, which are non-regular datatypes inexpressible
+in System \F. aaaa
+
+Datatype constructors that expects other types as arguments to produce
+a datatype are encodable in System \Fw. For example, the shorthand notations
+(or, type synonyms) in \S\ref{sec:f:data}), such as $(\times)$ for pair types
+and $(+)$ for sum types, can be encoded as type constructors in System \Fw\ 
+using lambda types, as follows:\footnote{Here,
+	we are using a Haskell-ish notation of turning a infix binary operator
+	into a prefix binary operator by surrounding the operator in parenthesis
+	(\eg, $(+)\;X_1\,X_2 = X_1 + X_2$)}
+\begin{align*}
+(\times) &= \l X_1^{*}.\l X_2^{*}.(X_1 -> X_2 -> X) -> X &:~ * -> * -> * \\
+     (+) &= \l X_1^{*}.\l X_2^{*}.(X_1 -> X) -> (X_2 -> X) -> X &:~ * -> * -> *
+\end{align*}
+In System \F, datatype constructors, such as $(\times)$ and $(+)$, are
+meta-level concepts that cannot be encoded whithin the type system.
+In System \Fw, these datatype constructors are encodable as type constructors,
+which are oridary constructs of System \Fw.
+
+We can also encode higher-kinded datatype constructors that expect
+not only types but also type constructors of aribrary kinds as arguments.
+For example, we can encode \textit{Flip}, which switches the order of
+the first and second arguments of binary type constructors
+(\ie, $(\textit{Flip}\;F)\;X_1\,X_2 = F\;X_1\,X_2$),
+and \textit{Compose}, which composes two unary type constructors
+(\ie, $(\textit{Compose}\;F\;G)\;X = F\,(G\;X)$), as follows:
+\begin{align*}
+\textit{Flip} &= \l X_{\!f}^{*-> *-> *}.\l X_1^{*}.\l X_2^{*}.X_{\!f}\,X_2\;X_1
+		     &:\;& (* -> * -> *) -> * -> * -> * \\
+\textit{Compose} &= \l X_{\!f}^{*-> *}.\l X_g^{*-> *}.\l X^{*}.X_{\!f}\,(X_g\,X)
+		     &:\;& (* -> *) -> (* -> *) -> * -> *
+\end{align*}
+
+TODO discussion on nested datatypes or non-regular datatypes
+use Haskell example???
+
+One of the most interesting higher-kinded datatype constructors
+encodalble in System \Fw\ is the recursive type operator $\mu$.
+Theories on recursive datatypes are often formulated in terms of
+the recursive type operator $\mu$, which satisfies the property
+that $\mu F = F (\mu F)$ for any $F: * -> *$. A recursive datatype ($\mu F$)
+is built from its base structure ($F$) by applying the recursive operator.
+For example, the natrual number datatype can be built from the base structure
+$F = \l X_r^{*}.X_r + \textit{Unit}$. Intuitively, we can understand this
+base structure as a specification for natrual numbers: a natrual number is
+either a successor of a recursive object ($X_r$)
+or zero encoded as the unit object (\textit{Uint}).
+From this base structure, we can define
+$\textit{Nat} = \mu(\l X_r^{*}.X_r + \textit{Unit})$.
+Let us write down the desired property of $\mu$ for $\textit{Nat}$.
+\begin{align*}
+\mu(\l X_r^{*}.X_r + \textit{Unit}) &=
+(\l X_r^{*}.X_r + \textit{Unit})(\mu(\l X_r^{*}.X_r + \textit{Unit})) \\
+\textit{Nat} &= (\l X_r^{*}.X_r + \textit{Unit})\,\textit{Nat} \\
+\textit{Nat} &= \textit{Nat}\, + \textit{Unit}
+\end{align*}
+Note, the simplified last equation looks very similar to
+the recursive datatype defintions of natural numbers in functional languages,
+such as Haskell: \[ \qquad\qquad
+\textbf{data}~\textit{Nat} = \texttt{Succ}~\textit{Nat}\,\mid\,\texttt{Zero} \]
+See Chapter \ref{ch:mendler} %% TODO update the fwd ref to a section later
+for more of the Haskell examples on recursive datatypes and $\mu$.
+
+Although recursive datatypes are encodable in System \F,
+extensions of System \F\ with $\mu$ have been studied %% TODO cite
+since we can reason about recursive datatype more uniformly based on
+the properties of $\mu$.
 \[
 \mu =
  \l X_{\!f}^{* -> *}.

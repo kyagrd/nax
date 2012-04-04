@@ -217,7 +217,7 @@ booleans
 			(\textbf{if} $x$ \textbf{then} $x_1$ \textbf{else} $x_2$)
 	\\\hline
 pairs
-& encoding of type	& $ X_1\times X_2 = \forall X. (X_1 -> X_2 -> X) -> X$ \\
+& encoding of type	& $ A_1\times A_2 = \forall X. (A_1 -> A_2 -> X) -> X$ \\
 & constructor		& $\mathtt{Pair} = \l x_1.\l x_2.\l x'.x'\,x_1\,x_2$ \\
 & eliminator		& $\l x.\l x'.x\;x'$ \par
 			(by passing appropriate values to $x'$, we get\par
@@ -225,7 +225,7 @@ pairs
 			$\textit{snd} = \l x.x(\l x_1.\l x_2.x_2)$ )
 	\\\hline
 sums
-& encoding of type	& $X_1+X_2 = \forall X. (X_1 -> X) -> (X_2 -> X) -> X$ \\
+& encoding of type	& $A_1+A_2 = \forall X. (A_1 -> X) -> (A_2 -> X) -> X$ \\
 & constructors		& $\mathtt{Inl} = \l x. \l x_1. \l x_2 . x_1\,x$,\quad
 			$\mathtt{Inr} = \l x. \l x_2. \l x_2 . x_2\,x$ \\
 & eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \par
@@ -242,7 +242,7 @@ numbers
 			(iteration on natural num.)
 	\\\hline
 lists
-& encoding of type	& $\textit{List}\;X_a = \forall X. (X_a -> X -> X) -> X -> X$ \\
+& encoding of type	& $\textit{List}\;A = \forall X. (A -> X -> X) -> X -> X$ \\
 & constructors		& $\mathtt{Cons} = \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n)$,\par
 			$\mathtt{Nil}\;\, = \l x_c.\l x_n.\l x_n$ \\
 & eliminator		& $\l x.\l x_c. \l x_n.x\;x_c\,x_n$ \quad
@@ -289,7 +289,7 @@ That is,
 |- \mathtt{Zero}:\textit{Nat} \qquad
 |- \mathtt{Nil}:\forall X_a.\textit{List}\;X_a
 \]
-where $\textit{Unit}$ is a shorthand notation (or, macro, type synonym)
+where $\textit{Unit}$ is a shorthand notation (or, type synonym)
 for $\forall X.X -> X$, $Bool$ is for $\forall X.X -> X -> X$, and so on,
 as described in Figure \ref{tbl:dataF}.
 %%% say it is a function
