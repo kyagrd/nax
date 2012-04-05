@@ -390,15 +390,17 @@ other types as arguments to produce a datatype. We can encode these
 type constructors in System \Fw. For example, the shorthand notations
 (or, type synonyms) in \S\ref{sec:f:data}), such as $(\times)$ for pair types
 and $(+)$ for sum types, can be encoded as as follows:\footnote{Here,
-	we are using a Haskell-ish notation of turning a infix binary operator
+	I used a Haskell-ish notation of turning a infix binary operator
 	into a prefix binary operator by surrounding the operator in parenthesis
-	(\eg, $(+)\;X_1\,X_2 = X_1 + X_2$)}
+	(\eg, $(+)\;X_1\,X_2 = X_1 + X_2$). I also annotated the kinds of
+	the type constructors after the colon (:).}
 \begin{align*}
 (\times) &= \l X_1^{*}.\l X_2^{*}.(X_1 -> X_2 -> X) -> X &:~ * -> * -> * \\
      (+) &= \l X_1^{*}.\l X_2^{*}.(X_1 -> X) -> (X_2 -> X) -> X &:~ * -> * -> *
 \end{align*}
 Type constructors for polymorphic recursive datatypes are encodable as well.
-For instance,
+For instance, we can encode the constructor \textit{List}
+for the polymorphic list datatype:
 \begin{align*}
 	\textit{List} &= \l X_a^{*}.\forall X^{*}.(X_a -> X -> X) -> X -> X
 	&:~ * -> *
@@ -413,9 +415,9 @@ which are ordinary constructs of System \Fw.
 not only types but also type constructors of arbitrary kinds as arguments
 are encodable in System \Fw\ as well. For example, we can encode
 \textit{Flip}, which flips the order of the first and second arguments of
-a binary type constructor (\ie, $(\textit{Flip}\;F)\,X_1\,X_2 = F\;X_1\,X_2$),
+a binary type constructor (\ie, $(\textit{Flip}\;F)\,A_1\,A_2 = F\,A_2\,A_1$),
 and \textit{Comp}, which composes two unary type constructors
-(\ie, $(\textit{Comp}\;F_1\,F_2)\,X = F_1\,(F_2\,X)$), as follows:
+(\ie, $(\textit{Comp}\;F_1\,F_2)\,A = F_1\,(F_2\,A)$), as follows:
 \begin{align*}
 \textit{Flip} &= \l X_{\!f}^{*-> *-> *}.\l X_1^{*}.\l X_2^{*}.X_{\!f}\,X_2\;X_1
 		     &:\;& (* -> * -> *) -> * -> * -> * \\
@@ -441,30 +443,39 @@ Many other well-known recursive datatypes are regular (\eg, binary trees).
 We can imagine a non-regular twist to the regualr polymorphic list type
 by insisting the recursive components (\ie, tails) to have different
 type arguments from the list they are part of. For instance, we may inisist
-that a list-like datatype of type ($\textit{Powl}\;A$) must have its tail of
-type $(\textit{Powl}\,(A\times A))$. That is, if the first element is
+that a list-like datatype of type ($\textit{Powl}\;A$) must have its tail be
+of type $(\textit{Powl}\,(A\times A))$. That is, if the first element is
 an integer (\eg, $1$), then the second element must be a pair of integers
 (\eg, $(2,3)$), and the third elment must be a pair of pair of integers
 (\eg, $((4,5),(6,7))$), and so on. We can depict an example of this list-like
 datatype with a three element as: $[1,\,(2,3),\,((4,5),(6,7))]$.
 This is a representative example of a non-regular datatype called powerlists.
-Such datatypes are also called \emph{nested datatypes} since the type arguments
-appllied to the type constructor becomes more complicated, or nested, as we
-step further inside the recursive components of the datatype.
+Such datatypes are also called \emph{nested datatypes} %% TODO cite
+since the type arguments appllied to the type constructor become
+more complicated, or nested, as we step further inside the recursive components.
+
 We can encode the type constroctor \textit{Powl} for powerlists using
 higher-kinded polymorphism of System \Fw, as follows
 (c.f. encoding of \textit{List}):
 \begin{align*}
-\textit{Powl} &= \l X_a^{*}.\forall X^{* -> *}.
-	(X_a -> X(X_a\times X_a) -> X\,X_a) -> X\,X_a -> X\,X_a
+\textit{Powl} &= \l X_a^{*}.\forall X^{* -> *}&.&
+	(X_a -> X(X_a\times X_a) & -> & X\,X_a) & -> & X\,X_a & -> & X\,X_a \\
+\textit{List} &= \l X_a^{*}.\forall X^{*}&.&
+	(X_a -> X & -> & X) & -> & X & -> & X
 \end{align*}
-Unlike the encoding of \text{List}, the type variable $X$ ranges over
-type constructors of kind $* -> *$. TODO X = List\,A) Powl = X
-TODO for comparison repeat the encoding of List too
+Unlike the encoding of \textit{List}, where $X$ is polymorphic over types
+of kind $*$, the universally quantified variable $X$ in the encoding of
+\textit{Powl} is polymorphic over constructors of kind $* -> *$.
+Intuitively, $X$ in the list encoding corresponds to $\textit{List}\;X_a$
+(\ie, the type constructor \textit{List} applied to its uniform argument $X_a$),
+and, $X$ in the powerlist encoding corresponds to \textit{Powl} without
+being applied to its argument so that it may be applied to a non-regular
+argument (\eg, $X(X_a\times X_a)$). See Chapter \ref{ch:mendler} for more
+examples and discussions on non-regular datatypes.
+%% TODO update the fwd ref to a section later
 
-\paragraph{TODO}
-The recursive type operator $\mu$ is one of the interesting
-higher-kinded datatype constructors encodable in System \Fw.
+\paragraph{The recursive type operator $\mu$} builds a recursive type
+($\mu F$) from a non-recursive base structure ($F:* -> *$).
 Theories on recursive datatypes are often formulated in terms of
 the recursive type operator $\mu$, which satisfies the property
 that $\mu F = F (\mu F)$ for any $F: * -> *$. A recursive datatype ($\mu F$)
@@ -473,7 +484,7 @@ For example, the natural number datatype can be built from the base structure
 $F = \l X_r^{*}.X_r + \textit{Unit}$. Intuitively, we can understand this
 base structure as a specification for natural numbers: a natural number is
 either a successor of a recursive object ($X_r$)
-or zero encoded as the unit object (\textit{Uint}).
+or zero encoded as the unit object (\textit{Unit}).
 From this base structure, we can define
 $\textit{Nat} = \mu(\l X_r^{*}.X_r + \textit{Unit})$.
 Let us write down the desired property of $\mu$ for $\textit{Nat}$.
@@ -484,44 +495,75 @@ Let us write down the desired property of $\mu$ for $\textit{Nat}$.
 \textit{Nat} &= \textit{Nat}\, + \textit{Unit}
 \end{align*}
 Note, the simplified last equation looks very similar to
-the recursive datatype definitions of natural numbers in functional languages,
-such as Haskell: \[ \qquad\qquad
+the recursive datatype definitions for unary natural numbers
+in functional languages, such as Haskell: \[ \qquad\qquad
 \textbf{data}~\textit{Nat} = \texttt{Succ}~\textit{Nat}\,\mid\,\texttt{Zero} \]
 See Chapter \ref{ch:mendler} %% TODO update the fwd ref to a section later
 for more of the Haskell examples on recursive datatypes and $\mu$.
 
-Although recursive datatypes are encodable in System \F,
+Although recursive datatypes are encodable in System \F (\S\ref{sec:f:data}),
 extensions of System \F\ with $\mu$ have been studied %% TODO cite
-since we can reason about recursive datatype more uniformly based on
-the properties of $\mu$.
+since we can reason about recursive datatypes more uniformly based on
+the properties of $\mu$. In System \Fw, we can encode $\mu$ using
+higher-kinded type constructors and higher-kinded polymorphism as follows:
 \[
 \mu =
  \l X_{\!f}^{* -> *}.
  \forall X_a^{*}.(\forall X_r^{*}.(X_r -> X_a) -> X_{\!f}\,X_r -> X_a) -> X_a
+ ~:\; (* -> *) -> *
 \]
-\begin{verbatim}
+Let us intuitively derive above the encoding of $\mu$ starting from
+the impredicative encoding of natural numbers:
+\begin{align*}
+\textit{Nat}
+	&= \forall X^{*} . (X -> X) -> X -> X \\
+	&\cong \forall X^{*} . (X -> X) -> (\textit{Unit} -> X) -> X 
+		&(\because \textit{Unit} -> X \cong X) \\
+	&\cong \mu(\l X_r^{*}.\,X_r + \textit{Unit})
+		& (\text{to show})
+\end{align*}
+We want to show that the impredicative encoding of natural numbers is
+equivalent to the natural number type defined using $\mu$. We need turn
+the impredicative encoding of natural numbers into a non-recursive
+base structure by abstract away the recursive component, which is
+the underlined part below. That is, we replace the underlined $X$
+with a new variable $X_r$:
+\begin{align*}
+\forall X^{*} . (\underline{X}\; -> X) -> (\textit{Unit} -> X) -> X \\
+\forall X^{*} . (X_r -> X) -> (\textit{Unit} -> X) -> X
+\end{align*}
+Recall that
+$X_r +\textit{Unit} = \forall X^{*} . (X_r -> X) -> (\textit{Unit} -> X) -> X$.
+Recall that the idea behind the impredicative encoding is that we can eliminate
+an object of the datatype into an arbitrary result type $X$. If we are to
+encode datatypes constructed by $\mu$, we apply this idea of
+impredicative encoding in two layers: for the base structure and for $\mu$.
+We already know how to encode the base structure: in the encoding above,
+we can eliminate to an arbitrary result type $X$. For $\mu$, we introduce
+yet another variable $X_a$ so that we can eliminate to an arbitrary result
+type $X_a$. So, it would be of the following form:
+\[ \forall X_a^{*}.(\;\dots\;\dots\;\dots\;\dots\;\dots (X_r + \textit{Unit}) -> X_a) -> X_a \]
+Since the recursive type contains the base structure, we would be able to
+eliminate the recursive type, given that we know how to eliminate
+the base structure $((X_r + \textit{Unit}) -> X_a)$.
+However, this is not yet complete because we do not know how to eliminate $X_r$.
+So, we require that we should also know how to eliminate $X_r$, as follows:
+\[ \forall X_a^{*}.
+	(\forall X_r^{*}.(X_r -> X_a) -> (X_r + \textit{Unit}) -> X_a) -> X_a \]
+We can derive the encoding for $\mu$ (repeated below)
+so that $\mu(\l X_r^{*}.X_r + \textit{Unit})$ is equivalent to above.
+\[
+\mu =
+ \l X_{\!f}^{* -> *}.
+ \forall X_a^{*}.(\forall X_r^{*}.(X_r -> X_a) -> X_{\!f}\,X_r -> X_a) -> X_a
+ ~:\; (* -> *) -> *
+\]
+Note that $X_r$ is also universally quantified. See Chapter \ref{ch:mendler}
+for an intuitive explanation for why $X_r$ should be universally quantified.
 
-mu = \f . forall a . (forall r. (r -> a) -> f r -> a) -> a
+\paragraph{A kind-indexed family of recursive type operators $\mu_\kappa$:}
 
-
-Nat is when f = \ r . forall x' . (r -> x') -> (1 -> x') -> x'
-
-So,
-Nat = forall a .
-  (forall r. (r->a) ->
-             (forall x'.(r->x') -> (1->x') -> x') -> a) ->  a
-
-Nat = forall a .
-  (forall r.(r->a) -> (forall x'.(r->x') -> x' -> x') -> a) ->  a
-
-
-how to show this is this isomorphic to the System F encoding?
-
-Nat = forall x . (x -> x) -> (1 -> x) -> x
-Nat = forall x . (x -> x) -> x -> x
-
-\end{verbatim}
-\subsection{Subject reduction and strong normalziation}\label{sec:f:srsn}
+\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
 \subsection*{Subject reduction}
 \begin{theorem}[subject reduction]
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
