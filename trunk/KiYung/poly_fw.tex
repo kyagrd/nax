@@ -374,16 +374,22 @@ I am not sure when one would need this style, though.
 \subsection{Encodings of datatypes in System \Fw}
 \label{sec:fw:data}
 In System \Fw, we can encode all the datatypes encodable in System \F\ (see
-\S\ref{sec:f:data}) and more. We can encode datatype constructors and
-datatype constructors of higher-kinds. Datatype constructors of higher-kinds
-can express nested datatypes, which are non-regular datatypes inexpressible
-in System \F. aaaa
+\S\ref{sec:f:data}) and more. \emph{Type constructors} for polymorphic datatypes
+can be encoded using lambda types that abstract over types.
+\emph{Non-regular datatypes}, or \emph{nested datatypes}, can be encoded
+using forall types that are polymorphic over type constructors.
+The ability to universally quantify over not only types but also
+type constructors is called \emph{higher-kinded polymorphsim}.
+\emph{Type constructors of higher kinds}, or \emph{higher-kinded
+type constructors} are type constructors that expect type constructors
+as their arguments. With higher-kinded type constructors and higher-kinded
+polymprhism, we can even encode the recursive type operator $\mu$ in System \Fw.
 
-Datatype constructors that expects other types as arguments to produce
-a datatype are encodable in System \Fw. For example, the shorthand notations
+\paragraph{Type constructors for polymorphic datatypes} expect
+other types as arguments to produce a datatype. We can encode these 
+type constructors in System \Fw. For example, the shorthand notations
 (or, type synonyms) in \S\ref{sec:f:data}), such as $(\times)$ for pair types
-and $(+)$ for sum types, can be encoded as type constructors in System \Fw\ 
-using lambda types, as follows:\footnote{Here,
+and $(+)$ for sum types, can be encoded as as follows:\footnote{Here,
 	we are using a Haskell-ish notation of turning a infix binary operator
 	into a prefix binary operator by surrounding the operator in parenthesis
 	(\eg, $(+)\;X_1\,X_2 = X_1 + X_2$)}
@@ -391,18 +397,25 @@ using lambda types, as follows:\footnote{Here,
 (\times) &= \l X_1^{*}.\l X_2^{*}.(X_1 -> X_2 -> X) -> X &:~ * -> * -> * \\
      (+) &= \l X_1^{*}.\l X_2^{*}.(X_1 -> X) -> (X_2 -> X) -> X &:~ * -> * -> *
 \end{align*}
-In System \F, datatype constructors, such as $(\times)$ and $(+)$, are
-meta-level concepts that cannot be encoded whithin the type system.
+Type constructors for polymorphic recursive datatypes are encodable as well.
+For instance,
+\begin{align*}
+	\textit{List} &= \l X_a^{*}.\forall X^{*}.(X_a -> X -> X) -> X -> X
+	&:~ * -> *
+\end{align*}
+In System \F, type constructors, such as $(\times)$, $(+)$, and
+\textit{List} are meta-level concepts (or, shorthand notations, macros)
+that cannot be encoded within the type system of System \F.
 In System \Fw, these datatype constructors are encodable as type constructors,
-which are oridary constructs of System \Fw.
+which are ordinary constructs of System \Fw.
 
-We can also encode higher-kinded datatype constructors that expect
-not only types but also type constructors of aribrary kinds as arguments.
-For example, we can encode \textit{Flip}, which switches the order of
-the first and second arguments of binary type constructors
-(\ie, $(\textit{Flip}\;F)\;X_1\,X_2 = F\;X_1\,X_2$),
-and \textit{Compose}, which composes two unary type constructors
-(\ie, $(\textit{Compose}\;F\;G)\;X = F\,(G\;X)$), as follows:
+\paragraph{Higher-kinded datatype constructors} that expect
+not only types but also type constructors of arbitrary kinds as arguments
+are encodable in System \Fw\ as well. For example, we can encode
+\textit{Flip}, which flips the order of the first and second arguments of
+a binary type constructor (\ie, $(\textit{Flip}\;F)\,X_1\,X_2 = F\;X_1\,X_2$),
+and \textit{Comp}, which composes two unary type constructors
+(\ie, $(\textit{Comp}\;F_1\,F_2)\,X = F_1\,(F_2\,X)$), as follows:
 \begin{align*}
 \textit{Flip} &= \l X_{\!f}^{*-> *-> *}.\l X_1^{*}.\l X_2^{*}.X_{\!f}\,X_2\;X_1
 		     &:\;& (* -> * -> *) -> * -> * -> * \\
@@ -410,18 +423,55 @@ and \textit{Compose}, which composes two unary type constructors
 		     &:\;& (* -> *) -> (* -> *) -> * -> *
 \end{align*}
 
-TODO discussion on nested datatypes or non-regular datatypes
-use Haskell example???
+\paragraph{Higher-kinded polymorphism} is the ability universally quantify
+over type constructors as well as types. That is, we can have
+$\forall X^\kappa.B$ where $\kappa$ is not the star kind.
+We can encode \emph{non-regular (recursive) datatypes} in System \Fw\ using
+higher-kinded polymorphism.
 
-One of the most interesting higher-kinded datatype constructors
-encodalble in System \Fw\ is the recursive type operator $\mu$.
+We mentioned that we can \emph{regular (recursive) datatypes}
+in Systerm \F\ (\S\ref{sec:f:data}), but have not discussed
+what regular datatypes are. A representative example of a regular datatype
+is the polymorphic list type ($\forall X_a.\textit{List}\,X_a$).
+We say that the polymorphic list type is regular since its recursive
+component, the tail, has exactly the same type. That is, for any
+non-empty list of $\textit{List}\,A$, its tail must be of type $\text{List}\,A$.
+Many other well-known recursive datatypes are regular (\eg, binary trees).
+
+We can imagine a non-regular twist to the regualr polymorphic list type
+by insisting the recursive components (\ie, tails) to have different
+type arguments from the list they are part of. For instance, we may inisist
+that a list-like datatype of type ($\textit{Powl}\;A$) must have its tail of
+type $(\textit{Powl}\,(A\times A))$. That is, if the first element is
+an integer (\eg, $1$), then the second element must be a pair of integers
+(\eg, $(2,3)$), and the third elment must be a pair of pair of integers
+(\eg, $((4,5),(6,7))$), and so on. We can depict an example of this list-like
+datatype with a three element as: $[1,\,(2,3),\,((4,5),(6,7))]$.
+This is a representative example of a non-regular datatype called powerlists.
+Such datatypes are also called \emph{nested datatypes} since the type arguments
+appllied to the type constructor becomes more complicated, or nested, as we
+step further inside the recursive components of the datatype.
+We can encode the type constroctor \textit{Powl} for powerlists using
+higher-kinded polymorphism of System \Fw, as follows
+(c.f. encoding of \textit{List}):
+\begin{align*}
+\textit{Powl} &= \l X_a^{*}.\forall X^{* -> *}.
+	(X_a -> X(X_a\times X_a) -> X\,X_a) -> X\,X_a -> X\,X_a
+\end{align*}
+Unlike the encoding of \text{List}, the type variable $X$ ranges over
+type constructors of kind $* -> *$. TODO X = List\,A) Powl = X
+TODO for comparison repeat the encoding of List too
+
+\paragraph{TODO}
+The recursive type operator $\mu$ is one of the interesting
+higher-kinded datatype constructors encodable in System \Fw.
 Theories on recursive datatypes are often formulated in terms of
 the recursive type operator $\mu$, which satisfies the property
 that $\mu F = F (\mu F)$ for any $F: * -> *$. A recursive datatype ($\mu F$)
 is built from its base structure ($F$) by applying the recursive operator.
-For example, the natrual number datatype can be built from the base structure
+For example, the natural number datatype can be built from the base structure
 $F = \l X_r^{*}.X_r + \textit{Unit}$. Intuitively, we can understand this
-base structure as a specification for natrual numbers: a natrual number is
+base structure as a specification for natural numbers: a natural number is
 either a successor of a recursive object ($X_r$)
 or zero encoded as the unit object (\textit{Uint}).
 From this base structure, we can define
@@ -434,7 +484,7 @@ Let us write down the desired property of $\mu$ for $\textit{Nat}$.
 \textit{Nat} &= \textit{Nat}\, + \textit{Unit}
 \end{align*}
 Note, the simplified last equation looks very similar to
-the recursive datatype defintions of natural numbers in functional languages,
+the recursive datatype definitions of natural numbers in functional languages,
 such as Haskell: \[ \qquad\qquad
 \textbf{data}~\textit{Nat} = \texttt{Succ}~\textit{Nat}\,\mid\,\texttt{Zero} \]
 See Chapter \ref{ch:mendler} %% TODO update the fwd ref to a section later
