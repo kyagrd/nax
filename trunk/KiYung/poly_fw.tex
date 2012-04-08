@@ -382,8 +382,10 @@ The ability to universally quantify over not only types but also
 type constructors is called \emph{higher-kinded polymorphsim}.
 \emph{Type constructors of higher kinds}, or \emph{higher-kinded
 type constructors} are type constructors that expect type constructors
-as their arguments. With higher-kinded type constructors and higher-kinded
-polymprhism, we can even encode the recursive type operator $\mu$ in System \Fw.
+as their arguments. With higher-kinded type constructors, we can even encode
+the recursive type operator $\mu$ in System \Fw. More generally, we can encode
+a family of kind-indexed recursive type operators $\mu_\kappa$ using both
+higher-kinded type constructors and higher-kinded polymorphism.
 
 \paragraph{Type constructors for polymorphic datatypes} expect
 other types as arguments to produce a datatype. We can encode these 
@@ -456,7 +458,7 @@ more complicated, or nested, as we step further inside the recursive components.
 
 We can encode the type constroctor \textit{Powl} for powerlists using
 higher-kinded polymorphism of System \Fw, as follows
-(c.f. encoding of \textit{List}):
+(\cf\ encoding of \textit{List}):
 \begin{align*}
 \textit{Powl} &= \l X_a^{*}.\forall X^{* -> *}&.&
 	(X_a -> X(X_a\times X_a) & -> & X\,X_a) & -> & X\,X_a & -> & X\,X_a \\
@@ -509,7 +511,7 @@ higher-kinded type constructors and higher-kinded polymorphism as follows:
 \[
 \mu =
  \l X_{\!f}^{* -> *}.
- \forall X_a^{*}.(\forall X_r^{*}.(X_r -> X_a) -> X_{\!f}\,X_r -> X_a) -> X_a
+ \forall X'^{*}.(\forall X_r^{*}.(X_r -> X') -> X_{\!f}\,X_r -> X') -> X'
  ~:\; (* -> *) -> *
 \]
 Let us intuitively derive above the encoding of $\mu$ starting from
@@ -538,30 +540,112 @@ Recall that the idea behind the impredicative encoding is that we can eliminate
 an object of the datatype into an arbitrary result type $X$. If we are to
 encode datatypes constructed by $\mu$, we apply this idea of
 impredicative encoding in two layers: for the base structure and for $\mu$.
-We already know how to encode the base structure: in the encoding above,
+We already know how to encode the base structure: with the encoding above,
 we can eliminate to an arbitrary result type $X$. For $\mu$, we introduce
-yet another variable $X_a$ so that we can eliminate to an arbitrary result
-type $X_a$. So, it would be of the following form:
-\[ \forall X_a^{*}.(\;\dots\;\dots\;\dots\;\dots\;\dots (X_r + \textit{Unit}) -> X_a) -> X_a \]
+yet another variable $X'$ so that we can eliminate to an arbitrary result
+type $X'$. Thus, the encoding for natrual number type constructed using $\mu$
+would be of the following form:
+\[ \forall X'^{*}.(\;\dots\;\dots\;\dots\;\dots\;\dots (X_r + \textit{Unit}) -> X') -> X' \]
 Since the recursive type contains the base structure, we would be able to
 eliminate the recursive type, given that we know how to eliminate
-the base structure $((X_r + \textit{Unit}) -> X_a)$.
+the base structure $((X_r + \textit{Unit}) -> X')$.
 However, this is not yet complete because we do not know how to eliminate $X_r$.
 So, we require that we should also know how to eliminate $X_r$, as follows:
-\[ \forall X_a^{*}.
-	(\forall X_r^{*}.(X_r -> X_a) -> (X_r + \textit{Unit}) -> X_a) -> X_a \]
+\[ \forall X'^{*}.
+	(\forall X_r^{*}.(X_r -> X') -> (X_r + \textit{Unit}) -> X') -> X' \]
 We can derive the encoding for $\mu$ (repeated below)
 so that $\mu(\l X_r^{*}.X_r + \textit{Unit})$ is equivalent to above.
 \[
 \mu =
  \l X_{\!f}^{* -> *}.
- \forall X_a^{*}.(\forall X_r^{*}.(X_r -> X_a) -> X_{\!f}\,X_r -> X_a) -> X_a
+ \forall X'^{*}.(\forall X_r^{*}.(X_r -> X') -> X_{\!f}\,X_r -> X') -> X'
  ~:\; (* -> *) -> *
 \]
-Note that $X_r$ is also universally quantified. See Chapter \ref{ch:mendler}
+Note that $X_r$ is also universally quantified
+in $(\forall X_r^{*}.(X_r -> X') -> X_{\!f}\,X_r -> X')$
+locally.
+See Chapter \ref{ch:mendler} %% TODO update the fwd ref to a section later
 for an intuitive explanation for why $X_r$ should be universally quantified.
 
+The (data) constructor for the reucrisve type operator $\mu$ is called $\In$
+and the eliminator is called $\MIt$. The encodings of $\In$ and $\MIt$ as
+Curry-style terms are as follows:
+\[ \In = \l x_r. \l x_\varphi.x_\varphi\,(\MIt~x_\varphi)\,x_r
+\qquad\qquad \MIt = \l x_\varphi.\l x_r.x_r\,x_\varphi \]
+These are, in fact, encodings of Mendler-style iteration, which we will be
+discussing in
+Chapter \ref{ch:mendler}. %% TODO update the fwd ref to a section later
+
+%%% TODO fwd ref
+
 \paragraph{A kind-indexed family of recursive type operators $\mu_\kappa$:}
+The recursive type operator $\mu : (* -> *) -> *$ discussed so far can only
+construct (non-mutually recursive) regular datatypes. For example,
+\begin{align*}
+\textit{Nat} &= \mu(\l X^{*}.X + \textit{Unit}) \\
+\textit{List} &= \l X_a^{*}.\mu(\l X^{*}.(X_a\times X) + \textit{Unit})
+\end{align*}
+More generally, there is a family of recursive type operators
+$\mu_\kappa : (\kappa -> \kappa) -> \kappa$ for each kind $\kappa$.
+The $\mu$, which we discussed abive, is $\mu_{*} : (* -> *) -> *$.
+We can construct \textit{Powl}, which is a non-regular datatype, using another
+recursive typer operator $\mu_{* -> *} : ((*-> *) -> (*-> *)) -> (*-> *) $
+as follows (\cf\ \textit{List}).
+\begin{align*}
+\textit{Powl} &= \mu_{* -> *}(\l X^{* -> *}.\l X_a^{*}.
+			(X_a\times X(X_a\times X_a)) + \textit{Unit}) \\
+\textit{List} &= \l X_a^{*}.\mu_{*}(\l X^{*}.(X_a\times X) + \textit{Unit})
+\end{align*}
+Note the difference where $X_a$ is bound in the defintions of \textit{Powl}
+and \textit{List}. The encodings of $\mu_{*}$ and $\mu_{*-> *}$ in System \Fw\ 
+are shown below:
+\begin{align*}
+\mu_{*} &=
+ \l X_{\!f}^{* -> *}.\forall X'^{*}.
+ (\forall X_r^{*}.(X_r -> X') -> (X_{\!f}\,X_r -> X')) -> X' \\
+\mu_{* -> *} &=
+ \l X_{\!f}^{(*-> *) -> (*-> *)}.\l X_a^{*}.\\&\qquad\quad \forall X'^{*-> *}.
+ \big(\forall X_r^{*-> *}.
+ 	(\forall X_a^{*}.X_r\,X_a -> X'\,X_a) -> \\&\qquad\qquad\qquad\qquad\qquad~
+	(\forall X_a^{*}.X_{\!f}\,X_r\,X_a -> X'\,X_a)\big) -> X'\,X_a
+\end{align*}
+The genreal form for the encoding of $\mu_\kappa$
+is as follows:
+\begin{align*}
+\mu_{\kappa} &=
+ \l X_{\!f}^{\kappa -> \kappa}.\l \vec{X}^{\vec{\kappa}}.
+ \forall X'^{*-> *}.
+ \big(\forall X_r^{\kappa -> \kappa}.
+ (\forall \vec{X}^{\vec{\kappa}}.X_r\,\vec{X} -> X'\,\vec{X}) -> \\
+ &\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
+ (\forall \vec{X}^{\vec{\kappa}}.X_{\!f}\,X_r\,\vec{X} -> X'\,\vec{X})
+ \big) -> X'\,\vec{X}
+\end{align*}
+where $\vec{X}$ denotes a sequence of $n$ variables
+such that $n=0$ when $\kappa = *$, otherwise, $n = |\vec{\kappa}|$ when
+$\kappa = \vec{\kappa} -> * = \kappa_1 -> \cdots -> \kappa_n -> *$.\footnote{
+	$\kappa$ always end up with $*$ when it is an arrow kind
+	since $->$ is right associative by convention.}
+That is, we can simply erase all the $\l \vec{X}^{\vec{\kappa}}$,
+$\forall \vec{X}^{\vec{\kappa}}$, and $\vec{X}$ from above when
+$\kappa = *$, otherwise, $\l \vec{X}^{\vec{\kappa}}$ stands for
+$\l X_1^{\kappa_1}.\cdots.\l X_n^{\kappa_n}$,
+$\forall \vec{X}^{\vec{\kappa}}$ stands for
+$\forall X_1^{\kappa_1}.\cdots.\forall X_n^{\kappa_n}$,
+and $F\,\vec{X}$ stands for $F\,X_1\cdots X_n$
+when $\kappa = \vec{\kappa} -> * = \kappa_1 -> \cdots -> \kappa_n -> *$.
+
+The (data) constructor for the reucrisve type operator $\mu_\kappa$ is
+called $\In_\kappa$ and the eliminator is called $\MIt_\kappa$.
+The encodings of $\In_\kappa$ and $\MIt_\kappa$ as Curry-style terms are
+exactly the same as for $\In$ and $\MIt$ for the star kind:
+\[ \In_\kappa = \l x_r. \l x_\varphi.x_\varphi\,(\MIt~x_\varphi)\,x_r
+\qquad\qquad \MIt_\kappa = \l x_\varphi.\l x_r.x_r\,x_\varphi \]
+These are, in fact, encodings of Mendler-style iteration, which we will be
+discussing in
+Chapter \ref{ch:mendler}. %% TODO update the fwd ref to a section later
+
+
 
 \subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
 \subsection*{Subject reduction}
