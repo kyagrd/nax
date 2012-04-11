@@ -572,9 +572,9 @@ and the eliminator is called $\MIt$. The encodings of $\In$ and $\MIt$ as
 Curry-style terms are as follows:
 \[ \In = \l x_r. \l x_\varphi.x_\varphi\,(\MIt~x_\varphi)\,x_r
 \qquad\qquad \MIt = \l x_\varphi.\l x_r.x_r\,x_\varphi \]
-These are, in fact, encodings of Mendler-style iteration, which we will be
-discussing in
-Chapter \ref{ch:mendler}. %% TODO update the fwd ref to a section later
+These ($\mu$, $\In$, and $\MIt$) are, in fact, encodings for
+Mendler-style iteration, which will be discussed in Chapter \ref{ch:mendler}.
+%% TODO update the fwd ref to a section later
 
 %%% TODO fwd ref
 
@@ -641,13 +641,17 @@ The encodings of $\In_\kappa$ and $\MIt_\kappa$ as Curry-style terms are
 exactly the same as for $\In$ and $\MIt$ for the star kind:
 \[ \In_\kappa = \l x_r. \l x_\varphi.x_\varphi\,(\MIt~x_\varphi)\,x_r
 \qquad\qquad \MIt_\kappa = \l x_\varphi.\l x_r.x_r\,x_\varphi \]
-These are, in fact, encodings of Mendler-style iteration, which we will be
-discussing in
+These ($\mu_\kappa$, $\In_\kappa$, and $\MIt_\kappa$) are, in fact,
+encodings for Mendler-style iteration in \Fw, which will discussed in
 Chapter \ref{ch:mendler}. %% TODO update the fwd ref to a section later
 
 
 
-\subsection{Subject reduction and strong normalization}\label{sec:f:srsn}
+\subsection{Subject reduction and strong normalization}\label{sec:fw:srsn}
+We discuss two important properties of System \Fw\ --
+\emph{subject reduction} (\aka\ \emph{type preservation})
+and \emph{strong normalization}.
+
 \subsection*{Subject reduction}
 \begin{theorem}[subject reduction]
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
