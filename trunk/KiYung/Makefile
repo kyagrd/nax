@@ -3,7 +3,7 @@
 ## LHSSRC=main.lhs \
 ##        example.lhs
 
-TEXSRC=main.tex \
+TEXSRC=mylhs2tex.sty main.tex \
        intro.tex \
        poly.tex poly_stlc.tex poly_f.tex poly_fw.tex poly_hm.tex \
        mendler.tex \
@@ -35,3 +35,11 @@ main.bbl: main.aux main.bib
 	bibtex main
 	latex main
 
+
+
+
+
+############ style file for using multiple lhs files
+
+mylhs2tex.sty: mylhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
