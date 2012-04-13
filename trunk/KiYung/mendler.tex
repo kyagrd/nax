@@ -52,16 +52,109 @@ examples. They postponed ``the search for exciting examples of negative
 recursive types" until another time. They stated that the normalization
 of negative types ``may have a theoretical value
 only''\cite{UusVen99}. So, until recently, the study on Mendler-style recursion
-combinators focused on examples of positive recursive types with type (rather than term) based indexing. %% TODO fwd ref for what is positive and negative etc
+combinators focused on examples of positive recursive types with type (rather than term) based indexing. %% TODO fwd ref for what is positive and negative etc?
 
-Recently, we \cite{AhnShe11} discovered a family of Mendler-style recursion
-combiantors that normalize for negative recursive types, which is believed to be
-more expressive than the Mendler-style iteration family. We \cite{AhnShe11}
-also discovered a counterexample, which proves that some Mendler-style recursion
-schemes do not normalize for negative recursive types.
+Recently, I have developed several new contributions to the study of
+the Mendler-style recursion shemes \cite{AhnShe11}. These contributions
+fall into three broad categories:
+\begin{itemize}
+\item discovered a new family of Mendler-style recursion combinators,
+	which normalizes for negative recursive types and is believed
+	to be more expressive than the Mendler-style iteration family
+	(\S\ref{sec:msf}),
+\item discovered a counterexample, which proves that
+	some families of Mendler-style recursion combinators
+	do not normalize for negative recursive types
+	but only normalize for positive recursive types (\S\ref{sec:mcv}), and
+\item extended Mendler-style recursion combinators to (almost)
+	term indexed types (\ie, Generalized Algebraic DataType(GADT)s)
+	(\S\ref{sec:mgadt}).
+\end{itemize}
+Details of these contributions are discussed in the following sections
+(\S\ref{sec:msf},\S\ref{sec:mcv},\S\ref{sec:mgadt}), which are extended and
+revised versions of the sections appearing in our recent work \cite{AhnShe11}.
+
 %% TODO fwd ref for sections
 
-\section{TODO}
+\section{Mendler-style iteration} \label{sec:mit}
 
-\section{TODO}
+\section{Mendler-style primitive} \label{sec:mit}
+
+
+\section{Mendler-style iteration with a syntactic inverse} \label{sec:msf}
+
+While it is known that iteration and primitive recursion terminate for all types
+\cite{AbeMatUus05,AbeMat04}, they are not particularly expressive over negative
+recursive types. Identifying additional Mendler-style operators that work
+naturally, and are more expressive than iteration, is one of the important
+result of this dissertation.
+
+Interesting examples of Mendler-style operators over negative recursive types
+have been neglected in the literature. One of the reasons, I think, is because
+it is possible to encode negative recursive types into positive recursive ones.
+Because conventional iteration and primitive recursion normalize for
+positive recursive types we can use standard techniques on these encodings
+of translating negative recursive types into positive recursive types.
+What we gain by using such encodings must be traded against the loss in
+transparency that such encodings force upon the implementation. The natural
+structure, which were evident in the negative data type, become obscured by
+the encoding.
+
+A series of papers \cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} studied 
+techniques that define recursion schemes over negative recursive types in
+the conventional setting. In our recent work \cite{AhnShe11}, we discovered
+that this work can be naturally captured as a kind-indexed family of Mendler
+style combinator. The \MsfIt\ combinator (\aka\ \textit{msfcata}) corresponds to
+the conventional recursion combinator discovered by \citet{FegShe96} and
+later refined by \citet{bgb}. With this new family, we were able to write many
+interesting programs, involving negative recursive types, that are impossible,
+or very unnatural, to write with just Mendler-style iteration.
+
+TODO
+
+
+
+\section{Mendler-style course-of-values iteration and primitive recursion}
+\label{sec:mcv}
+
+We \cite{AhnShe11} have illustrated that Mendler-style recursion combinators
+can be defined not only for nested datatypes but also for arbitrary indexed
+datatypes, whose can index may vary in the result types of the
+data constructors as well as in the argument types of the data constructors.
+For example, many examples using Generalized Algebraic DataTypes (GADTs),
+a popular extension to the type system of Haskell, involves indexed datatypes
+beyond the scope of nested datatypes.
+
+Previous work, that promoted the expressiveness and generality of
+the Mendler-style \cite{AbeMatUus03,AbeMatUus05,AbeMat04} used examples
+involving nested datatypes, a particularly simple kind of indexing
+where the variation of indices are restricted to the argument types of
+the data constructors. In order to handle nested datatypes, the translation of
+the Mendler-style combinators into System \textsf{F}, had to be extended to
+translation into \Fw. To translate Mendler-style combinators over arbitrary
+indexed types including term indices we have to extend \Fw, to a new calculus
+we call \Fi, and prove that this new calculus is also strongly normalizing.
+I have identified what the extensions must look like and have been developing
+the theoretical background necessary to accomplish this task.
+This theory is an important part of the thesis and is elaborated in
+\S\ref{Fi} and \S\ref{sec:Fi}.
+
+Despite, not having a completed theory to support the translation of GADTs,
+we have identified many examples \cite{AhnShe11}. Including examples
+that use term indices to exploit the Curry-Howard isomorphism, and
+examples of mutual recursion (between types) encoded in terms of GADTs.
+
+In general, we have pushed the boundaries of what is known about
+the Mendler-style operators in many ways. We have identified new domains
+in which they are applicable, identified new operators, adapted old ones,
+and organized them all into a natural hierarchy that explains how all are
+instances of a common pattern. However, we know of no guarantee that every
+principled recursion scheme has a Mendler-style operator, so there is
+much work still to be done.
+
+
+
+TODO
+
+\section{TODO} \label{sec:mgadt}
 
