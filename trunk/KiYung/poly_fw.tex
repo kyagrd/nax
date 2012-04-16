@@ -2,48 +2,62 @@
 %%%% TODO citation for Fw ... was it Girard??
 System \Fw\ extends the type syntax of System \F\ with lambda types and
 application types (see Figure \ref{fig:fw}). Lambda types ($\l X^\kappa.F$)
-and application types ($F\;G$) at type level are analogous to lambda terms
-and applications at term level. Type constructors are like functions, but
-at type level. Type constructors are categorized by kinds, just as termes
-are categorized by types. A type constructor of kind $\kappa -> \kappa'$
+and application types ($F\;G$), at the type level, are analogous to lambda terms
+and applications at the term level. Type constructors are like functions, but
+at the type level. Type constructors are categorized by kinds, just as terms
+are categorized by types. Type constructors of kind $*$ are just
+\emph{types}, and do not expect any arguments. Type constructors that expect
+an argument have arrow kinds ($\kappa -> \kappa'$). 
+A type constructor of kind $\kappa -> \kappa'$
 expects another type constructor of kind $\kappa$ as an argument to produce
 yet another type constructor of kind $\kappa'$, just as a function of type
-$A -> B$ expects another term of type $A$ as an argument to produce yet another
-term of type $B$. Type constructors of the star kind ($*$), or just
-\emph{types}, do not expect any arguments. Type constructors that expect
-an argument are of arrow kinds ($\kappa -> \kappa'$). By convention,
-$A$ and $B$ stands for types (\ie, type concstructors of kind $*$),
-and $F$ and $G$ stands for type constructors or arbitrary kinds.
+$A -> B$ expects another term of type $A$ as an argument, to produce yet another
+term of type $B$.   By convention,
+$A$ and $B$ stand for types (\ie, type constructors of kind $*$),
+while $F$ and $G$ stand for type constructors or arbitrary kinds.
 
-We can think of System \F\ as a restriction of System \Fw\ where we only
-allow types of the star kind ($*$). So, all the type variables appearing in
-well-kinded types in System \F\ are of the star kind. Since there exist only
-one kind ($*$) in System \F, the kinding rules of System \F\ only need to make
-sure that type variables are bounded (\ie, member of $\Delta$). 
-Since the kind structure of System \Fw\ is richer than System \F, we need to
+We can think of System \F\ as a restriction of System \Fw, where we only
+allow types of kind $*$. That is, all the type variables appearing in
+well-kinded types in System \F\ are of the star kind. Since there exists only
+one kind ($*$) in System \F, the kinding rules of System \F\ need only to make
+sure that type variables are bound in $\Delta$.
+
+Since the kind structure of System \Fw\ is richer than the kind structure of System \F, we need to
 keep track of the kind of the type variables in the kinding context ($\Delta$).
 So, the kinding context is extended by a type variable annotated by its kind
 ($X^\kappa$). The kinding rules of System \Fw\ keep track of the kinds of
-type constructors as well as making sure that the type variables are bounded.
-The kinding rules \rulename{TVar}, \rulename{TArr}, \rulename{TAll}
-are similar to the kinding rules of System \F. The kinding rules
-\rulename{TLam} and \rulename{TApp} states when lambda types and
-application types are well-kinded.
+type constructors as well as making sure that the type variables are bound in $\Delta$.
 
-Typing rules of System \Fw\ are almost identical to the typing rules of
+The kinding rules, for the type syntax inherited from System \F:
+\rulename{TVar}, \rulename{TArr}, \rulename{TAll}
+are similar to their conterparts in System \F, except for this additional
+kinding annotation. The kinding rules 
+\rulename{TLam} and \rulename{TApp} state when the extensions (lambda types and
+application types) to System \F\ are well-kinded.
+
+The typing rules of System \Fw\ are almost identical to the typing rules of
 System \F, except for one new rule \rulename{Conv}. The \rulename{Conv} rule
-supports conversion between equivalent types beyond $\alpha$-equivalence
-(\ie, up to change of bound type variable names).
-In STLC, types are equal when they are syntactically identical.
-In System \F, types are equal when they are $\alpha$-equivalent. For example,
+supports conversion between equivalent types.
+
+\begin{itemize}
+\item In the STLC, types are equal when they are syntactically identical.
+\item In System \F, types are equal when they are $\alpha$-equivalent
+(\ie, up to change of bound type variable names). For example,
 $\forall X.X$ and $\forall X'.X'$ are considered to be same types in System \F.
-In System \Fw, we expect richer notion of equality, such as $\beta$-equivalence,
-since the type syntax of System \Fw\ is analogous to a STLC at type level.
-For instance, we want $(\lambda X^{*}.X) A = A$. The equality rules over
-type constructors are illustrated in Figure \ref{fig:eqtyfw}.
+
+\item
+In System \Fw, we expect a richer notion of equality which
+incorporates the notion of 
+$\beta$-equivalence at the type level,
+since the type syntax of System \Fw\ has the structure of the STLC at the type level.
+For instance, we want $(\lambda X^{*}.X) A = A$. 
+\end{itemize}
+
+The equality rules over the
+type constructors of System \Fw\ are illustrated in Figure \ref{fig:eqtyfw}.
 The \rulename{EqTBeta} rule describes the essence of $\beta$-equivalence.
-Other rules describe structural nature of equality (\rulename{EqTVar},
-\rulename{EqTArr}, \rulename{EqTAll}, \rulename{EqTLam}, \rulename{EqTApp}.)
+Other rules describe the structural nature of equality (\rulename{EqTVar},
+\rulename{EqTArr}, \rulename{EqTAll}, \rulename{EqTLam}, \rulename{EqTApp})
 and transitivity of equality (\rulename{EqTTrans}).
 
 %% syntax directed formalism???
@@ -51,26 +65,32 @@ and transitivity of equality (\rulename{EqTTrans}).
 %% there is a slide the refers to other paper and say that CIC is okay
 %% since CIC is full. Is Fw also?
 
-The complete syntax, kinding rules, and typing rules of System \Fw
-are illustrated in Figure \ref{fig:fw}. The left column describes
-the Church-Church-style System \F\ and the right column describes
-the Curry-Church-style System \F. Since lambda types exist at type level
-in System \Fw, we also have a choice of either Church style (kind annotations
+The complete syntax, kinding rules, and typing rules of System \Fw\
+are illustrated in Figure \ref{fig:fw}. 
+Since lambda binders exist at both the term and type levels
+in System \Fw, we have a choice of either Church style (kind annotations
 on lambda types) or Curry style (no kind annotations on lambda types) for
-the type syntax. The Church-Church-style System \Fw\ is a version System \Fw\ 
+the type syntax. The Church-Church-style System \Fw\ is a version of System \Fw\ 
 with the Church-style term syntax and the Church-style type syntax.
 The Curry-Church-style System \Fw\ is a version of System \Fw\ 
 with the Curry-style term syntax and the Church-style type syntax.
+
+In Figure \ref{fig:fw}, the left column describes
+the Church-Church-style System \Fw\ and the right column describes
+the Curry-Church-style System \Fw. 
 Another version of System \Fw, the Curry-Curry-style System \Fw,
 with Curry-style term syntax and Curry style type syntax is described
 in the left column of Figure \ref{fig:fw2}.
 
 The reduction rules of System \Fw\ (Figure \ref{fig:redfw}) are
-almost identical to the reduction rules of System \F\ since the term syntax of
-System \Fw\ is almost identical to the term syntax of System \F.
-The Church-style term syntax only differs from the term syntax of System \F\ 
-that there is a kind annotation on the type variable appearing in
-the type abstraction ($\L X^\kappa.t$). The Church-style term syntax is
+almost identical to the reduction rules of System \F\ since 
+reduction usually ignores types and is based only on the structure of terms,
+and the term syntax of System \Fw\ is almost identical to the term syntax of System \F.
+
+The Church-style term syntax of System \Fw\ differs from the term syntax of System \F\ 
+in the type-abstraction ($\L X^\kappa.t$) terms. The difference
+is the kind annotation on the type variable appearing in
+the System \Fw. The Church-style term syntax is
 exactly the same as the term syntax of System \F.
 
 \begin{figure}
@@ -320,8 +340,8 @@ F,G,A,B ::= &~ X                  \\
 \label{fig:eqtyfw}
 \end{figure}
 
-\paragraph{From Curry-Church-style to Curry-Curry-style}
-We can also have a version of \Fw\ where type syntax is also in Curry style.
+\paragraph{From Curry-Church-style to Curry-Curry-style.}
+It is also possible to have a version of \Fw\ where the type syntax is also in Curry style.
 That is, the forall type ($\forall X.B$) and the lambda type ($\l X.B$)
 do not have kind annotations. We call this version of \Fw, where both terms
 and types are unannotated, the Curry-Curry-style \Fw.
@@ -329,22 +349,22 @@ In Figure \ref{fig:fw2}, the Curry-Curry-style \Fw\ (right) is laid out
 side-by-side to the Curry-Church-style \Fw\ (left).
 
 Since we changed the type syntax of forall types and lambda types in
-the Curry-Curry-style \Fw, we need to adjust the we need to adjust the rules
+the Curry-Curry-style \Fw\ (\ie, removed the kind annotations from
+the type constructor syntax), we need to adjust the kinding rules
 involving forall types and lambda types. The rules we need to adjust are
 the kinding rules \rulename{TAll} and \rulename{TLam}, and
 the typing rules \rulename{TyAbs} and \rulename{TyApp}.
 
-For the kinding rules \rulename{TAll} and \rulename{TLam}, all we need to do
-is simply dropping the kind annotations appearing in the forall type and
+For the kinding rules, \rulename{TAll} and \rulename{TLam}, we simply need to
+drop the kind annotations appearing in the forall type and
 the lambda type in each rule. In Figure \ref{fig:fw2}, you can see that
-\rulename{TAll} and \rulename{TLam} in left (Curry-Church-style) and
-right (Curry-Curry-style) are identical except for the kind annotations on
-the forall type and the lambda type.
+that the difference between the left (Curry-Church-style) and
+right (Curry-Curry-style) is the mssing kind annotations in these two rules.
 
 How should we adjust the typing rules \rulename{TyAbs} and \rulename{TyApp}
-in the Curry-Curry-style \Fw? Our first attempt may be just dropping
-the kind annotations (just as we did for the kinding rules) to adjust to
-the changes to the type syntax as below:
+for the Curry-Curry-style \Fw? A naive approach might be to adjust
+the kind annotations (just as we did for the kinding rules) to
+the changes below:
 \begin{align*}
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
 		       {\Delta;\Gamma |- t : \forall X.B}
@@ -352,8 +372,8 @@ the changes to the type syntax as below:
 		       {\Delta;\Gamma |- t : B[G/X]}
 \end{align*}
 The \rulename{TyAbs} rule above is fine. However, the \rulename{TyApp} rule
-above is problematic because it fails to require that $X$ must be of kind
-$\kappa$ as well as $G$. To ensure that $X$ is of kind $\kappa$, we need to
+above is problematic because it fails to require that both $X$ and
+$G$ have kind $\kappa$. To ensure that $X$ is of kind $\kappa$, we need to
 adjust the \rulename{TyApp} rule as follows:
 \begin{align*}
 & \phantom{ \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
@@ -369,28 +389,53 @@ the \rulename{TyAbs} rule.
 Although not illustrated in Figures \ref{fig:fw} and \ref{fig:fw2},
 we can imagine yet another version of \Fw\ with annotated terms
 and unannotated types -- namely, the Church-Curry-style \Fw.
-I am not sure when one would need this style, though.
+Since we make no use of this style in the thesis, we leave the details
+as an exercise for the reader.
 
 \subsection{Encodings of datatypes in System \Fw}
 \label{sec:fw:data}
-In System \Fw, we can encode all the datatypes encodable in System \F\ (see
-\S\ref{sec:f:data}) and more. \emph{Type constructors} for polymorphic datatypes
+In System \Fw\ we can encode all the datatypes encodable in System \F\ (see
+\S\ref{sec:f:data}) and more. In addition
+to the obvious type constructors, one can encode indexed-types, nested-types, and even
+a fixpoint operator over types.
+
+\begin{itemize}
+
+\item \emph{Type constructors} for polymorphic datatypes
 can be encoded using lambda types that abstract over types.
-\emph{Non-regular datatypes}, or \emph{nested datatypes}, can be encoded
+
+
+\item \emph{Non-regular datatypes}, or \emph{nested datatypes}, can be encoded
 using forall types that are polymorphic over type constructors.
-The ability to universally quantify over not only types but also
-type constructors is called \emph{higher-kinded polymorphsim}.
-\emph{Type constructors of higher kinds}, or \emph{higher-kinded
+
+\item With higher-kinded type constructors, we can even encode
+the recursive type operator $\mu$ in System \Fw\ by abstracting
+over non-star type constructors.
+\end{itemize}
+
+This additonal expressive power comes from two different uses of kinded types
+
+\begin{itemize}
+
+\item  \emph{Higher-kinded polymorphsim} is the ability to universally quantify over both types and
+type constructors.
+
+\item 
+\emph{Type constructors of higher kinds} or \emph{higher-kinded
 type constructors} are type constructors that expect type constructors
-as their arguments. With higher-kinded type constructors, we can even encode
-the recursive type operator $\mu$ in System \Fw. More generally, we can encode
+as their arguments.
+\end{itemize}
+
+In fact we combine these two to define 
 a family of kind-indexed recursive type operators $\mu_\kappa$ using both
 higher-kinded type constructors and higher-kinded polymorphism.
+
+
 
 \paragraph{Type constructors for polymorphic datatypes} expect
 other types as arguments to produce a datatype. We can encode these 
 type constructors in System \Fw. For example, the shorthand notations
-(or, type synonyms) in \S\ref{sec:f:data}), such as $(\times)$ for pair types
+(or, type synonyms) in \S\ref{sec:f:data}, such as $(\times)$ for pair types
 and $(+)$ for sum types, can be encoded as as follows:\footnote{Here,
 	I used a Haskell-ish notation of turning a infix binary operator
 	into a prefix binary operator by surrounding the operator in parenthesis
@@ -433,30 +478,31 @@ $\forall X^\kappa.B$ where $\kappa$ is not the star kind.
 We can encode \emph{non-regular (recursive) datatypes} in System \Fw\ using
 higher-kinded polymorphism.
 
-We mentioned that we can \emph{regular (recursive) datatypes}
+We mentioned that we can encode \emph{regular (recursive) datatypes}
 in Systerm \F\ (\S\ref{sec:f:data}), but have not discussed
 what regular datatypes are. A representative example of a regular datatype
 is the polymorphic list type ($\forall X_a.\textit{List}\,X_a$).
 We say that the polymorphic list type is regular since its recursive
 component, the tail, has exactly the same type. That is, for any
-non-empty list of $\textit{List}\,A$, its tail must be of type $\text{List}\,A$.
-Many other well-known recursive datatypes are regular (\eg, binary trees).
+non-empty list of type $\textit{List}\,A$, its tail must be of type $\textit{List}\,A$.
+Many other well-known recursive datatypes are also regular (\eg, binary trees).
 
-We can imagine a non-regular twist to the regualr polymorphic list type
-by insisting the recursive components (\ie, tails) to have different
-type arguments from the list they are part of. For instance, we may inisist
+But, one can imagine a non-regular twist to the regular polymorphic list type
+by insisting the recursive components (\ie, tails) have different
+type arguments from the list they are part of. For instance, we may insist
 that a list-like datatype of type ($\textit{Powl}\;A$) must have its tail be
 of type $(\textit{Powl}\,(A\times A))$. That is, if the first element is
 an integer (\eg, $1$), then the second element must be a pair of integers
 (\eg, $(2,3)$), and the third elment must be a pair of pair of integers
 (\eg, $((4,5),(6,7))$), and so on. We can depict an example of this list-like
-datatype with a three element as: $[1,\,(2,3),\,((4,5),(6,7))]$.
+datatype with three elements as: $[1,\,(2,3),\,((4,5),(6,7))]$.
 This is a representative example of a non-regular datatype called powerlists.
 Such datatypes are also called \emph{nested datatypes} %% TODO cite
-since the type arguments appllied to the type constructor become
-more complicated, or nested, as we step further inside the recursive components.
+since the the type constructor is applied to ever increasing complex arguments
+(here they are nested, but one can imagine even richer kinds of complexity)
+as we step further inside the recursive components.
 
-We can encode the type constroctor \textit{Powl} for powerlists using
+We can encode the type constructor \textit{Powl} for powerlists using
 higher-kinded polymorphism of System \Fw, as follows
 (\cf\ encoding of \textit{List}):
 \begin{align*}

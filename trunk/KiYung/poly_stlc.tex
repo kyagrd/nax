@@ -524,10 +524,10 @@ We can prove it by using \emph{subject reduction} and
 
 \subsection{Characteristics of the Curry-style STLC}\label{sec:stlc:curry}
 In Curry style, there is no annotation on the variable in an abstraction.
-Since the variable binding in the abstraction is no longer fixed to
+Since the variable binding in the abstraction is no longer specified to be
 a specific type, \emph{uniqueness of typing} does not hold,
-unlike in Church style. For instance, the identity function ($\l x.x$)
-could have one of any type that has of the form $A -> A$, such as:
+as it does in Church style. For instance, the identity function ($\l x.x$)
+could have any type of the form $A -> A$, such as:
 \begin{quote}\vspace*{-1em}
 \begin{singlespace}
 $\Gamma |- \l x.x : \iota -> \iota$ \\
@@ -538,27 +538,31 @@ $\Gamma |- \l x.x : ((\iota -> \iota) -> (\iota -> \iota)) -> ((\iota -> \iota) 
 $~~~~ \vdots $
 \end{singlespace}
 \end{quote}
-So, we read the typing judgment $\Gamma |- t : A$ in Curry style as
+In Curry style, we read the typing judgment $\Gamma |- t : A$,  as
 \begin{quote}
-$t$ \emph{can have type} $A$ under the typing context $\Gamma$,
+$t$ \emph{can have type} $A$, under the typing context $\Gamma$.
 \end{quote}
-unlike in Church style where we read the typing judgment as
+In Church style, we read the typing judgment as
 \begin{quote}
-$t$ \emph{has the type} $A$ under the typing context $\Gamma$.
+$t$ \emph{has {\bf the} type} $A$, under the typing context $\Gamma$.
 \end{quote}
 However, we do not consider the Curry-style STLC to be
 a polymorphic type system since the typing for a variable
 under a well-formed context is still unique. That is,
 \[ \inference{\Gamma |- x : A & \Gamma |- x : A'}{A = A'} \]
+In an environment $\Gamma$, a variable is assigned a unique {\em concrete}
+type, not a type variable that can stand for other types.
 
-Type equivalence between terms before and after well-typed $\beta$-reduction
-(or $\beta$-expansion) does not hold either, unlike in Church style.
+
+Unlike Church style, type equivalence between a term and its $\beta$-reduct, or between
+a term and one of its $\beta$-expansions, does not hold in Curry style.
 This is expected since uniqueness of typing does not hold in Curry style.
-Even when a well-typed term reduces to another well-typed term, they may be
-given different types.\footnote{Subject reduction still holds for
+Even when a well-typed term reduces to another well-typed term, it may be possible
+to assign different types to each\footnote{Subject reduction still holds for
 the Curry-style STLC since we can choose to give the same type to
-the reduced term as the type before the reduction.}
-Consider the reduction $(\l x'.x')(\l x.x) --> \l x.x$.
+the reduced term as the type before the reduction.}.
+
+For example, consider the reduction $(\l x'.x')(\l x.x) --> \l x.x$.
 We can give different types to the term before the reduction and the
 term after the reduction. For example,
 \[\setpremisesend{.1em} 
@@ -578,6 +582,7 @@ term after the reduction. For example,
  }
  {\cdot |- (\l x'.x')(\l x.x) : \iota -> \iota}
 \]
+\\
 \[\qquad\qquad\qquad\quad
 \inference[\sc Lam]
   {\inference[\sc Var]{x:\iota->\iota ~\in~ \cdot,x:\iota->\iota}
