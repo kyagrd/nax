@@ -1,6 +1,12 @@
 \chapter{Mendler-style recursion schemes}\label{ch:mendler}
+
+
+
+
 This chapter is a revised and extended version of
 my recent work \cite{AhnShe11}.
+
+
 
 \section{Historical progression}
 
@@ -79,6 +85,7 @@ revised versions of the sections appearing in our recent work \cite{AhnShe11}.
 %% TODO fwd ref for sections
 
 \section{Mendler-style iteration} \label{sec:mit}
+\input{mendler_it}
 
 \section{Mendler-style primitive recursion} \label{sec:mpr}
 
@@ -105,14 +112,17 @@ A series of papers \cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} studied
 techniques that define recursion schemes over negative recursive types in
 the conventional setting. In our recent work \cite{AhnShe11}, we discovered
 that this work can be naturally captured as a kind-indexed family of Mendler
-style combinator. The \MsfIt\ combinator (\aka\ \textit{msfcata}) corresponds to
-the conventional recursion combinator discovered by \citet{FegShe96} and
-later refined by \citet{bgb}. With this new family, we were able to write many
-interesting programs, involving negative recursive types, that are impossible,
-or very unnatural, to write with just Mendler-style iteration.
+style combinator. The \textit{msfit} combinator (\aka\ \textit{msfcata})
+corresponds to the conventional recursion combinator discovered
+by \citet{FegShe96} and later refined by \citet{bgb}.
+With this new family, we were able to write many interesting programs,
+involving negative recursive types, that may be impossible, or very unnatural,
+to write with the ordinary Mendler-style iteration family (\textit{mit},
+\aka, \textit{mcata}).
 
 TODO
 
+\input{mendler_sf}
 
 
 \section{Mendler-style course-of-values iteration and primitive recursion}
@@ -156,6 +166,9 @@ much work still to be done.
 
 
 TODO
+
+\input{mendler_cv}
+
 
 \section{TODO} \label{sec:mgadt}
 
