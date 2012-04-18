@@ -1,3 +1,5 @@
+%include includelhs2tex.lhs
+
 %format NP = N"_{\!P}"
 %format CP = C"_{\!P}"
 %format nilp = nil"_{\!"P"}"
@@ -50,26 +52,26 @@ a function that sums up the elements of bush (Figure \ref{fig:bsum}).
 Nested datatypes require us to move from rank 0 Mendler combinators
 to rank 1 Mendler combinators.
 
-%% The powerlist datatype is defined as follows:
-%% \begin{code}
-%% data Powl i = NP  | CP i (Powl (i,i))
-%% \end{code}
-%% The type argument |(i,i)| for |Powl| occurring on the right-hand side is
-%% different from |i| appearing on the left-hand side.  Type arguments that
-%% occur in variation on the right-hand side, like |i|, are type indices.
-%% 
-%% This single datatype equation for |Powl| relates a family of datatypes:
-%% the tail of an |i|-powerlist is a |(i,i)|-powerlist,
-%% its tail is a |((i,i),(i,i))|-powerlist, and so on.
-%% More concretely,
-%% \begin{code}
-%% ps    = CP 1 ps'             :: Powl Int
-%% ps'   = CP (2,3) ps''        :: Powl (Int,Int)
-%% ps''  = CP ((4,5),(6,7)) NP  :: Powl ((Int,Int),(Int,Int))
-%% \end{code}
-%% %%%% The tail of |ps| is |ps'|, and the tail of |ps'| is |ps''|.
-%% We can observe that the shape of elements includes deeper nested pairs
-%% as the type indices become more deeply nested.
+The powerlist datatype is defined as follows:
+\begin{code}
+data Powl i = NP  | CP i (Powl (i,i))
+\end{code}
+The type argument |(i,i)| for |Powl| occurring on the right-hand side is
+different from |i| appearing on the left-hand side.  Type arguments that
+occur in variation on the right-hand side, like |i|, are type indices.
+
+This single datatype equation for |Powl| relates a family of datatypes:
+the tail of an |i|-powerlist is a |(i,i)|-powerlist,
+its tail is a |((i,i),(i,i))|-powerlist, and so on.
+More concretely,
+\begin{code}
+ps    = CP 1 ps'             :: Powl Int
+ps'   = CP (2,3) ps''        :: Powl (Int,Int)
+ps''  = CP ((4,5),(6,7)) NP  :: Powl ((Int,Int),(Int,Int))
+\end{code}
+The tail of |ps| is |ps'|, and the tail of |ps'| is |ps''|.
+We can observe that the shape of elements includes deeper nested pairs
+as the type indices become more deeply nested.
 
 The bush datatype is defined as follows (also in Figure \ref{fig:bsum}):
 \begin{code}
@@ -90,7 +92,7 @@ bs''  = CB (CB (CB 3 NB) (CB (CB (CB 4 NB) NB) NB)) NB
 The tail of |bs| is |bs'|, and the tail of |bs'| is |bs''|.
 We can observe that the shape of the elements becomes more deeply nested as we
 move towards latter elements.
-%% Note, the element type of bushes becomes nested by bushes themselves.
+Note, the element type of bushes becomes nested by bushes themselves.
 
 %% On the left-hand side of Figure \ref{fig:psum}
 %% we define a function that sums up all the nested elements in a powerlist
@@ -121,33 +123,37 @@ move towards latter elements.
 %% we can specialize |bsum|, for integer bushes as follows by
 %% supplying the identity function:
 
-%% \begin{figure*}
-%% %include PowlG.lhs
-%% %include Powl.lhs
-%% \begin{minipage}{.5\textwidth}
-%% \PowlSumG
-%% \end{minipage}
-%% \begin{minipage}{.5\textwidth}
-%% \PowlSum
-%% \end{minipage}
-%% \caption{Summing up a powerlist (|Powl|), a nested datatype,
-%%          expressed in terms of |mcata1|.}
-%% \label{fig:psum}
-%% \end{figure*}
-
+\begin{landscape}
 \begin{figure*}
-%include BushG.lhs
-%include Bush.lhs
-\begin{minipage}{.5\textwidth}
+%include mendler/PowlG.lhs
+%include mendler/Powl.lhs
+\begin{minipage}{.49\linewidth}
+\PowlSumG
+\end{minipage}
+\begin{minipage}{.49\linewidth}
+\PowlSum
+\end{minipage}
+\caption{Summing up a powerlist (|Powl|), a nested datatype,
+         expressed in terms of |mcata1|.}
+\label{fig:psum}
+\end{figure*}
+\end{landscape}
+
+\begin{landscape}
+\begin{figure*}
+%include mendler/BushG.lhs
+%include mendler/Bush.lhs
+\begin{minipage}{.49\linewidth}
 \BushSumG
 \end{minipage}
-\begin{minipage}{.5\textwidth}
+\begin{minipage}{.49\linewidth}
 \BushSum
 \end{minipage}
 \caption{Summing up a bush (|Bush|), a recursively nested datatype,
          expressed in terms of |mcata1|.}
 \label{fig:bsum}
 \end{figure*}
+\end{landscape}
 
 We can define a function that sums up all the nested elements in a bush.
 Let us first take a look at the function |bsum| in the general recursion style,

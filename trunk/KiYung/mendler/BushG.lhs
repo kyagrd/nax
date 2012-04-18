@@ -1,4 +1,4 @@
-\comment{
+\begin{comment}
 \begin{code}
 {-# LANGUAGE RankNTypes, NoMonoLocalBinds, ScopedTypeVariables #-}
 import RecComb
@@ -14,7 +14,7 @@ import RecComb
 -- sumB :: Bush Int -> Int
 -- sumB = bsum id
 \end{code}
-}
+\end{comment}
 
 \newcommand{\BushSumG}{
 \vspace*{1em}
@@ -38,19 +38,19 @@ bsum'  (CB x xs)  = Ret (\ f ->
 \end{code}
 }
 
-\comment{
+\begin{comment}
 phi::(forall i . r i -> f i),  x::BushF r i 
 ----------------------------------------------
 mcata1 (f i = typ) phi x : f i
 
 mcata1 (f i = (i -> Int) -> Int) phi xs
-}
+\end{comment}
 
-\comment{
+\begin{comment}
 \begin{code}
 bs    = CB 1 bs'           :: Bush Int
 bs'   = CB (CB 2 NB) bs''  :: Bush (Bush Int)
 bs''                       :: Bush (Bush (Bush Int))
 bs''  = CB (CB (CB 3 NB) (CB (CB (CB 4 NB) NB) NB)) NB
 \end{code}
-}
+\end{comment}

@@ -1,11 +1,11 @@
-\comment{
+\begin{comment}
 \begin{code}
 {-# LANGUAGE RankNTypes, NoMonoLocalBinds, ScopedTypeVariables #-}
 import RecComb
 
 newtype Ret  i = Ret  { unRet  :: (i -> Int) -> Int }
 \end{code}
-}
+\end{comment}
 \newcommand{\BushSum}{
 \begin{code}
 data BushF r i  = NB  | CB i (r (r i))

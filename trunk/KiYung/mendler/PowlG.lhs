@@ -1,8 +1,8 @@
-\comment{
+\begin{comment}
 \begin{code}
 {-# LANGUAGE RankNTypes, NoMonoLocalBinds #-}
 \end{code}
-}
+\end{comment}
 
 
 
@@ -29,10 +29,10 @@ psum'  (CP x xs)  = Ret (\ f ->
 \end{code}
 }
 
-\comment{
+\begin{comment}
 \begin{code}
 ps    = CP 1 ps'             :: Powl Int
 ps'   = CP (2,3) ps''        :: Powl (Int,Int)
 ps''  = CP ((4,5),(6,7)) NP  :: Powl ((Int,Int),(Int,Int))
 \end{code}
-}
+\end{comment}

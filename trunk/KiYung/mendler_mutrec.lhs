@@ -1,3 +1,6 @@
+%include includelhs2tex.lhs
+
+\subsection{Mutually recursive datatypes} \label{ssec:tourMutRec}
 \begin{figure*}
 %format e1
 %format e2
@@ -18,8 +21,6 @@
          expressed in terms of |mcata1| over an indexed datatype |DecExpF|}
 \label{fig:mutrec}
 \end{figure*}
-
-\subsection{Mutually recursive datatypes} \label{ssec:tourMutRec}
 
 We can express mutual recursion over mutually recursive datatypes
 in Mendler style using an indexed base dataype.

@@ -1,3 +1,4 @@
+%include includelhs2tex.lhs
 \subsection{Indexed datatypes (GADTs)} \label{ssec:tourIndexed}
 %format NV = N"_{\!"V"}"
 %format CV = C"_{\!"V"}"
@@ -75,10 +76,10 @@ could be lifted.
 
 \begin{figure*}
 \begin{minipage}{.45\textwidth}
-%include VecG.lhs
+%include mendler/VecG.lhs
 \end{minipage}
 \begin{minipage}{.45\textwidth}
-%include Vec.lhs
+%include mendler/Vec.lhs
 \end{minipage}
 \caption{Recursion (|copy|) and course-of-values recursion (|switch2|)
 over size indexed lists (|Vec|) expressed in terms of |mcata1| and |mhist1|.}

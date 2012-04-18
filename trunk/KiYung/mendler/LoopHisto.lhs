@@ -1,9 +1,9 @@
-\comment{
+\begin{comment}
 \begin{code}
 {-# LANGUAGE RankNTypes, KindSignatures, NoMonoLocalBinds #-}
 import RecComb
 \end{code}
-}
+\end{comment}
 
 %format coo0
 %format coo1

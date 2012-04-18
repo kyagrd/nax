@@ -1,4 +1,4 @@
-\comment{
+\begin{comment}
 \begin{code}
 {-# LANGUAGE RankNTypes, NoMonoLocalBinds, ScopedTypeVariables #-}
 import RecComb
@@ -6,7 +6,7 @@ import Control.Arrow ( (***) )
 
 newtype Ret  i = Ret  { unRet  :: (i -> Int) -> Int }
 \end{code}
-}
+\end{comment}
 \newcommand{\PowlSum}{
 \begin{code}
 data PowlF r i  = NP  | CP i (r (i,i))
