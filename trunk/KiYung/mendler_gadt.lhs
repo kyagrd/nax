@@ -74,11 +74,12 @@ Again, in a language where the Mendler style combinators were
 language constructs rather than functions, we believe this annoying burden
 could be lifted.
 
-\begin{figure*}
-\begin{minipage}{.45\textwidth}
+\begin{figure*}\small
+$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
+\begin{minipage}{.7\textwidth}
 %include mendler/VecG.lhs
 \end{minipage}
-\begin{minipage}{.45\textwidth}
+\begin{minipage}{.4\textwidth}
 %include mendler/Vec.lhs
 \end{minipage}
 \caption{Recursion (|copy|) and course-of-values recursion (|switch2|)

@@ -6,25 +6,22 @@ module RecComb where
 \end{code}
 \end{comment}
 
-\newcommand{\DataFixStd}{
+\newcommand{\DataFix}{
 \begin{code}
 newtype  Mu0   (f :: *         -> *         )        = In0    { out0     :: f (Mu0 f)        }
 newtype  Mu1   (f :: (* -> *)  -> (* -> *)  )     i  = In1    { out1     :: f (Mu1 f)     i  }
-\end{code}
-}
-\newcommand{\DataFixAug}{
-\begin{code}
+
 data     Rec0  (f :: *         -> *         )  a     = Roll0  { unRoll0  :: f (Rec0 f a)     }  | Inverse0 a
 data     Rec1  (f :: (* -> *)  -> (* -> *)  )  a  i  = Roll1  { unRoll1  :: f (Rec1 f a)  i  }  | Inverse1 a
 \end{code}
 }
 
-\newcommand{\tti}{\text{abstract inverse}}
-\newcommand{\ttii}{\text{abstract unroll}}
-\newcommand{\ttiii}{\text{abstract recursive call}}
-\newcommand{\ttiiii}{\text{combining function}}
-\newcommand{\ttm}{\text{input value}}
-\newcommand{\tta}{\text{answer}}
+\newcommand{\tti}{\begin{smallmatrix}\\\text{abstract inverse}\end{smallmatrix}}
+\newcommand{\ttii}{\begin{smallmatrix}\\\text{abstract unroll}\end{smallmatrix}}
+\newcommand{\ttiii}{\begin{smallmatrix}\\\text{abstract recursive call}\end{smallmatrix}}
+\newcommand{\ttiiii}{\begin{smallmatrix}\\\text{combining function}\end{smallmatrix}}
+\newcommand{\ttm}{\begin{smallmatrix}\\\text{input value}\end{smallmatrix}}
+\newcommand{\tta}{$\!\!\!\!\!\!$\begin{smallmatrix}\\\text{answer}\end{smallmatrix}}
 
 \newcommand{\TypesOfRecursiveCombinators}{
 \begin{code}
@@ -43,7 +40,8 @@ msfhist1  :: (forall r i.   (forall i.  a i  -> r (a i) i  ) ->  (forall a i.  r
 }
 
 \newcommand{\DefsOfRecursiveCombinators}{
-\begin{minipage}{.5\linewidth}
+$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
+\begin{minipage}{.55\linewidth}
 \begin{code}
 cata    s    (In0 x)             = s (fmap (cata s) x)
                                

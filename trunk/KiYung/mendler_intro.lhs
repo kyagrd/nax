@@ -22,24 +22,22 @@ Finally, we present the case study focusing on HOAS in \S\ref{sec:showHOAS}.
 
 
 \begin{landscape}
-
-\begin{figure} %% TODO does not fit in a page
-\begin{minipage}{.5\linewidth}\DataFixStd\end{minipage}
-\begin{minipage}{.5\linewidth}\DataFixAug\end{minipage}
-\caption{Standard (left) and inverse augmented (right)
-datatype fixpoints for rank 0 (first line) and rank 1 (second line)}
+\begin{figure}
+\DataFix
+\caption{Standard (|Mu|) and inverse augmented (|Rec|) datatype fixpoints
+ for kind $*$ and kind $* -> *$}
 \label{fig:datafix}
 \end{figure}
 
 \begin{figure}
-\TypesOfRecursiveCombinators
+{\small\TypesOfRecursiveCombinators }
 \caption{Type signatures of recursive combinators.
          Note the heavy use of higher-rank types.}
 \label{fig:rcombty}
 \end{figure}
 
 \begin{figure}
-\DefsOfRecursiveCombinators
+{\small \DefsOfRecursiveCombinators }
 \caption{Definitions of recursive combinators.
   Note identical textual definitions for the same operators at different ranks,
   but with types specialized for that rank.}

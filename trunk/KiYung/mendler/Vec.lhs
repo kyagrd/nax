@@ -6,7 +6,7 @@ import RecComb
 data Z
 data S i
 \end{code}
-\end{comment}}
+\end{comment}
 
 \begin{code}
 data V p r i where

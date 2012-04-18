@@ -46,27 +46,29 @@ main.bbl: main.aux main.bib
 mylhs2tex.sty: mylhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
-mendler_intro.tex: mendler_intro.lhs
+mendler_intro.tex: mendler_intro.lhs includelhs2tex.lhs \
+	mendler/RecComb.lhs mendler/CataViaHisto.lhs mendler/Proof.lhs
 	lhs2TeX --poly -o $@ $<
 
-mendler_it.tex: mendler_it.lhs
+mendler_it.tex: mendler_it.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
-mendler_cv.tex: mendler_cv.lhs
+mendler_cv.tex: mendler_cv.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
-mendler_sf.tex: mendler_sf.lhs
+mendler_sf.tex: mendler_sf.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
-mendler_nest.tex: mendler_nest.lhs
+mendler_nest.tex: mendler_nest.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
-mendler_gadt.tex: mendler_gadt.lhs
+mendler_gadt.tex: mendler_gadt.lhs includelhs2tex.lhs \
+	mendler/Vec.lhs  mendler/VecG.lhs
 	lhs2TeX --poly -o $@ $<
 
-mendler_mutrec.tex: mendler_mutrec.lhs
+mendler_mutrec.tex: mendler_mutrec.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
-mendler_proof.tex: mendler_proof.lhs
+mendler_proof.tex: mendler_proof.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
