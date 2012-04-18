@@ -1,10 +1,10 @@
-\comment{
+\begin{comment}
 \begin{code}
 {-# LANGUAGE RankNTypes, ImpredicativeTypes, StandaloneDeriving
            , TypeSynonymInstances #-}
 {- F <=^{vec k -> *} G := forall vec x: vec k . F vec x -> G vec x -}
 \end{code}
-}
+\end{comment}
 
 %format in0
 \newcommand{\ProofCata}{

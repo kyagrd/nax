@@ -2,13 +2,13 @@
 %format inL = "\textit{in}_{\!"L"}"
 %format inR = "\textit{in}_{\!"R"}"
 %format caseSum = "\textit{case}_{"+"}"
-\comment{
+\begin{comment}
 \begin{code}
 {-# LANGUAGE RankNTypes, ImpredicativeTypes, ScopedTypeVariables
            , TypeOperators #-}
 import Prelude hiding (succ)
 \end{code}
-}
+\end{comment}
 \newcommand{\ProofSFCata}{
 \begin{code}
 type Rec0 f r a = (r a) :+: (((r a -> a) -> f (r a) -> a) -> a)
@@ -55,7 +55,7 @@ showExp e = msfcata phi e vars where
 \end{code}
 }
 
-\comment{
+\begin{comment}
 \begin{code}
 k = lam (\ x -> lam (\ y -> x))
 
@@ -75,4 +75,4 @@ n2i = msfcata phi
   where phi _ n2i' Z      = 0
         phi _ n2i' (S n)  = 1 + n2i' n
 \end{code}
-}
+\end{comment}
