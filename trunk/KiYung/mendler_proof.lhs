@@ -40,8 +40,8 @@ application. In the $F_\omega$ encoding, they could be omitted
 (i.e., |caseSum x f g| simplifies to |x f g|).  But, we choose to write
 in terms of |caseSum| to make the definitions easier to read.
 
-In Figure \ref{fig:HOASshowFw}, we define both an inductive datatype for HOAS (|Exp|), and the string formatting function
-(|showExp|), 
+In Figure \ref{fig:HOASshowFw}, we define both an recursive datatype
+for HOAS (|Exp|), and the string formatting function (|showExp|), 
 with these $F_\omega$ encodings, just as we did in \S\ref{ssec:showHOASmsfcata}.
 We can define simple expressions using the shorthand constructors and print out
 those expressions using |showExp|.  For example, \\

@@ -14,7 +14,7 @@
 \subsection{Nested datatypes} \label{ssec:tourNested}
 The datatypes |Nat| and |List|, defined in \S\ref{ssec:tourRegular}, 
 are regular datatypes.  Non-recursive datatypes (e.g., |Bool|) and
-recursive (or inductive) datatypes without any type arguments (e.g., |Nat|)
+recursive datatypes without any type arguments (e.g., |Nat|)
 are always regular.  Among the recursive datatypes with type arguments,
 those datatypes where all of the recursive occurrence on the right-hand side
 have exactly the same type argument as the left-hand side (in the same order)
@@ -224,7 +224,7 @@ contains an example where there are both type parameters and type indices
 in a datype (|Vec p i|). 
 
 Getting back to the right-hand side of Figure \ref{fig:bsum},
-since we used |Mu1| to define the inductive datatypes, we use |mcata1|, the
+since we used |Mu1| to define the recursive datatypes, we use |mcata1|, the
 Mendler style catamorphism combinator for rank 1, to define the functions.
 The beauty of the Mendler style approach is that the implementation
 of the recursion combinators for

@@ -1,13 +1,14 @@
 %include includelhs2tex.lhs
-\subsection{Mendler style Histomorphism for regular datatypes}
+\subsection{Mendler style course-of-values iteration for regular datatypes}
 \label{ssec:tourHist0}
-Some computations are not easily expressible by a catamorphism,
-since a catamorphism only recurses on the direct subcomponents (e.g., tail
-of a list). Recursing on deeper subcomponents (e.g., tail of tail of a list)
-requires complex encodings in the conventional setting. Unfortunately,
-functional programmers often write simple recursive functions using
-nested pattern matching that recurse on deep subcomponents exposed by
-the nested patterns.  A typical example is the Fibonacci function:
+Some computations are not easily expressible by iteration,
+since iteration only recurses on the direct subcomponents (e.g., tail
+of a list). Terminating recursion shcemes on deeper subcomponents
+(e.g., tail of tail of a list) requires rather complex encodings
+in the conventional setting. Unfortunately, functional programmers often
+write simple recursive functions using nested pattern matching that
+recurse on deep subcomponents exposed by the nested patterns.
+A typical example is the Fibonacci function:
 \vspace*{.5em}
 \begin{code}
 fib Z          = 0
@@ -17,30 +18,30 @@ fib (S (S m))  = fib (S m) + fib m
 Note, in the third equation |fib| recurses on both the predecessor |(S m)|,
 which is a direct subcomponent of the argument, and the predecessor of
 the predecessor |m|, which is a deeper subcomponent of the argument.
-The Histomorphism \cite{UusVen99histo} captures such patterns of recursion
-often called a course-of-values recursion.
+The Histomorphism \cite{UusVen99histo} captures such patterns of recursion.
+The Histomorphism is also known as the course-of-values iteration.
 
-In the conventional style, histomorphisms are defined through co-algebraic
-construction of an intermediate stream data structure that pairs up the
-current argument and the results from the previous steps.
+In the conventional style, course-of-values iteration are defined through
+co-algebraic construction of an intermediate stream data structure that
+pairs up the current argument and the results from the previous steps.
 There are two ways of implementing this.  One is a memoizing bottom-up version,
 and the other is a non-memoizing version that repeats the computation of
 the previous steps.  We are not going to show or discuss those implementations
 here, but the point we want to make is that both versions need to be
 implemented through co-algebraic construction \cite{UusVen00,vene00phd}.
-Course-of-values recursion expressed in terms of this co-algebraic style will
+Course-of-values iteration expressed in terms of this co-algebraic style will
 look very different from its equivalent in general recursion style. One needs
 to extract both the original arguments and the deep result values from the
 stream explicitly calling on stream-head and stream-tail operations.
 However, in Mendler style, we do not need such co-algebraic construction
-at the user level\footnote{The Mendler style
+at least for the non-memoizing version.\footnote{The Mendler-style
 histormophism combinators implemented here are the non-memoizing ones.
 \citet{vene00phd} suggests how to implement a memoizing 
-Mendler style histomorphism, which uses co-algebraic construction.}.
+Mendler-style histomorphism, which uses co-algebraic construction.}.
 
-In the Mendler style Histomorphism, we play the same trick
-we played in the Mendler style Catamorphism. We arrange for the
-combining function to take additional arguments
+In the Mendler-style course-of-values iteration (|mhist|),
+we play the same trick we played in the Mendler-style iteration (|mit|).
+We arrange for the combining function to take additional arguments
 (Figures \ref{fig:rcombty} and \ref{fig:rcombdef}).
 \begin{itemize}
   \item The combining function |phi| now becomes a function of 3 arguments. 
@@ -65,16 +66,15 @@ combining function to take additional arguments
   |mhist0 :: (forall r . (a -> f a) -> (r -> a) -> (f r -> a)) -> {-"\cdots"-}|
 \end{itemize}  
 
-The Mendler style histomorphism is much handier when expressing
-course-of-values recursion than the conventional histomorphism \cite{UusVen00}.
+The Mendler-style course-of-values iteration is much handier
+than the conventional course-of-values iteration \cite{UusVen00}.
 For example, in Figure \ref{fig:fib}, the definition for the Fibonacci function
 in general recursion style (left) and the definition in Mendler style (right)
 look almost identical.  Particularly, when we have unrolled the nested pattern
 matching in the general recursive definition into a case expression.
 The only difference between the two, is that in the Mendler style (left),
-we pattern match over |out n| in the case expression, in
-the Traditional-style (right) we
-pattern match over |n|.  
+we pattern match over |out n| in the case expression, in the gerneral recursion
+style (right) we pattern match over |n|.  
 
 \begin{figure}
 \begin{minipage}{.49\linewidth}
@@ -87,8 +87,8 @@ pattern match over |n|.
 \label{fig:fib}
 \end{figure}
 
-Let us visually relate the definition of |mhist0| with the second equation of |phi|
-in the definition of the Fibonocci function as follows:
+Let us visually relate the definition of |mhist0| with the second equation of
+|phi| in the definition of the Fibonocci function as follows:
 \begin{code}
 mhist0 phi (In0 x) =  phi  out0            (mhist0 phi)         {-"~~"-}x
                            {-"~~\vdots"-}  {-"~~~~~\vdots"-}    {-"~~~\vdots"-}
@@ -104,13 +104,14 @@ manner.  The abstract unrolling function |out| enables us to discharge |In0|
 as many times as we want inside |phi|. 
 
 From the programmers perspective, |out0| is a hidden primitive,
-hidden by the histomorphism abstraction.
+hidden by the |mhist0| abstraction (\ie, only used within the definition of
+combinators like |mhist0| but not in the user-defined functions).
 But, inside the definition of the combining function |phi|,
 the programmer can actually access the functionality of |out0|
 through the abstract unrolling function |out|. The higher-rank types limit
 the use of this abstract unrolling function |out| to values of type |r|.
 
-In a positive inductive datatype, the only functions with domain |r|
+In a positive recursive datatype, the only functions with domain |r|
 are the abstract unroller, and the recursive placeholder.
 The programmer can only
 {\em whittle down} the |r| values inside the base structure,

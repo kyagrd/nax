@@ -113,7 +113,7 @@ $*$ and $* -> *$.
 
 \section{Background - Termination and Negativity}\label{sec:motiv}
 \citet{Mendler87} showed that diverging computations can be expressed using
-inductive datatypes with negative occurrences of the datatype being defined. 
+recursive datatypes with negative occurrences of the datatype being defined. 
 No explicit recursion at the value level is required to elicit non-termination.
 We can illustrate this in Haskell as follows:
 \begin{center}

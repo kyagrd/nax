@@ -57,7 +57,7 @@ equivalence) is, in fact, the constant function returning the unit value.
 
 This illustrates the essence of how Mendler catamorphism guarantees
 normalization even in the presence of negative occurrences in the
-inductive type definition. By quantifying over the recursive type
+recursive datatype definition. By quantifying over the recursive type
 parameter of the base datatype (e.g. |r| in |TBase r|), it prevents an
 embedded function with a negative occurrence from flowing into any
 outside terms (especially terms embedding that function).
@@ -65,7 +65,7 @@ outside terms (especially terms embedding that function).
 Given these restrictions, the astute reader may ask, are types with
 embedded function with negative occurrences good for anything at all?
 Can we ever call such functions?  A simple example which uses an
-embedded function inside a negative inductive datatype is illustrated
+embedded function inside a negative recursive datatype is illustrated
 in Figure \ref{fig:LoopHisto}.  The datatype |Foo| (defined as a fixpoint
 of |FooF|) is a list-like data structure with two data constructors |Noo|
 and |Coo|.  The data constructor |Noo| is like the nil and |Coo| is like
@@ -107,7 +107,7 @@ does not preclude the risk of embedded functions, with negative domains,
 being applied to larger values which contain the embedded function
 itself.
 
-%% One should not be punished just by defining negative inductive types as long
+%% One should not be punished just by defining negative recursive types as long
 %% as one uses them in a safe way.  We know from functional programming examples
 %% that negative occurrences have real constructive uses, how do we generalize
 %% the Mendler Hierarchy to express these useful examples?  If you guessed that

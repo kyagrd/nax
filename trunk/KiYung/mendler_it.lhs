@@ -1,6 +1,6 @@
 %include includelhs2tex.lhs
 \subsection{Defining recursive regular datatypes} \label{ssec:tourRegular}
-In the Mendler style approach, we define Mendler style inductive datatypes
+In the Mendler-style approach, we define recursive datatypes
 as fixpoints of non-recursive base datatypes.  For example, the following
 are definitions of the natural number type in the general recursion style (left)
 and in the Mendler style (right).
@@ -24,7 +24,7 @@ succ n   = In0 (S n)
 \end{center}
 Note, in Mendler style, we define |Nat| by applying the fixpoint |Mu0| to
 the base |N|.  The type argument |r| in the base |N| is intended to denote
-the points of recursion in the inductive type.  Here, we have only
+the points of recursion in the recursive datatype.  Here, we have only
 one point of recursion at |S|, the successor data constructor.
 Then, we define the shorthand constructors |zero| and |succ| (on the right),
 which correspond to the data constructors |Z| and |S| of
@@ -156,24 +156,24 @@ values by pattern matching against |In0| (or, by using the selector function
 |out0|). These operations are hidden by the abstraction boundary (or in the case
 of Trellys' logicality inference, lead to classifying a term as programatic,
 rather than as logical). To remain in the logical (terminating) classification,
-whenever you need to decompose values of inductive datatypes you must do it via
+whenever you need to decompose values of recursive datatypes you must do it via
 |mcata0| (or, any of the other terminating Mendler style combinators).
-To conform to these rules, all functions over positive inductive datatypes,
+To conform to these rules, all functions over positive recursive datatypes,
 except the trivial ones such as identity and constant functions (which don't
 inspect their structure), need to be implemented in terms of the combinators
-described in Figure \ref{fig:rcombty}. For negative inductive datatypes
+described in Figure \ref{fig:rcombty}. For negative recursive datatypes
 only the combinators in the catamorphism family ensure termination.
 
 The intuitive reasoning behind the termination property of |mcata0| for
-all positive inductive datatypes is that (1) |mcata0| strips off one |In0|
+all positive recursive datatypes is that (1) |mcata0| strips off one |In0|
 constructor each time it is called, and (2) |mcata0| only recurses on the
 direct subcomponents (e.g., tail of a list) of its argument (because the type
 of the recursive placeholder won't allow it to be applied to anything else).
 Once we observe these two properties, it is obvious that |mcata0| always
 terminates since those properties imply that every recursive call to |mcata0|
 decreases the number of |In0| constructors in its argument.\footnote{We assume
-that the values of inductive types are always finite. We can construct infinite
-values (or, co-inductive values) in Haskell exploiting lazyness, but we exclude
+that the values of recursive types are always finite. We can construct infinite
+values (or, co-recursivevalues) in Haskell exploiting lazyness, but we exclude
 such infinite values from our discussion in this work, and this property is
 a fundamental design decision in Trellys.} 
 
