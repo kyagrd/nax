@@ -1,6 +1,6 @@
 %include includelhs2tex.lhs
 
-\subsection{Mutually recursive datatypes} \label{ssec:tourMutRec}
+\section{Mutually recursive datatypes} \label{ssec:tourMutRec}
 \begin{figure*}
 %format e1
 %format e2
@@ -25,7 +25,7 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\
 \end{figure*}
 
 We can express mutual recursion over mutually recursive datatypes
-in Mendler style using an indexed base dataype.
+in the Mendler style using an indexed base dataype.
 The context extension function |extend| and
 the expression evaluation function |eval| in Figure \ref{fig:mutrec}
 are mutually recursive functions over the mutually recursive datatypes of

@@ -24,7 +24,7 @@ are considerably more expressive than the conventional combinators of
 the Squiggol \cite{AoP} school, in the sense that the Mendler-style combinators
 are well-behaved (\ie, guarantee termination) over wider range of recursive
 datatypes. Historical progression on the studies of the Mendler-style approach
-is summarized in \ref{sec:mendler:history}.
+is summarized in \S\ref{mendler_history}.
 
 Recently, Mendler-style combinators have been studied in the context of
 modern functional languages with advanced type system features, including
@@ -111,7 +111,7 @@ different kind. In this chapter we illustrate only the two simplest kinds
 $*$ and $* -> *$. 
 
 
-\section{Background - Termination and Negativity}\label{sec:motiv}
+\subsection{Background - Termination and Negativity}\label{sec:motiv}
 \citet{Mendler87} showed that diverging computations can be expressed using
 recursive datatypes with negative occurrences of the datatype being defined. 
 No explicit recursion at the value level is required to elicit non-termination.
@@ -195,6 +195,80 @@ Mendler-style recursion, whose termination properties are known.
 Detailed case study of how to express this function using our extended
 Mendler-style iteration is presented in \S\ref{sec:showHOAS}.
 
+\subsection{Historical progression}\label{mendler_history}
+\citet{Mendler87} discovered an interesting way of formalizing
+primitive recursion, which was later dubbed ``the Mendler-style'',
+while he was formalizing a logic that extended System \textsf{F} with
+primitive recursion. Interestingly, Mendler did not seem to notice
+(or maybe, just did not bother to mention) that his style of formalizing
+primitive recursion also guaranteed normalization for non-positive recursive
+types -- Mendler required recursive types to be positive in his extension of
+System \textsf{F}. A decade later, \citet{matthes98phd} and \citet{uustalu98phd}
+noticed that Mendler never used the positivity condition in his proof of
+strong normalization.
+
+\citet{AbeMat04} generalized Mendler's primitive recursion combinator
+\cite{Mendler87} into a family of combinators that are uniformly defined for
+type constructors of arbitrary kinds. This was necessary for
+handling nested datatypes. Their system extends System \Fw\ 
+(\citet{Mendler87} extends System \textsf{F}). The notion
+of a kind indexed family of Mendler combinators has now become the norm.
+
+\citet{AbeMat04} prove strong normalization of their language \textsf{MRec},
+which extends System \Fw\ by adding a family of kind-indexed Mendler-style
+primitive recursion combinators. They show that \textsf{MRec} has
+a reduction preserving embedding into a calculus they call \Fixw.
+Then, they show that \Fixw\ is strongly normalizing.
+
+Abel, Matthes, and Uustalu \cite{AbeMatUus03,AbeMatUus05} studied
+a kind-indexed family of iteration combinators, along with examples
+involving nested datatypes that make use of those combinators.
+Iteration (\aka\ catamorphism) is a recursion scheme, which has the same
+computational power as primitive recursion (\ie, both can be defined
+in terms of each other), but has different algorithmic complexity. 
+
+It is strongly believed that primitive recursion is more efficient than
+iteration. For instance, it is trivial to define a constant time predecessor
+for natural numbers with primitive recursion, but it is believed impossible
+to define the constant time predecessor with iteration. The Mendler-style
+iteration family can be embedded into \Fw\ in a reduction preserving manner.
+That is, we can encode the family of Mendler-style iteration combinators
+into \Fw\ in such a way that the number of reduction steps of the original
+and the embedding differ only by a constant number of steps. The primitive
+recursion family, in contrast, is not believed to have a reduction preserving
+embedding into \Fw. \citet{AbeMat04} needed a more involved embedding of
+\textsf{MRec} into \Fixw, which has a richer structure than \Fw.
+
+Although Matthes, Uustalu, and others, were well aware of the fact that
+the Mendler-style iteration family and the primitive-recursion family both
+normalize for negative recursive types, they did not explore or document actual
+examples. They postponed ``the search for exciting examples of negative
+recursive types" until another time. They stated that the normalization
+of negative types ``may have a theoretical value
+only''\cite{UusVen99}. So, until recently, the study on Mendler-style recursion
+combinators focused on examples of positive recursive types with type
+rather than term) based indexing.
+
+Recently, I have developed several new contributions to the study of
+the Mendler-style recursion shemes \cite{AhnShe11}. These contributions
+fall into three broad categories:
+\begin{itemize}
+\item discovered a new family of Mendler-style recursion combinators,
+	which normalizes for negative recursive types and is believed
+	to be more expressive than the Mendler-style iteration family
+	(\S\ref{sec:msf}),
+\item discovered a counterexample, which proves that
+	some families of Mendler-style recursion combinators
+	do not normalize for negative recursive types
+	but only normalize for positive recursive types (\S\ref{sec:mcv}), and
+\item extended Mendler-style recursion combinators to (almost)
+	term indexed types (\ie, Generalized Algebraic DataType(GADT)s)
+	(\S\ref{sec:mgadt}).
+\end{itemize}
+Details of these contributions are discussed in the previous sections
+(\S\ref{sec:msf},\S\ref{sec:mcv},\S\ref{sec:mgadt}), which are extended and
+revised versions of the sections appearing in our recent work \cite{AhnShe11}.
+
 
 \section{Roadmap to a tour of the Mendler-style approach}\label{sec:tour}
 %include mendler/RecComb.lhs
@@ -217,7 +291,7 @@ Fourth, we give intuition why the Mendler-style iteration ensures
 termination even for negative datatypes (\S\ref{ssec:tourNegative}).
 Finally, we present the case study focusing on HOAS in \S\ref{sec:showHOAS}.
 
-
+\afterpage{
 \begin{landscape}
 \begin{figure}
 \DataFix
@@ -241,6 +315,7 @@ Finally, we present the case study focusing on HOAS in \S\ref{sec:showHOAS}.
 \label{fig:rcombdef}
 \end{figure}
 \end{landscape}
+}
 
 \begin{figure}
 \CataViaHisto
@@ -262,16 +337,16 @@ as arguments. They are used to tie the recursive knot
 through the generating functor (or base datatype) that they take as an argument.
 
 In Figure \ref{fig:rcombty}, we provide the types of 8 Mendler-style
-combinators distributed over the two ranks that we consider,
-along with the type of a conventional catamorphism for comparison.
+combinators distributed over the two kinds that we consider,
+along with the type of a conventional iteration combinator for comparison.
 The combinators can be organized into a hierarchy of increasing generality, and
 juxtaposing the types of the combinators makes it clear where in the hierarchy
 each combinator appears, and how each is related to the others.
 
 In Figure \ref{fig:rcombdef}, we define the combinators themselves,
-again distributed over two ranks. The definition of the corresponding
-combinators in the two ranks are textually identical, although they
-must be given different types in each rank.
+again distributed over two kinds. The definition of the corresponding
+combinators in the two kinds are textually identical, although they
+must be given different types in each kind.
 
 In Figures \ref{fig:len}, \ref{fig:fib}, and \ref{fig:bsum}, \ref{fig:vec}, and
 \ref{fig:mutrec}, we provide examples\footnote{Some of the examples
@@ -284,40 +359,4 @@ We have structured each of the examples into two, side by side, parts.
 On the left, we provide a general recursive encoding, and
 on the right, a Mendler-style encoding.
 
-
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% %%%%%%% Catamorphism for regular datatypes      %%%%%%% ssec:tourCata0
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% %include tourCata0.lhs
-%% 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% %%%%%%% Histomorphism for regular datatypes     %%%%%%% ssec:tourHist0
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% %include tourHist0.lhs
-%% 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% %%%%%%% Nested datatypes                        %%%%%%% ssec:tourNested
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% %include tourNested.lhs
-%% 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% %%%%%%% Indexed datatypes (GADTs)               %%%%%%% ssec:tourIndexed
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% %include tourIndexed.lhs
-%% 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% %%%%%%% Mutrually recursive datatypes           %%%%%%% ssec:tourMutRec
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% %include tourMutRec.lhs
-%% 
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% %%%%%%% Negative datatypes, a short look        %%%%%%% ssec:tourNegative
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% %include tourNegative.lhs
 

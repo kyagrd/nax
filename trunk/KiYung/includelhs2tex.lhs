@@ -37,6 +37,13 @@
 %format msfhist = "\textsf{msfcvIt}"
 %format msfhist0 = msfhist "_{*}"
 %format msfhist1 = msfhist "_{* -> *}"
+%format mprim = "\textsf{mPr}"
+%format mprim0 = mprim "_{*}"
+%format mprim1 = mprim "_{* -> *}"
+%format mcvpr = "\textsf{mcvPr}"
+%format mcvpr0 = mcvpr "_{*}"
+%format mcvpr1 = mcvpr "_{* -> *}"
+
 
 %format phi = "\varphi"
 

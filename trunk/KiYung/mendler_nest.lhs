@@ -11,7 +11,7 @@
 %format consb = cons"_{\!B}"
 %format bsumm = bsum"_{\!m}"
 
-\subsection{Nested datatypes} \label{ssec:tourNested}
+\section{Nested datatypes} \label{ssec:tourNested}
 The datatypes |Nat| and |List|, defined in \S\ref{ssec:tourRegular}, 
 are regular datatypes.  Non-recursive datatypes (e.g., |Bool|) and
 recursive datatypes without any type arguments (e.g., |Nat|)
@@ -192,44 +192,37 @@ the type system would need to unify (|a i|) with (|(i->Int) -> Int|),
 which is a higher-order unification, whereas unifying (|a i|) with
 the wrapped answer type (|Ret i|) is first-order.
 The type inference algorithm of Haskell (and most other languages)
-does not support higher-order unification.\footnote{
-We may avoid higher-order unification, either by making the Mendler style combinators
-language constructs (rather than functions) so that the type system
-treats them with specialized typing rules; or by providing a version of
-the combinators with syntactic Kan-extension as in \cite{AbeMatUus05}.}
-%% ) and annotating the constructs with a type
-%% equation, essentially moving the equation | Ret i = (i -> Int) -> Int |
-%% from the |newtype| definition to its point of use on |mcata1|.}
+does not support higher-order unification.\footnote{We may avoid higher-order
+unification, either by making the Mendler-style combinators language constructs
+(rather than functions) so that the type system treats them with specialized
+typing rules; or by providing a version of the combinators with syntactic
+Kan-extension as in \cite{AbeMatUus05}.}
 
 Finally, let us discuss the summation function for bushes using
 the Mendler style, found on the right-hand side in Figure \ref{fig:bsum}.
 First, we give Mendler style datatype definitions for bushes.  As usual,
 we define the datatype |Bush| as a fixpoint of the base |BushF|.
 However, an important difference that readers should notice is the use of
-fixpoint |Mu1| for rank 1 bases, instead of |Mu0|, for the rank 0 bases
+fixpoint |Mu1| for kind $* -> *$ bases, instead of |Mu0|, for the kind $*$ bases
 inducing regular datatypes.
 
-That the type argument |i| in
-%% |Powl i| and 
-|Bush i| is a type index that
-forces us to choose the rank 1 fixpoint (and its related recursion combinators).
-Note, in the definition of the base 
-%% types |PowlF| and 
-type |BushF|,
-we place the index |i| after the type argument |r| for the recursion points.
-This is the convention we use.  We always write parameters (|p|), before
-the recursion point arugment (|r|), followed by indices (|i|).  
-Figure \ref{fig:vec}, which we will shortly discuss in \S\ref{ssec:tourIndexed},
-contains an example where there are both type parameters and type indices
-in a datype (|Vec p i|). 
+That the type argument |i| in |Powl i| and |Bush i| is a type index that
+forces us to choose the fixpoint on kind $* -> *$ (and its related recursion
+combinators). Note, in the definition of the base types |PowlF| and 
+type |BushF|, we place the index |i| after the type argument |r| for
+the recursion points. This is the convention we use. We always write
+parameters (|p|), before the recursion point arugment (|r|), followed by
+indices (|i|).  Figure \ref{fig:vec}, which we will shortly discuss
+in \S\ref{ssec:tourIndexed}, contains an example where there are both
+type parameters and type indices in a datype (|Vec p i|). 
 
 Getting back to the right-hand side of Figure \ref{fig:bsum},
-since we used |Mu1| to define the recursive datatypes, we use |mcata1|, the
-Mendler style catamorphism combinator for rank 1, to define the functions.
-The beauty of the Mendler style approach is that the implementation
-of the recursion combinators for
-higher-ranks are \emph{exactly the same} as their rank 0 counterparts. The
-definitions differ only in their type signatures. As you can see in Figures 
+since we used |Mu1| to define the recursive datatypes, we use |mcata1|,
+the Mendler style iteration combinator for kind $* -> *$, to define
+the functions. The beauty of the Mendler style approach is that
+the implementation of the recursion combinators for higher-ranks
+(or, higher-kinds) are \emph{exactly the same} as their kind $*$ counterparts.
+The definitions differ only in their type signatures. As you can see in Figures 
 \ref{fig:rcombty} and \ref{fig:rcombdef}, |mcata1| has a richer type than
 |mcata0|, but their implementations are \emph{exactly the same}!
 This is not the case for the conventional approach.
@@ -238,5 +231,3 @@ There has been several approaches \cite{BirPat99,MarGibBay04,Hin00}
 to extend folds or catamorphisms for nested datatypes
 in the conventional setting.
 
-%% Although we have not shown it here, we can also define the summation function on
-%% powerlists in a similar manner.

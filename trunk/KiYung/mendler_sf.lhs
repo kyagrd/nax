@@ -1,4 +1,36 @@
 %include includelhs2tex.lhs
+\section{Mendler-style iteration with syntactic inverse} \label{sec:msf}
+While it is known that iteration and primitive recursion terminate for all types
+\cite{AbeMatUus05,AbeMat04}, they are not particularly expressive over negative
+recursive types. Identifying additional Mendler-style operators that work
+naturally, and are more expressive than iteration, is one of the important
+result of this dissertation.
+
+Interesting examples of Mendler-style operators over negative recursive types
+have been neglected in the literature. One of the reasons, I think, is because
+it is possible to encode negative recursive types into positive recursive ones.
+Because conventional iteration and primitive recursion normalize for
+positive recursive types we can use standard techniques on these encodings
+of translating negative recursive types into positive recursive types.
+What we gain by using such encodings must be traded against the loss in
+transparency that such encodings force upon the implementation. The natural
+structure, which were evident in the negative data type, become obscured by
+the encoding.
+
+A series of papers \cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} studied 
+techniques that define recursion schemes over negative recursive types in
+the conventional setting. In our recent work \cite{AhnShe11}, we discovered
+that this work can be naturally captured as a kind-indexed family of Mendler
+style combinator. The \textit{msfit} combinator (\aka\ \textit{msfcata})
+corresponds to the conventional recursion combinator discovered
+by \citet{FegShe96} and later refined by \citet{bgb}.
+With this new family, we were able to write many interesting programs,
+involving negative recursive types, that may be impossible, or very unnatural,
+to write with the ordinary Mendler-style iteration family (\textit{mit},
+\aka, \textit{mcata}).
+
+
+
 \subsection{Negative datatypes, a second look} \label{ssec:tourNegative}
 
 Let us revisit the negative inductive datatype |T|
@@ -7,7 +39,7 @@ Let us revisit the negative inductive datatype |T|
 %format C_m = C"_{\!m}"
 %format p_m = p"_{\!m}"
 %format w_m = w"_{\!m}"
-We can define a Mendler style version of |T|, called |T_m|, as follows:
+We can define a Mendler-style version of |T|, called |T_m|, as follows:
 \begin{code}
 data TBase r = C_m (r -> ())
 type T_m = Mu0 TBase
@@ -19,14 +51,11 @@ The function
 \begin{code}
 w_m x = (p_m x) x
 \end{code} 
-is easy. The function
-|p_m| is problematic. By the rules of the game,
-we cannot pattern match on |In0|
-(or use |out0|) so we must resort to using one of the
-combinators, such as |mcata0|.
-However, it is not possible to write |p_m|
-in terms of |mcata0|.
-Here is an attempt (seemingly the only one possible) that fails:
+is easy. The function |p_m| is problematic. By the rules of the game, we cannot
+pattern match on |In0| (or use |out0|) so we must resort to using one of
+the combinators, such as |mcata0|. However, it is not possible to write |p_m|
+in terms of |mcata0|. Here is an attempt (seemingly the only one possible)
+that fails:
 \begin{code}
 p_m :: T_m -> (T_m -> ())
 p_m =  mcata0 phi where
@@ -38,9 +67,9 @@ We write the explicit type signature for the combining function |phi|
 to make it clear why this attempt fails to type check. The combining
 function |phi| take two arguments. The recursive placeholder (for which we
 have used the pattern |_|, since we don't intend to call it) and the
-base structure |(Cm f)|, from which we can extract
-the function |f :: r -> ()|. Note that |r| is an abstract
-(universally quantified) type, and the result type of |phi| requires
+base structure |(Cm f)|, from which we can extract the function |f :: r -> ()|.
+Note that |r| is an abstract type (since it is universally quantified
+in the function argument), and the result type of |phi| requires
 |f :: T_m -> ()|. The types |r| and |T_m| can never match, if |r|
 is to remain abstract. Thus, |p_m| fails to type check.
 
@@ -55,7 +84,7 @@ and the function we can extract from the base structure |f :: r -> ()|,
 the only function that returns a unit value (modulo extensional
 equivalence) is, in fact, the constant function returning the unit value.
 
-This illustrates the essence of how Mendler catamorphism guarantees
+This illustrates the essence of how the Mendler-style iteration guarantees
 normalization even in the presence of negative occurrences in the
 recursive datatype definition. By quantifying over the recursive type
 parameter of the base datatype (e.g. |r| in |TBase r|), it prevents an
@@ -93,7 +122,7 @@ on termination of |mcata0| in Figure \ref{fig:proof}. %% \S\ref{sec:proof}.
 While all functions written in terms of |mcata0| are total, the
 same cannot be said of function written in terms of |mhist0|.
 The function |loopFoo| defined with |mhist0| is a counter-example to totality, which
-shows that Mendler style histomorphisms do not always terminate.
+shows that the Mendler-style course-of-values iteration do not always terminate.
 Try evaluating |loopFoo foo|.  It will loop.  This function |loopFoo| is
 similar to |lenFoo|, but has an additional twist.  At the very end of the
 function definition, we recurse on the transformed tail |(f' xs)|,
@@ -104,8 +133,7 @@ to a larger value |xs|, which contains |f'|.
 The abstract type of the unrolling function (|out::r->f r|),
 prevents the recursive placeholder from being applied to a larger value, but it
 does not preclude the risk of embedded functions, with negative domains,
-being applied to larger values which contain the embedded function
-itself.
+being applied to larger values which contain the embedded function itself.
 
 %% One should not be punished just by defining negative recursive types as long
 %% as one uses them in a safe way.  We know from functional programming examples
@@ -114,10 +142,8 @@ itself.
 %% we will make the combining function |phi| abstract over yet another argument
 %% you are correct.
 
-\section{Formatting Higher-Order Abstract Syntax}\label{sec:showHOAS}
-
-To lead up to the Mendler style solution
-to formatting HOAS, we first review
+\subsection{Formatting Higher-Order Abstract Syntax}\label{sec:showHOAS}
+To lead up to the Mendler-style solution to formatting HOAS, we first review
 some earlier work on turning expressions, expressed in 
 Higher-Order Abstract Syntax (HOAS)\cite{Church40,PfeEll88}, into strings.
 This solution was suggested by \citet{FegShe96}. They were studying
@@ -131,12 +157,13 @@ in Figure \ref{fig:datafix}, but with a different type.
 
 The algorithm worked, but, the augmentation introduces junk.
 \citet{bgb} eliminated the junk by exploiting parametricity.
-It is a coincidence that Mendler style recursion combinators also use the same
+It is a coincidence that Mendler-style recursion combinators also use the same
 technique, parametricity, for a different purpose, to guarantee termination.
 Fortunately, these two approaches work together
 without getting in each other's way.  
 
 %include mendler/HOASshow.lhs
+\afterpage{
 \begin{landscape}
 \begin{figure*}
 \ExpGFig
@@ -147,8 +174,9 @@ without getting in each other's way.
 \label{fig:HOASshow}
 \end{figure*}
 \end{landscape}
+}
 
-\subsection{A general recursive implementation for open HOAS}
+\subsubsection{A general recursive implementation for open HOAS}
 \label{ssec:showHOASrecursive}
 
 The recursive datatype |Exp_g| in Figure \ref{fig:HOASshow} is an open HOAS.
@@ -316,7 +344,7 @@ yet another new |Lam_g (\x->x)| expression and keeps on recursing.
 %% we should note up front that there is a differnce?? that we start with
 %% an example of HOAS with variable constructor}
 
-\subsection{A Mendler style solution for closed HOAS}
+\subsubsection{A Mendler-style solution for closed HOAS}
 \label{ssec:showHOASmsfcata}
 
 Our exploration of the code in Figure \ref{fig:HOASshow} illustrates
@@ -491,6 +519,59 @@ Another example of negative datatype is a graph with cycles and sharing.
 Due to the space limitation, we only give its implementation
 in Figure \ref{fig:graph}. For further details, see \citet{FegShe96}.
 
+\subsection{$F_\omega$ encoding of |Rec0| and |msfcata0|}\label{App:Fomega}
+
+%include mendler/Proof2.lhs
+
+\begin{figure}
+\ProofSFCata
+\SumDef
+\caption{$F_\omega$ encoding of |Rec0|, |msfcata0|, and the sum type (+).}
+\label{fig:proofsf}
+\end{figure}
+ 
+%% \begin{figure}
+%% \SumDef
+%% \caption{$F_\omega$ encoding of the sum type}
+%% \label{fig:sumdef}
+%% \end{figure}
+
+\begin{figure}
+\HOASshowFw
+\caption{HOAS string formatting example in $F_\omega$.}
+\label{fig:HOASshowFw}
+\end{figure}
+
+Figure \ref{fig:proofsf} is the $F_\omega$ encoding of
+the inverse augmented datatype |Rec0| and its iteration |msfcata0|.
+We use the sum type to encode |Rec0| since it consists of two constructors,
+one for the inverse and the other for the recursion.  The newtype |Id| wraps
+answer values inside the inverse. The iteration combinator |msfcata0| unwraps
+the result (|unIn|) when |x| is an inverse.  Otherwise, |msfcata0| runs the
+combining function |phi| over the recursive structure |(\f->f(phi Id))|.
+The utility function |lift| abstracts a common pattern, useful
+when we define the shorthand constructors (|lam| and |app|).
+
+Figure \ref{fig:proofsf} also contains the $F_\omega$ encoding of the sum type
+|(+)| and its constructors (or injection functions) |inL| and |inR|.
+The case expression |caseSum| for the sum type is just binary function
+application. In the $F_\omega$ encoding, they could be omitted
+(i.e., |caseSum x f g| simplifies to |x f g|).  But, we choose to write
+in terms of |caseSum| to make the definitions easier to read.
+
+In Figure \ref{fig:HOASshowFw}, we define both an recursive datatype
+for HOAS (|Exp|), and the string formatting function (|showExp|), 
+with these $F_\omega$ encodings, just as we did in \S\ref{ssec:showHOASmsfcata}.
+We can define simple expressions using the shorthand constructors and print out
+those expressions using |showExp|.  For example, \\
+\begin{quote}\noindent
+$>$ |putStrLn (showExp (lam(\x->lam(\y->x))))|\\
+\verb|(\a->(\b->a))|
+\end{quote}
+
+
+
+
 \subsection{Additional generalization}
 The combinator |msfhist0| generalizes |mhist0| by adding an abstract inverse to
 a combinator that already has an abstract unroller.
@@ -498,18 +579,17 @@ The combining function |phi| becomes a function of 4 arguments:
 an abstract inverse, an abstract unroll,
 a recursive placeholder, and a base structure.
 
-The rank 1 combinators |msfcata1| and |msfhist1| generalize
-the rank 0 combinators |msfcata0| and |msfhist0| to combinators 
-on types with an index. The pattern of generalization is
-quite evident in Figures \ref{fig:rcombty}, and \ref{fig:rcombdef},
-and the reader is encouraged to study those Figures for
-a complete understanding of the results of this paper.
+The kind $* -> *$ combinators |msfcata1| and |msfhist1| generalize
+the kind $*$ combinators |msfcata0| and |msfhist0| to combinators 
+on types with a type index. The pattern of generalization is quite evident
+in Figures \ref{fig:rcombty}, and \ref{fig:rcombdef}, and the reader is
+encouraged to study those Figures for a complete understanding of
+the results of this chapter.
 
-We believe |msfcata1| would be useful for writing functions over negative datatypes with
-type indices.  The combinator, |msfhist1|, like its rank 0 counterpart
-|msfhist0|, may not terminate given ill-behaved |phi| functions
-that extract embedded functions, and then apply them to
-parts of the tree which contain those functions. Yet, they
-are nevertheless useful functions. 
-
+We believe |msfcata1| would be useful for writing functions over
+negative datatypes with type indices.  The combinator, |msfhist1|,
+like its kind $*$ counterpart |msfhist0|, may not terminate given
+ill-behaved |phi| functions that extract embedded functions, and
+then apply them to parts of the tree which contain those functions.
+Yet, they may be nevertheless useful functions. 
 

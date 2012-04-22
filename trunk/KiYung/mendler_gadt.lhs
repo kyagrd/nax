@@ -1,5 +1,5 @@
 %include includelhs2tex.lhs
-\subsection{Indexed datatypes (GADTs)} \label{ssec:tourIndexed}
+\section{Indexed datatypes (GADTs)} \label{ssec:tourIndexed}
 %format NV = N"_{\!"V"}"
 %format CV = C"_{\!"V"}"
 %format nilv = nil"_{\!"V"}"
@@ -22,7 +22,7 @@ prime example:
 data Vec p i where
   NV :: Vec p Z
   CV :: p -> Vec p i -> Vec p (S i)
-\end{code}
+\end{code}.
 Note, the indices\footnote{The |Z| and |S| used in |Vec| are type level
 representations of natural numbers, which are empty types that are not
 inhabited by any value. They are only intend to be used as indices.
@@ -57,10 +57,11 @@ The base datatype |V p r i| is a GADT with a parameter |p| and an index |i|.
 Recall that by convention we place the parameter |p| before
 the type argument |r| for recursion points, followed by the index |i|.
 We can express the |copy| function that traverses a given vector and
-reconstructs that vector with the same elements, in Mendler style,
-using the rank 1 Mendler catamorphism combinator |mcata1|.  We can express
-the |switch2| function that switches every two elements of the given vector,
-in Mendler style, using the rank 1 histomorphism combinator |mhist1|.
+reconstructs that vector with the same elements, in the Mendler style,
+using Mendler-style iteration combinator |mcata1| for kind $* -> *$.
+We can express the |switch2| function that switches every two elements of
+the given vector, in the Mendler style, using the course-of-values iteration
+combinator |mhist1| for kind $* -> *$.
 The definitions for |mcata1| and |mhist1| are exactly the same as
 the definitions for |mcata0| and |mhist0|, except that |mcata1| and |mhist1|
 have richer type signatures
@@ -69,8 +70,8 @@ Thus, defining functions using |mcata1| and |mhist1| is no more complicated
 than defining the functions for regluar datatypes using |mcata0| and |mhist0|.
 The one proviso to this statement is that we need to give explicit
 type signatures for |phi| because GHC does not support type inference
-for higher rank types (i.e., types with inner $\forall$s that are not top-level).
-Again, in a language where the Mendler style combinators were
+for higher-rank types (\ie, types with inner $\forall$s that are not top-level).
+Again, in a language where the Mendler-style combinators were
 language constructs rather than functions, we believe this annoying burden
 could be lifted.
 

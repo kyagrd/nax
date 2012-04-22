@@ -1,5 +1,5 @@
 %include includelhs2tex.lhs
-\subsection{Mendler style course-of-values iteration for regular datatypes}
+\section{Mendler-style course-of-values iteration for regular datatypes}
 \label{ssec:tourHist0}
 Some computations are not easily expressible by iteration,
 since iteration only recurses on the direct subcomponents (e.g., tail
@@ -33,7 +33,7 @@ Course-of-values iteration expressed in terms of this co-algebraic style will
 look very different from its equivalent in general recursion style. One needs
 to extract both the original arguments and the deep result values from the
 stream explicitly calling on stream-head and stream-tail operations.
-However, in Mendler style, we do not need such co-algebraic construction
+However, in the Mendler style, we do not need such co-algebraic construction
 at least for the non-memoizing version.\footnote{The Mendler-style
 histormophism combinators implemented here are the non-memoizing ones.
 \citet{vene00phd} suggests how to implement a memoizing 
@@ -67,9 +67,9 @@ We arrange for the combining function to take additional arguments
 \end{itemize}  
 
 The Mendler-style course-of-values iteration is much handier
-than the conventional course-of-values iteration \cite{UusVen00}.
-For example, in Figure \ref{fig:fib}, the definition for the Fibonacci function
-in general recursion style (left) and the definition in Mendler style (right)
+than the conventional course-of-values iteration \cite{UusVen00}. For example,
+in Figure \ref{fig:fib}, the definition for the Fibonacci function in the
+general recursion style (left) and the definition in the Mendler style (right)
 look almost identical.  Particularly, when we have unrolled the nested pattern
 matching in the general recursive definition into a case expression.
 The only difference between the two, is that in the Mendler style (left),

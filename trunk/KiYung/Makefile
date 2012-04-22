@@ -9,6 +9,7 @@ TEXSRC=mylhs2tex.sty main.tex \
        mendler.tex \
        mendler_intro.tex mendler_it.tex mendler_cv.tex mendler_sf.tex \
        mendler_nest.tex mendler_gadt.tex mendler_mutrec.tex mendler_proof.tex \
+       mendler_prim.tex \
        fi.tex fixi.tex nax.tex casestd.tex \
        relwork.tex futwork.tex concl.tex
 
@@ -70,5 +71,9 @@ mendler_mutrec.tex: mendler_mutrec.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 mendler_proof.tex: mendler_proof.lhs includelhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
+mendler_prim.tex: mendler_prim.lhs includelhs2tex.lhs \
+	mendler/Fac.lhs mendler/FacG.lhs
 	lhs2TeX --poly -o $@ $<
 

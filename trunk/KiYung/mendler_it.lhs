@@ -1,5 +1,5 @@
 %include includelhs2tex.lhs
-\subsection{Defining recursive regular datatypes} \label{ssec:tourRegular}
+\section{Defining recursive regular datatypes} \label{ssec:tourRegular}
 In the Mendler-style approach, we define recursive datatypes
 as fixpoints of non-recursive base datatypes.  For example, the following
 are definitions of the natural number type in the general recursion style (left)
@@ -30,7 +30,8 @@ Then, we define the shorthand constructors |zero| and |succ| (on the right),
 which correspond to the data constructors |Z| and |S| of
 the natural number datatype in the general recursive encoding (on the left).  
 We can express the number 2 as |S (S Z)| in the general recursive encoding,
-and |succ (succ zero)| or |In0 (S (In0 (S (In0 Z))))| in the Mendler style encoding.
+and |succ (succ zero)| or |In0 (S (In0 (S (In0 Z))))| in the Mendler-style
+encoding.
 
 We can also define parameterized datatypes, such as lists, in the Mendler style,
 using the same datatype fixpoint |Mu0|, provided that we consistently order
@@ -62,20 +63,20 @@ the partial application of the base |L| to the parameter |p|.
 %% the data constructors |N| and |C| of list type in the general recursive encoding.
 We can express the integer list with two elements 1 and 2 as |C 1 (C 2 N)|
 in the general recursive encoding, and |cons 1 (cons 2 nil)| or
-|In0 (C 1 (In0 (C 2 (In0 N))))| in the Mendler style encoding.
+|In0 (C 1 (In0 (C 2 (In0 N))))| in the Mendler-style encoding.
 
 
-\subsection{Conventional Catamorphism for regular datatypes} \label{ssec:convCata}
-The conventional 
-catamorphism\footnote{In Haskell-ish words, |foldr| on lists generalized to
-other dataypes} is defined on the very same fixpoint, |Mu0|, as is used
-in the Mendler style, provided that the base datatype |f| is a functor.
+\section{Conventional iteration for regular datatypes} \label{ssec:convCata}
+The conventional iteration\footnote{Also known as catamorphism.
+In Haskell-ish words, |foldr| on lists generalized to other dataypes}
+is defined on the very same fixpoint, |Mu0|, as is used in the Mendler style,
+provided that the base datatype |f| is a functor.
 This, more widely known approach \cite{hagino87phd}, was developed independently,
 and at about the same time, as the Mendler style.
 
 The additional requirement, that the base datatype (|f|) is a functor, shows up
 as a type class constraint (|Functor f|) in the type signature of
-the conventional catamorphism combinator |cata|:\\
+the conventional iteration combinator |cata|:\\
 \hspace*{.1in} |cata :: Functor f => (f a -> a) -> Mu0 f -> a| \hspace*{.1in} (Figure \ref{fig:rcombty}).\\
 This is necessary because |cata| is defined in terms of |fmap| (a method of the |Functor| class):\\
 \hspace*{.1in} |cata phi (In0 x) = phi (fmap (cata phi) x)| \hspace*{.1in}  (Figure \ref{fig:rcombdef}).\\
@@ -84,7 +85,7 @@ assumes the recursive subcomponents (e.g., tail of the list) have already been
 turned into a value of answer type (|a|) and combines the overall result.
 
 %format lenc = len"_{\!c}"
-A typical example of catamorphism is the list length function.  We can define
+A typical example of iteration is the list length function.  We can define
 the list length function |lenc| in conventional style, which corresponds to
 the list length function |len| in the general recursion style
 in the left-hand side of Figure \ref{fig:len}, as follows:
@@ -103,10 +104,10 @@ instance Functor (L p) where
    fmap f N         = N
    fmap f (C x xs)  = C x (f xs)
 \end{code}
-The conventional catamorphism is widely known, especially on the list type,
-as |foldr|. The conventional catamorphism is more often used than the Mendler
-catamorphism, but it does not
-generalize easily to more exotic datatypes such as GADTs, or nested datatypes.
+The conventional iteration is widely known, especially on the list type,
+as |foldr|. The conventional iteration is more often used than
+the Mendler-style iteration, but it does not generalize easily to more
+exotic datatypes such as nested datatypes and GADTs
 
 \begin{figure}
 \begin{minipage}{.49\linewidth}
@@ -120,11 +121,11 @@ generalize easily to more exotic datatypes such as GADTs, or nested datatypes.
 \end{figure}
 
 
-\subsection{Mendler style Catamorphism for regular datatypes}
+\section{Mendler-style iteration for regular datatypes}
 \label{ssec:tourCata0}
-The Mendler catamorphism |mcata0| lifts the restriction that the
-base type be a functor, but still maintains the strict termination
-behavior of |cata|. This restriction is lifted by using two devices.
+The Mendler-style iteration combinator |mcata0| lifts the restriction that the
+base type be a functor, but still maintains the strict termination behavior of
+|cata|. This restriction is lifted by using two devices.
 \vspace*{-.5em}
 \begin{itemize}
   \item The combining function |phi| becomes a function of 2 arguments
@@ -157,12 +158,12 @@ values by pattern matching against |In0| (or, by using the selector function
 of Trellys' logicality inference, lead to classifying a term as programatic,
 rather than as logical). To remain in the logical (terminating) classification,
 whenever you need to decompose values of recursive datatypes you must do it via
-|mcata0| (or, any of the other terminating Mendler style combinators).
+|mcata0| (or, any of the other terminating Mendler-style combinators).
 To conform to these rules, all functions over positive recursive datatypes,
 except the trivial ones such as identity and constant functions (which don't
 inspect their structure), need to be implemented in terms of the combinators
 described in Figure \ref{fig:rcombty}. For negative recursive datatypes
-only the combinators in the catamorphism family ensure termination.
+only the combinators in the iteration family ensure termination.
 
 The intuitive reasoning behind the termination property of |mcata0| for
 all positive recursive datatypes is that (1) |mcata0| strips off one |In0|
@@ -173,7 +174,7 @@ Once we observe these two properties, it is obvious that |mcata0| always
 terminates since those properties imply that every recursive call to |mcata0|
 decreases the number of |In0| constructors in its argument.\footnote{We assume
 that the values of recursive types are always finite. We can construct infinite
-values (or, co-recursivevalues) in Haskell exploiting lazyness, but we exclude
+values (or, co-recursive values) in Haskell exploiting lazyness, but we exclude
 such infinite values from our discussion in this work, and this property is
 a fundamental design decision in Trellys.} 
 
@@ -185,7 +186,7 @@ the |mcata0| combinator as shown in Figure \ref{fig:rcombty},
 
 %format lenm = len"_{\!m}"
 In Figure \ref{fig:len}, we redefine the length function (|lenm| on the right),
-this time, using a Mendler style catamorphism.  In the definition of |lenm|,
+this time, using a Mendler-style iteration.  In the definition of |lenm|,
 we name the first argument of |phi|, the recursive placeholder, to be |len|.
 We use this |len| exactly where we would recursively call the recursive function
 in the general recursion style (|len| on the left).
@@ -196,7 +197,7 @@ Using general recursion, we could easily err (by mistake or by design)
 causing length to diverge, if we wrote its second equation as follows: 
 |len (C x xs) = 1 + len (C x xs)|. 
 
-We cannot encode such diverging recursion in Mendler style because
+We cannot encode such diverging recursion in the Mendler style because
 |len::r->Int| requires its argument to have the parametric type |r|,
 while |(C x xs) :: L p r| has more specific type than |r|.
 The parametricity enforces weak structural induction.
