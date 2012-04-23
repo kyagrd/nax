@@ -101,8 +101,8 @@ a deep recursive component of $n+2$ (\ie, $n$ is a predecessor of
 a precessor of $n+2$). We need primitive recursion since we not only perform
 a recurse call over $n$ ($\cdots+\,$|luc n|$\,+\cdots$) but also use the value
 of $n$ itself for addition ($\cdots+\,$|n|). The |mcvpr| family provides
-both |out| and |cast| operations for deep recursive calls and casting
-from an abstract value to a concrete recursive vaule.
+both |out| and |cast| operations for accessing deep recursive components and
+casting from an abstract value to a concrete recursive vaule.
 
 \begin{figure}
 $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
@@ -111,4 +111,10 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \caption{|mcvpr0| example: Lucas number (\url{http://oeis.org/A066982})}
 \label{fig:lucas}
 \end{figure}
+
+It is strongly believed that the primtive recursion family cannot be embbeded in
+\Fw. As we mentioned in \S\ref{mendler_history}, the termination property of
+the Mendler-style primitive recursion is shown by embedding |mprim| into \Fixw\ 
+\cite{AbeMat04}. We will explain the details of the embedding of |mprim|
+in Chapter \ref{ch:fixi}. %%% TODO
 
