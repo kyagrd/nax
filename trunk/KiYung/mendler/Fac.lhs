@@ -30,6 +30,7 @@ mhist1  :: (forall r i  . (forall i. r i   -> f r i  ) ->                       
 mcvpr0  :: (forall r    . (           r    -> f r    ) ->  (           r    -> Mu0 f    ) ->  (           r    -> a    ) -> f r    -> a    ) -> Mu0 f    -> a
 mcvpr1  :: (forall r i  . (forall i.  r i  -> f r i  ) ->  (forall i.  r i  -> Mu1 f i  ) ->  (forall i.  r i  -> a i  ) -> f r i  -> a i  ) -> Mu1 f i  -> a i
 
+{-""-}
 
 mcata0  phi (In0  x)  = phi            (mcata0  phi) x
 mcata1  phi (In1  x)  = phi            (mcata1  phi) x
@@ -49,6 +50,7 @@ type Nat = Mu0 N
 zero     = In0 Z
 succ n   = In0 (S n)
 
+{-""-}
 factorial = mprim0 phi where
     phi cast fac Z      = succ zero
     phi cast fac (S n)  = times (succ (cast n)) (fac n)

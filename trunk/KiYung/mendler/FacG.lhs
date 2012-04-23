@@ -20,6 +20,7 @@ data Nat
   |  Succ Nat
 
 {-""-}
+{-""-}
 fac Zero      = Succ Zero
 fac (Succ n)  = times (Succ n) (fac n)
 \end{code}
