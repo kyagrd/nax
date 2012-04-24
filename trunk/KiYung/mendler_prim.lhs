@@ -17,11 +17,11 @@ $\!\!\!\!\!\!\!\!\!$\mprimDef
 \section{Mendler-style primitive recursion} \label{sec:mpr}
 
 In Figure \ref{fig:mprim} we list a type declaration and a 
-defining equation for a number of mendler style opertors. We
-give two versions of each operator, one at kind $*$ and one at kind
-$* -> *$. The operators increase in complexity from
-iteration (|mcata|), through primitive recursion (|mprim|) and course of values
-iteration (|mhist|), to course of values primitive recursion (|mcvpr|).
+defining equation for a several families of Mendler-style recursion combinators.
+We give two versions for each family, one at kind $*$ and one at kind $* -> *$.
+The families of combinators increase in complexity from iteration (|mcata|),
+through primitive recursion (|mprim|) and course-of-values iteration (|mhist|),
+to course of values primitive recursion (|mcvpr|).
 We saw |mcata| and |mhist| in the previous sections.
 
 The Mendler-style primitive recursion family (|mprim|), when
@@ -125,9 +125,11 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \label{fig:lucas}
 \end{figure}
 
-It is strongly believed that the primitive recursion family cannot be embbeded in
-\Fw \cite{}. As we mentioned in \S\ref{mendler_history}, the termination properties of
+It is strongly believed that the primitive recursion family cannot be
+embbeded in \Fw\ in a reduction preserving manner \cite{}.
+As we mentioned in \S\ref{mendler_history}, the termination properties of
 Mendler-style primitive recursion are shown by embedding |mprim| into \Fixw\ 
-\cite{AbeMat04}. We will explain the details of the embedding of |mprim| into
-\Fixw\ in Chapter \ref{ch:fixi}. %%% TODO
+\cite{AbeMat04}. We will explain the details of the embedding of |mprim|
+into \Fixw\ in Chapter \ref{ch:fixi}.
+%%% TODO
 

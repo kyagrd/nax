@@ -18,17 +18,17 @@ times = mcata0 phi where
 \end{code}
 \end{comment}
 
-
 \newcommand{\mprimDef}{
 \begin{code}
-mcata0  :: (forall r    .                                                                     (           r    -> a    ) -> f r    -> a    ) -> Mu0 f    -> a
-mcata1  :: (forall r i  .                                                                     (forall i.  r i  -> a i  ) -> f r i  -> a i  ) -> Mu1 f i  -> a i
-mprim0  :: (forall r    .                                  (           r    -> Mu0 f    ) ->  (           r    -> a    ) -> f r    -> a    ) -> Mu0 f    -> a
-mprim1  :: (forall r i  .                                  (forall i.  r i  -> Mu1 f i  ) ->  (forall i.  r i  -> a i  ) -> f r i  -> a i  ) -> Mu1 f i  -> a i
-mhist0  :: (forall r    . (           r    -> f r    ) ->                                     (           r    -> a    ) -> f r    -> a    ) -> Mu0 f    -> a
-mhist1  :: (forall r i  . (forall i. r i   -> f r i  ) ->                                     (forall i.  r i  -> a i  ) -> f r i  -> a i  ) -> Mu1 f i  -> a i
-mcvpr0  :: (forall r    . (           r    -> f r    ) ->  (           r    -> Mu0 f    ) ->  (           r    -> a    ) -> f r    -> a    ) -> Mu0 f    -> a
-mcvpr1  :: (forall r i  . (forall i.  r i  -> f r i  ) ->  (forall i.  r i  -> Mu1 f i  ) ->  (forall i.  r i  -> a i  ) -> f r i  -> a i  ) -> Mu1 f i  -> a i
+                        {-"~~~~~~~\textsf{out}"-}          {-"~~~~~~\textit{cast}"-}          {-"~~~\begin{smallmatrix}\text{abstract}\\\text{recursive call}\end{smallmatrix}"-}
+mcata0  :: (forall r    .                                                                     (           r    -> a    ) -> (f r    -> a    )) -> (Mu0 f    -> a    )
+mcata1  :: (forall r i  .                                                                     (forall i.  r i  -> a i  ) -> (f r i  -> a i  )) -> (Mu1 f i  -> a i  )
+mprim0  :: (forall r    .                                  (           r    -> Mu0 f    ) ->  (           r    -> a    ) -> (f r    -> a    )) -> (Mu0 f    -> a    )
+mprim1  :: (forall r i  .                                  (forall i.  r i  -> Mu1 f i  ) ->  (forall i.  r i  -> a i  ) -> (f r i  -> a i  )) -> (Mu1 f i  -> a i  )
+mhist0  :: (forall r    . (           r    -> f r    ) ->                                     (           r    -> a    ) -> (f r    -> a    )) -> (Mu0 f    -> a    )
+mhist1  :: (forall r i  . (forall i. r i   -> f r i  ) ->                                     (forall i.  r i  -> a i  ) -> (f r i  -> a i  )) -> (Mu1 f i  -> a i  )
+mcvpr0  :: (forall r    . (           r    -> f r    ) ->  (           r    -> Mu0 f    ) ->  (           r    -> a    ) -> (f r    -> a    )) -> (Mu0 f    -> a    )
+mcvpr1  :: (forall r i  . (forall i.  r i  -> f r i  ) ->  (forall i.  r i  -> Mu1 f i  ) ->  (forall i.  r i  -> a i  ) -> (f r i  -> a i  )) -> (Mu1 f i  -> a i  )
 
 {-""-}
 

@@ -1,6 +1,6 @@
 %include includelhs2tex.lhs
 
-\subsection{Properties of the recursion combinators}
+\section{Properties of the recursion combinators}
 \label{sec:proof}
 
 We briefly discuss the termination properties of the recursion combinators

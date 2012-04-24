@@ -282,7 +282,7 @@ yet another new |Lam_g (\x->x)| expression and keeps on recursing.
 %% nor |var_m :: String -> Exp_m| here in |phi|
 %% since we need to construct a new value of parametric type |r|
 %% to pass it as an argument of |z :: r -> r|.
-%% This is the very kind of action Mendler style combinators prevent.
+%% This is the very kind of action Mendler-style combinators prevent.
 %% Recall, |mk :: String -> r| has the right type and its value is always
 %% |var_m| when we consistently use |lam_m| to construct expressions.
 %% Thus, it has the same effect of using |var_m| to construct a new variable
