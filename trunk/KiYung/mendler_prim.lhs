@@ -14,7 +14,7 @@ $\!\!\!\!\!\!\!\!\!$\mprimDef
 \end{figure}
 \end{landscape}
 
-\section{Mendler-style primitive recursion} \label{sec:mpr}
+\section{Mendler-style primitive recursion (|mprim|)} \label{sec:mpr}
 
 In Figure \ref{fig:mprim} we list a type declaration and a 
 defining equation for a several families of Mendler-style recursion combinators.

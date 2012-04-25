@@ -11,7 +11,7 @@
 %format consb = cons"_{\!B}"
 %format bsumm = bsum"_{\!m}"
 
-\section{Nested datatypes} \label{ssec:tourNested}
+\subsection{Nested datatypes} \label{ssec:tourNested}
 The datatypes |Nat| and |List|, defined in \S\ref{ssec:tourRegular}, 
 are regular datatypes.  Non-recursive datatypes (e.g., |Bool|) and
 recursive datatypes without any type arguments (e.g., |Nat|)

@@ -1,6 +1,6 @@
 %include includelhs2tex.lhs
 
-\section{Mutually recursive datatypes} \label{ssec:tourMutRec}
+\subsection{Mutually recursive datatypes} \label{ssec:tourMutRec}
 \begin{figure*}
 %format e1
 %format e2

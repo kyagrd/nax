@@ -121,7 +121,7 @@ exotic datatypes such as nested datatypes and GADTs
 \end{figure}
 
 
-\section{Mendler-style iteration for regular datatypes}
+\section{Mendler-style iteration (|mcata|) for regular datatypes}
 \label{ssec:tourCata0}
 The Mendler-style iteration combinator |mcata0| lifts the restriction that the
 base type be a functor, but still maintains the strict termination behavior of

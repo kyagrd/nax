@@ -8,7 +8,8 @@ TEXSRC=mylhs2tex.sty main.tex \
        poly.tex poly_stlc.tex poly_f.tex poly_fw.tex poly_hm.tex \
        mendler.tex \
        mendler_intro.tex mendler_it.tex mendler_cv.tex mendler_sf.tex \
-       mendler_nest.tex mendler_gadt.tex mendler_mutrec.tex mendler_proof.tex \
+       mendler_nonreg.tex mendler_nest.tex mendler_gadt.tex mendler_mutrec.tex \
+       mendler_proof.tex \
        mendler_prim.tex \
        fi.tex fixi.tex nax.tex casestd.tex \
        relwork.tex futwork.tex concl.tex
@@ -58,6 +59,10 @@ mendler_cv.tex: mendler_cv.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 mendler_sf.tex: mendler_sf.lhs includelhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
+mendler_nonreg.tex: mendler_nonreg.lhs includelhs2tex.lhs \
+	mendler_nest.lhs mendler_gadt.lhs mendler_mutrec.lhs
 	lhs2TeX --poly -o $@ $<
 
 mendler_nest.tex: mendler_nest.lhs includelhs2tex.lhs

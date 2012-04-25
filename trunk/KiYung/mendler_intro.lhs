@@ -270,26 +270,42 @@ Details of these contributions are discussed in the previous sections
 revised versions of the sections appearing in our recent work \cite{AhnShe11}.
 
 
-\section{Roadmap to a tour of the Mendler-style approach}\label{sec:tour}
+\subsection{Roadmap to a tour of the Mendler-style approach}\label{sec:tour}
 %include mendler/RecComb.lhs
 %include mendler/CataViaHisto.lhs
 %include mendler/Proof.lhs
 
-In this section we give an overview of the Mendler-style approach,
+In this subsection we give an overview of the Mendler-style approach,
 to orient the reader to navigate the following sections.
-First, we introduce both the iteration (\aka\ catamorphism)
+
+Firstly, we introduce both the iteration (\aka\ catamorphism)
 (\S\ref{ssec:tourCata0}) and course-of-values iteration (\aka\ histomorpism)
 (\S\ref{ssec:tourHist0}) combinators for kind $*$, that is,
-for regular datatypes.
-Second, we provide intuition why Mendler-style recursion combinators ensure
-termination for positive datatypes. Third, we move our focus from
-regular datatypes to more expressive datatypes which recursion combinators
+for regular datatypes. We also give an intuitive explanation
+why Mendler-style recursion combinators ensure termination
+for positive datatypes in these sections.
+
+Secondly, we move our focus from regular datatypes
+to more expressive datatypes which recursion combinators
 for kind $* -> *$. These include nested datatypes (\S\ref{ssec:tourNested}),
 indexed datatypes(GADTs) (\S\ref{ssec:tourIndexed}), and
 mutually recursive datatypes (\S\ref{ssec:tourMutRec}).
-Fourth, we give intuition why the Mendler-style iteration ensures
-termination even for negative datatypes (\S\ref{ssec:tourNegative}).
-Finally, we present the case study focusing on HOAS in \S\ref{sec:showHOAS}.
+
+Thirdly, we discuss why the Mendler-style iteration ensures termination
+even for negative datatypes while the Mendler-style course-of-values iteration
+can only ensure termination for positive datatypes (\S\ref{ssec:tourNegative}).
+
+Fourtly, TODO primitive recursion TODO
+
+Fiftly, we introduce a new Mendler-style family, which we discovered,
+and illustrate its expressiveness over negative datatypes by presenting
+the case study on fomratting HOAS in \S\ref{sec:showHOAS}.
+
+TODO discussions on other possible combinators TODO
+
+Finally, we summeraize TODO
+
+%%%% maybe it is better not to use 1st 2nd ....
 
 \afterpage{
 \begin{landscape}

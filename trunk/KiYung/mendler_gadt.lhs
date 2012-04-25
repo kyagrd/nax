@@ -1,5 +1,5 @@
 %include includelhs2tex.lhs
-\section{Indexed datatypes (GADTs)} \label{ssec:tourIndexed}
+\subsection{Indexed datatypes (GADTs)} \label{ssec:tourIndexed}
 %format NV = N"_{\!"V"}"
 %format CV = C"_{\!"V"}"
 %format nilv = nil"_{\!"V"}"
