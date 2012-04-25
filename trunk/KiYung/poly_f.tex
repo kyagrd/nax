@@ -491,17 +491,17 @@ zero reduction step in Curry style.}
 \end{singlespace}
 %% \vspace*{.3em}\hrule
 \end{figure}
-For the proof of strong normalization, we use the same proof strategy of
-interpreting types as saturated sets of normalizing terms as in the proof of
-strong normalization of STLC in \S\ref{sec:stlc:srsn}. The interpretation of
-types, contexts, and terms of System \F\ are illustrated in
-Figure \ref{fig:interpF}. Since we have type variables we need a type valuation
-($\xi$), which maps type variables to interpretations of types. So, the
-interpretation of types are indexed by the type valuation ($\xi$), and
-the interpretation of terms are indexed by the pair of term and type valuations
-($\xi;\rho$). A type valuation $\xi$ is a function from $\dom(\Delta)$,
-the set of bound type variables in $\Delta$, to $\SAT$, the set of all
-saturated sets.
+To prove strong normalization of System \F, we use the same proof strategy
+as in the proof of strong normalization of the STLC in \S\ref{sec:stlc:srsn}.
+That is, we interpret types as saturated sets of normalizing terms, which
+may or may not be well typed. The interpretation of types, contexts, and
+terms of System \F\ are illustrated in Figure \ref{fig:interpF}. Since we
+have type variables, we need a type valuation ($\xi$), which maps
+the type variables to interpretations of types. So, the interpretation of types
+are indexed by the type valuation ($\xi$), and the interpretation of terms are
+indexed by the pair of term and type valuations ($\xi;\rho$). A type valuation
+$\xi$ is a function from $\dom(\Delta)$, the set of type variables bound in
+$\Delta$, to $\SAT$, the set of all saturated sets.
 
 Any type interpretation is a saturated set. Since $\xi$ maps a type variable
 to a saturated set, $[|X|]_\xi \in \SAT$. We know $[|A -> B|]_\xi \in \SAT$
@@ -538,13 +538,11 @@ for particular $\xi';\rho'$ such that $\xi'=\xi$ and
 $\rho' = \rho[x \mapsto s]$ for any $s \in [|A|]_\xi' = [|A|]_\xi$.
 Since saturated sets are closed under normalizing weak head expansion,
 $(\l x.[|t|]_{\xi;\rho})~s \in[|B|]_\xi$ for any $s\in[|A|]_\xi$.
-Therefore, $\l x.[|t|]_{\xi;\rho}$ is obviously in the very set,
-which we wanted it to be in. That is,
-\[
-[|\l x.t|]_{\xi;\rho} = \l x.[|t|]_{\xi;\rho}
-\in \{t\in \SN \mid t~s\in[|B|] ~\text{for all}~ s\in[|A|]\} 
-= [|A -> B|]_\xi
-\]
+Therefore, $\l x.[|t|]_{\xi;\rho}$ is obviously in the set,
+which we wanted it to be in, \ie,
+\[ [|\l x.t|]_{\xi;\rho} = \l x.[|t|]_{\xi;\rho}
+   \in \{t\in \SN \mid t~s\in[|B|] ~\text{for all}~ s\in[|A|]\} 
+ = [|A -> B|]_\xi \]
 
 \paragraph{Case (\rulename{App})}
 We need to show that
@@ -594,16 +592,15 @@ $ \inference{\Delta;\Gamma |- t : B[A/X] & \xi;\rho\in[|\Delta;\Gamma|]}
 
 By induction, we know that
 $ \inference{\Delta;\Gamma |- t : \forall X.B & \xi';\rho'\in[|\Delta;\Gamma|]}
-	{[|t|]_{\xi';\rho'} \in [|\forall X.B|]_{\xi'}}
-$.
+	{[|t|]_{\xi';\rho'} \in [|\forall X.B|]_{\xi'}} $.
 
 Since this holds for all $\xi';\rho' \in [|\Delta,\Gamma|]$,
 it also holds for $\xi'=\xi$ and $\rho'=\rho$. Then, we are done:
 $ [|t|]_{\xi;\rho} \in [|\forall X.B|]_{\xi}
 	= \bigcap_{\mathcal{A}\in\SAT} [|B|]_{\xi[X\mapsto\mathcal{A}]}
-	\subseteq [|B|]_{\xi[X\mapsto[|A|]_\xi]} = [|B[A/X]|]_\xi
-$.
+	\subseteq [|B|]_{\xi[X\mapsto[|A|]_\xi]} = [|B[A/X]|]_\xi $.
 \end{proof}
+
 \begin{corollary}[strong normalization]
 	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
 \end{corollary}

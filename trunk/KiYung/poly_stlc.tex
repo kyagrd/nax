@@ -163,8 +163,10 @@ by reviewing the limitations of the STLC (\S\ref{sec:stlc:topoly}).
 \subsection{Subject reduction and strong normalization}\label{sec:stlc:srsn}
 We discuss two important properties of the STLC, which hold in both
 the Church style and the Curry style -- \emph{subject reduction} (\aka\
-type preservation) and \emph{strong normalization}.
-
+type preservation) and \emph{strong normalization}. Since we want to mainly
+focus on strong normalization, we well be rather brief on the proof of
+subject reduction and be more elaborate on the proof of strong normalization.
+ 
 \paragraph{Subject reduction} is a property that reduction preserves types,
 as stated below:
 \begin{theorem}[subject reduction]
@@ -192,15 +194,14 @@ are done evaluating, and are not intended
 to take further evaluation steps. 
 
 An {\em evaluation} is a reduction strategy
-(\ie, a certain subset of the reduction relation which computes a value -- hence the name
-{\em evaluation}), which is often deterministic.
-In such a setting, type safety means
-subject reduction together with progress -- all well typed terms are either
-fully evaluated (i.e. they are values), or they can take a step to another
-well typed term.
-However, in a calculus considering
-reductions of terms to normal forms, rather than evaluations to values, type safety is
-no more than subject reduction since normal terms are irreducible by definition.
+(\ie, a certain subset of the reduction relation which computes a value --
+hence the name {\em evaluation}), which is often deterministic.
+In such a setting, type safety means subject reduction together with progress --
+all well typed terms are either fully evaluated (i.e. they are values), or they
+can take a step to another well typed term.  However, in a calculus considering
+reductions of terms to normal forms, rather than evaluations to values,
+type safety is no more than subject reduction since normal terms are
+irreducible by definition.
 
 \paragraph{Strong normalization.} 
 When we consider terms of the STLC as proofs in a propositional logic,
@@ -268,14 +269,16 @@ strongly normalizing neutral terms, and when it is closed under strongly normali
 \inference{t[s/x]~s_1~\cdots~s_n\in \mathcal{A} & s\in\SN}
 	  {(\l x.t)~s~s_1~\cdots~s_n \in \mathcal{A}}
 \]
-There is a sort of cleverness in this definition of saturated. A set is saturated when
-the terms it contains are either variables, or ``come from" other terms in the saturated set using these two
-rules (neutral terms and weak-head expansion).
-We can easily observe that $\SN$ is a saturated set by definition.
-We can get the first and last part of the inductive definition for $\SN$
-when $\mathcal{A}=\SN$. We can define an arrow operation ($->$), which given two
-saturated sets, defines a third saturated set as follows:
-\[ \mathcal{A} -> \mathcal{B} = \{ t \in \SN \mid t~s \in \mathcal{B} ~\text{for all}~ s \in \mathcal{A} \} \]
+There is a sort of cleverness in this definition of saturated.
+A set is saturated when the terms it contains are either variables,
+or ``come from" other terms in the saturated set using these two rules
+(neutral terms and weak-head expansion). We can easily observe that $\SN$ is
+a saturated set by definition.  We can get the first and last part of
+the inductive definition for $\SN$ when $\mathcal{A}=\SN$. We can define
+an arrow operation ($->$), which given two saturated sets, defines
+a third saturated set as follows:
+\[ \mathcal{A} -> \mathcal{B} =
+  \{ t \in \SN \mid t~s \in \mathcal{B} ~\text{for all}~ s \in \mathcal{A} \} \]
 It is known that $\mathcal{A} -> \mathcal{B}$ is saturated
 when both $\mathcal{A}$ and $\mathcal{B}$ are saturated \cite{Tait75}.
 
@@ -310,24 +313,23 @@ when both $\mathcal{A}$ and $\mathcal{B}$ are saturated \cite{Tait75}.
 \vspace*{.5em}\hrule
 \end{figure}
 
-We interpret types as saturated subsets  of
-$\SN$ (\ie, subsets of $\SN$ that are saturated)
-as in Figure \ref{fig:interpSTLC}. We interpret the void type as
+We interpret types as saturated subsets of $\SN$ (\ie, subsets of $\SN$ that
+are saturated) as in Figure \ref{fig:interpSTLC}. We interpret the void type as
 the minimal saturated set ($\bot$), which is saturated from the empty set.
 We choose the symbol $\bot$ since saturated sets form a complete lattice
 under the subset relation as the partial order. We may denote $\SN$ as $\top$
 since it is the maximal element of the lattice. Note that $\bot$,
-or $[|\iota|]$, does not include any abstraction ($\lambda$-terms) since $\iota$ is
-not a type of a function. Arrow types ($A -> B$) are interpreted as
-the saturated-set arrow over the interpretations of the domain type
-and the range type ($[|A|] -> [|B|]$).
+or $[|\iota|]$, does not include any abstraction ($\lambda$-terms)
+since $\iota$ is not a type of a function. Arrow types ($A -> B$) are
+interpreted as the saturated-set arrow over the interpretations of
+the domain type and the range type ($[|A|] -> [|B|]$).
 
 We interpret a typing context ($\Gamma$) as a set of valuations ($\rho$).
 For every variable binding in the typing context ($x:A \in \Gamma$),
 a valuation should map the variable ($x$) to a term that belongs to
-the interpretation of its desired type ($[|A|]$). That is, if
-$x : A \in \Gamma$ then any $\rho \in [|\Gamma|]$ should satisfy the proposition 
-that $\rho(x) \in [|A|]$.
+the interpretation of its desired type ($[|A|]$). That is,
+if $x : A \in \Gamma$ then any $\rho \in [|\Gamma|]$ should
+satisfy the proposition that $\rho(x) \in [|A|]$.
 
 The proof of strong normalization amounts to proving the following theorem:
 \begin{theorem}[soundness of typing]

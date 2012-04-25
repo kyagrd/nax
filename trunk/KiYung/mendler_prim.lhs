@@ -70,7 +70,7 @@ will be quadratic in the size of the input rather than being linear.
 The time complexity of |pred| and |tail| in terms of iteration
 will be linear in the size of the input rather than being constant.
 
-\begin{figure}
+\begin{figure}[p]
 \begin{minipage}{.5\linewidth}\small \ExPredG \end{minipage}
 \begin{minipage}{.6\linewidth}\small \ExConstPred \end{minipage}
 \caption{|mprim0| example (non-recursive): a constant time predecessor}
@@ -121,7 +121,8 @@ casting from an abstract value to a concrete recursive vaule.
 $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \begin{minipage}{.6\linewidth}\small \ExLucasG \end{minipage}
 \begin{minipage}{.6\linewidth}\small \ExLucas \end{minipage}
-\caption{Lucas number {\small (\url{http://oeis.org/A066982})} example illustrating the use of the |mcvpr0| family.}
+\caption{Lucas number {\small (\url{http://oeis.org/A066982})} example
+         illustrating the use of the |mcvpr0| family.}
 \label{fig:lucas}
 \end{figure}
 
@@ -130,6 +131,5 @@ embbeded in \Fw\ in a reduction preserving manner \cite{}.
 As we mentioned in \S\ref{mendler_history}, the termination properties of
 Mendler-style primitive recursion are shown by embedding |mprim| into \Fixw\ 
 \cite{AbeMat04}. We will explain the details of the embedding of |mprim|
-into \Fixw\ in Chapter \ref{ch:fixi}.
-%%% TODO
+into \Fixw\ in Chapter \ref{ch:fixi}. %%% TODO update reference to a section
 

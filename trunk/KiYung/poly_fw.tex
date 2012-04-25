@@ -749,26 +749,62 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \label{fig:interpFw}
 \end{singlespace}
 \end{figure}
-For the proof of strong normalization of System \Fw, we use the same strategy
-of interpreting types as saturated sets of normalizing terms as we did for
-System \F. However, we need to generalize the interpretation of types to
-the interpretation of type constructors. In the strong normalization proof
-of System \F, we had a complete lattice $(\SAT,\subseteq)$.
-We generalize this to an arbitrary kind $\kappa$ such that
-$(\SAT_\kappa,\sqsubseteq_\kappa)$ from a complete lattice for any $\kappa$.
-The set $\SAT_\kappa$ are generalization of $\SAT$ such that $\SAT_{*}=\SAT$
-and $\SAT_{\kappa -> \kappa'} = \SAT_\kappa -> \SAT_{\kappa'}$
+To prove strong normalization of System \F, we use the same proof strategy
+as in the proof of strong normalization of System \F\ (\S\ref{sec:f:srsn}).
+That is, we interpret types as saturated sets of normalizing terms as we did
+for System \F. However, we need to generalize the interpretation of types to
+the interpretation of type constructors. In the strong normalization proof of
+System \F, we had a complete lattice $(\SAT,\subseteq)$. We generalize from
+$(\SAT,\subseteq)$, which is for kind $*$ only, to
+$(\SAT_\kappa,\sqsubseteq_\kappa)$ for an arbitrary kind $\kappa$,
+as follows:
+\begin{itemize}
+\item The set $\SAT_\kappa$ is a generalization of $\SAT$ such that
+\begin{align*}
+	\SAT_{*} &= \SAT \\
+	\SAT_{\kappa -> \kappa'} &= \SAT_\kappa -> \SAT_{\kappa'}
+\end{align*}
 (\ie, functions from $\SAT_\kappa$ to $\SAT_\kappa'$).
-The relation $\sqsubseteq_\kappa$ is a pointwise generalization of $\subseteq$
-such that
+
+\item The relation $\sqsubseteq_\kappa$ is
+	a pointwise generalization of $\subseteq$ such that
 \begin{align*}
 \mathcal{A} \sqsubseteq_{*} \mathcal{A'} &= \mathcal{A} \subseteq \mathcal{A'}\\
 \mathcal{F} \sqsubseteq_{\kappa -> \kappa'} \mathcal{F'} &=
 	\mathcal{F}(\mathcal{G}) \sqsubseteq_{\kappa'} \mathcal{F'}(\mathcal{G})
 	~\text{for all}~\mathcal{G}\in\SAT_\kappa
 \end{align*}
+\end{itemize}
+It is easy to see that $(\SAT_\kappa,\sqsubseteq_\kappa)$ forms
+a complete lattice by induction on $\kappa$. For kind $\star$,
+it is obvious since we alerady know that $(\SAT,\subseteq)$ forms
+a complete lattice. For an arrow kind $\kappa -> \kappa'$, we know that
+$(\SAT_{\kappa'},\sqsubseteq_{\kappa})$ forms a complete lattice by induction.
+It is easy to see that for every two element $\mathcal{F}_1, \mathcal{F}_2
+\in \SAT{\kappa'},\sqsubseteq_{\kappa}$ there exist a greatest lower bound
+($\mathcal{F}_1 \wedge \mathcal{F}_2$) and a greatest upper bound 
+($\mathcal{F}_1 \vee \mathcal{F}_2$), defiend pointwisely as follows:
+\begin{align*}
+(\mathcal{F}_1 \wedge \mathcal{F}_2)(\mathcal{G}) &=
+   \mathcal{F}_1(\mathcal{G}) \wedge \mathcal{F}_2(\mathcal{G})
+	~\text{for all}~\mathcal{G}\in\SAT_\kappa \\
+(\mathcal{F}_1 \vee \mathcal{F}_2)(\mathcal{G}) &=
+   \mathcal{F}_1(\mathcal{G}) \vee \mathcal{F}_2(\mathcal{G})
+	~\text{for all}~\mathcal{G}\in\SAT_\kappa
+\end{align*}
+The top and bottom elements at an arrow kind $\bot_{\kappa -> \kappa'}$
+are also defined pointwisely. Let $\bot_{\kappa -> \kappa'}$ be
+the constant function that that always return $\bot_{\kappa'}$
+(the bottom element at $\kappa'$, and, let $\top_{\kappa -> \kappa'}$ be
+the constant function that that always return $\top_{\kappa'}$
+(the top element of the lattice at $\kappa'$). It is easy to see that
+$\bot_{\kappa -> \kappa'}$ and $\top_{\kappa -> \kappa'}$
+are the bottom and top elements at kind $\kappa -> \kappa'$
+by definition of $\sqsubseteq_{\kappa -> \kappa'}$.
+
 Then, we can give interpretation of kind $\kappa$ as $\SAT_\kappa$.
-That is, $[| \kappa |] = \SAT_\kappa$.
+That is, $[| \kappa |] = \SAT_\kappa$. An inetrpretation of a type constructor
+of kind $\kappa$ should be a membmer of $[| \kappa |]$, \ie, $\SAT_\kappa$.
 The interpretation of kinds, type constructors, contexts, and
 terms of System \Fw\ are illustrated in Figure \ref{fig:interpFw}. 
 
