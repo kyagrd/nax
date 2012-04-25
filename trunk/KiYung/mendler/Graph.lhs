@@ -24,7 +24,7 @@ sumG = msfcata0 phi where
   phi inv sumg (R f)     = sumg (f (inv 0))
   phi inv sumg (S f g)   = sumg (f g)
 
-g0 :: Graph Int -- \xy \xymatrix{ *++[o][F-]{0} \ar[r] \ar[dr] & *++[o][F-]{1} \ar[d] \ar@@(ur,dr) \\ & *++[o][F-]{2} \ar@@<1ex>[ul] } \POS(-3,+3)\xymatrix{x &   \\ & } \POS( 0,+3)\xymatrix{  & y \\ & } \POS( 6,-6)\xymatrix{  &  \\ & z} \POS(10,-6)\xymatrix{& |flatG ~> [0,2,1,2]|}\POS(10,-10)\xymatrix{& |sumG ~> 5|}\endxy
+g0 :: Graph Int -- \xy \xymatrix{ *++[o][F-]{0} \ar[r] \ar[dr] & *++[o][F-]{1} \ar[d] \ar@@(ur,dr) \\ & *++[o][F-]{2} \ar@@<1ex>[ul] } \POS(-3,+3)\xymatrix{x &   \\ & } \POS( 0,+3)\xymatrix{  & y \\ & } \POS( 6,-6)\xymatrix{  &  \\ & z} \POS(10,-6)\xymatrix{& |flatG g0 ~> [0,2,1,2]|}\POS(10,-10)\xymatrix{& |sumG g0 ~> 5|}\endxy
 g0 =  rec(\x->
        share  (\z-> node 0  [z, rec(\y-> node 1 [y,z])])
               (node 2 [x]))

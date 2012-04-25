@@ -1,10 +1,19 @@
 %include includelhs2tex.lhs
 
+%include mendler/CataViaHisto.lhs
+%include mendler/Proof.lhs
+
 \section{Properties of the recursion combinators}
 \label{sec:proof}
 
 We briefly discuss the termination properties of the recursion combinators
-and the relation between the recursion combinators we discussed so far
+and the relation between the recursion combinators we discussed so far TODO
+
+\begin{figure}
+\ProofCata
+\caption{\normalsize $F_{\omega}$ encoding of |Mu0| and |mcata0| in Haskell}
+\label{fig:proof}
+\end{figure}
 
 We illustrate the termination proof for the Mendler-style iteration
 for kind $*$ in Figure \ref{fig:proof}.  This embedding of |Mu0| and |mcata0|
@@ -26,6 +35,12 @@ discuss whether the termination property holds for negative datatypes.
 In our work, we disproved the termination of |mhist0| for negative datatypes
 by showing the counter-example (Figure \ref{fig:LoopHisto})
 in \S\ref{ssec:tourNegative}.
+
+\begin{figure}
+\CataViaHisto
+\caption{\normalsize Alternative definition of iteration via course-of-values iteration.}
+\label{fig:cataviahisto}
+\end{figure}
 
 Figure \ref{fig:cataviahisto} illustrates a well known fact that a standard
 iteration (|mcata|) is a special case of a course-of-values iteration (|mhist|).

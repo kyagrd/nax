@@ -10,26 +10,25 @@
 %format out_star2star2star = out"_{"*"\to"*"\to"*"}"
 
 \section{Introduction}\label{sec:intro}
-
-In this chapter, we explore a family of terminating recursion combinators
-over a wide class of recursive datatypes. The functional programming
+The functional programming
 community has traditionally focused on families of combinators that work
-well in Hindley-Milner languages, characterized by folds and catamorphisms
-(\aka\ iterations). We explore a more expressive family called Mendler-style
-combinators. The Mendler-style combinators were originally developed in
-the context of the Nuprl \cite{Con86} type system.  Nuprl made extensive use
-of dependent types.  General type checking in Nuprl was done by interactive
-theorem proving --- not by type inference.  The Mendler-style combinators
-are considerably more expressive than the conventional combinators of
-the Squiggol \cite{AoP} school, in the sense that the Mendler-style combinators
-are well-behaved (\ie, guarantee termination) over wider range of recursive
-datatypes. Historical progression on the studies of the Mendler-style approach
+well in Hindley-Milner languages. One of well-known such family is called
+folds, or catamorphisms (\aka\ iterations). We explore a more expressive
+family called Mendler-style combinators. The Mendler-style combinators were
+originally developed in the context of the Nuprl \cite{Con86} type system.
+Nuprl made extensive use of dependent types and higher-rank polymorhpism.
+General type checking in Nuprl was done by interactive theorem proving --
+not by type inference.  The Mendler-style combinators are considerably more
+expressive than the conventional combinators of the Squiggol \cite{AoP} school,
+in the sense that the Mendler-style combinators are well-behaved (\ie,
+guarantee termination) over wider range of recursive datatypes.
+Historical progression on the studies of the Mendler-style approach
 is summarized in \S\ref{mendler_history}.
 
 Recently, Mendler-style combinators have been studied in the context of
 modern functional languages with advanced type system features, including
 higher-rank polymorphism and generalized algebraic data types.
-We extend those studiers by \vspace*{-.5em}
+We extend those studies by \vspace*{-.5em}
 \begin{itemize}
 
 \item[$\bigstar\!\!$] Illustrating that the Mendler-style approach applies 
@@ -45,7 +44,7 @@ ensures termination (\S\ref{ssec:tourCata0})
 even for negative datatypes (\S\ref{ssec:tourNegative}).
 We illustrate a semi-formal proof of termination by encoding 
 the extended iteration in the $F_\omega$ fragment in Haskell
-(Figure \ref{fig:proof}, \S\ref{sec:proof}). %% \S\ref{sec:concl}
+(Figure \ref{fig:proof} in \S\ref{sec:proof}). %% \S\ref{sec:concl}
 \vspace*{-.2em}
 \item[$\bigstar\!\!$] Providing an intuitive explanation of
 why the Mendler-style course-of-values iteration
@@ -63,7 +62,8 @@ and negative datatypes (\S\ref{ssec:tourNegative}, \S\ref{sec:showHOAS}).
 \vspace*{-.2em}
 \item 
 Providing a detailed set of examples, all written in Haskell,
-in both the conventional and the Mendler style, in order to
+illustrating two versions (one with general recursion and one with
+the Mendler style recursion combinator) side by side, in order to
 illustrate the usage of each family of recursion combinators.
 
 \end{itemize}
@@ -73,9 +73,11 @@ the others are collective observations of common patterns
 arising from the study of both the previously known combinators and
 our new combinators.
 
-We demonstrate the Mendler-style combinators in the Glasgow Haskell Compiler
-\cite{GHCuserguide} (GHC) dialect of Haskell. However, this demonstration
-depends on a set of conventions.  We assert that all our code fragments
+In this chapter, we demonstrate the Mendler-style combinators
+in the Glasgow Haskell Compiler \cite{GHCuserguide} (GHC) dialect of Haskell.
+We do so because it
+However, this demonstration depends on a set of conventions because we want
+to control the source of non-termination. We assert that all our code fragments
 conform with our conventions. The conventions include:
 \begin{enumerate}
 \item all values of algebraic data types are finite
@@ -85,7 +87,8 @@ conform with our conventions. The conventions include:
           as primitive constructs rather than user-defined constructs), and
 \item other sources of nontermination are delineated 
     (\eg, not allowed to use general recursion in user-defined datatypes
-          and functions).
+          and functions, pattern matching can only be done through
+          the recursion combinators).
 \end{enumerate}
 The motivation for this investigation is the design of Trellys, a
 full-featured language with dependent types being developed by a
@@ -253,17 +256,15 @@ Recently, I have developed several new contributions to the study of
 the Mendler-style recursion shemes \cite{AhnShe11}. These contributions
 fall into three broad categories:
 \begin{itemize}
-\item discovered a new family of Mendler-style recursion combinators,
-	which normalizes for negative recursive types and is believed
-	to be more expressive than the Mendler-style iteration family
-	(\S\ref{sec:msf}),
-\item discovered a counterexample, which proves that
-	some families of Mendler-style recursion combinators
-	do not normalize for negative recursive types
-	but only normalize for positive recursive types (\S\ref{sec:mcv}), and
-\item extended Mendler-style recursion combinators to (almost)
-	term indexed types (\ie, Generalized Algebraic DataType(GADT)s)
-	(\S\ref{sec:mgadt}).
+\item discovered a new family of Mendler-style recursion combinators
+ (\S\ref{sec:msf}), which normalizes for negative recursive types and
+ is believed to be more expressive than the Mendler-style iteration family,
+\item discovered a counterexample, which proves that some families of
+ Mendler-style recursion combinators do not normalize for negative datatypes
+ but only normalize for positive datatypes (\S\ref{ssec:tourNegative}), and
+\item explored the use of Mendler-style recursion combinators over (almost)
+ term-indexed types (\ie, Generalized Algebraic DataType(GADT)s)
+ (\S\ref{ssec:tourIndexed}).
 \end{itemize}
 Details of these contributions are discussed in the previous sections
 (\S\ref{sec:msf},\S\ref{sec:mcv},\S\ref{sec:mgadt}), which are extended and
@@ -272,38 +273,44 @@ revised versions of the sections appearing in our recent work \cite{AhnShe11}.
 
 \subsection{Roadmap to a tour of the Mendler-style approach}\label{sec:tour}
 %include mendler/RecComb.lhs
-%include mendler/CataViaHisto.lhs
-%include mendler/Proof.lhs
 
 In this subsection we give an overview of the Mendler-style approach,
 to orient the reader to navigate the following sections.
 
-Firstly, we introduce both the iteration (\aka\ catamorphism)
-(\S\ref{ssec:tourCata0}) and course-of-values iteration (\aka\ histomorpism)
-(\S\ref{ssec:tourHist0}) combinators for kind $*$, that is,
-for regular datatypes. We also give an intuitive explanation
-why Mendler-style recursion combinators ensure termination
-for positive datatypes in these sections.
+First, we introduce the Mendler-style iteration (|mcata|. \aka\ catamorphism)
+(\S\ref{ssec:tourCata0}) and course-of-values iteration
+(|mhist|. \aka\ histomorpism) (\S\ref{ssec:tourHist0}) combinators for kind $*$,
+that is, for (non-mutually recursive) regular datatypes. We also give
+an intuitive explanation why these Mendler-style recursion combinators
+ensure termination for positive datatypes.
 
-Secondly, we move our focus from regular datatypes
-to more expressive datatypes which recursion combinators
-for kind $* -> *$. These include nested datatypes (\S\ref{ssec:tourNested}),
-indexed datatypes(GADTs) (\S\ref{ssec:tourIndexed}), and
-mutually recursive datatypes (\S\ref{ssec:tourMutRec}).
+Then, we move our focus from non-mutually recursive regular datatypes
+to more expressive datatypes (\S\ref{mendler_nonreg}), which require
+recursion combinators at kind $* -> *$. We provide several examples of
+non-regular datatypes including nested datatypes (\S\ref{ssec:tourNested})
+and indexed datatypes (GADTs) (\S\ref{ssec:tourIndexed}), which illustrate
+the use of the Mendler style iteration (|mcata|) and course-of-values
+iteration (|mhist|) at kind $* -> *$. We also provide some examples, which
+show how to encode mutually recursive datatypes using indexed datatypes
+(\S\ref{ssec:tourMutRec}).
 
-Thirdly, we discuss why the Mendler-style iteration ensures termination
-even for negative datatypes while the Mendler-style course-of-values iteration
-can only ensure termination for positive datatypes (\S\ref{ssec:tourNegative}).
+In \S\ref{ssec:tourNegative}, we discuss why the Mendler-style iteration
+(|mcata|) ensures termination even for negative datatypes, while
+the Mendler-style course-of-values iteration (|mhist|) can only ensure
+termination for positive datatypes.
 
-Fourtly, TODO primitive recursion TODO
+In \S\ref{sec:mpr}, we introduce the Mendler-style primitive recursion (|mprim|)
+and course-of-values primitive recursion (|mcvpr|). |mprim| and |mcvpr| are
+equivalent to |mcata| and |mhist|, respectively, in terms of computability,
+but often lead to more efficient implementations.
 
-Fiftly, we introduce a new Mendler-style family, which we discovered,
-and illustrate its expressiveness over negative datatypes by presenting
-the case study on fomratting HOAS in \S\ref{sec:showHOAS}.
+In \S\ref{sec:msf}, we introduce a new Mendler-style family (|msfcata|),
+which we discovered, and illustrate its expressiveness over negative datatypes
+by presenting the case study on formatting HOAS (\S\ref{sec:showHOAS}).
 
-TODO discussions on other possible combinators TODO
+TODO discussions on other possible combinators TODO extrapolation
 
-Finally, we summeraize TODO
+Finally, we summarize TODO
 
 %%%% maybe it is better not to use 1st 2nd ....
 
@@ -332,18 +339,6 @@ Finally, we summeraize TODO
 \end{figure}
 \end{landscape}
 }
-
-\begin{figure}
-\CataViaHisto
-\caption{\normalsize Alternative definition of iteration via course-of-values iteration.}
-\label{fig:cataviahisto}
-\end{figure}
-
-\begin{figure}
-\ProofCata
-\caption{\normalsize $F_{\omega}$ encoding of |Mu0| and |mcata0| in Haskell}
-\label{fig:proof}
-\end{figure}
 
 All of our results are summarized in Figures \ref{fig:datafix},
 \ref{fig:rcombty}, and \ref{fig:rcombdef}. In Figure \ref{fig:datafix},
