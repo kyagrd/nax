@@ -11,31 +11,32 @@
 
 \section{Introduction}\label{sec:intro}
 The functional programming
-community has traditionally focused on families of combinators that work
-well in Hindley-Milner languages. One of well-known such family is called
-folds, or catamorphisms (\aka\ iterations). We explore a more expressive
-family called Mendler-style combinators. The Mendler-style combinators were
+community has traditionally focused on a style of combinators that work
+well in Hindley-Milner languages. One well-known combinator is called
+fold (or catamorphism in the Squiggol \cite{AoP} school) \aka\ iteration.
+We explore a more expressive
+style called the Mendler-style. The Mendler-style combinators were
 originally developed in the context of the Nuprl \cite{Con86} type system.
 Nuprl made extensive use of dependent types and higher-rank polymorhpism.
 General type checking in Nuprl was done by interactive theorem proving --
 not by type inference.  The Mendler-style combinators are considerably more
-expressive than the conventional combinators of the Squiggol \cite{AoP} school,
+expressive than the conventional combinators of the Squiggol school,
 in the sense that the Mendler-style combinators are well-behaved (\ie,
-guarantee termination) over wider range of recursive datatypes.
-Historical progression on the studies of the Mendler-style approach
+guarantee termination) over a wider range of recursive datatypes.
+A historical perspective on the Mendler-style
 is summarized in \S\ref{mendler_history}.
 
 Recently, Mendler-style combinators have been studied in the context of
 modern functional languages with advanced type system features, including
 higher-rank polymorphism and generalized algebraic data types.
-We extend those studies by \vspace*{-.5em}
+This chapter extends that work by \vspace*{-.5em}
 \begin{itemize}
 
 \item[$\bigstar\!\!$] Illustrating that the Mendler-style approach applies 
 to useful examples of negative datatypes,
 through the case study of the HOAS formatting function (\S\ref{sec:showHOAS}).
 \vspace*{-.2em}
-\item[$\bigstar\!\!$] Extending the Mendler-style iteration by using
+\item[$\bigstar\!\!$] Extending the Mendler-style iteration (|msfcata|) by using
 the inverse trick first described by \citet{FegShe96},
 and later refined by \citet{bgb} (\S\ref{sec:showHOAS}).
 \vspace*{-.2em}
@@ -43,14 +44,15 @@ and later refined by \citet{bgb} (\S\ref{sec:showHOAS}).
 ensures termination (\S\ref{ssec:tourCata0})
 even for negative datatypes (\S\ref{ssec:tourNegative}).
 We illustrate a semi-formal proof of termination by encoding 
-the extended iteration in the $F_\omega$ fragment in Haskell
+|msfcata| in the $F_\omega$ fragment of Haskell
 (Figure \ref{fig:proof} in \S\ref{sec:proof}). %% \S\ref{sec:concl}
 \vspace*{-.2em}
 \item[$\bigstar\!\!$] Providing an intuitive explanation of
 why the Mendler-style course-of-values iteration
 terminates for positive datatypes (\S\ref{ssec:tourHist0}),
 but may fail to terminate for negative datatypes
-(\S\ref{ssec:tourNegative}) by showing a counter-example to termination.
+(\S\ref{ssec:tourNegative}), by illustrating a counter-example which
+obviously fails to terminate.
 \vspace*{-.2em}
 \item Organizing a large class of Mendler-style recursion combinators into
 an intuitive hierarchy, of increasing generality, that is expressive enough
@@ -75,21 +77,22 @@ our new combinators.
 
 In this chapter, we demonstrate the Mendler-style combinators
 in the Glasgow Haskell Compiler \cite{GHCuserguide} (GHC) dialect of Haskell.
-We do so because it
-However, this demonstration depends on a set of conventions because we want
+However, this demonstration depends on a set of conventions, because we want
 to control the source of non-termination. We assert that all our code fragments
 conform with our conventions. The conventions include:
 \begin{enumerate}
 \item all values of algebraic data types are finite
     (\ie, do not use lazyness to build infinite structure),
 \item certain conventions of data abstraction not enforced by Haskell
-    (\ie, treat recursive type operator $\mu$ and the recursion combinators
-          as primitive constructs rather than user-defined constructs), and
+    (\ie, treating the recursive type operator $\mu$, and the recursion combinators,
+          as primitive constructs, rather than user-defined constructs), and
 \item other sources of nontermination are delineated 
     (\eg, not allowed to use general recursion in user-defined datatypes
           and functions, pattern matching can only be done through
           the recursion combinators).
 \end{enumerate}
+
+{\bf {\it MOVE THIS}}
 The motivation for this investigation is the design of Trellys, a
 full-featured language with dependent types being developed by a
 cooperative project of Portland State University, the University of Iowa,
@@ -113,6 +116,7 @@ There exists an infinite series of datatype fixpoint operators for each
 different kind. In this chapter we illustrate only the two simplest kinds
 $*$ and $* -> *$. 
 
+{\bf {\it TWO LEVEL TYPE INTRO BELONGS HERE}}
 
 \subsection{Background - Termination and Negativity}\label{sec:motiv}
 \citet{Mendler87} showed that diverging computations can be expressed using
