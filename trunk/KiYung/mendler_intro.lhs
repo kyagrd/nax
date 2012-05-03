@@ -91,32 +91,14 @@ conform with our conventions. The conventions include:
           and functions, pattern matching can only be done through
           the recursion combinators).
 \end{enumerate}
-
-{\bf {\it MOVE THIS}}
-The motivation for this investigation is the design of Trellys, a
-full-featured language with dependent types being developed by a
-cooperative project of Portland State University, the University of Iowa,
-and the University of Pennsylvania. A design goal of Trellys is to develop
-an inference mechanism which determines what terms of the language are safe
-to use as a logic, and what terms can only be used as programs. We call
-this analysis {\em logicality inference}. The intent is that logical values
-can be interpreted as proof objects by a Curry-Howard style interpretation,
-while programmatic values are allowed to express arbitrary computations
-(including non-termination). The usability of Trellys requires that it be
-as expressive as possible over natural forms of inductive and recursive
-argument.  Hence our motivation to fully understand the Mendler-style
-recursion combinators. It is our intention that the three conventions
-discussed in the previous paragraph will be enforced in the Trellys system, and
-our use of Haskell to illustrate the Mendler style, will soon be unnecessary.
-
-The use of Mendler-style combinators is characterized by splitting the
-definition of a recursive type into a generating functor (or a base datatype)
-and an explicit application of the appropriate datatype fixpoint operator.  
-There exists an infinite series of datatype fixpoint operators for each
-different kind. In this chapter we illustrate only the two simplest kinds
-$*$ and $* -> *$. 
-
-{\bf {\it TWO LEVEL TYPE INTRO BELONGS HERE}}
+The Mendler-style combinators operate on types defined in two levels,
+\ie, two-level types (see \S\ref{ssec:tourRegular}). Two-level types are 
+characterized by splitting the definition of a recursive type into
+a generating functor (or a base datatype) and an explicit application of
+the appropriate datatype fixpoint operator (|Mu|). There exists
+an infinite series of datatype fixpoint operators for each different kind
+(\eg, |Mu0|, |Mu1|). In this chapter, we illustrate the Mendler-style
+recursion comnbinators only at the two simplest kinds $*$ and $* -> *$.
 
 \subsection{Background - Termination and Negativity}\label{sec:motiv}
 \citet{Mendler87} showed that diverging computations can be expressed using
