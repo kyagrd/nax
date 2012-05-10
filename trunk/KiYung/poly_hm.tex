@@ -1,1 +1,84 @@
 \section{The Hindley-Milner type system} \label{sec:hm}
+
+The Hindly-Milner type system (HM),
+\aka\ Dammas-Hindly-Milner type system (DHM),
+\cite{Hindley69,Milner78,DamMil82,Damas85} infers the most general type scheme
+(\aka\ the principal type scheme) for a Curry-style term.
+A type scheme is
+%%% TODO explain what a type scheme is maybe I should have
+%%% already expained this in the previous section of STLC systm F
+%%% recall the reader on the 
+
+\citet{Hindley69} discovered that there exists a unique principal type scheme
+for an object in a combinatory logic. \citet{Milner78} rediscovered this
+in the setting of a polymorphic lambda calculus, while he was devising
+an algorithm, called the algorithm $W$, which infers a type scheme for
+a Curry-style term. \citet{Damas85} developed detailed theories on
+Milner's polymorphic lambda calculus (\aka\ let-polymorhpism) and
+the type inferecne algorithm $W$.
+
+
+\begin{figure}
+\begin{singlespace}
+\small
+\begin{align*}
+&\textbf{term}&
+t,s&~::= ~ x          
+    ~  | ~ \l x    . t 
+    ~  | ~ t ~ s       
+    ~  | ~ \<let> x=s \<in> t
+\\
+&\textbf{type}&
+A,B&~::= ~ A -> B
+    ~  | ~ \iota
+    ~  | ~ X
+\\
+&\textbf{type scheme}&
+\sigma&~::= ~ \forall X.\sigma
+       ~  | ~ A
+\\
+&\textbf{typing context}&
+\Gamma&~::= ~ \cdot 
+       ~  | ~ \Gamma, x:\sigma \quad (x\notin \dom(\Gamma))
+\end{align*}
+\[ \textbf{Type scheme ordering} \quad \framebox{$\sigma \sqsubseteq \sigma'$}\]
+\[ \inference{X_1',\dots,X_n'\notin\FV(\forall X_1\dots X_n.A)}
+             {\forall X_1\dots X_n.A \;\sqsubseteq\;
+	      \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} \]
+$\!\!\!\!\!\!\!\!\!\!$
+\begin{align*}
+&\textbf{Delcarative typing rules}&\quad
+&\textbf{Syntax-directed typing rules}
+	\\
+& \inference[\sc Var]{x:\sigma \in \Gamma}{\Gamma |- x:\sigma} &
+& \inference[\sc Var$_s$]{x:\sigma \in \Gamma & \sigma \sqsubseteq A}
+ 	                 {\Gamma |- x:A} \\
+& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} &
+& \inference[\sc Abs$_s$]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} \\
+& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}
+		     {\Gamma |- t~s : B} &
+& \inference[\sc App$_s$]{\Gamma |- t : A -> B & \Gamma |- s : A}
+		         {\Gamma |- t~s : B} \\
+& \inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
+		     {\Gamma |- \<let> x=s \<in> t : B} &
+& \inference[\sc Let$_s$]{\Gamma |- s : A & \Gamma,x:\Gen(\Gamma,A) |- t : B}
+		         {\Gamma |- \<let> x=s \<in> t : B} \\
+& \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
+		      {\Gamma |- t : \sigma'} &
+&\quad\qquad \begin{smallmatrix}\Gen(\Gamma,A)=\forall\vec{X}.A&
+			 ~\text{where}~\vec{X}=\FV(A)\setminus\FV(\Gamma)
+		 \end{smallmatrix}\\
+& \inference[\sc Gen]{\Gamma |- s : \sigma & X \notin\FV(\Gamma)}
+		     {\Gamma |- t : \forall X.\sigma}
+\end{align*}
+
+\end{singlespace}
+\caption{The Hindily-Milner type system}
+\label{fig:hm}
+\end{figure}
+
+\begin{figure}
+TODO
+\caption{The type inference algorithm $W$}
+\label{fig:algW}
+\end{figure}
