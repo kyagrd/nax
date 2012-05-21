@@ -1,12 +1,12 @@
 \section{The Hindley-Milner type system} \label{sec:hm}
 
 The Hindly-Milner type system (HM),
-\aka\ Dammas-Hindly-Milner type system (DHM),
+\aka\ Damas-Hindley-Milner type system (DHM),
 \cite{Hindley69,Milner78,DamMil82,Damas85} infers the most general type scheme
 (\aka\ the principal type scheme) for a Curry-style term.
 A type scheme is
 %%% TODO explain what a type scheme is maybe I should have
-%%% already expained this in the previous section of STLC systm F
+%%% already expained this in the previous section of STLC system F
 %%% recall the reader on the 
 
 \citet{Hindley69} discovered that there exists a unique principal type scheme
@@ -15,8 +15,12 @@ in the setting of a polymorphic lambda calculus, while he was devising
 an algorithm, called the algorithm $W$, which infers a type scheme for
 a Curry-style term. \citet{Damas85} developed detailed theories on
 Milner's polymorphic lambda calculus (\aka\ let-polymorhpism) and
-the type inferecne algorithm $W$.
+the type inference algorithm $W$.
 
+$\overline{\Gamma}(A)$ is a closure of type $A$ with respect to $\Gamma$.
+$\overline{\Gamma}(A)$ generalizes $A$ by all the free variables of $A$
+except the free variables in $\Gamma$. The free variable of $\Gamma$ is
+defined as: $\FV(\Gamma) = \bigcup_{x:A\in \Gamma} \FV(A)$.
 
 \begin{figure}
 \begin{singlespace}
@@ -61,24 +65,203 @@ $\!\!\!\!\!\!\!\!\!\!$
 		         {\Gamma |- t~s : B} \\
 & \inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
 		     {\Gamma |- \<let> x=s \<in> t : B} &
-& \inference[\sc Let$_s$]{\Gamma |- s : A & \Gamma,x:\Gen(\Gamma,A) |- t : B}
-		         {\Gamma |- \<let> x=s \<in> t : B} \\
+& \inference[\sc Let$_s$]
+            {\Gamma |- s : A & \Gamma,x:\overline{\Gamma}(A) |- t : B}
+	    {\Gamma |- \<let> x=s \<in> t : B} \\
 & \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
 		      {\Gamma |- t : \sigma'} &
-&\quad\qquad \begin{smallmatrix}\Gen(\Gamma,A)=\forall\vec{X}.A&
+&\quad\qquad \begin{smallmatrix}\overline{\Gamma}(A)=\forall\vec{X}.A&
 			 ~\text{where}~\vec{X}=\FV(A)\setminus\FV(\Gamma)
-		 \end{smallmatrix}\\
+		 \end{smallmatrix}
+		 \\
 & \inference[\sc Gen]{\Gamma |- s : \sigma & X \notin\FV(\Gamma)}
 		     {\Gamma |- t : \forall X.\sigma}
 \end{align*}
-
 \end{singlespace}
-\caption{The Hindily-Milner type system}
+\caption{The Hindley-Milner type system}
 \label{fig:hm}
 \end{figure}
 
 \begin{figure}
-TODO
+\begin{singlespace}
+\[ \inference
+	{x:\forall X_1\dots X_n.A\in\Gamma \\
+	 X_1',\dots,X_n'~\text{fresh}}
+        {W(\Gamma,x) = (\emptyset,[X_1'/X_1]\cdots[X_n'/X_n]A)}
+\]
+\[ \inference
+	{X~\text{fresh} \\
+	 W(\Gamma,x:X,t)=(S_1,A)}
+	{W(\Gamma,x)=(S_1,S_1(X -> A))}
+\]
+\[ \inference
+	{W(\Gamma,s)=(S_1,A_1) \\
+	 W(S_1 \Gamma,t)=(S_2,A_2) \\
+	 X~\text{fresh} \\
+	 U(S_2 A_1,A_2 -> X) = S_3 }
+	{W(\Gamma,s\;t) = (S_3\circ S_2\circ S_1,S_3 X)}
+\]
+\[ \inference
+	{W(\Gamma,s)=(S_1,A_1) \\
+	 W(S_1(\Gamma,x:\overline{S_1\Gamma}(A_1)),t)=(S_2,A_2) }
+	{W(\Gamma,\<let> x=s \<in> t) = (S_2\circ S_1,A_2)}
+\]
+\end{singlespace}
 \caption{The type inference algorithm $W$}
 \label{fig:algW}
 \end{figure}
+
+\subsection{Unification}
+TODO
+
+\begin{figure}
+\begin{singlespace}
+\textbf{Unification}
+%% \[ U(A_1,A_2) = \unify(\emptyset,A_1,A_2) \]
+\begin{align*}
+&U(\iota,&&\iota&) &= S \\
+&U(x,&&x&) &= S \\
+&U(x_1,&&x_2&) &= \<if> x_1 < x_2 \<then> \{x_1\mapsto x_2\}
+				\<else> \{x_2\mapsto x_1\}\\
+&U(x_1,&&A_2&) &= \<if> \occurs(x_1,A_2) \<then> \text{fail}
+				\<else> \{x_1\mapsto A_2\} \\
+&U(A_1,&&x_2&) &= \<if> \occurs(x_2,A_1) \<then> \text{fail}
+				\<else> \{x_2\mapsto A_1\} \\
+&U(A_1 -> B_1,&&A_2 -> B_2&) &= U(A_1,A_2) \circ U(B_1,B_2) \\
+&U(t_1,&&t_2&) &= \text{fail}
+\end{align*}
+\textbf{Substitution composition}
+\begin{align*}
+S_1 \circ \emptyset &= S_1 \\
+S_1 \circ (\{x\mapsto A\}\uplus S_2)
+	&= S_1[S_1 A/x] \circ S_2
+	\quad (x\notin\dom(S_1)) \\
+(\{x\mapsto A_1\}\uplus S_1)\circ
+(\{x\mapsto A_2\}\uplus S_2) &= S_1\circ S_2 \circ (\{x\mapsto S A_1\}\uplus S) \\
+			     &\<where> S=U(A_1,A_2) \\
+\end{align*}
+
+\textbf{Well-formed substitution}
+\begin{quote}
+A substitution $S$ is well-formed when $\dom(S)\cap\FV(\ran(S))=\emptyset$.
+\end{quote}
+
+\textbf{A single substitution on substitutions}
+\[ S[A/x] = \{x'\mapsto A'[S A/x] \mid x'\mapsto A' \in S\} \]
+
+\textbf{Occurs check on a single substitution on types}
+\begin{quote}
+In the context of unification, we assume that the single substitution on
+a type $A[B/x]$ succeeds only when $x$ does not occur in $B$. Otherwise,
+when $x$ occurs in $B$, the single substitution $A[B/x]$ fails.
+\end{quote}
+
+\end{singlespace}
+\caption{The unification algorithm and the composition of substitution}
+\label{fig:algU}
+\end{figure}
+
+\cite{Robinson65} TODO
+
+\begin{proposition}[unification of identical types] $U(A,A)=\emptyset$
+\label{prop:unifyidentical}
+\end{proposition}
+\begin{proof} Easy by induction on the definition of unification.
+\end{proof}
+Note, that unification on identical terms always suceeds.
+
+\begin{lemma}[substitution composition is idempotent] \label{lem:compident}
+	~\\ \indent
+	$S\circ S = S$ \quad (when $\circ$ succeeds)
+\end{lemma}
+\begin{proof}
+We prove by induction on the definition of substitution composition.
+
+When $S$ is empty, then it is trivial since
+$\emptyset \circ \emptyset = \emptyset$
+by the first equation of the substitution composition in Figure \ref{fig:algU}.
+
+When $S$ is non-empty, we should apply the third equation
+since the domains of the left- and right-hand side of the composition
+obviously share the same variables. Recall the third equation of
+the substitution composition in Figure \ref{fig:algU}:
+\begin{align*}
+(\{x\mapsto A_1\}\uplus S_1)\circ
+(\{x\mapsto A_2\}\uplus S_2) &= S_1\circ S_2 \circ (\{x\mapsto S A_1\}\uplus S) \\
+			     &\<where> S=U(A_1,A_2)
+\end{align*}
+Note that $\{x\mapsto A_1\}\uplus S_1 = \{x\mapsto A_2\}\uplus S_2$ in our case.
+So, is easy to see that $A_1=A_2$ and $S_1=S_2$ Let us give a new name $S'$
+for the substitutions $S_1$ and $S_2$ (\ie, $S'=S_1=S_2$) and a new name $A$
+for the two types $A_1$ and $A_2$ (\ie, $A=A_1=A_2$).
+By Proposition \ref{prop:unifyidentical}, we know that $S=\emptyset$
+and $A=A_1=A_2$ in the above equation.  And, by induction,
+we know that $S'\circ S' = S'$ (when composition succeeds).
+Using what we know, we can simplify the above equation as follows:
+\begin{align*}
+(\{x\mapsto A\}\uplus S')\circ
+(\{x\mapsto A\}\uplus S') &= S'\circ S' \circ \{x\mapsto A\} \\
+			  &= S' \circ \{x\mapsto A\} \\
+			  &= S' \uplus \{x\mapsto A\} \\
+			  &= \{x\mapsto A\} \uplus S'
+\end{align*}
+The last two steps of the above simplification rely on the fact that
+$x\notin\dom(S')$ (thus, using the second equation of $\circ$)
+and $\uplus$ is commutative.
+
+Therefore, $S\circ S = S$ (when composition succeeds).\\
+\end{proof}
+
+\begin{proposition}[composition of identical well-formed substitutions succeds]
+	\label{prop:compident}
+\begin{quote} $S \circ S$ suceeds when $S$ is well-formed \end{quote}
+\end{proposition}
+\begin{proof}
+As discussed in the proof of the previous lemma,
+the computation of $S \circ S$ will only involve
+the first and thrid equations of the defintion of $\circ$.
+The only source of possible failure is in the third equation calling on $U$.
+However, we know that $U$ always suceeds when unifying identical types
+(Proposition \ref{prop:unifyidentical}).
+\end{proof}
+
+\begin{theorem}[substitution composition is idempotent] ~
+	\begin{quote} $S\circ S = S$ for any well-formed $S$ \end{quote}
+\end{theorem}
+\begin{proof}
+	By Lemma \ref{lem:compident} and Proposition \ref{prop:compident}.
+\end{proof}
+
+\begin{theorem}[substitution composition is commutative]
+	\[S_1\circ S_2 = S_2\circ S_1\]
+\end{theorem}
+
+\begin{theorem}[substitution composition is associative]
+	\[(S_1\circ S_2) \circ S_3 = S_1 \circ (S_2 \circ S_3)\]
+\end{theorem}
+
+
+A substitution is well-formed when no variables of its domain
+occurs in its range (\ie, $\dom(S)\cap\FV(\ran(S))=\emptyset$).
+
+\begin{proposition}[$U$ produces well-formed substitutions]
+	~\\ \indent
+	$U(A_1,A_2)$ is well-formed for any two terms $A_1$ and $A_2$
+	(when $U$ suceeds).
+\end{proposition}
+
+\begin{proposition}[substitution composition preserves well-formedness]~\\
+	\indent
+$S_1\circ S_2$ is well-formed when both $S_1$ and $S_2$ are well-formed
+(when $\circ$ succeeds).
+\end{proposition}
+
+
+
+\begin{theorem}[$U$ returns a unifier] \label{prop:uniU}
+	\[ \inference{U(A_1,A_2)=S}{S A_1 = S A_2}\]
+\end{theorem}
+
+\begin{theorem}[$U$ returns a most general unfier] \label{prop:mguU}
+\[ \inference{S' A_1 = S' A_2 & U(A_1,A_2)=S}{\exists S''.\, S' = S\circ S''} \]
+\end{theorem}
