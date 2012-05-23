@@ -133,9 +133,9 @@ TODO
 \textbf{Substitution composition}
 \begin{align*}
 S_1 \circ \emptyset &= S_1 \\
-S_1 \circ (\{x\mapsto A\}\uplus S_2)
-	&= S_1[S_1 A/x] \circ S_2
-	\quad (x\notin\dom(S_1)) \\
+S_1 \circ (\{x\mapsto A_2\}\uplus S_2)
+	&= (S_1[S_1 A_2/x]\uplus\{x\mapsto S_1 A_2\}) \circ S_2 \\
+%%	\quad (x\notin\dom(S_1)) \\
 (\{x\mapsto A_1\}\uplus S_1)\circ
 (\{x\mapsto A_2\}\uplus S_2)
 	&= (S_1\circ S_2) \circ (\{x\mapsto S A_1\}\uplus S) \\
@@ -148,7 +148,7 @@ A substitution $S$ is well-formed when $\dom(S)\cap\FV(\ran(S))=\emptyset$.
 \end{quote}
 
 \textbf{A single substitution on substitutions}
-\[ S[A/x] = \{x'\mapsto A'[S A/x] \mid x'\mapsto A' \in S\} \]
+\[ S[A/x] = \{x'\mapsto A'[A/x] \mid x'\mapsto A' \in S\} \]
 
 \textbf{Occurs check on a single substitution on types}
 \begin{quote}
@@ -241,7 +241,7 @@ However, we know that $U$ always suceeds when unifying identical types
 \begin{proof} Easy by induction on the structure of $A_1$ and $A_2$.
 
 The base cases (\ie, $U(\iota,\iota)$, $U(x,x)$, $U(x_1,x_2)$,
-			$U(x_1,A_2)$, $U(A_1,x_2)$, $U()$) are trivial.
+			$U(x_1,A_2)$, $U(A_1,x_2)$) are trivial.
 
 The inductive case $U(A_1 -> B_1, A_2 -> B_2)$ is easy by induction.
 By induction, we know that $U(A_1,A_2) = U(A_2,A_1)$ and
@@ -252,16 +252,6 @@ U(A_1 -> B_1, A_2 -> B_2)
 	&= U(A_2,A_1) \circ U(B_2,B_1) = U(A_2 -> B_2, A_1 -> B_1)
 \end{align*}
 \end{proof}
-
-\begin{theorem}[substitution composition is commutative]
-	$ S_1\circ S_2 = S_2\circ S_1 $
-\end{theorem}
-\begin{proof} TODO
-\end{proof}
-
-\begin{theorem}[substitution composition is associative]
-	\[(S_1\circ S_2) \circ S_3 = S_1 \circ (S_2 \circ S_3)\]
-\end{theorem}
 
 
 A substitution is well-formed when no variables of its domain
@@ -276,10 +266,121 @@ $S_1\circ S_2$ is well-formed when both $S_1$ and $S_2$ are well-formed
 \begin{proposition}[$U$ produces well-formed substitutions]
 	~\\ \indent
 	$U(A_1,A_2)$ is well-formed for any two terms $A_1$ and $A_2$
-	(when $U$ suceeds).
+	(when $U$ succeeds).
 \end{proposition}
 \begin{proof}
 	TODO
+\end{proof}
+
+
+\begin{theorem}[substitution composition is associative]
+	\[(S_1\circ S_2) \circ S_3 = S_1 \circ (S_2 \circ S_3)
+	\qquad\text{($S_1, S_2, S_3$ are well-formed)}
+	\]
+\end{theorem}
+\begin{proof}
+	TODO
+\end{proof}
+
+\begin{lemma}\label{lem:commsinglesinglesubst}
+\[ \{x\mapsto A\}\circ\{x'\mapsto A'\} = \{x'\mapsto A'\}\circ\{x\mapsto A\} \]
+\end{lemma}
+\begin{proof}
+When either $\{x\mapsto A\}$ or $\{x'\mapsto A'\}$ is not well-formed,
+\ie, either $x$ occurs in $A$ or $x'$ occurs in $A'$,
+both sides of the equation above fail.
+It is easy to check this proceeding by the second equation of $\circ$
+for each side, since we occurs check on a single substitution on types
+(Figure \ref{fig:algU}). We leave this as an exercise to the reader.
+
+When $x$ occurs in $A'$ and $x'$ occurs $A$ at the same time,
+both sides of the equation above fail as well.
+It is also easy to check this proceeding by the second equation of $\circ$.
+We leave this as an exercise to the reader.
+
+When neither $x$ nor $x'$ occur in $A$ and $A'$, it is easy to see
+that this lemma holds, by using the second equation of $\circ$.
+\begin{align*}
+\{x\mapsto A\}\circ\{x'\mapsto A'\}
+&= \{x\mapsto A[\{x\mapsto A\} A'/x']\}\uplus\{x'\mapsto\{x\mapsto A\} A'\} \\
+&= \{x\mapsto A\}\uplus\{x'\mapsto A'\} \\
+&= \{x\mapsto A'\}\uplus\{x\mapsto A\} \\
+&= \{x'\mapsto A'[\{x'\mapsto A'\}A/x]\}\uplus\{x\mapsto\{x'\mapsto A'\}A\} \\
+&= \{x'\mapsto A'\}\circ\{x\mapsto A\}
+\end{align*}
+
+The other two cases to consider are:
+\begin{itemize}
+\item[(1)] $x$ occurs in $A'$ but $x'$ does not occur in $A$
+\item[(2)] $x'$ occurs in $A$ but $x$ does not occur in $A'$
+\end{itemize}
+
+TODO
+\end{proof}
+
+\begin{lemma}\label{lem:commsingletonsubst}
+	$S \circ \{x\mapsto A\} = \{x\mapsto A\} \circ S
+	\quad (x \notin \dom(S))$
+\end{lemma}
+\begin{proof} By induction on the size of $S$.
+
+When $S=\emptyset$ it holds trivially.
+
+When $S$ is non-empty, that is, let $S=\{x'\mapsto A'\}\uplus S'$,
+we use the associativity of $\circ$:
+\begin{align*}
+S\circ\{x\mapsto A\}
+&= (\{x'\mapsto A'\}\uplus S') \circ \{x\mapsto A\} \\
+&= (\{x'\mapsto A'\}\circ S') \circ \{x\mapsto A\} \\
+&= \{x'\mapsto A'\} \circ (S' \circ \{x\mapsto A\})
+& \text{by associativity of $\circ$} \\
+&= \{x'\mapsto A'\} \circ (\{x\mapsto A\} \circ S')
+& \text{by induction} \\
+&= (\{x'\mapsto A'\} \circ \{x\mapsto A\}) \circ S'
+& \text{by associativity of $\circ$} \\
+&= (\{x\mapsto A\} \circ \{x'\mapsto A\}') \circ S'
+& \text{by Lemma \ref{lem:commsinglesinglesubst}} \\
+&= \{x\mapsto A\} \circ (\{x'\mapsto A\}' \circ S')
+& \text{by associativity of $\circ$} \\
+&= \{x\mapsto A\} \circ S
+\end{align*}
+\end{proof}
+
+\begin{theorem}[substitution composition is commutative]
+\[ S_1\circ S_2 = S_2\circ S_1 \qquad\text{($S_1$ and $S_2$ are well-formed)} \]
+\end{theorem}
+\begin{proof}
+By induction on the size of $S_2$.
+
+When $S_2=\emptyset$ it holds trivially.
+
+When $S_2$ is non-empty, let $S_2=\{x\mapsto A_2\}\uplus S_2'$.
+
+When $x\notin\dom(S)$,
+\begin{align*}
+S_1 \circ S_2
+	&= S_1 \circ (\{x\mapsto A_2\}\uplus S_2') \\
+	&= S_1 \circ (\{x\mapsto A_2\}\circ S_2') \\
+	&= (S_1 \circ \{x\mapsto A_2\}) \circ S_2'
+	& \text{by associativity of $\circ$} \\
+	&= (\{x\mapsto A_2\}\circ S_1) \circ S_2'
+	& \text{by Lemma \ref{lem:commsingletonsubst}} \\
+	&= \{x\mapsto A_2\}\circ (S_1 \circ S_2')
+	& \text{by associativity of $\circ$} \\
+	&= \{x\mapsto A_2\}\circ (S_2' \circ S_1)
+	& \text{by induction} \\
+	&= (\{x\mapsto A_2\}\circ S_2') \circ S_1 \\
+	&= (\{x\mapsto A_2\}\uplus S_2') \circ S_1 \\
+	&= S_2 \circ S_1
+\end{align*}
+
+When $x\in\dom(S)$, TODO
+\begin{align*}
+S_1 \circ S_2
+	&= (\{x\mapsto A_1\}\uplus S_1') \circ (\{x\mapsto A_2\}\uplus S_2') \\
+	&= (\{x\mapsto A_1\}\circ S_1') \circ (\{x\mapsto A_2\}\circ S_2') \\
+	&= (\{x\mapsto A_1\}\circ S_1') \circ (\{x\mapsto A_2\}\circ S_2') \\
+\end{align*}
 \end{proof}
 
 \begin{theorem}[$U$ returns a unifier] \label{prop:uniU}
