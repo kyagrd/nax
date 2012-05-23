@@ -137,8 +137,9 @@ S_1 \circ (\{x\mapsto A\}\uplus S_2)
 	&= S_1[S_1 A/x] \circ S_2
 	\quad (x\notin\dom(S_1)) \\
 (\{x\mapsto A_1\}\uplus S_1)\circ
-(\{x\mapsto A_2\}\uplus S_2) &= S_1\circ S_2 \circ (\{x\mapsto S A_1\}\uplus S) \\
-			     &\<where> S=U(A_1,A_2) \\
+(\{x\mapsto A_2\}\uplus S_2)
+	&= (S_1\circ S_2) \circ (\{x\mapsto S A_1\}\uplus S) \\
+	&\<where> S=U(A_1,A_2) \\
 \end{align*}
 
 \textbf{Well-formed substitution}
@@ -166,7 +167,7 @@ when $x$ occurs in $B$, the single substitution $A[B/x]$ fails.
 \begin{proposition}[unification of identical types] $U(A,A)=\emptyset$
 \label{prop:unifyidentical}
 \end{proposition}
-\begin{proof} Easy by induction on the definition of unification.
+\begin{proof} Easy by induction on the structure of type $A$.
 \end{proof}
 Note, that unification on identical terms always suceeds.
 
@@ -175,7 +176,8 @@ Note, that unification on identical terms always suceeds.
 	$S\circ S = S$ \quad (when $\circ$ succeeds)
 \end{lemma}
 \begin{proof}
-We prove by induction on the definition of substitution composition.
+We prove by induction on the size of the substitution $S$.
+The size of $S$ is defined as the size of its domain (\ie, $|S| = |\dom(S)|$).
 
 When $S$ is empty, then it is trivial since
 $\emptyset \circ \emptyset = \emptyset$
@@ -187,8 +189,9 @@ obviously share the same variables. Recall the third equation of
 the substitution composition in Figure \ref{fig:algU}:
 \begin{align*}
 (\{x\mapsto A_1\}\uplus S_1)\circ
-(\{x\mapsto A_2\}\uplus S_2) &= S_1\circ S_2 \circ (\{x\mapsto S A_1\}\uplus S) \\
-			     &\<where> S=U(A_1,A_2)
+(\{x\mapsto A_2\}\uplus S_2)
+	&= (S_1\circ S_2) \circ (\{x\mapsto S A_1\}\uplus S) \\
+	&\<where> S=U(A_1,A_2)
 \end{align*}
 Note that $\{x\mapsto A_1\}\uplus S_1 = \{x\mapsto A_2\}\uplus S_2$ in our case.
 So, is easy to see that $A_1=A_2$ and $S_1=S_2$ Let us give a new name $S'$
@@ -232,9 +235,29 @@ However, we know that $U$ always suceeds when unifying identical types
 	By Lemma \ref{lem:compident} and Proposition \ref{prop:compident}.
 \end{proof}
 
-\begin{theorem}[substitution composition is commutative]
-	\[S_1\circ S_2 = S_2\circ S_1\]
+\begin{theorem}[unification is commutative] $ U(A_1,A_2) = U(A_2,A_1) $
+	\label{thm:commU}
 \end{theorem}
+\begin{proof} Easy by induction on the structure of $A_1$ and $A_2$.
+
+The base cases (\ie, $U(\iota,\iota)$, $U(x,x)$, $U(x_1,x_2)$,
+			$U(x_1,A_2)$, $U(A_1,x_2)$, $U()$) are trivial.
+
+The inductive case $U(A_1 -> B_1, A_2 -> B_2)$ is easy by induction.
+By induction, we know that $U(A_1,A_2) = U(A_2,A_1)$ and
+$U(B_1,A_2) = U(B_2,B_1)$. Therefore,
+\begin{align*}
+U(A_1 -> B_1, A_2 -> B_2)
+	&= U(A_1,A_2) \circ U(B_1,B_2) \\
+	&= U(A_2,A_1) \circ U(B_2,B_1) = U(A_2 -> B_2, A_1 -> B_1)
+\end{align*}
+\end{proof}
+
+\begin{theorem}[substitution composition is commutative]
+	$ S_1\circ S_2 = S_2\circ S_1 $
+\end{theorem}
+\begin{proof} TODO
+\end{proof}
 
 \begin{theorem}[substitution composition is associative]
 	\[(S_1\circ S_2) \circ S_3 = S_1 \circ (S_2 \circ S_3)\]
@@ -244,24 +267,33 @@ However, we know that $U$ always suceeds when unifying identical types
 A substitution is well-formed when no variables of its domain
 occurs in its range (\ie, $\dom(S)\cap\FV(\ran(S))=\emptyset$).
 
-\begin{proposition}[$U$ produces well-formed substitutions]
-	~\\ \indent
-	$U(A_1,A_2)$ is well-formed for any two terms $A_1$ and $A_2$
-	(when $U$ suceeds).
-\end{proposition}
-
 \begin{proposition}[substitution composition preserves well-formedness]~\\
 	\indent
 $S_1\circ S_2$ is well-formed when both $S_1$ and $S_2$ are well-formed
 (when $\circ$ succeeds).
 \end{proposition}
 
-
+\begin{proposition}[$U$ produces well-formed substitutions]
+	~\\ \indent
+	$U(A_1,A_2)$ is well-formed for any two terms $A_1$ and $A_2$
+	(when $U$ suceeds).
+\end{proposition}
+\begin{proof}
+	TODO
+\end{proof}
 
 \begin{theorem}[$U$ returns a unifier] \label{prop:uniU}
 	\[ \inference{U(A_1,A_2)=S}{S A_1 = S A_2}\]
 \end{theorem}
+\begin{proof}
+	TODO
+\end{proof}
 
 \begin{theorem}[$U$ returns a most general unfier] \label{prop:mguU}
 \[ \inference{S' A_1 = S' A_2 & U(A_1,A_2)=S}{\exists S''.\, S' = S\circ S''} \]
 \end{theorem}
+\begin{proof}
+	TODO
+\end{proof}
+
+
