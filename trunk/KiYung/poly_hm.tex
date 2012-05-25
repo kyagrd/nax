@@ -168,8 +168,13 @@ when $x$ occurs in $B$, the single substitution $A[B/x]$ fails.
 \label{prop:unifyidentical}
 \end{proposition}
 \begin{proof} Easy by induction on the structure of type $A$.
+
+We need not worry whether $\circ$ may fail or loop,
+in the inductive case (\ie, $A(A \to B,A \to B)$),
+since it is clear that $\emptyset \circ \emptyset = \emptyset$
+from the first equation of the defintion of $\circ$ in Figure \ref{fig:algU}.
 \end{proof}
-Note, that unification on identical terms always suceeds.
+Note, that unification of identical types always suceeds.
 
 \begin{lemma}[substitution composition is idempotent] \label{lem:compident}
 	~\\ \indent
@@ -212,7 +217,7 @@ The last two steps of the above simplification rely on the fact that
 $x\notin\dom(S')$ (thus, using the second equation of $\circ$)
 and $\uplus$ is commutative.
 
-Therefore, $S\circ S = S$ (when composition succeeds).\\
+Therefore, $S\circ S = S$ (when composition succeeds).
 \end{proof}
 
 \begin{proposition}[composition of identical well-formed substitutions succeds]
@@ -227,6 +232,10 @@ The only source of possible failure is in the third equation calling on $U$.
 However, we know that $U$ always suceeds when unifying identical types
 (Proposition \ref{prop:unifyidentical}).
 \end{proof}
+
+From now on, $S_1 \circ S_2 = S$ means that the composition succeeds and
+returns $S$. Similarly, $U(A_1,A_2)=S$ means that the unification succeeds
+and returns $S$.
 
 \begin{theorem}[substitution composition is idempotent] ~
 	\begin{quote} $S\circ S = S$ for any well-formed $S$ \end{quote}
@@ -252,27 +261,94 @@ U(A_1 -> B_1, A_2 -> B_2)
 	&= U(A_2,A_1) \circ U(B_2,B_1) = U(A_2 -> B_2, A_1 -> B_1)
 \end{align*}
 \end{proof}
+TODO have we proved that both sides fail at the same time in the inductive case?
 
 
 
 A substitution is well-formed when no variables of its domain
 occurs in its range (\ie, $\dom(S)\cap\FV(\ran(S))=\emptyset$).
 
-\begin{proposition}[substitution composition preserves well-formedness]~\\
-	\indent
-$S_1\circ S_2$ is well-formed when both $S_1$ and $S_2$ are well-formed
-(when $\circ$ succeeds).
-\end{proposition}
-
-\begin{proposition}[$U$ produces well-formed substitutions]
-	~\\ \indent
-	$U(A_1,A_2)$ is well-formed for any two terms $A_1$ and $A_2$
-	(when $U$ succeeds).
+\begin{proposition}[substitution composition preserves well-formedness] ~
+\begin{quote}
+	Let $S_1$ and $S_2$ be well-formed substitutions.\\
+	If $S_1\circ S_2=S$ then $S$ is also well-formed.
+\end{quote}
 \end{proposition}
 \begin{proof}
 	TODO
 \end{proof}
 
+\begin{proposition}[$U$ produces well-formed substitutions] ~
+\begin{quote}
+	If $U(A_1,A_2)=S$ then $S$ is well-formed.
+\end{quote}
+\end{proposition}
+\begin{proof}
+	TODO
+\end{proof}
+
+\begin{lemma}
+Let $S$, $\{x\mapsto A'\}$, and $\{x\mapsto A\}$ be well-formed substitutions.
+	\[ (S \circ \{x\mapsto A'\}) \circ \{x\mapsto A\} =
+	S \circ (\{x\mapsto A'\} \circ \{x\mapsto A\}) \]
+\end{lemma}
+\begin{proof}
+TODO
+\end{proof}
+
+\begin{lemma} \label{lem:assocsinglesubst}
+Let $S_1$, $S_2$, and $\{x\mapsto A\}$ be well-formed substitutions.
+\[ (S_1\circ S_2) \circ \{x\mapsto A\} = S_1 \circ (S_2 \circ \{x\mapsto A\}) \]
+\end{lemma}
+\begin{proof}
+By induction on the size of $S_2$.
+
+When $S_2=\emptyset$, trivial.
+
+When $S_2$ is non-empty.
+
+If $x\notin \dom(S_2)$, let $S_2=\{x'\mapsto A'\}\uplus S_2'$.
+\begin{align*}
+ &~ (S_1\circ S_2) \circ \{x\mapsto A\} \\
+=&~ (S_1\circ(\{x'\mapsto A'\}\uplus S_2')) \circ \{x\mapsto A\} \\
+=&~ (S_1\circ(S_2'\uplus\{x'\mapsto A'\})) \circ \{x\mapsto A\} \\
+=&~ (S_1\circ(S_2'\circ\{x'\mapsto A'\})) \circ \{x\mapsto A\} \\
+=&~ ((S_1\circ S_2')\circ\{x'\mapsto A'\}) \circ \{x\mapsto A\}
+	& \text{by induction} \\
+=&~ (S_1\circ S_2')\circ(\{x'\mapsto A'\} \circ \{x\mapsto A\})
+	& \text{by Lemma TODO} \\
+=&~ TODO \\
+=&~ S_1 \circ (S_2'\circ (\{x'\mapsto A'\} \circ \{x\mapsto A\})) \\
+=&~ S_1 \circ ((S_2'\circ \{x'\mapsto A'\}) \circ \{x\mapsto A\}) \\
+=&~ S_1 \circ ((S_2'\uplus \{x'\mapsto A'\}) \circ \{x\mapsto A\}) \\
+=&~ S_1 \circ ((\{x'\mapsto A'\}\uplus S_2') \circ \{x\mapsto A\}) \\
+=&~ S_1 \circ (S_2 \circ \{x\mapsto A\})
+\end{align*}
+
+
+If $x\in \dom(S_2)$, let $S_2=\{x\mapsto A'\}\uplus S_2'$.
+\begin{align*}
+ &~ (S_1\circ S_2) \circ \{x\mapsto A\} \\
+=&~ (S_1\circ(\{x\mapsto A'\}\uplus S_2')) \circ \{x\mapsto A\} \\
+=&~ (S_1\circ(S_2'\uplus\{x\mapsto A'\})) \circ \{x\mapsto A\} \\
+=&~ (S_1\circ(S_2'\circ\{x\mapsto A'\})) \circ \{x\mapsto A\} \\
+=&~ ((S_1\circ S_2')\circ\{x\mapsto A'\}) \circ \{x\mapsto A\}
+	& \text{by induction} \\
+=&~ (S_1\circ S_2')\circ(\{x\mapsto A'\} \circ \{x\mapsto A\})
+	& \text{by Lemma \ref{TODO}} \\
+=&~ (S_1\circ S_2')\circ \{x\mapsto A''\} \\
+=&~ S_1 \circ (S_2'\circ \{x\mapsto A''\} )
+	& \text{by induction} \\
+=&~ S_1 \circ (S_2'\circ (\{x\mapsto A'\} \circ \{x\mapsto A\})) \\
+=&~ S_1 \circ ((S_2'\circ \{x\mapsto A'\}) \circ \{x\mapsto A\})
+	& \text{by Lemma \ref{TODO}} \\
+=&~ S_1 \circ ((S_2'\uplus \{x\mapsto A'\}) \circ \{x\mapsto A\}) \\
+=&~ S_1 \circ ((\{x\mapsto A'\}\uplus S_2') \circ \{x\mapsto A\}) \\
+=&~ S_1 \circ (S_2 \circ \{x\mapsto A\})
+\end{align*}
+
+
+\end{proof}
 
 \begin{theorem}[substitution composition is associative]
 	\[(S_1\circ S_2) \circ S_3 = S_1 \circ (S_2 \circ S_3)
@@ -280,7 +356,25 @@ $S_1\circ S_2$ is well-formed when both $S_1$ and $S_2$ are well-formed
 	\]
 \end{theorem}
 \begin{proof}
-	TODO
+By induction on the size of $S_3$.
+
+When $S_3=\emptyset$, trivial.
+
+When $S_3$ is non-empty, let $S_3=\{x\mapsto A\}\uplus S_3'$.
+\begin{align*}
+(S_1\circ S_2) \circ S_3
+	&= (S_1\circ S_2) \circ (\{x\mapsto A\}\uplus S_3') \\
+	&= (S_1\circ S_2) \circ (\{x\mapsto A\} \circ S_3') \\
+	&= ((S_1\circ S_2) \circ \{x\mapsto A\}) \circ S_3'
+	& \text{by induction} \\
+	&= (S_1\circ(S_2 \circ \{x\mapsto A\})) \circ S_3'
+	& \text{by Lemma \ref{lem:assocsinglesubst}} \\
+	&= S_1\circ((S_2 \circ \{x\mapsto A\}) \circ S_3')
+	& \text{by induction} \\
+	&= S_1\circ(S_2 \circ(\{x\mapsto A\} \circ S_3'))
+	& \text{by induction} \\
+	&= S_1 \circ (S_2 \circ S_3)
+\end{align*}
 \end{proof}
 
 
@@ -390,8 +484,23 @@ S_1 \circ S_2
 \end{align*}
 \end{proof}
 
-\begin{theorem}[$U$ returns a unifier] \label{prop:soundU}
-	\[ \inference{U(A_1,A_2)=S}{S A_1 = S A_2}\]
+\begin{lemma} $(S \circ S') A = (S \circ S')(S' A)$
+	\label{lem:dupsubstR}
+\end{lemma}
+\begin{proof}
+	TODO
+\end{proof}
+
+\begin{lemma} $(S \circ S') A = (S \circ S')(S A)$
+	\label{lem:dupsubstL}
+\end{lemma}
+\begin{proof}
+	TODO
+\end{proof}
+
+
+\begin{theorem}[$U$ is sound] \label{prop:soundU}
+$ \inference{U(A_1,A_2)=S}{S A_1 = S A_2} $
 \end{theorem}
 \begin{proof}
 By induction on the structure of $A_1$ and $A_2$.
@@ -409,17 +518,21 @@ In the inductive case $U(A_1 -> B_1, A_2 -> B_2)$, we know that
 \]
 Then, $U(A_1 -> B_1, A_2 -> B_2)=S'\circ S''$ by definition.
 \begin{align*}
-(S'\circ S'')(A_1 -> B_1)
-&= (S'\circ S'') A_1 -> (S'\circ S'') B_1 \\
-&= (S'\circ S'') A_1 -> (S'\circ S'') B_1
+ &~(S'\circ S'')(A_1 -> B_1) \\
+=&~ (S'\circ S'') A_1 -> (S'\circ S'') B_1 \\
+=&~ (S'\circ S'')(S' A_1) -> (S'\circ S'')(S'' B_1)
+ & \text{by Lemma \ref{lem:dupsubstR} and Lemma \ref{lem:dupsubstL}} \\
+=&~ (S'\circ S'')(S' A_2) -> (S'\circ S'')(S'' B_2)
+ & \text{by what we know from induction} \\
+=&~ (S'\circ S'') A_2 -> (S'\circ S'') B_2
+ & \text{by Lemma \ref{lem:dupsubstR} and Lemma \ref{lem:dupsubstL}} \\
+=&~ (S'\circ S'')(A_2 -> B_2)
 \end{align*}
-TODO
-
-
+Therefore, $U(A_1 -> B_1, A_2 -> B_2)=S'\circ S''$ is a unifier.
 \end{proof}
 
-\begin{theorem}[$U$ returns a most general unfier] \label{prop:completeU}
-\[ \inference{S A_1 = S A_2}{\exists S'.\, S = U(A_1,A_2)\circ S'} \]
+\begin{theorem}[$U$ is complete] \label{prop:completeU}
+$ \inference{S A_1 = S A_2}{\exists S'.\, U(A_1,A_2)\circ S' = S} $
 \end{theorem}
 \begin{proof}
 	TODO
