@@ -117,48 +117,37 @@ TODO
 \begin{figure}
 \begin{singlespace}
 \textbf{Unification}
-%% \[ U(A_1,A_2) = \unify(\emptyset,A_1,A_2) \]
+\[ U(A_1,A_2) = \unify(\{A_1 =?= A_2\}) \]
 \begin{align*}
-&U(\iota,&&\iota&) &= S \\
-&U(x,&&x&) &= S \\
-&U(x_1,&&x_2&) &= \<if> x_1 < x_2 \<then> \{x_1\mapsto x_2\}
-				\<else> \{x_2\mapsto x_1\}\\
-&U(x_1,&&A_2&) &= \<if> \occurs(x_1,A_2) \<then> \text{fail}
-				\<else> \{x_1\mapsto A_2\} \\
-&U(A_1,&&x_2&) &= \<if> \occurs(x_2,A_1) \<then> \text{fail}
-				\<else> \{x_2\mapsto A_1\} \\
-&U(A_1 -> B_1,&&A_2 -> B_2&) &= U(A_1,A_2) \circ U(B_1,B_2) \\
-&U(t_1,&&t_2&) &= \text{fail}
-\end{align*}
-\textbf{Substitution composition}
-\begin{align*}
-S_1 \circ \emptyset &= S_1 \\
-S_1 \circ (\{x\mapsto A_2\}\uplus S_2)
-	&= (S_1[S_1 A_2/x]\uplus\{x\mapsto S_1 A_2\}) \circ S_2 \\
-%%	\quad (x\notin\dom(S_1)) \\
-(\{x\mapsto A_1\}\uplus S_1)\circ
-(\{x\mapsto A_2\}\uplus S_2)
-	&= (S_1\circ S_2) \circ (\{x\mapsto S A_1\}\uplus S) \\
-	&\<where> S=U(A_1,A_2) \\
+\unify(\{\iota =?= \iota\}\uplus Q) &= \unify(Q) \\
+\unify(\{x =?= x\}\uplus Q) &= \unify(Q) \\
+\unify(\{A_1 -> B_1 =?= A_2 -> B_2\}\uplus Q)
+	&= \unify(\{A_1 =?= A_2, B_1 =?= B_2\}\uplus Q) \\
+\unify(\{A -> B =?= \iota\}\uplus Q) &= \text{fail} \\
+\unify(\{\iota =?= A -> B\}\uplus Q) &= \text{fail} \\
+\unify(\{A =?= x\}\uplus Q) &= \unify(\{x =?= A\}\uplus Q) \<when> x<A \\
+\unify(\{x =?= A\}\uplus Q) &= \text{fail} \<when> \occurs(x,A) \\
+\unify(\{x =?= A\}\uplus Q) &= \unify(\{x =?= A\}\uplus Q[A/x]) \\
+			    & \<when> \occurs(x,Q) \\
+\unify(\{x_1 =?= A_1,\dots,x_n =?= A_n\})
+	&= \{x_1\mapsto A_1,\dots,x_n\mapsto A_n\} \\
+	& \<when> x_1,\dots,x_n ~\text{are distinct, and,} \\
+	& \qquad \neg\occurs(x_i,A_j) ~\text{for all $i$ and $j$} \\
+\unify(Q) &= \text{fail}
 \end{align*}
 
-\textbf{Well-formed substitution}
+\textbf{Unifier composition}
 \begin{quote}
-A substitution $S$ is well-formed when $\dom(S)\cap\FV(\ran(S))=\emptyset$.
-\end{quote}
+Let $S_1$ and $S_2$ be unifiers. That is,\\
+for any $x\in \dom(S_1)$, $x$ does not occur in range of $S_2$, and,\\
+for any $x\in \dom(S_1)$, $x$ does not occur in range of $S_2$.
 
-\textbf{A single substitution on substitutions}
-\[ S[A/x] = \{x'\mapsto A'[A/x] \mid x'\mapsto A' \in S\} \]
-
-\textbf{Occurs check on a single substitution on types}
-\begin{quote}
-In the context of unification, we assume that the single substitution on
-a type $A[B/x]$ succeeds only when $x$ does not occur in $B$. Otherwise,
-when $x$ occurs in $B$, the single substitution $A[B/x]$ fails.
+Then, the composition of two unifiers $S_1$ and $S_2$ is defined as follows:
 \end{quote}
+\[ S_1 \circ S_2 = \unify(\{ x =?= A \mid x\mapsto A \in S_1 \cup S_2 \}) \]
 
 \end{singlespace}
-\caption{The unification algorithm and the composition of substitution}
+\caption{The unification algorithm and the composition of unifiers}
 \label{fig:algU}
 \end{figure}
 
@@ -167,12 +156,8 @@ when $x$ occurs in $B$, the single substitution $A[B/x]$ fails.
 \begin{proposition}[unification of identical types] $U(A,A)=\emptyset$
 \label{prop:unifyidentical}
 \end{proposition}
-\begin{proof} Easy by induction on the structure of type $A$.
-
-We need not worry whether $\circ$ may fail or loop,
-in the inductive case (\ie, $A(A \to B,A \to B)$),
-since it is clear that $\emptyset \circ \emptyset = \emptyset$
-from the first equation of the defintion of $\circ$ in Figure \ref{fig:algU}.
+\begin{proof}
+	%% TODO Easy by induction on the structure of type $A$.
 \end{proof}
 Note, that unification of identical types always suceeds.
 
