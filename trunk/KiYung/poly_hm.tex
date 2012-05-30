@@ -112,28 +112,27 @@ $\!\!\!\!\!\!\!\!\!\!$
 \end{figure}
 
 \subsection{Unification}
-TODO
+A single substitution
 
 \begin{figure}
 \begin{singlespace}
 \textbf{Unification}
 \[ U(A_1,A_2) = \unify(\{A_1 =?= A_2\}) \]
 \begin{align*}
+\unify(\{A -> B =?= \iota\}\uplus Q) &= \text{fail} \\
+\unify(\{\iota =?= A -> B\}\uplus Q) &= \text{fail} \\
 \unify(\{\iota =?= \iota\}\uplus Q) &= \unify(Q) \\
 \unify(\{x =?= x\}\uplus Q) &= \unify(Q) \\
 \unify(\{A_1 -> B_1 =?= A_2 -> B_2\}\uplus Q)
 	&= \unify(\{A_1 =?= A_2, B_1 =?= B_2\}\uplus Q) \\
-\unify(\{A -> B =?= \iota\}\uplus Q) &= \text{fail} \\
-\unify(\{\iota =?= A -> B\}\uplus Q) &= \text{fail} \\
 \unify(\{A =?= x\}\uplus Q) &= \unify(\{x =?= A\}\uplus Q) \<when> x<A \\
-\unify(\{x =?= A\}\uplus Q) &= \text{fail} \<when> \occurs(x,A) \\
+\unify(\{x =?= A\}\uplus Q) &= \text{fail}~ \<when> x\notin\FV(A) \\
 \unify(\{x =?= A\}\uplus Q) &= \unify(\{x =?= A\}\uplus Q[A/x]) \\
-			    & \<when> \occurs(x,Q) \\
+			    & \<when> x\in\FV(Q) \\
 \unify(\{x_1 =?= A_1,\dots,x_n =?= A_n\})
 	&= \{x_1\mapsto A_1,\dots,x_n\mapsto A_n\} \\
 	& \<when> x_1,\dots,x_n ~\text{are distinct, and,} \\
-	& \qquad \neg\occurs(x_i,A_j) ~\text{for all $i$ and $j$} \\
-\unify(Q) &= \text{fail}
+	& \qquad \neg\occurs(x_i,A_j) ~\text{for all $i\neq j$} \\
 \end{align*}
 
 \textbf{Unifier composition}
