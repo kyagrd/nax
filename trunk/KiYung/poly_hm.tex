@@ -12,38 +12,6 @@ is also known as the Hindley-Milner type system (HM),
 Damas-Hindley-Milner type system (DHM), or let-polymorphism.
 
 The Hindley-Milner type system (HM) is illustrated in Figure \ref{fig:hm}.
-
-Terms include the usual Curry-style terms ($x$, $\l x.t$, and $t\;s$)
-and the let-terms ($\<let> x=s \<in> t$). A let term $\<let> x=s \<in> t$
-may be considered as a syntactic sugar for $(\l x.t)\,s$
-while reduction.\footnote{The reduction rules for the terms are exactly
-	the same as the reduction rules for Curry-style terms
-	in the previous sections, treating the let-term as a syntactic sugar.}
-However, the let-term does make a significance in the typing rules.
-
-Types (or, monotypes) include the types of the STLC ($A -> B$ and $\iota$)
-and type variables ($X$). Type schemes (or, polytypes) are like
-the (polymorphic) types of System \F, but universal quantifications
-are restricted to top level. Type schemes are either universal quantifications
-over type schemes or types. Note, it is only possible to quantify
-over type schemes but not types. Typing contexts ($\Gamma$) keep track of
-each bound variable and its type scheme ($x:\sigma$).
-
-The ordering between two type schemes $\sigma \sqsubseteq \sigma'$ 
-means that $\sigma$ is more general than or equivalent to $\sigma'$.
-The two type schemes $\sigma$ and $\sigma'$ are equivalent
-(\ie, $\sigma \sqsubseteq \sigma'$ and $\sigma' \sqsubseteq \sigma$)
-when they are $\alpha$-equivalent (\eg, $\forall X.X -> X$ is
-equivalent to $\forall X'. X' -> X$). In fact, $\alpha$-equivalence is
-a special case of the type scheme ordering rule in Figure \ref{fig:hm},
-where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
-
-
-$\overline{\Gamma}(A)$ is a closure of type $A$ with respect to $\Gamma$.
-$\overline{\Gamma}(A)$ generalizes $A$ by all the free variables of $A$
-except the free variables in $\Gamma$. The free variables of $\Gamma$ is
-defined as: $\FV(\Gamma) = \bigcup_{x:A\in \Gamma} \FV(A)$.
-
 \begin{figure}
 \begin{singlespace}
 \small
@@ -105,6 +73,168 @@ $\!\!\!\!\!\!\!\!\!\!$
 \end{figure}
 
 
+
+Terms include the usual Curry-style terms ($x$, $\l x.t$, and $t\;s$)
+and the let-terms ($\<let> x=s \<in> t$). A let term $\<let> x=s \<in> t$
+may be considered as a syntactic sugar for $(\l x.t)\,s$
+while reduction.\footnote{The reduction rules for the terms are exactly
+	the same as the reduction rules for Curry-style terms
+	in the previous sections, treating the let-term as a syntactic sugar.}
+However, let-terms does make a significance in the typing rules
+since a let-term can introduce polymorphic type schemes to the typing context
+(\rulename{Let}). We will discuss further details on the typing of let-term
+later on, when we explain the typing rules.
+
+Types (or, monotypes) include the types of the STLC ($A -> B$ and $\iota$)
+and type variables ($X$). Type schemes (or, polytypes) are like
+the (polymorphic) types of System \F, but universal quantifications
+are restricted to top level. Type schemes are either universal quantifications
+over type schemes or types. Note, it is only possible to quantify
+over type schemes but not types. Typing contexts ($\Gamma$) keep track of
+each bound variable and its type scheme ($x:\sigma$).
+
+The ordering between two type schemes $\sigma \sqsubseteq \sigma'$,
+defined in Figure \ref{fig:hm}, means that $\sigma$ is more general
+than or equivalent to $\sigma'$. The ordering relation $\sqsubseteq$
+comes from \citet{DamMil82}, which is also known as generic instantiation:
+$\sigma'$ is called a generic instance of $\sigma$
+when $\sigma \sqsubseteq \sigma'$. The shorthand notation
+$\forall X_1\dots X_n.A$ stands for consecutive universal quantification
+of $n$ variables. For instance, $\forall X_1\,X_2\,X_3.A$
+is a shorthand for $\forall X_1.\forall X_2.\forall X_3.A$.
+
+The two type schemes $\sigma$ and $\sigma'$ are equivalent
+(\ie, $\sigma \sqsubseteq \sigma'$ and $\sigma' \sqsubseteq \sigma$)
+when they are $\alpha$-equivalent (\eg, $\forall X.X -> X$ is
+equivalent to $\forall X'. X' -> X$). In fact, $\alpha$-equivalence is
+a special case of the type scheme ordering rule,
+where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
+
+The type scheme ordering rule also enables instantiation of type variables
+in type schemes. For instance,
+$ \forall X_1\,X_2.X_1->X_2 \sqsubseteq
+  \forall X_2.\iota\to X_2 \sqsubseteq \iota\to\iota $.
+In such cases of $\sigma\sqsubseteq\sigma'$, we can call $\sigma'$ an instance,
+as well as generic instance, of $\sigma$. For example, $\iota\to\iota$ is
+an instance of $\forall X_2.\iota\to X_2$ and $\forall X_1\,X_2.X->X_2$, and,
+$\iota\to\iota$ and $\forall X_2.\iota\to X_2$ are instances of
+$\forall X_1\,X_2.X_1->X_2$.
+
+More generally, we say $\sigma'$ is a generic instance of $\sigma$
+when $\sigma \sqsubseteq \sigma'$, since the relation $\sqsubseteq$
+is more than $\alpha$-equivalence and initiation.
+The type scheme ordering rule allows quantising newly introduced
+variables in $\sigma'$, which do no appear free in $\sigma$.
+For example,
+consider the two generic instances of $\forall X.X -> X$ below:
+\begin{align*}
+\forall X.X -> X \sqsubseteq\;\,& (X'-> X')-> (X'-> X') \\
+\forall X.X -> X \sqsubseteq\;\,& \forall X'.(X'-> X')-> (X'-> X')
+\end{align*}
+The former, $(X'-> X')-> (X'-> X')$, is an instance of $\forall X.X -> X$
+instantiating $X$ to $(X'-> X')$. However, the latter,
+$\forall X'.(X'-> X')-> (X'-> X')$, is not an instance
+but a generic instance of $\forall X.X-> X$ because
+the newly introduced variable $X'$ is universally quantified.
+
+Readers who are not familiar with HM may wonder what is different between
+$(X'-> X')-> (X'-> X')$ and $\forall X'.(X'-> X')-> (X'-> X')$.
+The difference is that a higher order function of a monomorphic type
+$(X'-> X')-> (X'-> X')$ can only be applied to functions of the same type
+in one program, but a higher order function of a polymorphic type scheme
+$\forall X'.(X'-> X')-> (X'-> X')$ can be applied to functions of many
+different types in one program as long as their domain and range are the same.
+For example, consider a typing context $\Gamma$ such that\footnote{
+	For an intuitive explanation, we assume \texttt{int} and \texttt{string}
+	to be existing ground types although our formal definition of HM
+	in Figure \ref{fig:hm} only has the void type $\iota$ as
+	the ground type for simplicity.} \vspace*{-1em}\\ 
+\begin{minipage}{.3\linewidth}
+\begin{align*}
+\!\!\!\!\!\!\!\!\!\!
+\textit{square} : \;\quad~\texttt{int} -> \texttt{int} ~\quad\; \in \Gamma \\
+\!\!\!\!\!\!\!\!\!\!
+\textit{revstr} : \texttt{string} -> \texttt{string} \in \Gamma
+\end{align*}
+\end{minipage}
+\begin{minipage}{.4\linewidth}
+\begin{align*}
+\textit{Id}_{->}^{\,\textit{mon}} : \quad (X'-> X')-> (X'-> X') \quad \in \Gamma \\
+\textit{Id}_{->}^{\,\textit{poly}} : \forall X'.(X'-> X')-> (X'-> X') \in \Gamma
+\end{align*}
+\end{minipage} \vspace*{1em} \\
+Under the typing context $\Gamma$, It is possible to apply
+$\textit{Id}_{->}^{\,\textit{mon}}$,
+the monomorphic identity function over endofunctions,
+to each of \textit{square} and \textit{revstr} as below,
+as long as we do not try to apply $\textit{Id}_{->}^{\,\textit{mon}}$ to both
+of them in the same program.\footnote{A program is just a term, but it sounds
+like a more practical example.} For example,
+\[ \Gamma |-
+	(\textit{Id}_{->}^{\,\textit{mon}}\;\textit{square}) :
+	\texttt{int} -> \texttt{int}
+\]
+\[ \Gamma |-
+	(\textit{Id}_{->}^{\,\textit{mon}}\;\textit{revstr}) :
+	\texttt{string} -> \texttt{string}
+\]
+However, it is impossible to derive type of a program, which tries to
+apply an error when we try to apply $\textit{Id}_{->}^{\,\textit{mon}}$
+to both \textit{square} and \textit{revstr} in one program.
+\begin{align*}
+\Gamma |- \;
+& \dots (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{square}) \dots \\
+& \dots (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{revstr}) \dots
+~:~ \text{this is a type error}
+\end{align*}
+On the other hand, we can apply $\textit{Id}_{->}^{\,\textit{poly}}$,
+the polymorphic identity function over endofunctions, to both
+\textit{square} and \textit{revstr} even in one program.
+\[ \Gamma |-
+	(\textit{Id}_{->}^{\,\textit{poly}}\;\textit{square}) :
+	\texttt{int} -> \texttt{int}
+\]
+\[ \Gamma |-
+	(\textit{Id}_{->}^{\,\textit{poly}}\;\textit{revstr}) :
+	\texttt{string} -> \texttt{string}
+\]
+\begin{align*}
+\Gamma |-\;
+& \dots (\textit{Id}_{->}^{\,\textit{poly}}\;\textit{square}) \dots \\
+& \dots (\textit{Id}_{->}^{\,\textit{poly}}\;\textit{revstr}) \dots
+~:~ \text{this can be type correct}
+\end{align*}
+
+Two sets of typing rules are illustrated in Figure \ref{fig:hm}:
+declarative typing rules on the left and the syntax directed typing rules
+on the right.
+
+The first three rules \rulename{Var}, \rulename{Abs}, and \rulename{App}
+are standard.
+
+
+
+$\overline{\Gamma}(A)$ is a closure of type $A$ with respect to $\Gamma$.
+$\overline{\Gamma}(A)$ generalizes $A$ by all the free variables of $A$
+except the free variables in $\Gamma$. The free variables of $\Gamma$ is
+defined as: $\FV(\Gamma) = \bigcup_{x:\sigma\in \Gamma} \FV(\sigma)$.
+
+
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
 
 \begin{figure}
 \begin{singlespace}
