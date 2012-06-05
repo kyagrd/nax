@@ -44,20 +44,24 @@ $\!\!\!\!\!\!\!\!\!\!$
 &\textbf{Delcarative typing rules}&\quad
 &\textbf{Syntax-directed typing rules}
 	\\
+& \qquad\framebox{$\Gamma |- t : \sigma$}
+&
+&~\qquad\framebox{$\Gamma |-s t : A$}
+	\\
 & \inference[\sc Var]{x:\sigma \in \Gamma}{\Gamma |- x:\sigma} &
 & \inference[\sc Var$_s$]{x:\sigma \in \Gamma & \sigma \sqsubseteq A}
- 	                 {\Gamma |- x:A} \\
+ 	                 {\Gamma |-s x:A} \\
 & \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} &
-& \inference[\sc Abs$_s$]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} \\
+& \inference[\sc Abs$_s$]{\Gamma,x:A |-s t:B}{\Gamma |-s \l x   .t : A -> B} \\
 & \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}
 		     {\Gamma |- t~s : B} &
-& \inference[\sc App$_s$]{\Gamma |- t : A -> B & \Gamma |- s : A}
-		         {\Gamma |- t~s : B} \\
+& \inference[\sc App$_s$]{\Gamma |-s t : A -> B & \Gamma |-s s : A}
+		         {\Gamma |-s t~s : B} \\
 & \inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
 		     {\Gamma |- \<let> x=s \<in> t : B} &
 & \inference[\sc Let$_s$]
-            {\Gamma |- s : A & \Gamma,x:\overline{\Gamma}(A) |- t : B}
-	    {\Gamma |- \<let> x=s \<in> t : B} \\
+            {\Gamma |-s s : A & \Gamma,x:\overline{\Gamma}(A) |-s t : B}
+	    {\Gamma |-s \<let> x=s \<in> t : B} \\
 & \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
 		      {\Gamma |- t : \sigma'} &
 &\quad\qquad \begin{smallmatrix}\overline{\Gamma}(A)=\forall\vec{X}.A&
@@ -209,32 +213,152 @@ Two sets of typing rules are illustrated in Figure \ref{fig:hm}:
 declarative typing rules on the left and the syntax directed typing rules
 on the right.
 
-The first three rules \rulename{Var}, \rulename{Abs}, and \rulename{App}
-are standard.
+The declarative typing rules deduce a type scheme for a given term under
+a typing context ($\Gamma |- t : \sigma$). The type scheme ($\sigma$)
+deduced for the given term ($t$) under the typing ($\Gamma$) may not
+be unique. For example,
+\begin{align*}
+	&\cdot |- \l x.x: \iota -> \iota \\
+	&\cdot |- \l x.x: X -> X \\
+	&\cdot |- \l x.x: (X -> X) -> (X -> X) \\
+	&\cdot |- \l x.x: \forall X.X -> X \\
+	&\cdot |- \l x.x: \forall X.(X -> X) -> (X -> X) \\
+	&\cdot |- \l x.x: \forall X_1 X_2.(X_1 -> X_2) -> (X_1 -> X_2) \\
+	&\quad \vdots
+\end{align*}
+This is expected since terms of HM are Curry style. Recall that
+the uniqueness of typing property do not hold for lambda calculi
+with Church-style terms. The first three rules \rulename{Var}, \rulename{Abs},
+and \rulename{App} are fairly standard. The \rulename{Var} rule deduces
+the type scheme of a variable according to the type scheme binding
+of the variable in the typing context. The type schemes deduced by
+the rules \rulename{Abs} and \rulename{App} are restricted to the form
+of types\footnote{Recall type types are subset of type schemes.}
+since the domain and range of functions types are restricted to types.
+The \rulename{Let} rule enables polymorphic type schemes to be introduced
+into the typing context. The \rulename{Inst} rule deduces a generic instance
+($\sigma'$) of any deducible type scheme ($\sigma$). The \rulename{Inst} rule
+is essential when variables with polymorphic type schemes appear in
+the rules \rulename{Abs} and \rulename{App} rules. For instance,
+when $t$ is a variable with polymorphic type scheme binding in $\Gamma$,
+we need to instantiate the type scheme into a type since \rulename{Abs}
+and \rulename{App} is restricted to deduce types. A typical usage of
+the \rulename{Inst} rule is illustrated below:
+\[
+\inference[\sc Abs]
+  {\inference[Inst]
+	{\inference[Var]
+		{x':\forall X'.X' -> X' \in x':\forall X'.X' -> X',x:X}
+		{x':\forall X'.X' -> X',x:X|- x':\forall X'.X'-> X'}
+	}
+  	{x':\forall X'.X' -> X',x:X |- x':X' -> X'}}
+  {x':\forall X'.X' -> X' |- \l x.x' : X -> (X' -> X')}
+\]
+The \rulename{Gen} rule deduces a generalization (\ie,
+polymorphic quantification) of a deducible type scheme, as long as
+the quantified variable does not appear free in the typing context.
+The \rulename{Gen} is essential for the \rulename{Let} rule to be useful.
+For instance, consider that $s$ is a function that may be polymorphic,
+such as the identity function $\l x'.x'$. Recall that the \rulename{Abs} can
+only deduce a type without any universal quantification, such as $X -> X$.
+Here, we can use the \rulename{Gen} rule to generalize $X -> X$ to
+$\forall X.X -> X$, provided that $X$ does not appear free in
+the typing context, in order to make $\sigma$ appearing in
+the \rulename{Let} rule a polymorphic type scheme, as below:
+\[
+\inference[\sc Let]
+  { \inference[\sc Gen]
+	  {\inference[\sc Abs]{\vdots}{\Gamma|- \l x'.x' : X -> X}}
+	  {\Gamma|- \l x'.x':\forall X.X-> X}
+  & \Gamma,x:\forall X.X-> X |- t : B}
+  {\Gamma |- \<let> x = \l x'.x' \<in> t : B}
+\]
 
+The syntax directed typing rules deduce a type, rather than a type scheme,
+for a given term under a typing context ($\Gamma |- t : A$). These rules
+are syntax directed since there is only one rule to apply for each syntactic
+cateogry of terms. Therefore, the typing is unique (up to change of
+type variables) for the given term and the typing context. For example,
+$\l x.x$ has a unique typing with respect to the syntax directed typing rules,
+as below: \[ \cdot |- \l x.x: X -> X \]
+The syntax directed typing rules are based on the observation
+that the \rulename{Inst} and \rulename{Gen} in the delcarting typing rules
+are only necessary at the \rulename{Var} and \rulename{Let} rules, respectively.
+That is, we only need to apply the \rulename{Inst} rule to the conclusion of
+the \rulename{Var} rule, and, we only need to apply the \rulename{Gen} rule to
+the first premise ($\Gamma |- s:\sigma$) of the \rulename{Let} rule.
+The \rulename{Var$_s$} rule can be understood as a merge of
+\rulename{Var} and \rulename{Inst} in one rule.
+The \rulename{Abs$_s$} rule and the \rulename{App$_s$} rule remains the same as
+their counterparts in the declarative typing rules.
+The \rulename{Let$_s$} rule can be understood as a merge of
+\rulename{Let} and \rulename{Gen} in one rule.
+The notation $\overline{\Gamma}(A)$ appearing in the \rulename{Let$_s$} is
+a closure of type $A$ with respect to $\Gamma$. That is, $\overline{\Gamma}(A)$
+generalizes $A$ all the free type variables of $A$ except the free variables of
+$\Gamma$. The free type variables of $\Gamma$ is defined as:
+$\FV(\Gamma) = \bigcup_{x:\sigma\in \Gamma} \FV(\sigma)$.
 
+Syntax directed typing rules are sound (Theorem \ref{thm:sdHMsound})
+and complete (Corollary \ref{cor:sdHMcomplete} with respect to
+the declarative typing rules.
+\begin{theorem}[$|-s$ is sound with respect to $|-$]
+$ \inference{\Gamma |-s t : A}{\Gamma |- t : A} $
+\label{thm:sdHMsound}
+\end{theorem}
+\begin{proof}
+We will just give an key idea for the proof
+since the soundness is rather obvious.
+All we need to do is transform any given derivation for $|-s$
+into a derivation for $|-$, which is straightforward.
 
-$\overline{\Gamma}(A)$ is a closure of type $A$ with respect to $\Gamma$.
-$\overline{\Gamma}(A)$ generalizes $A$ by all the free variables of $A$
-except the free variables in $\Gamma$. The free variables of $\Gamma$ is
-defined as: $\FV(\Gamma) = \bigcup_{x:\sigma\in \Gamma} \FV(\sigma)$.
+Recall that the \rulename{Var$_s$} rule can be understood as a merge of
+\rulename{Var} and \rulename{Inst}. Thus, we can transform any derivation
+step using \rulename{Var$_s$} rule into two steps of derivation using
+the \rulename{Var} rule, and then applying the \rulename{Inst} rule
+to the conclusion of the \rulename{Var} rule.
 
+The \rulename{Abs$_s$} rule and the \rulename{App$_s$} rules are mapped
+to the \rulename{Abs} rule and the \rulename{App} rule, respectively.
 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
-TODO \\ 
+Recall that the \rulename{Let$_s$} rule can be understood as a merge of
+\rulename{Let} and \rulename{Gen}. We can transform any derivation step
+using the \rulename{Let$_s$} rule into a series of \rulename{Gen} rules
+applied to the first premise of the \rulename{Let} rule, and then applying
+the \rulename{Let} rule. Since the definition of the closure
+$\overline{\Gamma}(A)$ appearing in the \rulename{Let$_s$} rule
+generalizes only the free type variables of $A$, which do not
+appear free in $\Gamma$, the condition $X\notin\FV(\Gamma)$ appearing
+in the \rulename{Gen} rule holds.
+\end{proof}
+
+\begin{theorem}[$|-s$ deduces a most general type]
+$ \inference
+	{\Gamma |- t : \sigma}
+	{\Gamma |-s t : A ~\land~ \overline{\Gamma}(A)\sqsubseteq\sigma} $
+\end{theorem}
+\begin{proof}
+TODO
+\end{proof}
+
+\begin{corollary}[$|-s$ is complete with respect to $|-$]
+$ \inference{\Gamma |- t : \sigma}{\Gamma |-s t : A} $
+\label{cor:sdHMcomplete}
+\end{corollary}
+
+The syntax directed rule and the algorithm $W$ is sound and complete
+with respect to the syntax directed typing rules.
+
+TODO\\
+TODO\\
+TODO\\
+TODO\\
+TODO\\
+TODO\\
+TODO\\
+TODO\\
+TODO\\
+TODO\\
 
 \begin{figure}
 \begin{singlespace}
