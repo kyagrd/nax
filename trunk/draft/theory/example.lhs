@@ -57,6 +57,7 @@ data Maybe : * -> * where
 \end{minipage}
 \end{tabular}
 \vspace*{0.1in}
+
 Note the kind information (|Bool: *|) declares |Bool| to be a type,
 (|Either: * -> * -> *|) declares |Either| to be a type constructor
 with two type arguments, and (|Maybe: * -> *|) declares |Maybe| to be
@@ -67,6 +68,7 @@ that uses a parameter where the usual recursive components occur. By design,
 normal parameters of the introduced type are written first (|a| in |L| below)
 and the type argument to stand for the recursive component is written last
 (the |r| of |N|, and the |r| of |L| below).
+
 \vspace*{0.1in}\noindent
 \begin{tabular}{l||l}
 \begin{minipage}[t]{.40\linewidth}
@@ -148,7 +150,7 @@ cons x xs  = In[*] (Cons x xs)
 
 This is such a common occurrence that recursive synonyms and
 recursive constructor functions can be automatically derived.
-With automatic synonym and constructor derivation using Nax is
+Automatic synonym and constructor derivation using Nax is
 both concise and simple. The clause ``|deriving fixpoint List|" (below right)
 causes the |synonym| for |List| to be automatically defined.
 It also defines the constructor functions |nil| and |cons|.  By convention,
@@ -253,13 +255,15 @@ implementation we provide 5 Mendler style combinators:
  |McvIt| (courses of values iteration), and
  |McvPr| (courses of values primitive recursion), and
  |MsfIt| (fold or catamorphism or iteration for recursive types with negative occurrences).
-A Mendler-style combinator appears similar to a case expression.
-It contains patterns, and the variables in the patterns are scoped over a term,
-that is executed if that pattern matches. It differs from a case expression
+
+A Mendler-style combinator is written in a manner similar to a case expression.
+A Mendler-style combinator expression contains patterns, and the variables bound in the patterns
+are scoped over a term. This term is executed if the pattern matches. 
+A mendler-style combinator expression differs from a case expression
 in that it also introduces additional names (or variables) into scope.
 These variables play a role similar in nature to the operations of
-an abstract datatype, and provide additional functionality over what can be
-done using just case analysis.
+an abstract datatype, and provide additional functionality in addition to what can be
+expressed using just case analysis.
 
 For a visual example, compare the |case| expression to the |MIt| expression.
 In the |case|, each {\em clause} following the |of| indicates a possible match
@@ -545,8 +549,10 @@ within abstraction have to be generalized to deal with the type indices in
 a consistent manner. How this is done is best first explained by example, and
 then later abstracted to its full general form.
 
-Recall, a value of type (|PowerTree Int|) is a nested, parenthesized \KYA{what does parenthesized mean?}, set
-of integers, where the number of integers is an exact power of 2. Consider
+Recall, a value of type (|PowerTree Int|) is a set of integers. This
+set is constructed as a balanced binary tree with pairs at the leaves
+(see {\it tree2} and {\it tree3} above).
+The number of integers in the set is an exact power of 2. Consider
 a function that adds up all those integers. One wants a function of type
 (|PowerTree Int -> Int|). One strategy to writing this function is to write
 a more general function of type (|PowerTree a -> (a -> Int) -> Int|). In Nax,

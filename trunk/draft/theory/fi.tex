@@ -281,11 +281,13 @@ A type level context $\Delta$ is well-formed when it is either empty,
 extended by a type variable binding $X^\kappa$ whose kind $\kappa$ is
 well-sorted under $\Delta$, or extended by an index binding $i^A$
 whose type $A$ is well-kinded under the empty type level context.
-Similarly to the well-sorted rule ($Ri$) for indexed arrow kinds,
+A similar restriction occurs in the sorting rule ($Ri$), for indexed arrow kinds,
 we require $A$ of $i^A$ to be well-kinded in the empty type level context
-($\cdot$), since no bindings are introduced at kind level in \Fi.
+($\cdot$), since no bindings are introduced at kind level in \Fi. The consequence of
+this is that, in typing contexts and in sorts, $A$ must be type constructor with no
+type variables.
 
-A term level context $\Gamma$ is well-formed under a type level contexts
+A term level context $\Gamma$ is well-formed under a type level context
 $\Delta$ when it is either empty or extended by a term variable binding
 $x:A$ whose type $A$ is well-kinded under $\Delta$.
 
