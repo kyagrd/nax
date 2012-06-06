@@ -11,7 +11,15 @@ for the Milner's polymorphic lambda calculus \cite{Milner78,DamMil82,Damas85}
 is also known as the Hindley-Milner type system (HM),
 Damas-Hindley-Milner type system (DHM), or let-polymorphism.
 
-The Hindley-Milner type system (HM) is illustrated in Figure \ref{fig:hm}.
+The syntax and typing rules of the Hindley-Milner type system (HM) are
+illustrated in Figure \ref{fig:hm}. The details of the sindax is described
+in \S\ref{sec:hm:syntax}. There are two sets of typing rules.
+The declarative typing rules (\S\ref{sec:hm:dectyrule}) are suited for
+reasoning about the soundness of typing.
+The syntax directed typing rules (\S\ref{sec:hm:dectyrule}) are suited
+for reasoning about the properties of the type inference algorithm $W$
+(\S\ref{sec:hm:W}).
+
 \begin{figure}
 \begin{singlespace}
 \small
@@ -76,8 +84,7 @@ $\!\!\!\!\!\!\!\!\!\!$
 \label{fig:hm}
 \end{figure}
 
-
-
+\subsection{Syntax}\label{sec:hm:syntax}
 Terms include the usual Curry-style terms ($x$, $\l x.t$, and $t\;s$)
 and the let-terms ($\<let> x=s \<in> t$). A let term $\<let> x=s \<in> t$
 may be considered as a syntactic sugar for $(\l x.t)\,s$
@@ -209,10 +216,7 @@ the polymorphic identity function over endofunctions, to both
 ~:~ \text{this can be type correct}
 \end{align*}
 
-Two sets of typing rules are illustrated in Figure \ref{fig:hm}:
-declarative typing rules on the left and the syntax directed typing rules
-on the right.
-
+\subsection{Declarative typing rules}\label{sec:hm:dectyrule}
 The declarative typing rules deduce a type scheme for a given term under
 a typing context ($\Gamma |- t : \sigma$). The type scheme ($\sigma$)
 deduced for the given term ($t$) under the typing ($\Gamma$) may not
@@ -274,6 +278,10 @@ the \rulename{Let} rule a polymorphic type scheme, as below:
   {\Gamma |- \<let> x = \l x'.x' \<in> t : B}
 \]
 
+The soundness of typing is obvious once we observe that HM is a restriction
+of System \F. TODO
+
+\subsection{Syntax directed typing rules}\label{sec:hm:syntyrule}
 The syntax directed typing rules deduce a type, rather than a type scheme,
 for a given term under a typing context ($\Gamma |- t : A$). These rules
 are syntax directed since there is only one rule to apply for each syntactic
@@ -331,7 +339,8 @@ generalizes only the free type variables of $A$, which do not
 appear free in $\Gamma$, the condition $X\notin\FV(\Gamma)$ appearing
 in the \rulename{Gen} rule holds.
 \end{proof}
-
+The completenes of $|-s$ can be shown by proving a stronger theorem
+that $|-s$ deduces a most general type.
 \begin{theorem}[$|-s$ deduces a most general type]
 $ \inference
 	{\Gamma |- t : \sigma}
@@ -346,7 +355,8 @@ $ \inference{\Gamma |- t : \sigma}{\Gamma |-s t : A} $
 \label{cor:sdHMcomplete}
 \end{corollary}
 
-The syntax directed rule and the algorithm $W$ is sound and complete
+\subsection{The type inference algorithm $W$}\label{sec:hm:W}
+The type inference algorithm $W$ is sound and complete
 with respect to the syntax directed typing rules.
 
 TODO\\
@@ -359,6 +369,8 @@ TODO\\
 TODO\\
 TODO\\
 TODO\\
+
+TODO
 
 \begin{figure}
 \begin{singlespace}
