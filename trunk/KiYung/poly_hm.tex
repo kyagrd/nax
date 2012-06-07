@@ -21,7 +21,7 @@ for reasoning about the properties of the type inference algorithm $W$
 (\S\ref{sec:hm:W}).
 
 \begin{figure}
-\begin{singlespace}
+\begin{singlespace}\small
 \small
 \begin{align*}
 &\textbf{Term}&
@@ -43,8 +43,8 @@ A,B&~::= ~ A -> B
 \Gamma&~::= ~ \cdot 
        ~  | ~ \Gamma, x:\sigma \quad (x\notin \dom(\Gamma))
 \end{align*}
-\[ \textbf{Type scheme ordering} \quad \framebox{$\sigma \sqsubseteq \sigma'$}\]
-\[ \inference{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
+\[ \textbf{Type scheme ordering (or, generic instantiation)} \quad \framebox{$\sigma \sqsubseteq \sigma'$}\]
+\[ \qquad \inference{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
              {\forall X_1\dots X_n.A \;\sqsubseteq\;
 	      \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} \]
 $\!\!\!\!\!\!\!\!\!\!$
@@ -76,8 +76,8 @@ $\!\!\!\!\!\!\!\!\!\!$
 			 ~\text{where}~\vec{X}=\FV(A)\setminus\FV(\Gamma)
 		 \end{smallmatrix}
 		 \\
-& \inference[\sc Gen]{\Gamma |- s : \sigma & X \notin\FV(\Gamma)}
-		     {\Gamma |- t : \forall X.\sigma}
+& \inference[\sc Gen]{\Gamma |- t : \sigma}
+		     {\Gamma |- t : \forall X.\sigma} ~ (X \notin\FV(\Gamma))
 \end{align*}
 \end{singlespace}
 \caption{Milner's polymorphic lambda calculus}
@@ -279,18 +279,82 @@ the \rulename{Let} rule a polymorphic type scheme, as below:
 \]
 
 The soundness of typing is obvious once we observe that HM is a restriction
-of System \F. TODO
+of the Curry-style System \F (\ie, if $\Gamma |- t : \sigma$ in HM, then
+$\Delta;\Gamma |- t : \sigma$ in System \F). The terms in HM are exactly
+the same as the terms in the Curry-style System \F, considering the let-term
+as a syntactic sugar. Types and type schemes in HM are restrictions of types
+in System \F. The declarative typing rules are also a restriction of
+the typing rules in System \F. The rules \rulename{Var}, \rulename{Abs},
+\rulename{App}, and \rulename{Gen} in HM are virtually same as
+their counterparts in Systerm \F, which are the rules \rulename{Var},
+\rulename{Abs}, \rulename{App}, and \rulename{TyAbs}, respectively.
+Thus, all we need to make sure is that the \rulename{Let} rule and
+the \rulename{Inst} rule in HM are admissible in System \F.
+A derivation step of \rulename{Let} in HM can be translated into two steps of
+derivation involving the \rulename{App} and \rulename{Abs} rules in System \F,
+considering the let-term as a syntactic sugar, as below:
+\[\inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
+		     {\Gamma |- \<let> x=s \<in> t : B} 
+\]
+\[\inference[\sc App]
+	{ \inference[\sc Abs]
+		{ \Delta |- \sigma
+		& \Delta;\Gamma,x:\sigma |- t : B}
+		{\Delta;\Gamma |- \l x.t : A -> B}
+	& \Delta\Gamma |- s : \sigma }
+	{\Delta;\Gamma |- (\l x.t)\;s}
+\]
+A derivation step of \rulename{Inst} in HM can be translated into multiple
+stpes involving the \rulename{TyAbs} and \rulename{TyApp} rules in System \F,
+as below:
+{\small
+\begin{multline*}
+  \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
+		      {\Gamma |- t : \sigma'}
+	\quad\text{where}~
+	\begin{array}{rl}
+		\sigma =& \forall X_1\dots X_n.A ~~~~~~~~~~~~~~~~~~~~~~ \\
+	       \sigma' =& \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]
+	\end{array}
+ \\ \text{such that}~
+   \inference{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
+             {\forall X_1\dots X_n.A \;\sqsubseteq\;
+	      \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
+\end{multline*}
+
+\begin{align*}
+& \inference[\sc TyApp]
+	{\Delta;\Gamma |- t : A & \Delta |- A}
+	{\Delta;\Gamma |- t : A[B_1/X_1] ~~\,} \\
+& \inference[\sc TyApp]
+	{ \quad \vdots \qquad\qquad\qquad\qquad\qquad
+	& \Delta |- A[B_1/X_1]\cdots[B_{n-1}/X_{n-1}]
+	}
+	{ \Delta;\Gamma |- t : A[B_1/X_1]\cdots[B_n/X_n] \qquad \qquad
+	 \qquad\qquad\qquad\qquad\qquad
+ 	} \\
+& \inference[\sc TyAbs]
+	{}
+	{\Delta;\Gamma |- t : \forall X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
+	(X_m'\notin\FV(A[B_1/X_1]\cdots[B_n/X_n])) \\
+& \qquad\qquad\qquad\qquad\qquad \vdots \\
+& \inference[\sc TyAbs]
+	{\Delta;\Gamma |- t : \forall X_2'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
+	{\Delta;\Gamma |- t : \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
+	(X_1'\notin\FV\left(\begin{smallmatrix}\forall X_2'\dots X_m'.\\A[B_1/X_1]\cdots[B_n/X_n]\end{smallmatrix}\right)) \\
+\end{align*}
+} %% end \small
 
 \subsection{Syntax directed typing rules}\label{sec:hm:syntyrule}
 The syntax directed typing rules deduce a type, rather than a type scheme,
 for a given term under a typing context ($\Gamma |- t : A$). These rules
 are syntax directed since there is only one rule to apply for each syntactic
-cateogry of terms. Therefore, the typing is unique (up to change of
+category of terms. Therefore, the typing is unique (up to change of
 type variables) for the given term and the typing context. For example,
 $\l x.x$ has a unique typing with respect to the syntax directed typing rules,
 as below: \[ \cdot |- \l x.x: X -> X \]
 The syntax directed typing rules are based on the observation
-that the \rulename{Inst} and \rulename{Gen} in the delcarting typing rules
+that the \rulename{Inst} and \rulename{Gen} in the declarative typing rules
 are only necessary at the \rulename{Var} and \rulename{Let} rules, respectively.
 That is, we only need to apply the \rulename{Inst} rule to the conclusion of
 the \rulename{Var} rule, and, we only need to apply the \rulename{Gen} rule to
@@ -339,7 +403,7 @@ generalizes only the free type variables of $A$, which do not
 appear free in $\Gamma$, the condition $X\notin\FV(\Gamma)$ appearing
 in the \rulename{Gen} rule holds.
 \end{proof}
-The completenes of $|-s$ can be shown by proving a stronger theorem
+The completeness of $|-s$ can be shown by proving a stronger theorem
 that $|-s$ deduces a most general type.
 \begin{theorem}[$|-s$ deduces a most general type]
 $ \inference
