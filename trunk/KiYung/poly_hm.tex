@@ -1,22 +1,25 @@
 \section{The Hindley-Milner type system} \label{sec:hm}
 
 \citet{Hindley69} discovered that there exists a unique principal type scheme
-for an object in a combinatory logic. \citet{Milner78} rediscovered this
+for every object in a combinatory logic. \citet{Milner78} rediscovered this
 in the setting of a polymorphic lambda calculus, while he was devising
 an algorithm, called the algorithm $W$, which infers a most general
 type scheme (\aka\ principal type scheme) for a Curry-style term.
 \citet{Damas85} developed detailed theories on Milner's polymorphic
 lambda calculus and the type inference algorithm $W$. The type system
-for the Milner's polymorphic lambda calculus \cite{Milner78,DamMil82,Damas85}
+for Milner's polymorphic lambda calculus \cite{Milner78,DamMil82,Damas85}
 is also known as the Hindley-Milner type system (HM),
-Damas-Hindley-Milner type system (DHM), or let-polymorphism.
+the Damas-Hindley-Milner type system (DHM), or let-polymorphism.
 
-The syntax and typing rules of the Hindley-Milner type system (HM) are
-illustrated in Figure \ref{fig:hm}. The details of the sindax is described
-in \S\ref{sec:hm:syntax}. There are two sets of typing rules.
+The syntax of Milner's polymorphic lambda calculus and its the typing rules
+are illustrated in Figure \ref{fig:hm}, and the type inference algorithm $W$
+is illustrated in Figure \ref{fig:algW}. We describe the syntax in
+\S\ref{sec:hm:syntax}, the typing rules in \S\ref{sec:hm:dectyrule} and
+\S\ref{sec:hm:syntyrule}, and the type inference algorithm in \S\ref{sec:hm:W}.
+Note, that there are two sets of typing rules.
 The declarative typing rules (\S\ref{sec:hm:dectyrule}) are suited for
 reasoning about the soundness of typing.
-The syntax directed typing rules (\S\ref{sec:hm:dectyrule}) are suited
+The syntax directed typing rules (\S\ref{sec:hm:syntyrule}) are suited
 for reasoning about the properties of the type inference algorithm $W$
 (\S\ref{sec:hm:W}).
 
@@ -30,12 +33,12 @@ t,s&~::= ~ x
     ~  | ~ t ~ s       
     ~  | ~ \<let> x=s \<in> t
 \\
-&\textbf{Type}&
+&\textbf{Type (or, monotype)}&
 A,B&~::= ~ A -> B
     ~  | ~ \iota
     ~  | ~ X
 \\
-&\textbf{Type scheme}&
+&\textbf{Type scheme (or, polytype)}&
 \sigma&~::= ~ \forall X.\sigma
        ~  | ~ A
 \\
@@ -85,24 +88,27 @@ $\!\!\!\!\!\!\!\!\!\!$
 \end{figure}
 
 \subsection{Syntax}\label{sec:hm:syntax}
-Terms include the usual Curry-style terms ($x$, $\l x.t$, and $t\;s$)
-and the let-terms ($\<let> x=s \<in> t$). A let term $\<let> x=s \<in> t$
-may be considered as a syntactic sugar for $(\l x.t)\,s$
-while reduction.\footnote{The reduction rules for the terms are exactly
-	the same as the reduction rules for Curry-style terms
-	in the previous sections, treating the let-term as a syntactic sugar.}
-However, let-terms does make a significance in the typing rules
-since a let-term can introduce polymorphic type schemes to the typing context
-(\rulename{Let}). We will discuss further details on the typing of let-term
-later on, when we explain the typing rules.
+The syntax of terms include the usual Curry-style terms
+($x$, $\l x.t$, and $t\;s$) and let-terms ($\<let> x=s \<in> t$).
+A let term, $\<let> x=s \<in> t$, is semantically equivalent to
+$(\l x.t)\,s$. That is, $\<let> x=s \<in> t$ is a syntactic sugar
+for $(\l x.t)\,s$ in terms of reduction\footnote{The reduction rules for
+	for the terms of HM are exactly the same as the reduction rules for
+	Curry-style terms in the previous sections, once we desugar
+	all the let terms.}
+However, let-terms are significant in the typing rules, since a let-term can
+introduce a polymorphic type scheme into the typing context. We will discuss
+further details of typing let-terms (the \rulename{Let} rule) later on, when
+we explain the typing rules.
 
-Types (or, monotypes) include the types of the STLC ($A -> B$ and $\iota$)
-and type variables ($X$). Type schemes (or, polytypes) are like
-the (polymorphic) types of System \F, but universal quantifications
-are restricted to top level. Type schemes are either universal quantifications
-over type schemes or types. Note, it is only possible to quantify
-over type schemes but not types. Typing contexts ($\Gamma$) keep track of
-each bound variable and its type scheme ($x:\sigma$).
+The syntax of types (or, monotypes) include all the types in the STLC
+($A -> B$ and $\iota$) and type variables ($X$).
+The syntax of type schemes (or, polytypes) are similar to
+the polymorphic types of System \F, but universal quantification must appear
+only at the top level. Type schemes are either universal quantifications over
+other type schemes ($\forall X.\sigma$) or (mono)types ($A$).
+Typing contexts ($\Gamma$) keep track of each term variable and
+its associated type scheme ($x:\sigma$).
 
 The ordering between two type schemes $\sigma \sqsubseteq \sigma'$,
 defined in Figure \ref{fig:hm}, means that $\sigma$ is more general
@@ -114,30 +120,31 @@ $\forall X_1\dots X_n.A$ stands for consecutive universal quantification
 of $n$ variables. For instance, $\forall X_1\,X_2\,X_3.A$
 is a shorthand for $\forall X_1.\forall X_2.\forall X_3.A$.
 
-The two type schemes $\sigma$ and $\sigma'$ are equivalent
-(\ie, $\sigma \sqsubseteq \sigma'$ and $\sigma' \sqsubseteq \sigma$)
-when they are $\alpha$-equivalent (\eg, $\forall X.X -> X$ is
-equivalent to $\forall X'. X' -> X$). In fact, $\alpha$-equivalence is
-a special case of the type scheme ordering rule,
+Two type schemes $\sigma$ and $\sigma'$ are equivalent
+when $\sigma \sqsubseteq \sigma'$ and $\sigma' \sqsubseteq \sigma$.
+This coincides with $\alpha$-equivalence (\eg, $\forall X.X -> X$ is
+equivalent to $\forall X'. X' -> X$). In fact, we can derive
+$\alpha$-equivalence as a special case of the type scheme ordering rule,
 where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
 
-The type scheme ordering rule also enables instantiation of type variables
-in type schemes. For instance,
-$ \forall X_1\,X_2.X_1->X_2 \sqsubseteq
-  \forall X_2.\iota\to X_2 \sqsubseteq \iota\to\iota $.
+The usual \empty{instantiation} (\ie, substitution of quantified variables
+with types) falls under the type scheme ordering rule. For instance,
+$ (\forall X_1\,X_2.X_1 -> X_2) \sqsubseteq
+  (\forall X_2.\iota -> X_2) \sqsubseteq (\iota -> \iota) $.
+Here, we instantiate $X_1$ with $\iota$,
+and then, instantiate $X_2$ with $\iota$.
 In such cases of $\sigma\sqsubseteq\sigma'$, we can call $\sigma'$ an instance,
 as well as generic instance, of $\sigma$. For example, $\iota\to\iota$ is
 an instance of $\forall X_2.\iota\to X_2$ and $\forall X_1\,X_2.X->X_2$, and,
 $\iota\to\iota$ and $\forall X_2.\iota\to X_2$ are instances of
 $\forall X_1\,X_2.X_1->X_2$.
 
-More generally, we say $\sigma'$ is a generic instance of $\sigma$
+More generally, we say that $\sigma'$ is a \empty{generic instance} of $\sigma$
 when $\sigma \sqsubseteq \sigma'$, since the relation $\sqsubseteq$
-is more than $\alpha$-equivalence and initiation.
-The type scheme ordering rule allows quantising newly introduced
-variables in $\sigma'$, which do no appear free in $\sigma$.
-For example,
-consider the two generic instances of $\forall X.X -> X$ below:
+is more than $\alpha$-equivalence and instantiation.
+The type scheme ordering rule allows quantifying newly introduced
+variables in $\sigma'$, which do not appear free in $\sigma$.
+For example, consider the two generic instances of $\forall X.X -> X$ below:
 \begin{align*}
 \forall X.X -> X \sqsubseteq\;\,& (X'-> X')-> (X'-> X') \\
 \forall X.X -> X \sqsubseteq\;\,& \forall X'.(X'-> X')-> (X'-> X')
@@ -148,13 +155,13 @@ $\forall X'.(X'-> X')-> (X'-> X')$, is not an instance
 but a generic instance of $\forall X.X-> X$ because
 the newly introduced variable $X'$ is universally quantified.
 
-Readers who are not familiar with HM may wonder what is different between
-$(X'-> X')-> (X'-> X')$ and $\forall X'.(X'-> X')-> (X'-> X')$.
-The difference is that a higher order function of a monomorphic type
-$(X'-> X')-> (X'-> X')$ can only be applied to functions of the same type
-in one program, but a higher order function of a polymorphic type scheme
-$\forall X'.(X'-> X')-> (X'-> X')$ can be applied to functions of many
-different types in one program as long as their domain and range are the same.
+There is a difference between the (mono)type $(X'-> X')-> (X'-> X')$,
+where $X'$ is free, and the type scheme $\forall X'.(X'-> X')-> (X'-> X')$,
+where $X'$ is universally quantified.
+A function of the monomorphic type $(X'-> X')-> (X'-> X')$
+can only be applied to functions of the same type in one program, but
+a function of the polymorphic type scheme $\forall X'.(X'-> X')-> (X'-> X')$
+can be applied to functions of many different types in one program.
 For example, consider a typing context $\Gamma$ such that\footnote{
 	For an intuitive explanation, we assume \texttt{int} and \texttt{string}
 	to be existing ground types although our formal definition of HM
@@ -174,10 +181,11 @@ For example, consider a typing context $\Gamma$ such that\footnote{
 \textit{Id}_{->}^{\,\textit{poly}} : \forall X'.(X'-> X')-> (X'-> X') \in \Gamma
 \end{align*}
 \end{minipage} \vspace*{1em} \\
-Under the typing context $\Gamma$, It is possible to apply
-$\textit{Id}_{->}^{\,\textit{mon}}$,
+In other words, four function names with the types assigned as above
+are available in the context. Under this typing context $\Gamma$,
+it is possible to apply $\textit{Id}_{->}^{\,\textit{mon}}$,
 the monomorphic identity function over endofunctions,
-to each of \textit{square} and \textit{revstr} as below,
+to both \textit{square} and \textit{revstr} as below,
 as long as we do not try to apply $\textit{Id}_{->}^{\,\textit{mon}}$ to both
 of them in the same program.\footnote{A program is just a term, but it sounds
 like a more practical example.} For example,
@@ -189,9 +197,10 @@ like a more practical example.} For example,
 	(\textit{Id}_{->}^{\,\textit{mon}}\;\textit{revstr}) :
 	\texttt{string} -> \texttt{string}
 \]
-However, it is impossible to derive type of a program, which tries to
-apply an error when we try to apply $\textit{Id}_{->}^{\,\textit{mon}}$
-to both \textit{square} and \textit{revstr} in one program.
+However, it is impossible to derive a type for a program, which which applies
+$\textit{Id}_{->}^{\,\textit{mon}}$ to both \textit{square} and \textit{revstr} 
+in one program, since there is no solution for inconsistent equations
+$X'=\mathtt{int}$ and $X'=\mathtt{string}$.
 \begin{align*}
 \Gamma |- \;
 & \dots (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{square}) \dots \\
@@ -200,7 +209,9 @@ to both \textit{square} and \textit{revstr} in one program.
 \end{align*}
 On the other hand, we can apply $\textit{Id}_{->}^{\,\textit{poly}}$,
 the polymorphic identity function over endofunctions, to both
-\textit{square} and \textit{revstr} even in one program.
+\textit{square} and \textit{revstr} even in one program, since
+the universally quantified type variable $X'$ can be instantiated
+to many different types including \texttt{int} and \texttt{string}.
 \[ \Gamma |-
 	(\textit{Id}_{->}^{\,\textit{poly}}\;\textit{square}) :
 	\texttt{int} -> \texttt{int}
@@ -219,7 +230,7 @@ the polymorphic identity function over endofunctions, to both
 \subsection{Declarative typing rules}\label{sec:hm:dectyrule}
 The declarative typing rules deduce a type scheme for a given term under
 a typing context ($\Gamma |- t : \sigma$). The type scheme ($\sigma$)
-deduced for the given term ($t$) under the typing ($\Gamma$) may not
+deduced for the given term ($t$) under the typing context ($\Gamma$) may not
 be unique. For example,
 \begin{align*}
 	&\cdot |- \l x.x: \iota -> \iota \\
@@ -231,20 +242,20 @@ be unique. For example,
 	&\quad \vdots
 \end{align*}
 This is expected since terms of HM are Curry style. Recall that
-the uniqueness of typing property do not hold for lambda calculi
-with Church-style terms. The first three rules \rulename{Var}, \rulename{Abs},
+the uniqueness of typing does not hold for lambda calculi with
+Curry-style terms. The first three rules \rulename{Var}, \rulename{Abs},
 and \rulename{App} are fairly standard. The \rulename{Var} rule deduces
 the type scheme of a variable according to the type scheme binding
 of the variable in the typing context. The type schemes deduced by
 the rules \rulename{Abs} and \rulename{App} are restricted to the form
-of types\footnote{Recall type types are subset of type schemes.}
-since the domain and range of functions types are restricted to types.
-The \rulename{Let} rule enables polymorphic type schemes to be introduced
-into the typing context. The \rulename{Inst} rule deduces a generic instance
-($\sigma'$) of any deducible type scheme ($\sigma$). The \rulename{Inst} rule
+of (mono)types\footnote{Recall that types are subset of type schemes.}
+since the domain and range of functions types are restricted to (mono)types.
+The \rulename{Let} rule can introduce polymorphic type schemes into
+the typing context. The \rulename{Inst} rule deduces a generic instance
+($\sigma'$) of any type scheme ($\sigma$). The \rulename{Inst} rule
 is essential when variables with polymorphic type schemes appear in
-the rules \rulename{Abs} and \rulename{App} rules. For instance,
-when $t$ is a variable with polymorphic type scheme binding in $\Gamma$,
+the rules \rulename{Abs} and \rulename{App}. For instance,
+when $t$ is a variable with a polymorphic type scheme in $\Gamma$,
 we need to instantiate the type scheme into a type since \rulename{Abs}
 and \rulename{App} is restricted to deduce types. A typical usage of
 the \rulename{Inst} rule is illustrated below:
@@ -259,7 +270,7 @@ the \rulename{Inst} rule is illustrated below:
   {x':\forall X'.X' -> X' |- \l x.x' : X -> (X' -> X')}
 \]
 The \rulename{Gen} rule deduces a generalization (\ie,
-polymorphic quantification) of a deducible type scheme, as long as
+universal quantification) of a type scheme, as long as
 the quantified variable does not appear free in the typing context.
 The \rulename{Gen} is essential for the \rulename{Let} rule to be useful.
 For instance, consider that $s$ is a function that may be polymorphic,
@@ -279,19 +290,20 @@ the \rulename{Let} rule a polymorphic type scheme, as below:
 \]
 
 The soundness of typing is obvious once we observe that HM is a restriction
-of the Curry-style System \F (\ie, if $\Gamma |- t : \sigma$ in HM, then
+of the Curry-style System \F\ (\ie, if $\Gamma |- t : \sigma$ in HM, then
 $\Delta;\Gamma |- t : \sigma$ in System \F). The terms in HM are exactly
-the same as the terms in the Curry-style System \F, considering the let-term
-as a syntactic sugar. Types and type schemes in HM are restrictions of types
-in System \F. The declarative typing rules are also a restriction of
+the same as the terms in the Curry-style System \F, if we consider the let-term
+as a syntactic sugar. Both types and type schemes in HM are restrictions of
+types in System \F. The declarative typing rules are also a restriction of
 the typing rules in System \F. The rules \rulename{Var}, \rulename{Abs},
 \rulename{App}, and \rulename{Gen} in HM are virtually same as
 their counterparts in Systerm \F, which are the rules \rulename{Var},
 \rulename{Abs}, \rulename{App}, and \rulename{TyAbs}, respectively.
 Thus, all we need to make sure is that the \rulename{Let} rule and
 the \rulename{Inst} rule in HM are admissible in System \F.
-A derivation step of \rulename{Let} in HM can be translated into two steps of
-derivation involving the \rulename{App} and \rulename{Abs} rules in System \F,
+A single derivation step of \rulename{Let} in HM corresponds to
+two derivation steps in System \F\
+involving the \rulename{App} and \rulename{Abs} rules,
 considering the let-term as a syntactic sugar, as below:
 \[\inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
 		     {\Gamma |- \<let> x=s \<in> t : B} 
@@ -304,9 +316,9 @@ considering the let-term as a syntactic sugar, as below:
 	& \Delta\Gamma |- s : \sigma }
 	{\Delta;\Gamma |- (\l x.t)\;s}
 \]
-A derivation step of \rulename{Inst} in HM can be translated into multiple
-stpes involving the \rulename{TyAbs} and \rulename{TyApp} rules in System \F,
-as below:
+A singe derivation step of \rulename{Inst} in HM corresponds to
+multiple derivation steps in System \F\ involving
+the rules \rulename{TyAbs} and \rulename{TyApp} rules, as below:
 {\small
 \begin{multline*}
   \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
