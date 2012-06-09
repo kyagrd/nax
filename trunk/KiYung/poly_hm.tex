@@ -128,9 +128,12 @@ $\alpha$-equivalence as a special case of the type scheme ordering rule,
 where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
 
 The usual \empty{instantiation} (\ie, substitution of quantified variables
-with types) falls under the type scheme ordering rule. For instance,
-$ (\forall X_1\,X_2.X_1 -> X_2) \sqsubseteq
-  (\forall X_2.\iota -> X_2) \sqsubseteq (\iota -> \iota) $.
+with types) also falls under the type scheme ordering rule. In other words,
+instantiation is a special case of generic instantiation. For example,
+consider an instantiation of $\forall X_1\,X_2.X_1 -> X_2$ below:
+\[ (\forall X_1\,X_2.X_1 -> X_2) \sqsubseteq
+   (\forall X_2.\iota -> X_2) \sqsubseteq (\iota -> \iota)
+\] 
 Here, we instantiate $X_1$ with $\iota$,
 and then, instantiate $X_2$ with $\iota$.
 In such cases of $\sigma\sqsubseteq\sigma'$, we can call $\sigma'$ an instance,
@@ -243,13 +246,16 @@ be unique. For example,
 \end{align*}
 This is expected since terms of HM are Curry style. Recall that
 the uniqueness of typing does not hold for lambda calculi with
-Curry-style terms. The first three rules \rulename{Var}, \rulename{Abs},
-and \rulename{App} are fairly standard. The \rulename{Var} rule deduces
-the type scheme of a variable according to the type scheme binding
-of the variable in the typing context. The type schemes deduced by
-the rules \rulename{Abs} and \rulename{App} are restricted to the form
-of (mono)types\footnote{Recall that types are subset of type schemes.}
+Curry-style terms.
+
+The first three rules \rulename{Var}, \rulename{Abs}, and \rulename{App} are
+fairly standard. The \rulename{Var} rule deduces the type scheme of
+a variable according to the type scheme binding of the variable in
+the typing context. Note that the type schemes deduced by the rules
+\rulename{Abs} and \rulename{App} are restricted to the form of
+(mono)types\footnote{Recall that (mono)types are subset of type schemes.}
 since the domain and range of functions types are restricted to (mono)types.
+
 The \rulename{Let} rule can introduce polymorphic type schemes into
 the typing context. The \rulename{Inst} rule deduces a generic instance
 ($\sigma'$) of any type scheme ($\sigma$). The \rulename{Inst} rule
@@ -266,20 +272,23 @@ the \rulename{Inst} rule is illustrated below:
 		{x':\forall X'.X' -> X' \in x':\forall X'.X' -> X',x:X}
 		{x':\forall X'.X' -> X',x:X|- x':\forall X'.X'-> X'}
 	}
-  	{x':\forall X'.X' -> X',x:X |- x':X' -> X'}}
-  {x':\forall X'.X' -> X' |- \l x.x' : X -> (X' -> X')}
+  	{x':\forall X'.X' -> X',x:X |- x':X'' -> X''}}
+  {x':\forall X'.X' -> X' |- \l x.x' : X -> (X'' -> X'')}
 \]
+
 The \rulename{Gen} rule deduces a generalization (\ie,
 universal quantification) of a type scheme, as long as
 the quantified variable does not appear free in the typing context.
 The \rulename{Gen} is essential for the \rulename{Let} rule to be useful.
 For instance, consider that $s$ is a function that may be polymorphic,
-such as the identity function $\l x'.x'$. Recall that the \rulename{Abs} can
-only deduce a type without any universal quantification, such as $X -> X$.
+such as the identity function $\l x'.x'$. We want bind this function
+in a let term, $\<let> x=\l x'.x' \<in> t$, and use $x$ as a polymorphic
+function in $t$ (\ie, extend the typing context with $x:\forall X.X-> X$).
+However, the \rulename{Abs} rule can only deduce a function type without
+any universal quantification, such as $\Gamma |- \l x'.x' : X -> X$.
 Here, we can use the \rulename{Gen} rule to generalize $X -> X$ to
 $\forall X.X -> X$, provided that $X$ does not appear free in
-the typing context, in order to make $\sigma$ appearing in
-the \rulename{Let} rule a polymorphic type scheme, as below:
+the typing context $\Gamma$, as below:
 \[
 \inference[\sc Let]
   { \inference[\sc Gen]
@@ -289,37 +298,53 @@ the \rulename{Let} rule a polymorphic type scheme, as below:
   {\Gamma |- \<let> x = \l x'.x' \<in> t : B}
 \]
 
-The soundness of typing is obvious once we observe that HM is a restriction
-of the Curry-style System \F\ (\ie, if $\Gamma |- t : \sigma$ in HM, then
-$\Delta;\Gamma |- t : \sigma$ in System \F). The terms in HM are exactly
-the same as the terms in the Curry-style System \F, if we consider the let-term
-as a syntactic sugar. Both types and type schemes in HM are restrictions of
-types in System \F. The declarative typing rules are also a restriction of
-the typing rules in System \F. The rules \rulename{Var}, \rulename{Abs},
-\rulename{App}, and \rulename{Gen} in HM are virtually same as
-their counterparts in Systerm \F, which are the rules \rulename{Var},
-\rulename{Abs}, \rulename{App}, and \rulename{TyAbs}, respectively.
+\paragraph{} The soundness of typing is obvious
+once we observe that HM is a restriction of the Curry-style System \F\ (\ie,
+if $\Gamma|- t:\sigma$ in HM, then $\Delta;\Gamma|- t:\sigma$ in System \F).
+The terms in HM are exactly the same as the terms in the Curry-style System \F,
+if we consider the let-term as a syntactic sugar. Both types (or, monotypes)
+and type schemes (or, polytypes) in HM are restrictions of types in System \F.
+The declarative typing rules are also a restriction of the typing rules
+in System \F. The rules \rulename{Var}, \rulename{Abs}, \rulename{App},
+and \rulename{Gen} in HM are virtually same as their counterparts
+in System \F.\footnote{The names of corresponding rules
+	in HM and System \F\ are the same (\rulename{Var}, \rulename{Abs},
+	\rulename{App}), except for the \rulename{Gen} rule.
+	The \rulename{Gen} rule in HM corresponds to
+	the \rulename{TyAbs} rule in System \F.}
 Thus, all we need to make sure is that the \rulename{Let} rule and
 the \rulename{Inst} rule in HM are admissible in System \F.
+
 A single derivation step of \rulename{Let} in HM corresponds to
 two derivation steps in System \F\
-involving the \rulename{App} and \rulename{Abs} rules,
-considering the let-term as a syntactic sugar, as below:
+involving the \rulename{App} and \rulename{Abs} rules.
+Let us start from the \rulename{Let} rule in HM, quoted verbatim from
+Figure \ref{fig:hm}:
 \[\inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
 		     {\Gamma |- \<let> x=s \<in> t : B} 
 \]
+Recall that a let-term, $\<let> x=s \<in> t$ is semantically equivalent to
+$(\l x.t)\;s$. We first desugar the let-term into an application of
+an abstraction $(\ x.t)$ to the body of the local definition ($s$).
+Then, we can simply apply the \rulename{App} rule and the \rulename{Abs} rule
+in System \F, as below:
 \[\inference[\sc App]
 	{ \inference[\sc Abs]
 		{ \Delta |- \sigma
 		& \Delta;\Gamma,x:\sigma |- t : B}
 		{\Delta;\Gamma |- \l x.t : A -> B}
-	& \Delta\Gamma |- s : \sigma }
+	& \Delta;\Gamma |- s : \sigma }
 	{\Delta;\Gamma |- (\l x.t)\;s}
 \]
+
+
 A singe derivation step of \rulename{Inst} in HM corresponds to
 multiple derivation steps in System \F\ involving
-the rules \rulename{TyAbs} and \rulename{TyApp} rules, as below:
-{\small
+the rules \rulename{TyAbs} and \rulename{TyApp} rules.
+Since the \rulename{Inst} rule refers to the generic instantiation relation
+$\sqsubseteq$, the shape of $\sigma$ and $\sigma'$ in the \rulename{Inst} rule
+must match the left- and right-hand sides of $\sqsubseteq$
+in the generic instantiation rule, as below:
 \begin{multline*}
   \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
 		      {\Gamma |- t : \sigma'}
@@ -333,17 +358,36 @@ the rules \rulename{TyAbs} and \rulename{TyApp} rules, as below:
              {\forall X_1\dots X_n.A \;\sqsubseteq\;
 	      \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
 \end{multline*}
-
+The generic instantiation from $\sigma$ to $\sigma'$
+by the \rulename{Inst} rule above can be understood as two parts:
+instantiation from $\sigma$ to $A[B_1/X_1]\cdots[B_n/X_n]$ and
+generalization from $A[B_1/X_1]\cdots[B_n/X_n]$ to $\sigma$.
+The instantiation from $\forall.X_1\dots X_n.A$ to $A[B_1/X_1]\cdots[B_n/X_n]$
+can be broken down to $n$ small steps of instantiation,
+instantiating each of the quantified variables ($X_1\dots X_n$).
+The generalization from $A[B_1/X_1]\cdots[B_n/X_n]$ to
+$X_1'\dots X_m'.A[B_1/X_1]\cdots[B_n/X_n]$ can be broken down to
+$m$ small steps of generalization, universally quantifying
+the newly introduced variables during instantiation ($X_1'\dots X_m$).
+The Curry-style System \F\ have the rules, which exactly captures the concept
+of those small steps (see Figure \ref{fig:f} in \S\ref{sec:f}).
+The \rulename{TyApp} rule captures the small step in the instantiation part.
+The \rulename{TyAbs} rule captures the small step in the generalization part.
+Therefore, we can translate the \rulename{Inst} rule in HM into
+a consecutive applications of the \rulename{TyApp} rule followed by
+a consecutive applications of the \rulename{TyAbs} rule in System \F, as below:
+{\small
 \begin{align*}
 & \inference[\sc TyApp]
-	{\Delta;\Gamma |- t : A & \Delta |- A}
-	{\Delta;\Gamma |- t : A[B_1/X_1] ~~\,} \\
+	{\Delta;\Gamma |- t : \forall X_1\dots X_n.A & \Delta |- \forall X_1\dots X_n.A}
+	{\Delta;\Gamma |- t : \forall X_2\dots X_n.A[B_1/X_1]
+	\qquad\qquad\quad~~} \\
 & \inference[\sc TyApp]
-	{ \quad \vdots \qquad\qquad\qquad\qquad\qquad
-	& \Delta |- A[B_1/X_1]\cdots[B_{n-1}/X_{n-1}]
+	{ \qquad\qquad \vdots \qquad\qquad\qquad\qquad\qquad \quad
+	& \Delta |- \forall X_n.A[B_1/X_1]\cdots[B_{n-1}/X_{n-1}]
 	}
 	{ \Delta;\Gamma |- t : A[B_1/X_1]\cdots[B_n/X_n] \qquad \qquad
-	 \qquad\qquad\qquad\qquad\qquad
+	 \qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
  	} \\
 & \inference[\sc TyAbs]
 	{}
@@ -353,18 +397,25 @@ the rules \rulename{TyAbs} and \rulename{TyApp} rules, as below:
 & \inference[\sc TyAbs]
 	{\Delta;\Gamma |- t : \forall X_2'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
 	{\Delta;\Gamma |- t : \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
-	(X_1'\notin\FV\left(\begin{smallmatrix}\forall X_2'\dots X_m'.\\A[B_1/X_1]\cdots[B_n/X_n]\end{smallmatrix}\right)) \\
+	(X_1'\notin\FV\left(\begin{smallmatrix}\forall X_2'\dots X_m'.\\A[B_1/X_1]\cdots[B_n/X_n]\end{smallmatrix}\right))
 \end{align*}
-} %% end \small
+} %end \small
 
 \subsection{Syntax directed typing rules}\label{sec:hm:syntyrule}
+TODO cite about syntax directed rules Clement et al 1986
+TODO restate
+
 The syntax directed typing rules deduce a type, rather than a type scheme,
 for a given term under a typing context ($\Gamma |- t : A$). These rules
 are syntax directed since there is only one rule to apply for each syntactic
-category of terms. Therefore, the typing is unique (up to change of
+category of terms.
+
+TODO this is not true due to the Var rule\\
+Therefore, the typing is unique (up to change of
 type variables) for the given term and the typing context. For example,
 $\l x.x$ has a unique typing with respect to the syntax directed typing rules,
 as below: \[ \cdot |- \l x.x: X -> X \]
+
 The syntax directed typing rules are based on the observation
 that the \rulename{Inst} and \rulename{Gen} in the declarative typing rules
 are only necessary at the \rulename{Var} and \rulename{Let} rules, respectively.
@@ -383,19 +434,20 @@ generalizes $A$ all the free type variables of $A$ except the free variables of
 $\Gamma$. The free type variables of $\Gamma$ is defined as:
 $\FV(\Gamma) = \bigcup_{x:\sigma\in \Gamma} \FV(\sigma)$.
 
+\paragraph{}
 Syntax directed typing rules are sound (Theorem \ref{thm:sdHMsound})
-and complete (Corollary \ref{cor:sdHMcomplete} with respect to
+and complete (Theorem \ref{thm:sdHMcomplete}) with respect to
 the declarative typing rules.
+
+We will just lay out a key idea for the proof of the soundness of $|-s$
+since the soundness is rather obvious. All we need to do is transform
+any given derivation for $|-s$ into a derivation for $|-$, which is
+straightforward.
 \begin{theorem}[$|-s$ is sound with respect to $|-$]
 $ \inference{\Gamma |-s t : A}{\Gamma |- t : A} $
 \label{thm:sdHMsound}
 \end{theorem}
 \begin{proof}
-We will just give an key idea for the proof
-since the soundness is rather obvious.
-All we need to do is transform any given derivation for $|-s$
-into a derivation for $|-$, which is straightforward.
-
 Recall that the \rulename{Var$_s$} rule can be understood as a merge of
 \rulename{Var} and \rulename{Inst}. Thus, we can transform any derivation
 step using \rulename{Var$_s$} rule into two steps of derivation using
@@ -415,21 +467,17 @@ generalizes only the free type variables of $A$, which do not
 appear free in $\Gamma$, the condition $X\notin\FV(\Gamma)$ appearing
 in the \rulename{Gen} rule holds.
 \end{proof}
-The completeness of $|-s$ can be shown by proving a stronger theorem
-that $|-s$ deduces a most general type.
-\begin{theorem}[$|-s$ deduces a most general type]
+
+The completeness of $|-s$ TODO
+\begin{theorem}[$|-s$ is complete with respect to $|-$]
 $ \inference
 	{\Gamma |- t : \sigma}
 	{\Gamma |-s t : A ~\land~ \overline{\Gamma}(A)\sqsubseteq\sigma} $
+\label{thm:sdHMcomplete}
 \end{theorem}
 \begin{proof}
 TODO
 \end{proof}
-
-\begin{corollary}[$|-s$ is complete with respect to $|-$]
-$ \inference{\Gamma |- t : \sigma}{\Gamma |-s t : A} $
-\label{cor:sdHMcomplete}
-\end{corollary}
 
 \subsection{The type inference algorithm $W$}\label{sec:hm:W}
 The type inference algorithm $W$ is sound and complete
