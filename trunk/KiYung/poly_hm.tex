@@ -402,19 +402,10 @@ a consecutive applications of the \rulename{TyAbs} rule in System \F, as below:
 } %end \small
 
 \subsection{Syntax directed typing rules}\label{sec:hm:syntyrule}
-TODO cite about syntax directed rules Clement et al 1986
-TODO restate
-
-The syntax directed typing rules deduce a type, rather than a type scheme,
-for a given term under a typing context ($\Gamma |- t : A$). These rules
-are syntax directed since there is only one rule to apply for each syntactic
-category of terms.
-
-TODO this is not true due to the Var rule\\
-Therefore, the typing is unique (up to change of
-type variables) for the given term and the typing context. For example,
-$\l x.x$ has a unique typing with respect to the syntax directed typing rules,
-as below: \[ \cdot |- \l x.x: X -> X \]
+The syntax directed typing rules \cite{Clement86} deduce a type,
+rather than a type scheme, for a given term under a typing context
+($\Gamma |- t : A$). These rules are syntax directed since there is
+only one rule to apply for each syntactic category of terms.
 
 The syntax directed typing rules are based on the observation
 that the \rulename{Inst} and \rulename{Gen} in the declarative typing rules
@@ -468,7 +459,13 @@ appear free in $\Gamma$, the condition $X\notin\FV(\Gamma)$ appearing
 in the \rulename{Gen} rule holds.
 \end{proof}
 
-The completeness of $|-s$ TODO
+The completeness of $|-s$ is stated as the theorem below.
+Note, the completeness of $|-s$ is to be stated in terms of closure and
+type scheme ordering relation ($\overline{\Gamma}(A)\sqsubseteq\sigma$),
+since the syntax directed rule can only deduce types, not type schemes.
+The syntax directed rule $|-s$ is complete in the sense that for any given
+we can always deduce a type $A$ such that the closure of $A$ is more general
+than the type scheme $\sigma$ deduced from the declarative typing rules.
 \begin{theorem}[$|-s$ is complete with respect to $|-$]
 $ \inference
 	{\Gamma |- t : \sigma}
@@ -476,7 +473,20 @@ $ \inference
 \label{thm:sdHMcomplete}
 \end{theorem}
 \begin{proof}
-TODO
+TODO by induction on the derivation
+
+when the last rule is
+
+Var easy
+
+Abs by induction
+
+App by induction
+
+Inst by induction and transitivity of $\sqsubseteq$
+
+Gen easy
+
 \end{proof}
 
 \subsection{The type inference algorithm $W$}\label{sec:hm:W}
