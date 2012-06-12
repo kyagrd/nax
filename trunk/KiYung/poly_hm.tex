@@ -460,7 +460,7 @@ in the \rulename{Gen} rule holds.
 \end{proof}
 
 The completeness of $|-s$ is stated as the theorem below.
-Note, the completeness of $|-s$ is to be stated in terms of closure and
+Note that the completeness of $|-s$ is to be stated in terms of closure and
 type scheme ordering relation ($\overline{\Gamma}(A)\sqsubseteq\sigma$),
 since the syntax directed rule can only deduce types, not type schemes.
 The syntax directed rule $|-s$ is complete in the sense that for any given
@@ -469,24 +469,104 @@ than the type scheme $\sigma$ deduced from the declarative typing rules.
 \begin{theorem}[$|-s$ is complete with respect to $|-$]
 $ \inference
 	{\Gamma |- t : \sigma}
-	{\Gamma |-s t : A ~\land~ \overline{\Gamma}(A)\sqsubseteq\sigma} $
+	{\exists A.\;\Gamma |-s t : A ~\land~ \overline{\Gamma}(A)\sqsubseteq\sigma} $
 \label{thm:sdHMcomplete}
 \end{theorem}
 \begin{proof}
-TODO by induction on the derivation
+We proof by induction on the derivation $\Gamma |- t : \sigma$.
+Let us consider cases by the last rule (\ie, root of the derivation).
 
-when the last rule is
+When the last rule is \rulename{Var}, we know that $x:\sigma \in \Gamma$.
+We choose $A$ in the \rulename{Var$_s$} rule to be an instance of $\sigma$,
+instantiating each universally quantified variable with a fresh variable,
+which neither appears free in $\sigma$ nor $\Gamma$. Then such the closure
+of such $A$ satisfy $\overline{\Gamma}(A)\sqsubseteq\sigma$.
+For example, when $\sigma=\forall X_1.\forall X_2.X_1 -> X_2 -> X$,
+we choose $A = X_1' -> X_2' -> X$ where $X_1',X_2'\notin\FV(\Gamma)$.
+If $X\in\FV(\Gamma)$, then
+$\overline{\Gamma}(A) = \forall X_1'.\forall X_2'.X_1' -> X_2' -> X$,
+which is $\alpha$-equivalent to $\sigma$, therefore,
+$\overline{\Gamma}(A)\sqsubseteq\sigma$.
+Otherwise, if $X\notin\FV(\Gamma)$,
+$\overline{\Gamma}(A) = \forall X_1'.\forall X_2'.\forall X.X_1' -> X_2' -> X$,
+and $\overline{\Gamma}(A)\sqsubseteq\sigma$ still holds.
 
-Var easy
+When the last rule is \rulename{Abs}, it is straightforward by induction.
 
-Abs by induction
+When the last rule is \rulename{App}, it is straightforward by induction.
 
-App by induction
+When the last rule is \rulename{Let}, we know by induction that there exists
+$A'$ and $B'$ such that
+$\Gamma |-s s : A' \land \overline{\Gamma}(A') \sqsubseteq \sigma$ and
+$\Gamma,x:\sigma |-s t : B' \land
+	\overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
+We would be done with the case for \rulename{Let} if we can show that
+$\Gamma,x:\overline{\Gamma}(A') |-s t : B' \land
+	\overline{\Gamma,x:\overline{\Gamma}(A')}(B') \sqsubseteq B$.
+instead of $\Gamma,x:\sigma |-s t : B' \land
+	\overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
+We use Lemma \ref{lem:generalizeGamma} to show
+$\Gamma,x:\overline{\Gamma}(A') |-s t : B'$ from $\Gamma,x:\sigma |-s t : B'$,
+and we use Lemma \ref{lem:closureMoreGen} to show
+$\overline{\Gamma,x:\overline{\Gamma}(A')}(B') \sqsubseteq B$
+from $\overline{\Gamma,x:\sigma}(B') \sqsubseteq B$ and transitivity of
+$\sqsubseteq$. These two lemmas are introduced after the proof of this throem.
 
-Inst by induction and transitivity of $\sqsubseteq$
+When the last rule is \rulename{Inst}, it is straightforward by induction
+and transitivity of $\sqsubseteq$.
 
-Gen easy
+When the last rule is \rulename{Gen}, we know by induction that there exists
+$A$ such that $\overline{\Gamma}(A) \sqsubseteq \sigma$. We also know
+that $X \notin\FV \overline{\Gamma}(A)$ by definition of closure --
+if it were $X\in\overline{\Gamma}(A)$, then it should be $X\in\FV(\Gamma)$
+by defintion of closure, which contradicts the side condition of
+the \rulename{Gen} rule $X\notin\FV(\Gamma)$.
+Recall that generic instantiation allows quantifiying type variables
+that do not apper free the original type scheme. Thus,
+$\overline{\Gamma}(A) \sqsubseteq \forall X.\sigma$ by definition
+of $\sqsubseteq$.
+\end{proof}
 
+\begin{lemma}[generalizing typing context is safe]
+$ \inference{\Gamma |-s t : A & \Gamma' \sqsubseteq \Gamma}
+	    {\Gamma' |-s t : A} $ where
+\begin{quote}
+$\Gamma' \sqsubseteq \Gamma$ when for any $x,\sigma\in \Gamma$,
+there exists $x,\sigma'\in\Gamma'$ such that $\sigma'\sqsubseteq\sigma$.
+\end{quote}
+\label{lem:generalizeGamma}
+\end{lemma}
+\begin{proof}
+This is an intuitively obvious property since assuming
+more general type schemes for variables only make
+it possible to deduce all the judgments of $|-s$ and more, but no less,
+by transitivity of $\sqsubseteq$ on type schemes.
+We will just give a proof for the base case, the \rulename{Var} rule,
+which illustrates this intuition.
+Other cases ore straightforward by induction on the derivation of $|-s$.
+
+When $\Gamma |-s x : A$, we know that there exists
+$x,\sigma'\in\Gamma'$ such that $\sigma'\sqsubseteq\sigma$.
+By \rulename{Var$_s$} rule, we can dedece any $A'$ for $x$
+such that $\Gamma' |-s x : A'$ and $\sigma'\sqsubseteq A'$.
+By transitivity of $\sqsubseteq$, $\sigma' \sqsubseteq \sigma \sqsubseteq A$.
+Therefore, $\Gamma' |-s x : A$.
+\end{proof}
+
+\begin{lemma}[closure of a more general typing context is more general]
+\begin{quote}
+$ \inference{\Gamma' \sqsubseteq \Gamma}
+	    {\overline{\Gamma'}(A) \sqsubseteq \overline{\Gamma}(A)} $
+for any $A$.
+\end{quote}
+\label{lem:closureMoreGen}
+\end{lemma}
+\begin{proof}
+It is obvious once we observe that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
+It is easy to see that $\FV(\sigma')\sqsubseteq\FV(\sigma)$
+when $\sigma' \sqsubseteq \sigma$. Since the defintion of $\sqsubseteq$
+over typing contexts only depends on $\sqsubseteq$ on type schemes,
+it is clear that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
 \end{proof}
 
 \subsection{The type inference algorithm $W$}\label{sec:hm:W}
