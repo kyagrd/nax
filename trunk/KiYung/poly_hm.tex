@@ -561,7 +561,7 @@ there exists $x,\sigma'\in\Gamma'$ such that $\sigma'\sqsubseteq\sigma$.
 This is an intuitively obvious property since assuming
 more general type schemes for variables only make
 it possible to deduce all the judgments of $|-s$ and more, but no less,
-by transitivity of $\sqsubseteq$ on type schemes.
+by transitivity of $\sqsubseteq$ over type schemes.
 We will just give a proof for the base case, the \rulename{Var} rule,
 which illustrates this intuition.
 Other cases ore straightforward by induction on the derivation of $|-s$.
@@ -584,9 +584,9 @@ for any $A$.
 \end{lemma}
 \begin{proof}
 It is obvious once we observe that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
-It is easy to see that $\FV(\sigma')\sqsubseteq\FV(\sigma)$
+It is easy to see that $\FV(\sigma') \subseteq \FV(\sigma)$
 when $\sigma' \sqsubseteq \sigma$. Since the defintion of $\sqsubseteq$
-over typing contexts only depends on $\sqsubseteq$ on type schemes,
+over typing contexts only depends on $\sqsubseteq$ over type schemes,
 it is clear that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
 \end{proof}
 
@@ -616,10 +616,10 @@ TODO
 \]
 \[ \inference[\sc Abs$_W$]
 	{X~\text{fresh} \\
-	 W(\Gamma,x:X,t) ~> (S_1,A)}
-	{W(\Gamma,x) ~> (S_1,S_1(X -> A))}
+	 W((\Gamma,x:X),t) ~> (S_1,A)}
+	{W(\Gamma,\l x.t) ~> (S_1,S_1 X -> A)}
 \]
-
+%% double check the composition order
 \[ \inference[\sc App$_W$]
 	{W(\Gamma,s) ~> (S_1,A_1) \\
 	 W(S_1 \Gamma,t) ~> (S_2,A_2) \\
@@ -630,7 +630,7 @@ TODO
 
 \[ \inference[\sc Let$_W$]
 	{W(\Gamma,s) ~> (S_1,A_1) \\
-	 W(S_1(\Gamma,x:\overline{S_1\Gamma}(A_1)),t) ~> (S_2,A_2) }
+	 W((S_1\Gamma,x:\overline{S_1\Gamma}(A_1)),t) ~> (S_2,A_2) }
 	{W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)}
 \]
 \end{singlespace}
