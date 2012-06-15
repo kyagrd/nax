@@ -1,0 +1,419 @@
+\section{System \Fi}
+\label{sec:Fi}
+System \Fi\ is a higher-order polymorphic lambda calculus with term indices.
+In other words, System \Fi\ is an extension of System \Fw\ by term indices.
+The complete syntax and rules of \Fi\ are described in \Fig{Fi} and
+\Fig{eqFi}. The syntax and rules highlighted by \newFi{\text{grey boxes}}
+are the extensions new to \Fi, which are not originally part of \Fw.
+That is, the system we obtain by excluding all the grey boxes from \Fig{Fi}
+and \Fig{eqFi} is a version of \Fw. In particular, it is a version of \Fw\
+with Curry-style terms and typing contexts separated into two parts
+(\ie, type level and term level). Terms are Curry style. That is,
+term level abstractions are unannotated ($\lambda x.t$), and
+type generalization ($\forall I$) and type instantiation ($\forall E$) are
+implicit at term level. Types remain Church style as usual. That is,
+type level abstractions are annotated by kinds ($\lambda X^\kappa.F$).
+Typing contexts are separated into type level contexts ($\Delta$) and
+term level contexts ($\Gamma$). We expect readers to be familiar to \Fw\
+and focus on describing new constructs of \Fi, which are in grey boxes.
+
+\begin{figure*}
+\paragraph{Syntax:}
+\begin{align*}
+\!\!\!\!\!\!\!\!&\text{Kinds}
+ 	& \kappa		&~ ::= ~ *
+				\mid \kappa -> \kappa
+				\mid \newFi{A -> \kappa}
+\\
+\!\!\!\!\!\!\!\!&\text{Type Constructors}
+	& A,B,F,G		&~ ::= ~ X
+				\mid A -> B
+				\mid \lambda X^\kappa.F
+				\mid F\,G
+				\mid \forall X^\kappa . B
+				\mid \newFi{\lambda i^A.F
+				\mid F\,\{s\}
+				\mid \forall i^A . B}
+\\
+\!\!\!\!\!\!\!\!&\text{Terms}
+	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
+				\mid \newFi{i}
+\\
+\!\!\!\!\!\!\!\!&\text{Typing Contexts}
+	& \Delta		&~ ::= ~ \cdot
+				\mid \Delta, X^\kappa
+				\mid \newFi{\Delta, i^A} \\
+&	& \Gamma		&~ ::= ~ \cdot
+				\mid \Gamma, x : A
+\end{align*}
+
+\paragraph{Well-formed typing contexts:}
+\[ \fbox{$|- \Delta$}
+ ~~~~ ~~~~
+   \inference{}{|- \cdot}
+ ~~~~
+   \inference{|- \Delta & |- \kappa:\square}
+             {|- \Delta,X^\kappa}
+      \big( X\notin\dom(\Delta) \big)
+ ~~~~ \newFi{
+   \inference{|- \Delta & \cdot |- A:*}
+             {|- \Delta,i^A}
+      \big( i\notin\dom(\Delta) \big) }
+\]
+\[ \fbox{$\Delta |- \Gamma$}
+ ~~~~
+   \inference{|- \Delta}{\Delta |- \cdot}
+ ~~~~
+   \inference{\Delta |- \Gamma & \Delta |- A:*}
+             {\Delta |- \Gamma,x:A}
+      \big( x\notin\dom(\Gamma) \big)
+\]
+~\\
+\paragraph{Sorting:} \fbox{$|- \kappa : \square$}
+$ \qquad
+ ~~~~
+  \inference[($A$)]{}{|- *:\square}
+ ~~~~
+   \inference[($R$)]{|- \kappa:\square & |- \kappa':\square}
+                    {|- \kappa -> \kappa' : \square}
+ ~~~~
+   \newFi{
+   \inference[($Ri$)]{\cdot |- A:* & |- \kappa:\square}
+                     {|- A -> \kappa : \square} }
+$
+~\\ ~\\
+\paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
+$ \quad
+ ~~~~
+   \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
+                       {\Delta |- X : \kappa}
+ ~~~~
+   \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
+                     {\Delta |- A -> B : * }
+$
+\[
+  \inference[($\lambda$)]{|- \kappa:\square & \Delta,X^\kappa |- F : \kappa'}
+                          {\Delta |- \lambda X^\kappa.F : \kappa -> \kappa'}
+ ~~~~
+   \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
+                    & \Delta |- G : \kappa }
+                    {\Delta |- F\,G : \kappa'}
+ ~~~~
+   \inference[($\forall$)]{|- \kappa:\square & \Delta, X^\kappa |- B : *}
+                          {\Delta |- \forall X^\kappa . B : *}
+\]
+\[ \newFi{
+  \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}
+                            {\Delta |- \lambda i^A.F : A->\kappa}
+ ~~~~
+   \inference[($@i$)]{ \Delta |- F : A -> \kappa
+                     & \Delta;\cdot |- s : A }
+                     {\Delta |- F\,\{s\} : \kappa}
+ ~~~~
+   \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}
+                            {\Delta |- \forall i^A . B : *} }
+\]
+\[ \newFi{
+   \inference[($Conv$)]{ \Delta |- A : \kappa
+                       & \Delta |- \kappa = \kappa' : \square }
+                       {\Delta |- A : \kappa'} }
+\]
+~\\
+\paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
+$ \qquad
+ ~~~~
+   \inference[($:$)]{x:A \in \Gamma & \Delta |- \Gamma} 
+                    {\Delta;\Gamma |- x:A}
+ ~~~~ \newFi{
+   \inference[($:i$)]{i^A \in \Delta & \Delta |- \Gamma} 
+                     {\Delta;\Gamma |- i:A} }
+$
+\[
+   \inference[($->$$I$)]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
+                        {\Delta;\Gamma |- \lambda x.t : A -> B}
+ ~~~~ ~~~~
+   \inference[($->$$E$)]{\Delta;\Gamma |- r : A -> B & \Delta;\Gamma |- s : A}
+                        {\Delta;\Gamma |- r\;s : B}
+\]
+\[ \inference[($\forall I$)]{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t : B}
+                            {\Delta;\Gamma |- t : \forall X^\kappa.B}
+			    (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
+                            & \Delta |- G:\kappa }
+                            {\Delta;\Gamma |- t : [G/X]B}
+\]
+\[ \newFi{
+   \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}
+                              {\Delta;\Gamma |- t : \forall i^A.B}
+   \left(\begin{matrix}
+		i\notin\FV(t),\\
+		i\notin\FV(\Gamma)\end{matrix}\right)
+ ~~~~
+   \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
+                              & \Delta;\cdot |- s:A}
+                              {\Delta;\Gamma |- t : [s/i]B} }
+\]
+\[ \inference[($=$)]{\Delta;\Gamma |- t : A & \Delta |- A = B : *}
+                    {\Delta;\Gamma |- t : B}
+\]
+~\\
+\paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
+$ 
+ ~~~~
+   \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
+ ~~~~
+   \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
+ ~~~~
+   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+$
+~\\ ~\\
+\caption{Syntax, Typing rules, and Reduction rules of \Fi}
+\label{fig:Fi}
+\end{figure*}
+
+\begin{figure*}
+\paragraph{Kind equality:} \fbox{$|- \kappa=\kappa' : \square$}
+$ \quad
+ ~~~~
+   \inference{}{|- * = *:\square}
+ ~~~~
+   \inference{ |- \kappa_1 = \kappa_1' : \square
+             & |- \kappa_2 = \kappa_2' : \square }
+             {|- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
+ ~~~~ \newFi{
+   \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}
+             {|- A -> \kappa = A' -> \kappa' : \square} }
+$
+\[ \inference{|- \kappa=\kappa':\square}
+             {|- \kappa'=\kappa:\square}
+ ~~~~
+   \inference{ |- \kappa =\kappa' :\square
+             & |- \kappa'=\kappa'':\square}
+             {|- \kappa=\kappa'':\square}
+\]
+~\\
+\paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
+$ \quad
+ ~~~~
+   \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+             {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
+ ~~~~ \newFi{
+   \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+             {\Delta |- (\lambda i^A.F)\,\{s\} = [s/i]F:\kappa} }
+$
+\[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
+ ~~~~
+   \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+\]
+\[ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}
+             {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
+ ~~~~
+   \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
+             {\Delta |- F\,G = F'\,G' : \kappa'}
+ ~~~~
+   \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}
+             {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
+\]
+\[ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}
+             {\Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa}
+ ~~~~
+   \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
+             {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
+ ~~~~
+   \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}
+             {\Delta |- \forall i^A.B=\forall i^A.B':*} }
+\]
+\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+ ~~~~
+   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
+             {\Delta |- F = F'' : \kappa}
+\]
+~\\
+\paragraph{Term equality:} \fbox{$\Delta;\Gamma |- t = t' : A$}
+$ \qquad
+ ~~~~
+   \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
+             {\Delta;\Gamma |- (\lambda x.t)\,s=[s/x]t : B}
+ ~~~~
+   \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
+$
+\[ \inference{\Delta |- A:* & \Delta;\Gamma,x:A |- t=t':B}
+             {\Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
+ ~~~~
+   \inference{\Delta;\Gamma |- r=r':A-> B & \Delta;\Gamma |- s=s':A}
+             {\Delta;\Gamma |- r\;s=r'\;s':B}
+\]
+\[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}
+             {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
+	     (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
+             & \Delta |- G:\kappa }
+             {\Delta;\Gamma |- t=t' : [G/X]B}
+\]
+\[ \newFi{
+   \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
+             {\Delta;\Gamma |- t=t' : \forall i^A.B}
+   \left(\begin{smallmatrix}
+		i\notin\FV(t),\\
+		i\notin\FV(t'),\\
+		i\notin\FV(\Gamma)\end{smallmatrix}\right)
+ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
+             & \Delta;\cdot |- s:A}
+             {\Delta;\Gamma |- t=t' : [s/x]B} }
+\]
+\[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
+ ~~~~
+   \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
+             {\Delta;\Gamma |- t=t'':A}
+\]
+~\\
+\caption{Equality rules of \Fi}
+\label{fig:eqFi}
+\end{figure*}
+
+\subsection{The constructs new to \Fi}
+
+\paragraph{Typing contexts}
+Typing contexts are split into two parts:
+type level contexts ($\Delta$) for type level bindings
+and term level contexts ($\Gamma$) for term level bindings.
+We have a new form of index variable bindings ($i^A$) that can appear in
+type level contexts in addition to type variable bindings ($X^\kappa$).
+There is only one form of term level binding ($x:A$) that can appear in
+term level contexts.
+
+A type level context $\Delta$ is well-formed when it is either empty,
+extended by a type variable binding $X^\kappa$ whose kind $\kappa$ is
+well-sorted under $\Delta$, or extended by an index binding $i^A$
+whose type $A$ is well-kinded under the empty type level context.
+A similar restriction occurs in the sorting rule ($Ri$), for indexed arrow kinds,
+we require $A$ of $i^A$ to be well-kinded in the empty type level context
+($\cdot$), since no bindings are introduced at kind level in \Fi. The consequence of
+this is that, in typing contexts and in sorts, $A$ must be type constructor with no
+type variables.
+
+A term level context $\Gamma$ is well-formed under a type level context
+$\Delta$ when it is either empty or extended by a term variable binding
+$x:A$ whose type $A$ is well-kinded under $\Delta$.
+
+
+\paragraph{Kinds and their sorting rules}
+We extend the kind syntax of \Fw\ by indexed arrow kinds of the form
+\newFi{A -> \kappa}. The formation of indexed arrow kinds is
+governed by the sorting rule \newFi{(Ri)}. The rule $(Ri)$ specifies that
+an indexed arrow kind $A -> \kappa$ is well-sorted when $A$ is well-kinded
+under the empty type level context ($\cdot$) and $\kappa$ is well-sorted.
+We avoid dependent kinds (\ie, kinds depending on type level or value level
+bindings) by requiring $\cdot |- A$. The type $A$ appearing in
+the index arrow kind $A -> \kappa$ must be well-kinded under
+the empty type level context ($\cdot$), since no bindings are
+introduced at kind level in \Fi.
+
+\paragraph{Type constructors and their kinding rules}
+We extend the type constructor syntax by three constructs,
+and extend the kinding rules accordingly for these new constructs.
+
+\newFi{\lambda i^A.F} is the type level abstraction over an index
+(or, index abstraction). Index abstractions introduce indexed arrow kinds
+by the kinding rule \newFi{(\lambda i)}. Note, we have a new form of binding
+$i^A$ in the kinding rule ($\lambda i$).
+We will explain what this binding means when we discuss contexts.
+
+\newFi{F\,\{s\}} is the type level index application. In contrast to
+the ordinary type level application ($F\,G$) whose argument being applied is
+a type constructor ($G$), the argument of the index application ($F\,\{s\}$) is
+a term ($s$). We use the curly bracket notation around the index argument to
+emphasize the distinction from ordinary type arguments and also to emphasize
+that $s$ is an index term, which is erasable. Index applications eliminate
+indexed arrow kinds by the kinding rule \newFi{(@i)}. Note, we type check
+the index term ($s$) under the current type level context paired with
+the empty term level context ($\Delta;\cdot$) since we do not want
+the index term ($s$) to depend on any term level bindings.
+
+\newFi{\forall i^A . B} is an index polymorphic type.
+The formation of indexed polymorphic types is governed by
+the kinding rule \newFi{\forall i}, which is very similar to
+the formation rule ($\forall$) for ordinary polymorphic types.
+
+In addition to the rules ($\lambda i$), ($@ i$), and ($\forall i$),
+we need a conversion rule \newFi{(Conv)} at kind level. This is because
+the new extension to the kind syntax $A -> \kappa$ involves types.
+Since kind syntax involves types, we need more than simple structural
+equality over kinds. The equality over kinds is the usual structural equality
+extended by type constructor equality when comparing indexed arrow kinds
+(see \Fig{eqFi}).
+
+\paragraph{Terms and their typing rules}
+The term syntax is extended by index variables (\newFi{i}), since terms used
+as indices may have index variables as well as term variables
+(\eg, $\lambda i^A.F\{(\lambda x.x\;i)\,(\lambda x.x)\}$).
+The term variables ($x$) are introduced from
+term level abstractions ($\lambda x.t$).
+The index variables ($i$) are introduced from
+index abstractions ($\lambda i^A.F$) and
+index polymorphic types ($\forall i^A.B$). However, the distinction between
+$x$ and $i$ is in fact only a convention for the convenience of readability.
+An equivalent but more succinct description of the system would be possible
+by having only $x$ for both term and index variables instead of having two
+kinds of variables $x$ and $i$.
+
+Since \Fi\ has index polymorphic types ($\forall i^A . B$),
+we need typing rules for index polymorphism:
+\newFi{(\forall I i)} for index generalization
+and \newFi{(\forall E i)} for index instantiation.
+
+The index generalization rule ($\forall I i$) is similar to
+the type generalization rule ($\forall I$), except the additional
+side condition $\big(i\notin\FV(t)\big)$. This side condition prevents
+terms from accessing the type level index variables introduced by index
+polymorphism. Otherwise, without this side condition, $\forall$-binder
+would be no longer behave as polymorphism but powerful enough to behave as
+dependent functions, which are usually denoted by the $\Pi$-binder in
+dependent type theories. The side condition on generalization rules
+for polymorphism is fairly standard in dependently typed languages supporting
+distinctions between polymorphism (or, erasable arguments) and
+dependent functions (\eg, IPTS[TODO cite Nathans' thesis], ICC[TODO cite]).
+The rule ($\forall I$) for ordinary type generalization rule does not need
+a side condition because type variables cannot appear in the syntax of terms.
+
+The index instantiation rule ($\forall E i$) is similar to
+the type instantiation rule ($\forall E i$), except that
+we type check the index term $s$ to be instantiated for $i$
+in the current type level context paired with the empty term level context
+($\Delta;\cdot$) rather than the current term level context.
+Since index terms are at type level, they should not depend on
+term level bindings.
+
+In addition to the rules ($\forall I i$) and ($\forall E i$) for
+index polymorphism, we need an additional variable rule \newFi{(:i)}
+to be able to access the index variables already in scope. Terms ($s$) used
+at type level in index applications ($F\{s\}$) should be able to access
+index variables already in scope. For example, $\lambda i^A.F\{i\}$ should be
+well-kinded under a context where $F$ is well-kinded,
+justified by the derivation in Figure \ref{fig:ivarexample}.
+\begin{figure*}
+\[ \inference[($\lambda i$)]
+      { \cdot |- A:* &
+	\inference[($@i$)]{ \Delta, i^A |- F : A -> \kappa
+                          & \inference[($:i$)]{ i^A\in \Delta,i^A
+                                              & \Delta |- \cdot }
+                                              {\Delta,i^A;\cdot |- i:A}
+                          }
+                          {\Delta, i^A |- F\{i\} : \kappa} }
+      {\Delta |- \lambda i^A.F\{i\} :\kappa}
+\]
+\caption{Kinding derivation for an index abstraction}
+\label{fig:ivarexample}
+\end{figure*}
+
+
+
+
+
+
