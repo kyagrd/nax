@@ -506,7 +506,8 @@ to be able to access the index variables already in scope. Terms ($s$) used
 at type level in index applications ($F\{s\}$) should be able to access
 index variables already in scope. For example, $\lambda i^A.F\{i\}$ should be
 well-kinded under a context where $F$ is well-kinded,
-justified by the following derivation:
+justified by the derivation in Figure \ref{fig:ivarexample}.
+\begin{figure*}
 \[ \inference[($\lambda i$)]
       { \cdot |- A:* &
 	\inference[($@i$)]{ \Delta, i^A |- F : A -> \kappa
@@ -517,6 +518,10 @@ justified by the following derivation:
                           {\Delta, i^A |- F\{i\} : \kappa} }
       {\Delta |- \lambda i^A.F\{i\} :\kappa}
 \]
+\caption{Kinding derivation for an index abstraction}
+\label{fig:ivarexample}
+\end{figure*}
+
 
 
 
