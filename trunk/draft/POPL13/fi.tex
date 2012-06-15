@@ -8,13 +8,39 @@ are the extensions new to \Fi, which are not originally part of \Fw.
 That is, the system we obtain by excluding all the grey boxes from \Fig{Fi}
 and \Fig{eqFi} is a version of \Fw. In particular, it is a version of \Fw\
 with Curry-style terms and typing contexts separated into two parts
-(\ie, type level and term level). Terms are Curry style. That is,
-term level abstractions are unannotated ($\lambda x.t$), and
-type generalization ($\forall I$) and type instantiation ($\forall E$) are
-implicit at term level. Types remain Church style as usual. That is,
-type level abstractions are annotated by kinds ($\lambda X^\kappa.F$).
+(type level and term level).
+
+Terms are Curry style. That is, term level abstractions are unannotated
+($\lambda x.t$), and type generalizations ($\forall I$) and type instantiations
+($\forall E$) are implicit at term level. A Curry style calculus generally has
+advantages over its Church style couterpart when reasoning about properties of
+reduction. For instnace, the Church-Rossor property naturally holds for all
+of $\beta$-, $\eta$-, and $\beta\eta$-reduction in Curry style, but
+it does not hold Church style due to the presense of annotations on
+abstractions \cite{TODO ICC ECC}.\footnote{Does not hold in the strict sense
+	(\ie, $\alpha$-equivalence over Church-style terms),
+	but may hold under certain approximation such as
+	modulo ignoring the annotations on abstractions.}
+
+Type constructors remain Church style. That is, type level abstractions are
+annotated by kinds ($\lambda X^\kappa.F$). Choosing type constructors
+to be Church style makes it visually more evident to which kind
+a type constructor belongs. But, the choice of style for type constructors
+is not as crucial as the choice of style for terms, since the syntax and
+kinding rules are essentially a simply typed lambda calculus (STLC)
+at type level. Chosing type constructors to be Curry style would not
+make a big diffrecne for \Fi. When type constructors are also in Curry style,
+the type instantiation rule ($\forall E$) becomes slightly more complicated,
+though.
+
 Typing contexts are separated into type level contexts ($\Delta$) and
-term level contexts ($\Gamma$). We expect readers to be familiar to \Fw\
+term level contexts ($\Gamma$). TODO explain why in \Fw\ it may simply
+a matter of taste having one context is more desriable considering
+relation to other systems blah but we have a problem in \Fi\ ..
+keep track of different
+TODO don't explain everything here we can point to where we explain this
+
+We expect readers to be familiar to \Fw\
 and focus on describing new constructs of \Fi, which are in grey boxes.
 
 \begin{figure*}
