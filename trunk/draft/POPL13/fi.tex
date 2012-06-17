@@ -14,15 +14,16 @@ Terms are Curry style. That is, term level abstractions are unannotated
 ($\lambda x.t$), and type generalizations ($\forall I$) and type instantiations
 ($\forall E$) are implicit at term level. A Curry style calculus generally has
 advantages over its Church style couterpart when reasoning about properties of
-reduction. For instnace, the Church-Rossor property naturally holds for all
+reduction. For instnace, the Church-Rosser property naturally holds for all
 of $\beta$-, $\eta$-, and $\beta\eta$-reduction in Curry style, but
-it does not hold Church style due to the presense of annotations on
-abstractions \cite{TODO ICC ECC}.\footnote{Does not hold in the strict sense
+it may not hold in Church style due to the presense of annotations in
+abstractions \cite{Miquel01}.\footnote{In Church style, the Church-Rosser
+	property Does not hold in the strict sense
 	(\ie, $\alpha$-equivalence over Church-style terms),
-	but may hold under certain approximation such as
-	modulo ignoring the annotations on abstractions.}
+	but may hold under certain approximations such as
+	modulo ignoring the annotations in abstractions.}
 
-Type constructors remain Church style. That is, type level abstractions are
+Type constructors remain in Church style. That is, type level abstractions are
 annotated by kinds ($\lambda X^\kappa.F$). Choosing type constructors
 to be Church style makes it visually more evident to which kind
 a type constructor belongs. But, the choice of style for type constructors
@@ -39,6 +40,12 @@ a matter of taste having one context is more desriable considering
 relation to other systems blah but we have a problem in \Fi\ ..
 keep track of different
 TODO don't explain everything here we can point to where we explain this
+
+Although it is imaginable to formalize a system, which distinguishes
+index variables from ordinary term variables using more general concepts
+(\eg, capability, modality), we think that spliting the tying context into
+two parts is a more simple solution just for the purose of distinguishing
+index variables from ordinary term variables.
 
 We expect readers to be familiar to \Fw\
 and focus on describing new constructs of \Fi, which are in grey boxes.
