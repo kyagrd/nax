@@ -8,15 +8,19 @@ are the extensions new to \Fi, which are not originally part of \Fw.
 That is, the system we obtain by excluding all the grey boxes from \Fig{Fi}
 and \Fig{eqFi} is a version of \Fw. In particular, it is a version of \Fw\
 with Curry-style terms and typing contexts separated into two parts
-(type level and term level).
+(type level and term level). We first discuss the rational for
+the design choices of having Curry-style terms and two typing contexts
+(\S\ref{ssec:rationale}), and then introduce the new constructs of \Fi,
+which are not found in \Fw\ (\S\ref{ssec:newFi}).
 
+\subsection{Rationale for the design choices} \label{ssec:rationale}
 Terms are Curry style. That is, term level abstractions are unannotated
 ($\lambda x.t$), and type generalizations ($\forall I$) and type instantiations
 ($\forall E$) are implicit at term level. A Curry style calculus generally has
-advantages over its Church style couterpart when reasoning about properties of
-reduction. For instnace, the Church-Rosser property naturally holds for all
+advantages over its Church-style counterpart when reasoning about properties of
+reduction. For instance, the Church-Rosser property naturally holds for all
 of $\beta$-, $\eta$-, and $\beta\eta$-reduction in Curry style, but
-it may not hold in Church style due to the presense of annotations in
+it may not hold in Church style due to the presence of annotations in
 abstractions \cite{Miquel01}.\footnote{The Church-Rosser property generally
 	does not hold in Church-style calculi in the strict sense
 	(\ie, $\alpha$-equivalence over terms), but may hold under
@@ -29,39 +33,40 @@ to be Church style makes it visually more evident to which kind
 a type constructor belongs. But, the choice of style for type constructors
 is not as crucial as the choice of style for terms, since the syntax and
 kinding rules are essentially a simply typed lambda calculus at type level.
-Choosing type constructors to be Curry style would not have made much diffrecne.
+Choosing type constructors to be Curry style would not have made
+much difference.
 
 Typing contexts are separated into type level contexts ($\Delta$) and
 term level contexts ($\Gamma$). Type level variables ($X$, $i$) are
 bound in $\Delta$ and term variables ($x$) are bound $\Gamma$.
 
 Often times, System \Fw\ is formalized with a single context, which
-binds type variabels ($X$) and term variables ($x$).
-which binds both type variables ($X$) and term variables ($x$).
+binds both type variables ($X$) and term variables ($x$).
 In such a formalization, the free type variables in the typing of
-the term variable must be previosly bound in the context. For example,
+the term variable must be previously bound in the context. For example,
 $X_1$ and $X_2$ appearing free in the type of $x$ must appear previously
 in the single context ($\Gamma$) as below:
-\[ \Gamma = \dots,X_1^{*},\dots,X_2^{*},\dots, x:\forall X^{*}.X_1 -> X_2 -> X,\dots \]
+\[ \Gamma = \dots,X_1^{*},\dots,X_2^{*},\dots,
+		x:\forall X^{*}.X_1 -> X_2 -> X,\dots \]
 Also, in such a formalization, the side condition ($X\notin\Gamma$)
-in the $(\forall I)$ rule is not neccessary since such a condition
-is already a part of the well-formness condition for the single context
+in the $(\forall I)$ rule is not necessary since such a condition
+is already a part of the well-formedness condition for the single context
 (\ie, $\Gamma,X^\kappa$ is well-formed when $X\notin\FV(\Gamma)$).
 Thus, for \Fw, it is only a matter of taste whether to formalize the system
 using a single context or two contexts, since they are equivalent
 formalizations with comparable complexity.
 
 However, for \Fi, it is necessary to have two contexts due to index variables.
-Index varaibles are part of the term syntax, but their use is restricted at
-type leval, \ie, where it does not affect reduction at term level.
+Index variables are part of the term syntax, but their use is restricted at
+type level, \ie, where it does not affect reduction at term level.
 Index variables are bound to the type level context ($\Delta,i^A$),
 contrary to term variables bound in the term level context ($\Delta,x:A$),
-in order to enforce the restriced use of index variables. 
+in order to enforce the restricted use of index variables. 
 Although it is imaginable to formalize \Fi\ with a single typing context
 and distinguish index variables from ordinary term variables using
-more general concepts (\eg, capability, modality), we think that spliting
+more general concepts (\eg, capability, modality), we think that splitting
 the tying context into two parts is a more simple solution just for
-the purose of distinguishing index variables from ordinary term variables.
+the purpose of distinguishing index variables from ordinary term variables.
 
 \begin{figure*}
 \paragraph{Syntax:}
@@ -323,7 +328,7 @@ $
 \label{fig:eqFi}
 \end{figure*}
 
-\subsection{The constructs new to \Fi}
+\subsection{The constructs new to \Fi} \label{ssec:newFi}
 We expect readers to be familiar to \Fw\
 and focus on describing new constructs of \Fi, which are in grey boxes.
 
@@ -426,7 +431,7 @@ dependent functions, which are usually denoted by the $\Pi$-binder in
 dependent type theories. The side condition on generalization rules
 for polymorphism is fairly standard in dependently typed languages supporting
 distinctions between polymorphism (or, erasable arguments) and
-dependent functions (\eg, IPTS[TODO cite Nathans' thesis], ICC[TODO cite]).
+dependent functions (\eg, IPTS[TODO cite Nathans' thesis], ICC\ref{Miquel01}).
 The rule ($\forall I$) for ordinary type generalization rule does not need
 a side condition because type variables cannot appear in the syntax of terms.
 

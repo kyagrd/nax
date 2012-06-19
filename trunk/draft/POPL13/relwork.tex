@@ -2,32 +2,34 @@
 \label{sec:relwork}
 TODO
 
-In a theorectical setting
+In a theoretical setting
 
-All terms typable in System \Fw\ are typable in System \Fi\ with the same type,
-and all terms typable in \Fi\ are are typable in ICC with the same type.
-So, the subject-reduction property of \Fi\ is automatic from ICC.
-ICC\cite{Miquel01} is more than just a dependent extension of \Fi,
-as dscribed in our work, since ICC includes $\eta$-reduction and
-the extensionality typing rule. We foresee no problem of adding
-$\eta$-reduction and the extensionalty typing rule to \Fi.
-However, System \Fi\ enjoys the erasure property (TODO internal cite),
-which ICC does not have.
+All terms typable in Curry-style System \Fw\ [TODO cite] are typable
+in System \Fi\ with the same type, and all terms typable in \Fi\ are
+typable in ICC \cite{Miquel01} with the same type. So, the subject reduction
+and strong normalization of \Fi\ can be automatically derived from ICC.
+ICC is more than just a dependent extension of \Fi, as described in our work,
+since ICC includes $\eta$-reduction and the extensionality typing rule.
+We do not foresee any problem of adding $\eta$-reduction and
+the extensionality typing rule to \Fi. However, System \Fi\ enjoys
+the erasure property (TODO internal cite), which ICC does not provide.
 
-Why Curry style is often preferable - better reduction properties.
+In \S\ref{ssec:rationale}, we have mentioned that Curry-style calculi enjoys
+better reduction properties (\ie, Church-Rosser) than Church-style calculi. 
 \citet{Nederpelt73} showed a counterexample that the Church-Rosser property
 does not generally hold for $\beta\eta$-reduction of Church-style terms.
 \citet{Geuvers92} proved that the Church-Rosser for $\beta\eta$-reduction
 holds in functional PTSs. \citet{Seldin08} discusses the relation between
-the Church-style typing and the Curry-style typing. 
+the Church-style typing and the Curry-style typing.
 
+In a more practical setting for language implementation,
 
-In a more practial setting (for language implementation)
-
-"Giving Haskell a Propmotion" \cite{YorgeyWCJVM12}
+\citet{YorgeyWCJVM12}
+"Giving Haskell a Promotion" 
 most closely reated work would be this
 
-value dependent types in F-star \cite{Swamy11} from MSR
+\citet{Swamy11}
+value dependent types in F-star  from MSR
 
 
 what others to discuss?
