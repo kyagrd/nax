@@ -4,19 +4,21 @@ TODO
 
 In a theorectical setting
 
-System \Fi\ is between Curry-style System \Fw\ and
-the Iimplicit Calculus of Constructions (ICC) \cite{Miquel01}.
-So subject-reduction property is juts automatic from ICC
-ICC is more than just a dependent version of \Fi, as dscribed in our
-work, is that ICC includes $\eta$-reduction and the extensionality typing rule.
-We see no problem of adding $\eta$-reduction and the extensionalty typing rule
-to \Fi.
+All terms typable in System \Fw\ are typable in System \Fi\ with the same type,
+and all terms typable in \Fi\ are are typable in ICC with the same type.
+So, the subject-reduction property of \Fi\ is automatic from ICC.
+ICC\cite{Miquel01} is more than just a dependent extension of \Fi,
+as dscribed in our work, since ICC includes $\eta$-reduction and
+the extensionality typing rule. We foresee no problem of adding
+$\eta$-reduction and the extensionalty typing rule to \Fi.
+However, System \Fi\ enjoys the erasure property (TODO internal cite),
+which ICC does not have.
 
-why Curry style is often preferable
+Why Curry style is often preferable - better reduction properties.
 \citet{Nederpelt73} showed a counterexample that the Church-Rosser property
 does not generally hold for $\beta\eta$-reduction of Church-style terms.
 \citet{Geuvers92} proved that the Church-Rosser for $\beta\eta$-reduction
-holds infunctional PTSs. \citet{Seldin08} discusses the relation between
+holds in functional PTSs. \citet{Seldin08} discusses the relation between
 the Church-style typing and the Curry-style typing. 
 
 
@@ -25,8 +27,8 @@ In a more practial setting (for language implementation)
 "Giving Haskell a Propmotion" \cite{YorgeyWCJVM12}
 most closely reated work would be this
 
-F-star from MSR
-\cite{Swamy11}
+value dependent types in F-star \cite{Swamy11} from MSR
+
 
 what others to discuss?
 

@@ -17,38 +17,51 @@ advantages over its Church style couterpart when reasoning about properties of
 reduction. For instnace, the Church-Rosser property naturally holds for all
 of $\beta$-, $\eta$-, and $\beta\eta$-reduction in Curry style, but
 it may not hold in Church style due to the presense of annotations in
-abstractions \cite{Miquel01}.\footnote{In Church style, the Church-Rosser
-	property Does not hold in the strict sense
-	(\ie, $\alpha$-equivalence over Church-style terms),
-	but may hold under certain approximations such as
-	modulo ignoring the annotations in abstractions.}
+abstractions \cite{Miquel01}.\footnote{The Church-Rosser property generally
+	does not hold in Church-style calculi in the strict sense
+	(\ie, $\alpha$-equivalence over terms), but may hold under
+	certain approximations such as modulo ignoring the annotations
+	in abstractions.}
 
 Type constructors remain in Church style. That is, type level abstractions are
 annotated by kinds ($\lambda X^\kappa.F$). Choosing type constructors
 to be Church style makes it visually more evident to which kind
 a type constructor belongs. But, the choice of style for type constructors
 is not as crucial as the choice of style for terms, since the syntax and
-kinding rules are essentially a simply typed lambda calculus (STLC)
-at type level. Chosing type constructors to be Curry style would not
-make a big diffrecne for \Fi. When type constructors are also in Curry style,
-the type instantiation rule ($\forall E$) becomes slightly more complicated,
-though.
+kinding rules are essentially a simply typed lambda calculus at type level.
+Choosing type constructors to be Curry style would not have made much diffrecne.
 
 Typing contexts are separated into type level contexts ($\Delta$) and
-term level contexts ($\Gamma$). TODO explain why in \Fw\ it may simply
-a matter of taste having one context is more desriable considering
-relation to other systems blah but we have a problem in \Fi\ ..
-keep track of different
-TODO don't explain everything here we can point to where we explain this
+term level contexts ($\Gamma$). Type level variables ($X$, $i$) are
+bound in $\Delta$ and term variables ($x$) are bound $\Gamma$.
 
-Although it is imaginable to formalize a system, which distinguishes
-index variables from ordinary term variables using more general concepts
-(\eg, capability, modality), we think that spliting the tying context into
-two parts is a more simple solution just for the purose of distinguishing
-index variables from ordinary term variables.
+Often times, System \Fw\ is formalized with a single context, which
+binds type variabels ($X$) and term variables ($x$).
+which binds both type variables ($X$) and term variables ($x$).
+In such a formalization, the free type variables in the typing of
+the term variable must be previosly bound in the context. For example,
+$X_1$ and $X_2$ appearing free in the type of $x$ must appear previously
+in the single context ($\Gamma$) as below:
+\[ \Gamma = \dots,X_1^{*},\dots,X_2^{*},\dots, x:\forall X^{*}.X_1 -> X_2 -> X,\dots \]
+Also, in such a formalization, the side condition ($X\notin\Gamma$)
+in the $(\forall I)$ rule is not neccessary since such a condition
+is already a part of the well-formness condition for the single context
+(\ie, $\Gamma,X^\kappa$ is well-formed when $X\notin\FV(\Gamma)$).
+Thus, for \Fw, it is only a matter of taste whether to formalize the system
+using a single context or two contexts, since they are equivalent
+formalizations with comparable complexity.
 
-We expect readers to be familiar to \Fw\
-and focus on describing new constructs of \Fi, which are in grey boxes.
+However, for \Fi, it is necessary to have two contexts due to index variables.
+Index varaibles are part of the term syntax, but their use is restricted at
+type leval, \ie, where it does not affect reduction at term level.
+Index variables are bound to the type level context ($\Delta,i^A$),
+contrary to term variables bound in the term level context ($\Delta,x:A$),
+in order to enforce the restriced use of index variables. 
+Although it is imaginable to formalize \Fi\ with a single typing context
+and distinguish index variables from ordinary term variables using
+more general concepts (\eg, capability, modality), we think that spliting
+the tying context into two parts is a more simple solution just for
+the purose of distinguishing index variables from ordinary term variables.
 
 \begin{figure*}
 \paragraph{Syntax:}
@@ -311,6 +324,8 @@ $
 \end{figure*}
 
 \subsection{The constructs new to \Fi}
+We expect readers to be familiar to \Fw\
+and focus on describing new constructs of \Fi, which are in grey boxes.
 
 \paragraph{Typing contexts}
 Typing contexts are split into two parts:
