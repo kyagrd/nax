@@ -466,20 +466,19 @@ The only interesting cases, which are worth elaborating, are
 the equality rules involving substitution.
 There are two such rules.
 
-\begin{itemize}
-\item
+\paragraph{}
   $\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
              {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}$ \\
 
-We need to show that
-$ \Delta^\circ |- ((\lambda X^\kappa.F)\,G)^\circ = ([G/X]F)^\circ : \kappa'^\circ $,\\
+We need to show
+$ \Delta^\circ |- ((\lambda X^\kappa.F)\,G)^\circ = ([G/X]F)^\circ : \kappa'^\circ $,
 which simplifies to 
-$ \Delta^\circ |- (\lambda X^{\kappa^\circ}.F^\circ)\,G^\circ = ([G/X]F)^\circ : \kappa'^\circ $.
-	by Definition \ref{def:ierase}.
+$ \Delta^\circ |- (\lambda X^{\kappa^\circ}.F^\circ)\,G^\circ = ([G/X]F)^\circ : \kappa'^\circ $
+by Definition \ref{def:ierase}.
 
 By induction, we know that $(\Delta,X^\kappa)^\circ |- F^\circ : \kappa'^\circ$,
 which simplifies to $\Delta^\circ,X^{\kappa^\circ} |- F^\circ : \kappa'^\circ$.
-	by Definition \ref{def:ierase}.
+by Definition \ref{def:ierase}.
 
 Using the kinding rule ($\lambda$), we get
 $\Delta^\circ |- \lambda X^{\kappa^\circ} F^\circ : \kappa^\circ -> \kappa'^\circ$.
@@ -487,32 +486,59 @@ $\Delta^\circ |- \lambda X^{\kappa^\circ} F^\circ : \kappa^\circ -> \kappa'^\cir
 Using the kinding rule ($@$), we get
 $\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ : \kappa^\circ$.
 
-Using the very equality rule of this case, we get 
+Using the very equality rule of this case,\\ we get 
 $\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ = [G^\circ/X] F^\circ : \kappa^\circ$.
 
 All we need to check is $([G/X]F)^\circ = [G^\circ/X] F^\circ$,
 which is easy to see.
 
-
-\item
+\paragraph{}
   $\inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
              {\Delta |- (\lambda i^A.F)\,\{s\} = [s/i]F:\kappa}$ \\
 
-TODO this case is done by induction and the fact that $([s/i]F)^\circ = F^\circ$
-\end{itemize}
+By induction we know that $\Delta^\circ |- F^\circ : \kappa^\circ$.
+
+The erasure of the left hand side of the equality is\\
+$((\lambda i^A.F)\,\{s\})^\circ = (\lambda i^A.F)^\circ = F^\circ$.
+
+All we need to show is $([s/i]F)^\circ = F^\circ$, which is obvious
+since index variables can only occur in index terms and index terms
+are always erased. Recall the index erasure over type constructors in
+Definition \ref{def:ierase}, in particular, $(\lambda i^A.F)^\circ=F^\circ$,
+$(F\{s\})^\circ=F^\circ$, and $(\forall i^A.B)^\circ=B^\circ$.
 \end{proof}
 
-The proofs for the two theorems above on types need not consider
+The proofs for the two theorems above on type constructors need not consider
 mutual recursion in the definition of type constructors due to
-the erasure operation on type constructors. Recall that
-the erasure operation on type constructors discards the index term ($s$)
-appearing in the index application $(F\;\{s\})$. So, there is no need to
-consider the index terms appearing in the types after the erasure.
+the erasure operation. Recall that the erasure operation on type constructors
+discards the index term ($s$) appearing in the index application $(F\;\{s\})$.
+So, there is no need to consider the index terms appearing in the types after
+the erasure.
 
 \begin{theorem}[index erasure on well-formed term level contexts]
 \label{thm:ierasetmctx}
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ} \]
 \end{theorem}
+\begin{proof}
+By induction on $\Gamma$.
+\begin{itemize}
+\item[case] ($\Gamma=\cdot$) It trivially holds.
+\item[case] ($\Gamma = \Gamma',x:A$),
+we know that  $\Delta |- \Gamma'$ and $\Delta |- A:*$
+by the well-formedness rules
+and that $\Delta^\circ |- \Gamma'^\circ$ by induction.
+
+From $\Delta |- A:*$, we know that $\Delta^\circ |- A^\circ :*$
+by Theorem \ref{thm:ierasekinding}.
+
+We know that $\Delta^\circ |- \Gamma'^\circ,x:A^\circ$
+from $\Delta^\circ |- \Gamma'^\circ$ and $\Delta^\circ |- A^\circ :*$
+by the well-formedness rules.
+
+Since $\Gamma'^\circ,x:A^\circ = (\Gamma',x:A)^\circ = \Gamma^\circ$
+by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
+\end{itemize}
+\end{proof}
 
 \begin{theorem}[index erasure on well-typed terms]
 \label{thm:ierasetyping}
@@ -520,12 +546,14 @@ consider the index terms appearing in the types after the erasure.
 		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
 \]
 \end{theorem}
+\begin{proof}
+	TODO
+\end{proof}
 
-
-\begin{theorem}[index erasure on term equality]
-\[ \inference{\Delta;\Gamma |- t=t':A}
- 	{\Delta^\circ;\Gamma^\circ |- t=t':A^\circ}
-\]
-\end{theorem}
+%% \begin{theorem}[index erasure on term equality]
+%% \[ \inference{\Delta;\Gamma |- t=t':A}
+%%  	{\Delta^\circ;\Gamma^\circ |- t=t':A^\circ}
+%% \]
+%% \end{theorem}
 
 
