@@ -40,7 +40,7 @@ Typing contexts are separated into type level contexts ($\Delta$) and
 term level contexts ($\Gamma$). Type level variables ($X$, $i$) are
 bound in $\Delta$ and term variables ($x$) are bound $\Gamma$.
 
-Often times, System \Fw\ is formalized with a single context, which
+System \Fw\ is more often formalized with a single context, which
 binds both type variables ($X$) and term variables ($x$).
 In such a formalization, the free type variables in the typing of
 the term variable must be previously bound in the context. For example,
@@ -49,19 +49,19 @@ in the single context ($\Gamma$) as below:
 \[ \Gamma = \dots,X_1^{*},\dots,X_2^{*},\dots,
 		x:\forall X^{*}.X_1 -> X_2 -> X,\dots \]
 Also, in such a formalization, the side condition ($X\notin\Gamma$)
-in the $(\forall I)$ rule is not necessary since such a condition
-is already a part of the well-formedness condition for the single context
-(\ie, $\Gamma,X^\kappa$ is well-formed when $X\notin\FV(\Gamma)$).
-Thus, for \Fw, it is only a matter of taste whether to formalize the system
-using a single context or two contexts, since they are equivalent
-formalizations with comparable complexity.
+in the $(\forall I)$ rule in Figure \ref{fig:Fi} is not necessary
+since such a condition is already a part of the well-formedness condition
+for the single context (\ie, $\Gamma,X^\kappa$ is well-formed when
+$X\notin\FV(\Gamma)$). Thus, for \Fw, it is only a matter of taste
+whether to formalize the system using a single context or two contexts,
+since they are equivalent formalizations with comparable complexity.
 
 However, for \Fi, it is necessary to have two contexts due to index variables.
 Index variables are part of the term syntax, but their use is restricted at
-type level, \ie, where it does not affect reduction at term level.
+type level, that is, where it does not affect reduction at term level.
 Index variables are bound to the type level context ($\Delta,i^A$),
 contrary to term variables bound in the term level context ($\Delta,x:A$),
-in order to enforce the restricted use of index variables. 
+in order to enforce the restricted use of index variables.
 Although it is imaginable to formalize \Fi\ with a single typing context
 and distinguish index variables from ordinary term variables using
 more general concepts (\eg, capability, modality), we think that splitting
@@ -328,7 +328,7 @@ $
 \label{fig:eqFi}
 \end{figure*}
 
-\subsection{The constructs new to \Fi} \label{ssec:newFi}
+\subsection{The constructs new to \Fi\ compared to \Fw} \label{ssec:newFi}
 We expect readers to be familiar to \Fw\
 and focus on describing new constructs of \Fi, which are in grey boxes.
 
