@@ -19,7 +19,8 @@
 
 \newcommand{\email}[1]{\texttt{\small #1}}
 
-\title{System \Fi: a higher-order polymorphic $\lambda$-calculus with erasable term indexes \vspace*{-5pt}}
+\title{System \Fi: a higher-order polymorphic $\lambda$-calculus
+	with erasable term indexes \vspace*{-5pt}}
 
 \author{
  $\begin{matrix}_\text{grad student}\\ ~ \\ ~ \end{matrix}\!\!\!\!\!\!\!\!$
@@ -43,38 +44,36 @@
 \maketitle \vspace*{-15pt}
 %% Clearly state the problem being addressed
 %% and explain the reasons for seeking a solution to this problem.
-Our goal is to design a calculus, as simple as possible, yet
-expressive enough to embed non-dependent term-indexed datatypes
-(e.g., length indexed lists) and their eliminators (e.g., fold over
-length indexed lists). It is well known that datatypes can be embedded into
-a polymorphic lambda calculi. More expressive polymorphic calculi would be
-able to embed larger class of datatypes.
+My goal is to design a calculus, as simple as possible, yet expressive enough
+to embed non-dependent \emph{term-indexed datatypes} and their eliminators.
+It is well known that datatypes can be embedded into polymorphic lambda calculi
+(e.g., \cite{AbeMatUus03}).
 
 In System \textsf{F}, we can embed \emph{regular datatypes},
-such as homogeneous lists:
+such as homogeneous lists:\vspace*{1pt}\\
 \fbox{$
 \begin{array}{ll}
 \text{Haskell:} & \texttt{data List a = Nil | Cons a (List a)} \\
 \text{System \textsf{F}:} & \texttt{{List}}\:\: A\:\:\triangleq\:\:\forall X.X\to(A\to X\to X)\to X \qquad\qquad\qquad\qquad\quad
-\end{array}$}\\
+\end{array}$}\vspace*{1pt}\\
 Note the use of the universally quantified type variable $X$
 and the regularity of $(\texttt{List a})$ in the datatype definition.
 
 In System \Fw, we can embed \emph{type-indexed datatypes}, which include
 datatypes that are not regular. For example, we can embed powerlists with
 heterogeneous elements where an element of type \texttt{a} is followed by
-an element of type \texttt{(a,a)}:
+an element of type \texttt{(a,a)}:\vspace*{1pt}\\
 \fbox{$
 \begin{array}{ll}
 \text{Haskell:} & \texttt{data Powl a = PNil | PCons a (Powl(a,a))} \\
 \text{System \textsf{F}:} & \texttt{{Powl}}\:\:\triangleq\:\:
 \lambda A^{*}.\forall X^{*\to*}.X\, A\to(A\to X(A\times A)\to X\, A)\to X\, A
-\end{array}$}\\
+\end{array}$}\vspace*{1pt}\\
 Note the non-regular occurrence \texttt{(Powl(a,a))} and
 the use of type constructor variable $X$ universally quantifying over
 type constructors of kind $* -> *$.\\
 \begin{center}\vspace*{-14pt}
-\textbf{Motivating Example} \vspace*{-8pt}
+\textbf{A Motivating Example: length-indexed lists} \vspace*{-8pt}
 \end{center}
 \definecolor{shadecolor}{rgb}{1,0.9,0.7}
 \begin{snugshade}\vspace{-7pt}
@@ -95,7 +94,7 @@ $
 \end{snugshade}\vspace*{-5pt}
 What extensions to \Fw\ do we need to embed datatypes that are indexed by
 terms (\texttt{Z}, \texttt{i}, \texttt{S i}), as well as types (\texttt{a}),
-such as length indexed lists (\verb|Vec a {i}|)? From the motivating example
+such as length-indexed lists (\verb|Vec a {i}|)? From the motivating example
 above, we learn that the calculus would need four additional constructs:
 index arrow kinds ($\texttt{{Nat}\ensuremath{\to}*}$),
 index abstraction ($\lambda i^{\texttt{{Nat}}}.\cdots$),
@@ -143,26 +142,25 @@ $\vspace*{3pt}
 (\forall i^{A}.F)^{\circ}=F^{\circ} \qquad
 \end{align*}\vspace*{-25pt}
 \end{framed}\vspace*{-5pt}
-We extend the syntax of the Curry style \Fw\ based on the observations from
+We extend the syntax of the Curry-style \Fw\ based on the observations from
 the motivating example. The constructs new to \Fi\ are highlighted grey.
 
-Index erasure operation ($^\circ$) erases all the index related constructs
+The index erasure operation ($^\circ$) erases all the index related constructs
 at type level, but does not erase anything from terms. The key erasure rules are
 illustrated above, and all other rules left out are contextual rules that
-delegates erasure operation structurally. Since index erasure is completely
+delegates the erasure operation structurally. Since index erasure is completely
 predetermined by the syntax, there is no need for any extra analysis
-to determine erasable components. System \Fi\ enjoys a simple erasure property
+to determine erasable fragments. System \Fi\ enjoys a simple erasure property
 such that $\Gamma;\Delta|- t:A$ then $\Gamma^\circ;\Delta^\circ|- t:A^\circ$.
-If the original judgment $\Gamma;\Delta|- t:A$ is derivable in \Fi\
+In addition, if the original judgment $\Gamma;\Delta|- t:A$ is derivable in \Fi,
 then the erased judgment $\Gamma^\circ;\Delta^\circ|- t:A^\circ$ should be
 derivable in \Fw.
 
-The key mechanism to ensure such simple erasure is dividing the typing context
-into two parts, the type-level context $\Delta$ and the term-level context $\Gamma$.
-When we go inside the curly braces to type check a term index $s$
-in a type application $F\,\{s\}$, we retain the type-level context $\Delta$
-but forget about the term-level context $\Gamma$, as in the kinding rule below:
-\vspace*{-5pt} \\
+The key mechanism to ensure this erasure property comes from splitting
+the typing context into two parts. When we go inside the curly braces
+to type check a term index ($s$) in a type application ($F\,\{s\}$), we keep
+the type-level context $\Delta$ but forget the term-level context $\Gamma$,
+as in the kinding rule below: \vspace{1pt}\\
 $~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad
 \inference[($@i$)]{ \Delta |- F : A -> \kappa & \Delta;\cdot |- s : A }
                   {\Delta |- F\,\{s\} : \kappa}  
@@ -171,34 +169,39 @@ $\vspace*{3pt}
 We proved the index erasure property mentioned above. Strong normalization
 is a corollary of the erasure property since we know that System \Fw\ is
 strongly normalizing. Logical consistency is immediate since System \Fi\
-is a strict subset of the \emph{restricted implicit calculus}, which is
-proved to be logically consistent.
-\vspace{-10pt}
+is a strict subset of the \emph{restricted implicit calculus} \cite{Miquel00}.
+\vspace{-3pt}
 \begin{center}
 \textbf{
  Conclusions and Future work
  \vspace*{-9pt}
 }
 \end{center}
-Our contributions are:\vspace*{-8pt}
+My contributions are:\vspace*{-6pt}
 \begin{itemize}
 \item identifying the features needed for $\lambda$-calculi 
     to embed term-indexed datatypes, in isolation with other
-    requirements (e.g., large elimination), \vspace*{-8pt}
+    requirements (e.g., large elimination), \vspace*{-7pt}
 \item design of a calculus useful for studying properties of
-    term-indexed datatypes, \vspace*{-20pt}
+    term-indexed datatypes
+    (e.g., we can use \Fi\ to give formal proof that the eliminators
+    for GADTs appearing in our last year's ICFP paper \cite{AhnShe11} are
+    indeed nomralizing), \vspace*{-7pt}
 \item proof that the calculus enjoys a simple erasure property
     and inherits metatheoretic results from well-known calculi.
 \end{itemize}\vspace*{-3pt}
 We are exploring whether Leibniz equality over indices
-(i.e., $s=t$ encoded as $\forall X^{A -> *}.X\{s\} -> X\{t\}$)
-may help us express functions whose domain types are restricted
-by term-indices (e.g., \verb|vtail :: Vec a {S n} -> Vec a n|).
-We wonder what would be the smallest extension to \Fi\ to enable
-large elimination (i.e., computing types from term-indices), which
-is often used in datatype generic programming.
-We are also designing a programming language Nax, which supports
-type inference with little annotation, based on \Fi.
+(i.e., $s_1=s_2$ encoded as $\forall X^{A -> *}.X\{s_1\} -> X\{s_2\}$)
+may help us express functions whose domains are restricted by term-indices
+(e.g., \verb|vtail :: Vec a {S n} -> Vec a n|). We wonder what extension
+we need to enable large elimination (i.e., computing types from term-indices).
+We are also developing a programming language Nax, which supports
+type inference with little annotation, based on System \Fi.
 % \paragraph{Acknowledgments:} Thanks to Tim Sheard, Andy Pitts, Marcelo Fiore,
 % Stephanie Weirich for their enlightening suggestions and feedback.
+
+\bibliographystyle{plain}
+\bibliography{main}
+
+
 \end{document}

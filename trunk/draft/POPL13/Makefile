@@ -33,6 +33,11 @@ main.bbl: main.aux main.bib
 	bibtex main
 	latex main
 
-Abstract.pdf: Abstract.tex main.bbl
+Abstract.pdf: Abstract.tex Abstract.bbl
 	pdflatex Abstract
+
+Abstract.bbl: Abstract.aux main.bib
+	bibtex Abstract 
+	latex Abstract
+
 
