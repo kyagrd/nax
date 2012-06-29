@@ -218,52 +218,7 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
 	{\Delta,\Gamma |- [s/x]t:B} $
 \end{lemma}
 
-
-
-\begin{proposition}[anti-dependency on arrow kinds]
-\[ \inference{ |- \Delta,X^\kappa
-             & \Delta,X^\kappa |- F : \kappa' }
-             { X\notin\FV(\kappa') }
-\]
-\end{proposition}
-\begin{proof}
-	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
-	Note that $|- \kappa'$ does not involve any type level context.
-
-	Therefore, $X$ cannot appear free in $\kappa'$.
-\end{proof}
-
-\begin{proposition}[anti-dependency on indexed arrow kinds]
-\[ \inference{ |- \Delta,i^A
-             & \Delta,i^A |- F : \kappa }
-             { i\notin\FV(\kappa) }
-\]
-\end{proposition}
-\begin{proof}
-	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
-	Note that $|- \kappa'$ does not involve any type level context.
-
-	Therefore, $i$ cannot appear free in $\kappa'$.
-\end{proof}
-
-\begin{proposition}[anti-dependency on arrow types]
-\[ \inference{ \Delta |- \Gamma,x:A
-             & \Delta;\Gamma,x:A |- t : B }
-             { x\notin\FV(B) }
-\]
-\end{proposition}
-\begin{proof}
-	By Proposition \ref{prop:wftype}, $\Delta |- B$.
-	Note that $\Delta |- \kappa'$ does not involve any term level context.
-
-	Therefore, $x$ cannot appear free in $B$.
-\end{proof}
-
-
-\begin{remark} Our system is more strong??? than anti-dependency on arrow types
-TODO
-\end{remark}
-
+\subsection{Erasure}
 \paragraph{}
 \begin{definition}[index erasure]\label{def:ierase}
 \[ \fbox{$\kappa^\circ$}
@@ -555,5 +510,68 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 %%  	{\Delta^\circ;\Gamma^\circ |- t=t':A^\circ}
 %% \]
 %% \end{theorem}
+
+\subsection{TODO about void type instantiation}
+Why did we bother to design \Fi? What is different from a Curry-style
+dependent calculus with implicit arguments such as ICC? The following rule
+is the instantiation 
+\[
+\inference{\Gamma,x:A |- t : B}{\Gamma |- t : \forall x^A.B }~(x\notin\FV(t))
+\]
+Consier when $A=Void$ and $B=\forall i^{Void}.NeverEverVoid\,\{i\}$.
+In the calculus above, we can instantiate $i$ with $y$ provided that
+$(y:Void)\in\Gamma$. It is a void type instantiation, Uh-Oh ...
+
+In \Fi\ we cannot instantiate $B$ with any of the term variables
+since index instantiation can not refer to the term-level context
+but only refer to the type-level context $\Delta$. Recall
+\[
+	\inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B & \textcolor{red}{\Delta;\cdot |- s:A} }
+	                           {\Delta;\Gamma |- t : [s/i]B}
+			   \]
+
+\begin{proposition}[anti-dependency on arrow kinds]
+\[ \inference{ |- \Delta,X^\kappa
+             & \Delta,X^\kappa |- F : \kappa' }
+             { X\notin\FV(\kappa') }
+\]
+\end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
+	Note that $|- \kappa'$ does not involve any type level context.
+
+	Therefore, $X$ cannot appear free in $\kappa'$.
+\end{proof}
+
+\begin{proposition}[anti-dependency on indexed arrow kinds]
+\[ \inference{ |- \Delta,i^A
+             & \Delta,i^A |- F : \kappa }
+             { i\notin\FV(\kappa) }
+\]
+\end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
+	Note that $|- \kappa'$ does not involve any type level context.
+
+	Therefore, $i$ cannot appear free in $\kappa'$.
+\end{proof}
+
+\begin{proposition}[anti-dependency on arrow types]
+\[ \inference{ \Delta |- \Gamma,x:A
+             & \Delta;\Gamma,x:A |- t : B }
+             { x\notin\FV(B) }
+\]
+\end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wftype}, $\Delta |- B$.
+	Note that $\Delta |- \kappa'$ does not involve any term level context.
+
+	Therefore, $x$ cannot appear free in $B$.
+\end{proof}
+
+
+\begin{remark} Our system is more strong??? than anti-dependency on arrow types
+TODO
+\end{remark}
 
 

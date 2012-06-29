@@ -1,10 +1,12 @@
-.PHONY: pdf ps dvi
+.PHONY: all pdf ps dvi
 
 LHSSRC=main.lhs \
        example.lhs
 
 TEXSRC=main.tex \
        intro.tex fi.tex theory.tex relwork.tex concl.tex
+
+all: pdf Abstract.pdf
 
 pdf: main.pdf
 
@@ -30,4 +32,7 @@ main.aux:
 main.bbl: main.aux main.bib
 	bibtex main
 	latex main
+
+Abstract.pdf: Abstract.tex main.bbl
+	pdflatex Abstract
 

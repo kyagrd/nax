@@ -1,0 +1,204 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage{url}
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{semantic}
+\usepackage{todonotes}
+\usepackage{framed}
+
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+
+\newcommand{\Fi}{\ensuremath{\mathsf{F}_i}}
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
+
+\newcommand{\dom}{\mathop{\mathsf{dom}}}
+\newcommand{\FV}{\mathop{\mathrm{FV}}}
+
+\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
+
+\newcommand{\email}[1]{\texttt{\small #1}}
+
+\title{System \Fi: a higher-order polymorphic $\lambda$-calculus with erasable term indexes \vspace*{-5pt}}
+
+\author{
+ $\begin{matrix}_\text{grad student}\\ ~ \\ ~ \end{matrix}\!\!\!\!\!\!\!\!$
+ $\begin{matrix}\text{Ki Yung Ahn} \\ \email{kya@cs.pdx.edu} \\
+   \text{\small ACM member no. 4262877}   \end{matrix}$
+ $\!\!\!\!\begin{matrix}_\text{advised by}\\ ~ \\ ~ \end{matrix}$
+ $\begin{matrix}\text{Tim Sheard} \\ \email{sheard@cs.pdx.edu} \\ ~ \end{matrix}
+ \qquad$
+ \vspace*{5pt} \\
+ \small Department of Computer Science \\
+ \small Portland State University \\ \small PO Box 751, Portland, Oregon, 97201
+}
+
+\date{\small \vspace*{-12pt}
+% (An extended abstract submitted to ICFP 2012 Student Research Competition)
+% \hrule
+ }
+
+
+\begin{document}
+\maketitle \vspace*{-15pt}
+%% Clearly state the problem being addressed
+%% and explain the reasons for seeking a solution to this problem.
+Our goal is to design a calculus, as simple as possible, yet
+expressive enough to embed non-dependent term-indexed datatypes
+(e.g., length indexed lists) and their eliminators (e.g., fold over
+length indexed lists). It is well known that datatypes can be embedded into
+a polymorphic lambda calculi. More expressive polymorphic calculi would be
+able to embed larger class of datatypes.
+
+In System \textsf{F}, we can embed \emph{regular datatypes},
+such as homogeneous lists:
+\fbox{$
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data List a = Nil | Cons a (List a)} \\
+\text{System \textsf{F}:} & \texttt{{List}}\:\: A\:\:\triangleq\:\:\forall X.X\to(A\to X\to X)\to X \qquad\qquad\qquad\qquad\quad
+\end{array}$}\\
+Note the use of the universally quantified type variable $X$
+and the regularity of $(\texttt{List a})$ in the datatype definition.
+
+In System \Fw, we can embed \emph{type-indexed datatypes}, which include
+datatypes that are not regular. For example, we can embed powerlists with
+heterogeneous elements where an element of type \texttt{a} is followed by
+an element of type \texttt{(a,a)}:
+\fbox{$
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data Powl a = PNil | PCons a (Powl(a,a))} \\
+\text{System \textsf{F}:} & \texttt{{Powl}}\:\:\triangleq\:\:
+\lambda A^{*}.\forall X^{*\to*}.X\, A\to(A\to X(A\times A)\to X\, A)\to X\, A
+\end{array}$}\\
+Note the non-regular occurrence \texttt{(Powl(a,a))} and
+the use of type constructor variable $X$ universally quantifying over
+type constructors of kind $* -> *$.\\
+\begin{center}\vspace*{-14pt}
+\textbf{Motivating Example} \vspace*{-8pt}
+\end{center}
+\definecolor{shadecolor}{rgb}{1,0.9,0.7}
+\begin{snugshade}\vspace{-7pt}
+\begin{lstlisting}[basicstyle={\small\ttfamily},language=Haskell]
+data Nat = Z | S n
+data Vec (a:*) {i:N} where
+  VNil  : Vec a {Z}
+  VCons : a -> Vec a {i} -> Vec a {S i}
+\end{lstlisting}\vspace*{-10pt}
+\end{snugshade}\vspace*{-15pt}
+\begin{snugshade}\noindent
+$
+\texttt{{Vec}}\:\:\triangleq\:\:\lambda A^{*}.\lambda i^{\texttt{{N}}}.
+\forall X^{\texttt{{Nat}}\to*}.
+X\{\texttt{{Z}}\}\to
+(\forall i^{\texttt{{Nat}}}.A\to X\{i\}\to X\{\texttt{{S}}\; i\})\to X\{i\}
+$
+\end{snugshade}\vspace*{-5pt}
+What extensions to \Fw\ do we need to embed datatypes that are indexed by
+terms (\texttt{Z}, \texttt{i}, \texttt{S i}), as well as types (\texttt{a}),
+such as length indexed lists (\verb|Vec a {i}|)? From the motivating example
+above, we learn that the calculus would need four additional constructs:
+index arrow kinds ($\texttt{{Nat}\ensuremath{\to}*}$),
+index abstraction ($\lambda i^{\texttt{{Nat}}}.\cdots$),
+index application ($X\{i\}$), and
+index polymorphism ($\forall i^{\texttt{{Nat}}}.\cdots$).
+
+\begin{center}
+\textbf{
+ System \Fi ~= Curry-style System \Fw\ + \newFi{\text{\{erasable term indices\}}}}
+ \vspace*{-7pt}
+\end{center}
+\begin{framed}\vspace{-6pt}\noindent
+$
+\text{Terms}~~ r,s,t ~ ::= ~ x \mid \lambda x.t \mid r\;s \mid \newFi{i}
+\qquad
+\text{Kinds}~~ \kappa ~ ::= ~ *
+                                \mid \kappa -> \kappa
+                                \mid \newFi{A -> \kappa}$ \vspace*{2pt} \\
+$
+\text{Type Constructors}~~~
+        A,B,F,G               ~ ::= ~ X
+                                \mid A -> B
+                                \mid \lambda X^\kappa.F
+                                \mid F\,G
+                                \mid \forall X^\kappa . B$\\
+$~\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
+\mid \newFi{\lambda i^A.F
+                                \mid F\,\{s\}
+                                \mid \forall i^A . B}$ \\
+$\text{Typing Contexts}
+\qquad \Delta                ~ ::= ~ \cdot
+                                \mid \Delta, X^\kappa
+                                \mid \newFi{\Delta, i^A}
+\qquad\qquad \Gamma                ~ ::= ~ \cdot
+                                \mid \Gamma, x : A 
+$\vspace*{3pt}
+\hrule ~ \\ \vspace*{-20pt}
+\begin{align*}
+ \!\!\!\!\!\!\!\!\text{Index Erasure}\quad
+& \qquad (A\to\kappa)^{\circ}=\kappa^{\circ} \qquad \qquad
+(\Delta,i^A)^\circ = \Delta^\circ
+\\
+& (\lambda i^{A}.F)^{\circ}=F^{\circ} \qquad
+(F\,\{s\})^{\circ}\;=F^{\circ} \qquad
+(\forall i^{A}.F)^{\circ}=F^{\circ} \qquad
+\end{align*}\vspace*{-25pt}
+\end{framed}\vspace*{-5pt}
+We extend the syntax of the Curry style \Fw\ based on the observations from
+the motivating example. The constructs new to \Fi\ are highlighted grey.
+
+Index erasure operation ($^\circ$) erases all the index related constructs
+at type level, but does not erase anything from terms. The key erasure rules are
+illustrated above, and all other rules left out are contextual rules that
+delegates erasure operation structurally. Since index erasure is completely
+predetermined by the syntax, there is no need for any extra analysis
+to determine erasable components. System \Fi\ enjoys a simple erasure property
+such that $\Gamma;\Delta|- t:A$ then $\Gamma^\circ;\Delta^\circ|- t:A^\circ$.
+If the original judgment $\Gamma;\Delta|- t:A$ is derivable in \Fi\
+then the erased judgment $\Gamma^\circ;\Delta^\circ|- t:A^\circ$ should be
+derivable in \Fw.
+
+The key mechanism to ensure such simple erasure is dividing the typing context
+into two parts, the type-level context $\Delta$ and the term-level context $\Gamma$.
+When we go inside the curly braces to type check a term index $s$
+in a type application $F\,\{s\}$, we retain the type-level context $\Delta$
+but forget about the term-level context $\Gamma$, as in the kinding rule below:
+\vspace*{-5pt} \\
+$~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad
+\inference[($@i$)]{ \Delta |- F : A -> \kappa & \Delta;\cdot |- s : A }
+                  {\Delta |- F\,\{s\} : \kappa}  
+$\vspace*{3pt}
+
+We proved the index erasure property mentioned above. Strong normalization
+is a corollary of the erasure property since we know that System \Fw\ is
+strongly normalizing. Logical consistency is immediate since System \Fi\
+is a strict subset of the \emph{restricted implicit calculus}, which is
+proved to be logically consistent.
+\vspace{-10pt}
+\begin{center}
+\textbf{
+ Conclusions and Future work
+ \vspace*{-9pt}
+}
+\end{center}
+Our contributions are:\vspace*{-8pt}
+\begin{itemize}
+\item identifying the features needed for $\lambda$-calculi 
+    to embed term-indexed datatypes, in isolation with other
+    requirements (e.g., large elimination), \vspace*{-8pt}
+\item design of a calculus useful for studying properties of
+    term-indexed datatypes, \vspace*{-20pt}
+\item proof that the calculus enjoys a simple erasure property
+    and inherits metatheoretic results from well-known calculi.
+\end{itemize}\vspace*{-3pt}
+We are exploring whether Leibniz equality over indices
+(i.e., $s=t$ encoded as $\forall X^{A -> *}.X\{s\} -> X\{t\}$)
+may help us express functions whose domain types are restricted
+by term-indices (e.g., \verb|vtail :: Vec a {S n} -> Vec a n|).
+We wonder what would be the smallest extension to \Fi\ to enable
+large elimination (i.e., computing types from term-indices), which
+is often used in datatype generic programming.
+We are also designing a programming language Nax, which supports
+type inference with little annotation, based on \Fi.
+% \paragraph{Acknowledgments:} Thanks to Tim Sheard, Andy Pitts, Marcelo Fiore,
+% Stephanie Weirich for their enlightening suggestions and feedback.
+\end{document}
