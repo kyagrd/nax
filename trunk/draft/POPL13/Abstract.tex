@@ -70,7 +70,7 @@ an element of type \texttt{(a,a)}:\vspace*{1pt}\\
 \lambda A^{*}.\forall X^{*\to*}.X\, A\to(A\to X(A\times A)\to X\, A)\to X\, A
 \end{array}$}\vspace*{1pt}\\
 Note the non-regular occurrence \texttt{(Powl(a,a))} and
-the use of type constructor variable $X$ universally quantifying over
+the use of the type constructor variable $X$ universally quantifying over
 type constructors of kind $* -> *$.\\
 \begin{center}\vspace*{-14pt}
 \textbf{A Motivating Example: length-indexed lists} \vspace*{-8pt}
@@ -150,11 +150,12 @@ at type level, but does not erase anything from terms. The key erasure rules are
 illustrated above, and all other rules left out are contextual rules that
 delegates the erasure operation structurally. Since index erasure is completely
 predetermined by the syntax, there is no need for any extra analysis
-to determine erasable fragments. System \Fi\ enjoys a simple erasure property
-such that $\Gamma;\Delta|- t:A$ then $\Gamma^\circ;\Delta^\circ|- t:A^\circ$.
-In addition, if the original judgment $\Gamma;\Delta|- t:A$ is derivable in \Fi,
-then the erased judgment $\Gamma^\circ;\Delta^\circ|- t:A^\circ$ should be
-derivable in \Fw.
+to determine erasable fragments. System \Fi\ enjoys a simple erasure property:
+if $\Gamma;\Delta|- t:A$ then $\Gamma^\circ;\Delta^\circ|- t:A^\circ$.
+In addition, if the original judgment $\Gamma;\Delta|- t:A$ is derivable in
+System \Fi, then the erased judgment $\Gamma^\circ;\Delta^\circ|- t:A^\circ$
+should be derivable in System \Fw, sinced the erased type $A^\circ$ does not
+contain any index terms.
 
 The key mechanism to ensure this erasure property comes from splitting
 the typing context into two parts. When we go inside the curly braces
@@ -166,7 +167,7 @@ $~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad ~ \qquad
                   {\Delta |- F\,\{s\} : \kappa}  
 $\vspace*{3pt}
 
-We proved the index erasure property mentioned above. Strong normalization
+We proved that the index erasure property mentioned above. Strong normalization
 is a corollary of the erasure property since we know that System \Fw\ is
 strongly normalizing. Logical consistency is immediate since System \Fi\
 is a strict subset of the \emph{restricted implicit calculus} \cite{Miquel00}.
@@ -194,7 +195,7 @@ We are exploring whether Leibniz equality over indices
 (i.e., $s_1=s_2$ encoded as $\forall X^{A -> *}.X\{s_1\} -> X\{s_2\}$)
 may help us express functions whose domains are restricted by term-indices
 (e.g., \verb|vtail :: Vec a {S n} -> Vec a n|). We wonder what extension
-we need to enable large elimination (i.e., computing types from term-indices).
+we need to enable large eliminations (i.e., computing types from term-indices).
 We are also developing a programming language Nax, which supports
 type inference with little annotation, based on System \Fi.
 % \paragraph{Acknowledgments:} Thanks to Tim Sheard, Andy Pitts, Marcelo Fiore,
