@@ -158,7 +158,7 @@ $
                             {\Delta |- \lambda i^A.F : A->\kappa}
  ~~~~
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
-                     & \Delta;\cdot |- s : A }
+                     & \Delta;\Delta |- s : A }
                      {\Delta |- F\,\{s\} : \kappa}
  ~~~~
    \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}

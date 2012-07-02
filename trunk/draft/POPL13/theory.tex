@@ -495,14 +495,50 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 \end{itemize}
 \end{proof}
 
-\begin{theorem}[index erasure on well-typed terms]
+\begin{theorem}[index erasure on index-free well-typed terms]
 \label{thm:ierasetyping}
+For any term $t$ that does not contain any index variables,
 \[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
 		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
 \]
 \end{theorem}
-\begin{proof}
-	TODO
+\begin{proof} TODO
+\begin{itemize}
+\item[case] ($:$)
+By Theorem \ref{thm:ierasetmctx}, we know that $\Delta^\circ|- \Gamma^\circ$
+when $\Delta|- \Gamma$.
+By definition of erasure on term-level context, we know that
+$x:A^\circ \in \Gamma^\circ$ when $x:A \in \Gamma$.
+\item[case] ($:i$) Vacuously true since we assume that $t$ does not
+	contain any index variables.
+By Theorem \ref{thm:ierasetyctx}, we know that $|- \Delta^\circ$
+when $|- \Delta$.
+By definition of erasure on term-level context $\Delta$, we know that
+$x:A^\circ \in \Gamma^\circ$ when $x:A \in \Gamma$.
+
+\item[case] ($->$$E$)
+\item[case] ($->$$I$)
+\item[case] ($\forall I$)
+\item[case] ($\forall E$)
+\item[case] ($\forall Ii$)
+\item[case] ($\forall Ei$)
+\item[case] ($=$)
+\end{itemize}
+\end{proof}
+
+\begin{theorem}[index erasure on well-formed term level contexts
+with variable shifting]
+\label{thm:ierasetmctx}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ} \]
+\end{theorem}
+
+\begin{theorem}[index erasure on well-typed terms]
+\label{thm:ierasetypingall}
+\[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+\]
+\end{theorem}
+\begin{proof} TODO
 \end{proof}
 
 %% \begin{theorem}[index erasure on term equality]

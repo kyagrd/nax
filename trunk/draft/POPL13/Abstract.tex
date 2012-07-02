@@ -151,11 +151,11 @@ illustrated above, and all other rules left out are contextual rules that
 delegates the erasure operation structurally. Since index erasure is completely
 predetermined by the syntax, there is no need for any extra analysis
 to determine erasable fragments. System \Fi\ enjoys a simple erasure property:
-if $\Gamma;\Delta|- t:A$ then $\Gamma^\circ;\Delta^\circ|- t:A^\circ$.
-In addition, if the original judgment $\Gamma;\Delta|- t:A$ is derivable in
-System \Fi, then the erased judgment $\Gamma^\circ;\Delta^\circ|- t:A^\circ$
-should be derivable in System \Fw, sinced the erased type $A^\circ$ does not
-contain any index terms.
+if $\Gamma;\Delta|- t:A$ then $\Delta^\circ;\Gamma^\circ|- t:A^\circ$
+when $t$ is index free.
+Moreover, if the original judgment $\Gamma;\Delta|- t:A$ is derivable in \Fi,
+then the erased judgment $\Gamma^\circ;\Delta^\circ|- t:A^\circ$ should be
+derivable in \Fw.
 
 The key mechanism to ensure this erasure property comes from splitting
 the typing context into two parts. When we go inside the curly braces
