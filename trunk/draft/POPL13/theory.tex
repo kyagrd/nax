@@ -78,7 +78,7 @@ the big well-formedness property.
 \begin{itemize}
 \item[case] ($Var$)
 	Trivial by the second well-formedness rule of $\Delta$.
-\item[case] ($Conv$) \\
+\item[case] ($Conv$)
 	By induction and Lemma \ref{lem:wfeqkind}.
 \item[case] ($\lambda$) \\
 	By induction and Proposition \ref{prop:wfsort} we know
@@ -410,6 +410,7 @@ and the index terms appearing in those types, after the erasure.\\
 \[ \inference{\Delta |- F=F':\kappa}
 		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
 \]
+\label{thm:ierasetyconeq}
 \end{theorem}
 \begin{proof}
 By induction on the derivation of type constructor equality.
@@ -496,41 +497,77 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 \end{proof}
 
 \begin{theorem}[index erasure on index-free well-typed terms]
-\label{thm:ierasetyping}
+\label{thm:ierasetypingifree}
 For any term $t$ that does not contain any index variables,
 \[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
 		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
 \]
 \end{theorem}
-\begin{proof} TODO
+\begin{proof} By induction on the typing derivation.
+	Interesting cases are the index related rules ($:i$), ($\forall Ii$),
+	and ($\forall Ei$). Proofs for the other cases are straightforward
+	by induction and applying other erasure theorems corresponding to
+	the judgment forms.
 \begin{itemize}
 \item[case] ($:$)
-By Theorem \ref{thm:ierasetmctx}, we know that $\Delta^\circ|- \Gamma^\circ$
-when $\Delta|- \Gamma$.
-By definition of erasure on term-level context, we know that
-$x:A^\circ \in \Gamma^\circ$ when $x:A \in \Gamma$.
-\item[case] ($:i$) Vacuously true since we assume that $t$ does not
-	contain any index variables.
-By Theorem \ref{thm:ierasetyctx}, we know that $|- \Delta^\circ$
-when $|- \Delta$.
-By definition of erasure on term-level context $\Delta$, we know that
-$x:A^\circ \in \Gamma^\circ$ when $x:A \in \Gamma$.
-
-\item[case] ($->$$E$)
+	By Theorem \ref{thm:ierasetmctx}, we know that
+	$\Delta^\circ|- \Gamma^\circ$ when $\Delta|- \Gamma$.
+	By definition of erasure on term-level context, we know that
+	$x:A^\circ \in \Gamma^\circ$ when $x:A \in \Gamma$.
+\item[case] ($:i$)
+	Vacuously true since we assume that $t$ does not contain
+	any index variables.
 \item[case] ($->$$I$)
+	By Theorem \ref{thm:ierasekinding}, we know that $\circ |- A^\circ:*$.
+	By induction, we know that
+	$\Delta^\circ;\Gamma^\circ,x:A^\circ |- t^\circ : B^\circ$.
+	Applying the ($->$$I$) rule to what we know, we have
+	$\Delta^\circ;\Gamma^\circ |- \l x.t^\circ : A^\circ -> B^\circ$.
+\item[case] ($->$$E$)
+	Straightforward by induction.
 \item[case] ($\forall I$)
+	By Theorem \ref{thm:ierasesorting}, we know that
+	$|- \kappa^\circ:\square$.
+	By induction, we know that
+	$\Delta^\circ,X^{\kappa^\circ};\Gamma^\circ |- t : B^\circ$.
+	Applying the ($\forall I$) rule to what we know, we have
+	$\Delta^\circ;\Gamma^\circ |- t : \forall X^{\kappa^\circ}.B^\circ$.
 \item[case] ($\forall E$)
+	By induction, we know that
+	$\Delta^\circ;\Gamma^\circ |- t : \forall X^{\kappa^\circ}.B^\circ$.
+	By Theorem \ref{thm:ierasekinding}, we know that
+	$\Delta^\circ |- G^\circ : \kappa^\circ$.
+	Applying the ($\forall E$) rule, we have
+	$\Delta^\circ;\Gamma^\circ |- t : [G^\circ / X]B^\circ$.
 \item[case] ($\forall Ii$)
+	By Theorem \ref{thm:ierasekinding}, we know that $\circ |- A^\circ:*$.
+	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
+	which is what we want since $(\forall i^A.B)^circ = B^\circ$.
 \item[case] ($\forall Ei$)
+	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
+	which is what we want since $([s/i]B)^\circ = B^\circ$.
 \item[case] ($=$)
+	By Theorem \ref{thm:ierasetyconeq} and induction.
 \end{itemize}
 \end{proof}
 
+\begin{definition}[index variable selection]
+\[ \circ^\bullet = \circ \qquad
+	(\Delta,X^A)^\bullet = \Delta^\bullet \qquad
+	(\Delta,i^A)^\bullet = \Delta^\bullet,i^A
+\]
+\end{definition}\noindent
+The index variable selection operation ($^\bullet$) selects
+all the index variable bindings from the type level context.
 \begin{theorem}[index erasure on well-formed term level contexts
-with variable shifting]
-\label{thm:ierasetmctx}
-\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ} \]
+		prepended by index variable selection]
+\label{thm:ierasetmctxivs}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
+\]
 \end{theorem}
+\begin{proof}
+Straightforward by Theorem \ref{thm:ierasetmctx} and the typing rule ($:i$).
+\end{proof}
 
 \begin{theorem}[index erasure on well-typed terms]
 \label{thm:ierasetypingall}
@@ -538,7 +575,12 @@ with variable shifting]
 		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
 \]
 \end{theorem}
-\begin{proof} TODO
+\begin{proof}
+	The proof is almost the same as as Theorem \ref{thm:ierasetypingifree},
+	except for the ($:i$) case. The proof for the ($:i$) case is easy
+	since $i^A \in \Delta^\bullet$ when $i^A \in \Delta$ by definition of
+	the index variable selection operation. The indices from $\Delta$
+	being prepended to $\Gamma$ do not affect the proof for the other cases.
 \end{proof}
 
 %% \begin{theorem}[index erasure on term equality]
@@ -554,7 +596,7 @@ is the instantiation
 \[
 \inference{\Gamma,x:A |- t : B}{\Gamma |- t : \forall x^A.B }~(x\notin\FV(t))
 \]
-Consier when $A=Void$ and $B=\forall i^{Void}.NeverEverVoid\,\{i\}$.
+Consider when $A=Void$ and $B=\forall i^{Void}.NeverEverVoid\,\{i\}$.
 In the calculus above, we can instantiate $i$ with $y$ provided that
 $(y:Void)\in\Gamma$. It is a void type instantiation, Uh-Oh ...
 
