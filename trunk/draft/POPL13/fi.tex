@@ -34,11 +34,15 @@ a type constructor belongs. But, the choice of style for type constructors
 is not as crucial as the choice of style for terms, since the syntax and
 kinding rules are essentially a simply typed lambda calculus at type level.
 Choosing type constructors to be Curry style would not have made
-much difference.
+much difference. We use $A$ and $B$, instead of $F$ and $G$, where
+$A$ and $B$ to are expected to be types (\ie, nullary type constructors)
+of kind $*$.
 
 Typing contexts are separated into type level contexts ($\Delta$) and
 term level contexts ($\Gamma$). Type level variables ($X$, $i$) are
 bound in $\Delta$ and term variables ($x$) are bound $\Gamma$.
+We use $i$ when term variables are used as indices (\ie, introduced by
+either index abstraction or index polymorphism).
 
 System \Fw\ is more often formalized with a single context, which
 binds both type variables ($X$) and term variables ($x$).
@@ -56,12 +60,13 @@ $X\notin\FV(\Gamma)$). Thus, for \Fw, it is only a matter of taste
 whether to formalize the system using a single context or two contexts,
 since they are equivalent formalizations with comparable complexity.
 
-However, for \Fi, it is necessary to have two contexts due to index variables.
-Index variables are part of the term syntax, but their use is restricted at
-type level, that is, where it does not affect reduction at term level.
+However, for \Fi, it is necessary to have two contexts to distinguish
+term variables being used as indices ($i$) from ordinary use of
+term variables ($x$). Term variables used as indices, or index variables,
+should not affect reduction at term level.
 Index variables are bound to the type level context ($\Delta,i^A$),
-contrary to term variables bound in the term level context ($\Delta,x:A$),
-in order to enforce the restricted use of index variables.
+contrary to ordinary term variables being bound
+in the term level context ($\Delta,x:A$).
 Although it is imaginable to formalize \Fi\ with a single typing context
 and distinguish index variables from ordinary term variables using
 more general concepts (\eg, capability, modality), we think that splitting
@@ -71,6 +76,12 @@ the purpose of distinguishing index variables from ordinary term variables.
 \begin{figure*}
 \paragraph{Syntax:}
 \begin{align*}
+\!\!\!\!\!\!\!\!&\text{Term Variables}
+ 	& x,i
+\\
+\!\!\!\!\!\!\!\!&\text{Type Constructor Variables}
+ 	& X
+\\
 \!\!\!\!\!\!\!\!&\text{Kinds}
  	& \kappa		&~ ::= ~ *
 				\mid \kappa -> \kappa
@@ -88,7 +99,6 @@ the purpose of distinguishing index variables from ordinary term variables.
 \\
 \!\!\!\!\!\!\!\!&\text{Terms}
 	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
-				\mid \newFi{i}
 \\
 \!\!\!\!\!\!\!\!&\text{Typing Contexts}
 	& \Delta		&~ ::= ~ \cdot
@@ -192,7 +202,7 @@ $
  ~~~~ ~~~~
    \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
                             & \Delta |- G:\kappa }
-                            {\Delta;\Gamma |- t : [G/X]B}
+                            {\Delta;\Gamma |- t : B[G/X]}
 \]
 \[ \newFi{
    \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}
@@ -203,7 +213,7 @@ $
  ~~~~
    \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
                               & \Delta;\cdot |- s:A}
-                              {\Delta;\Gamma |- t : [s/i]B} }
+                              {\Delta;\Gamma |- t : B[s/i]} }
 \]
 \[ \inference[($=$)]{\Delta;\Gamma |- t : A & \Delta |- A = B : *}
                     {\Delta;\Gamma |- t : B}
@@ -212,7 +222,7 @@ $
 \paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
 $ 
  ~~~~
-   \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
+   \inference{}{(\lambda x.t)\,s \rightsquigarrow t[s/x]}
  ~~~~
    \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
  ~~~~
@@ -250,10 +260,10 @@ $
 $ \quad
  ~~~~
    \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
-             {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}
+             {\Delta |- (\lambda X^\kappa.F)\,G = F[G/X]:\kappa'}
  ~~~~ \newFi{
    \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
-             {\Delta |- (\lambda i^A.F)\,\{s\} = [s/i]F:\kappa} }
+             {\Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
 $
 \[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
  ~~~~
@@ -288,7 +298,7 @@ $
 $ \qquad
  ~~~~
    \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
-             {\Delta;\Gamma |- (\lambda x.t)\,s=[s/x]t : B}
+             {\Delta;\Gamma |- (\lambda x.t)\,s=t[s/x] : B}
  ~~~~
    \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
 $
@@ -304,7 +314,7 @@ $
  ~~~~ ~~~~
    \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
              & \Delta |- G:\kappa }
-             {\Delta;\Gamma |- t=t' : [G/X]B}
+             {\Delta;\Gamma |- t=t' : B[G/X]}
 \]
 \[ \newFi{
    \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
@@ -316,7 +326,7 @@ $
  ~~~~
    \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
              & \Delta;\cdot |- s:A}
-             {\Delta;\Gamma |- t=t' : [s/x]B} }
+             {\Delta;\Gamma |- t=t' : B[s/x]} }
 \]
 \[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
  ~~~~

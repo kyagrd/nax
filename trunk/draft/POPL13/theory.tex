@@ -199,23 +199,23 @@ categories: firstly, the equality rules following the same structure of
 the sorting, kinding, and typing rules; and secondly, the reflexive
 rules and the transitive rules. The proof for the equality rules
 following the same structure of the sorting, kinding, and typing rules
-can be proved by induction and applying the correspoinding
+can be proved by induction and applying the corresponding
 sorting, kinding, and typing rules. The proof for the reflexive rules
 and the transitive rules can be proved simply by induction.
 
 \begin{lemma}[type substitution]\label{lem:tysubst}
 $ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
-	{\Delta |- [G/X]F:\kappa'} $
+	{\Delta |- F[G/X]:\kappa'} $
 \end{lemma}
 
 \begin{lemma}[index substitution]\label{lem:ixsubst}
 $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
-	{\Delta |- [s/i]F:\kappa} $
+	{\Delta |- F[s/i]:\kappa} $
 \end{lemma}
 
 \begin{lemma}[term substitution]\label{lem:tmsubst}
 $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
-	{\Delta,\Gamma |- [s/x]t:B} $
+	{\Delta,\Gamma |- t[s/x]:B} $
 \end{lemma}
 
 \subsection{Erasure}
@@ -364,7 +364,7 @@ and the index terms appearing in those types, after the erasure.\\
 
 	By induction we know that
 	$\Delta^\circ |- F^\circ : (A -> \kappa)^\circ$,
-	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$.
+	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$
 	by Definition \ref{def:ierase}.
 
 \item[case] ($->$)
@@ -375,7 +375,7 @@ and the index terms appearing in those types, after the erasure.\\
 	We need to show that
 	$\Delta^\circ |- (\forall X^\kappa.B)^\circ : *^\circ$,
 	which simplifies to
-	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$.
+	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$
 	by Definition \ref{def:ierase}.
 
 	Using Theorem \ref{thm:ierasesorting}, we know that
@@ -384,7 +384,7 @@ and the index terms appearing in those types, after the erasure.\\
 	By induction we know that
 	$(\Delta,X^\kappa)^\circ |- B^\circ : *^\circ$,
 	which simplifies to
-	$\Delta^\circ,X^{\kappa^\circ} |- B^\circ : *$.
+	$\Delta^\circ,X^{\kappa^\circ} |- B^\circ : *$
 	by Definition \ref{def:ierase}.
 
 	Using the kinding rule ($\forall$), we get exactly
@@ -395,12 +395,12 @@ and the index terms appearing in those types, after the erasure.\\
 
 	We need to show that
 	$\Delta^\circ |- (\forall i^A.B)^\circ : *^\circ$,
-	which simplifies to $\Delta^\circ |- B^\circ : *$.
+	which simplifies to $\Delta^\circ |- B^\circ : *$
 	by Definition \ref{def:ierase}.
 
 	By induction we know that
 	$(\Delta,i^A)^\circ |- B^\circ : *^\circ$,
-	which simplifies $\Delta^\circ |- B^\circ : *$.
+	which simplifies $\Delta^\circ |- B^\circ : *$
 	by Definition \ref{def:ierase}.
 
 \end{itemize}
@@ -424,12 +424,12 @@ There are two such rules.
 
 \paragraph{}
   $\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
-             {\Delta |- (\lambda X^\kappa.F)\,G = [G/X]F:\kappa'}$ \\
+             {\Delta |- (\lambda X^\kappa.F)\,G = F[G/X]:\kappa'}$ \\
 
 We need to show
-$ \Delta^\circ |- ((\lambda X^\kappa.F)\,G)^\circ = ([G/X]F)^\circ : \kappa'^\circ $,
+$ \Delta^\circ |- ((\lambda X^\kappa.F)\,G)^\circ = (F[G/X])^\circ : \kappa'^\circ $,
 which simplifies to 
-$ \Delta^\circ |- (\lambda X^{\kappa^\circ}.F^\circ)\,G^\circ = ([G/X]F)^\circ : \kappa'^\circ $
+$ \Delta^\circ |- (\lambda X^{\kappa^\circ}.F^\circ)\,G^\circ = (F[G/X])^\circ : \kappa'^\circ $
 by Definition \ref{def:ierase}.
 
 By induction, we know that $(\Delta,X^\kappa)^\circ |- F^\circ : \kappa'^\circ$,
@@ -443,21 +443,21 @@ Using the kinding rule ($@$), we get
 $\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ : \kappa^\circ$.
 
 Using the very equality rule of this case,\\ we get 
-$\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ = [G^\circ/X] F^\circ : \kappa^\circ$.
+$\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ =  F^\circ[G^\circ/X] : \kappa^\circ$.
 
-All we need to check is $([G/X]F)^\circ = [G^\circ/X] F^\circ$,
+All we need to check is $([G/X]F)^\circ = F^\circ[G^\circ/X]$,
 which is easy to see.
 
 \paragraph{}
   $\inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
-             {\Delta |- (\lambda i^A.F)\,\{s\} = [s/i]F:\kappa}$ \\
+             {\Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa}$ \\
 
 By induction we know that $\Delta^\circ |- F^\circ : \kappa^\circ$.
 
 The erasure of the left hand side of the equality is\\
 $((\lambda i^A.F)\,\{s\})^\circ = (\lambda i^A.F)^\circ = F^\circ$.
 
-All we need to show is $([s/i]F)^\circ = F^\circ$, which is obvious
+All we need to show is $(F[s/i])^\circ = F^\circ$, which is obvious
 since index variables can only occur in index terms and index terms
 are always erased. Recall the index erasure over type constructors in
 Definition \ref{def:ierase}, in particular, $(\lambda i^A.F)^\circ=F^\circ$,
@@ -538,14 +538,14 @@ For any term $t$ that does not contain any index variables,
 	By Theorem \ref{thm:ierasekinding}, we know that
 	$\Delta^\circ |- G^\circ : \kappa^\circ$.
 	Applying the ($\forall E$) rule, we have
-	$\Delta^\circ;\Gamma^\circ |- t : [G^\circ / X]B^\circ$.
+	$\Delta^\circ;\Gamma^\circ |- t : B^\circ[G^\circ / X]$.
 \item[case] ($\forall Ii$)
 	By Theorem \ref{thm:ierasekinding}, we know that $\circ |- A^\circ:*$.
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
 	which is what we want since $(\forall i^A.B)^circ = B^\circ$.
 \item[case] ($\forall Ei$)
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
-	which is what we want since $([s/i]B)^\circ = B^\circ$.
+	which is what we want since $(B[s/i])^\circ = B^\circ$.
 \item[case] ($=$)
 	By Theorem \ref{thm:ierasetyconeq} and induction.
 \end{itemize}
@@ -605,7 +605,7 @@ since index instantiation can not refer to the term-level context
 but only refer to the type-level context $\Delta$. Recall
 \[
 	\inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B & \textcolor{red}{\Delta;\cdot |- s:A} }
-	                           {\Delta;\Gamma |- t : [s/i]B}
+	                           {\Delta;\Gamma |- t : B[s/i]}
 			   \]
 
 \begin{proposition}[anti-dependency on arrow kinds]
