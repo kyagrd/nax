@@ -1,7 +1,10 @@
 \section{Metatheory}
 \label{sec:theory}
 
-Before go on to prove subjected reduction and strong normalization, we need to
+The expectation is that System \Fi\ has all the nice properties of System \Fw, yet
+is more expressive because of the addition of term indexed types.
+
+Before we prove subjected reduction and strong normalization for \Fi, we need to
 check some basic well-formedness properties for the derivations of \Fi.
 We want to show that the sorting, kinding, and typing derivations give
 well-formed results under well-formed contexts. That is, sorting derivations
@@ -12,10 +15,10 @@ result in well-kinded types under well-formed type and term level contexts
 (Proposition \ref{prop:wftype}).
 
 Since the definitions of sorting, kinding, and typing rules are
-mutually recursive, these three properties should really be considered as
-one big property (illustrated below) in order to be more rigorous about
+mutually recursive, these three properties are considered as
+one big property (illustrated below) in order to be more rigorous abouts
 the induction principle used in the proof.
-\begin{proposition*}[The big well-formedness propoerty of \Fi,
+\begin{proposition*}[The big well-formedness property of \Fi,
 		roughly\footnote{Technically,
     this is not yet completely rigorous since there are three more forms of
     judgments in the mutually recursive definition. The \emph{kind equality},
@@ -40,8 +43,7 @@ the induction principle used in the proof.
 \end{itemize}
 \end{quote}
 \end{proposition*}\noindent
-The big well-formedness property about derivations for a judgment,
-which can be either one of the three forms --
+The big well-formedness property has one of the three forms --
 \fbox{$ |- \kappa : \square $} (sorting),
 \fbox{$ \Delta |- F : \kappa $} (kinding), and
 \fbox{$ \Delta;\Gamma |- t:A $} typing.
@@ -53,12 +55,12 @@ under well-formed contexts for the judgment (no context for sorting judgments,
 $\Delta$ for kinding judgments, and $\Delta;\Gamma$ for typing judgments).
 
 We can prove the big well-formedness property of \Fi\ by induction on
-the derivation of a judgment, which can be either one of the three forms.
+the derivation of a judgment, which can be any one of the three forms.
 Here, I illustrate the proof for the three propositions as if they were
-separate proofs. During the proof description, the proof for each proposition
-references the other properties (which is yet another application of the
-induction hypothesis of the big well-formedness property), since it gives
-more intuitive proof sketch that way. So, when I say ``by induction''
+separate proofs. Because it provides a more intuitive proof sketch, during 
+the proof description, the proof for each proposition
+references the other properties (which are yet another application of the
+induction hypothesis of the big well-formedness property).  So, when I say ``by induction''
 during the proofs, what I really mean is the induction hypothesis of
 the big well-formedness property.
 
