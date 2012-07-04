@@ -2,10 +2,71 @@
 \label{sec:intro}
 TODO
 
-theoretical core language for languages supporting
-non-regular datatypes (\eg, nested datatypes) and
-indexed datatypes (\eg, GADTs), but not fully dependent types.
+%% theoretical core language for languages supporting
+%% non-regular datatypes (\eg, nested datatypes) and
+%% indexed datatypes (\eg, GADTs), but not fully dependent types.
+%% 
+%% embed recursive datatypes by Church encoding and show strong normalization
+%% for the logical fragment of such a language
 
-embed recursive datatypes by Church encoding and show strong normalization
-for the logical fragment of such a language
+Our goal is to design a calculus, as simple as possible, yet expressive enough
+to embed non-dependent \emph{term-indexed datatypes} and their eliminators.
+It is well known that datatypes can be embedded into polymorphic lambda calculi
+(e.g., \cite{AbeMatUus03}).
+
+In System \textsf{F}, we can embed \emph{regular datatypes},
+such as homogeneous lists:
+\[\!\!\!\!\!\!\!\!\!
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data List a = Nil | Cons a (List a)} \\
+\text{System \textsf{F}:} & \texttt{{List}}\:\: A\:\:\triangleq\:\:\forall X.X\to(A\to X\to X)\to X ~~\;
+\end{array}
+\]
+Note the use of the universally quantified type variable $X$
+and the regularity of $(\texttt{List a})$ in the datatype definition.
+
+In System \Fw, we can embed \emph{type-indexed datatypes}, which include
+datatypes that are not regular. For example, we can embed powerlists with
+heterogeneous elements where an element of type \texttt{a} is followed by
+an element of type \texttt{(a,a)}:
+\[
+\begin{array}{ll}
+\text{Haskell:} & \!\!\!\!\texttt{data Powl a = PNil | PCons a (Powl(a,a))} \\
+\text{System \Fw:} & \!\!\!\!\texttt{{Powl}}\:\triangleq\:
+\lambda A^{*}.\forall X^{*\to*}.\\ \qquad
+& \qquad X A\to (A\to X(A\times A)\to X A)\to XA
+\end{array}
+\]
+Note the non-regular occurrence \texttt{(Powl(a,a))} and
+the use of the type constructor variable $X$ universally quantifying over
+type constructors of kind $* -> *$.\\
+
+\definecolor{shadecolor}{rgb}{1,0.9,0.7}
+\paragraph{A Motivating Example: length-indexed lists}~\vspace*{-14pt}\\
+\begin{framed}\vspace*{-4pt}\noindent
+A functional language supporting indexed terms: \vspace*{-4.5pt}
+\begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
+data Nat = Z | S n
+data Vec (a:*) {i:N} where
+  VNil  : Vec a {Z}
+  VCons : a -> Vec a {i} -> Vec a {S i}
+\end{lstlisting}\noindent
+System \Fi: \vspace*{-7pt}
+\begin{multline*}\!\!\!\!\!\!\!
+\texttt{{Vec}}\:\:\triangleq\:\:\lambda A^{*}.\lambda i^{\texttt{{N}}}.
+\forall X^{\texttt{{Nat}}\to*}.\\
+X\{\texttt{{Z}}\}\to
+(\forall i^{\texttt{{Nat}}}.A\to X\{i\}\to X\{\texttt{{S}}\; i\})\to X\{i\}
+\!\!\!\!\!\!\!\!\!
+\end{multline*}\vspace*{-20pt}
+\end{framed}\vspace*{-5pt}\noindent
+What extensions to \Fw\ do we need to embed datatypes that are indexed by
+terms (\texttt{Z}, \texttt{i}, \texttt{S i}), as well as types (\texttt{a}),
+such as length-indexed lists (\verb|Vec a {i}|)? From the motivating example
+above, we learn that the calculus would need four additional constructs:
+index arrow kinds ($\texttt{{Nat}\ensuremath{\to}*}$),
+index abstraction ($\lambda i^{\texttt{{Nat}}}.\cdots$),
+index application ($X\{i\}$), and
+index polymorphism ($\forall i^{\texttt{{Nat}}}.\cdots$).
+
 
