@@ -26,21 +26,22 @@ of such a non-terminating computation in the program code.
 On the other hand, the lambda calculus \Fw, is known to be strongly normalizing, and
 through the use of Church encodings or Scott encodings of data structures is rich enough
 to many data rich systems, such as compilers. Unfortunately, it is not known
-how to express the kind of indexed datatypes in \Fw\ that are necessary to
+how to express the kind of \emph{term-indexed datatypes} in \Fw\ that are necessary to
 support Guillemette's system.
 
 Xavier Leroy, in his CompCert system\cite{Leroy-Compcert-CACM}, showed that a much richer
-language, the Inductive Calculus of Constructions (ICC), embedded in the Coq theorem prover,
+language, the Calculus of Inductive Constructions (CIC), embedded in the Coq theorem prover,
 is expressive enough to guarantee type preservation between compiler stages
 (and quite a bit more). Unfortunately, this expressivity comes with a cost.
 Programmers must learn to use both dependent types, and a new programming
 paradigm, programming by code extraction.
 
-Is there an expressive system, somewhere in between \Fw\ and ICC? Can we use
-indexed types (rather than dependent types) when they are all we need? Can
-we program, rather than extract code? The
-goal of this paper is to develop the theory necesary to begin to answer
-these and related questions.  Our goal is to design a calculus, as simple as possible, yet expressive enough
+Is there an expressive system, somewhere in between \Fw\ and dependent calculi?
+Can we use indexed types (rather than dependent types) when they are all
+we need? Can we program, rather than extract code?
+The goal of this paper is to develop the theory necesary to begin to answer
+these and related questions.
+Our goal is to design a calculus, as simple as possible, yet expressive enough
 to embed non-dependent \emph{term-indexed datatypes} and their eliminators.
 
 \subsection{Background}
@@ -71,19 +72,19 @@ an element of type \texttt{(a,a)}:
 \]
 Note the non-regular occurrence \texttt{(Powl(a,a))} and
 the use of the type constructor variable $X$ universally quantifying over
-type constructors of kind $* -> *$.\\
+type constructors of kind $* -> *$.
 
 \definecolor{shadecolor}{rgb}{1,0.9,0.7}
 \paragraph{A Motivating Example: length-indexed lists}~\vspace*{-14pt}\\
 \begin{framed}\vspace*{-4pt}\noindent
-A functional language supporting indexed terms: \vspace*{-4.5pt}
+\!\!\!A functional language supporting term-indexed datatypes: \vspace*{-4.5pt}
 \begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
 data Nat = Z | S n
 data Vec (a:*) {i:N} where
   VNil  : Vec a {Z}
   VCons : a -> Vec a {i} -> Vec a {S i}
 \end{lstlisting}\noindent
-System \Fi: \vspace*{-7pt}
+\!\!\!System \Fi: \vspace*{-7pt}
 \begin{multline*}\!\!\!\!\!\!\!
 \texttt{{Vec}}\:\:\triangleq\:\:\lambda A^{*}.\lambda i^{\texttt{{N}}}.
 \forall X^{\texttt{{Nat}}\to*}.\\

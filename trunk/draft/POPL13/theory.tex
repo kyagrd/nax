@@ -56,12 +56,12 @@ $\Delta$ for kinding judgments, and $\Delta;\Gamma$ for typing judgments).
 
 We can prove the big well-formedness property of \Fi\ by induction on
 the derivation of a judgment, which can be any one of the three forms.
-Here, I illustrate the proof for the three propositions as if they were
+Here, we illustrate the proof for the three propositions as if they were
 separate proofs. Because it provides a more intuitive proof sketch, during 
 the proof description, the proof for each proposition
 references the other properties (which are yet another application of the
-induction hypothesis of the big well-formedness property).  So, when I say ``by induction''
-during the proofs, what I really mean is the induction hypothesis of
+induction hypothesis of the big well-formedness property).  So, when we say ``by induction''
+during the proofs, what we really mean is the induction hypothesis of
 the big well-formedness property.
 
 \begin{proposition}[sorting derivations result in well-formed sorts]
@@ -118,9 +118,9 @@ the big well-formedness property.
 \end{proof}
 
 The basic structure of the proof for the following proposition on typing
-derivations is similar to above. So, I illustrate the proof for most of
+derivations is similar to above. So, we illustrate the proof for most of
 the cases, which can be done by applying the induction hypothesis, rather
-bravely. I elaborate more on interesting cases ($\forall E$) and ($\forall Ei$)
+bravely. We elaborate more on interesting cases ($\forall E$) and ($\forall Ei$)
 which involve substitutions in the types resulting from the typing judgments.
 \begin{proposition}[typing derivations under well-formed contexts result in
 	well-kinded types]
@@ -544,7 +544,7 @@ For any term $t$ that does not contain any index variables,
 \item[case] ($\forall Ii$)
 	By Theorem \ref{thm:ierasekinding}, we know that $\circ |- A^\circ:*$.
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
-	which is what we want since $(\forall i^A.B)^circ = B^\circ$.
+	which is what we want since $(\forall i^A.B)^\circ = B^\circ$.
 \item[case] ($\forall Ei$)
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
 	which is what we want since $(B[s/i])^\circ = B^\circ$.
