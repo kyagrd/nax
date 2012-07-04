@@ -16,7 +16,7 @@ which are not found in \Fw\ (\S\ref{ssec:newFi}).
 \subsection{Rationale for the design choices} \label{ssec:rationale}
 Terms are Curry style. That is, term level abstractions are unannotated
 ($\lambda x.t$), and type generalizations ($\forall I$) and type instantiations
-($\forall E$) are implicit at term level. A Curry style calculus generally has
+($\forall E$) are implicit at term level. A Curry-style calculus generally has
 advantages over its Church-style counterpart when reasoning about properties of
 reduction. For instance, the Church-Rosser property naturally holds for all
 of $\beta$-, $\eta$-, and $\beta\eta$-reduction in Curry style, but
@@ -27,7 +27,7 @@ abstractions \cite{Miquel01}.\footnote{The Church-Rosser property generally
 	certain approximations such as modulo ignoring the annotations
 	in abstractions.}
 
-Type constructors remain in Church style. That is, type level abstractions are
+Type constructors remain Church style. That is, type level abstractions are
 annotated by kinds ($\lambda X^\kappa.F$). Choosing type constructors
 to be Church style makes it visually more evident to which kind
 a type constructor belongs. But, the choice of style for type constructors
@@ -41,7 +41,9 @@ of kind $*$.
 Typing contexts are separated into type level contexts ($\Delta$) and
 term level contexts ($\Gamma$). Type level variables ($X$, $i$) are
 bound in $\Delta$ and term variables ($x$) are bound $\Gamma$.
-We use $i$ when term variables are used as indices (\ie, introduced by
+Type level variables are either type constructor variables ($X$) or
+term variables to be used as indices ($i$). We write $i$, instead of $x$,
+when term variables are to be used as indices (\ie, introduced by
 either index abstraction or index polymorphism).
 
 System \Fw\ is more often formalized with a single context, which
@@ -60,11 +62,11 @@ $X\notin\FV(\Gamma)$). Thus, for \Fw, it is only a matter of taste
 whether to formalize the system using a single context or two contexts,
 since they are equivalent formalizations with comparable complexity.
 
-However, for \Fi, it is necessary to have two contexts to distinguish
+However, in \Fi, we spearated the context into two parts to distinguish
 term variables being used as indices ($i$) from ordinary use of
 term variables ($x$). Term variables used as indices, or index variables,
 should not affect reduction at term level.
-Index variables are bound to the type level context ($\Delta,i^A$),
+Index variables are bound in the type level context ($\Delta,i^A$),
 contrary to ordinary term variables being bound
 in the term level context ($\Delta,x:A$).
 Although it is imaginable to formalize \Fi\ with a single typing context
@@ -413,18 +415,13 @@ extended by type constructor equality when comparing indexed arrow kinds
 (see \Fig{eqFi}).
 
 \paragraph{Terms and their typing rules}
-The term syntax is extended by index variables (\newFi{i}), since terms used
-as indices may have index variables as well as term variables
-(\eg, $\lambda i^A.F\{(\lambda x.x\;i)\,(\lambda x.x)\}$).
-The term variables ($x$) are introduced from
+The term syntax is exactly the same as other Curry-style calclui.
+We write $x$ for ordinary term variables introduced from
 term level abstractions ($\lambda x.t$).
-The index variables ($i$) are introduced from
+We write $i$ for index variables introduced from
 index abstractions ($\lambda i^A.F$) and
-index polymorphic types ($\forall i^A.B$). However, the distinction between
-$x$ and $i$ is in fact only a convention for the convenience of readability.
-An equivalent but more succinct description of the system would be possible
-by having only $x$ for both term and index variables instead of having two
-kinds of variables $x$ and $i$.
+index polymorphic types ($\forall i^A.B$). The distinction between
+$x$ and $i$ is just a convention for the convenience of readability.
 
 Since \Fi\ has index polymorphic types ($\forall i^A . B$),
 we need typing rules for index polymorphism:
@@ -432,8 +429,8 @@ we need typing rules for index polymorphism:
 and \newFi{(\forall E i)} for index instantiation.
 
 The index generalization rule ($\forall I i$) is similar to
-the type generalization rule ($\forall I$), except the additional
-side condition $\big(i\notin\FV(t)\big)$. This side condition prevents
+the type generalization rule ($\forall I$), except for the additional
+side condition $i\notin\FV(t)$. This side condition prevents
 terms from accessing the type level index variables introduced by index
 polymorphism. Otherwise, without this side condition, $\forall$-binder
 would be no longer behave as polymorphism but powerful enough to behave as
@@ -441,7 +438,7 @@ dependent functions, which are usually denoted by the $\Pi$-binder in
 dependent type theories. The side condition on generalization rules
 for polymorphism is fairly standard in dependently typed languages supporting
 distinctions between polymorphism (or, erasable arguments) and
-dependent functions (\eg, IPTS[TODO cite Nathans' thesis], ICC\ref{Miquel01}).
+dependent functions (\eg, IPTS\cite{LingerS08}, ICC\cite{Miquel01}).
 The rule ($\forall I$) for ordinary type generalization rule does not need
 a side condition because type variables cannot appear in the syntax of terms.
 
@@ -474,9 +471,5 @@ justified by the derivation in Figure \ref{fig:ivarexample}.
 \caption{Kinding derivation for an index abstraction}
 \label{fig:ivarexample}
 \end{figure*}
-
-
-
-
 
 

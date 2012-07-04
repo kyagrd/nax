@@ -40,4 +40,7 @@ Abstract.bbl: Abstract.aux main.bib
 	bibtex Abstract 
 	latex Abstract
 
+Abstract.aux:
+	latex Abstract
+
 
