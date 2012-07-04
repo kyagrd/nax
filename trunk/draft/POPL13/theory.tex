@@ -1,11 +1,14 @@
 \section{Metatheory}
 \label{sec:theory}
 
-The expectation is that System \Fi\ has all the nice properties of System \Fw, yet
-is more expressive because of the addition of term indexed types.
+The expectation is that System \Fi\ has all the nice properties of System \Fw,
+yet is more expressive because of the addition of term-indexed types.
 
 Before we prove subjected reduction and strong normalization for \Fi, we need to
 check some basic well-formedness properties for the derivations of \Fi.
+
+\subsection{Well-formness properties and substitution lemmas}
+\label{ssec:wf}
 We want to show that the sorting, kinding, and typing derivations give
 well-formed results under well-formed contexts. That is, sorting derivations
 result in well-formed sorts (Proposition \ref{prop:wfsort}),
@@ -220,8 +223,8 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
 	{\Delta,\Gamma |- t[s/x]:B} $
 \end{lemma}
 
-\subsection{Erasure}
-\paragraph{}
+\subsection{Erasure properties}
+\label{ssec:erasure}
 \begin{definition}[index erasure]\label{def:ierase}
 \[ \fbox{$\kappa^\circ$}
  ~~~~ ~~
@@ -465,6 +468,12 @@ are always erased. Recall the index erasure over type constructors in
 Definition \ref{def:ierase}, in particular, $(\lambda i^A.F)^\circ=F^\circ$,
 $(F\{s\})^\circ=F^\circ$, and $(\forall i^A.B)^\circ=B^\circ$.
 \end{proof}
+\begin{remark}
+For any well-kinded type constructor equality $\Delta |- F=F':\kappa$ in \Fi,
+$\Delta^\circ|- F^\circ=F'^\circ:\kappa^\circ$ is
+a well-kinded type constructor equality in \Fw.
+\end{remark}
+
 
 The proofs for the two theorems above on type constructors need not consider
 mutual recursion in the definition of type constructors due to
@@ -591,7 +600,15 @@ Straightforward by Theorem \ref{thm:ierasetmctx} and the typing rule ($:i$).
 %% \]
 %% \end{theorem}
 
-\subsection{TODO about void type instantiation}
+\subsection{Strong normalization and logical consistency}
+\label{ssec:sn}
+Strong normalization is a corollary of the erasure property since we know that
+System \Fw\ is strongly normalizing. Logical consistency is immediate since
+System \Fi\ is a strict subset of the \emph{restricted implicit calculus}
+\cite{Miquel00}, which is a restriction of ICC \cite{Miquel01}.
+Subject reduction is also immediate since \Fi\ is a strict subset of ICC.
+
+\subsection{TODO about void type instantiation TODO}
 Why did we bother to design \Fi? What is different from a Curry-style
 dependent calculus with implicit arguments such as ICC? The following rule
 is the instantiation 

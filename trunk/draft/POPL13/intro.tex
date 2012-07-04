@@ -39,13 +39,31 @@ paradigm, programming by code extraction.
 Is there an expressive system, somewhere in between \Fw\ and dependent calculi?
 Can we use indexed types (rather than dependent types) when they are all
 we need? Can we program, rather than extract code?
-The goal of this paper is to develop the theory necesary to begin to answer
-these and related questions.
-Our goal is to design a calculus, as simple as possible, yet expressive enough
-to embed non-dependent \emph{term-indexed datatypes} and their eliminators.
+The goal of this paper is to develop the theory necessary to begin to answer
+these and related questions. To approach this goal, we designed a calculus,
+which is as simple as possible, yet expressive enough to embed non-dependent
+\emph{term-indexed datatypes} and their eliminators.
+Our contributions are:\vspace*{-3pt}
+\begin{itemize}
+\item identifying the features needed for $\lambda$-calculi 
+    to embed term-indexed datatypes (\S\ref{sec:motiv}),
+    in isolation of other features
+    (e.g., large elimination, dependent types),
+    \vspace*{-3pt}
+\item design of a calculus, System \Fi\ (\S\ref{sec:Fi}),
+    useful for studying the properties languages with term-indexed datatypes
+    by embedding those datatyeps into the calculus (\S\ref{sec:data})
+%%    (e.g., we can use \Fi\ to give formal proof that the eliminators
+%%    for GADTs appearing in our last year's ICFP paper \cite{AhnShe11} are
+%%    indeed normalizing), \vspace*{-3pt}
+\item showing that the calculus enjoys a simple erasure property
+    (\S\ref{ssec:erasure}) and inherits metatheoretic results
+    from well-known related calculi (\S\ref{ssec:sn}).
+\end{itemize}\vspace*{-3pt}
 
-\subsection{Background}
 
+\section{Motivation}
+\label{sec:motiv}
 It is well known that datatypes can be embedded into polymorphic lambda calculi
 (e.g., \cite{AbeMatUus03}).  In System \textsf{F}, we can embed \emph{regular datatypes},
 such as homogeneous lists:
@@ -74,10 +92,9 @@ Note the non-regular occurrence \texttt{(Powl(a,a))} and
 the use of the type constructor variable $X$ universally quantifying over
 type constructors of kind $* -> *$.
 
+\begin{figure}\noindent
 \definecolor{shadecolor}{rgb}{1,0.9,0.7}
-\paragraph{A Motivating Example: length-indexed lists}~\vspace*{-14pt}\\
-\begin{framed}\vspace*{-4pt}\noindent
-\!\!\!A functional language supporting term-indexed datatypes: \vspace*{-4.5pt}
+\!\!\!\!\!A functional language supporting term-indexed datatypes: \vspace*{-4.5pt}
 \begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
 data Nat = Z | S n
 data Vec (a:*) {i:N} where
@@ -90,13 +107,16 @@ data Vec (a:*) {i:N} where
 \forall X^{\texttt{{Nat}}\to*}.\\
 X\{\texttt{{Z}}\}\to
 (\forall i^{\texttt{{Nat}}}.A\to X\{i\}\to X\{\texttt{{S}}\; i\})\to X\{i\}
-\!\!\!\!\!\!\!\!\!
-\end{multline*}\vspace*{-20pt}
-\end{framed}\vspace*{-5pt}\noindent
+\end{multline*}\vspace*{-10pt}
+\caption{A Motivating Example: length-indexed lists}
+\label{fig:motiv}
+\end{figure}
+
 What extensions to \Fw\ do we need to embed datatypes that are indexed by
 terms (\texttt{Z}, \texttt{i}, \texttt{S i}), as well as types (\texttt{a}),
-such as length-indexed lists (\verb|Vec a {i}|)? From the motivating example
-above, we learn that the calculus would need four additional constructs:
+such as length-indexed lists (\verb|Vec a {i}|) in Figure \ref{fig:motiv}?
+From the motivating example (Figure \ref{fig:motiv}), we learn that
+the calculus would need four additional constructs:
 index arrow kinds ($\texttt{{Nat}\ensuremath{\to}*}$),
 index abstraction ($\lambda i^{\texttt{{Nat}}}.\cdots$),
 index application ($X\{i\}$), and
