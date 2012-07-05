@@ -8,15 +8,15 @@
 %% embed recursive datatypes by Church encoding and show strong normalization
 %% for the logical fragment of such a language
 
-The introduction of Generalized Algebraic Datatypes (GADTs) to functional
-languages such as Haskell and O'Caml has popularized the use of indexed datatypes
-as a light-weight, type-based mechanism to raise users' confidence that software systems
-maintain important properties. A classic example is 
-Louis-Julien Guillemette thesis\cite{guillemetteThesis} which encodes the classic 
-paper by Morrisett et al.\cite{tal-toplas} completely in Haskell. The 
-system embeds a multi-stage compiler, compiling from System F, all the way
-to typed assembly language, using indexed
-types to show that every stage preserves type information.
+The introduction of Generalized Algebraic Datatypes (GADTs) to
+functional languages such as Haskell and O'Caml has popularized
+the use of indexed datatypes as a light-weight, type-based mechanism
+to raise users' confidence that software systems maintain important properties.
+A classic example is Louis-Julien Guillemette thesis\cite{guillemetteThesis}
+which encodes the classic paper by Morrisett et al.\cite{tal-toplas} completely
+in Haskell. The system embeds a multi-stage compiler, compiling from System F,
+all the way to typed assembly language, using indexed types to show that
+every stage preserves type information.
 
 This impressive system provides confidence, but no guarantees, since it uses types to enforce
 type preservation between the stages of the compiler. In Haskell, the non-terminating computation
@@ -40,25 +40,27 @@ Is there an expressive system, somewhere in between \Fw\ and dependent calculi?
 Can we use indexed types (rather than dependent types) when they are all
 we need? Can we program, rather than extract code?
 The goal of this paper is to develop the theory necessary to begin to answer
-these and related questions. To approach this goal, we designed a calculus,
-which is as simple as possible, yet expressive enough to embed non-dependent
-\emph{term-indexed datatypes} and their eliminators.
-Our contributions are:\vspace*{-3pt}
+these and related questions.
+
+To approach this goal, we designed a calculus, System \Fi,
+which extends System \Fw\ with as little feature as possible,
+yet expressive enough to embed non-dependent \emph{term-indexed datatypes}
+and their eliminators. Our contributions are:\vspace*{-3pt}
 \begin{itemize}
-\item identifying the features needed for $\lambda$-calculi 
+\item identifying the features needed for the $\lambda$-calculus
     to embed term-indexed datatypes (\S\ref{sec:motiv}),
-    in isolation of other features
-    (e.g., large elimination, dependent types),
-    \vspace*{-3pt}
-\item design of a calculus, System \Fi\ (\S\ref{sec:Fi}), which is
+    in isolation of other features (e.g., large elimination, dependent types),
+    \vspace*{-2pt}
+\item design of the calculus, System \Fi\ (\S\ref{sec:Fi}), which is
     useful for studying the properties languages with term-indexed datatypes
-    by embedding those datatyeps into the calculus (\S\ref{sec:data})
+    by embedding those datatypes into the calculus (\S\ref{sec:data})
 %%    (e.g., we can use \Fi\ to give formal proof that the eliminators
 %%    for GADTs appearing in our last year's ICFP paper \cite{AhnShe11} are
 %%    indeed normalizing), \vspace*{-3pt}
+    \vspace*{-2pt}
 \item showing that the calculus enjoys a simple erasure property
     (\S\ref{ssec:erasure}) and inherits metatheoretic results
-    from well-known related calculi (\S\ref{ssec:sn}).
+    from well-known calculi related to \Fi\ (\S\ref{ssec:sn}).
 \end{itemize}\vspace*{-3pt}
 
 
