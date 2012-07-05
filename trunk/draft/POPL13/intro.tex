@@ -12,44 +12,51 @@ The introduction of Generalized Algebraic Datatypes (GADTs) to
 functional languages such as Haskell and O'Caml has popularized
 the use of indexed datatypes as a light-weight, type-based mechanism
 to raise users' confidence that software systems maintain important properties.
-A classic example is Louis-Julien Guillemette thesis\cite{guillemetteThesis}
-which encodes the classic paper by Morrisett et al.\cite{tal-toplas} completely
+A classic example is Louis-Julien Guillemette's thesis \cite{guillemetteThesis}
+which encodes the classic paper by \citet{tal-toplas} completely
 in Haskell. The system embeds a multi-stage compiler, compiling from System F,
 all the way to typed assembly language, using indexed types to show that
 every stage preserves type information.
 
-This impressive system provides confidence, but no guarantees, since it uses types to enforce
-type preservation between the stages of the compiler. In Haskell, the non-terminating computation
-can be assigned any type, so in practice, it is possible that this property is a consequence
-of such a non-terminating computation in the program code.
+This impressive system provides confidence, but no guarantees, since it uses
+types to enforce type preservation between the stages of the compiler.
+In Haskell, the non-terminating computation can be assigned any type,
+so in practice, it is possible that this property is a consequence of
+such a non-terminating computation in the program code.
 
-On the other hand, the lambda calculus \Fw, is known to be strongly normalizing, and
-through the use of Church encodings or Scott encodings of data structures is rich enough
-to many data rich systems, such as compilers. Unfortunately, it is not known
-how to express the kind of \emph{term-indexed datatypes} in \Fw\ that are necessary to
-support Guillemette's system.
+On the other hand, the higher-order polymorphic lambda calculus, System \Fw,
+is known to be strongly normalizing, and through the use of Church encodings
+or Scott encodings of data structures is rich enough to express
+many data rich systems, \KYA{ What's a data rich system,
+				and why talk about compilers?? }
+such as compilers. 
+Unfortunately, it is not known how to express the kind of
+\emph{term-indexed datatypes} in \Fw\ that are necessary to support
+Guillemette's system.
 
-Xavier Leroy, in his CompCert system\cite{Leroy-Compcert-CACM}, showed that a much richer
-language, the Calculus of Inductive Constructions (CIC), embedded in the Coq theorem prover,
-is expressive enough to guarantee type preservation between compiler stages
-(and quite a bit more). Unfortunately, this expressivity comes with a cost.
-Programmers must learn to use both dependent types, and a new programming
-paradigm, programming by code extraction.
+Xavier Leroy, in his CompCert system\cite{Leroy-Compcert-CACM}, showed that
+a much richer language, the Calculus of Inductive Constructions (CIC), which
+is the basis of the Coq theorem prover, is expressive enough to guarantee
+type preservation between compiler stages (and quite a bit more).
+Unfortunately, this expressivity comes with a cost. Programmers must learn to
+use both dependent types, and a new programming paradigm, programming by
+code extraction.
 
-Is there an expressive system, somewhere in between \Fw\ and dependent calculi?
-Can we use indexed types (rather than dependent types) when they are all
-we need? Can we program, rather than extract code?
-The goal of this paper is to develop the theory necessary to begin to answer
-these and related questions.
+Is there an expressive system supporting non-dependent indexed types,
+somewhere in between \Fw\ and dependent calculi?
+Can we use non-dependent indexed types when they are all we need?
+Can we program, rather than extract code? The goal of this paper is
+to develop the theory necessary to begin to answer these and related questions.
 
 To approach this goal, we designed a calculus, System \Fi,
 which extends System \Fw\ with as little feature as possible,
 yet expressive enough to embed non-dependent \emph{term-indexed datatypes}
-and their eliminators. Our contributions are:\vspace*{-3pt}
+and their eliminators. Our contributions are:\vspace*{-5pt}
 \begin{itemize}
 \item identifying the features needed for the $\lambda$-calculus
     to embed term-indexed datatypes (\S\ref{sec:motiv}),
-    in isolation of other features (e.g., large elimination, dependent types),
+    in isolation of other features
+    (e.g., general recursion, large elimination, dependent types),
     \vspace*{-2pt}
 \item design of the calculus, System \Fi\ (\S\ref{sec:Fi}), which is
     useful for studying the properties languages with term-indexed datatypes
@@ -60,7 +67,8 @@ and their eliminators. Our contributions are:\vspace*{-3pt}
     \vspace*{-2pt}
 \item showing that the calculus enjoys a simple erasure property
     (\S\ref{ssec:erasure}) and inherits metatheoretic results
-    from well-known calculi related to \Fi\ (\S\ref{ssec:sn}).
+    (\eg, strong normalization, logical consistency)
+    from well-known calculi related to System \Fi\ (\S\ref{ssec:sn}).
 \end{itemize}\vspace*{-3pt}
 
 
