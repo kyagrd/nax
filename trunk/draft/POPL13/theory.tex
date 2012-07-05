@@ -1,13 +1,16 @@
 \section{Metatheory}
 \label{sec:theory}
-
 The expectation is that System \Fi\ has all the nice properties of System \Fw,
 yet is more expressive because of the addition of term-indexed types.
 
-Before we prove subjected reduction and strong normalization for \Fi, we need to
-check some basic well-formedness properties for the derivations of \Fi.
+We show some basic well-formedness properties for
+the judgments of \Fi\ in \S\ref{ssec:wf}.
+We prove erasure properties of \Fi, which captures the idea that indices are
+erasable since they are irrelevant for reduction in \S\ref{ssec:erasure}.
+We show strong normalization, logical consistence, and subject reduction for
+\Fi\ by reasoning about well-known calculi related to \Fi\ in \S\ref{ssec:sn}.
 
-\subsection{Well-formness properties and substitution lemmas}
+\subsection{Well-formedness properties and substitution lemmas}
 \label{ssec:wf}
 We want to show that the sorting, kinding, and typing derivations give
 well-formed results under well-formed contexts. That is, sorting derivations
@@ -63,9 +66,9 @@ Here, we illustrate the proof for the three propositions as if they were
 separate proofs. Because it provides a more intuitive proof sketch, during 
 the proof description, the proof for each proposition
 references the other properties (which are yet another application of the
-induction hypothesis of the big well-formedness property).  So, when we say ``by induction''
-during the proofs, what we really mean is the induction hypothesis of
-the big well-formedness property.
+induction hypothesis of the big well-formedness property).
+So, when we say ``by induction'' during the proofs, what we really mean is
+the induction hypothesis of the big well-formedness property.
 
 \begin{proposition}[sorting derivations result in well-formed sorts]
 \label{prop:wfsort}
@@ -117,7 +120,7 @@ the big well-formedness property.
 	Trivial since $|- * : \square$.
 \item[case] ($\forall i$)
 	Trivial since $|- * : \square$.
-\end{itemize}
+\end{itemize}\vspace*{-10pt}
 \end{proof}
 
 The basic structure of the proof for the following proposition on typing
@@ -159,7 +162,7 @@ which involve substitutions in the types resulting from the typing judgments.
 	able to derive $\Delta |- \forall i^A.B : *$, we know
 	that $\Delta,i^A |- B : *$.\\
 	Then, we use the index substitution lemma (Lemma \ref{lem:ixsubst}).
-\end{itemize}
+\end{itemize}\vspace*{-10pt}
 \end{proof}
 
 \begin{lemma}[kind equality is well-sorted]\label{lem:wfeqkind}
@@ -179,7 +182,6 @@ $ \inference{|- \kappa = \kappa':\square}
 \begin{proof}
 	By induction on the derivation of type constructor equality
 	and using the kinding rules.
-
 	Also use the type substitution lemma (Lemma \ref{lem:tysubst})
 	and the index substitution lemma (Lemma \ref{lem:ixsubst}).
 \end{proof}
@@ -192,7 +194,6 @@ $ \inference{|- \kappa = \kappa':\square}
 \begin{proof}
 	By induction on the derivation of term equality
 	and using the typing rules.
-
 	Also use the term substitution lemma (Lemma \ref{lem:tmsubst}).
 \end{proof}
 
@@ -408,7 +409,7 @@ and the index terms appearing in those types, after the erasure.\\
 	which simplifies $\Delta^\circ |- B^\circ : *$
 	by Definition \ref{def:ierase}.
 
-\end{itemize}
+\end{itemize}\vspace*{-10pt}
 \end{proof}
 
 \begin{theorem}[index erasure on type constructor equality]
@@ -504,13 +505,13 @@ by the well-formedness rules.
 
 Since $\Gamma'^\circ,x:A^\circ = (\Gamma',x:A)^\circ = \Gamma^\circ$
 by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
-\end{itemize}
+\end{itemize}\vspace*{-10pt}
 \end{proof}
 
 \begin{theorem}[index erasure on index-free well-typed terms]
 \label{thm:ierasetypingifree}
-For any term $t$ that does not contain any index variables,
-\[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A
+             & \dom(\Delta)\cap\FV(t) = \emptyset}
 		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
 \]
 \end{theorem}
@@ -526,8 +527,8 @@ For any term $t$ that does not contain any index variables,
 	By definition of erasure on term-level context, we know that
 	$x:A^\circ \in \Gamma^\circ$ when $x:A \in \Gamma$.
 \item[case] ($:i$)
-	Vacuously true since we assume that $t$ does not contain
-	any index variables.
+	Vacuously true since $t$ does not contain any index variables
+        (\ie, $\dom(\Delta)\cap\FV(t) = \emptyset$).
 \item[case] ($->$$I$)
 	By Theorem \ref{thm:ierasekinding}, we know that $\circ |- A^\circ:*$.
 	By induction, we know that
@@ -559,7 +560,7 @@ For any term $t$ that does not contain any index variables,
 	which is what we want since $(B[s/i])^\circ = B^\circ$.
 \item[case] ($=$)
 	By Theorem \ref{thm:ierasetyconeq} and induction.
-\end{itemize}
+\end{itemize}\vspace*{-10pt}
 \end{proof}
 
 \begin{definition}[index variable selection]
@@ -649,7 +650,6 @@ but only refer to the type-level context $\Delta$. Recall
 \begin{proof}
 	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
 	Note that $|- \kappa'$ does not involve any type level context.
-
 	Therefore, $i$ cannot appear free in $\kappa'$.
 \end{proof}
 
@@ -660,9 +660,8 @@ but only refer to the type-level context $\Delta$. Recall
 \]
 \end{proposition}
 \begin{proof}
-	By Proposition \ref{prop:wftype}, $\Delta |- B$.
+	By Proposition \ref{prop:wftype}, $\Delta |- B:*$.
 	Note that $\Delta |- \kappa'$ does not involve any term level context.
-
 	Therefore, $x$ cannot appear free in $B$.
 \end{proof}
 
