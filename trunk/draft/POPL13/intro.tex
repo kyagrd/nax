@@ -27,9 +27,7 @@ such a non-terminating computation in the program code.
 On the other hand, the higher-order polymorphic lambda calculus, System \Fw,
 is known to be strongly normalizing, and through the use of Church encodings
 or Scott encodings of data structures is rich enough to express
-many data rich systems, \KYA{ What's a data rich system,
-				and why talk about compilers?? }
-such as compilers. 
+systems with a rich collection of data structures.
 Unfortunately, it is not known how to express the kind of
 \emph{term-indexed datatypes} in \Fw\ that are necessary to support
 Guillemette's system.
@@ -48,34 +46,38 @@ Can we use non-dependent indexed types when they are all we need?
 Can we program, rather than extract code? The goal of this paper is
 to develop the theory necessary to begin to answer these and related questions.
 
-To approach this goal, we designed a calculus, System \Fi,
-which extends System \Fw\ with as little feature as possible,
-yet expressive enough to embed non-dependent \emph{term-indexed datatypes}
+To approach this goal, we have designed a new calculus, System \Fi,
+which extends System \Fw\ with just a few new features. Despite
+the paucity of new features, \Fi\
+is expressive enough to embed non-dependent \emph{term-indexed datatypes}
 and their eliminators. Our contributions are:\vspace*{-5pt}
 \begin{itemize}
-\item identifying the features needed for the $\lambda$-calculus
+\item Identifying which features are needed for a $\lambda$-calculus
     to embed term-indexed datatypes (\S\ref{sec:motiv}),
-    in isolation of other features
+    in isolation from other features normally associated with such calculii
     (e.g., general recursion, large elimination, dependent types),
     \vspace*{-2pt}
-\item design of the calculus, System \Fi\ (\S\ref{sec:Fi}), which is
-    useful for studying the properties languages with term-indexed datatypes
-    by embedding those datatypes into the calculus (\S\ref{sec:data})
-%%    (e.g., we can use \Fi\ to give formal proof that the eliminators
-%%    for GADTs appearing in our last year's ICFP paper \cite{AhnShe11} are
-%%    indeed normalizing), \vspace*{-3pt}
+\item The design of the calculus, System \Fi\ (\S\ref{sec:Fi}), which we
+    use to studying the properties of languages with term-indexed datatypes,
+    by embedding such datatypes into the calculus (\S\ref{sec:data})
+    For example, we can use \Fi\ to give a formal proof that the 
+    Mendler-style eliminators
+    for GADTs appearing in last year's ICFP paper \cite{AhnShe11} are
+    indeed normalizing.
     \vspace*{-2pt}
-\item showing that the calculus enjoys a simple erasure property
+\item Showing that \Fi\ enjoys a simple erasure property
     (\S\ref{ssec:erasure}) and inherits metatheoretic results
     (\eg, strong normalization, logical consistency)
-    from well-known calculi related to System \Fi\ (\S\ref{ssec:sn}).
+    from well-known calculi (such as \Fw) related to System \Fi\ (\S\ref{ssec:sn}).
 \end{itemize}\vspace*{-3pt}
 
 
 \section{Motivation}
 \label{sec:motiv}
 It is well known that datatypes can be embedded into polymorphic lambda calculi
-(e.g., \cite{AbeMatUus03}).  In System \textsf{F}, we can embed \emph{regular datatypes},
+(e.g., \cite{AbeMatUus03}) using
+functional encodings such as the Church encoding.
+In System \textsf{F}, we can embed \emph{regular datatypes},
 such as homogeneous lists:
 \[\!\!\!\!\!\!\!\!\!
 \begin{array}{ll}
@@ -123,13 +125,16 @@ X\{\texttt{{Z}}\}\to
 \end{figure}
 
 What extensions to \Fw\ do we need to embed datatypes that are indexed by
-terms (\texttt{Z}, \texttt{i}, \texttt{S i}), as well as types (\texttt{a}),
-such as length-indexed lists (\verb|Vec a {i}|) in Figure \ref{fig:motiv}?
-From the motivating example (Figure \ref{fig:motiv}), we learn that
+terms (such as \texttt{Z}, \texttt{i}, and \texttt{S i}), as well as indexed by types (\texttt{a})?
+The classical example of such a type is the length-indexed lists
+(\verb|Vec a {i}|) outlined in Figure \ref{fig:motiv}.
+From this motivating example, we learn that
 the calculus would need four additional constructs:
-index arrow kinds ($\texttt{{Nat}\ensuremath{\to}*}$),
-index abstraction ($\lambda i^{\texttt{{Nat}}}.\cdots$),
-index application ($X\{i\}$), and
-index polymorphism ($\forall i^{\texttt{{Nat}}}.\cdots$).
+\begin{itemize}
+\item index arrow kinds ($\texttt{{Nat}\ensuremath{\to}*}$),
+\item index abstraction ($\lambda i^{\texttt{{Nat}}}.\cdots$),
+\item index application ($X\{i\}$), and
+\item index polymorphism ($\forall i^{\texttt{{Nat}}}.\cdots$).
+\end{itemize}
 
 

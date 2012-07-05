@@ -33,8 +33,11 @@ to be Church style makes the kind of
 a type constructor visually explicit. The choice of style for type constructors
 is not as crucial as the choice of style for terms, since the syntax and
 kinding rules at type level are essentially a simply typed lambda calculus.
-Annotating the type level abstractions with kinds just makes it more evident
-about kinds in the type syntax. As a notational convention, we write
+Annotating the type level abstractions with kinds makes kinds
+explicit in the type syntax. Since \Fi\ is essentially an extension of \Fw\
+with a new formation rule for kinds, making kinds explicit is a pedagogical
+tool to emphasize the consequences of this new formation rule.
+As a notational convention, we write
 $A$ and $B$, instead of $F$ and $G$, where $A$ and $B$ to are expected
 to be types (\ie, nullary type constructors) of kind $*$.
 
@@ -364,7 +367,7 @@ bindings). The type $A$ appearing in
 the index arrow kind $A -> \kappa$ must be well-kinded under
 the empty type level context ($\cdot$).
 That is, $A$ should to be a closed type of kind $*$,
-which do not contain any free type variables or index variables.
+which does not contain any free type variables or index variables.
 For example, $(\textit{List}\,X -> *)$ is not a well-sorted kind,
 while $((\forall X^{*}\!.\,\textit{List}\,X) -> *)$ is a well-sorted kind.
 
@@ -385,7 +388,7 @@ whose type $A$ is well-kinded under the empty type level context at kind $*$.
 This restriction is similar to the one that occurs in the sorting rule ($Ri$)
 for term-indexed arrow kinds (see the paragraph {\bf\textit{Sorting}}).
 The consequence of this is that, in typing contexts and in sorts,
-$A$ must be closed type without free variables.
+$A$ must be closed type (not a type constructor!) without free variables.
 
 A term level context $\Gamma$ is well-formed under a type level context
 $\Delta$ when it is either empty or extended by a term variable binding

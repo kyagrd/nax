@@ -97,14 +97,28 @@
 \maketitle
 
 \begin{abstract}
-This is the text of the abstract.  This is the text of the abstract.
-This is the text of the abstract.  This is the text of the abstract.
-This is the text of the abstract.  This is the text of the abstract.
-This is the text of the abstract.  This is the text of the abstract.
-This is the text of the abstract.  This is the text of the abstract.
-This is the text of the abstract.  This is the text of the abstract.
-This is the text of the abstract.  This is the text of the abstract.
-This is the text of the abstract.  This is the text of the abstract.
+We describe System \Fi, a polymorphic lambda calculus, which supports
+term-indexed datatypes, such as length-indexed lists. System \Fi\ is the
+the smallest extension to System \Fw\ we could devise that can
+express term indices. Term indexed datatypes are expressible
+in richer systems, such as the Calculus of Inductive Constructions (CIC),
+but such systems come coupled with orthoganal features
+such as large eliminations and dependent types.
+We argue there are important pedagogical benefits of isolating the minimal
+features to support term-indexing. We relate System \Fi to other
+known systems. We show system \Fi\ is embeddable in CIC.
+We also prove an erasure properties of \Fi\ which captures the idea
+that term indicies are erasable, since they are irrelevant for reduction.
+Erased \Fi\ terms are \Fw\ terms, so \Fi inherits the strong normalization property from both
+System \Fw\ and CIC. We also show that System \Fi\ is logically consistent.
+We argue that System \Fi\ provides a theory for analyzing term-indexed
+Generalized Algebraic Data Structures and could provide the basis
+for the design of a light-weight logically-sound system, providing some
+of the benefits of logical systems based upon CIC, but with much less complexity.
+
+ 
+
+
 \end{abstract}
 
 \category{D.3.3}{Programming Languages}{Language Constructs and Features}[data types and structures]
