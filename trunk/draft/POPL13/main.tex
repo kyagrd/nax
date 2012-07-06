@@ -56,6 +56,8 @@
 \newcommand{\Fixw}{\ensuremath{\Fix_{\omega}}}
 \newcommand{\Fixi}{\ensuremath{\Fix_{i}}}
 
+\renewcommand{\l}{\lambda}
+
 \newcommand{\dom}{\mathop{\mathsf{dom}}}
 \newcommand{\FV}{\mathop{\mathrm{FV}}}
 
@@ -100,13 +102,13 @@
 We describe System \Fi, a polymorphic lambda calculus, which supports
 term-indexed datatypes, such as length-indexed lists. System \Fi\ is
 the smallest extension to System \Fw\ we could devise that can
-express term indices. Term indexed datatypes are expressible
+express term indices. Term-indexed datatypes are expressible
 in richer systems, such as the Implicit Calculus Constructions (ICC),
 but such systems come coupled with orthogonal features
 such as large eliminations and dependent types.
 We argue there are important pedagogical benefits of isolating the minimal
 features to support term-indexing. We relate System \Fi to other
-known systems. We prove an erasure properties of \Fi\ which captures the idea
+known systems. We prove erasure properties of \Fi\ which captures the idea
 that term indices are erasable, since they are irrelevant for reduction.
 Erased \Fi\ terms are \Fw\ terms, so \Fi inherits
 the strong normalization property from System \Fw.
