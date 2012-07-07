@@ -148,7 +148,7 @@ defined along the following lines:
 \end{lstlisting}\noindent
 Here the type constructor~{\tt Vec} is defined to admit parameterisation
 by both type and term indices.  For instance, the type 
-(\verb|Vec (List Nat) {S S Z}|) is that of two-di\-men\-sion\-al
+(\verb|Vec (List Nat) {S (S Z)}|) is that of length-two
 vectors of lists of natural numbers.  By design, our syntax directly
 reflects the different type and term indexing by indicating the latter in
 curly brackets.  This feature has been directly transferred from
@@ -168,7 +168,7 @@ next section, one sees that such a calculus incorporating term-indexing
 structure needs four additional constructs.
 \begin{enumerate}
 \item 
-  Type-indexed kinding~$A\to\kappa$ (as $\texttt{{Nat}\ensuremath{\to}*}$
+  Type-indexed kinding~($A\to\kappa$) (as in $(\texttt{{Nat}\ensuremath{\to}*})$
   in the example above) where the compile-time nature of term-indexing
   will be reflected in the enforcement that $A$ be a closed type~(see
   rule~$(Ri)$ in \Fig{Fi}).
