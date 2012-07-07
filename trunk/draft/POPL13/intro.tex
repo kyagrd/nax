@@ -8,16 +8,59 @@
 %% embed recursive datatypes by Church encoding and show strong normalization
 %% for the logical fragment of such a language
 
-The introduction of Generalized Algebraic Datatypes~(GADTs) to
-functional languages such as Haskell and OCaml has popularized
-the use of indexed datatypes as a light-weight, type-based mechanism
+We wish to incorporate dependent types into ordinary programming
+languages. We are interested in two kinds of dependent types.
+Full dependency, where the type of a function can depend upon the value
+of its run-time parameters, and static dependency, where the type
+of a function can depend only upon static (or compile-time) parameters.
+Static dependency is sometimes referred to as indexed typing. The first
+is very expressive, while the second is often much easier to learn and 
+use. Indexed types come in two flavors: type-indexed and term-indexed
+types. Type indexing includes parametric polymorphism, but it also
+includes more sophisticated typing such as Generalized Algebraic 
+Datatypes~(GADTs). An example of type indexing using GADTs is a type representation:
+{\small
+\begin{verbatim}
+data TypeRep t where
+  Int:: TypeRep Int
+  Bool:: TypeRep Bool
+  Pair:: TypeRep a -> TypeRep b -> TypeRep(a,b)
+\end{verbatim}}
+Here, a value of type {\tt TypeRep t} is isomorphic in ``shape" with
+the type {\tt t}. For example {\tt Pair Int Bool)} is isomorphic in shape
+with its type {\tt (Int,Bool)}.
+
+On the other hand, term-indexed types include indices that range over data
+structures, such as the Natural Numbers~(like {\tt Z}, {(\tt S
+Z})) or Lists~(like {\tt Nil} or ({\tt Cons 1 Nil})). 
+The classic example of a term index is the second
+parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
+(S Z)})).  In languages such as Haskell, which support GADTs with type indexing,
+term-indices are not first-class; they are ``faked" by reflecting data at the
+type level with uninhabited type constructors. For example
+{\small
+\begin{verbatim}
+data Zero
+data Succ n
+
+data Vecor t n where
+  Nil:: Vector a Zero
+  Cons:: a -> Vector a n -> Vector a (Succ n)
+\end{verbatim}}
+This comes with a number of problems. First, there is no way to say
+that types such as {\tt (Succ Int)} and ill-formed, and second the costs
+associated with duplicating the constructor functions of data to be used
+as term-indices.
+Nevertheless, ``faked" term-indexed GADTs have become extremely
+popular as a light-weight, type-based mechanism
 to raise the confidence of users that software systems maintain important
 properties.  
 
 A salient example is Guillemette's thesis~\cite{guillemetteThesis}
 encoding the classic paper by~\citet{tal-toplas} completely
 in Haskell. This impressive system embeds a multi-stage compiler, from
-System~F all the way to typed assembly language using indexed types to
+System~F all the way to typed assembly language using indexed datatypes
+(many of them ``faked" term-indices) to
 show that every stage preserves type information.
 %
 As such, it provides confidence but no guarantees.  Indeed, since in
@@ -41,10 +84,10 @@ dependent types and a new programming paradigm, programming by code
 extraction.
 
 Some natural questions thus arise: Is there an expressive system
-supporting non-dependent indexed types, say sitting somewhere in between
-\Fw\ and dependent calculi?  
-Can one use non-dependent indexed types when they are all we
-need?\marginpar{\bf MF: I don't understand the second question?}
+supporting term-indexed types, say, sitting somewhere in between
+\Fw\ and fully dependent calculi? 
+If one needs only term-indexed types to maintain properties
+of interest, is there a language one can use?
 Can one program, rather than extract code? 
 The goal of this paper is to develop the theory necessary to begin
 answering these and related questions.  

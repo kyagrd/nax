@@ -100,28 +100,14 @@
 
 \begin{abstract}
 
-We wish to incorporate dependent types into ordinary programming
-languages. We are interested in two kinds of dependent types.
-Full dependency, where the type of a function can depend upon the value
-of its run-time parameters, and static dependency, where the type
-of a function can depend only upon static (or compile-time) parameters.
-Static dependency is sometimes referred to as indexed typing. The first
-is very expressive, while the second is often much easier to learn and 
-use. Indexed types come in two flavors: type-indexed and term-indexed
-types. Type indexing includes parametric polymorphism, but it also
-includes more sophisticated typing such as Generalized Algebraic 
-Datatypes~(GADTs). Term-indexed types include indices that range over data
-structures, such as the Natural Numbers~(like {\tt Z}, {(\tt S
-Z})) or Lists~(like {\tt Nil} or ({\tt Cons 1 Nil})) rather than types
-such as {\tt Int}. The classic example of a term index is the second
-parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
-(S Z)})).  In languages such as Haskell, which support GADTs,
-term-indices are not first-class; they are faked by reflecting data at the
-type level with uninhabited type constructors.
 
 The purpose of this paper is to introduce a foundational type system,
 System~\Fi, for the design of programming languages with first-class
-term-indexed datatypes; thus avoiding reflecting data. To do this, we have
+term-indexed datatypes -- datatypes whose parameters range over data
+such as the Natural Numbers~(e.g. {\tt Z} and {(\tt S
+Z})) or Lists~(e.g. {\tt Nil} and ({\tt Cons 1 Nil})).
+
+To do this, we have
 devised a minimal extension of System \Fw\ that incorporates term indices.
 While term-indexed datatypes are expressible in richer type systems, like
 the Implicit Calculus Constructions~(ICC), such systems come coupled with
