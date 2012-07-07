@@ -25,17 +25,17 @@ Haskell the non-terminating computation can be assigned any type, it is in
 principle possible that the type-preservation property is a consequence of
 a non-terminating computation in the program code.
 
-This drawback would be absent in an approach based on logical calculi
-known to be strongly normalizing; like System~\Fw, the higher-order
+This drawback would be absent in an approach based on strongly normalizing
+logical calculi; like System~\Fw, the higher-order
 polymorphic lambda calculus, which is rich enough to express a wide
 collection of data structures.  Unfortunately, the \emph{term-indexed
 datatypes} that are necessary to support Guillemette's system are not
-known to be expressible in \Fw.
+known to be expressible in System~\Fw.
 
 In his CompCert system, Leroy~\cite{Leroy-Compcert-CACM} showed that the
 much richer logical Calculus of Inductive Constructions~(CIC), which
 constitutes the basis of the Coq proof assistant, is expressive enough to
-guarantee type preservation and more between compiler stages.  This
+guarantee type preservation, and more, between compiler stages.  This
 approach, however, comes at a cost.  Programmers must learn to use both
 dependent types and a new programming paradigm, programming by code
 extraction.
@@ -67,14 +67,14 @@ this development are as follows.\vspace*{-5pt}
   The design of the calculus, System \Fi\ (\S\ref{sec:Fi}), and its use to
   study properties of languages with term-indexed datatypes, by embedding
   these into the calculus~(\S\ref{sec:data}).  For instance, one can use
-  System~\Fi\ to give a formal proof that the Mendler-style eliminators
+  System~\Fi\ to prove that the Mendler-style eliminators
   for GADTs of~\cite{AhnShe11} are normalizing.
   \vspace*{-1pt}
 \item 
   Showing that System~\Fi\ enjoys a simple erasure
   property~(\S\ref{ssec:erasure}) and inherits meta-theoretic
   results~(strong normalization and logical consistency) from well-known
-  calculi~(\Fw\ and ICC) that enclose System~\Fi~(\S\ref{ssec:sn}).
+  calculi~(System~\Fw\ and ICC) that enclose System~\Fi~(\S\ref{ssec:sn}).
 \end{itemize}\vspace*{-3pt}
 
 
