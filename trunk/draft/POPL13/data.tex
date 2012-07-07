@@ -1,72 +1,134 @@
 \section{Embedding datatypes and their eliminators} \label{sec:data}
 We demonstrate some examples of embedding datatypes into System \Fi.
 %% TODO cite some paper that does this with System Fw or System F
-We first illustrate the embedding of both non-recursive datatypes and
-recursive datatypes as Church-encoded terms (\S\ref{ssec:embedChurch}).
-Then, we illustrate a more involved embedding for the recursive datatypes
-based on two-level types (\S\ref{ssec:embedTwoLevel}).
+We first illustrate embeddings for both non-recursive datatypes and
+recursive datatypes, where we use Church encodings \cite{Church33}
+for data constructors (\S\ref{ssec:embedChurch}). Then, we illustrate
+a more involved embedding for the recursive datatypes based on two-level types
+(\S\ref{ssec:embedTwoLevel}).
 
-\subsection{Embedding datatypes of Church-encoded terms}
+\subsection{Embedding datatypes using Church-encoded terms}
 \label{ssec:embedChurch}
+\citet{Church33} demonstrated an embedding of natural numbers into
+the untyped $\lambda$-calculus, which he invented, in order to argue
+that the $\lambda$-calculus  expressive enough for the foundation of
+logic and arithmetic. Church encoded the data constructors of natural numbers,
+successor and zero, as higher-order functions,
+$\mathtt{succ}=\l x.\l x_s.\l x_z.x_s(x\,x_s x_z)$ and
+$\mathtt{zero}=\l x_s.\l x_z.x_z$.
+The heart of the Church encoding is that a value is encoded as its elimination.
+The bound variables $x_s$ and $x_z$ stands for the operations needed for
+eliminating the successor case and the zero case. The Church encodings of
+successor and zero states that: to eliminate $\mathtt{succ}\,x$, apply $x_s$
+to the elimination of the predecessor $(x\,x_s x_z)$; and,
+to eliminate $\mathtt{zero}$, just return $x_z$.
+Since values themselves are eliminators,
+eliminator can be defined as applying the value itself to the needed operations
+for each data constructor case. For instance, we can define an eliminator
+for natural numbers as $\mathtt{elimNat}=\l x.\l x_s.\l x_z.x\,x_s x_z$,
+which is just an $\eta$-expansion of the identity function $\l x.x$.
+Church encoded natural numbers are typable in polymorphic $\lambda$-calculi,
+such as System \Fw, as follows:\vspace*{-7pt}
+\begin{align*}
+&\texttt{Nat} &=~& \forall X^{*}.(X -> X) -> X -> X \qquad\qquad\qquad\\
+&\texttt{succ} &\!\!\!:~~& \texttt{Nat} -> \texttt{Nat}
+	~~ =~ \l x.\l x_s.\l x_z.x_s(x\,x_s x_z) \\
+&\texttt{zero} &\!\!\!:~~& \texttt{Nat} \qquad\quad\,
+	~~ =~ \l x_s.\l x_z.x_z \\
+&\mathtt{elim_{Nat}} &\!\!\!:~~& \texttt{Nat} -> \forall X^{*}.(X -> X)-> X-> X \\
+& &=~& \l x.\l x_s.\l x_z.x\,x_s x_z
+\end{align*}~\vspace*{-15pt}
 
+Similarly, other datatypes are also embeddable into
+polymorphic $\lambda$-calculi in this fashion.
+Figure \ref{fig:churchnonrec} illustrates the embeddings of
+some well-known non-recursive datatypes.
+\begin{figure}
+%% \begin{align*}
+%% &\mathtt{Bool} &=~& \forall X.X -> X -> X$ \\
+%% &$\mathtt{true}  &\!\!\!:~~& \texttt{Bool} = \l x_1.\l x_2. x_1$ \\
+%% &$\mathtt{false} &\!\!\!:~~& \texttt{Bool} = \l x_1.\l x_2. x_2$ \\
+%% &$\mathtt{elim_{Bool}}
+%% \end{align*}
 \begin{tabular}{lp{60mm}}
-	\hline
-boolean type	& $\!\!\!\!\textit{Bool} = \forall X.X -> X -> X$ \\
-constructors		& $\mathtt{True} = \l x_1.\l x_2. x_1$ \\
-            &$\mathtt{False} = \l x_1.\l x_2. x_2$ \\
-eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \\
-	      &(\textbf{if} $x$ \textbf{then} $x_1$ \textbf{else} $x_2$)
+boolean type	& $\!\!\!\!\mathtt{Bool} = \forall X.X -> X -> X$ \\
+constructors		& $\mathtt{true} = \l x_1.\l x_2. x_1$ \\
+            &$\mathtt{false} = \l x_1.\l x_2. x_2$ \\
+eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \quad~~
+	(\textbf{if} $x$ \textbf{then} $x_1$ \textbf{else} $x_2$)\vspace*{1pt}
 	\\\hline
-pair type & $\!\!\!\!\!\!\!\!A_1\times A_2 = \forall X. (A_1 -> A_2 -> X) -> X$ \\
+	pair type & $\!\!\!\!\!\!\!\!A_1\times A_2 = \forall X. (A_1 -> A_2 -> X) -> X \phantom{A^{A^A}}$ \\
 constructor		& $\mathtt{pair} = \l x_1.\l x_2.\l x'.x'\,x_1\,x_2$ \\
 eliminator		& $\l x.\l x'.x\;x'$ \par
 			(by passing appropriate values to $x'$, \par ~~ we get
 			~$\textit{fst} = \l x.x(\l x_1.\l x_2.x_1)$,\par \qquad
 			\quad
-			~$\,\textit{snd} = \l x.x(\l x_1.\l x_2.x_2)$ )
+			~$\,\textit{snd} = \l x.x(\l x_1.\l x_2.x_2)$ )\vspace*{1pt}
 	\\\hline
-
-sum type & $\!\!\!\!\!\!\!\!A_1+A_2 = \forall X^{*}. (A_1 -> X) -> (A_2 -> X) -> X$ \\
+sum type$\phantom{A^{A^A}}$ & $\!\!\!\!\!\!\!\!A_1+A_2 = \forall X^{*}. (A_1 -> X) -> (A_2 -> X) -> X$ \\
 constructors		& $\mathtt{inl} = \l x. \l x_1. \l x_2 . x_1\,x$\\
 	      &		$\mathtt{inr} = \l x. \l x_2. \l x_2 . x_2\,x$ \\
 eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \par
 			(\textbf{case} $x$ \textbf{of}
 				\{$\mathtt{inl}~x' -> x_1\;x'$;
 				  $\mathtt{inr}~x' -> x_2\;x'$\})
-	\\\hline
-list type & $\!\!\!\!\!\!\!\!\textit{List}=\l A^{*}.\forall X^{*}. (A -> X -> X) -> X -> X$ \\
-constructors		& $\mathtt{cons} = \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n)$\\
-       &	$\mathtt{nil}\;\, = \l x_c.\l x_n.\l x_n$ \\
-eliminator		& $\l x.\l x_c. \l x_n.x\;x_c\,x_n$ \\
-	    &		(\textit{foldr} $x_z$ $x_c$ $x$ in Haskell)
-	\\\hline
 \end{tabular}
+\caption{Embedding non-recursive datatypes}
+\label{fig:churchnonrec}
+\end{figure}
 
-
-lists
-encoding of type	$\textit{List}\;A = \forall X. (A -> X -> X) -> X -> X$ \\
-constructors		$\mathtt{cons} = \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n)$,\par
-			$\mathtt{nil}\;\, = \l x_c.\l x_n.\l x_n$ \\
-eliminator		$\l x.\l x_c. \l x_n.x\;x_c\,x_n$ \quad
-			(\textit{foldr} $x_z$ $x_c$ $x$ in Haskell)
-
-\[
-\textit{Powl} = \l A^{*}.\forall X^{* -> *} .
-	(A -> X(A\times A) -> XA) -> XA  -> XA \\
-\]
-
+Recursive types
+Figure \ref{fig:churchrec}
+\begin{figure}
 \begin{align*}
-\textit{Powl} &= \l A^{*}.\forall X^{* -> *}&.&
-	(A -> X(A\times A) & -> & XA) & -> & XA & -> & XA \\
-\textit{List} &= \l A^{*}.\forall X^{*}&.&
-	(A -> X & -> & X) & -> & X & -> & X
-\end{align*}
+&\!\!\!\!\!\!\mathtt{List} &\!\!\!\!\!=~& \l A^{*}.\forall X^{*}.(A-> X-> X)-> X-> X
+	\\
+&\!\!\!\!\!\!\texttt{cons} &\!\!\!\!\!:~~& \forall A^{*}.A-> \mathtt{List}\,A-> \mathtt{List}\,A \\
+& & & \qquad~\qquad~\quad\, =~\l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{nil} &\!\!\!\!\!:~~& \forall A^{*}.\texttt{List}\,A
+~~=~ \l x_c.\l x_n.\l x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{List}} &\!\!\!\!:~~& \forall A^{*}.\texttt{List}\,A ->
+	\forall X^{*}.(A -> X -> X) -> X -> X \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
+\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.5pt}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{Powl} &\!\!\!\!\!=~& \l A^{*}.\forall X^{*-> *}.(A-> X(A\times A)-> XA)-> XA -> XA \\
+&\!\!\!\!\!\!\texttt{pcons} &\!\!\!\!\!:~~& \forall A^{*}.A-> \mathtt{Powl}(A\times A)-> \mathtt{Powl}\,A \\
+&&& \qquad~\qquad~\quad\, ~=~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{pnil} &\!\!\!\!\!:~~& \forall A^{*}.\texttt{Powl}\,A
+~~~=~ \l x_c.\l x_n.\l x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{Powl}} &\!\!\!\!:~~& \forall A^{*}.\texttt{Powl}\,A -> \\
+&&& \forall X^{*-> *}.(A -> X(A\times A) -> XA) -> XA -> XA \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
+\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.5pt}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{Vec} &\!\!\!\!\!\!\!\!=~& \l A^{*}.\l i^{\mathtt{Nat}}.\\
+&&&	\forall X^{\mathtt{Nat}-> *}.
+	(\forall i^\mathtt{Nat}.A-> X\{i\}-> X\{\mathtt{succ}\,i\}) ->
+	X\{\texttt{zero}\} \\
+&&& \qquad~\qquad -> X\{i\} \\
+ &\!\!\!\!\!\!\texttt{vcons} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.A-> \mathtt{Vec}\,A\,\{i\}-> \mathtt{Vec}\,A\,\{\mathtt{succ}\,i\} \\
+&&&\,\qquad~\qquad~\qquad~\quad~ ~~=~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{vnil} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\texttt{Vec}\,A\,\{\mathtt{zero}\} 
+~~~=~ \l x_c.\l x_n.\l x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{Vec}} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.\texttt{Vec}\,A\,\{i\} -> \\
+&&& \forall X^{\mathtt{Nat}-> *}.(\forall i^\mathtt{Nat}.A -> X\{i\} -> X\{\mathtt{succ}\,i\}) -> X\{\mathtt{zero}\} \\
+&&& \qquad~\qquad -> X\{i\} \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
+\end{align*} ~\vspace*{-10pt}
+\caption{Embedding recursive datatypes}
+\label{fig:churchrec}
+\end{figure}
+
+
 
 
 \subsection{
-   Embedding the recursive type operator and the Mendler-style iterators}
+   Embedding the recursive type operators and the Mendler-style iterators}
 \label{ssec:embedTwoLevel}
-We can divide a recursive datatype defintion into two levels,
+We can divide a recursive datatype definition into two levels,
 by factoring out the recursive type operator, which ties the knot of
 the recursive definition, and a non-recursive base structure,
 which describes the shape (\ie, number of data constructors and their types) of
