@@ -9,6 +9,90 @@ a more involved embedding for the recursive datatypes based on two-level types
 
 \subsection{Embedding datatypes using Church-encoded terms}
 \label{ssec:embedChurch}
+\begin{figure}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{Bool} &=~& \forall X.X -> X -> X \\
+&\!\!\!\!\!\!\mathtt{true}  &\!\!\!:~~& \texttt{Bool} ~~=~ \l x_1.\l x_2. x_1 \\
+&\!\!\!\!\!\!\mathtt{false} &\!\!\!:~~& \texttt{Bool} ~~=~ \l x_1.\l x_2. x_2 \\
+&\!\!\!\!\!\!\mathtt{elim_{Bool}} &\!\!\!:~~& \texttt{Bool} -> \forall X.X -> X -> X \\
+&	&=~& \l x.\l x_1. \l x_2. x\;x_1\,x_2 \qquad
+(\textbf{if}~x~\textbf{then}~x_1~\textbf{else}~x_2)
+\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.4pt}
+\begin{align*}
+&\!\!\!\!\!\!A_1\times A_2 &=~& \forall X. (A_1 -> A_2 -> X) -> X \\
+&\!\!\!\!\!\!\mathtt{pair} &\!\!\!:~~&
+	\forall A_1^{*}.\forall A_2^{*}.A_1\times A_2
+	~~=~ \l x_1.\l x_2.\l x'.x'\,x_1\,x_2 \\
+&\!\!\!\!\!\!\mathtt{elim_{(\times)}} &\!\!\!:~~&
+	\forall A_1^{*}.\forall A_2^{*}.A_1\times A_2 ->
+	\forall X. (A_1 -> A_2 -> X) -> X \\
+	& &=~& \l x.\l x'.x\;x' \\
+ &&&\!\!\!\!\!\!\!\!\text{(by passing appropriate values to $x'$, we get}\\
+ &&&\!\!\!\!\textit{fst} = \l x.x(\l x_1.\l x_2.x_1),~
+            \textit{snd} = \l x.x(\l x_1.\l x_2.x_2) ~)
+\end{align*} \vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.4pt}
+\begin{align*}
+&\!\!\!\!\!\!A_1+A_2 &=~&\forall X^{*}. (A_1 -> X) -> (A_2 -> X) -> X \\
+&\!\!\!\!\!\!\mathtt{inl} &\!\!\!:~~& \forall A_1^{*}.\forall A_2^{*}.A_1-> A_1+A_2
+	~~=~ \l x. \l x_1. \l x_2 . x_1\,x \\
+&\!\!\!\!\!\!\mathtt{inr} &\!\!\!:~~& \forall A_1^{*}.\forall A_2^{*}.A_2-> A_1+A_2
+	~~=~ \l x. \l x_1. \l x_2 . x_2\,x \\
+&\!\!\!\!\!\!\mathtt{elim_{(+)}} &\!\!\!:~~&
+	\forall A_1^{*}.\forall A_2^{*}.(A_1+A_2) -> \\
+	&&& \forall X^{*}. (A_1 -> X) -> (A_2 -> X) -> X \\
+	& &=~& \l x.\l x_1. \l x_2. x\;x_1\,x_2 \\
+	&&&			(\textbf{case}~x~\textbf{of}~
+				\{\mathtt{inl}~x' -> x_1\;x';
+				  \mathtt{inr}~x' -> x_2\;x'\})
+\end{align*}~\vspace*{-10pt}
+\caption{Embedding non-recursive datatypes}
+\label{fig:churchnonrec}
+\end{figure}
+\begin{figure}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{List} &\!\!\!\!\!=~& \l A^{*}.\forall X^{*}.(A-> X-> X)-> X-> X
+	\\
+&\!\!\!\!\!\!\texttt{cons} &\!\!\!\!\!:~~& \forall A^{*}.A-> \mathtt{List}\,A-> \mathtt{List}\,A \\
+& & & \qquad~\qquad~\quad\, =~\l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{nil} &\!\!\!\!\!:~~& \forall A^{*}.\texttt{List}\,A
+~~=~ \l x_c.\l x_n.\l x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{List}} &\!\!\!\!:~~& \forall A^{*}.\texttt{List}\,A ->
+	\forall X^{*}.(A -> X -> X) -> X -> X \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n\qquad
+	\text{(\textit{foldr} $x_z$ $x_c$ $x~$ in Haskell)}
+\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.4pt}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{Powl} &\!\!\!\!\!=~& \l A^{*}.\\
+&&&\forall X^{*-> *}.(A-> X(A\times A)-> XA)-> XA -> XA \\
+&\!\!\!\!\!\!\texttt{pcons} &\!\!\!\!\!:~~& \forall A^{*}.A-> \mathtt{Powl}(A\times A)-> \mathtt{Powl}\,A \\
+&&& \qquad~\qquad~\quad\, ~=~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{pnil} &\!\!\!\!\!:~~& \forall A^{*}.\texttt{Powl}\,A
+~~~=~ \l x_c.\l x_n.\l x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{Powl}} &\!\!\!\!:~~& \forall A^{*}.\texttt{Powl}\,A -> \\
+&&& \forall X^{*-> *}.(A -> X(A\times A) -> XA) -> XA -> XA \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
+\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.4pt}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{Vec} &\!\!\!\!\!\!\!\!=~& \l A^{*}.\l i^{\mathtt{Nat}}.\\
+&&&	\forall X^{\mathtt{Nat}-> *}.
+	(\forall i^\mathtt{Nat}.A-> X\{i\}-> X\{\mathtt{succ}\,i\}) ->  \\
+&&& \qquad~\qquad X\{\texttt{zero}\} -> X\{i\} \\
+ &\!\!\!\!\!\!\texttt{vcons} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.A-> \mathtt{Vec}\,A\,\{i\}-> \mathtt{Vec}\,A\,\{\mathtt{succ}\,i\} \\
+&&&\;\qquad\qquad\quad =~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{vnil} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\texttt{Vec}\,A\,\{\mathtt{zero}\} 
+~~~=~ \l x_c.\l x_n.\l x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{Vec}} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.\texttt{Vec}\,A\,\{i\} -> \\
+&&& \forall X^{\mathtt{Nat}-> *}.(\forall i^\mathtt{Nat}.A -> X\{i\} -> X\{\mathtt{succ}\,i\}) -> \\
+&&& \qquad~\qquad X\{\mathtt{zero}\} -> X\{i\} \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
+\end{align*} ~\vspace*{-14pt}
+\caption{Embedding recursive datatypes}
+\label{fig:churchrec}
+\end{figure}
 \citet{Church33} demonstrated an embedding of natural numbers into
 the untyped $\lambda$-calculus, which he invented, in order to argue
 that the $\lambda$-calculus  expressive enough for the foundation of
@@ -28,7 +112,7 @@ for each data constructor case. For instance, we can define an eliminator
 for natural numbers as $\mathtt{elimNat}=\l x.\l x_s.\l x_z.x\,x_s x_z$,
 which is just an $\eta$-expansion of the identity function $\l x.x$.
 Church encoded natural numbers are typable in polymorphic $\lambda$-calculi,
-such as System \Fw, as follows:\vspace*{-7pt}
+such as System \Fw, as follows:\vspace*{-2pt}
 \begin{align*}
 &\texttt{Nat} &=~& \forall X^{*}.(X -> X) -> X -> X \qquad\qquad\qquad\\
 &\texttt{succ} &\!\!\!:~~& \texttt{Nat} -> \texttt{Nat}
@@ -37,93 +121,18 @@ such as System \Fw, as follows:\vspace*{-7pt}
 	~~ =~ \l x_s.\l x_z.x_z \\
 &\mathtt{elim_{Nat}} &\!\!\!:~~& \texttt{Nat} -> \forall X^{*}.(X -> X)-> X-> X \\
 & &=~& \l x.\l x_s.\l x_z.x\,x_s x_z
-\end{align*}~\vspace*{-15pt}
+\end{align*}~\vspace*{-13pt}
 
 Similarly, other datatypes are also embeddable into
 polymorphic $\lambda$-calculi in this fashion.
-Figure \ref{fig:churchnonrec} illustrates the embeddings of
-some well-known non-recursive datatypes.
-\begin{figure}
-%% \begin{align*}
-%% &\mathtt{Bool} &=~& \forall X.X -> X -> X$ \\
-%% &$\mathtt{true}  &\!\!\!:~~& \texttt{Bool} = \l x_1.\l x_2. x_1$ \\
-%% &$\mathtt{false} &\!\!\!:~~& \texttt{Bool} = \l x_1.\l x_2. x_2$ \\
-%% &$\mathtt{elim_{Bool}}
-%% \end{align*}
-\begin{tabular}{lp{60mm}}
-boolean type	& $\!\!\!\!\mathtt{Bool} = \forall X.X -> X -> X$ \\
-constructors		& $\mathtt{true} = \l x_1.\l x_2. x_1$ \\
-            &$\mathtt{false} = \l x_1.\l x_2. x_2$ \\
-eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \quad~~
-	(\textbf{if} $x$ \textbf{then} $x_1$ \textbf{else} $x_2$)\vspace*{1pt}
-	\\\hline
-	pair type & $\!\!\!\!\!\!\!\!A_1\times A_2 = \forall X. (A_1 -> A_2 -> X) -> X \phantom{A^{A^A}}$ \\
-constructor		& $\mathtt{pair} = \l x_1.\l x_2.\l x'.x'\,x_1\,x_2$ \\
-eliminator		& $\l x.\l x'.x\;x'$ \par
-			(by passing appropriate values to $x'$, \par ~~ we get
-			~$\textit{fst} = \l x.x(\l x_1.\l x_2.x_1)$,\par \qquad
-			\quad
-			~$\,\textit{snd} = \l x.x(\l x_1.\l x_2.x_2)$ )\vspace*{1pt}
-	\\\hline
-sum type$\phantom{A^{A^A}}$ & $\!\!\!\!\!\!\!\!A_1+A_2 = \forall X^{*}. (A_1 -> X) -> (A_2 -> X) -> X$ \\
-constructors		& $\mathtt{inl} = \l x. \l x_1. \l x_2 . x_1\,x$\\
-	      &		$\mathtt{inr} = \l x. \l x_2. \l x_2 . x_2\,x$ \\
-eliminator		& $\l x.\l x_1. \l x_2. x\;x_1\,x_2$ \par
-			(\textbf{case} $x$ \textbf{of}
-				\{$\mathtt{inl}~x' -> x_1\;x'$;
-				  $\mathtt{inr}~x' -> x_2\;x'$\})
-\end{tabular}
-\caption{Embedding non-recursive datatypes}
-\label{fig:churchnonrec}
-\end{figure}
-
-Recursive types
-Figure \ref{fig:churchrec}
-\begin{figure}
-\begin{align*}
-&\!\!\!\!\!\!\mathtt{List} &\!\!\!\!\!=~& \l A^{*}.\forall X^{*}.(A-> X-> X)-> X-> X
-	\\
-&\!\!\!\!\!\!\texttt{cons} &\!\!\!\!\!:~~& \forall A^{*}.A-> \mathtt{List}\,A-> \mathtt{List}\,A \\
-& & & \qquad~\qquad~\quad\, =~\l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
-&\!\!\!\!\!\!\mathtt{nil} &\!\!\!\!\!:~~& \forall A^{*}.\texttt{List}\,A
-~~=~ \l x_c.\l x_n.\l x_n \\
-&\!\!\!\!\!\!\mathtt{elim_{List}} &\!\!\!\!:~~& \forall A^{*}.\texttt{List}\,A ->
-	\forall X^{*}.(A -> X -> X) -> X -> X \\
-& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
-\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
-\rule{\linewidth}{.5pt}
-\begin{align*}
-&\!\!\!\!\!\!\mathtt{Powl} &\!\!\!\!\!=~& \l A^{*}.\forall X^{*-> *}.(A-> X(A\times A)-> XA)-> XA -> XA \\
-&\!\!\!\!\!\!\texttt{pcons} &\!\!\!\!\!:~~& \forall A^{*}.A-> \mathtt{Powl}(A\times A)-> \mathtt{Powl}\,A \\
-&&& \qquad~\qquad~\quad\, ~=~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
-&\!\!\!\!\!\!\mathtt{pnil} &\!\!\!\!\!:~~& \forall A^{*}.\texttt{Powl}\,A
-~~~=~ \l x_c.\l x_n.\l x_n \\
-&\!\!\!\!\!\!\mathtt{elim_{Powl}} &\!\!\!\!:~~& \forall A^{*}.\texttt{Powl}\,A -> \\
-&&& \forall X^{*-> *}.(A -> X(A\times A) -> XA) -> XA -> XA \\
-& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
-\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
-\rule{\linewidth}{.5pt}
-\begin{align*}
-&\!\!\!\!\!\!\mathtt{Vec} &\!\!\!\!\!\!\!\!=~& \l A^{*}.\l i^{\mathtt{Nat}}.\\
-&&&	\forall X^{\mathtt{Nat}-> *}.
-	(\forall i^\mathtt{Nat}.A-> X\{i\}-> X\{\mathtt{succ}\,i\}) ->
-	X\{\texttt{zero}\} \\
-&&& \qquad~\qquad -> X\{i\} \\
- &\!\!\!\!\!\!\texttt{vcons} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.A-> \mathtt{Vec}\,A\,\{i\}-> \mathtt{Vec}\,A\,\{\mathtt{succ}\,i\} \\
-&&&\,\qquad~\qquad~\qquad~\quad~ ~~=~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
-&\!\!\!\!\!\!\mathtt{vnil} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\texttt{Vec}\,A\,\{\mathtt{zero}\} 
-~~~=~ \l x_c.\l x_n.\l x_n \\
-&\!\!\!\!\!\!\mathtt{elim_{Vec}} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.\texttt{Vec}\,A\,\{i\} -> \\
-&&& \forall X^{\mathtt{Nat}-> *}.(\forall i^\mathtt{Nat}.A -> X\{i\} -> X\{\mathtt{succ}\,i\}) -> X\{\mathtt{zero}\} \\
-&&& \qquad~\qquad -> X\{i\} \\
-& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
-\end{align*} ~\vspace*{-10pt}
-\caption{Embedding recursive datatypes}
-\label{fig:churchrec}
-\end{figure}
-
-
-
+Embeddings of some well-known non-recursive datatypes are illustrated
+in Figure \ref{fig:churchnonrec}, and embeddings of the list-like
+recursive datatypes, which we discussed earlier as motivating examples
+(\S\ref{sec:motiv}), are illustrated in Figure \ref{fig:churchrec}.
+Note that the term encodings for the constructors and eliminators of
+the list-like datatypes in Figure \ref{fig:churchrec} are exactly the same.
+For instance, the term encodings for \texttt{nil}, \texttt{pnil}, and
+\texttt{vnil} coincide as $\l x_s.\l x_z.x_z$.
 
 \subsection{
    Embedding the recursive type operators and the Mendler-style iterators}
