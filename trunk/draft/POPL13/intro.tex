@@ -201,11 +201,12 @@ nature of term indexing.
 The encoding of the vector datatype in System~\Fi\ is as follows: 
 \vspace*{-5pt}
 \begin{multline*}\!\!\!\!\!\!\!
-\texttt{{Vec}}\:\:\triangleq\:\:\lambda A^{*}.\lambda i^{\texttt{{Nat}}}.
-\forall X^{\texttt{{Nat}}\to*}.\\
+\texttt{{Vec}}\:\:\triangleq\:\:\lambda A^\mathtt{*}.\lambda
+i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to\mathtt{*}}.\\
 X\{\texttt{{Z}}\}\to
 (\forall j^{\texttt{{Nat}}}.A\to X\{j\}\to X\{\texttt{{S}}\; j\})\to X\{i\}
 \end{multline*}
+where $\texttt{{Nat}} \triangleq \forall X^\mathtt{*}.\, X\to(X\to X)\to X$.
 Without going into the details of the formalism, which are given in the
 next section, one sees that such a calculus incorporating term-indexing
 structure needs four additional constructs.

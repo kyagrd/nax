@@ -56,13 +56,14 @@ we write $i$, instead of $x$, when term variables are to be used as indices
 (\ie, introduced by either index abstraction or index polymorphism).
 
 In contrast to our design choice, System \Fw\ is most often formalized using
-a single context, which binds both type variables ($X$) and term variables
-($x$). In such a formalization, the free type variables in the typing of
+a single context, which binds both type variables~($X$) and term 
+variables~($x$). 
+In such a formalization, the free type variables in the typing of
 the term variable must be bound earlier in the context. For example,
 if $X_1$ and $X_2$ appear free in the type of $x$, they must appear earlier
 in the single context ($\Gamma$) as below:
-\[ \Gamma = \dots,X_1^{*},\dots,X_2^{*},\dots,
-		(x:\forall X^{*}.X_1 -> X_2 -> X),\dots \]
+\[ \Gamma = \dots,Y^{*},\dots,Z^{*},\dots,
+		(x:\forall X^{*}.Y -> Z -> X),\dots \]
 In such a formalization, the side condition ($X\notin\Gamma$)
 in the $(\forall I)$ rule of Figure \ref{fig:Fi} is not necessary,
 since such a condition is already a part of the well-formedness condition
@@ -176,7 +177,7 @@ $
                             {\Delta |- \lambda i^A.F : A->\kappa}
  ~~~~
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
-                     & \Delta;\Delta |- s : A }
+                     & \Delta;\cdot |- s : A }
                      {\Delta |- F\,\{s\} : \kappa}
  ~~~~
    \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}
@@ -191,7 +192,7 @@ $
 \paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
 $ \qquad
  ~~~~
-   \inference[($:$)]{x:A \in \Gamma & \Delta |- \Gamma} 
+ \inference[($:$)]{(x:A) \in \Gamma & \Delta |- \Gamma} 
                     {\Delta;\Gamma |- x:A}
  ~~~~ \newFi{
    \inference[($:i$)]{i^A \in \Delta & \Delta |- \Gamma} 

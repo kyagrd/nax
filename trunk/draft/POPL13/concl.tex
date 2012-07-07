@@ -12,3 +12,22 @@ we need to enable large eliminations (i.e., computing types from term-indices).
 We are also developing a programming language Nax, which supports
 type inference with little annotation, based on System \Fi.
 
+Mention the need to incorporate \emph{equality types} to encode
+term-indexed datatypes with constructors that discriminate (typically by
+pattern matching) on term indices.  Two such examples arise when
+representing untyped lambda terms by de~Bruijn indices: 
+\begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
+ data Lam {i:Nat} where
+   LVar : Fin {i} -> Lam {i}
+   LApp : Lam {i} -> Lam {i} -> Lam {i}
+   LAbs : Lam {S i} -> Lam {i}
+\end{lstlisting}
+where 
+\begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
+ data Fin {i:Nat} where
+   FZ : Fin {S i} 
+   FS : Fin {i} -> Fin {S i} 
+\end{lstlisting}
+for the lambda abstraction constructor~{\tt LAbs} and the zero
+constructor~{\tt FZ}.
+
