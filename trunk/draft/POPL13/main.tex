@@ -90,7 +90,7 @@
 
 \authorinfo{Ki Yung Ahn\and Tim Sheard}
            {Portland State University}
-	   {kya@cs.pdx.edu\and sheard@cs.pdx.edu}
+	   {\{kya,sheard\}@cs.pdx.edu}
 
 \authorinfo{Marcelo Fiore\and Andrew M. Pitts}
            {University of Cambridge}
@@ -100,47 +100,47 @@
 
 \begin{abstract}
 
-We are interested in incorporating dependent types in ordinary programming
+We wish to incorporate dependent types into ordinary programming
 languages. We are interested in two kinds of dependent types.
 Full dependency, where the type of a function can depend upon the value
 of its run-time parameters, and static dependency, where the type
-of a function can depend only upon static (or compile-time parameters).
-Static dependency is sometimes called indexed types. The first
-is very expressive, but the second is often much easier to learn to
-use. Index types come in two flavors: (1) type indexed and (2) term
-indexed types. Type indexing includes parametric polymorphism, but it also
-includes more sophisticated typing such as Generalized Algebraic Datatypes
-(GADTs). Term indexed types include indices that range over data strutures,
-such as the Natural Numbers (like {\tt Zero}, {\tt (Succ Zero)}) or 
-Lists (like {\tt Nil} or {\tt (Cons 1 Nil)}) rather than types such as {\tt Int}. The classic example of a term index
-is the second parameter to the length-indexed list type {\tt (Vector Int (Succ Zero))}. In languages
-such as Haskell, which support GADTs, term-indices are ``faked" by reflecting
-``data" at the type level with uninhabited type constructors.
+of a function can depend only upon static (or compile-time) parameters.
+Static dependency is sometimes referred to as indexed typing. The first
+is very expressive, while the second is often much easier to learn and 
+use. Indexed types come in two flavors: type-indexed and term-indexed
+types. Type indexing includes parametric polymorphism, but it also
+includes more sophisticated typing such as Generalized Algebraic 
+Datatypes~(GADTs). Term-indexed types include indices that range over data
+structures, such as the Natural Numbers~(like {\tt Z}, {(\tt S
+Z})) or Lists~(like {\tt Nil} or ({\tt Cons 1 Nil})) rather than types
+such as {\tt Int}. The classic example of a term index is the second
+parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
+(S Z)})).  In languages such as Haskell, which support GADTs,
+term-indices are not first-class; they are faked by reflecting data at the
+type level with uninhabited type constructors.
 
-The purpose of this paper is to introduce a foundational type system, \Fi,  for
-the design of programming languages with term-indexed data types which avoids
-reflecting data. To do this, we have devised a minimal extension of System
-\Fw\ that incorporates term indices. While term-indexed datatypes are expressible
-in richer systems, such as the Implicit Calculus Constructions (ICC),
-such systems come coupled with orthogonal features
-such as large eliminations and dependent types.
-We argue there are important pedagogical benefits of isolating the minimal
-features to support term-indexing. We also argue that
-System \Fi\ provides a theory for analysing programs with
-term-indexed types and provides the basis for the design of light-weight
+The purpose of this paper is to introduce a foundational type system,
+System~\Fi, for the design of programming languages with first-class
+term-indexed datatypes; thus avoiding reflecting data. To do this, we have
+devised a minimal extension of System \Fw\ that incorporates term indices.
+While term-indexed datatypes are expressible in richer type systems, like
+the Implicit Calculus Constructions~(ICC), such systems come coupled with
+orthogonal features such as large eliminations and dependent types.  We
+argue that there are important pedagogical benefits of isolating the
+minimal features to support term-indexing. We show that System~\Fi\
+provides a theory for analysing programs with term-indexed types and also
+argue that it constitutes a basis for the design of light-weight
 logically-sound dependent programming languages.
 
-In terms of expressivity, \Fi\ sits in between \Fw\ (the prototypical
-logical calculus for functional programming)  and ICC (a full-featured
-dependent type theory).  
-Indeed, we relate System \Fi\ to \Fw\ and ICC as
-follows.  We establish erasure properties of \Fi\
-that capture the idea that term indices are discardable 
-in that they are irrelevant for computation.  Erased \Fi\ terms are \Fw\
-terms; so \Fi inherits the strong-normalisation property from System
-\Fw.  On the other hand, the logical consistency of \Fi\ is
+In terms of expressivity, System~\Fi\ sits in between System~\Fw\ (the
+prototypical logical calculus for functional programming) and ICC~(a
+full-featured dependent type theory).  Indeed, we relate System~\Fi\ to
+System~\Fw\ and ICC as follows.  We establish erasure properties of
+System~\Fi\ that capture the idea that term indices are discardable in
+that they are irrelevant for computation.  Erased \mbox{\Fi-terms} are
+\Fw-terms; so System~\Fi\ inherits the strong-normalisation property from
+System~\Fw.  On the other hand, the logical consistency of System~\Fi\ is
 established by embedding it into a subset of ICC.
-
 \end{abstract}
 
 \category{D.3.3}{Programming Languages}{Language Constructs and Features}[data types and structures]
@@ -151,7 +151,7 @@ Languages, Theory
 
 \keywords
 term-indexed data types, generalized algebraic data types,
-higher-order polymorphism, type constructor polymorphism, higher-kinded types,
+higher-order polymorphism, type-constructor polymorphism, higher-kinded types,
 impredicative encoding
 
 \input{intro}
