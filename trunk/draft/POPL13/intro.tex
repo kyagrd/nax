@@ -43,22 +43,24 @@ type level with uninhabited type constructors. For example
 data Zero
 data Succ n
 
-data Vector t n where
+data Vecor t n where
   Nil:: Vector a Zero
   Cons:: a -> Vector a n -> Vector a (Succ n)
 \end{verbatim}}
 This comes with a number of problems. First, there is no way to say
 that types such as {\tt (Succ Int)} and ill-formed, and second the costs
-associated with duplicating the constructor functions of data to be used as
-term-indices. Nevertheless, ``faked'' term-indexed GADTs have become extremely
-popular as a light-weight, type-based mechanism to raise the confidence of users
-that software systems maintain important properties.  
+associated with duplicating the constructor functions of data to be used
+as term-indices.
+Nevertheless, ``faked" term-indexed GADTs have become extremely
+popular as a light-weight, type-based mechanism
+to raise the confidence of users that software systems maintain important
+properties.  
 
 A salient example is Guillemette's thesis~\cite{guillemetteThesis}
 encoding the classic paper by~\citet{tal-toplas} completely
 in Haskell. This impressive system embeds a multi-stage compiler, from
 System~F all the way to typed assembly language using indexed datatypes
-(many of them ``faked'' term-indices) to
+(many of them ``faked" term-indices) to
 show that every stage preserves type information.
 %
 As such, it provides confidence but no guarantees.  Indeed, since in
@@ -73,8 +75,8 @@ collection of data structures.  Unfortunately, the \emph{term-indexed
 datatypes} that are necessary to support Guillemette's system are not
 known to be expressible in System~\Fw.
 
-In his CompCert system, Leroy \cite{Leroy-Compcert-CACM} showed that the
-much richer logical Calculus of Inductive Constructions (CIC), which
+In his CompCert system, Leroy~\cite{Leroy-Compcert-CACM} showed that the
+much richer logical Calculus of Inductive Constructions~(CIC), which
 constitutes the basis of the Coq proof assistant, is expressive enough to
 guarantee type preservation, and more, between compiler stages.  This
 approach, however, comes at a cost.  Programmers must learn to use both
@@ -96,7 +98,7 @@ datatypes.  In a nutshell, System~\Fi is obtained by minimally extending
 System~\Fw\ with type-indexed kinds.  Notably, this yields a logical
 calculus that is expressive enough to embed non-dependent
 \emph{term-indexed datatypes} and their eliminators. Our contributions in
-this development are as follows.\vspace*{-3pt}
+this development are as follows.\vspace*{-5pt}
 \begin{itemize}
 \item 
   Identifying the features that are needed for a higher-order polymorphic
@@ -121,16 +123,16 @@ this development are as follows.\vspace*{-3pt}
 
 \section{Motivation}
 \label{sec:motiv}
-It is well known that datatypes can be embedded into polymorphic lambda calculi
-by means of functional encodings (e.g., \cite{AbeMatUus03}), such as the
-Church \cite{Church33} and Boehm-Berarducci \cite{BoehmBerarducci} encodings.
+It is well known that datatypes can be embedded into polymorphic lambda
+calculi by means of functional encodings~(e.g.,~\cite{AbeMatUus03}), such
+as the Church and Boehm-Berarducci encodings.
 
 In System~\textsf{F}, for instance, one can embed \emph{regular
 datatypes}~\cite{BoehmBerarducci}, like homogeneous lists:
 \[\!\!\!\!\!\!\!\!\!
 \begin{array}{ll}
-\text{Haskell:} & \texttt{data List a = Cons a (List a) | Nil}\\
-\text{System \textsf{F}:} & \texttt{{List}}\:\: A\:\:\triangleq\:\:\forall X.(A\to X\to X)\to X\to X ~~\;
+\text{Haskell:} & \texttt{data List a = Nil | Cons a (List a)} \\
+\text{System \textsf{F}:} & \texttt{{List}}\:\: A\:\:\triangleq\:\:\forall X.X\to(A\to X\to X)\to X ~~\;
 \end{array}
 \]
 In these, datatype constructors have algebraic structure that directly
@@ -144,10 +146,10 @@ heterogeneous elements in which an element of type \texttt{a} is followed by
 an element of the product type \texttt{(a,a)}:
 \[
 \begin{array}{ll}
-\text{Haskell:} & \!\!\!\!\texttt{data Powl a = PCons a (Powl(a,a)) | PNil} \\
+\text{Haskell:} & \!\!\!\!\texttt{data Powl a = PNil | PCons a (Powl(a,a))} \\
 \text{System \Fw:} & \!\!\!\!\texttt{{Powl}}\:\triangleq\:
 \lambda A^{*}.\forall X^{*\to*}.\\ \qquad
-& ~\qquad\; (A\to X(A\times A)\to X A)\to XA\to XA
+& \qquad X A\to (A\to X(A\times A)\to X A)\to XA
 \end{array}
 \]
 Note the non-regular occurrence (\texttt{Powl(a,a)}) in the definition of
@@ -184,8 +186,8 @@ defined along the following lines:
 \begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
  data Nat = Z | S Nat
  data Vec (a:*) {i:Nat} where
-   VCons : a -> Vec a {i} -> Vec a {S i}
    VNil  : Vec a {Z}
+   VCons : a -> Vec a {i} -> Vec a {S i}
 \end{lstlisting}\noindent
 Here the type constructor~{\tt Vec} is defined to admit parameterisation
 by both type and term indices.  For instance, the type 
@@ -201,10 +203,12 @@ The encoding of the vector datatype in System~\Fi\ is as follows:
 \begin{multline*}\!\!\!\!\!\!\!
 \texttt{{Vec}}\:\:\triangleq\:\:\lambda A^\mathtt{*}.\lambda
 i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to\mathtt{*}}.\\
-(\forall j^{\texttt{{Nat}}}.A\to X\{j\}\to X\{\texttt{{S}}\; j\})\to
-X\{\texttt{{Z}}\}\to X\{i\}
+X\{\texttt{{Z}}\}\to
+(\forall j^{\texttt{{Nat}}}.A\to X\{j\}\to X\{\texttt{{S}}\; j\})\to X\{i\}
 \end{multline*}
-where $\texttt{{Nat}} \triangleq \forall X^\mathtt{*}.\, X\to(X\to X)\to X$.
+where $\texttt{{Nat}} \triangleq \forall X^\mathtt{*}.\, X\to(X\to X)\to
+X$, $\texttt Z \triangleq \lambda x.\,\lambda f.\, x$, and
+$\texttt S \triangleq \lambda n.\,\lambda x.\,\lambda f.\, n\, x\, f$.
 Without going into the details of the formalism, which are given in the
 next section, one sees that such a calculus incorporating term-indexing
 structure needs four additional constructs.
@@ -214,15 +218,21 @@ structure needs four additional constructs.
   in the example above) where the compile-time nature of term-indexing
   will be reflected in the enforcement that $A$ be a closed type~(see
   rule~$(Ri)$ in \Fig{Fi}).
+
 \item 
   Term-index abstraction~$\lambda i^A.F$~(as $\lambda
   i^{\texttt{{Nat}}}.\cdots$ in the example above) for constructing (or
   introducing) type-indexed kinds~(see rule~$(\lambda i)$ in
   \Fig{Fi}).  
+
 \item 
   Term-index application~$F\{s\}$ (as $X\{{\tt Z}\}$, $X\{j\}$, and
   $X\{\texttt{S}\;j\}$ in the example above) for destructing (or
-  eliminating) type-indexed kinds~(see rule~$(@i)$ in \Fig{Fi}). 
+  eliminating) type-indexed kinds, where the compile-time nature of
+  indexing will be reflected in the enforcement that the index be
+  statically typed% in that it does not depend on run-time parameters
+~(see rule~$(@i)$ in \Fig{Fi}) .
+
 \item 
   Term-index polymorphism~$\forall i^A.B$ (as $\forall
   j^{\texttt{{Nat}}}.\cdots$ in the example above) where the compile-time
@@ -231,5 +241,17 @@ structure needs four additional constructs.
   Ii)$ in \Fig{Fi}).
 \end{enumerate}
 
-\textbf{MF: I'll try to add something about erasure here a bit later on}
+As exemplified above, System~\Fi\ maintains a clear-cut separation between
+higher-order kinding and term indexing.  This adds a level of abstraction
+to System~\Fw\ and yields types that in addition to structural invariants
+also keep track of indexing invariants.  Being static, all term-indexing
+information can be erased.  This projects System~\Fi\ into System~\Fw\
+fixing the latter.  For instance, the erasure of the \Fi-type~\texttt{Vec}
+is the \Fw-type~\texttt{List}, the erasure of which (when regarded as an
+\Fi-type that is) is in turn itself.  Since, as already mentioned, typing
+in System~\Fi\ imposes structural and indexing constraints on terms one
+expects that the structural projection from System~\Fi\ to System~\Fw\
+provided by index erasure preserves typing.  This is established in
+Section~\ref{sec:theory} and used to deduce the strong normalization of
+System~\Fi.
 

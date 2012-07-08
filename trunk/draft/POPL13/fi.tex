@@ -60,10 +60,10 @@ a single context, which binds both type variables~($X$) and term
 variables~($x$). 
 In such a formalization, the free type variables in the typing of
 the term variable must be bound earlier in the context. For example,
-if $X_1$ and $X_2$ appear free in the type of $x$, they must appear earlier
+if $X$ and $Y$ appear free in the type of $f$, they must appear earlier
 in the single context ($\Gamma$) as below:
-\[ \Gamma = \dots,Y^{*},\dots,Z^{*},\dots,
-		(x:\forall X^{*}.Y -> Z -> X),\dots \]
+\[ \Gamma = \dots,X^{\mathtt*},\dots,Y^{\mathtt*},\dots,
+		(f:\forall Z^{\mathtt*}.X -> Y -> Z),\dots \]
 In such a formalization, the side condition ($X\notin\Gamma$)
 in the $(\forall I)$ rule of Figure \ref{fig:Fi} is not necessary,
 since such a condition is already a part of the well-formedness condition

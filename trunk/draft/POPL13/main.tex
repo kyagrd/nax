@@ -67,6 +67,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
+\newtheorem{example}{Example}
 
 \theoremstyle{remark}
 \newtheorem{remark}{Remark}
@@ -103,15 +104,16 @@
 
 The purpose of this paper is to introduce a foundational type system,
 System~\Fi, for the design of programming languages with first-class
-term-indexed datatypes -- datatypes whose parameters range over data
-such as the Natural Numbers~(e.g. {\tt Z} and {(\tt S
+term-indexed datatypes -- higher-order datatypes whose parameters range
+over data such as the Natural Numbers~(e.g. {\tt Z} and {(\tt S
 Z})) or Lists~(e.g. {\tt Nil} and ({\tt Cons Z Nil})).
 
 To do this, we have
-devised a minimal extension of System \Fw\ that incorporates term indices.
-While term-indexed datatypes are expressible in richer type systems, like
-the Implicit Calculus Constructions~(ICC), such systems come coupled with
-orthogonal features such as large eliminations and fulls dependent types.  We
+devised a minimal extension of System~\Fw\ that incorporates term indices.
+While term-indexed datatypes are expressible in rich type theories, like
+the Implicit Calculus of Constructions~(ICC), these systems typically come 
+coupled with
+orthogonal features such as large eliminations and full type dependency.  We
 argue that there are important pedagogical benefits of isolating the
 minimal features to support term-indexing. We show that System~\Fi\
 provides a theory for analysing programs with term-indexed types and also
@@ -125,7 +127,7 @@ System~\Fw\ and ICC as follows.  We establish erasure properties of
 System~\Fi\ that capture the idea that term indices are discardable in
 that they are irrelevant for computation.  Erased \mbox{\Fi-terms} are
 \Fw-terms; so System~\Fi\ inherits the strong-normalisation property from
-System~\Fw.  On the other hand, the logical consistency of System~\Fi\ is
+System~\Fw.  The logical consistency of System~\Fi\ is
 established by embedding it into a subset of ICC.
 \end{abstract}
 

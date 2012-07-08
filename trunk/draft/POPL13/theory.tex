@@ -283,6 +283,22 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
 \]
 \end{definition}
 
+\begin{example}
+The meta-operation of index-erasure discards all indexing information.
+The effect of this on most datatypes is to project the indexing invariants
+while retaining the type structure.  For instance, the index erasure of
+$\mathtt{Vec}: \mathtt * \to \mathtt{Nat} \to \mathtt*$ as introduced in
+Section~\ref{sec:motiv} is $\mathtt{List} \triangleq \lambda
+A^\mathtt*.\,\forall X^\mathtt*.\, X \to (A\to X\to X)\to X:
+\mathtt*\to\mathtt*$.
+%
+However, one can build pathological examples.  To this end, let $\mathtt0
+\triangleq \forall X^\mathtt{*}.\,X$ and consider %the type 
+$\forall F^{\mathtt{0}\to *}.\,\forall i^\mathtt{0}.\,\forall
+j^\mathtt{0}.\, F\{i\}\to F\{j\}$.  This uninhabited type has index
+erasure $\mathtt1 \triangleq \forall X^\mathtt{*}.\,X\to X$.
+\end{example}
+
 \begin{theorem}[index erasure on well-sorted kinds]
 \label{thm:ierasesorting}
 	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
@@ -563,8 +579,13 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 \end{itemize}\vspace*{-10pt}
 \end{proof}
 
+\begin{remark}
+The pathological considerations of Example~\ref{PathologicalExample} show
+that the implication of the theorem does not admit a converse.
+\end{remark}
+
 \begin{definition}[index variable selection]
-\[ \circ^\bullet = \circ \qquad
+\[ \cdot^\bullet = \cdot \qquad
 	(\Delta,X^A)^\bullet = \Delta^\bullet \qquad
 	(\Delta,i^A)^\bullet = \Delta^\bullet,i^A
 \]
