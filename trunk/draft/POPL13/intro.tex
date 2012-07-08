@@ -8,6 +8,8 @@
 %% embed recursive datatypes by Church encoding and show strong normalization
 %% for the logical fragment of such a language
 
+%%%%%%\subsection{Motivation and development}
+
 We wish to incorporate dependent types into ordinary programming
 languages. We are interested in two kinds of dependent types.
 Full dependency, where the type of a function can depend upon the value
@@ -27,12 +29,12 @@ data TypeRep t where
   Pair:: TypeRep a -> TypeRep b -> TypeRep(a,b)
 \end{verbatim}}
 Here, a value of type {\tt TypeRep t} is isomorphic in ``shape" with
-the type {\tt t}. For example {\tt Pair Int Bool)} is isomorphic in shape
+the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
 with its type {\tt (Int,Bool)}.
 
 On the other hand, term-indexed types include indices that range over data
 structures, such as the Natural Numbers~(like {\tt Z}, {(\tt S
-Z})) or Lists~(like {\tt Nil} or ({\tt Cons 1 Nil})). 
+Z})) or Lists~(like {\tt Nil} or ({\tt Cons Z Nil})). 
 The classic example of a term index is the second
 parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
 (S Z)})).  In languages such as Haskell, which support GADTs with type indexing,
@@ -48,7 +50,7 @@ data Vecor t n where
   Cons:: a -> Vector a n -> Vector a (Succ n)
 \end{verbatim}}
 This comes with a number of problems. First, there is no way to say
-that types such as {\tt (Succ Int)} and ill-formed, and second the costs
+that types such as {\tt (Succ Int)} are ill-formed, and second the costs
 associated with duplicating the constructor functions of data to be used
 as term-indices.
 Nevertheless, ``faked" term-indexed GADTs have become extremely
@@ -78,7 +80,7 @@ known to be expressible in System~\Fw.
 In his CompCert system, Leroy~\cite{Leroy-Compcert-CACM} showed that the
 much richer logical Calculus of Inductive Constructions~(CIC), which
 constitutes the basis of the Coq proof assistant, is expressive enough to
-guarantee type preservation, and more, between compiler stages.  This
+guarantee type preservation (and more) between compiler stages.  This
 approach, however, comes at a cost.  Programmers must learn to use both
 dependent types and a new programming paradigm, programming by code
 extraction.
@@ -86,7 +88,7 @@ extraction.
 Some natural questions thus arise: Is there an expressive system
 supporting term-indexed types, say, sitting somewhere in between
 \Fw\ and fully dependent calculi? 
-If one needs only term-indexed types to maintain properties
+If only term-indexed types are needed to maintain properties
 of interest, is there a language one can use?
 Can one program, rather than extract code? 
 The goal of this paper is to develop the theory necessary to begin
@@ -94,7 +96,7 @@ answering these and related questions.
 
 Our approach in this direction is to design a new foundational calculus,
 System~\Fi, for functional programming languages with term-indexed
-datatypes.  In a nutshell, System~\Fi is obtained by minimally extending
+datatypes.  In a nutshell, System~\Fi\ is obtained by minimally extending
 System~\Fw\ with type-indexed kinds.  Notably, this yields a logical
 calculus that is expressive enough to embed non-dependent
 \emph{term-indexed datatypes} and their eliminators. Our contributions in
@@ -115,13 +117,16 @@ this development are as follows.\vspace*{-5pt}
   \vspace*{-1pt}
 \item 
   Showing that System~\Fi\ enjoys a simple erasure
-  property~(\S\ref{ssec:erasure}) and inherits meta-theoretic
+  property %~(\S\ref{ssec:erasure}) 
+  and inherits meta-theoretic
   results~(strong normalization and logical consistency) from well-known
-  calculi~(System~\Fw\ and ICC) that enclose System~\Fi~(\S\ref{ssec:sn}).
+  calculi~(System~\Fw\ and ICC) that enclose System~\Fi~%(\S\ref{ssec:sn}).
+(\S\ref{sec:theory}).
 \end{itemize}\vspace*{-3pt}
 
-
-\section{From System~\Fw\ to System~\Fi, and back}%{Motivation}
+\section
+%%%%%%\subsection
+{From System~\Fw\ to System~\Fi, and back}%{Motivation}
 \label{sec:motiv}
 
 It is well known that datatypes can be embedded into polymorphic lambda
@@ -136,9 +141,9 @@ datatypes}~\cite{BoehmBerarducci}, like homogeneous lists:
 \text{System \textsf{F}:} & \texttt{{List}}\:\: A\:\:\triangleq\:\:\forall X.X\to(A\to X\to X)\to X ~~\;
 \end{array}
 \]
-In these, datatype constructors have algebraic structure that directly
-translates into polymorphic operations on abstract types as encapsulated
-by universal quantification.
+In such regular datatypes, constructors have algebraic structure that
+directly translates into polymorphic operations on abstract types as
+encapsulated by universal quantification.
 
 In the more expressive System \Fw, one can encode more general
 \emph{type-indexed datatypes} that go beyond the algebraic class.
@@ -192,7 +197,7 @@ defined along the following lines:
 \end{lstlisting}\noindent
 Here the type constructor~{\tt Vec} is defined to admit parameterisation
 by both type and term indices.  For instance, the type 
-(\verb|Vec (List Nat) {S (S Z)}|) is that of length-two
+(\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
 vectors of lists of natural numbers.  By design, our syntax directly
 reflects the different type and term indexing by indicating the latter in
 curly brackets.  This feature has been directly transferred from
@@ -245,7 +250,7 @@ structure needs four additional constructs.
 As exemplified above, System~\Fi\ maintains a clear-cut separation between
 higher-order kinding and term indexing.  This adds a level of abstraction
 to System~\Fw\ and yields types that in addition to structural invariants
-also keep track of indexing invariants.  Being static, all term-indexing
+also keep track of indexing invariants.  Being static, all term-index
 information can be erased.  This projects System~\Fi\ into System~\Fw\
 fixing the latter.  For instance, the erasure of the \Fi-type~\texttt{Vec}
 is the \Fw-type~\texttt{List}, the erasure of which (when regarded as an
@@ -253,6 +258,6 @@ is the \Fw-type~\texttt{List}, the erasure of which (when regarded as an
 in System~\Fi\ imposes structural and indexing constraints on terms one
 expects that the structural projection from System~\Fi\ to System~\Fw\
 provided by index erasure preserves typing.  This is established in
-Section~\ref{sec:theory} and used to deduce the strong normalization of
+\S\ref{sec:theory} and used to deduce the strong normalization of
 System~\Fi.
 
