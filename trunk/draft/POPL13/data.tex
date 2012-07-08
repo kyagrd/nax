@@ -156,12 +156,11 @@ newtype Mu$_{*}$ (f :: * -> *)
   = In$_{*}$ (f (Mu$_{*}$ f))
 
 data ListF (a::*) (r::*)
-  = Nil
-  | Cons a r
+  = Cons a r       | Nil
 
 type List a = Mu$_{*}$ (ListF a)
-nil       = In$_{*}$ Nil
 cons x xs = In$_{*}$ (Cons x xs)
+nil       = In$_{*}$ Nil
 
 mit$_{*}$ :: ($\forall$ r.(r->x) -> f r -> x) -> Mu0 f -> x
 mit$_{*}$ phi (In$_{*}$ z) = phi (mit$_{*}$ phi) z
@@ -170,12 +169,11 @@ newtype Mu$_{(*-> *)}$ (f :: (*->*) -> (*->*)) (a::*)
   = In$_{(*-> *)}$ (f (Mu$_{(*-> *)}$ f)) a
 
 data PowlF (r::*->*) (a::*)
-  = PNil
-  | PCons a (r(a,a))
+  = PCons a (r(a,a)) | PNil
 
 type Powl a = Mu$_{(*-> *)}$ PowlF a
-pnil       = In$_{(*-> *)}$ PNil
 pcons x xs = In$_{(*-> *)}$ (PCons x xs)
+pnil       = In$_{(*-> *)}$ PNil
 
 mit$_{(*-> *)}$ :: ($\forall$ r a.($\forall$a.r a->x a) -> f r a -> x a)
         -> Mu$_{(*-> *)}$ f a -> x a
@@ -188,12 +186,12 @@ newtype Mu$_{(\mathtt{Nat}-> *)}$ (f::(Nat->*)->(Nat->*)) {n::Nat}
   = In$_{(\mathtt{Nat}-> *)}$ (f (Mu$_{(\mathtt{Nat}-> *)}$ f)) {n}
 
 data VecF (a::*) (r::Nat->*) {n::Nat} where
-  VNil  :: VecF a r {Z}
   VCons :: a -> r n -> VecF a r {S n}
+  VNil  :: VecF a r {Z}
 
 type Vec a {n::Nat} = Mu$_{(\mathtt{Nat}-> *)}$ (VecF a) {n}
-vnil       = In$_{(\mathtt{Nat}-> *)}$ VNil
 vcons x xs = In$_{(\mathtt{Nat}-> *)}$ (VCons x xs)
+vnil       = In$_{(\mathtt{Nat}-> *)}$ VNil
 
 mit$_{(\mathtt{Nat}-> *)}$::($\forall$ r n.($\forall$n.r{n}->x{n})->f r {n}->x{n})
         -> Mu$_{(\mathtt{Nat}-> *)}$ f {n} -> x{n}
