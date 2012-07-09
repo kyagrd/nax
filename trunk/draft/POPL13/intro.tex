@@ -18,16 +18,15 @@ of a function can depend only upon static (or compile-time) parameters.
 Static dependency is sometimes referred to as indexed typing. The first
 is very expressive, while the second is often much easier to learn and 
 use. Indexed types come in two flavors: type-indexed and term-indexed
-types. Type indexing includes parametric polymorphism, but it also
-includes more sophisticated typing such as Generalized Algebraic 
-Datatypes~(GADTs). An example of type indexing using GADTs is a type representation:
-{\small
-\begin{verbatim}
+types. Type indexing includes parametric polymorphism, but it also includes
+more sophisticated typing such as Generalized Algebraic Datatypes~(GADTs).
+An example of type indexing using GADTs is a type representation:\vspace*{-1pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data TypeRep t where
-  Int:: TypeRep Int
+  Int :: TypeRep Int
   Bool:: TypeRep Bool
   Pair:: TypeRep a -> TypeRep b -> TypeRep(a,b)
-\end{verbatim}}
+\end{lstlisting}\vspace*{-1pt}
 Here, a value of type {\tt TypeRep t} is isomorphic in ``shape" with
 the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
 with its type {\tt (Int,Bool)}.
@@ -39,16 +38,15 @@ The classic example of a term index is the second
 parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
 (S Z)})).  In languages such as Haskell, which support GADTs with type indexing,
 term-indices are not first-class; they are ``faked" by reflecting data at the
-type level with uninhabited type constructors. For example
-{\small
-\begin{verbatim}
+type level with uninhabited type constructors. For example,\vspace*{-1pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data Zero
 data Succ n
 
 data Vecor t n where
-  Nil:: Vector a Zero
-  Cons:: a -> Vector a n -> Vector a (Succ n)
-\end{verbatim}}
+  Nil  :: Vector a Zero
+  Cons :: a -> Vector a n -> Vector a (Succ n)
+\end{lstlisting}\vspace*{-1pt}
 This comes with a number of problems. First, there is no way to say
 that types such as {\tt (Succ Int)} are ill-formed, and second the costs
 associated with duplicating the constructor functions of data to be used
@@ -100,7 +98,7 @@ datatypes.  In a nutshell, System~\Fi\ is obtained by minimally extending
 System~\Fw\ with type-indexed kinds.  Notably, this yields a logical
 calculus that is expressive enough to embed non-dependent
 \emph{term-indexed datatypes} and their eliminators. Our contributions in
-this development are as follows.\vspace*{-5pt}
+this development are as follows.\vspace*{-2pt}
 \begin{itemize}
 \item 
   Identifying the features that are needed for a higher-order polymorphic
