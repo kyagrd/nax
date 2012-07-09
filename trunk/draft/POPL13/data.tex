@@ -109,7 +109,7 @@ to eliminate $\mathtt{zero}$, just return $x_z$.
 Since values themselves are eliminators,
 eliminator can be defined as applying the value itself to the needed operations
 for each data constructor case. For instance, we can define an eliminator
-for natural numbers as $\mathtt{elimNat}=\l x.\l x_s.\l x_z.x\,x_s x_z$,
+for natural numbers as $\mathtt{elim_{Nat}}=\l x.\l x_s.\l x_z.x\,x_s x_z$,
 which is just an $\eta$-expansion of the identity function $\l x.x$.
 Church encoded natural numbers are typable in polymorphic $\lambda$-calculi,
 such as System \Fw, as follows:\vspace*{-2pt}
@@ -138,65 +138,129 @@ For instance, the term encodings for \texttt{nil}, \texttt{pnil}, and
    Embedding the recursive type operators and the Mendler-style iterators}
 \label{ssec:embedTwoLevel}
 We can divide a recursive datatype definition into two levels,
-by factoring out the recursive type operator, which ties the knot of
-the recursive definition, and a non-recursive base structure,
-which describes the shape (\ie, number of data constructors and their types) of
-the recursive datatype.
-
-For the non-recursive base structures, or non-recursive datatypes,
-we can use the same impredicative encodings in the previous subsection.
-That is, booleans, sums, and products are encoded as in Figure TODO.
-
-Encoding of two-level types are more involved than the encoding, but
-iterator definitions become more general and uniform.
+by factoring out the recursive type operator, which weaves in the recursion
+to the datatype definition, and a non-recursive base structure, which describes
+the shape (\ie, number of data constructors and their types) of the datatype.
+We can program with two-level types in functional languages that support
+higher-order polymorphism\footnote{a.k.a. higher-kinded polymorphism
+	or type constructor polymorphism}, such as Haskell, as illustrated
+in Figure \ref{fig:twoleveltypes}. The function $\mathtt{mit}_\kappa$ descirbes
+the Mendler-style iteration\footnote{An iteration is a principled recursion
+	scheme guaranteed to terminate for any well-founded input.
+	Also known as fold or catamorphism} for the recursive types
+defined by $\mu_\kappa$. Although it is possible to wirte programs using
+two level datatypes, we would not have gurantee of logical consistency
+in such general purpose functional lanugages.
 
 \begin{figure}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
-newtype Mu$_{*}$ (f :: * -> *)
-  = In$_{*}$ (f (Mu$_{*}$ f))
+newtype $\mu_{*}$ (f :: * -> *)
+  = In$_{*}$ (f ($\mu_{*}$ f))
 
 data ListF (a::*) (r::*)
   = Cons a r       | Nil
 
-type List a = Mu$_{*}$ (ListF a)
+type List a = $\mu_{*}$ (ListF a)
 cons x xs = In$_{*}$ (Cons x xs)
 nil       = In$_{*}$ Nil
 
 mit$_{*}$ :: ($\forall$ r.(r->x) -> f r -> x) -> Mu0 f -> x
 mit$_{*}$ phi (In$_{*}$ z) = phi (mit$_{*}$ phi) z
 
-newtype Mu$_{(*-> *)}$ (f :: (*->*) -> (*->*)) (a::*)
+newtype $\mu_{(*-> *)}$ (f :: (*->*) -> (*->*)) (a::*)
   = In$_{(*-> *)}$ (f (Mu$_{(*-> *)}$ f)) a
 
 data PowlF (r::*->*) (a::*)
   = PCons a (r(a,a)) | PNil
 
-type Powl a = Mu$_{(*-> *)}$ PowlF a
+type Powl a = $\mu_{(*-> *)}$ PowlF a
 pcons x xs = In$_{(*-> *)}$ (PCons x xs)
 pnil       = In$_{(*-> *)}$ PNil
 
 mit$_{(*-> *)}$ :: ($\forall$ r a.($\forall$a.r a->x a) -> f r a -> x a)
-        -> Mu$_{(*-> *)}$ f a -> x a
+        -> $\mu_{(*-> *)}$ f a -> x a
 mit$_{(*-> *)}$ phi (In$_{(*-> *)}$ z) = phi (mit$_{(*-> *)}$ phi) z
 
 -- above is Haskell (with some GHC extensions)
 -- below is Haskell-ish psudocode
 
-newtype Mu$_{(\mathtt{Nat}-> *)}$ (f::(Nat->*)->(Nat->*)) {n::Nat}
-  = In$_{(\mathtt{Nat}-> *)}$ (f (Mu$_{(\mathtt{Nat}-> *)}$ f)) {n}
+newtype $\mu_{(\mathtt{Nat}-> *)}$ (f::(Nat->*)->(Nat->*)) {n::Nat}
+  = In$_{(\mathtt{Nat}-> *)}$ (f ($\mu_{(\mathtt{Nat}-> *)}$ f)) {n}
 
 data VecF (a::*) (r::Nat->*) {n::Nat} where
   VCons :: a -> r n -> VecF a r {S n}
   VNil  :: VecF a r {Z}
 
-type Vec a {n::Nat} = Mu$_{(\mathtt{Nat}-> *)}$ (VecF a) {n}
+type Vec a {n::Nat} = $\mu_{(\mathtt{Nat}-> *)}$ (VecF a) {n}
 vcons x xs = In$_{(\mathtt{Nat}-> *)}$ (VCons x xs)
 vnil       = In$_{(\mathtt{Nat}-> *)}$ VNil
 
 mit$_{(\mathtt{Nat}-> *)}$::($\forall$ r n.($\forall$n.r{n}->x{n})->f r {n}->x{n})
-        -> Mu$_{(\mathtt{Nat}-> *)}$ f {n} -> x{n}
+        -> $\mu_{(\mathtt{Nat}-> *)}$ f {n} -> x{n}
 mit$_{(\mathtt{Nat}-> *)}$ phi (In$_{(\mathtt{Nat}-> *)}$ z) = phi (mit$_{(\mathtt{Nat}-> *)}$ phi) z
 \end{lstlisting}
 \caption{2-level types and their Mendler-style iterators in Haskell}
 \label{fig:twoleveltypes}
 \end{figure}
+
+Interestingly, there exists an embedding of the recursive type operator
+$\mu_\kappa$, its data constructor $\mathtt{In}_\kappa$,
+and the Mendler-style iterator $\mathtt{mit}\kappa$ at each kind $\kappa$
+into higher-order polymorhpic lambda calculi, as in Figure \ref{fig:mu}.
+
+However, there does not exist an embedding of destructing
+(or, pattern matching away) the $\mathtt{In}_\kappa$ constructors.
+It is a known fact that having arbitrary recursive datatypes
+and the ability arbitrarily destruct (or, unroll) the values of
+recursive types is powerful enough to define non-termiating computation
+in a type safe way.
+
+TODO For the non-recursive base structures, or non-recursive datatypes,
+we can use the same impredicative encodings in the previous subsection.
+That is, booleans, sums, and products are encoded as in Figure TODO.
+
+TODO Encoding of two-level types are more involved than the encoding, but
+iterator definitions become more general and uniform.
+
+\begin{figure*}
+\begin{align*}
+&\mu_\kappa &\!\!\!\!\!~:~~& (\kappa -> \kappa) -> \kappa
+  \qquad\qquad\qquad\qquad\quad
+  = \l F^{\kappa -> \kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
+  \forall X^\kappa.
+  (\forall {X_r}^{\!\!\kappa}.
+  	(X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ->
+	(F X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X)) -> X\mathbb{I} \\
+&\mu_{*} &\!\!\!\!\!~:~~& (* -> *) -> * 
+ \qquad\qquad\qquad\qquad\quad~
+ = \l F^{* -> *}.\phantom{\boldsymbol{\l}\mathbb{I}^\kappa.}
+ \forall X^{*}.(\forall {X_r}^{\!\!*}.(X_r -> X) -> (F\,X_r -> X)) -> X \\
+&\mu_{*-> *} &\!\!\!\!\!~:~~& ((* -> *) -> (* -> *)) -> (* -> *) \\
+&            &\!\!\!\!\!=~&
+  \l F^{(*-> *) -> (*-> *)}.\l X_1^{*}.
+   \forall X^{* -> *}.(\forall {X_r}^{\!\!* -> *}.
+   (\forall X_1^{*}.X_r X_1 -> X X_1) -> (\forall X_1^{*}.F\,X_r X_1 -> X X_1)) -> X X_1 \\
+  &\mu_{\mathtt{Nat}-> *} &\!\!\!\!\!~:~~& ((\mathtt{Nat} -> *) -> (\mathtt{Nat} -> *)) -> (\mathtt{Nat} -> *) \\
+&            &\!\!\!\!\!=~&
+  \l F^{(\mathtt{Nat}-> *) -> (\mathtt{Nat}-> *)}.\l i_1^\mathtt{Nat}.
+  \forall X^{\mathtt{Nat} -> *}.(\forall {X_r}^{\!\!\mathtt{Nat} -> *}.
+  (\forall i_1^\mathtt{Nat}.X_r i_1 -> X i_1) -> (\forall i_1^\mathtt{Nat}.F\,X_r i_1 -> X i_1)) -> X i_1 \qquad\qquad
+\end{align*}
+\begin{align*}
+\mathtt{In}_{\kappa} \,~\,&~~:~ \forall F^{\kappa-> \kappa}.
+	F(\mu_\kappa F) \stackrel{\kappa\;}{\pmb{\pmb{->}}} \mu_\kappa F
+&&=~ \l x_r. \l x_\varphi.x_\varphi\,(\mathtt{mit}_\kappa~x_\varphi)\,x_r
+	\qquad~\qquad~\qquad~\qquad~\quad \\
+\mathtt{mit}_\kappa &~~:~ \forall F^{\kappa-> \kappa}.\forall X^\kappa.
+	(\forall {X_r}^{\!\!\kappa}.
+	 (X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ->
+	 (F X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ) ->
+	(\mu_\kappa F \stackrel{\kappa\;}{\pmb{\pmb{->}}} X)
+&&=~ \l x_\varphi.\l x_r.x_r\,x_\varphi
+\end{align*}
+\caption{Embedding of the recursive operators ($\mu_\kappa$),
+	their data constructors ($\mathtt{In}_\kappa$),
+	and the Mendler-style iterators ($\mathtt{mit}_\kappa$).}
+\label{fig:mu}
+\end{figure*}
+
