@@ -142,15 +142,18 @@ by factoring out the recursive type operator, which weaves in the recursion
 to the datatype definition, and a non-recursive base structure, which describes
 the shape (\ie, number of data constructors and their types) of the datatype.
 We can program with two-level types in functional languages that support
-higher-order polymorphism\footnote{a.k.a. higher-kinded polymorphism
-	or type constructor polymorphism}, such as Haskell, as illustrated
-in Figure \ref{fig:twoleveltypes}. The function $\mathtt{mit}_\kappa$ descirbes
+higher-order polymorphism\footnote{a.k.a. higher-kinded polymorphism,
+	or type-constructor polymorphism}, such as Haskell, as illustrated
+in Figure \ref{fig:twoleveltypes}. The function $\mathtt{mit}_\kappa$ describes
 the Mendler-style iteration\footnote{An iteration is a principled recursion
 	scheme guaranteed to terminate for any well-founded input.
-	Also known as fold or catamorphism} for the recursive types
-defined by $\mu_\kappa$. Although it is possible to wirte programs using
-two level datatypes, we would not have gurantee of logical consistency
-in such general purpose functional lanugages.
+	Also known as fold, or catamorphism.} for the recursive types
+defined by $\mu_\kappa$. The use of two-level types has been recognized as
+a useful functional programming pearl \cite{Sheard04} since two-level types
+separate the two concerns of (1) recursing deeper into recursive subcomponents
+and (2) handling different cases by the shape of the base structure. 
+Although it is possible to write programs using two level datatypes, one could
+not expect logical consistency in such general purpose functional languages.
 
 \begin{figure}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
@@ -204,25 +207,41 @@ mit$_{(\mathtt{Nat}-> *)}$ phi (In$_{(\mathtt{Nat}-> *)}$ z) = phi (mit$_{(\math
 \end{figure}
 
 Interestingly, there exists an embedding of the recursive type operator
-$\mu_\kappa$, its data constructor $\mathtt{In}_\kappa$,
-and the Mendler-style iterator $\mathtt{mit}\kappa$ at each kind $\kappa$
-into higher-order polymorhpic lambda calculi, as in Figure \ref{fig:mu}.
-
-However, there does not exist an embedding of destructing
-(or, pattern matching away) the $\mathtt{In}_\kappa$ constructors.
-It is a known fact that having arbitrary recursive datatypes
-and the ability arbitrarily destruct (or, unroll) the values of
-recursive types is powerful enough to define non-termiating computation
-in a type safe way.
-
-TODO For the non-recursive base structures, or non-recursive datatypes,
-we can use the same impredicative encodings in the previous subsection.
-That is, booleans, sums, and products are encoded as in Figure TODO.
-
-TODO Encoding of two-level types are more involved than the encoding, but
-iterator definitions become more general and uniform.
+$\mu_\kappa$, its data constructor $\mathtt{In}_\kappa$, and
+the Mendler-style iterator $\mathtt{mit}\kappa$ at each kind $\kappa$
+into a higher-order polymorphic $\lambda$-calculus, as illustrated
+in Figure \ref{fig:mu}. In addition to illustrating the general form of
+embedding $\mu_\kappa$, we also fully expand the embeddings for some
+instances ($\mu_{*}$, $\mu_{*->*}$, $\mu_{\mathtt{Nat}->*}$), which is
+used in Figure \ref{fig:twoleveltypes}. This embedding allows arbitrary
+type- and term-indexed recursive datatypes be embeddable into System \Fi,
+so that we can reason about these datatypes in a logically consistent calculus.
+However, it is important to note that there does not exist an embedding of
+arbitrary destruction (or, pattern matching away) of the $\mathtt{In}_\kappa$
+constructor. It is known that having arbitrary recursive datatypes together with
+the ability to arbitrarily destruct (or, unroll) the values of recursive types
+is powerful enough to define non-terminating computation in a type safe way,
+which leads to logical inconsistency.
 
 \begin{figure*}
+\begin{multline*} \text{notation:}\quad
+   \boldsymbol{\l}\mathbb{I}^\kappa.F =
+	\lambda I_1^{\kappa_1}.\cdots.\lambda I_n^{\kappa_n}.F \qquad
+   \boldsymbol{\forall}\mathbb{I}^\kappa.B =
+	\forall I_1^{\kappa_1}.\cdots.\forall I_n^{\kappa_n}.B \qquad
+   F\mathbb{I} = F I_1 \cdots I_n \qquad
+   F \stackrel{\kappa}{\pmb{\pmb{->}}} G =
+	\boldsymbol{\forall}\mathbb{I}^\kappa.F\mathbb{I} -> G\mathbb{I} \\
+\begin{array}{lll}
+\text{where}
+ 	& \kappa = \kappa_1 -> \cdots -> \kappa_n -> * & \text{and} ~~~
+ 	\text{$I_i$ is an index variable ($i_i$) when $\kappa_i$ is a type,}
+ 		\\
+ 	& \mathbb{I}\,=I_1,\;\dots\;\dots\;,\;I_n& \qquad~\qquad
+ 	\text{a type constructor variable ($X_i$) otherwise.}
+\end{array}
+\end{multline*} ~ \vspace*{-5pt}
+\hrule  \vspace*{-2pt}
 \begin{align*}
 &\mu_\kappa &\!\!\!\!\!~:~~& (\kappa -> \kappa) -> \kappa
   \qquad\qquad\qquad\qquad\quad
@@ -257,7 +276,7 @@ iterator definitions become more general and uniform.
 	 (F X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ) ->
 	(\mu_\kappa F \stackrel{\kappa\;}{\pmb{\pmb{->}}} X)
 &&=~ \l x_\varphi.\l x_r.x_r\,x_\varphi
-\end{align*}
+\end{align*} ~ \vspace*{-10pt}
 \caption{Embedding of the recursive operators ($\mu_\kappa$),
 	their data constructors ($\mathtt{In}_\kappa$),
 	and the Mendler-style iterators ($\mathtt{mit}_\kappa$).}
