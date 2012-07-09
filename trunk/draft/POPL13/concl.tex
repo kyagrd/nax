@@ -1,16 +1,24 @@
 \section{Conclusion and Future work}
 \label{sec:concl}
-TODO
 
-We are also developing a programming language Nax, which supports
-type inference with little annotation, based on System \Fi.
+System \Fi\ is a strongly-normalizing, logically-consistent
+polymorphic lambda calculus that was designed to support the
+definition of datatypes indexed by both terms and types.
+In terms of expressivity, \Fi\ sits between System \Fw\ and CIC.
+We designed System \Fi\ as a tool to reason about programming
+languages with term-indexed datatypes. 
 
-We wonder what extension
-we need to enable large eliminations (i.e., computing types from term-indices).
-
-We are exploring whether Leibniz equality over indices
-(i.e., $s_1=s_2$ encoded as $\forall X^{A -> *}.X\{s_1\} -> X\{s_2\}$)
-may help us express functions whose domains are restricted by term-indices
-(e.g., \verb|vtail :: Vec a {S n} -> Vec a n|).  {\bf [MF: Omit this? As I
-	added the, I should say experimental, \S\S\ref{Leibniz} on this.]}
-
+We have applied this tool to the programming language Nax (described elsewhere).
+Nax is given semantics in terms of System \Fi . In Nax,
+Mendler style operators are primitive operators with their
+own typing rules. Nax has been designed to be expressive over
+the Hindley-Milner fragment of System \Fi, and supports type
+inference with minimal typing annotations. Typing annotations are
+necessary only on case statements (for non-recursive term-indexed datatypes)
+and Mendler style operators (for recursive term-indexed datatypes). Programs
+involving only type-indexing require no annotations. A typing annotation
+takes the form of a large elimination -- a function of types and terms to types.
+The current implementation requires static annotations, but we believe we can extend
+Nax to abstract over annotations, and still retain the strict separation between
+terms and types that allows an erasure semantics.
+ 
