@@ -33,13 +33,13 @@ and the Curry-style typing.
 
 In a more practical setting for language implementation,
 
-\citet{YorgeyWCJVM12}, inspired by \cite{SHE}, desinged a language extension
-to Haskell, promoting datatypes to be used as kinds. For instnace, \texttt{Bool}
+\citet{YorgeyWCJVM12}, inspired by \citet{SHE}, designed a language extension
+to Haskell, promoting datatypes to be used as kinds. For instance, \texttt{Bool}
 is promoted to a kind (\ie, $\texttt{Bool}:\square$) and its data constructors
 \texttt{Ture} and \texttt{False} are promoted to type level. To support this
 in GHC, they extended System $F_{\!C}$ (GHC's intermediate language, or,
 GHC Core), naming the extended GHC Core as System $F_{\!C}^\uparrow$.
-The key differnce between $F_{\!C}^\uparrow$ and \Fi\ is in the extension
+The key difference between $F_{\!C}^\uparrow$ and \Fi\ is in the extension
 to the kind syntax, as illustrated below: \vspace*{-2pt}
 \[\qquad\quad
 \begin{array}{ll}
@@ -49,26 +49,29 @@ F_{\!C}^\uparrow\,\textbf{kinds}: &
 \kappa ::= * \mid \kappa -> \kappa \mid A -> \kappa \phantom{A^{A^A}}
 \end{array}  
 \] ~\vspace*{-6pt}\\
-In $F_{\!C}^\uparrow$, any type constructor (\texttt{F}) is promoted to 
-kind level and becomes a kind when fully appied to other kinds
-($\texttt{F}\vec\kappa$). In \Fi, on the other hand, a type can only appear
+In $F_{\!C}^\uparrow$, any type constructor ($F$) is promoted to 
+kind level and becomes a kind when fully applied to other kinds
+($F\vec\kappa$). In \Fi, on the other hand, a type can only appear
 at the domain of an index arrow kind ($A-> \kappa$). This seemingly small
-difference of the kind syntax makes $F_{\!C}^\uparrow$ be a drastically more
-expressive language. The promotion of type constructors such as
-$\texttt{List}:* -> *$ to a kind cosntructor $\texttt{List}:\square -> \square$
-enables data structuers at type level (\eg, $\mathtt{[Nat,Bool,Nat-> Bool]}$).
-Also, the promotion polymorphic types naturally motivates kind polymorphism
-($\forall \mathcal{X}.\kappa$), which is known to break strong normalization
-and cause logical inconsistency \cite{Girard72}. For the purpose of extending
-a functional programming language, inconsistency is not a problem. But for
-our interest of studying term-indexed datatypes in a logically consistent
-calculi, we need a more conservative approach, as in \Fi, starting from
-smallest possible extension that does not break normalization or consistency.
-
+difference to the kind syntax makes $F_{\!C}^\uparrow$ to develop into
+a drastically more expressive language than \Fi. The promotion of
+a type constructor, for instance, $\texttt{List}:* -> *$ to a kind constructor
+$\texttt{List}:\square-> \square$ enables type-level data structures
+such as $\mathtt{[Nat,Bool,Nat-> Bool]:List\,*}$. Having type-level
+data structure motivates type-level computation over promoted data,
+which they make it possible by extending the type families\footnote{
+	A GHC extension to define type-level functions in Haskell}.
+In addition, the promotion of polymorphic types naturally motivates
+kind polymorphism ($\forall \mathcal{X}.\kappa$), which is known to
+break strong normalization and cause logical inconsistency \cite{Girard72}.
+For the purpose of extending a functional programming language,
+inconsistency is not an issue. However, for our interest of studying
+term-indexed datatypes in a logically consistent calculi, we need
+a more conservative approach, as in \Fi, starting from smallest possible
+extension that maintains normalization and consistency.
 
 \citet{Swamy11}
 value dependent types in F-star  from MSR
-
 
 what others to discuss?
 
