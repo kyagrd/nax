@@ -480,18 +480,18 @@ index variables already in scope. For example, $\lambda i^A.F\{i\}$ should be
 well-kinded under a context where $F$ is well-kinded,
 justified by the derivation in Figure \ref{fig:ivarexample}.
 
-\begin{figure*}
-\[ \inference[($\lambda i$)]
-      { \cdot |- A:* &
-	\inference[($@i$)]{ \Delta, i^A |- F : A -> \kappa
-                          & \inference[($:i$)]{ i^A\in \Delta,i^A
-                                              & \Delta |- \cdot }
-                                              {\Delta,i^A;\cdot |- i:A}
+\begin{figure}
+\[ \!\!\!\!\!\!\!\!\inference[($\lambda i$)]
+      { \!\!\!\! \cdot |- A:* \!\!\!\!&
+	\inference[($@i$)\!\!\!]{ \!\!\!\!\Delta, i^A |- F : A -> \kappa
+                          & \!\!\!\!\inference[($:i$)\!\!\!]{\!\!\!\! i^A\in \Delta,i^A
+                                              & \Delta |- \cdot \!\!\!\!}
+                                              {\Delta,i^A;\cdot |- i:A\!\!\!\!}
                           }
                           {\Delta, i^A |- F\{i\} : \kappa} }
-      {\Delta |- \lambda i^A.F\{i\} :A -> \kappa}
+      {\Delta |- \lambda i^A.F\{i\} :A -> \kappa\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!}
 \]
 \caption{Kinding derivation for an index abstraction}
 \label{fig:ivarexample}
-\end{figure*}
+\end{figure}
 

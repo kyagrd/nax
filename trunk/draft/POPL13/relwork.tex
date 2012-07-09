@@ -7,18 +7,20 @@ All terms typable in Curry-style System \Fw\ are typable in System \Fi\
 with the same type, and all terms typable in \Fi\ are typable in ICC
 with the same type.\footnote{The $*$ kind in \Fw\ and \Fi\ corresponds
 	to \textsf{Set} in ICC.}
-So, the subject reduction and strong normalization of \Fi\ 
-can be automatically derived from ICC. ICC is more than just an extension of
-\Fi, as described in our work, with dependent types and stratified universes,
-since ICC includes $\eta$-reduction and the extensionality typing rule.
-We do not foresee any problem of adding $\eta$-reduction and
-the extensionality typing rule to \Fi. Although System \Fi\ accepts
-less terms than ICC, \Fi\ enjoys a stronger erasure property
-(Theorem \ref{thm:ierasetyping}), which ICC cannot not provide
+We have discussed that we can derive strong normalization, logical consistency,
+and subject reduction of \Fi, from \Fw\ and a subset of ICC.
+In fact, ICC is more than just an extension of \Fi, as described in our work,
+with dependent types and stratified universes. ICC includes $\eta$-reduction
+and the extensionality typing rule. We do not foresee any problem of adding
+$\eta$-reduction and the extensionality typing rule to \Fi. Although
+System \Fi\ accepts less terms than ICC, \Fi\ enjoys more simple
+erasure properties (Theorem \ref{thm:ierasetypingifree} and
+Theorem \ref{ierasetypingall)}, which ICC cannot not provide
 due to its support for full dependent types. In System \Fi, index terms
 appearing in types (\eg, $s$ in $F\{s\}$) are always erasable.
-\citet{LingerS08} formalized a generic framework which describes the erasure on
-arbitrary Church-style calculi (EPTS) and Curry-style calculi (IPTS).
+\citet{LingerS08} formalized a more generic framework than ICC, which describes
+the erasure on arbitrary Church-style calculi (EPTS) and Curry-style calculi
+(IPTS), but only consider $\beta$-equivalence for type conversion.
 
 In \S\ref{ssec:rationale}, we have mentioned that Curry-style calculi enjoys
 better reduction properties (\eg,$\beta\eta$-reduction is Church-Rosser)

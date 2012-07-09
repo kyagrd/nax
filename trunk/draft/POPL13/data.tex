@@ -134,8 +134,7 @@ the list-like datatypes in Figure \ref{fig:churchrec} are exactly the same.
 For instance, the term encodings for \texttt{nil}, \texttt{pnil}, and
 \texttt{vnil} coincide as $\l x_s.\l x_z.x_z$.
 
-\subsection{
-   Embedding the recursive type operators and the Mendler-style iterators}
+\subsection{Embedding recursive datatypes as two-level types}
 \label{ssec:embedTwoLevel}
 We can divide a recursive datatype definition into two levels,
 by factoring out the recursive type operator, which weaves in the recursion
@@ -155,7 +154,7 @@ and (2) handling different cases by the shape of the base structure.
 Although it is possible to write programs using two level datatypes, one could
 not expect logical consistency in such general purpose functional languages.
 
-\begin{figure}
+\begin{figure}\vspace*{-8pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 newtype $\mu_{*}$ (f :: * -> *)
   = In$_{*}$ (f ($\mu_{*}$ f))
