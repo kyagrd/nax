@@ -282,3 +282,136 @@ which leads to logical inconsistency.
 \label{fig:mu}
 \end{figure*}
 
+\subsection{Leibniz index equality}
+\label{Leibniz}
+
+The quantification over type-indexed kinding available in System~\Fi\
+allows the definition of \emph{Leibniz-equality type} constructors
+$\Eq_A: A\to A\to *$ on closed types~$A$.  These are as follows
+\[
+\Eq_A 
+\triangleq
+\l i^A.\, \l j^A.\, 
+  \LEq_A\s i \s j \times \LEq_A\s j \s i 
+\]
+where
+\[
+\LEq_A 
+\triangleq
+\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
+\enspace.
+\]
+Note that $\Delta\vdash F \s s \s t = F\s{s'}\s{t'}:*$ for $F=\Eq_A,\LEq_A$
+and all $\Delta;\cdot\vdash s=s':A$, $\Delta;\cdot\vdash t=t':A$.
+
+As a basic property, one has that the types 
+\[\begin{array}{l}
+\forall i^A.\,\LEq_A\s{i}\s{i}
+\\[1mm]
+\forall i^A.\,\forall j^A.\,\forall k^A.\,
+  \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{k}\to\LEq_A\s{i}\s{k}
+\\[1mm]
+\forall i^A.\,\forall j^A.\,
+  \LEq_A\s{i}\s{j}\to \forall f^{A\to B}.\, \LEq_B\s{f\,i}\s{f\,j}
+\end{array}\]
+are inhabited, and hence that Leibniz equality is a congruence.
+%\[\begin{array}{l}
+%\forall i^A.\,\Eq_A\s{i}\s{i}
+%\\[1mm]
+%\forall i^A.\,\forall j^A.\,
+%  \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{i}
+%\\[1mm]
+%\forall i^A.\,\forall j^A.\,\forall k^A.\,
+%  \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{k}\to\Eq_A\s{i}\s{k}
+%\\[1mm]
+%\forall i^A.\,\forall j^A.\,
+%  \Eq_A\s{i}\s{j}\to
+%  \forall f^{A\to B}.\,
+%  \Eq_B\s{f\,i}\s{f\,j}
+%\end{array}\]
+
+In applications, the types~$\LEq_A$ are useful in constraining the
+term-indexing of datatypes as parameterised by coercions.  A general such
+construction is given by the type constructors
+$\Ext_{A,B}: (A\to B) \to (A\to*) \to B\to *$, which are in spirit right
+Kan extensions~(\eg~\cite{AbeMatUus03}), defined as 
+\[
+\Ext_{A,B}
+\triangleq
+\l f^{A\to B}.\,
+  \l X^{A\to*}.\,
+    \l j^B.
+      \forall i^A.\,
+        \LEq_B \s j \s{f\,i}
+	  \to X\s i
+\]
+for closed types~$A$ and $B$.  
+%
+Here, for closed $t:A\to B$, $F:A\to*$, and $s:B$, a closed term $u:
+(\Ext_{A,B}\ \s t\ F) \s s$ is a polymorphic function that, for every
+closed $r:A$, given a generic coercion $\forall X^{B\to*}.\, X\s s \to
+X\s{t\,r}$ provides output of type $F\s r$.
+%
+%(We note the interesting fact that the type 
+%$\forall X^{A\to*}.\,\forall j^A.\,\forall i^A.\, 
+%   X\s i \to (\Ext_{A,A}\ \s{\lambda x.\,x}\ X) \s i$
+%is inhabited by a retraction.)
+
+As a concrete example to which the same principle applies, consider the
+type constructor
+\[
+\mathtt{Fin}\triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l i^{\mathtt{Nat}}.\,\forall X^{\mathtt{Nat}\to*}.\,
+\\[1mm]
+	\quad (\forall j^\mathtt{Nat}.\,\LEq_\mathtt{Nat}\s i\s{\mathtt
+		S\,j}\to X\s i)
+\\[1mm]
+	\quad\quad \to (\forall j^\mathtt{Nat}.\, X\s j\to X\s{\mathtt S\,j})
+\\[1mm]
+	\quad\quad\quad\to X\s i
+\end{array}
+\]
+For it, one derives constructors
+\[\begin{array}{l}
+\mathtt{FinZ}:
+  \forall i^{\mathtt{Nat}}\,\forall j^{\mathtt{Nat}}.\,
+    \LEq_{\mathtt{Nat}}\s i \s{\mathtt S\,j} \to \mathtt{Fin}\s i
+\\[1mm]
+\mathtt{FinS}:
+  \forall i^{\mathtt{Nat}}.\,
+    \mathtt{Fin}\s i \to \mathtt{Fin}\s{\mathtt S\, i}
+\end{array}\]
+so that 
+\[
+\mathtt{FinZ}\,(\lambda x.\, x): \mathtt{Fin}\s{\mathtt S\, t}
+\enspace,\quad
+\mathtt{FinS}:
+  \mathtt{Fin}\s t \to \mathtt{Fin}\s{\mathtt S\, t}
+\]
+for all closed $t:\mathtt{Nat}$.
+
+With $\mathtt{Fin}$, one defines the type of \mbox{$\lambda$-terms} in
+context 
+%$\mathtt{Lam}:\mathtt{Nat}\to*$
+as:
+\[
+%\mathtt{Lam} \triangleq
+%\!\!\!
+\begin{array}[t]{l}
+\l i^\mathtt{Nat}.\,\forall X^{\mathtt{Nat}\to*}.
+\\[1mm]
+\quad
+  (\forall j^\mathtt{Nat}.\,\mathtt{Fin}\s j \to X\s j)
+\\[1mm]
+\quad\quad
+ \to(\forall j^\mathtt{Nat}.\,X\s j \to X\s j \to X\s j)
+\\[1mm]
+\quad\quad\quad
+\to(\forall j^\mathtt{Nat}.\,X\s{\mathtt S\, j} \to X\s j)
+\\[1mm]
+\quad\quad\quad\quad
+  \to X\s i
+\end{array}
+\]

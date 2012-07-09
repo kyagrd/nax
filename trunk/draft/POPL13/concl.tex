@@ -2,32 +2,15 @@
 \label{sec:concl}
 TODO
 
-mention nax
+We are also developing a programming language Nax, which supports
+type inference with little annotation, based on System \Fi.
+
+We wonder what extension
+we need to enable large eliminations (i.e., computing types from term-indices).
 
 We are exploring whether Leibniz equality over indices
 (i.e., $s_1=s_2$ encoded as $\forall X^{A -> *}.X\{s_1\} -> X\{s_2\}$)
 may help us express functions whose domains are restricted by term-indices
-(e.g., \verb|vtail :: Vec a {S n} -> Vec a n|). We wonder what extension
-we need to enable large eliminations (i.e., computing types from term-indices).
-We are also developing a programming language Nax, which supports
-type inference with little annotation, based on System \Fi.
-
-Mention the need to incorporate \emph{index-equality types} to encode
-term-indexed datatypes with constructors that discriminate (typically by
-pattern matching) on term indices.  Two such examples arise when
-representing untyped lambda terms by de~Bruijn indices: 
-\begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
- data Lam {i:Nat} where
-   LVar : Fin {i} -> Lam {i}
-   LApp : Lam {i} -> Lam {i} -> Lam {i}
-   LAbs : Lam {S i} -> Lam {i}
-\end{lstlisting}
-where 
-\begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
- data Fin {i:Nat} where
-   FZ : Fin {S i} 
-   FS : Fin {i} -> Fin {S i} 
-\end{lstlisting}
-for the lambda abstraction constructor~{\tt LAbs} and the zero
-constructor~{\tt FZ}.
+(e.g., \verb|vtail :: Vec a {S n} -> Vec a n|).  {\bf [MF: Omit this? As I
+	added the, I should say experimental, \S\S\ref{Leibniz} on this.]}
 

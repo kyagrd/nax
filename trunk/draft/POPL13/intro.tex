@@ -43,7 +43,7 @@ type level with uninhabited type constructors. For example,\vspace*{-1pt}
 data Zero
 data Succ n
 
-data Vecor t n where
+data Vector t n where
   Nil  :: Vector a Zero
   Cons :: a -> Vector a n -> Vector a (Succ n)
 \end{lstlisting}\vspace*{-1pt}
