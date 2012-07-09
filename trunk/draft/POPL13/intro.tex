@@ -32,7 +32,7 @@ the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
 with its type {\tt (Int,Bool)}.
 
 On the other hand, term-indexed types include indices that range over data
-structures, such as the Natural Numbers~(like {\tt Z}, {(\tt S
+structures, such as Natural Numbers~(like {\tt Z}, {(\tt S
 Z})) or Lists~(like {\tt Nil} or ({\tt Cons Z Nil})). 
 The classic example of a term index is the second
 parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
@@ -68,8 +68,8 @@ Haskell the non-terminating computation can be assigned any type, it is in
 principle possible that the type-preservation property is a consequence of
 a non-terminating computation in the program code.
 
-This drawback would be absent in an approach based on strongly normalizing
-logical calculi; like System~\Fw, the higher-order
+This drawback is absent in approaches based on strongly normalizing
+logical calculi; like, for instance, System~\Fw, the higher-order
 polymorphic lambda calculus, which is rich enough to express a wide
 collection of data structures.  Unfortunately, the \emph{term-indexed
 datatypes} that are necessary to support Guillemette's system are not
@@ -220,13 +220,13 @@ structure needs four additional constructs.
 \item 
   Type-indexed kinding~($A\to\kappa$) (as in $(\texttt{{Nat}\ensuremath{\to}*})$
   in the example above) where the compile-time nature of term-indexing
-  will be reflected in the enforcement that $A$ be a closed type~(see
-  rule~$(Ri)$ in \Fig{Fi}).
+  will be reflected in the enforcement that $A$ be a closed
+  type~(rule~$(Ri)$ in \Fig{Fi}).
 
 \item 
   Term-index abstraction~$\lambda i^A.F$~(as $\lambda
   i^{\texttt{{Nat}}}.\cdots$ in the example above) for constructing (or
-  introducing) type-indexed kinds~(see rule~$(\lambda i)$ in
+  introducing) type-indexed kinds (rule~$(\lambda i)$ in
   \Fig{Fi}).  
 
 \item 
@@ -235,13 +235,13 @@ structure needs four additional constructs.
   eliminating) type-indexed kinds, where the compile-time nature of
   indexing will be reflected in the enforcement that the index be
   statically typed% in that it does not depend on run-time parameters
-~(see rule~$(@i)$ in \Fig{Fi}) .
+~(rule~$(@i)$ in \Fig{Fi}) .
 
 \item 
   Term-index polymorphism~$\forall i^A.B$ (as $\forall
   j^{\texttt{{Nat}}}.\cdots$ in the example above) where the compile-time
   nature of polymorphic term-indexing will be reflected in the enforcement
-  that the variable~$i$ be static of closed type~$A$~(see rule~$(\forall
+  that the variable~$i$ be static of closed type~$A$~(rule~$(\forall
   Ii)$ in \Fig{Fi}).
 \end{enumerate}
 
