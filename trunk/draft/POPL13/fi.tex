@@ -1,19 +1,24 @@
 \section{System \Fi}
 \label{sec:Fi}
-System \Fi\ is a higher-order polymorphic lambda calculus with term indices.
-System \Fi\ was designed to extend System \Fw\ by the inclusion of term indices.
-The complete syntax and rules of \Fi\ are described in \Fig{Fi} and
-\Fig{eqFi}. The syntax and rules are highlighted by \newFi{\text{grey boxes}}.
-The extensions new to \Fi, which are not originally part of \Fw, appear in the boxes.
-If one excludes all the grey boxes from \Fig{Fi}
-and \Fig{eqFi}, one obtains a version of \Fw. In particular, it is a version of \Fw\
-with Curry-style terms and typing contexts separated into two parts
-(type level and term level contexts). We first discuss the rational for
-these design choices 
-(\S\ref{ssec:rationale}), and then introduce the new constructs of \Fi,
-which are not found in \Fw\ (\S\ref{ssec:newFi}).
+System \Fi\ is a higher-order polymorphic lambda calculus 
+designed to extend System~\Fw\ by the inclusion of term indices.
+The syntax and rules of System~\Fi\ are described in~\Figs{Fi}
+and~\ref{fig:eqFi}. 
+The extensions new to System~\Fi, which are not
+originally part of System~\Fw, 
+are highlighted by \newFi{\text{grey boxes}}.  
+Eliding all the grey boxes from~\Figs{Fi}
+and~\ref{fig:eqFi}, one obtains a Curry-style version of System~\Fw
+with terms and typing contexts separated into two parts, type and term
+level contexts. 
 
-\subsection{Rationale for the design choices} \label{ssec:rationale}
+In this section, we first discuss the rational for our design
+choices~(\S\ref{ssec:rationale}) and then introduce the new constructs of
+System~\Fi\ %, which are not found in System~\Fw
+(\S\ref{ssec:newFi}).
+
+\subsection{Design of System~\Fi%Rationale for the design choices
+} \label{ssec:rationale}
 Terms in \Fi\ are Curry style. That is, term level abstractions are unannotated
 ($\lambda x.t$), and type generalizations ($\forall I$) and type instantiations
 ($\forall E$) are implicit at term level. A Curry-style calculus generally has
@@ -347,9 +352,10 @@ $
 \label{fig:eqFi}
 \end{figure*}
 
-\subsection{The constructs new to \Fi\ compared to \Fw} \label{ssec:newFi}
-We expect readers to be familiar with \Fw\
-and focus on describing the new constructs of \Fi, which appear in the grey boxes.
+\subsection{%The constructs new to 
+	System~\Fi\ compared to System~\Fw} \label{ssec:newFi}
+We assume readers to be familiar with System~\Fw\
+and focus on describing the new constructs of \Fi.  These appear in grey boxes.
 
 
 \paragraph{Kinds.}
