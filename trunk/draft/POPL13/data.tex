@@ -323,18 +323,18 @@ For $F_A\in\{\Eq_A,\LEq_A\}$, one has
 As further basic properties, one also has the inhabitation of the
 following types
 \[\begin{array}{l}
-\mathrm{(Reflexivity)} 
+\mathrm{(Reflexive)} 
 \\
 \qquad
 \forall i^A.\,F_A\s{i}\s{i}
 \\[1mm]
-\mathrm{(Transitivity)} 
+\mathrm{(Transitive)} 
 \\
 \qquad
 \forall i^A.\,\forall j^A.\,\forall k^A.\,
   F_A\s{i}\s{j}\to F_A\s{j}\s{k}\to F_A\s{i}\s{k}
 \\[1mm]
-\mathrm{(Logicality)}
+\mathrm{(Logical)}
 \\
 \qquad
 \forall i^A.\,\forall j^A.\, 
@@ -348,7 +348,7 @@ F_{A\to B}\s{f}\s{g}\to
 Hence Leibniz equality is a congruence; in that, in addition to the above
 one also has the inhabitation of the type
 \[\begin{array}{l}
-\mathrm{(Symmetry)} 
+\mathrm{(Symmetric)} 
 \\
 \qquad
 \forall i^A.\,\forall j^A.\,
@@ -363,11 +363,10 @@ one also has the inhabitation of the type
 
 In applications, the types~$\LEq_A$ are useful in constraining the
 term-indexing of datatypes as parameterised by coercions.  A general such
-construction is given by the type constructors $\Ext_{A,B}: (A\to B) \to
-(A\to*) \to B\to *$ (which are in spirit right Kan extensions, see
-\eg~\cite{AbeMatUus05}) defined as 
+construction is given by the type constructors $\Ran_{A,B}: (A\to B) \to
+(A\to*) \to B\to *$.  These are defined as 
 \[
-\Ext_{A,B}
+\Ran_{A,B}
 \triangleq
 \l f^{A\to B}.\,
   \l X^{A\to*}.\,
@@ -376,22 +375,37 @@ construction is given by the type constructors $\Ext_{A,B}: (A\to B) \to
         \LEq_B \s j \s{f\,i}
 	  \to X\s i
 \]
-for closed types~$A$ and $B$.  
-
-It follows that, %Here, 
-for closed $t:A\to B$, $F:A\to*$, and $s:B$, a closed term $u:
-(\Ext_{A,B}\ \s t\ F) \s s$ is a polymorphic function that, for every
-closed $r:A$, given a generic coercion $\forall X^{B\to*}.\, X\s s \to
-X\s{t\,r}$ provides output of type $F\s r$.  In particular, 
+%for closed types~$A$ and $B$, 
+and are in spirit right Kan extensions, a notion that is being extensively
+used in programming,~\eg~\cite{AbeMatUus05,Ghani,Hinze}.  .  
+%%
+%It follows that, %Here, 
+%%for closed $t:A\to B$, $F:A\to*$, and $s:B$, a closed term $u:
+%%(\Ext_{A,B}\ \s t\ F) \s s$ is a polymorphic function that, for every
+%%closed $r:A$, given a generic coercion $\forall X^{B\to*}.\, X\s s \to
+%%X\s{t\,r}$ provides output of type $F\s r$.  In particular, 
 %the type
-$\forall f^{A\to B}.\,\forall X^{A\to*}.\,\forall i^A.\,
-(\Ext_{A,B}\ \s f\ X) \s{f\,i}\to X\s i$ is inhabited by 
-$\l f.\,f(\l x.\,x)$.
+%$\forall f^{A\to B}.\,\forall X^{A\to*}.\,\forall i^A.\,
+%(\Ext_{A,B}\ \s f\ X) \s{f\,i}\to X\s i$ is inhabited by 
+%$\l f.\,f(\l x.\,x)$.
+%%
+%%(We note the interesting fact that the type 
+%%$\forall X^{A\to*}.\,\forall j^A.\,\forall i^A.\, 
+%%   X\s i \to (\Ext_{A,A}\ \s{\lambda x.\,x}\ X) \s i$
+%%is inhabited by a retraction.)
 %
-%(We note the interesting fact that the type 
-%$\forall X^{A\to*}.\,\forall j^A.\,\forall i^A.\, 
-%   X\s i \to (\Ext_{A,A}\ \s{\lambda x.\,x}\ X) \s i$
-%is inhabited by a retraction.)
+One of their usefulness comes from the fact that the type
+\[
+\begin{array}{l}
+%\l h.\,\l y.\,\l g.\, h(g\, y):
+\forall Y^{B\to*}.\,\forall X^{A\to*}.\,\forall f^{A\to B}.\,
+\\
+\big[\forall i^A.\,Y\s{f\,i}\to X\s i\big]
+\to
+\big[\forall j^B.\,Y\s j\to (\Ran_{A,B}\s f X)\s j\big]
+\end{array}\]
+is inhabited by a retraction.  This allows the representation of functions
+\ldots
 
 \begin{comment}
 \begin{quote}
