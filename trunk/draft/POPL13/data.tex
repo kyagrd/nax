@@ -302,47 +302,64 @@ iteration, primitive recursion, and courses of values recursion.
 
 The quantification over type-indexed kinding available in System~\Fi\
 allows the definition of \emph{Leibniz-equality type} constructors
-$\Eq_A: A\to A\to *$ on closed types~$A$.  These are as follows
-\[
-\Eq_A 
+$\Eq_A: A\to A\to *$ on closed types~$A$.  These are as
+fol\-lows\linebreak
+$\Eq_A 
 \triangleq
 \l i^A.\, \l j^A.\, 
-  \LEq_A\s i \s j \times \LEq_A\s j \s i 
-\]
+  \LEq_A\s i \s j \times \LEq_A\s j \s i$
 where
-\[
-\LEq_A 
+$\LEq_A 
 \triangleq
-\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
-\enspace.
-\]
+\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}$.
 
-For $F_A=\Eq_A,\LEq_A$, one has $\Delta\vdash F_A \s s \s t =
-F_A\s{s'}\s{t'}:*$ for all $\Delta;\cdot\vdash s=s':A$,
-$\Delta;\cdot\vdash t=t':A$.
+For $F_A\in\{\Eq_A,\LEq_A\}$, one has
+\[\begin{array}{c}
+\Delta;\cdot\vdash s=s':A\enspace\quad \Delta;\cdot\vdash t=t':A
+\\ \hline \\[-3mm]
+\Delta\vdash F_A \s s \s t = F_A\s{s'}\s{t'}:*
+\end{array}\]
 %
-As a further basic property, one also has that the types 
+As further basic properties, one also has the inhabitation of the
+following types
 \[\begin{array}{l}
+\mathrm{(Reflexivity)} 
+\\
+\qquad
 \forall i^A.\,F_A\s{i}\s{i}
 \\[1mm]
+\mathrm{(Transitivity)} 
+\\
+\qquad
 \forall i^A.\,\forall j^A.\,\forall k^A.\,
   F_A\s{i}\s{j}\to F_A\s{j}\s{k}\to F_A\s{i}\s{k}
 \\[1mm]
-\forall i^A.\,\forall j^A.\,
-  F_A\s{i}\s{j}\to \forall f^{A\to B}.\, F_B\s{f\,i}\s{f\,j}
+\mathrm{(Logicality)}
+\\
+\qquad
+\forall i^A.\,\forall j^A.\, 
+F_A\s{i}\s{j}\to \forall f^{A\to B}.\, F_B\s{f\,i}\s{f\,j}
+\\[1mm]
+\qquad
+\forall f^{A\to B}.\,\forall g^{A\to B}.\, 
+F_{A\to B}\s{f}\s{g}\to 
+\forall i^A.\, F_B\s{f\,i}\s{g\,i}
 \end{array}\]
-are inhabited.  Hence Leibniz equality is a congruence; in that, in
-addition to the above, the type
-\[
+Hence Leibniz equality is a congruence; in that, in addition to the above
+one also has the inhabitation of the type
+\[\begin{array}{l}
+\mathrm{(Symmetry)} 
+\\
+\qquad
 \forall i^A.\,\forall j^A.\,
   \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{i}
-\]
-is inhabited.  This is not so for the type 
-\begin{equation}\label{NonSymmetry}
-\forall i^A.\,\forall j^A.\, \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
-\enspace.
-\end{equation}
-(Cf.~Example~\ref{PathologicalExampleContinued} in~\S\ref{sec:theory}.)
+\end{array}\]
+%This is not so for the type 
+%\begin{equation}\label{NonSymmetry}
+%\forall i^A.\,\forall j^A.\, \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
+%\enspace.
+%\end{equation}
+%(Cf.~Example~\ref{PathologicalExampleContinued} in~\S\ref{sec:theory}.)
 
 In applications, the types~$\LEq_A$ are useful in constraining the
 term-indexing of datatypes as parameterised by coercions.  A general such
