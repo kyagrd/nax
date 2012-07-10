@@ -18,13 +18,26 @@ much more difficult had we restricted ICC.
 
 Typing annotations in Nax are necessary only
 on case statements (for non-recursive term-indexed datatypes)
-and Mendler style operators (for recursive term-indexed datatypes).
+and Mendler-style operators (for recursive term-indexed datatypes).
 Programs involving only type-indexing require no annotations elsewhere.
-A typing annotation takes the form of a large elimination --
-an abstraction over both types and terms to types. Such abstractions
-are classified exactly by the kinds derivable from the kind
-syntax of \Fi.   The current implementation requires
-static annotations, but we believe we can extend Nax to abstract over
-annotations, and still retain the strict separation between terms and types
-that allows both type inference and an erasure semantics.
+A typing annotation takes a limited form of a large elimination,
+which is an abstraction over both type- and term-indices to types
+(\eg, $X,i_1,i_2 \mapsto F X \{i_1 + i_2\}$), which is somewhat similar to
+the convoy pattern idiom \cite{cpdt} found in Coq proof scripts to aid
+type checking depedent case expressions.
+One of our futuer work
+is to include richer form of large elimination, which enables selection
+of different type constructors for the result type of case statements
+and Mendler-style operators, such as:
+\[ X,i_1,i_2 \mapsto \textbf{if}\;i_1<i_2\;
+	\textbf{then}\; F_1 X \{i_1\}\;\textbf{else}\;F_2 X \{i_2\} \]
+Enriching the type annotations in Nax will motivate us to identify
+the features we needed extend \Fi\ for embedding large eliminations.
+
+%% Such abstractions
+%% are classified exactly by the kinds derivable from the kind
+%% syntax of \Fi.   The current implementation requires
+%% static annotations, but we believe we can extend Nax to abstract over
+%% annotations, and still retain the strict separation between terms and types
+%% that allows both type inference and an erasure semantics.
  
