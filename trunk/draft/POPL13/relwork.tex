@@ -69,15 +69,6 @@ term-indexed datatypes in a logically consistent calculi, we need
 a more conservative approach, as in \Fi, starting from smallest possible
 extension that maintains normalization and consistency.
 
-Dependent types TODO
-\citet{Swamy11}
-value dependent types.
-only allow first-order values
-variables
-(in the sense of value restriction in ML, but even more limited to
-values of ground types)
-in F-star from MSR
-
 Literature on handing type equality constraints in the type systems supporting
 GADTs is vast. We list a few of them. System $F_{\!C}$ \cite{Sulzmann07} would
 arguably be the most influential system, being the intermediate language of
@@ -86,4 +77,15 @@ System $\mathrm{R}_\omega$ \cite{Crary98}, an extension to Curry-style $\Fw$
 with the type-representation datatype and its primitive recursor, so that
 one may derive \emph{free theorems} \cite{Wadler89free} in the presence of
 type equalities.
+
+Another possible approach for utilizing term-indexed datatypes for lightweight
+verified programming is to restrict from full-spectrum dependent types, rather
+than to extend from non-dependent types. $F^{*}$, developed by \citet{Swamy11},
+is a language for secure distributed programming with value dependent types.
+In $F^{*}$, terms appearing in dependent types are restricted to first-order
+values, which is in spirit of value restriction in ML type inference, but
+even more limited to values that are not functions. By taming the dependent type
+with such a restriction, they were able to have a usable programming language
+and also self-certify \citet{Swamy12} their compiler by implementing $F^{*}$
+type checker in $F^{*}$.
 
