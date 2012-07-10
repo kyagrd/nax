@@ -5,7 +5,8 @@ First, we illustrate embeddings for both non-recursive and
 recursive datatypes using Church encodings \cite{Church33} to define
 data constructors (\S\ref{ssec:embedChurch}). Second, we illustrate
 a more involved embedding for recursive datatypes based on two-level types
-(\S\ref{ssec:embedTwoLevel}).
+(\S\ref{ssec:embedTwoLevel}). Lastly, we discuss an encoding of equality over
+term indices (\S\ref{Leibniz}).
 
 \subsection{Embedding datatypes using Church-encoded terms}
 \label{ssec:embedChurch}
@@ -302,58 +303,50 @@ iteration, primitive recursion, and courses of values recursion.
 
 The quantification over type-indexed kinding available in System~\Fi\
 allows the definition of \emph{Leibniz-equality type} constructors
-$\Eq_A: A\to A\to *$ on closed types~$A$.  These are as
-fol\-lows\linebreak
-$\Eq_A 
-\triangleq
-\l i^A.\, \l j^A.\, 
-  \LEq_A\s i \s j \times \LEq_A\s j \s i$
-where
-$\LEq_A 
-\triangleq
-\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}$.
+$\Eq_A: A\to A\to *$ on closed types~$A$, defined as follows:
 
-For $F_A\in\{\Eq_A,\LEq_A\}$, one has
-\[\begin{array}{c}
+\begin{align*}
+\Eq_A ~~\triangleq&~
+	\l i^A.\, \l j^A.\, 
+	\LEq_A\s i \s j \times \LEq_A\s j \s i
+\quad \text{where} \\
+\LEq_A \triangleq&~
+	\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
+\end{align*}
+For $F_A\in\{\Eq_A,\LEq_A\}$, 
+$\begin{array}{c}
 \Delta;\cdot\vdash s=s':A\enspace\quad \Delta;\cdot\vdash t=t':A
 \\ \hline \\[-3mm]
 \Delta\vdash F_A \s s \s t = F_A\s{s'}\s{t'}:*
-\end{array}\]
-%
-As further basic properties, one also has the inhabitation of the
-following types
-\[\begin{array}{l}
-\mathrm{(Reflexive)} 
-\\
-\qquad
+\end{array}.$ \vspace*{3pt} \\
+As further basic properties, the following types are inhabited:
+\[\!\!\!\!\begin{array}{l}
+\text{\small(Reflexive)} 
+~~\,
 \forall i^A.\,F_A\s{i}\s{i}
 \\[1mm]
-\mathrm{(Transitive)} 
-\\
-\qquad
+\text{\small(Transitive)} 
+~~
 \forall i^A.\,\forall j^A.\,\forall k^A.\,
   F_A\s{i}\s{j}\to F_A\s{j}\s{k}\to F_A\s{i}\s{k}
 \\[1mm]
-\mathrm{(Logical)}
-\\
-\qquad
-\forall i^A.\,\forall j^A.\, 
+\text{\small(Logical)}
+\quad~\, \forall i^A.\,\forall j^A.\, 
 F_A\s{i}\s{j}\to \forall f^{A\to B}.\, F_B\s{f\,i}\s{f\,j}
 \\[1mm]
-\qquad
+\qquad\qquad~~~
 \forall f^{A\to B}.\,\forall g^{A\to B}.\, 
 F_{A\to B}\s{f}\s{g}\to 
 \forall i^A.\, F_B\s{f\,i}\s{g\,i}
 \end{array}\]
 Hence Leibniz equality is a congruence; in that, in addition to the above
 one also has the inhabitation of the type
-\[\begin{array}{l}
-\mathrm{(Symmetric)} 
-\\
-\qquad
+\[\!\!\!\!\begin{array}{l}
+\text{\small(Symmetric)} 
+\quad
 \forall i^A.\,\forall j^A.\,
   \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{i}
-\end{array}\]
+\end{array}\qquad\qquad\qquad\qquad\qquad\]
 %This is not so for the type 
 %\begin{equation}\label{NonSymmetry}
 %\forall i^A.\,\forall j^A.\, \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
