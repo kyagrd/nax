@@ -1,28 +1,30 @@
 \section{Related work}
 \label{sec:relwork}
-Among theoretical calculi, \Fi\ is most closely related to
-Curry-style System \Fw \cite{AbeMatUus03,AbeMatUus05,GHR93}
+Among theoretical calculi, System~\Fi\ is most closely related to
+Curry-style System~\Fw \cite{AbeMatUus03,AbeMatUus05,GHR93}
 and Implicit Calculus of Constructions (ICC) \cite{Miquel01}.
 All terms typable in Curry-style System \Fw\ are typable in System \Fi\ 
 with the same type, and all terms typable in \Fi\ are typable in ICC
 with the same type.\footnote{The $*$ kind in \Fw\ and \Fi\ corresponds
 	to \textsf{Set} in ICC.}
 We have discussed that we can derive strong normalization, logical consistency,
-and subject reduction of \Fi, from \Fw\ and a subset of ICC.
-In fact, ICC is more than just an extension of \Fi, as described in our work,
-with dependent types and stratified universes. ICC includes $\eta$-reduction
+and subject reduction of System~\Fi, from System~\Fw\ and a subset of ICC.
+In fact, ICC is more than just an extension of System~\Fi, 
+%as described in our work, 
+with dependent types and stratified universes. ICC includes
+$\eta$-reduction
 and the extensionality typing rule. We do not foresee any problem of adding
-$\eta$-reduction and the extensionality typing rule to \Fi. Although
-System \Fi\ accepts less terms than ICC, \Fi\ enjoys more simple
+$\eta$-reduction and the extensionality typing rule to System~\Fi. Although
+System~\Fi\ accepts less terms than ICC, it enjoys simpler
 erasure properties (Theorem \ref{thm:ierasetypingifree} and
-Theorem \ref{thm:ierasetypingall}), which ICC cannot not provide
+Theorem \ref{thm:ierasetypingall}), which ICC cannot provide
 due to its support for full dependent types. In System \Fi, index terms
-appearing in types (\eg, $s$ in $F\{s\}$) are always erasable.
+appearing in types (\eg,~$s$ in $F\{s\}$) are always erasable.
 \citet{LingerS08} formalized a more generic framework than ICC, which describes
-the erasure on arbitrary Church-style calculi (EPTS) and Curry-style calculi
-(IPTS), but only consider $\beta$-equivalence for type conversion.
+the erasure on arbitrary Church-style calculi~(EPTS) and Curry-style
+calculi~(IPTS), but only consider $\beta$-equivalence for type conversion.
 
-In \S\ref{ssec:rationale}, we have mentioned that Curry-style calculi enjoys
+In~\S\ref{ssec:rationale}, we have mentioned that Curry-style calculi enjoy
 better reduction properties (\eg,$\beta\eta$-reduction is Church-Rosser)
 than Church-style calculi. \citet{Nederpelt73} showed a counterexample to
 the Church-Rosser property for $\beta\eta$-reduction of Church-style terms.
@@ -31,11 +33,11 @@ in functional PTSs, which is a certain class of Church-style calculi.
 \citet{Seldin08} discusses the relation between the Church-style typing
 and the Curry-style typing.
 
-In a more practical setting aimed twoards language implementation,
+In a more practical setting aimed towards language implementation,
 \citet{YorgeyWCJVM12}, inspired by \citet{SHE}, designed a language extension
 to Haskell, promoting datatypes to be used as kinds. For instance, \texttt{Bool}
 is promoted to a kind (\ie, $\texttt{Bool}:\square$) and its data constructors
-\texttt{Ture} and \texttt{False} are promoted to type level. To support this
+\texttt{True} and \texttt{False} are promoted to type level. To support this
 in GHC, they extended System $F_{\!C}$ (GHC's intermediate language, or,
 GHC Core), naming the extended GHC Core as System $F_{\!C}^\uparrow$.
 The key difference between $F_{\!C}^\uparrow$ and \Fi\ is in the extension
@@ -66,26 +68,27 @@ break strong normalization and cause logical inconsistency \cite{Girard72}.
 For the purpose of extending a functional programming language,
 inconsistency is not an issue. However, for our interest of studying
 term-indexed datatypes in a logically consistent calculi, we need
-a more conservative approach, as in \Fi, starting from smallest possible
+a more conservative approach, as in System~\Fi, starting from smallest possible
 extension that maintains normalization and consistency.
 
-Literature on handing type equality constraints in the type systems supporting
-GADTs is vast. We list a few of them. System $F_{\!C}$ \cite{Sulzmann07} would
+Literature on handling type equality constraints in the type systems supporting
+GADTs is vast. We list a few of them. System~$F_{\!C}$~\cite{Sulzmann07} would
 arguably be the most influential system, being the intermediate language of
 the Glasgow Haskell Compiler (GHC). \citet{VytWei10} proved parametricity of
-System $\mathrm{R}_\omega$ \cite{Crary98}, an extension to Curry-style $\Fw$
+System $\mathrm{R}_\omega$ \cite{Crary98}, an extension to Curry-style
+System~\Fw
 with the type-representation datatype and its primitive recursor, so that
 one may derive \emph{free theorems} \cite{Wadler89free} in the presence of
 type equalities.
 
 Another possible approach for utilizing term-indexed datatypes for lightweight
 verified programming is to restrict from full-spectrum dependent types, rather
-than to extend from non-dependent types. \citet{Swamy11} developed $F^{*}$,
+than to extend from non-de\-pend\-ent types. \citet{Swamy11} developed $F^{*}$,
 a language for secure distributed programming with value dependent types.
 Terms appearing in dependent types in $F^{*}$ are restricted to first-order
 values, similarly to value restriction in ML type inference, but even more
 limited since function values are not allowed. By taming the dependent type
 with such a restriction, they were able to have a usable programming language
-and also self-certify \cite{Strub12} their compiler by implementing $F^{*}$
+and self-certify~\cite{Strub12} their compiler by implementing $F^{*}$
 type checker in $F^{*}$.
 
