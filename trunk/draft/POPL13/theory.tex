@@ -628,24 +628,39 @@ System \Fi\ is a strict subset of the \emph{restricted implicit calculus}
 \cite{Miquel00}, which is a restriction of ICC \cite{Miquel01}.
 Subject reduction is also immediate since \Fi\ is a strict subset of ICC.
 
-\subsection{TODO about void type instantiation TODO}
-Why did we bother to design \Fi? What is different from a Curry-style
-dependent calculus with implicit arguments such as ICC? The following rule
-is the instantiation 
+\subsection{No void type instantiation from dynamic values}
+There is an interesting difference between \Fi\ and a Curry-style
+dependent calculus with implicit arguments such as ICC, regarding
+the instantiation of uninhabited type. Consider the instantiation rule of ICC,
+shown below:
 \[
 \inference{\Gamma,x:A |- t : B}{\Gamma |- t : \forall x^A.B }~(x\notin\FV(t))
 \]
-Consider when $A=Void$ and $B=\forall i^{Void}.NeverEverVoid\,\{i\}$.
-In the calculus above, we can instantiate $i$ with $y$ provided that
-$(y:Void)\in\Gamma$. It is a void type instantiation, Uh-Oh ...
+When $A=\mathtt{Void}$ and $B=\forall i^\mathtt{Void}.\mathtt{NeverEverVoid}\{i\}$,
+we can instantiate $i$ with $y$, according to the rule above,
+provided that $(y:Void)\in\Gamma$. Note that, in ICC, it is possible to
+instantiate a universally quantified term variable $i$ of an uninhabited type
+from a possibly dynamic term $x$.
 
-In \Fi\ we cannot instantiate $B$ with any of the term variables
-since index instantiation can not refer to the term-level context
-but only refer to the type-level context $\Delta$. Recall
+In \Fi, we cannot instantiate $B$ with any of the term variables since
+index instantiation can not refer to the term-level context ($\Gamma$)
+but only refers to the type-level context ($\Delta$).
+Recall the ($\forall E i$) rule:
 \[
-	\inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B & \textcolor{red}{\Delta;\cdot |- s:A} }
+	\inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B & \Delta;\cdot |- s:A }
 	                           {\Delta;\Gamma |- t : B[s/i]}
-			   \]
+\]
+Note that it is still possible to instantiate uninhabited type from
+index variables introduced at type level (\ie, when $j^\mathtt{Void}\in\Delta$).
+However, such variables are only introduced within a pathological
+type constructor definition, as in Example~\ref{PathologicalExample}.
+Void type instantiation is localized inside type constructor definition.
+It is assured that function definitions at term level will never cause
+void type instantiation, even when some of the function arguments have
+uninhabited type or pathological type.
+
+
+\begin{comment}
 
 \begin{proposition}[anti-dependency on arrow kinds]
 \[ \inference{ |- \Delta,X^\kappa
@@ -689,4 +704,5 @@ but only refer to the type-level context $\Delta$. Recall
 TODO
 \end{remark}
 
+\end{comment}
 
