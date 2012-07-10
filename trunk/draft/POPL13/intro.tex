@@ -19,7 +19,7 @@ Static dependency is sometimes referred to as indexed typing. The first
 is very expressive, while the second is often much easier to learn and 
 use. Indexed types come in two flavors: type-indexed and term-indexed
 types. Type indexing includes parametric polymorphism, but it also includes
-more sophisticated typing such as Generalized Algebraic Datatypes~(GADTs).
+more sophisticated typing as found in Generalized Algebraic Datatypes~(GADTs).
 An example of type indexing using GADTs is a type representation:\vspace*{-1pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data TypeRep t where
@@ -27,7 +27,7 @@ data TypeRep t where
   Bool:: TypeRep Bool
   Pair:: TypeRep a -> TypeRep b -> TypeRep(a,b)
 \end{lstlisting}\vspace*{-1pt}
-Here, a value of type {\tt TypeRep t} is isomorphic in ``shape" with
+Here, a value of type {\tt (TypeRep t)} is isomorphic in ``shape" with
 the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
 with its type {\tt (Int,Bool)}.
 
