@@ -87,9 +87,9 @@ the induction hypothesis of the big well-formedness property.
 \item[case] ($Var$)
 	Trivial by the second well-formedness rule of $\Delta$.
 \item[case] ($Conv$)
-	By induction and Lemma \ref{lem:wfeqkind}.
+	By induction and Lemma~\ref{lem:wfeqkind}.
 \item[case] ($\lambda$) \\
-	By induction and Proposition \ref{prop:wfsort} we know
+	By induction and Proposition~\ref{prop:wfsort} we know
 	that $|- \kappa:\square$.\\
 	By the second well-formedness rule of $\Delta$,
 	we know that $|- \Delta,X^\kappa$ since we already know
@@ -102,7 +102,9 @@ the induction hypothesis of the big well-formedness property.
 \item[case] ($@$)
 	By induction, easy.
 \item[case] ($\lambda i$)\\
-	By induction and Proposition \ref{prop:wftype} we know
+	By induction and Proposition~\ref{prop:wftype} 
+\marginpar{\fbox{\bf\em Why Prop.~\ref{prop:wftype}?}}
+	we know
 	that $\cdot|- A:*$.
 	By the third well-formedness rule of $\Delta$,
 	we know that $|- \Delta,i^A$ since we already know that $\cdot|- A:*$ and
@@ -119,8 +121,8 @@ the induction hypothesis of the big well-formedness property.
 \item[case] ($\forall$)
 	Trivial since $|- * : \square$.
 \item[case] ($\forall i$)
-	Trivial since $|- * : \square$.
-\end{itemize}\vspace*{-10pt}
+	Trivial since $|- * : \square$.\qedhere
+\end{itemize}
 \end{proof}
 
 The basic structure of the proof for the following proposition on typing
@@ -163,8 +165,8 @@ which involve substitutions in the types resulting from the typing judgments.
 	able to derive $\Delta |- \forall i^A.B : *$, we know
 	that $\Delta,i^A |- B : *$.\\
 	Then, we use the index substitution lemma
-	(Lemma~\ref{lem:subst}(\ref{lem:ixsubst})).
-\end{itemize}\vspace*{-10pt}
+	(Lemma~\ref{lem:subst}(\ref{lem:ixsubst})).\qedhere
+\end{itemize}
 \end{proof}
 
 \begin{lemma}[kind equality is well-sorted]\label{lem:wfeqkind}
@@ -239,14 +241,19 @@ $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
 %\begin{lemma}[term substitution]
 \label{lem:tmsubst}
 \mbox{\rm (term substitution)}
-$ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
+$ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
 	{\Delta,\Gamma |- t[s/x]:B} $
+\marginpar{\framebox{\bf\em Added a $\Gamma$ here}}
 %\end{lemma}
 \end{enumerate}
 \end{lemma}
 
 \subsection{Erasure properties}
 \label{ssec:erasure}
+
+We define a meta-operation of index erasure that projects $\Fi$-types to
+$\Fw$-types.
+
 \begin{definition}[index erasure]\label{def:ierase}
 \[ \fbox{$\kappa^\circ$}
  ~~~~ ~~
@@ -305,9 +312,9 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
 \end{definition}
 
 \begin{example}\label{PathologicalExample}
-The meta-operation of index-erasure discards all indexing information.
-The effect of this on most datatypes is to project the indexing invariants
-while retaining the type structure.  
+The meta-operation of index erasure simply discards all indexing
+information.  The effect of this on most datatypes is to project the
+indexing invariants while retaining the type structure.  
 %
 This is clearly seen for the vector type constructor~$\mathtt{Vec}$ whose
 index erasure is the list type constructor~$\mathtt{List}$,
@@ -443,9 +450,8 @@ and the index terms appearing in those types, after the erasure.\\
 	By induction we know that
 	$(\Delta,i^A)^\circ |- B^\circ : *^\circ$,
 	which simplifies $\Delta^\circ |- B^\circ : *$
-	by Definition \ref{def:ierase}.
-
-\end{itemize}\vspace*{-10pt}
+	by Definition \ref{def:ierase}.\qedhere
+\end{itemize}
 \end{proof}
 
 \begin{theorem}[index erasure on type constructor equality]
@@ -460,9 +466,8 @@ By induction on the derivation of type constructor equality.
 Most of the cases are done by applying the induction hypothesis
 and sometimes using Proposition \ref{prop:wfkind}.
 
-The only interesting cases, which are worth elaborating, are
-the equality rules involving substitution.
-There are two such rules.
+The only interesting cases, which are worth elaborating on, are the
+equality rules involving substitution.  There are two such rules.
 
 \paragraph{}
   $\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
@@ -475,19 +480,20 @@ $ \Delta^\circ |- (\lambda X^{\kappa^\circ}.F^\circ)\,G^\circ = (F[G/X])^\circ :
 by Definition \ref{def:ierase}.
 
 By induction, we know that $(\Delta,X^\kappa)^\circ |- F^\circ : \kappa'^\circ$,
-which simplifies to $\Delta^\circ,X^{\kappa^\circ} |- F^\circ : \kappa'^\circ$.
+which simplifies to $\Delta^\circ,X^{\kappa^\circ} |- F^\circ : \kappa'^\circ$
 by Definition \ref{def:ierase}.
 
 Using the kinding rule ($\lambda$), we get
-$\Delta^\circ |- \lambda X^{\kappa^\circ} F^\circ : \kappa^\circ -> \kappa'^\circ$.
+$\Delta^\circ |- \lambda X^{\kappa^\circ}. F^\circ : \kappa^\circ -> \kappa'^\circ$.
 
 Using the kinding rule ($@$), we get
-$\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ : \kappa^\circ$.
+$\Delta^\circ |- (\lambda X^{\kappa^\circ}. F^\circ) G^\circ : \kappa'^\circ$.
 
 Using the very equality rule of this case,\\ we get 
-$\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ =  F^\circ[G^\circ/X] : \kappa^\circ$.
+$\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ =
+F^\circ[G^\circ/X] : \kappa'^\circ$.
 
-All we need to check is $([G/X]F)^\circ = F^\circ[G^\circ/X]$,
+All we need to check is $(F[G/X])^\circ = F^\circ[G^\circ/X]$,
 which is easy to see.
 
 \paragraph{}
@@ -502,7 +508,7 @@ $((\lambda i^A.F)\,\{s\})^\circ = (\lambda i^A.F)^\circ = F^\circ$.
 All we need to show is $(F[s/i])^\circ = F^\circ$, which is obvious
 since index variables can only occur in index terms and index terms
 are always erased. Recall the index erasure over type constructors in
-Definition \ref{def:ierase}, in particular, $(\lambda i^A.F)^\circ=F^\circ$,
+Definition \ref{def:ierase}; in particular, $(\lambda i^A.F)^\circ=F^\circ$,
 $(F\{s\})^\circ=F^\circ$, and $(\forall i^A.B)^\circ=B^\circ$.
 \end{proof}
 \begin{remark}
@@ -546,12 +552,12 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 
 \begin{theorem}[index erasure on index-free well-typed terms]
 \label{thm:ierasetypingifree}
-\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A
-             & \dom(\Delta)\cap\FV(t) = \emptyset}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
 		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+		{\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
 \]
 \end{theorem}
-\begin{proof*} By induction on the typing derivation.
+\begin{proof} By induction on the typing derivation.
 	Interesting cases are the index related rules ($:i$), ($\forall Ii$),
 	and ($\forall Ei$). Proofs for the other cases are straightforward
 	by induction and applying other erasure theorems corresponding to
@@ -561,12 +567,12 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 	By Theorem \ref{thm:ierasetmctx}, we know that
 	$\Delta^\circ|- \Gamma^\circ$ when $\Delta|- \Gamma$.
 	By definition of erasure on term-level context, we know that
-	$x:A^\circ \in \Gamma^\circ$ when $x:A \in \Gamma$.
+	$(x:A^\circ) \in \Gamma^\circ$ when $(x:A) \in \Gamma$.
 \item[case] ($:i$)
 	Vacuously true since $t$ does not contain any index variables
         (\ie, $\dom(\Delta)\cap\FV(t) = \emptyset$).
 \item[case] ($->$$I$)
-	By Theorem \ref{thm:ierasekinding}, we know that $\circ |- A^\circ:*$.
+	By Theorem \ref{thm:ierasekinding}, we know that $\cdot |- A^\circ:*$.
 	By induction, we know that
 	$\Delta^\circ;\Gamma^\circ,x:A^\circ |- t^\circ : B^\circ$.
 	Applying the ($->$$I$) rule to what we know, we have
@@ -588,16 +594,16 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 	Applying the ($\forall E$) rule, we have
 	$\Delta^\circ;\Gamma^\circ |- t : B^\circ[G^\circ / X]$.
 \item[case] ($\forall Ii$)
-	By Theorem \ref{thm:ierasekinding}, we know that $\circ |- A^\circ:*$.
+	By Theorem \ref{thm:ierasekinding}, we know that $\cdot |- A^\circ:*$.
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
 	which is what we want since $(\forall i^A.B)^\circ = B^\circ$.
 \item[case] ($\forall Ei$)
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
 	which is what we want since $(B[s/i])^\circ = B^\circ$.
 \item[case] ($=$)
-	By Theorem \ref{thm:ierasetyconeq} and induction.\qed
+	By Theorem \ref{thm:ierasetyconeq} and induction.\qedhere
 \end{itemize}
-\end{proof*}
+\end{proof}
 
 \begin{example}\label{PathologicalExampleContinued}
 The theorem yields that the pathological type~$\mathtt P_A$
@@ -620,14 +626,15 @@ in that the type of~(\ref{NonSymmetry}) in~\S\ref{Leibniz} is not
 inhabited.  
 \end{example}
 
-We introduce an index variable selection operation~($^\bullet$) that
-selects all the index variable bindings from the type level context.
+We introduce an index variable selection meta-operation that selects all
+the index variable bindings from the type level context.
 
 \begin{definition}[index variable selection]
 \[ \cdot^\bullet = \cdot \qquad
 	(\Delta,X^A)^\bullet = \Delta^\bullet \qquad
-	(\Delta,i^A)^\bullet = \Delta^\bullet,i^A
+	(\Delta,i^A)^\bullet = \Delta^\bullet,i:A
 \]
+\marginpar{\framebox{\bf\em Modified last case}}
 \end{definition}\noindent
 
 \begin{theorem}[index erasure on well-formed term level contexts
@@ -640,6 +647,9 @@ selects all the index variable bindings from the type level context.
 Straightforward by Theorem \ref{thm:ierasetmctx} and the typing rule ($:i$).
 \end{proof}
 
+The following result is the appropriate version of
+Theorem~\ref{thm:ierasetypingifree} without the side condition therein.
+
 \begin{theorem}[index erasure on well-typed terms]
 \label{thm:ierasetypingall}
 \[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
@@ -647,9 +657,10 @@ Straightforward by Theorem \ref{thm:ierasetmctx} and the typing rule ($:i$).
 \]
 \end{theorem}
 \begin{proof}
-	The proof is almost the same as as Theorem \ref{thm:ierasetypingifree},
-	except for the ($:i$) case. The proof for the ($:i$) case is easy
-	since $i^A \in \Delta^\bullet$ when $i^A \in \Delta$ by definition of
+	The proof is almost the same as that of
+	Theorem~\ref{thm:ierasetypingifree}, except for the ($:i$) case.
+	The proof for the rule~($:i$) case is easy
+	since $(i:A) \in \Delta^\bullet$ when $i^A \in \Delta$ by definition of
 	the index variable selection operation. The indices from $\Delta$
 	being prepended to $\Gamma$ do not affect the proof for the other cases.
 \end{proof}
@@ -663,18 +674,20 @@ Straightforward by Theorem \ref{thm:ierasetmctx} and the typing rule ($:i$).
 \subsection{Strong normalization and logical consistency}
 \label{ssec:sn}
 Strong normalization is a corollary of the erasure property since we know that
-System \Fw\ is strongly normalizing. Logical consistency is immediate since
-System \Fi\ is a strict subset of the \emph{restricted implicit calculus}
-\cite{Miquel00}, which is a restriction of ICC \cite{Miquel01}.
-Subject reduction is also immediate since \Fi\ is a strict subset of ICC.
+System~\Fw\ is strongly normalizing. Logical consistency is immediate since
+System~\Fi\ is a strict subset of the \emph{restricted implicit calculus}
+\cite{Miquel00}, which is in turn a restriction of ICC~\cite{Miquel01}.
+Subject reduction is also immediate for the same reason.
+\marginpar{\framebox{\bf\em State these results formally in a theorem?}}
 
-\subsection{No void type instantiation from dynamic values}
+\subsection{No \texttt{Void} type instantiation from dynamic values}
 \label{NoVoid}
 
 There is an interesting difference between \Fi\ and a Curry-style
 dependent calculus with implicit arguments such as ICC, regarding
-the instantiation of uninhabited type. Consider the instantiation rule of ICC,
-shown below:
+the instantiation of uninhabited type. Consider the 
+instantiation rule\marginpar{\framebox{\bf\em Instantiation!?}}
+of ICC, shown below:
 \[
 \inference{\Gamma,x:A |- t : B}{\Gamma |- t : \forall x^A.B }~(x\notin\FV(t))
 \]
@@ -684,23 +697,27 @@ provided that $(y:\mathtt{Void})\in\Gamma$. Note that, in ICC, it is possible to
 instantiate a universally quantified term variable $i$ of an uninhabited type
 from a possibly dynamic term $x$.
 
+\marginpar{\framebox{\bf\em Sorry, I don't quite understand.  Needs to be
+		improved.}}
+
 In System~\Fi, one cannot instantiate $B$ with any of the term variables since
-index instantiation cannot refer to the term-level context ($\Gamma$)
-but only refers to the type-level context ($\Delta$).
-Recall the ($\forall E i$) rule:
-\[
-	\inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B & \Delta;\cdot |- s:A }
-	                           {\Delta;\Gamma |- t : B[s/i]}
-\]
+index instantiation cannot refer to the term-level context~($\Gamma$)
+but only refers to the type-level context~($\Delta$).
+%Recall the ($\forall E i$) rule:
+%\[
+%\inference[($\forall E i$)]
+%{ \Delta;\Gamma |- t : \forall i^A.B & \Delta;\cdot |- s:A }
+%	                           {\Delta;\Gamma |- t : B[s/i]}
+%\]
 Note that it is still possible to instantiate uninhabited type from
-index variables introduced at type level (\ie, when $j^\mathtt{Void}\in\Delta$).
-However, such variables are only introduced within a pathological
-type constructor definition, as in Examples~\ref{PathologicalExample}
-and~\ref{PathologicalExampleContinued}.
-Void type instantiation is localized inside type constructor definition.
-It is assured that function definitions at term level will never cause
-void type instantiation, even when some of the function arguments have
-uninhabited type or pathological type.
+index variables introduced at type level~(\ie, when $j^\mathtt{Void}\in\Delta$).
+%%%However, such variables are only introduced within a pathological
+%%%type constructor definition, as in Examples~\ref{PathologicalExample}
+%%%and~\ref{PathologicalExampleContinued}.
+\texttt{Void} type instantiation is localized inside type constructor
+definition.  It is assured that function definitions at term level will
+never cause \texttt{Void} type instantiation, even when some of the
+function arguments have uninhabited type.
 
 
 \begin{comment}
