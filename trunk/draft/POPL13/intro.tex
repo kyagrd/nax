@@ -40,8 +40,8 @@ parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
 term-indices are not first-class; they are ``faked" by reflecting data at the
 type level with uninhabited type constructors. For example,\vspace*{-1pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
-data Zero
 data Succ n
+data Zero
 
 data Vector t n where
   Cons :: a -> Vector a n -> Vector a (Succ n)
