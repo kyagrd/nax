@@ -1,10 +1,10 @@
 \section{Embedding datatypes and their eliminators} \label{sec:data}
-We demonstrate some examples of embedding datatypes into System \Fi.
+System \Fi\ can express a rich collection of datatypes.
 %% TODO cite some paper that does this with System Fw or System F
-We first illustrate embeddings for both non-recursive datatypes and
-recursive datatypes, where we use Church encodings \cite{Church33}
-for data constructors (\S\ref{ssec:embedChurch}). Then, we illustrate
-a more involved embedding for the recursive datatypes based on two-level types
+First, we illustrate embeddings for both non-recursive and
+recursive datatypes using Church encodings \cite{Church33} to define
+data constructors (\S\ref{ssec:embedChurch}). Second, we illustrate
+a more involved embedding for recursive datatypes based on two-level types
 (\S\ref{ssec:embedTwoLevel}).
 
 \subsection{Embedding datatypes using Church-encoded terms}
@@ -93,25 +93,26 @@ a more involved embedding for the recursive datatypes based on two-level types
 \caption{Embedding recursive datatypes}
 \label{fig:churchrec}
 \end{figure}
-\citet{Church33} demonstrated an embedding of natural numbers into
-the untyped $\lambda$-calculus, which he invented, in order to argue
-that the $\lambda$-calculus  expressive enough for the foundation of
+\citet{Church33} invented an embedding of the natural numbers into
+the un typed $\lambda$-calculus, which he used to argue
+that the $\lambda$-calculus was expressive enough for the foundation of
 logic and arithmetic. Church encoded the data constructors of natural numbers,
 successor and zero, as higher-order functions,
-$\mathtt{S}=\l x.\l x_s.\l x_z.x_s(x\,x_s x_z)$ and
-$\mathtt{Z}=\l x_s.\l x_z.x_z$.
-The heart of the Church encoding is that a value is encoded as its elimination.
-The bound variables $x_s$ and $x_z$ stands for the operations needed for
-eliminating the successor case and the zero case. The Church encodings of
-successor and zero states that: to eliminate $\mathtt{S}\,x$, apply $x_s$
-to the elimination of the predecessor $(x\,x_s x_z)$; and,
-to eliminate $\mathtt{Z}$, just return $x_z$.
-Since values themselves are eliminators,
-eliminator can be defined as applying the value itself to the needed operations
-for each data constructor case. For instance, we can define an eliminator
-for natural numbers as $\mathtt{elim_{Nat}}=\l x.\l x_s.\l x_z.x\,x_s x_z$,
-which is just an $\eta$-expansion of the identity function $\l x.x$.
-Church encoded natural numbers are typable in polymorphic $\lambda$-calculi,
+$\mathtt{succ}=\l x.\l x_s.\l x_z.x_s(x\,x_s x_z)$ and
+$\mathtt{zero}=\l x_s.\l x_z.x_z$.
+The heart of the Church encoding is that a value is encoded as an elimination function.
+The bound variables $x_s$ and $x_z$ (of both $\mathtt{succ}$ and $\mathtt{zero}$) stand for the operations needed to
+eliminate the successor case and the zero case respectively. The Church encodings of
+successor states: ``to eliminate $\mathtt{succ}\,x$, apply $x_s$
+to the elimination of the predecessor $(x\,x_s x_z)$"; and,
+to eliminate $\mathtt{zero}$, just ``return $x_z$".
+Since values {\it are} elimination functions, the
+eliminator can be defined as applying the value itself to the needed operations. One
+for each of the data constructors. 
+For instance, we can define an eliminator
+for the natural numbers as $\mathtt{elim_{Nat}}=\l x.\l x_s.\l x_z.x\,x_s x_z$.
+This is just an $\eta$-expansion of the identity function $\l x.x$.
+The Church encoded natural numbers are typable in a polymorphic $\lambda$-calculi,
 such as System \Fw, as follows:\vspace*{-2pt}
 \begin{align*}
 &\texttt{Nat} &=~& \forall X^{*}.(X -> X) -> X -> X \qquad\qquad\qquad\\
@@ -123,8 +124,8 @@ such as System \Fw, as follows:\vspace*{-2pt}
 & &=~& \l x.\l x_s.\l x_z.x\,x_s x_z
 \end{align*}~\vspace*{-13pt}
 
-Similarly, other datatypes are also embeddable into
-polymorphic $\lambda$-calculi in this fashion.
+In a Similar fashion, other datatypes are also embeddable into
+polymorphic $\lambda$-calculi.
 Embeddings of some well-known non-recursive datatypes are illustrated
 in Figure \ref{fig:churchnonrec}, and embeddings of the list-like
 recursive datatypes, which we discussed earlier as motivating examples
@@ -132,27 +133,35 @@ recursive datatypes, which we discussed earlier as motivating examples
 Note that the term encodings for the constructors and eliminators of
 the list-like datatypes in Figure \ref{fig:churchrec} are exactly the same.
 For instance, the term encodings for \texttt{nil}, \texttt{pnil}, and
-\texttt{vnil} coincide as $\l x_s.\l x_z.x_z$.
+\texttt{vnil} are all the same term: $\l x_s.\l x_z.x_z$. The nil and cons terms
+capture the linear nature of lists, so they are the same for all list like structures.
+But, the types differ, capturing different invariants about lists -- shape of the elements ({\tt Powl}), and
+length of the list ({\tt Vec}).
 
 \subsection{Embedding recursive datatypes as two-level types}
 \label{ssec:embedTwoLevel}
-We can divide a recursive datatype definition into two levels,
-by factoring out the recursive type operator, which weaves in the recursion
-to the datatype definition, and a non-recursive base structure, which describes
-the shape (\ie, number of data constructors and their types) of the datatype.
-We can program with two-level types in functional languages that support
+We can divide a recursive datatype definition into two parts --
+a recursive type operator and a base structure. The operator ``weaves" recursion
+into the datatype definition, and the base structure describes
+its shape (\ie, number of data constructors and their types).
+One can program with two-level types in any functional language that supports
 higher-order polymorphism\footnote{a.k.a. higher-kinded polymorphism,
-	or type-constructor polymorphism}, such as Haskell, as illustrated
-in Figure \ref{fig:twoleveltypes}. The function $\mathtt{mit}_\kappa$ describes
-the Mendler-style iteration\footnote{An iteration is a principled recursion
+	or type-constructor polymorphism}, such as Haskell. 
+In Figure \ref{fig:twoleveltypes}, we illustrate this by giving an example of a two level definition
+for ordinary lists (all the other types in this paper have similar definitions).
+
+The use of two-level types has been recognized as
+a useful functional programming pearl \cite{Sheard04}, since two-level types
+separate the two concerns of (1) recursion on recursive sub components
+and (2) handling different cases (by pattern matching over the shape of the (non-recursive) base structure).
+An advantage of such an approach, is that a single eliminator can be defined once for
+all datatypes of the same kind. For example, the function $\mathtt{mit}_\kappa$ describes
+Mendler-style iteration\footnote{An iteration is a principled recursion
 	scheme guaranteed to terminate for any well-founded input.
 	Also known as fold, or catamorphism.} for the recursive types
-defined by $\mu_\kappa$. The use of two-level types has been recognized as
-a useful functional programming pearl \cite{Sheard04} since two-level types
-separate the two concerns of (1) recursing deeper into recursive subcomponents
-and (2) handling different cases by the shape of the base structure. 
-Although it is possible to write programs using two level datatypes, one could
-not expect logical consistency in such general purpose functional languages.
+defined by $\mu_\kappa$. Although it is possible to write programs using two level datatypes
+in a general purpose functional language, one could
+not expect logical consistency in such systems.
 
 \begin{figure}\vspace*{-8pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
@@ -184,7 +193,7 @@ mit$_{(*-> *)}$ :: ($\forall$ r a.($\forall$a.r a->x a) -> f r a -> x a)
 mit$_{(*-> *)}$ phi (In$_{(*-> *)}$ z) = phi (mit$_{(*-> *)}$ phi) z
 
 -- above is Haskell (with some GHC extensions)
--- below is Haskell-ish psudocode
+-- below is Haskell-ish pseudocode
 
 newtype $\mu_{(\mathtt{Nat}-> *)}$ (f::(Nat->*)->(Nat->*)) {n::Nat}
   = In$_{(\mathtt{Nat}-> *)}$ (f ($\mu_{(\mathtt{Nat}-> *)}$ f)) {n}
@@ -205,22 +214,28 @@ mit$_{(\mathtt{Nat}-> *)}$ phi (In$_{(\mathtt{Nat}-> *)}$ z) = phi (mit$_{(\math
 \label{fig:twoleveltypes}
 \end{figure}
 
-Interestingly, there exists an embedding of the recursive type operator
+Interestingly, there exists embeddings of the recursive type operator
 $\mu_\kappa$, its data constructor $\mathtt{In}_\kappa$, and
-the Mendler-style iterator $\mathtt{mit}\kappa$ at each kind $\kappa$
-into a higher-order polymorphic $\lambda$-calculus, as illustrated
+the Mendler-style iterator $\mathtt{mit}\kappa$ for each kind $\kappa$
+into the higher-order polymorphic $\lambda$-calculus \Fi, as illustrated
 in Figure \ref{fig:mu}. In addition to illustrating the general form of
 embedding $\mu_\kappa$, we also fully expand the embeddings for some
-instances ($\mu_{*}$, $\mu_{*->*}$, $\mu_{\mathtt{Nat}->*}$), which is
-used in Figure \ref{fig:twoleveltypes}. This embedding allows arbitrary
-type- and term-indexed recursive datatypes be embeddable into System \Fi,
-so that we can reason about these datatypes in a logically consistent calculus.
-However, it is important to note that there does not exist an embedding of
+instances ($\mu_{*}$, $\mu_{*->*}$, $\mu_{\mathtt{Nat}->*}$), which are
+used in Figure \ref{fig:twoleveltypes}. These embeddings support the embedding
+of arbitrary type- and term-indexed recursive datatypes into System \Fi.
+Thus we can reason about these datatypes in a logically consistent calculus.
+
+However, it is important to note that there does not exist an embedding of the
 arbitrary destruction (or, pattern matching away) of the $\mathtt{In}_\kappa$
-constructor. It is known that having arbitrary recursive datatypes together with
-the ability to arbitrarily destruct (or, unroll) the values of recursive types
-is powerful enough to define non-terminating computation in a type safe way,
-which leads to logical inconsistency.
+constructor. It is known that combining arbitrary recursive datatypes with
+the ability to destruct (or, unroll) their values
+is powerful enough to define non-terminating computations in a type safe way,
+leading to logical inconsistency. Some systems maintain consistency by restricting
+which recursive datatypes can be defined, but allow arbitrary unrolling. In System
+\Fi, we can define any datatype, but restrict unrolling to Mendler style operators
+definable in \Fi. Such operators are quite expressive, capturing at least
+iteration, primitive recursion, and courses of values recursion.
+
 
 \begin{figure*}
 \begin{multline*} \text{notation:}\quad
