@@ -153,7 +153,8 @@ which involve substitutions in the types resulting from the typing judgments.
 	By the kinding rule ($\forall$), which is the only kinding rule
 	able to derive $\Delta |- \forall X^\kappa.B : *$, we know
 	that $\Delta,X^\kappa |- B : *$.\\
-	Then, we use the type substitution lemma (Lemma \ref{lem:tysubst}).
+	Then, we use the type substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:tysubst})).
 \item[case] ($\forall Ii$)
 	By induction and well-formedness of $\Delta$.
 \item[case] ($\forall Ei$)\\
@@ -161,7 +162,8 @@ which involve substitutions in the types resulting from the typing judgments.
 	By the kinding rule ($\forall i$), which is the only kinding rule
 	able to derive $\Delta |- \forall i^A.B : *$, we know
 	that $\Delta,i^A |- B : *$.\\
-	Then, we use the index substitution lemma (Lemma \ref{lem:ixsubst}).
+	Then, we use the index substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:ixsubst})).
 \end{itemize}\vspace*{-10pt}
 \end{proof}
 
@@ -182,8 +184,10 @@ $ \inference{|- \kappa = \kappa':\square}
 \begin{proof}
 	By induction on the derivation of type constructor equality
 	and using the kinding rules.
-	Also use the type substitution lemma (Lemma \ref{lem:tysubst})
-	and the index substitution lemma (Lemma \ref{lem:ixsubst}).
+	Also use the type substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:tysubst}))
+	and the index substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:ixsubst})).  
 \end{proof}
 
 \begin{lemma}[term equality is well-typed]\label{lem:wfeqterm}
@@ -194,7 +198,8 @@ $ \inference{|- \kappa = \kappa':\square}
 \begin{proof}
 	By induction on the derivation of term equality
 	and using the typing rules.
-	Also use the term substitution lemma (Lemma \ref{lem:tmsubst}).
+	Also use the term substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:tmsubst})).
 \end{proof}
 
 The proofs for the three lemmas above are straightforward
@@ -209,19 +214,35 @@ can be proved by induction and applying the corresponding
 sorting, kinding, and typing rules. The proof for the reflexive rules
 and the transitive rules can be proved simply by induction.
 
-\begin{lemma}[type substitution]\label{lem:tysubst}
-$ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+\begin{lemma}[substitution]\mbox{}\\[-3mm]
+\label{lem:subst}
+\begin{enumerate}
+\item
+%\begin{lemma}[type substitution]
+\label{lem:tysubst}
+\mbox{\rm (type substitution)}
+$\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
 	{\Delta |- F[G/X]:\kappa'} $
-\end{lemma}
+%\end{lemma}
+\medskip
 
-\begin{lemma}[index substitution]\label{lem:ixsubst}
+\item
+%\begin{lemma}[index substitution]
+\label{lem:ixsubst}
+\mbox{\rm (index substitution)}
 $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
 	{\Delta |- F[s/i]:\kappa} $
-\end{lemma}
+%\end{lemma}
+\medskip
 
-\begin{lemma}[term substitution]\label{lem:tmsubst}
+\item
+%\begin{lemma}[term substitution]
+\label{lem:tmsubst}
+\mbox{\rm (term substitution)}
 $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\cdot |- s:A}
 	{\Delta,\Gamma |- t[s/x]:B} $
+%\end{lemma}
+\end{enumerate}
 \end{lemma}
 
 \subsection{Erasure properties}
@@ -657,12 +678,12 @@ shown below:
 \]
 When $A=\mathtt{Void}$ and $B=\forall i^\mathtt{Void}.\mathtt{NeverEverVoid}\{i\}$,
 we can instantiate $i$ with $y$, according to the rule above,
-provided that $(y:Void)\in\Gamma$. Note that, in ICC, it is possible to
+provided that $(y:\mathtt{Void})\in\Gamma$. Note that, in ICC, it is possible to
 instantiate a universally quantified term variable $i$ of an uninhabited type
 from a possibly dynamic term $x$.
 
-In \Fi, we cannot instantiate $B$ with any of the term variables since
-index instantiation can not refer to the term-level context ($\Gamma$)
+In System~\Fi, one cannot instantiate $B$ with any of the term variables since
+index instantiation cannot refer to the term-level context ($\Gamma$)
 but only refers to the type-level context ($\Delta$).
 Recall the ($\forall E i$) rule:
 \[
@@ -672,7 +693,8 @@ Recall the ($\forall E i$) rule:
 Note that it is still possible to instantiate uninhabited type from
 index variables introduced at type level (\ie, when $j^\mathtt{Void}\in\Delta$).
 However, such variables are only introduced within a pathological
-type constructor definition, as in Example~\ref{PathologicalExample}.
+type constructor definition, as in Examples~\ref{PathologicalExample}
+and~\ref{PathologicalExampleContinued}.
 Void type instantiation is localized inside type constructor definition.
 It is assured that function definitions at term level will never cause
 void type instantiation, even when some of the function arguments have
