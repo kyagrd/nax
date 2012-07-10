@@ -309,16 +309,14 @@ The meta-operation of index-erasure discards all indexing information.
 The effect of this on most datatypes is to project the indexing invariants
 while retaining the type structure.  
 %
-This is clearly seen for the vector type 
-constructor~$\mathtt{Vec}: \mathtt * \to \mathtt{Nat} \to \mathtt*$ of
-\S\ref{sec:motiv} whose index erasure is the list type
-constructor~$\mathtt{List} \triangleq \lambda A^\mathtt*.\,\forall
-X^\mathtt*.\, X \to (A\to X\to X)\to X: \mathtt*\to\mathtt*$.
+This is clearly seen for the vector type constructor~$\mathtt{Vec}$ whose
+index erasure is the list type constructor~$\mathtt{List}$,
+see~\Fig{churchrec}. 
 %
-One can however build pathological examples.  For instance, 
-the type 
-$\mathtt P_A\triangleq\forall i^A.\,\forall j^A.\, \LEq_A\s i\s j$ has
-index erasure $\mathtt{Unit} \triangleq \forall X^\mathtt{*}.\,X\to X$.
+One can however build pathological examples.  For instance, the
+type $\mathtt P_A \triangleq \forall i^A.\,\forall j^A.\, \LEq_A\s i \s j$
+has index erasure $\mathtt{Unit} \triangleq \forall X^\mathtt{*}.\,X\to
+X$.
 \end{example}
 
 \begin{theorem}[index erasure on well-sorted kinds]
@@ -553,7 +551,7 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
 \]
 \end{theorem}
-\begin{proof} By induction on the typing derivation.
+\begin{proof*} By induction on the typing derivation.
 	Interesting cases are the index related rules ($:i$), ($\forall Ii$),
 	and ($\forall Ei$). Proofs for the other cases are straightforward
 	by induction and applying other erasure theorems corresponding to
@@ -597,16 +595,16 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
 	which is what we want since $(B[s/i])^\circ = B^\circ$.
 \item[case] ($=$)
-	By Theorem \ref{thm:ierasetyconeq} and induction.
-\end{itemize}\vspace*{-10pt}
-\end{proof}
+	By Theorem \ref{thm:ierasetyconeq} and induction.\qed
+\end{itemize}
+\end{proof*}
 
 \begin{example}\label{PathologicalExampleContinued}
-We apply the theorem to observe that the pathological type~$\mathtt P_A$
-of Example~\ref{PathologicalExample} is not inhabited; as it is impossible
+The theorem yields that the pathological type~$\mathtt P_A$
+of~Example~\ref{PathologicalExample} is not inhabited, as it is impossible
 to have both $t:\mathtt P_A$ and $t:(\mathtt P_A)^\circ=\mathtt{Unit}$.
-It follows as a corollary that the implication of the above theorem does
-not admit a converse.
+It follows as a corollary that the implication of
+Theorem~\ref{thm:ierasetypingifree} does not admit a converse.
 
 In this context for $A=\mathtt{Void}$, note that even though one has
 %the open typing 
@@ -615,12 +613,15 @@ j^{\mathtt{Void}}.\,\forall X^{\mathtt{Void}\to*}.\, X\s i\to X\s j$,
 this open term %this derivation 
 cannot be closed by rule~$(\forall Ii)$ because of its side
 condition.  This is in stark contrast to what is possible in calculi with
-full type dependency.
+full type dependency, see also \S\ref{NoVoid}.
 
 Similar considerations to the above show that $\LEq_A$ is not symmetric,
-in that the type $\forall i^A.\,\forall j^A.\, \LEq_A\s i\s j\to \LEq_A\s
-j\s i$ is not inhabited.
+in that the type of~(\ref{NonSymmetry}) in~\S\ref{Leibniz} is not
+inhabited.  
 \end{example}
+
+We introduce an index variable selection operation~($^\bullet$) that
+selects all the index variable bindings from the type level context.
 
 \begin{definition}[index variable selection]
 \[ \cdot^\bullet = \cdot \qquad
@@ -628,8 +629,7 @@ j\s i$ is not inhabited.
 	(\Delta,i^A)^\bullet = \Delta^\bullet,i^A
 \]
 \end{definition}\noindent
-The index variable selection operation ($^\bullet$) selects
-all the index variable bindings from the type level context.
+
 \begin{theorem}[index erasure on well-formed term level contexts
 		prepended by index variable selection]
 \label{thm:ierasetmctxivs}
@@ -669,6 +669,8 @@ System \Fi\ is a strict subset of the \emph{restricted implicit calculus}
 Subject reduction is also immediate since \Fi\ is a strict subset of ICC.
 
 \subsection{No void type instantiation from dynamic values}
+\label{NoVoid}
+
 There is an interesting difference between \Fi\ and a Curry-style
 dependent calculus with implicit arguments such as ICC, regarding
 the instantiation of uninhabited type. Consider the instantiation rule of ICC,

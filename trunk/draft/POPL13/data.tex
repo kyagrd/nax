@@ -79,15 +79,15 @@ a more involved embedding for the recursive datatypes based on two-level types
 \begin{align*}
 &\!\!\!\!\!\!\mathtt{Vec} &\!\!\!\!\!\!\!\!=~& \l A^{*}.\l i^{\mathtt{Nat}}.\\
 &&&	\forall X^{\mathtt{Nat}-> *}.
-	(\forall i^\mathtt{Nat}.A-> X\{i\}-> X\{\mathtt{succ}\,i\}) ->  \\
-&&& \qquad~\qquad X\{\texttt{zero}\} -> X\{i\} \\
- &\!\!\!\!\!\!\texttt{vcons} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.A-> \mathtt{Vec}\,A\,\{i\}-> \mathtt{Vec}\,A\,\{\mathtt{succ}\,i\} \\
+	(\forall i^\mathtt{Nat}.A-> X\{i\}-> X\{\mathtt{S}\,i\}) ->  \\
+&&& \qquad~\qquad X\{\texttt{Z}\} -> X\{i\} \\
+ &\!\!\!\!\!\!\texttt{vcons} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.A-> \mathtt{Vec}\,A\,\{i\}-> \mathtt{Vec}\,A\,\{\mathtt{S}\,i\} \\
 &&&\;\qquad\qquad\quad =~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
-&\!\!\!\!\!\!\mathtt{vnil} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\texttt{Vec}\,A\,\{\mathtt{zero}\} 
+&\!\!\!\!\!\!\mathtt{vnil} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\texttt{Vec}\,A\,\{\mathtt{Z}\} 
 ~~~=~ \l x_c.\l x_n.x_n \\
 &\!\!\!\!\!\!\mathtt{elim_{Vec}} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.\texttt{Vec}\,A\,\{i\} -> \\
-&&& \forall X^{\mathtt{Nat}-> *}.(\forall i^\mathtt{Nat}.A -> X\{i\} -> X\{\mathtt{succ}\,i\}) -> \\
-&&& \qquad~\qquad X\{\mathtt{zero}\} -> X\{i\} \\
+&&& \forall X^{\mathtt{Nat}-> *}.(\forall i^\mathtt{Nat}.A -> X\{i\} -> X\{\mathtt{S}\,i\}) -> \\
+&&& \qquad~\qquad X\{\mathtt{Z}\} -> X\{i\} \\
 & &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
 \end{align*} ~\vspace*{-14pt}
 \caption{Embedding recursive datatypes}
@@ -98,14 +98,14 @@ the untyped $\lambda$-calculus, which he invented, in order to argue
 that the $\lambda$-calculus  expressive enough for the foundation of
 logic and arithmetic. Church encoded the data constructors of natural numbers,
 successor and zero, as higher-order functions,
-$\mathtt{succ}=\l x.\l x_s.\l x_z.x_s(x\,x_s x_z)$ and
-$\mathtt{zero}=\l x_s.\l x_z.x_z$.
+$\mathtt{S}=\l x.\l x_s.\l x_z.x_s(x\,x_s x_z)$ and
+$\mathtt{Z}=\l x_s.\l x_z.x_z$.
 The heart of the Church encoding is that a value is encoded as its elimination.
 The bound variables $x_s$ and $x_z$ stands for the operations needed for
 eliminating the successor case and the zero case. The Church encodings of
-successor and zero states that: to eliminate $\mathtt{succ}\,x$, apply $x_s$
+successor and zero states that: to eliminate $\mathtt{S}\,x$, apply $x_s$
 to the elimination of the predecessor $(x\,x_s x_z)$; and,
-to eliminate $\mathtt{zero}$, just return $x_z$.
+to eliminate $\mathtt{Z}$, just return $x_z$.
 Since values themselves are eliminators,
 eliminator can be defined as applying the value itself to the needed operations
 for each data constructor case. For instance, we can define an eliminator
@@ -115,9 +115,9 @@ Church encoded natural numbers are typable in polymorphic $\lambda$-calculi,
 such as System \Fw, as follows:\vspace*{-2pt}
 \begin{align*}
 &\texttt{Nat} &=~& \forall X^{*}.(X -> X) -> X -> X \qquad\qquad\qquad\\
-&\texttt{succ} &\!\!\!:~~& \texttt{Nat} -> \texttt{Nat}
+&\texttt{S} &\!\!\!:~~& \texttt{Nat} -> \texttt{Nat}
 	~~ =~ \l x.\l x_s.\l x_z.x_s(x\,x_s x_z) \\
-&\texttt{zero} &\!\!\!:~~& \texttt{Nat} \qquad\quad\,
+&\texttt{Z} &\!\!\!:~~& \texttt{Nat} \qquad\quad\,
 	~~ =~ \l x_s.\l x_z.x_z \\
 &\mathtt{elim_{Nat}} &\!\!\!:~~& \texttt{Nat} -> \forall X^{*}.(X -> X)-> X-> X \\
 & &=~& \l x.\l x_s.\l x_z.x\,x_s x_z
@@ -301,40 +301,39 @@ where
 \l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
 \enspace.
 \]
-Note that $\Delta\vdash F \s s \s t = F\s{s'}\s{t'}:*$ for $F=\Eq_A,\LEq_A$
-and all $\Delta;\cdot\vdash s=s':A$, $\Delta;\cdot\vdash t=t':A$.
 
-As a basic property, one has that the types 
+For $F_A=\Eq_A,\LEq_A$, one has $\Delta\vdash F_A \s s \s t =
+F_A\s{s'}\s{t'}:*$ for all $\Delta;\cdot\vdash s=s':A$,
+$\Delta;\cdot\vdash t=t':A$.
+%
+As a further basic property, one also has that the types 
 \[\begin{array}{l}
-\forall i^A.\,\LEq_A\s{i}\s{i}
+\forall i^A.\,F_A\s{i}\s{i}
 \\[1mm]
 \forall i^A.\,\forall j^A.\,\forall k^A.\,
-  \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{k}\to\LEq_A\s{i}\s{k}
+  F_A\s{i}\s{j}\to F_A\s{j}\s{k}\to F_A\s{i}\s{k}
 \\[1mm]
 \forall i^A.\,\forall j^A.\,
-  \LEq_A\s{i}\s{j}\to \forall f^{A\to B}.\, \LEq_B\s{f\,i}\s{f\,j}
+  F_A\s{i}\s{j}\to \forall f^{A\to B}.\, F_B\s{f\,i}\s{f\,j}
 \end{array}\]
-are inhabited.  Hence Leibniz equality is a congruence, in that the types
-\[\begin{array}{l}
-\forall i^A.\,\Eq_A\s{i}\s{i}
-\\[1mm]
+are inhabited.  Hence Leibniz equality is a congruence; in that, in
+addition to the above, the type
+\[
 \forall i^A.\,\forall j^A.\,
   \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{i}
-\\[1mm]
-\forall i^A.\,\forall j^A.\,\forall k^A.\,
-  \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{k}\to\Eq_A\s{i}\s{k}
-\\[1mm]
-\forall i^A.\,\forall j^A.\,
-  \Eq_A\s{i}\s{j}\to
-  \forall f^{A\to B}.\,
-  \Eq_B\s{f\,i}\s{f\,j}
-\end{array}\]
-are inhabited.
+\]
+is inhabited.  This is not so for the type 
+\begin{equation}\label{NonSymmetry}
+\forall i^A.\,\forall j^A.\, \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
+\enspace.
+\end{equation}
+(Cf.~Examples~\ref{PathologicalExample}
+and~\ref{PathologicalExampleContinued} in \S\ref{sec:theory}.)
 
 In applications, the types~$\LEq_A$ are useful in constraining the
 term-indexing of datatypes as parameterised by coercions.  A general such
 construction is given by the type constructors $\Ext_{A,B}: (A\to B) \to
-(A\to*) \to B\to *$ (in spirit right Kan extensions, see
+(A\to*) \to B\to *$ (which are in spirit right Kan extensions, see
 \eg~\cite{AbeMatUus03}) defined as 
 \[
 \Ext_{A,B}
@@ -347,12 +346,13 @@ construction is given by the type constructors $\Ext_{A,B}: (A\to B) \to
 	  \to X\s i
 \]
 for closed types~$A$ and $B$.  
-%
+
 It follows that, %Here, 
 for closed $t:A\to B$, $F:A\to*$, and $s:B$, a closed term $u:
 (\Ext_{A,B}\ \s t\ F) \s s$ is a polymorphic function that, for every
 closed $r:A$, given a generic coercion $\forall X^{B\to*}.\, X\s s \to
-X\s{t\,r}$ provides output of type $F\s r$.  In fact, %particular, 
+X\s{t\,r}$ provides output of type $F\s r$.  In particular, 
+%the type
 $\forall f^{A\to B}.\,\forall X^{A\to*}.\,\forall i^A.\,
 (\Ext_{A,B}\ \s f\ X) \s{f\,i}\to X\s i$ is inhabited by 
 $\l f.\,f(\l x.\,x)$.
