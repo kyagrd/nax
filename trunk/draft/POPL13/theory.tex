@@ -618,7 +618,10 @@ j^{\mathtt{Void}}.\,\forall X^{\mathtt{Void}\to*}.\, X\s i\to X\s j$,
 this open term %this derivation 
 cannot be closed by rule~$(\forall Ii)$ because of its side
 condition.  This is in stark contrast to what is possible in calculi with
-full type dependency, see also \S\ref{NoVoid}.
+full type dependency. In System \Fi, the index variables
+in type level context~$\Delta$ cannot appear dynamically at term level.
+Conversely, term variables in the term level context~$\Gamma$ cannot be
+used for instantiation of index polymorphic types (rule $(\forall Ei)$).
 
 Similar considerations to the above show that $\LEq_A$ is not symmetric,
 in that the type of~(\ref{NonSymmetry}) in~\S\ref{Leibniz} is not
@@ -678,6 +681,7 @@ System~\Fi\ is a strict subset of the \emph{restricted implicit calculus}
 Subject reduction is also immediate for the same reason.
 \marginpar{\framebox{\bf\em State these results formally in a theorem?}}
 
+\begin{comment}
 \subsection{No \texttt{Void} type instantiation from dynamic values}
 \label{NoVoid}
 
@@ -718,7 +722,6 @@ never cause \texttt{Void} type instantiation, even when some of the
 function arguments have uninhabited type.
 
 
-\begin{comment}
 
 \begin{proposition}[anti-dependency on arrow kinds]
 \[ \inference{ |- \Delta,X^\kappa
