@@ -103,7 +103,7 @@ the induction hypothesis of the big well-formedness property.
 	By induction, easy.
 \item[case] ($\lambda i$)\\
 	By induction and Proposition~\ref{prop:wftype} 
-\marginpar{\fbox{\bf\em Why Prop.~\ref{prop:wftype}?}}
+\marginpar{\fbox{\bf\em Why Prop.~\ref{prop:wftype}?}} %% TODO
 	we know
 	that $\cdot|- A:*$.
 	By the third well-formedness rule of $\Delta$,
@@ -243,7 +243,6 @@ $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
 \mbox{\rm (term substitution)}
 $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
 	{\Delta,\Gamma |- t[s/x]:B} $
-\marginpar{\framebox{\bf\em Added a $\Gamma$ here}}
 %\end{lemma}
 \end{enumerate}
 \end{lemma}
@@ -634,8 +633,7 @@ the index variable bindings from the type level context.
 	(\Delta,X^A)^\bullet = \Delta^\bullet \qquad
 	(\Delta,i^A)^\bullet = \Delta^\bullet,i:A
 \]
-\marginpar{\framebox{\bf\em Modified last case}}
-\end{definition}\noindent
+\end{definition}
 
 \begin{theorem}[index erasure on well-formed term level contexts
 		prepended by index variable selection]
@@ -694,16 +692,16 @@ of ICC, shown below:
 When $A=\mathtt{Void}$ and $B=\forall i^\mathtt{Void}.\mathtt{NeverEverVoid}\{i\}$,
 we can instantiate $i$ with $y$, according to the rule above,
 provided that $(y:\mathtt{Void})\in\Gamma$. Note that, in ICC, it is possible to
-instantiate a universally quantified term variable $i$ of an uninhabited type
-from a possibly dynamic term $x$.
+instantiate a universally quantified term variable $x$ of an uninhabited type
+from a possibly dynamic term $y$.
 
 \marginpar{\framebox{\bf\em Sorry, I don't quite understand.  Needs to be
 		improved.}}
 
 In System~\Fi, one cannot instantiate $B$ with any of the term variables since
 index instantiation cannot refer to the term-level context~($\Gamma$)
-but only refers to the type-level context~($\Delta$).
-%Recall the ($\forall E i$) rule:
+but only refers to the type-level context~($\Delta$) --
+recall the ($\forall E i$) rule in Figure \ref{fig:fi}.
 %\[
 %\inference[($\forall E i$)]
 %{ \Delta;\Gamma |- t : \forall i^A.B & \Delta;\cdot |- s:A }

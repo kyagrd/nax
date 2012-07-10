@@ -76,10 +76,9 @@ GADTs is vast. We list a few of them. System~$F_{\!C}$~\cite{Sulzmann07} would
 arguably be the most influential system, being the intermediate language of
 the Glasgow Haskell Compiler (GHC). \citet{VytWei10} proved parametricity of
 System $\mathrm{R}_\omega$ \cite{Crary98}, an extension to Curry-style
-System~\Fw
-with the type-representation datatype and its primitive recursor, so that
-one may derive \emph{free theorems} \cite{Wadler89free} in the presence of
-type equalities.
+System~\Fw\ with the type-representation datatype and its primitive recursor,
+so that one may derive \emph{free theorems} \cite{Wadler89free}
+in the presence of type equalities.
 
 Another possible approach for utilizing term-indexed datatypes for lightweight
 verified programming is to restrict from full-spectrum dependent types, rather
@@ -87,7 +86,7 @@ than to extend from non-de\-pend\-ent types. \citet{Swamy11} developed $F^{*}$,
 a language for secure distributed programming with value dependent types.
 Terms appearing in dependent types in $F^{*}$ are restricted to first-order
 values, similarly to value restriction in ML type inference, but even more
-limited since function values are not allowed. By taming the dependent type
+limited since function values are not allowed. By taming the dependent types
 with such a restriction, they were able to have a usable programming language
 and self-certify~\cite{Strub12} their compiler by implementing $F^{*}$
 type checker in $F^{*}$.
