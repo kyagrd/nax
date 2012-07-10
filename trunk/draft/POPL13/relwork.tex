@@ -66,14 +66,14 @@ break strong normalization and cause logical inconsistency \cite{Girard72}.
 In a functional {\em programming language},
 inconsistency is not an issue. However, when studying
 term-indexed datatypes in a logically consistent calculi, we need
-a more conservative approach, as in System~\Fi.
+a more conservative approach, as in \Fi.
 
 System~\Fi\ is the smallest possible
 extension to \Fw that we could devise that maintains normalization and consistency.
 An alternative is to restrict a system with full-spectrum dependent types.
 \citet{Swamy11} developed $F^{*}$,
 a language for secure distributed programming with value dependent types.
-Terms appearing in dependent types in $F^{*}$ are restricted to first-order\footnote{Function values are not allowed.}
+Terms appearing in dependent types in $F^{*}$ are restricted to first-order % \footnote{Function values are not allowed.}
 values, similar to the value restriction of ML type inference. 
 Taming dependent types with this restriction, they were able to have a usable programming language
 and self-certify~\cite{Strub12} their compiler by implementing $F^{*}$
