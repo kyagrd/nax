@@ -103,7 +103,7 @@ $\mathtt{zero}=\l x_s.\l x_z.x_z$.
 The heart of the Church encoding is that a value is encoded as an elimination function.
 The bound variables $x_s$ and $x_z$ (of both $\mathtt{succ}$ and $\mathtt{zero}$) stand for the operations needed to
 eliminate the successor case and the zero case respectively. The Church encodings of
-successor states: ``to eliminate $\mathtt{succ}\,x$, apply $x_s$
+successor states: to eliminate $\mathtt{succ}\,x$, ``apply $x_s$
 to the elimination of the predecessor $(x\,x_s x_z)$"; and,
 to eliminate $\mathtt{zero}$, just ``return $x_z$".
 Since values {\it are} elimination functions, the
