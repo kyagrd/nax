@@ -88,7 +88,7 @@ the induction hypothesis of the big well-formedness property.
 	Trivial by the second well-formedness rule of $\Delta$.
 \item[case] ($Conv$)
 	By induction and Lemma~\ref{lem:wfeqkind}.
-\item[case] ($\lambda$) \\
+\item[case] ($\lambda$)
 	By induction and Proposition~\ref{prop:wfsort} we know
 	that $|- \kappa:\square$.\\
 	By the second well-formedness rule of $\Delta$,
@@ -101,13 +101,10 @@ the induction hypothesis of the big well-formedness property.
 	since we already know that $|- \kappa:\square$ and $|- \kappa':\square$.
 \item[case] ($@$)
 	By induction, easy.
-\item[case] ($\lambda i$)\\
-	By induction
-%% \marginpar{\fbox{\bf\em Why Prop.~\ref{prop:wftype}?}} %% TODO
-	we know
-	that $\cdot|- A:*$.
-	By the third well-formedness rule of $\Delta$,
-	we know that $|- \Delta,i^A$ since we already know that $\cdot|- A:*$ and
+\item[case] ($\lambda i$)
+	By induction we know that $\cdot|- A:*$.
+	By the third well-formedness rule of $\Delta$, we know that
+	$|- \Delta,i^A$ since we already know that $\cdot|- A:*$ and
 	that $|- \Delta$ from the property statement.\\
 	By induction, we know that $|- \kappa:\square$
 	since we already know that $|- \Delta,i^A$ and
@@ -150,7 +147,7 @@ which involve substitutions in the types resulting from the typing judgments.
 	By induction.
 \item[case] ($\forall I$)
 	By induction and well-formedness of $\Delta$.
-\item[case] ($\forall E$)\\
+\item[case] ($\forall E$)
 	By induction we know that $\Delta |- \forall X^\kappa.B : *$.\\
 	By the kinding rule ($\forall$), which is the only kinding rule
 	able to derive $\Delta |- \forall X^\kappa.B : *$, we know
@@ -159,7 +156,7 @@ which involve substitutions in the types resulting from the typing judgments.
 	(Lemma~\ref{lem:subst}(\ref{lem:tysubst})).
 \item[case] ($\forall Ii$)
 	By induction and well-formedness of $\Delta$.
-\item[case] ($\forall Ei$)\\
+\item[case] ($\forall Ei$)
 	By induction we know that $\Delta |- \forall i^A.B : *$.\\
 	By the kinding rule ($\forall i$), which is the only kinding rule
 	able to derive $\Delta |- \forall i^A.B : *$, we know
@@ -394,7 +391,6 @@ and the index terms appearing in those types, after the erasure.\\
 	By induction.
 
 \item[case] ($\lambda i$)
-
 	We need to show that
 	$\Delta^\circ |- (\lambda i^A.F)^\circ : (A -> \kappa)^\circ$,
 	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$
@@ -406,7 +402,6 @@ and the index terms appearing in those types, after the erasure.\\
 	by Definition \ref{def:ierase}.
 
 \item[case] ($@ i$)
-
 	We need to show that
 	$\Delta^\circ |- (F\;\{s\})^\circ : \kappa^\circ$,
 	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$
@@ -421,7 +416,6 @@ and the index terms appearing in those types, after the erasure.\\
 	By induction.
 
 \item[case] ($\forall$)
-
 	We need to show that
 	$\Delta^\circ |- (\forall X^\kappa.B)^\circ : *^\circ$,
 	which simplifies to
@@ -442,7 +436,6 @@ and the index terms appearing in those types, after the erasure.\\
 	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$.
 
 \item[case] ($\forall i$)
-
 	We need to show that
 	$\Delta^\circ |- (\forall i^A.B)^\circ : *^\circ$,
 	which simplifies to $\Delta^\circ |- B^\circ : *$

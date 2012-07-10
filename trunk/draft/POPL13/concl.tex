@@ -23,17 +23,15 @@ Programs involving only type-indexing require no annotations elsewhere.
 A typing annotation takes a limited form of a large elimination,
 which is an abstraction over both type- and term-indices to types
 (\eg, $X,i_1,i_2 \mapsto F X \{i_1 + i_2\}$), which is somewhat similar to
-the convoy pattern idiom \cite{cpdt} found in Coq proof scripts to aid
-type checking depedent case expressions.
-One of our futuer work
-is to include richer form of large elimination, which enables selection
+the convoy pattern idiom \cite{cpdt} found in Coq scripts to aid
+type checking dependent case expressions.
+Future work includes richer form of large elimination, which enables selection
 of different type constructors for the result type of case statements
-and Mendler-style operators, such as:\vspace*{-5pt}
-\[ X,i_1,i_2 \mapsto \textbf{if}\;i_1<i_2\;
-	\textbf{then}\; F_1 X \{i_1\}\;\textbf{else}\;F_2 X \{i_2\} \]
-~ \vspace*{-15pt} \\
+and Mendler-style operators (\eg, 
+ $X,i_1,i_2 \mapsto \textbf{if}\;i_1<i_2\;
+	\textbf{then}\; F_1\,X\,\{i_1\}\;\textbf{else}\;F_2\, X\,\{i_2\}$ ).
 Enriching the type annotations in Nax will motivate us to identify
-the features we needed extend \Fi\ for embedding large eliminations.
+the features we need extend \Fi\ for embedding large eliminations.
 
 %% Such abstractions
 %% are classified exactly by the kinds derivable from the kind
