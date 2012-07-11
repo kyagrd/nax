@@ -413,26 +413,58 @@ x}(\mathtt{Vec}\, X)\big)\s j
 \enspace.
 \]
 
-Left Kan extensions can be incorporated analogously.
+Left Kan extensions can be incorporated analogously..
 
-\begin{comment}
-\begin{quote}
-{\bf\em
-\noindent\hrulefill begin cut \hrulefill
-\begin{center}
-THIS IS UNFORTUNATELY FLAWED
-\end{center}
+%\begin{comment}
+\begin{example}
+One can give a version of the constantly unit type 
+\[
+	\l i^{A}.\, \forall X^{*}.X
+\]
+that is restricted according to an index test function.  This is done as
+follows 
+\[
+	\mathtt T_{A,B} \triangleq
+	\l f^{B\to A}.\, \l i^{A}.\, \forall X^{*}.\,
+	  (\forall j^B.\, \LEq_A\s i\s{f\,j}\to X) \to X
+\enspace.
+\]
+(Intuitively, this encodes an existential quantifier as in the informal
+type ``$\l f^{B\to A}.\, \l i^{A}.\, \forall X^{*}.\, (\exists j^B.\,
+\LEq_A\s i\s{f\,j})\to X \to X$''.)
+Note that
+\[
+	\l h.\, h(\l x.\,x)
+	:
+	\forall f^{B\to A}.\,\forall j^{B}.\,
+	(\mathtt{T}_{A,B}\s{f})\s{f\, j}
+\]
+so that, in particular,
+\[
+	\l h.\, h(\l x.\,x)
+	:
+	\forall i^{A}.\,(\mathtt{T}_{A,A}\s{\l x.\,x})\s{i}
+\]
 
-As a concrete example to which the same principle applies, consider the
-type constructor
+The example
+\[
+\mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S}
+=
+\l i^{\mathtt{Nat}}.\,\forall X^{*}.\, 
+(\forall j^{\mathtt{Nat}}.\, \LEq_{\mathtt{Nat}}\s{i}\s{\mathtt{S}\,j}\to X) 
+\to X 
+\]
+allows us to define 
 \[
 \mathtt{Fin}\triangleq
 \!\!\!
 \begin{array}[t]{l}
 \l i^{\mathtt{Nat}}.\,\forall X^{\mathtt{Nat}\to*}.\,
 \\[1mm]
-	\quad (\forall j^\mathtt{Nat}.\,\LEq_\mathtt{Nat}\s i\s{\mathtt
-		S\,j}\to X\s i)
+\quad 
+(\forall j^\mathtt{Nat}.\,
+   \mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S}\s{j}
+     \to X\s j)
 \\[1mm]
 	\quad\quad \to (\forall j^\mathtt{Nat}.\, X\s j\to X\s{\mathtt S\,j})
 \\[1mm]
@@ -441,37 +473,27 @@ type constructor
 \]
 For it, one derives constructors
 \[\begin{array}{lcl}
-\l x.\,\l x_0.\, \l x_1.\, x_0\, x
+\l h.\, \l f.\, \l g.\,
+  h\, f
 & : & 
-  \forall i^{\mathtt{Nat}}\,\forall j^{\mathtt{Nat}}.\,
-    \LEq_{\mathtt{Nat}}\s i \s{\mathtt S\,j} \to \mathtt{Fin}\s i
+  \forall i^{\mathtt{Nat}}.\,
+  (\mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{i}
+    \to \mathtt{Fin}\s i
 \\[1mm]
-!!!???
+\l h.\, \l f.\, \l g.\,
+  g\, (h\, f\, g)
 & : & 
   \forall i^{\mathtt{Nat}}.\,
     \mathtt{Fin}\s i \to \mathtt{Fin}\s{\mathtt S\, i}
 \end{array}\]
-so that 
-\[\begin{array}{l}
-\l x_0.\, \l x_1.\, x_0\, (\l x.\, x)
-: \mathtt{Fin}\s{\mathtt S\, t}
-\\[1mm]
-!!!???
-: \mathtt{Fin}\s t \to \mathtt{Fin}\s{\mathtt S\, t}
-\end{array}\]
-for all closed $t:\mathtt{Nat}$.
+so that, in particular,
+\[
+\l f.\,\l g.\, f\,(\l x.\, x)
+: \forall i^\mathtt{Nat}.\,\mathtt{Fin}\s{\mathtt S\, i}
+\]
+\end{example}
 
-\noindent\hrulefill end cut \hrulefill
-}
-\end{quote}
-
-\begin{quote}
-{\bf\em
-\noindent\hrulefill begin cut \hrulefill
-\begin{center}
-WHERE SHOULD THIS GO, IF ANYWHERE, NOW???
-\end{center}
-
+\begin{example}
 The datatype of \mbox{$\lambda$-terms} in context 
 \begin{verbatim}
 data Lam ( C: Nat -> * ) { i: Nat } where
@@ -500,8 +522,7 @@ is encoded as:
   \to X\s i
 \end{array}
 \]
-
-\noindent\hrulefill end cut \hrulefill
-}
-\end{quote}
-\end{comment}
+For a concrete representation one can consider
+$\mathtt{Lam}\,\mathtt{Fin}$.  
+\end{example}
+%\end{comment}
