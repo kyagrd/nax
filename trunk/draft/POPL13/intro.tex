@@ -17,16 +17,18 @@ of its run-time parameters, and static dependency, where the type
 of a function can depend only upon static (or compile-time) parameters.
 Static dependency is sometimes referred to as indexed typing. The first
 is very expressive, while the second is often much easier to learn and 
-use. Indexed types come in two flavors: type-indexed and term-indexed
+use especially for those who are familiar to functional programming languages
+like Haskell or ML.
+Indexed types come in two flavors: type-indexed and term-indexed
 types. Type indexing includes parametric polymorphism, but it also includes
 more sophisticated typing as found in Generalized Algebraic Datatypes~(GADTs).
-An example of type indexing using GADTs is a type representation:\vspace*{-1pt}
+An example of type indexing using GADTs is a type representation:\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data TypeRep t where
   Int :: TypeRep Int
   Bool:: TypeRep Bool
   Pair:: TypeRep a -> TypeRep b -> TypeRep(a,b)
-\end{lstlisting}\vspace*{-1pt}
+\end{lstlisting}\vspace*{-2pt}
 Here, a value of type {\tt (TypeRep t)} is isomorphic in ``shape" with
 the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
 with its type {\tt (Int,Bool)}.
@@ -37,16 +39,20 @@ Z})) or Lists~(like {\tt Nil} or ({\tt Cons Z Nil})).
 The classic example of a term index is the second
 parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
 (S Z)})).  In languages such as Haskell, which support GADTs with type indexing,
-term-indices are not first-class; they are ``faked" by reflecting data at the
-type level with uninhabited type constructors. For example,\vspace*{-1pt}
+term-indices are not first-class;
+they are ``faked'' by reflecting data at the type level with uninhabited
+type constructors (see \S\ref{sec:relwork} for a very recent GHC extension,
+	which enable term-indices be first class).
+For example,\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data Succ n
 data Zero
-
+\end{lstlisting}\vspace*{-8pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data Vector t n where
   Cons :: a -> Vector a n -> Vector a (Succ n)
   Nil  :: Vector a Zero
-\end{lstlisting}\vspace*{-1pt}
+\end{lstlisting}\vspace*{-2pt}
 This comes with a number of problems. First, there is no way to say
 that types such as {\tt (Succ Int)} are ill-formed, and second the costs
 associated with duplicating the constructor functions of data to be used
@@ -197,13 +203,14 @@ System~\Fi.
 
 In a functional language supporting term-indexed datatypes, we envisage
 that the classic example of homogeneous length-indexed lists would be
-defined along the following lines:
+defined along the following lines:\vspace{-5pt}
 \begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
  data Nat = S Nat | Z 
+
  data Vec (a:*) {i:Nat} where
    VCons : a -> Vec a {i} -> Vec a {S i}
    VNil  : Vec a {Z}
-\end{lstlisting}\noindent
+\end{lstlisting}~\vspace{-15pt}\\ \noindent
 Here the type constructor~{\tt Vec} is defined to admit parameterisation
 by both type and term indices.  For instance, the type 
 (\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
