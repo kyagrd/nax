@@ -419,19 +419,21 @@ Left Kan extensions can be incorporated analogously..
 \begin{example}
 One can give a version of the constantly unit type 
 \[
-	\l i^{A}.\, \forall X^{*}.X
+	\l i^{A}.\, \forall Z^{*}.\,Z\to Z : A\to *
 \]
 that is restricted according to an index test function.  This is done as
 follows 
 \[
 	\mathtt T_{A,B} \triangleq
-	\l f^{B\to A}.\, \l i^{A}.\, \forall X^{*}.\,
-	  (\forall j^B.\, \LEq_A\s i\s{f\,j}\to X) \to X
+	\l f^{B\to A}.\, \l i^{A}.\, \forall Z^{*}.\,
+	  (\forall j^B.\, \LEq_A\s i\s{f\,j}\to Z) \to Z
 \enspace.
 \]
-(Intuitively, this encodes an existential quantifier as in the informal
-type ``$\l f^{B\to A}.\, \l i^{A}.\, \forall X^{*}.\, (\exists j^B.\,
-\LEq_A\s i\s{f\,j})\to X \to X$''.)
+(Intuitively, we are encoding a double-negated existential type as in the
+informal type ``$\l f^{B\to A}.\, \l i^{A}.\, \mathtt K(\exists j^B.\,
+\LEq_A\s i\s{f\,j})$'' for $\mathtt K\triangleq \lambda X^{*}.\,\forall
+Z^{*}.\,(X\to Z)\to Z$ the
+codensity monad.)
 Note that
 \[
 	\l h.\, h(\l x.\,x)
@@ -444,17 +446,24 @@ so that, in particular,
 	\l h.\, h(\l x.\,x)
 	:
 	\forall i^{A}.\,(\mathtt{T}_{A,A}\s{\l x.\,x})\s{i}
+	\enspace.
 \]
 
-The example
+For the example
 \[
 \mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S}
 =
-\l i^{\mathtt{Nat}}.\,\forall X^{*}.\, 
-(\forall j^{\mathtt{Nat}}.\, \LEq_{\mathtt{Nat}}\s{i}\s{\mathtt{S}\,j}\to X) 
-\to X 
+\l i^{\mathtt{Nat}}.\,\forall Z^{*}.\, 
+(\forall j^{\mathtt{Nat}}.\, \LEq_{\mathtt{Nat}}\s{i}\s{\mathtt{S}\,j}\to Z) 
+\to Z 
+\enspace,
 \]
-allows us to define 
+the type $\forall i^\mathtt{Nat}.\,(\mathtt
+T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{\mathtt S\,i}$ is inhabited,
+while $(\mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{\mathtt Z}$
+is not.
+%
+Define thus
 \[
 \mathtt{Fin}\triangleq
 \!\!\!
@@ -471,7 +480,7 @@ allows us to define
 	\quad\quad\quad\to X\s i
 \end{array}
 \]
-For it, one derives constructors
+For it, one derives
 \[\begin{array}{lcl}
 \l h.\, \l f.\, \l g.\,
   h\, f
@@ -490,6 +499,7 @@ so that, in particular,
 \[
 \l f.\,\l g.\, f\,(\l x.\, x)
 : \forall i^\mathtt{Nat}.\,\mathtt{Fin}\s{\mathtt S\, i}
+\enspace.
 \]
 \end{example}
 
