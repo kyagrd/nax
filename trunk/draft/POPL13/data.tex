@@ -463,7 +463,13 @@ T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{\mathtt S\,i}$ is inhabited,
 while $(\mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{\mathtt Z}$
 is not.
 %
-Define thus
+Encode thus
+\begin{verbatim}
+data Fin { i: Nat } where
+  FZ : Fin{S i}
+  FS : Fin{i} -> Fin{S i}
+\end{verbatim}
+as
 \[
 \mathtt{Fin}\triangleq
 \!\!\!
