@@ -371,7 +371,7 @@ A general such construction is given by the type constructors $\Ran_{A,B}:
 \]
 %for closed types~$A$ and $B$, 
 and are in spirit right Kan extensions, a notion that is being extensively
-used in programming,~\eg~\cite{AbeMatUus05}. %% ,Ghani,Hinze}.  .  
+used in programming,~\eg~\cite{AbeMatUus05,JohannGhani08}. %,Hinze}.  .  
 %%
 %It follows that, %Here, 
 %%for closed $t:A\to B$, $F:A\to*$, and $s:B$, a closed term $u:
@@ -407,19 +407,54 @@ $\forall X^{*}.\,\forall i^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s{\mathtt
 S\, i} \to \mathtt{Vec}\, X\,\s i$ can be coerced (forth and back) to one of
 type 
 \[
-\forall X^{*}.\,\forall j^{\mathtt Nat}.\,\mathtt{Vec}\, X\, \s j \to
+\forall X^{*}.\,\forall j^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s j \to
 \big(\Ran_{\mathtt{Nat},\mathtt{Nat}}\,\s{\lambda x.\,\mathtt S\,
 x}(\mathtt{Vec}\, X)\big)\s j
 \enspace.
 \]
 
-Left Kan extensions can be incorporated analogously..
+Type constructors ${\Lan_{A,B}:(A\to B)\to (A\to*)\to B\to *}$, which are
+in spirit left Kan extensions, permit the encoding of functions of type
+$(\forall i^{A}.\, F\s i\to G\s{t\,i})$, for ${F:A\to*}$, ${G:B\to*}$, and
+${t:A\to B}$, as functions of type $(\forall j^{B}.\, (\Lan_{A,B}\s t F)\s
+j\to G\s{j})$.  Left Kan extensions are dual to right Kan extensions, but
+to define them as such one needs existential and product types.  In
+formalisms without them, these have to be encoded.  This can be done as
+follows: 
+\[
+\Lan_{A,B}
+\triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l f^{A\to B}.\,
+\l X^{A\to*}.\,
+\l j^{B}.\, 
+\\[1mm]
+\quad
+\forall Z^{*}.\,
+  (\forall i^A.\, \LEq_B\s{f\,i}\s{j}\to X\s i\to Z)\to Z
+\end{array}
+\]
+The type 
+\[\begin{array}{l}
+\forall X^{A\to*}.\,
+\forall Y^{B\to*}.\,
+\forall f^{A\to B}.\,
+\\[1mm]
+(\forall i^{A}.\, 
+X\s i\to Y\s{f\,i})
+\to
+(\forall j^{B}.\, 
+(\Lan_{A,B}\s f X)\s j\to Y\s{j})
+\end{array}\]
+is thus inhabited by a retraction, coercing (forth and back) between the
+two functional representations.
 
 %\begin{comment}
 \begin{example}
 One can give a version of the constantly unit type 
 \[
-	\l i^{A}.\, \forall Z^{*}.\,Z\to Z : A\to *
+	(\l i^{A}.\, \forall Z^{*}.\,Z\to Z) : A\to *
 \]
 that is restricted according to an index test function.  This is done as
 follows 
