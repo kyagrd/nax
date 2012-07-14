@@ -298,6 +298,57 @@ iteration, primitive recursion, and courses of values recursion.
 \label{fig:mu}
 \end{figure*}
 
+\begin{example}
+The datatype of \mbox{$\lambda$-terms} in context 
+\begin{verbatim}
+data Lam ( C: Nat -> * ) { i: Nat } where
+  LVar : C{i} -> Lam{i}
+  LApp : Lam{i} -> Lam{i} -> Lam{i}
+  LAbs : Lam{S i} -> Lam{i}
+\end{verbatim}
+is encoded as:
+\[
+\mathtt{Lam} \triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l C^{\mathtt{Nat}\to*}
+\l i^\mathtt{Nat}.\,\forall X^{\mathtt{Nat}\to*}.
+\\[1mm]
+\quad
+  (\forall j^\mathtt{Nat}.\,C\s j \to X\s j)
+\\[1mm]
+\quad\quad
+ \to(\forall j^\mathtt{Nat}.\,X\s j \to X\s j \to X\s j)
+\\[1mm]
+\quad\quad\quad
+\to(\forall j^\mathtt{Nat}.\,X\s{\mathtt S\, j} \to X\s j)
+\\[1mm]
+\quad\quad\quad\quad
+  \to X\s i
+\end{array}
+\]
+For a concrete representation one can consider
+$\mathtt{Lam}\,\mathtt{Fin}$ where
+\begin{verbatim}
+data Fin { i: Nat } where
+  FZ : Fin{S i}
+  FS : Fin{i} -> Fin{S i}
+\end{verbatim}
+This is encoded as
+\[
+\mathtt{Fin}\triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l i^{\mathtt{Nat}}.\,\forall X^{\mathtt{Nat}\to*}.\,
+\\[1mm]
+\quad 
+(\forall j^\mathtt{Nat}.\, X\s{\mathtt S\, j})
+	\to (\forall j^\mathtt{Nat}.\, X\s j\to X\s{\mathtt S\,j})
+\\[1mm]
+	\qquad\to X\s i
+\end{array}
+\]
+\end{example}
 \subsection{Leibniz index equality}
 \label{Leibniz}
 
@@ -447,133 +498,7 @@ X\s i\to Y\s{f\,i})
 (\forall j^{B}.\, 
 (\Lan_{A,B}\s f X)\s j\to Y\s{j})
 \end{array}\]
-is thus inhabited by a retraction, coercing (forth and back) between the
-two functional representations.
+is thus inhabited by a retraction, allowing for the (forth and back)
+coercion between the two functional representations.
 
-%\begin{comment}
-\begin{example}
-One can give a version of the constantly unit type 
-\[
-	(\l i^{A}.\, \forall Z^{*}.\,Z\to Z) : A\to *
-\]
-that is restricted according to an index test function.  This is done as
-follows 
-\[
-	\mathtt T_{A,B} \triangleq
-	\l f^{B\to A}.\, \l i^{A}.\, \forall Z^{*}.\,
-	  (\forall j^B.\, \LEq_A\s i\s{f\,j}\to Z) \to Z
-\enspace.
-\]
-(Intuitively, we are encoding a double-negated existential type as in the
-informal type ``$\l f^{B\to A}.\, \l i^{A}.\, \mathtt K(\exists j^B.\,
-\LEq_A\s i\s{f\,j})$'' for $\mathtt K\triangleq \lambda X^{*}.\,\forall
-Z^{*}.\,(X\to Z)\to Z$ the
-codensity monad.)
-Note that
-\[
-	\l h.\, h(\l x.\,x)
-	:
-	\forall f^{B\to A}.\,\forall j^{B}.\,
-	(\mathtt{T}_{A,B}\s{f})\s{f\, j}
-\]
-so that, in particular,
-\[
-	\l h.\, h(\l x.\,x)
-	:
-	\forall i^{A}.\,(\mathtt{T}_{A,A}\s{\l x.\,x})\s{i}
-	\enspace.
-\]
 
-For the example
-\[
-\mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S}
-=
-\l i^{\mathtt{Nat}}.\,\forall Z^{*}.\, 
-(\forall j^{\mathtt{Nat}}.\, \LEq_{\mathtt{Nat}}\s{i}\s{\mathtt{S}\,j}\to Z) 
-\to Z 
-\enspace,
-\]
-the type $\forall i^\mathtt{Nat}.\,(\mathtt
-T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{\mathtt S\,i}$ is inhabited,
-while $(\mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{\mathtt Z}$
-is not.
-%
-Encode thus
-\begin{verbatim}
-data Fin { i: Nat } where
-  FZ : Fin{S i}
-  FS : Fin{i} -> Fin{S i}
-\end{verbatim}
-as
-\[
-\mathtt{Fin}\triangleq
-\!\!\!
-\begin{array}[t]{l}
-\l i^{\mathtt{Nat}}.\,\forall X^{\mathtt{Nat}\to*}.\,
-\\[1mm]
-\quad 
-(\forall j^\mathtt{Nat}.\,
-(\mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{j}
-     \to X\s j)
-\\[1mm]
-	\quad\quad \to (\forall j^\mathtt{Nat}.\, X\s j\to X\s{\mathtt S\,j})
-\\[1mm]
-	\quad\quad\quad\to X\s i
-\end{array}
-\]
-For it, one derives
-\[\begin{array}{lcl}
-\l h.\, \l f.\, \l g.\,
-  h\, f
-& : & 
-  \forall i^{\mathtt{Nat}}.\,
-  (\mathtt T_{\mathtt{Nat},\mathtt{Nat}}\s{\mathtt S})\s{i}
-    \to \mathtt{Fin}\s i
-\\[1mm]
-\l h.\, \l f.\, \l g.\,
-  g\, (h\, f\, g)
-& : & 
-  \forall i^{\mathtt{Nat}}.\,
-    \mathtt{Fin}\s i \to \mathtt{Fin}\s{\mathtt S\, i}
-\end{array}\]
-so that, in particular,
-\[
-\l f.\,\l g.\, f\,(\l x.\, x)
-: \forall i^\mathtt{Nat}.\,\mathtt{Fin}\s{\mathtt S\, i}
-\enspace.
-\]
-\end{example}
-
-\begin{example}
-The datatype of \mbox{$\lambda$-terms} in context 
-\begin{verbatim}
-data Lam ( C: Nat -> * ) { i: Nat } where
-  LVar : C{i} -> Lam{i}
-  LApp : Lam{i} -> Lam{i} -> Lam{i}
-  LAbs : Lam{S i} -> Lam{i}
-\end{verbatim}
-is encoded as:
-\[
-\mathtt{Lam} \triangleq
-\!\!\!
-\begin{array}[t]{l}
-\l C^{\mathtt{Nat}\to*}
-\l i^\mathtt{Nat}.\,\forall X^{\mathtt{Nat}\to*}.
-\\[1mm]
-\quad
-  (\forall j^\mathtt{Nat}.\,C\s j \to X\s j)
-\\[1mm]
-\quad\quad
- \to(\forall j^\mathtt{Nat}.\,X\s j \to X\s j \to X\s j)
-\\[1mm]
-\quad\quad\quad
-\to(\forall j^\mathtt{Nat}.\,X\s{\mathtt S\, j} \to X\s j)
-\\[1mm]
-\quad\quad\quad\quad
-  \to X\s i
-\end{array}
-\]
-For a concrete representation one can consider
-$\mathtt{Lam}\,\mathtt{Fin}$.  
-\end{example}
-%\end{comment}
