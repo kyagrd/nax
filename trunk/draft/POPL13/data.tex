@@ -460,13 +460,40 @@ instance, by means of the iterators of the previous section one can define
 a vector tail function of type 
 \[
 \forall X^{*}.\,\forall j^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s j \to
-\big(\Ran_{\mathtt{Nat},\mathtt{Nat}}\,\s{\lambda x.\,\mathtt S\,
-x}(\mathtt{Vec}\, X)\big)\s j
+\big(\Ran_{\mathtt{Nat},\mathtt{Nat}}\,\s{\mathtt S}(\mathtt{Vec}\,
+X)\big)\s j 
 \]
 and retract it to one of type
 \[
 \forall X^{*}.\,\forall i^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s{\mathtt
 S\, i} \to \mathtt{Vec}\, X\,\s i
+\enspace.
+\]
+%
+Analogously, one can use an iterator to define a single-variable
+capture-avoiding substitution function of type
+\[\begin{array}{l}
+\forall i^{\mathtt{Nat}}.\,
+(\mathtt{Lam}\,\mathtt{Fin})\s i
+\\[1mm]
+\quad
+\to
+\big(\Ran_{\mathtt{Nat},\mathtt{Nat}}
+\s{\mathtt S}
+(\lambda j^{\mathtt{Nat}}.\,
+\mathtt{Lam}\,\mathtt{Fin}\s j
+\to
+\mathtt{Lam}\,\mathtt{Fin}\s j)\big)
+\s i
+\end{array}\]
+and then retract it to one of type 
+\[
+\forall i^{\mathtt{Nat}}.\,
+(\mathtt{Lam}\,\mathtt{Fin})\s{\mathtt S\, i}
+\to
+(\mathtt{Lam}\,\mathtt{Fin})\s{i}
+\to
+(\mathtt{Lam}\,\mathtt{Fin})\s{i}
 \enspace.
 \]
 
@@ -504,6 +531,6 @@ X\s i\to Y\s{f\,i})
 (\forall j^{B}.\, 
 (\Lan_{A,B}\s f X)\s j\to Y\s{j})
 \end{array}\]
-is thus inhabited by a section, allowing for a retractable coercion
-between the two functional representations.
+is thus inhabited by a section, providing a retractable coercion between
+the two functional representations.
 
