@@ -355,22 +355,25 @@ This is encoded as
 The quantification over type-indexed kinding available in System~\Fi\
 allows the definition of \emph{Leibniz-equality type} constructors
 $\Eq_A: A\to A\to *$ on closed types~$A$, defined as follows:
-
-\begin{align*}
-\Eq_A ~~\triangleq&~
+\[\begin{array}{l}
+\Eq_A \triangleq
 	\l i^A.\, \l j^A.\, 
 	\LEq_A\s i \s j \times \LEq_A\s j \s i
-\quad \text{where} \\
-\LEq_A \triangleq&~
+\enspace,
+\\[1mm]
+\text{where } 
+\LEq_A \triangleq
 	\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
-\end{align*}
+\enspace.
+\end{array}\]
 For $F_A\in\{\Eq_A,\LEq_A\}$, 
-$\begin{array}{c}
-\Delta;\cdot\vdash s=s':A\enspace\quad \Delta;\cdot\vdash t=t':A
-\\ \hline \\[-3mm]
-\Delta\vdash F_A \s s \s t = F_A\s{s'}\s{t'}:*
-\end{array}.$ \vspace*{3pt} \\
-As further basic properties, observe that the following types are
+%\[\begin{array}{c}
+%\Delta;\cdot\vdash s=s':A\enspace\quad \Delta;\cdot\vdash t=t':A
+%\\ \hline \\[-3mm]
+%\Delta\vdash F_A \s s \s t = F_A\s{s'}\s{t'}:*
+%\end{array}\] 
+%and, as further basic properties, 
+observe that the following types are
 inhabited: 
 \[\!\!\!\!\begin{array}{l}
 \text{\small(Reflexive)} 
