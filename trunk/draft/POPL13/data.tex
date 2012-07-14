@@ -443,7 +443,7 @@ used in programming,~\eg~\cite{AbeMatUus05,JohannGhani08}. %,Hinze}.  .
 %%is inhabited by a retraction.)
 %
 One of their usefulness comes from the fact that the following type
-is inhabited by a retraction
+is inhabited by a section
 \[
 \!\!\!
 \begin{array}{l}
@@ -455,15 +455,18 @@ is inhabited by a retraction
 \big(\forall j^B.\,Y\s j\to (\Ran_{A,B}\s f X)\s j\big)
 \end{array}\]
 This allows one to represent functions from input datatypes with
-constrained indices as plain indexed functions.  For instance, the vector
-tail function of type 
-$\forall X^{*}.\,\forall i^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s{\mathtt
-S\, i} \to \mathtt{Vec}\, X\,\s i$ can be coerced (forth and back) to one of
-type 
+constrained indices as plain indexed functions, and vice versa.  For
+instance, by means of the iterators of the previous section one can define
+a vector tail function of type 
 \[
 \forall X^{*}.\,\forall j^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s j \to
 \big(\Ran_{\mathtt{Nat},\mathtt{Nat}}\,\s{\lambda x.\,\mathtt S\,
 x}(\mathtt{Vec}\, X)\big)\s j
+\]
+and retract it to one of type
+\[
+\forall X^{*}.\,\forall i^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s{\mathtt
+S\, i} \to \mathtt{Vec}\, X\,\s i
 \enspace.
 \]
 
@@ -501,7 +504,6 @@ X\s i\to Y\s{f\,i})
 (\forall j^{B}.\, 
 (\Lan_{A,B}\s f X)\s j\to Y\s{j})
 \end{array}\]
-is thus inhabited by a retraction, allowing for the (forth and back)
-coercion between the two functional representations.
-
+is thus inhabited by a section, allowing for a retractable coercion
+between the two functional representations.
 
