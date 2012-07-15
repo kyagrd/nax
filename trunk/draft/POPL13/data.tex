@@ -537,5 +537,9 @@ the two functional representations.
 Left Kan extensions come with a canonical function of type
 $\forall f^{A\to B}.\,\forall X^{A\to *}.\,\forall i^A.\, X\s i \to
 (\Lan_{A,B}\s f X)\s{f\,i}$ that, according to a reindexing function
-$t:A\to B$, embeds an $A$-indexed type $F$ (at index $s$) into the
-$B$-indexed type $\Lan_{A,B}\s t F$ (at index $t\,s$).
+$t:A\to B$, transforms an \mbox{$A$-indexed} type $F$ (at index $s$) into
+the $B$-indexed type $\Lan_{A,B}\s t F$ (at index $t\,s$).  This can be
+used, for instance, to embed a one-dimensional array into a
+two-dimensional matrix or, conversely, to project a two-dimensional matrix
+into a one-dimensional array.
+
