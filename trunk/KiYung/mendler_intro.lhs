@@ -252,9 +252,9 @@ fall into three broad categories:
  term-indexed types (\ie, Generalized Algebraic DataType(GADT)s)
  (\S\ref{ssec:tourIndexed}).
 \end{itemize}
-Details of these contributions are discussed in the previous sections
-(\S\ref{sec:msf},\S\ref{sec:mcv},\S\ref{sec:mgadt}), which are extended and
-revised versions of the sections appearing in our recent work \cite{AhnShe11}.
+%% Details of these contributions are discussed in \S\ref{sec:msf},
+%% \S\ref{ssec:tourHist0},\S\ref{sec:mgadt}), which are extended and
+%% revised versions of the sections appearing in our recent work \cite{AhnShe11}.
 
 
 \subsection{Roadmap to a tour of the Mendler-style approach}\label{sec:tour}
@@ -266,7 +266,8 @@ to orient the reader to navigate the following sections.
 First, we introduce the Mendler-style iteration (|mcata|. \aka\ catamorphism)
 (\S\ref{ssec:tourCata0}) and course-of-values iteration
 (|mhist|. \aka\ histomorpism) (\S\ref{ssec:tourHist0}) combinators for kind $*$,
-that is, for (non-mutually recursive) regular datatypes. We also give
+that is, for (non-mutually recursive) regular datatypes (\S\ref{ssec:tourRegular}).
+ We also give
 an intuitive explanation why these Mendler-style recursion combinators
 ensure termination for positive datatypes.
 

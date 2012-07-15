@@ -4,10 +4,10 @@
          and course-of-values iteration (|mhist|)
          on non-regular datatypes and mutually recursive datatypes}
 \label{mendler_nonreg}
+We discussed Mendler style iteration and course-of-values iteration
+over non-mutually recursive datatypes so far. I this section, we discuss
+Mendler-style iteration and course-of-values iteration over
+non-regular datatypes (\S\ref{ssec:tourNested}, \S\ref{ssec:tourIndexed})
+and mutually recursive datatypes (\S\ref{ssec:tourMutRec}).
 
-TODO just a short sentence for leading up the three subsections
-
-\S\ref{ssec:tourNested}
-\S\ref{ssec:tourIndexed}
-\S\ref{ssec:tourMutRec}
 
