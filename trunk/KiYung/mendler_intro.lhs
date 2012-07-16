@@ -266,10 +266,15 @@ to orient the reader to navigate the following sections.
 First, we introduce the Mendler-style iteration (|mcata|. \aka\ catamorphism)
 (\S\ref{ssec:tourCata0}) and course-of-values iteration
 (|mhist|. \aka\ histomorpism) (\S\ref{ssec:tourHist0}) combinators for kind $*$,
-that is, for (non-mutually recursive) regular datatypes (\S\ref{ssec:tourRegular}).
- We also give
+that is, for (non-mutually recursive) regular datatypes
+(\S\ref{ssec:tourRegular}). We also give
 an intuitive explanation why these Mendler-style recursion combinators
 ensure termination for positive datatypes.
+
+In \S\ref{ssec:tourNegative}, we discuss why the Mendler-style iteration
+(|mcata|) ensures termination even for negative datatypes, while
+the Mendler-style course-of-values iteration (|mhist|) can only ensure
+termination for positive datatypes.
 
 Then, we move our focus from non-mutually recursive regular datatypes
 to more expressive datatypes (\S\ref{mendler_nonreg}), which require
@@ -281,11 +286,6 @@ iteration (|mhist|) at kind $* -> *$. We also provide some examples, which
 show how to encode mutually recursive datatypes using indexed datatypes
 (\S\ref{ssec:tourMutRec}).
 
-In \S\ref{ssec:tourNegative}, we discuss why the Mendler-style iteration
-(|mcata|) ensures termination even for negative datatypes, while
-the Mendler-style course-of-values iteration (|mhist|) can only ensure
-termination for positive datatypes.
-
 In \S\ref{sec:mpr}, we introduce the Mendler-style primitive recursion (|mprim|)
 and course-of-values primitive recursion (|mcvpr|). |mprim| and |mcvpr| are
 equivalent to |mcata| and |mhist|, respectively, in terms of computability,
@@ -295,9 +295,10 @@ In \S\ref{sec:msf}, we introduce a new Mendler-style family (|msfcata|),
 which we discovered, and illustrate its expressiveness over negative datatypes
 by presenting the case study on formatting HOAS (\S\ref{sec:showHOAS}).
 
-TODO discussions on other possible combinators TODO extrapolation
+Finally, we summarize the properties of the Mendler-style recursion combinators
+in \S\ref{sec:proof}. %% and extrapolate on other possible recursion combinators.
 
-Finally, we summarize TODO
+
 
 %%%% maybe it is better not to use 1st 2nd ....
 

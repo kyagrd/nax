@@ -100,22 +100,22 @@ The |luc| function in Figure \ref{fig:lucas} is slightly
 different from the original version of Lucas numbers.
 What |luc n| implements is the function $Lucas(n+1) - (n+1)$, 
 where $Lucas$ is the original
-definition of the Lucas number. Mathmatically, Lucas numbers are just a
+definition of the Lucas number. Mathematically, Lucas numbers are just a
 Fibonacci sequence with different base values. They can be understood
-as a Fibonacci number offset by linear term. For instance, |luc| can be tunred
+as a Fibonacci number offset by linear term. For instance, |luc| can be turned
 into a Fibonacci function via change of variable by |fib n = luc n + n + 1|.}
 \begin{code}
 fib (n+2)  = fib (n+1)  + fib n
 luc (n+2)  = luc (n+1)  + luc n + n
 \end{code}
-Note the traliing ``$\cdots+\,$|n|'' in the recurrens relation for |luc|.
+Note the trailing ``$\cdots+\,$|n|'' in the recurrence relation for |luc|.
 We need the ability of course-of-values recursion because $n$ is
 a deep recursive component of $n+2$ (\ie, $n$ is the predecessor of
-the precessor of $n+2$). We need primitive recursion, since we not only perform
+the predecessor of $n+2$). We need primitive recursion, since we not only perform
 a recursive call over $n$ ($\cdots+\,$|luc n|$\,+\cdots$), but also add the value
 of $n$ itself ($\cdots+\,$|n|). The |mcvpr| family provides
 both |out| and |cast| operations for accessing deep recursive components and
-casting from an abstract value to a concrete recursive vaule.
+casting from an abstract value to a concrete recursive value.
 
 \begin{figure}
 $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
@@ -127,7 +127,8 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \end{figure}
 
 It is strongly believed that the primitive recursion family cannot be
-embbeded in \Fw\ in a reduction preserving manner \cite{}.
+embedded in \Fw\ in a reduction preserving manner, since it is known that
+induction is not derivable from second-order dependent calculi \cite{Geuvers01}.
 As we mentioned in \S\ref{mendler_history}, the termination properties of
 Mendler-style primitive recursion are shown by embedding |mprim| into \Fixw\ 
 \cite{AbeMat04}. We will explain the details of the embedding of |mprim|

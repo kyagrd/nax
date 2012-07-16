@@ -5,9 +5,15 @@
 
 \section{Properties of the recursion combinators}
 \label{sec:proof}
+We close this chapter by summarizing the termination properties of
+the recursion combinators and the relation between the recursion combinators
+we discussed so far.
 
-We briefly discuss the termination properties of the recursion combinators
-and the relation between the recursion combinators we discussed so far TODO
+TODO also discuss other possibilities families of recursion combinators
+and difficulties of defining them, e.g., msfcv-
+
+TODO table that summarizes the termination property
+(extend from table at the end of ICFP paper)
 
 \begin{figure}
 \ProofCata
@@ -44,9 +50,13 @@ in \S\ref{ssec:tourNegative}.
 
 Figure \ref{fig:cataviahisto} illustrates a well known fact that a standard
 iteration (|mcata|) is a special case of a course-of-values iteration (|mhist|).
+Note that |mcata| is defined in terms of |mhist|
+by ignoring the inverse operation (|out|).
 
-Although we do not have a formal argument, it seems quite evident that
-we can simulate all the standard combinators (e.g., |mcata0|) via
-its inverse augmented counterparts (e.g., |msfcata0|). That is, all functions
-definable using |mcata0| are definable using |msfcata0| instead.
+Similarly, We can define |mcata| in terms of |mprim|, and,
+|mhist| in terms of |mcvpr|, by ignoring the casting operation of
+the primitive recursion families. It is also quite evident that
+we can define |mcata| in terms of |msfcata|.
 
+TODO need come back and finish this section later on, since I
+haven't really worked on embedding CV families into Fix calclui.
