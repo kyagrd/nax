@@ -30,8 +30,8 @@ term indices (\S\ref{Leibniz}).
 	\forall X. (A_1 -> A_2 -> X) -> X \\
 	& &=~& \l x.\l x'.x\;x' \\
  &&&\!\!\!\!\!\!\!\!\text{(by passing appropriate values to $x'$, we get}\\
- &&&\!\!\!\!\textit{fst} = \l x.x(\l x_1.\l x_2.x_1),~
-            \textit{snd} = \l x.x(\l x_1.\l x_2.x_2) ~)
+ &&&\!\!\!\!\texttt{fst} = \l x.x(\l x_1.\l x_2.x_1),~
+            \texttt{snd} = \l x.x(\l x_1.\l x_2.x_2) ~)
 \end{align*} \vspace*{-19pt} \\ \vspace*{-4pt}
 \rule{\linewidth}{.4pt}
 \begin{align*}
@@ -534,12 +534,14 @@ X\s i\to Y\s{f\,i})
 is thus inhabited by a section, providing a retractable coercion between
 the two functional representations.
 
-Left Kan extensions come with a canonical function of type
+Left Kan extensions come with a canonical section of type
 $\forall f^{A\to B}.\,\forall X^{A\to *}.\,\forall i^A.\, X\s i \to
 (\Lan_{A,B}\s f X)\s{f\,i}$ that, according to a reindexing function
-$t:A\to B$, transforms an \mbox{$A$-indexed} type $F$ (at index $s$) into
-the $B$-indexed type $\Lan_{A,B}\s t F$ (at index $t\,s$).  This can be
-used, for instance, to embed one-dimensional arrays into two-dimensional
-matrices or, conversely, to project a two-dimensional matrices down to
-one-dimensional arrays.
+$t:A\to B$, embeds an \mbox{$A$-indexed} type $F$ (at index $s$) into
+the $B$-indexed type $\Lan_{A,B}\s t F$ (at index $t\,s$).  For instance, the
+type constructor $\mathtt{Lan}_{A,A\times A}\s{\l x.\,\mathtt{pair}\,x\,x}$
+embeds arrays of types into matrices along the diagonal; while the type
+constructors $\mathtt{Lan}_{A\times A,A}\s{\mathtt{fst}}$ and
+$\mathtt{Lan}_{A\times A,A}\s{\mathtt{snd}}$ respectively encapsulate matrices
+of types as arrays by columns and by rows.
 
