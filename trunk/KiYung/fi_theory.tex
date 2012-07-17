@@ -1,0 +1,762 @@
+\section{Metatheory}\label{sec:fi:theory}
+The expectation is that System \Fi\ has all the nice properties of System \Fw,
+yet is more expressive because of the addition of term-indexed types.
+
+We show some basic well-formedness properties for
+the judgments of \Fi\ in \S\ref{ssec:fi:wf}.
+We prove erasure properties of \Fi, which captures the idea that indices are
+erasable since they are irrelevant for reduction in \S\ref{ssec:fi:erasure}.
+We show strong normalization, logical consistence, and subject reduction for
+\Fi\ by reasoning about well-known calculi related to \Fi\ in \S\ref{ssec:fi:sn}.
+
+\subsection{Well-formedness properties and substitution lemmas}
+\label{ssec:fi:wf}
+We want to show that the sorting, kinding, and typing derivations give
+well-formed results under well-formed contexts. That is, sorting derivations
+result in well-formed sorts (Proposition \ref{prop:wfsort}),
+kinding derivations result in well-sorted kinds under well-formed
+type level contexts (Proposition \ref{prop:wfkind}), and typing derivations
+result in well-kinded types under well-formed type and term level contexts
+(Proposition \ref{prop:wftype}).
+
+Since the definitions of sorting, kinding, and typing rules are
+mutually recursive, these three properties are considered as
+one big property (illustrated below) in order to be more rigorous abouts
+the induction principle used in the proof.
+\begin{proposition*}[The big well-formedness property of \Fi,
+		roughly\footnote{Technically,
+    this is not yet completely rigorous since there are three more forms of
+    judgments in the mutually recursive definition. The \emph{kind equality},
+    \emph{type considered equality}, and \emph{term equality} rules are part of
+    the mutually recursive definition along with the sorting, kinding, and
+    typing rules. So, the complete description of the big well-formedness
+    property will consist of six cases, which correspond to
+    Proposition \ref{prop:wfsort}, Proposition \ref{prop:wfkind},
+    Proposition \ref{prop:wftype}, Lemma \ref{lem:wfeqkind},
+    Lemma \ref{lem:wfeqtype}, and Lemma \ref{lem:wfeqterm}.  }  ]~
+\begin{quote}
+\begin{itemize}
+\item[case] \fbox{$ |- \kappa : \square $}\qquad\quad
+ $ \inference{ |- \kappa : \mathfrak{s} }{ \mathfrak{s}=\square } $\\
+ \qquad\qquad (Proposition \ref{prop:wfsort})
+\item[case] \fbox{$ \Delta |- F : \kappa $}\qquad
+ $ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa:\square } $\\
+ \qquad\qquad (Proposition \ref{prop:wfkind})
+\item[case] \fbox{$ \Delta;\Gamma |- t:A $}\quad
+ $ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * } $\\
+ (Proposition \ref{prop:wftype})
+\end{itemize}
+\end{quote}
+\end{proposition*}\noindent
+The big well-formedness property has one of the three forms --
+\fbox{$ |- \kappa : \square $} (sorting),
+\fbox{$ \Delta |- F : \kappa $} (kinding), and
+\fbox{$ \Delta;\Gamma |- t:A $} typing.
+That is, a derivation for a judgment of either sorting, kinding, or typing
+results in either a well-formed sort (when it is a sorting judgment),
+a well-sorted kind (when it is a kinding judgment), or
+a well-kinded type (when it is a typing judgment),
+under well-formed contexts for the judgment (no context for sorting judgments,
+$\Delta$ for kinding judgments, and $\Delta;\Gamma$ for typing judgments).
+
+We can prove the big well-formedness property of \Fi\ by induction on
+the derivation of a judgment, which can be any one of the three forms.
+Here, we illustrate the proof for the three propositions as if they were
+separate proofs. Because it provides a more intuitive proof sketch, during 
+the proof description, the proof for each proposition
+references the other properties (which are yet another application of the
+induction hypothesis of the big well-formedness property).
+So, when we say ``by induction'' during the proofs, what we really mean is
+the induction hypothesis of the big well-formedness property.
+
+\begin{proposition}[sorting derivations result in well-formed sorts]
+\label{prop:wfsort}
+\[ \inference{ |- \kappa : \mathfrak{s} }{ \mathfrak{s}=\square } \]
+\end{proposition}
+\begin{proof}Obvious since $\square$ is the only sort in \Fi.\end{proof}
+
+\begin{proposition}[kinding derivations under well-formed contexts
+	       	result in well-sorted kinds]
+\label{prop:wfkind}
+\[ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa:\square }
+\]
+\end{proposition}
+\begin{proof} By induction on the derivation.
+\begin{itemize}
+\item[case] ($Var$)
+	Trivial by the second well-formedness rule of $\Delta$.
+\item[case] ($Conv$)
+	By induction and Lemma~\ref{lem:wfeqkind}.
+\item[case] ($\lambda$)
+	By induction and Proposition~\ref{prop:wfsort} we know
+	that $|- \kappa:\square$.\\
+	By the second well-formedness rule of $\Delta$,
+	we know that $|- \Delta,X^\kappa$ since we already know
+	that $|- \kappa:\square$ and $|- \Delta$ from the property statement.\\
+	By induction, we know that $|- \kappa':\square$
+	since we already know that $|- \Delta,X^\kappa$ and
+	that $\Delta,X^\kappa|- F:\kappa'$ from induction hypothesis.\\
+	By the sorting rule ($R$), we know that $|- \kappa -> \kappa':\square$
+	since we already know that $|- \kappa:\square$ and $|- \kappa':\square$.
+\item[case] ($@$)
+	By induction, easy.
+\item[case] ($\lambda i$)
+	By induction we know that $\cdot|- A:*$.
+	By the third well-formedness rule of $\Delta$, we know that
+	$|- \Delta,i^A$ since we already know that $\cdot|- A:*$ and
+	that $|- \Delta$ from the property statement.\\
+	By induction, we know that $|- \kappa:\square$
+	since we already know that $|- \Delta,i^A$ and
+	that $\Delta,i^A|- F:\kappa$ from the induction hypothesis.\\
+	By the sorting rule ($Ri$), we know that $|- A -> \kappa:\square$
+	since we already know that $\cdot |- A:*$ and $|- \kappa:\square$.
+\item[case] ($@i$)
+	By induction and Proposition \ref{prop:wftype}, easy.
+\item[case] ($->$)
+	Trivial since $|- * : \square$.
+\item[case] ($\forall$)
+	Trivial since $|- * : \square$.
+\item[case] ($\forall i$)
+	Trivial since $|- * : \square$.\qedhere
+\end{itemize}
+\end{proof}
+
+The basic structure of the proof for the following proposition on typing
+derivations is similar to above. So, we illustrate the proof for most of
+the cases, which can be done by applying the induction hypothesis, rather
+bravely. We elaborate more on interesting cases ($\forall E$) and ($\forall Ei$)
+which involve substitutions in the types resulting from the typing judgments.
+\begin{proposition}[typing derivations under well-formed contexts result in
+	well-kinded types]
+\label{prop:wftype}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * }
+\]
+\end{proposition}
+\begin{proof} By induction on the derivation.
+\begin{itemize}
+\item[case] ($:$)
+	Trivial by the second well-formedness rule of $\Gamma$.
+\item[case] ($:i$)
+	Trivial by the third the well-formedness rule of $\Delta$.
+\item[case] ($=$)
+	By induction and Lemma \ref{lem:wfeqtype}.
+\item[case] ($->$$I$)
+	By induction and well-formedness of $\Gamma$.
+\item[case] ($->$$E$)
+	By induction.
+\item[case] ($\forall I$)
+	By induction and well-formedness of $\Delta$.
+\item[case] ($\forall E$)
+	By induction we know that $\Delta |- \forall X^\kappa.B : *$.\\
+	By the kinding rule ($\forall$), which is the only kinding rule
+	able to derive $\Delta |- \forall X^\kappa.B : *$, we know
+	that $\Delta,X^\kappa |- B : *$.\\
+	Then, we use the type substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:tysubst})).
+\item[case] ($\forall Ii$)
+	By induction and well-formedness of $\Delta$.
+\item[case] ($\forall Ei$)
+	By induction we know that $\Delta |- \forall i^A.B : *$.\\
+	By the kinding rule ($\forall i$), which is the only kinding rule
+	able to derive $\Delta |- \forall i^A.B : *$, we know
+	that $\Delta,i^A |- B : *$.\\
+	Then, we use the index substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:ixsubst})).\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{lemma}[kind equality is well-sorted]\label{lem:wfeqkind}
+$ \inference{|- \kappa = \kappa':\square}
+	{|- \kappa:\square \quad |- \kappa':\square} $
+\end{lemma}
+\begin{proof}
+	By induction on the derivation of kind equality
+	and using the sorting rules.
+\end{proof}
+
+\begin{lemma}[type constructor equality is well-kinded]\label{lem:wfeqtype}
+\[ \inference{\Delta |- F = F':\kappa}
+	{\Delta |- F:\kappa \quad \Delta |- F':\kappa}
+\]
+\end{lemma}
+\begin{proof}
+	By induction on the derivation of type constructor equality
+	and using the kinding rules.
+	Also use the type substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:tysubst}))
+	and the index substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:ixsubst})).  
+\end{proof}
+
+\begin{lemma}[term equality is well-typed]\label{lem:wfeqterm}
+\[ \inference{\Delta,\Gamma |- t = t':A}
+	{\Delta,\Gamma |- t:A \quad \Delta,\Gamma |- t':A}
+\]
+\end{lemma}
+\begin{proof}
+	By induction on the derivation of term equality
+	and using the typing rules.
+	Also use the term substitution lemma
+	(Lemma~\ref{lem:subst}(\ref{lem:tmsubst})).
+\end{proof}
+
+The proofs for the three lemmas above are straightforward
+once we have dealt with the interesting cases for the equality rules
+involving substitution. We can prove those interesting cases
+by applying the substitution lemmas. The other cases fall into two
+categories: firstly, the equality rules following the same structure of
+the sorting, kinding, and typing rules; and secondly, the reflexive
+rules and the transitive rules. The proof for the equality rules
+following the same structure of the sorting, kinding, and typing rules
+can be proved by induction and applying the corresponding
+sorting, kinding, and typing rules. The proof for the reflexive rules
+and the transitive rules can be proved simply by induction.
+
+\begin{lemma}[substitution]\mbox{}\\[-3mm]
+\label{lem:subst}
+\begin{enumerate}
+\item
+%\begin{lemma}[type substitution]
+\label{lem:tysubst}
+\mbox{\rm (type substitution)}
+$\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+	{\Delta |- F[G/X]:\kappa'} $
+%\end{lemma}
+\medskip
+
+\item
+%\begin{lemma}[index substitution]
+\label{lem:ixsubst}
+\mbox{\rm (index substitution)}
+$ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+	{\Delta |- F[s/i]:\kappa} $
+%\end{lemma}
+\medskip
+
+\item
+%\begin{lemma}[term substitution]
+\label{lem:tmsubst}
+\mbox{\rm (term substitution)}
+$ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
+	{\Delta,\Gamma |- t[s/x]:B} $
+%\end{lemma}
+\end{enumerate}
+\end{lemma}
+The substitution lemma is fairly standard, comparable to substitution lemmas
+in other well-known systems such as \Fw\ or ICC.
+
+\subsection{Erasure properties}
+\label{ssec:fi:erasure}
+
+We define a meta-operation of index erasure that projects $\Fi$-types
+to $\Fw$-types.
+
+\begin{definition}[index erasure]\label{def:ierase}
+\[ \fbox{$\kappa^\circ$}
+ ~~~~ ~~
+ *^\circ =
+ *
+ ~~~~ ~~
+ (\kappa_1 -> \kappa_2)^\circ =
+ {\kappa_1}^\circ -> {\kappa_2}^\circ
+ ~~~~ ~~
+ (A -> \kappa)^\circ =
+ \kappa^\circ
+\]
+\[ \fbox{$F^\circ$}
+ ~~~~
+ X^\circ =
+ X
+ ~~~~ ~~~~
+ (A -> B)^\circ =
+ A^\circ -> B^\circ
+\]
+\[ \qquad
+ (\lambda X^\kappa.F)^\circ =
+ \lambda X^{\kappa^\circ}.F^\circ
+ ~~~~ ~~~~
+ (\lambda i^A.F)^\circ =
+ F^\circ
+\]
+\[ \qquad
+ (F\;G)^\circ =
+ F^\circ\;G^\circ
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~
+ (F\,\{s\})^\circ =
+ F^\circ
+\]
+\[ \qquad
+ (\forall X^\kappa . B)^\circ =
+ \forall X^{\kappa^\circ} . B^\circ
+ ~~~~ ~~~~
+ (\forall i^A . B)^\circ =
+ B^\circ
+\]
+\[ \fbox{$\Delta^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~
+ (\Delta,X^\kappa)^\circ = \Delta^\circ,X^{\kappa^\circ}
+ ~~~~ ~~
+ (\Delta,i^A)^\circ = \Delta^\circ
+\]
+\[ \fbox{$\Gamma^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~~~
+ (\Gamma,x:A)^\circ = \Gamma^\circ,x:A^\circ
+\]
+\end{definition}
+
+\begin{example}\label{PathologicalExample}
+The meta-operation of index erasure simply discards all indexing
+information.  The effect of this on most datatypes is to project the
+indexing invariants while retaining the type structure.  
+%
+This is clearly seen for the vector type constructor~$\mathtt{Vec}$ whose
+index erasure is the list type constructor~$\mathtt{List}$,
+see~\Fig{churchrec}. 
+%
+One can however build pathological examples.  For instance, the
+type $\mathtt P_A \triangleq \forall i^A.\,\forall j^A.\, \LEq_A\s i \s j$
+has index erasure $\mathtt{Unit} \triangleq \forall X^\mathtt{*}.\,X\to
+X$.
+\end{example}
+
+\begin{theorem}[index erasure on well-sorted kinds]
+\label{thm:ierasesorting}
+	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
+\end{theorem}
+\begin{proof}
+	By induction on the sorting derivation.
+\end{proof}
+\begin{remark}
+For any well-sorted kind $\kappa$ in \Fi,
+$\kappa^\circ$ is a kind in \Fw.
+\end{remark}
+
+\begin{theorem}[index erasure on well-formed type level contexts]
+\label{thm:ierasetyctx}
+\[ \inference{|- \Delta}{|- \Delta^\circ} \]
+\end{theorem}
+\begin{proof}
+	By induction on the derivation for well-formed type level context
+	and using Theorem \ref{thm:ierasesorting}.
+\end{proof}
+\begin{remark}
+For any well-formed type level context $\Delta$ in \Fi,
+$\Delta^\circ$ is a well-formed type level context in \Fw.
+\end{remark}
+
+\begin{theorem}[index erasure on kind equality]\label{thm:ierasekindeq}
+$ \inference{|- \kappa=\kappa':\square}
+	{|- \kappa^\circ=\kappa'^\circ:\square}
+$
+\end{theorem}
+\begin{proof}
+	By induction on the kind equality judgement.
+\end{proof}
+\begin{remark}
+For any well-sorted kind equality $|- \kappa=\kappa':\square$ in \Fi,
+$|- \kappa^\circ=\kappa'^\circ:\square$ is a well-sorted kind equality in \Fw.
+\end{remark}
+
+The three theorems above on kinds are rather simple to prove since there is
+no need to consider mutual recursion in the definition of kinds due to
+the erasure operation on kinds. Recall that the erasure operation on kinds
+discards the type ($A$) appearing in the index arrow type ($A -> \kappa$).
+So, there is no need to consider the types appearing in kinds
+and the index terms appearing in those types, after the erasure.\\
+
+\begin{theorem}[index erasure on well-kinded type constructors]
+\label{thm:ierasekinding}
+\[ \inference{|- \Delta & \Delta |- F : \kappa}
+		{\Delta^\circ |- F^\circ : \kappa^\circ}
+\]
+\end{theorem}
+\begin{proof}
+	By induction on the kinding derivation.
+\begin{itemize}
+\item[case] ($Var$)
+	Use Theorem \ref{thm:ierasetyctx}.
+
+\item[case] ($Conv$)
+	By induction and using Theorem \ref{thm:ierasekindeq}.
+
+\item[case] ($\lambda$)
+	By induction and using Theorem \ref{thm:ierasesorting}.
+
+\item[case] ($@$)
+	By induction.
+
+\item[case] ($\lambda i$)
+	We need to show that
+	$\Delta^\circ |- (\lambda i^A.F)^\circ : (A -> \kappa)^\circ$,
+	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$
+	by Definition \ref{def:ierase}.
+
+	By induction, we know that
+	$(\Delta,i^A)^\circ |- F^\circ : \kappa^\circ $,
+	which simplifies $\Delta^\circ |- F^\circ : \kappa^\circ$
+	by Definition \ref{def:ierase}.
+
+\item[case] ($@ i$)
+	We need to show that
+	$\Delta^\circ |- (F\;\{s\})^\circ : \kappa^\circ$,
+	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$
+	by Definition \ref{def:ierase}.
+
+	By induction we know that
+	$\Delta^\circ |- F^\circ : (A -> \kappa)^\circ$,
+	which simplifies to $\Delta^\circ |- F^\circ : \kappa^\circ$
+	by Definition \ref{def:ierase}.
+
+\item[case] ($->$)
+	By induction.
+
+\item[case] ($\forall$)
+	We need to show that
+	$\Delta^\circ |- (\forall X^\kappa.B)^\circ : *^\circ$,
+	which simplifies to
+	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$
+	by Definition \ref{def:ierase}.
+
+	Using Theorem \ref{thm:ierasesorting}, we know that
+	$|- \kappa^\circ : \square$.
+
+	By induction we know that
+	$(\Delta,X^\kappa)^\circ |- B^\circ : *^\circ$,
+	which simplifies to
+	$\Delta^\circ,X^{\kappa^\circ} |- B^\circ : *$
+	by Definition \ref{def:ierase}.
+
+	Using the kinding rule ($\forall$), we get exactly
+	what we need to show:
+	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$.
+
+\item[case] ($\forall i$)
+	We need to show that
+	$\Delta^\circ |- (\forall i^A.B)^\circ : *^\circ$,
+	which simplifies to $\Delta^\circ |- B^\circ : *$
+	by Definition \ref{def:ierase}.
+
+	By induction we know that
+	$(\Delta,i^A)^\circ |- B^\circ : *^\circ$,
+	which simplifies $\Delta^\circ |- B^\circ : *$
+	by Definition \ref{def:ierase}.\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{theorem}[index erasure on type constructor equality]
+\[ \inference{\Delta |- F=F':\kappa}
+		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
+\]
+\label{thm:ierasetyconeq}
+\end{theorem}
+\begin{proof}
+By induction on the derivation of type constructor equality.
+
+Most of the cases are done by applying the induction hypothesis
+and sometimes using Proposition \ref{prop:wfkind}.
+
+The only interesting cases, which are worth elaborating on, are the
+equality rules involving substitution.  There are two such rules.
+
+\paragraph{}
+  $\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+             {\Delta |- (\lambda X^\kappa.F)\,G = F[G/X]:\kappa'}$ \\
+
+We need to show
+$ \Delta^\circ |- ((\lambda X^\kappa.F)\,G)^\circ = (F[G/X])^\circ : \kappa'^\circ $,
+which simplifies to 
+$ \Delta^\circ |- (\lambda X^{\kappa^\circ}.F^\circ)\,G^\circ = (F[G/X])^\circ : \kappa'^\circ $
+by Definition \ref{def:ierase}.
+
+By induction, we know that $(\Delta,X^\kappa)^\circ |- F^\circ : \kappa'^\circ$,
+which simplifies to $\Delta^\circ,X^{\kappa^\circ} |- F^\circ : \kappa'^\circ$
+by Definition \ref{def:ierase}.
+
+Using the kinding rule ($\lambda$), we get
+$\Delta^\circ |- \lambda X^{\kappa^\circ}. F^\circ : \kappa^\circ -> \kappa'^\circ$.
+
+Using the kinding rule ($@$), we get
+$\Delta^\circ |- (\lambda X^{\kappa^\circ}. F^\circ) G^\circ : \kappa'^\circ$.
+
+Using the very equality rule of this case,\\ we get 
+$\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ =
+F^\circ[G^\circ/X] : \kappa'^\circ$.
+
+All we need to check is $(F[G/X])^\circ = F^\circ[G^\circ/X]$,
+which is easy to see.
+
+\paragraph{}
+  $\inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+             {\Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa}$ \\
+
+By induction we know that $\Delta^\circ |- F^\circ : \kappa^\circ$.
+
+The erasure of the left hand side of the equality is\\
+$((\lambda i^A.F)\,\{s\})^\circ = (\lambda i^A.F)^\circ = F^\circ$.
+
+All we need to show is $(F[s/i])^\circ = F^\circ$, which is obvious
+since index variables can only occur in index terms and index terms
+are always erased. Recall the index erasure over type constructors in
+Definition \ref{def:ierase}; in particular, $(\lambda i^A.F)^\circ=F^\circ$,
+$(F\{s\})^\circ=F^\circ$, and $(\forall i^A.B)^\circ=B^\circ$.
+\end{proof}
+\begin{remark}
+For any well-kinded type constructor equality $\Delta |- F=F':\kappa$ in \Fi,
+$\Delta^\circ|- F^\circ=F'^\circ:\kappa^\circ$ is
+a well-kinded type constructor equality in \Fw.
+\end{remark}
+
+
+The proofs for the two theorems above on type constructors need not consider
+mutual recursion in the definition of type constructors due to
+the erasure operation. Recall that the erasure operation on type constructors
+discards the index term ($s$) appearing in the index application $(F\;\{s\})$.
+So, there is no need to consider the index terms appearing in the types after
+the erasure.
+
+\begin{theorem}[index erasure on well-formed term level contexts]
+\label{thm:ierasetmctx}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ} \]
+\end{theorem}
+\begin{proof}
+By induction on $\Gamma$.
+\begin{itemize}
+\item[case] ($\Gamma=\cdot$) It trivially holds.
+\item[case] ($\Gamma = \Gamma',x:A$),
+we know that  $\Delta |- \Gamma'$ and $\Delta |- A:*$
+by the well-formedness rules
+and that $\Delta^\circ |- \Gamma'^\circ$ by induction.
+
+From $\Delta |- A:*$, we know that $\Delta^\circ |- A^\circ :*$
+by Theorem \ref{thm:ierasekinding}.
+
+We know that $\Delta^\circ |- \Gamma'^\circ,x:A^\circ$
+from $\Delta^\circ |- \Gamma'^\circ$ and $\Delta^\circ |- A^\circ :*$
+by the well-formedness rules.
+
+Since $\Gamma'^\circ,x:A^\circ = (\Gamma',x:A)^\circ = \Gamma^\circ$
+by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
+\end{itemize}\vspace*{-10pt}
+\end{proof}
+
+\begin{theorem}[index erasure on index-free well-typed terms]
+\label{thm:ierasetypingifree}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+		{\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
+\]
+\end{theorem}
+\begin{proof} By induction on the typing derivation.
+	Interesting cases are the index related rules ($:i$), ($\forall Ii$),
+	and ($\forall Ei$). Proofs for the other cases are straightforward
+	by induction and applying other erasure theorems corresponding to
+	the judgment forms.
+\begin{itemize}
+\item[case] ($:$)
+	By Theorem \ref{thm:ierasetmctx}, we know that
+	$\Delta^\circ|- \Gamma^\circ$ when $\Delta|- \Gamma$.
+	By definition of erasure on term-level context, we know that
+	$(x:A^\circ) \in \Gamma^\circ$ when $(x:A) \in \Gamma$.
+\item[case] ($:i$)
+	Vacuously true since $t$ does not contain any index variables
+        (\ie, $\dom(\Delta)\cap\FV(t) = \emptyset$).
+\item[case] ($->$$I$)
+	By Theorem \ref{thm:ierasekinding}, we know that $\cdot |- A^\circ:*$.
+	By induction, we know that
+	$\Delta^\circ;\Gamma^\circ,x:A^\circ |- t^\circ : B^\circ$.
+	Applying the ($->$$I$) rule to what we know, we have
+	$\Delta^\circ;\Gamma^\circ |- \l x.t^\circ : A^\circ -> B^\circ$.
+\item[case] ($->$$E$)
+	Straightforward by induction.
+\item[case] ($\forall I$)
+	By Theorem \ref{thm:ierasesorting}, we know that
+	$|- \kappa^\circ:\square$.
+	By induction, we know that
+	$\Delta^\circ,X^{\kappa^\circ};\Gamma^\circ |- t : B^\circ$.
+	Applying the ($\forall I$) rule to what we know, we have
+	$\Delta^\circ;\Gamma^\circ |- t : \forall X^{\kappa^\circ}.B^\circ$.
+\item[case] ($\forall E$)
+	By induction, we know that
+	$\Delta^\circ;\Gamma^\circ |- t : \forall X^{\kappa^\circ}.B^\circ$.
+	By Theorem \ref{thm:ierasekinding}, we know that
+	$\Delta^\circ |- G^\circ : \kappa^\circ$.
+	Applying the ($\forall E$) rule, we have
+	$\Delta^\circ;\Gamma^\circ |- t : B^\circ[G^\circ / X]$.
+\item[case] ($\forall Ii$)
+	By Theorem \ref{thm:ierasekinding}, we know that $\cdot |- A^\circ:*$.
+	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
+	which is what we want since $(\forall i^A.B)^\circ = B^\circ$.
+\item[case] ($\forall Ei$)
+	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
+	which is what we want since $(B[s/i])^\circ = B^\circ$.
+\item[case] ($=$)
+	By Theorem \ref{thm:ierasetyconeq} and induction.\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{example}\label{PathologicalExampleContinued}
+The theorem yields that the pathological type~$\mathtt P_A$
+of~Example~\ref{PathologicalExample} is not inhabited, as it is impossible
+to have both $t:\mathtt P_A$ and $t:(\mathtt P_A)^\circ=\mathtt{Unit}$.
+It follows as a corollary that the implication of
+Theorem~\ref{thm:ierasetypingifree} does not admit a converse.
+
+In this context for $A=\mathtt{Void}$, note that even though one has
+%the open typing 
+$i^\mathtt{Void};\cdot\vdash\lambda x.\,i:\forall
+j^{\mathtt{Void}}.\,\forall X^{\mathtt{Void}\to*}.\, X\s i\to X\s j$, 
+this open term %this derivation 
+cannot be closed by rule~$(\forall Ii)$ because of its side
+condition.  This is in stark contrast to what is possible in calculi with
+full type dependency. In System \Fi, the index variables
+in type level context~$\Delta$ cannot appear dynamically at term level.
+Conversely, term variables in the term level context~$\Gamma$ cannot be
+used for instantiation of index polymorphic types (rule $(\forall Ei)$).
+
+Similar considerations to the above show that $\LEq_A$ is not symmetric,
+in that the type {\small\rm(Symmetric)} in~\S\ref{Leibniz} is not inhabited.  
+\end{example}
+
+We introduce an index variable selection meta-operation that selects all
+the index variable bindings from the type level context.
+
+\begin{definition}[index variable selection]
+\[ \cdot^\bullet = \cdot \qquad
+	(\Delta,X^A)^\bullet = \Delta^\bullet \qquad
+	(\Delta,i^A)^\bullet = \Delta^\bullet,i:A
+\]
+\end{definition}
+
+\begin{theorem}[index erasure on well-formed term level contexts
+		prepended by index variable selection]
+\label{thm:ierasetmctxivs}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
+\]
+\end{theorem}
+\begin{proof}
+Straightforward by Theorem \ref{thm:ierasetmctx} and the typing rule ($:i$).
+\end{proof}
+
+The following result is the appropriate version of
+Theorem~\ref{thm:ierasetypingifree} without the side condition therein.
+
+\begin{theorem}[index erasure on well-typed terms]
+\label{thm:ierasetypingall}
+\[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+\]
+\end{theorem}
+\begin{proof}
+	The proof is almost the same as that of
+	Theorem~\ref{thm:ierasetypingifree}, except for the ($:i$) case.
+	The proof for the rule~($:i$) case is easy
+	since $(i:A) \in \Delta^\bullet$ when $i^A \in \Delta$ by definition of
+	the index variable selection operation. The indices from $\Delta$
+	being prepended to $\Gamma$ do not affect the proof for the other cases.
+\end{proof}
+
+%% \begin{theorem}[index erasure on term equality]
+%% \[ \inference{\Delta;\Gamma |- t=t':A}
+%%  	{\Delta^\circ;\Gamma^\circ |- t=t':A^\circ}
+%% \]
+%% \end{theorem}
+
+\subsection{Strong normalization and logical consistency}
+\label{ssec:fi:sn}
+Strong normalization is a corollary of the erasure property since we know that
+System~\Fw\ is strongly normalizing. Logical consistency is immediate since
+System~\Fi\ is a strict subset of the \emph{restricted implicit calculus}
+\cite{Miquel00}, which is in turn a restriction of ICC~\cite{Miquel01}.
+Subject reduction is also immediate for the same reason.
+%% \marginpar{\framebox{\bf\em State these results formally in a theorem?}}
+
+\begin{comment}
+\subsection{No \texttt{Void} type instantiation from dynamic values}
+\label{NoVoid}
+
+There is an interesting difference between \Fi\ and a Curry-style
+dependent calculus with implicit arguments such as ICC, regarding
+the instantiation of uninhabited type. Consider the 
+instantiation rule\marginpar{\framebox{\bf\em Instantiation!?}}
+of ICC, shown below:
+\[
+\inference{\Gamma,x:A |- t : B}{\Gamma |- t : \forall x^A.B }~(x\notin\FV(t))
+\]
+When $A=\mathtt{Void}$ and $B=\forall i^\mathtt{Void}.\mathtt{NeverEverVoid}\{i\}$,
+we can instantiate $i$ with $y$, according to the rule above,
+provided that $(y:\mathtt{Void})\in\Gamma$. Note that, in ICC, it is possible to
+instantiate a universally quantified term variable $x$ of an uninhabited type
+from a possibly dynamic term $y$.
+
+\marginpar{\framebox{\bf\em Sorry, I don't quite understand.  Needs to be
+		improved.}}
+
+In System~\Fi, one cannot instantiate $B$ with any of the term variables since
+index instantiation cannot refer to the term-level context~($\Gamma$)
+but only refers to the type-level context~($\Delta$) --
+recall the ($\forall E i$) rule in Figure \ref{fig:fi}.
+%\[
+%\inference[($\forall E i$)]
+%{ \Delta;\Gamma |- t : \forall i^A.B & \Delta;\cdot |- s:A }
+%	                           {\Delta;\Gamma |- t : B[s/i]}
+%\]
+Note that it is still possible to instantiate uninhabited type from
+index variables introduced at type level~(\ie, when $j^\mathtt{Void}\in\Delta$).
+%%%However, such variables are only introduced within a pathological
+%%%type constructor definition, as in Examples~\ref{PathologicalExample}
+%%%and~\ref{PathologicalExampleContinued}.
+\texttt{Void} type instantiation is localized inside type constructor
+definition.  It is assured that function definitions at term level will
+never cause \texttt{Void} type instantiation, even when some of the
+function arguments have uninhabited type.
+
+
+
+\begin{proposition}[anti-dependency on arrow kinds]
+\[ \inference{ |- \Delta,X^\kappa
+             & \Delta,X^\kappa |- F : \kappa' }
+             { X\notin\FV(\kappa') }
+\]
+\end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
+	Note that $|- \kappa'$ does not involve any type level context.
+
+	Therefore, $X$ cannot appear free in $\kappa'$.
+\end{proof}
+
+\begin{proposition}[anti-dependency on indexed arrow kinds]
+\[ \inference{ |- \Delta,i^A
+             & \Delta,i^A |- F : \kappa }
+             { i\notin\FV(\kappa) }
+\]
+\end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
+	Note that $|- \kappa'$ does not involve any type level context.
+	Therefore, $i$ cannot appear free in $\kappa'$.
+\end{proof}
+
+\begin{proposition}[anti-dependency on arrow types]
+\[ \inference{ \Delta |- \Gamma,x:A
+             & \Delta;\Gamma,x:A |- t : B }
+             { x\notin\FV(B) }
+\]
+\end{proposition}
+\begin{proof}
+	By Proposition \ref{prop:wftype}, $\Delta |- B:*$.
+	Note that $\Delta |- \kappa'$ does not involve any term level context.
+	Therefore, $x$ cannot appear free in $B$.
+\end{proof}
+
+
+\begin{remark} Our system is more strong??? than anti-dependency on arrow types
+TODO
+\end{remark}
+
+\end{comment}
+
