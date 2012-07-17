@@ -594,19 +594,6 @@ it is clear that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
 The type inference algorithm $W$ is sound and complete
 with respect to the syntax directed typing rules.
 
-TODO\\
-TODO\\
-TODO\\
-TODO\\
-TODO\\
-TODO\\
-TODO\\
-TODO\\
-TODO\\
-TODO\\
-
-TODO
-
 \begin{figure}
 \begin{singlespace}
 \[ \inference[\sc Var$_W$]
@@ -638,8 +625,101 @@ TODO
 \label{fig:algW}
 \end{figure}
 
+\begin{proposition} \label{prop:substvdashs}
+	$\inference{\Gamma |-s t : A}{S\Gamma |-s t : SA}$
+\end{proposition}
+\begin{proposition} \label{prop:substclosure}
+	$ S(\overline{\Gamma}(A)) = \overline{S\Gamma}(SA) $
+\end{proposition}
+
+\begin{theorem}[Soundess of $W$] \label{thm:soundW}
+$ \inference{ W(\Gamma,t) ~> (S,A) }{ S\Gamma |-s t : A } $
+\end{theorem}
+\begin{proof}
+By induction on the derivation of $|-s$.
+\begin{itemize}
+\item[case](\rulename{Var$_W$})
+	Obvious, by definition of $\sqsubseteq$.
+
+\item[case](\rulename{Abs$_W$})
+	We need to show that
+	$S_1\Gamma |-s \l x.t : S_1 X -> A$.
+
+	By induction, we know that $S_1(\Gamma,x:X) |-s t : A$.
+
+	We know that $S_1\Gamma,x:S_1X |-s t : A$,
+	since $S_1(\Gamma,x:X) = S_1\Gamma,x:S_1 X$.
+
+	By \rulename{Abs$_s$} rule, we have
+	$S_1\Gamma |-s \l x.t : S_1 X -> A$.
+\item[case](\rulename{App$_W$})
+	We need to show that $(S_3\circ S_2 \circ S_1)\Gamma |-s s\,t : S_3 X$.
+
+	By inducution, we know that
+	$S_1\Gamma |-s s : A_1$ and 
+	$S_2(S_1\Gamma) |-s t : A_2$.
+	By Proposition~\ref{prop:substvdashs},
+	$S_3(S_2(S_1\Gamma)) |-s s : S_3(S_2(A_1))$ and 
+	$S_3(S_2(S_1\Gamma)) |-s t : S_3 A_2$.
+
+	Due to the property of unification, $S_2 A_1 =  A_2 -> X$.
+
+	Thus, $S_3(S_2(S_1\Gamma)) |-s s : S_3(A_2 -> X)$ and 
+	$S_3(S_2(S_1\Gamma)) |-s t : S_3 A_2$.
+
+	That is, $(S_3\circ S_2 \circ S_1)\Gamma |-s s : S_3 A_2 -> S_3 X$ and 
+	$(S_3\circ S_2 \circ S_1)\Gamma |-s t : S_3 A_2$.
+
+	By \rulename{App$_s$} rule, we have 
+	$(S_3\circ S_2 \circ S_1)\Gamma |-s s\,t : S_3 X$.
+
+\item[case](\rulename{Let$_W$})
+	We need to show that $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
+
+	By induction, we have $S_1\Gamma |-s s:A_1$ and
+	$S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1)) |-s t:A_2$.
+
+	By Proposition~\ref{prop:substvdashs}, we have $S_2(S_1\Gamma) |-s s:S_2 A_1$.
+
+	By Proposition~\ref{prop:substclosure}, we have
+	$S_2(S_1\Gamma),x:\overline{S_2(S_1\Gamma)}(S_2 A_1) |-s t: A_2$.
+
+	By \rulename{Let$_s$}, we have
+	$S_2(S_1\Gamma) |-s \<let> x=s \<in> t:A_2$.
+	Since $S_2(S_1\Gamma)=(S_2\circ S_1)\Gamma$ by definition,
+	we have $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
+\vspace*{-2em}
+\end{itemize}
+\end{proof}
+
+\begin{theorem}[Completeness of $W$] \label{thm:completeW}
+\[ \inference{ S'\Gamma |-s t : A' }{
+	W(\Gamma,t) ~> (S,A) ~\land~
+	\exists R . \left(
+		S'\Gamma = R(S\Gamma) \,\land\,
+		R(\overline{S\Gamma}(A))\sqsubseteq A' \right) }
+\]
+\end{theorem}
+\begin{proof}
+TODO
+\end{proof}
+TODO
+
+\begin{corollary}[Completeness of $W$ under closed context]
+\[
+\inference{ \Gamma |-s t : A' & \FV(\Gamma)=\emptyset }{
+	W(\Gamma,t) ~> (S,A) ~\land~
+	\exists R.R(\overline{\Gamma}(A))\sqsubseteq A' }
+\]
+\end{corollary}
+\begin{proof} By Theorem \ref{thm:completeW} and the fact that
+	$S'\Gamma = \Gamma$ for any $S'$
+	when $\FV(\Gamma) = \emptyset$.
+\end{proof}
+
 There exists a unification algorithm such that
 
+\begin{comment}
 
 \subsection{Unification}
 A single substitution
@@ -1054,4 +1134,4 @@ $ \inference{S A_1 = S A_2}{\exists S'.\, U(A_1,A_2)\circ S' = S} $
 	TODO
 \end{proof}
 
-
+\end{comment}
