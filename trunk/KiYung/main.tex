@@ -39,6 +39,8 @@
 %% \DeclareMathSymbol{\strictif}{\mathrel}{symbolsC}{74}
 %% \DeclareMathSymbol{\boxright}{\mathrel}{symbolsC}{128}
 
+\newcommand{\Fig}[1]{Figure\,\ref{fig:#1}}
+
 \newcommand{\cf}[0]{{cf.}}
 \newcommand{\eg}[0]{{e.g.}}
 \newcommand{\ie}[0]{{i.e.}}
@@ -82,18 +84,31 @@
 \command{let[let\;], in[\;in\;], if[if\;], then[\;then\;], else[\;else\;], where[\;where\;], when[\;when\;]}
 
 \newtheorem{proposition}{Proposition}
+\newtheorem*{proposition*}{Proposition}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
 \newtheorem{corollary}{Corollary}
-%% \theoremstyle{defintition}
-%% \newtheorem{definition}{Theorem}
+\theoremstyle{defintition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
 
-%% \numberwithin{definition}{section}
+\numberwithin{definition}{section}
 \numberwithin{equation}{section}
 \numberwithin{proposition}{section}
 \numberwithin{theorem}{section}
 \numberwithin{lemma}{section}
 \numberwithin{corollary}{section}
+\numberwithin{example}{section}
+\numberwithin{remark}{section}
+
+
+\newcommand{\Eq}{\mathtt{Eq}}
+\newcommand{\LEq}{\mathtt{LEq}}
+\newcommand{\Ran}{\mathtt{Ran}}
+\newcommand{\Lan}{\mathtt{Lan}}
+
 
 \begin{document}
 \title{How to Write Theses \\ With Two Line Titles}
