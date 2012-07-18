@@ -636,7 +636,7 @@ with respect to the syntax directed typing rules.
 $ \inference{ W(\Gamma,t) ~> (S,A) }{ S\Gamma |-s t : A } $
 \end{theorem}
 \begin{proof}
-By induction on the derivation of $|-s$.
+By induction on the recursion of the algorithm $W$.
 \begin{itemize}
 \item[case](\rulename{Var$_W$})
 	Obvious, by definition of $\sqsubseteq$.
@@ -692,16 +692,108 @@ By induction on the derivation of $|-s$.
 \end{itemize}
 \end{proof}
 
+\begin{proposition}[\rulename{Abs$_s$} is reversible] \label{prop:Abssrev}
+$ \inference{\Gamma |-s \l x   .t : A -> B}{\Gamma,x:A |-s t:B} $
+\end{proposition}
+
 \begin{theorem}[Completeness of $W$] \label{thm:completeW}
 \[ \inference{ S'\Gamma |-s t : A' }{
-	W(\Gamma,t) ~> (S,A) ~\land~
+	W(\Gamma,t) ~> (S,A_W) ~\land~
 	\exists R . \left(
 		S'\Gamma = R(S\Gamma) \,\land\,
-		R(\overline{S\Gamma}(A))\sqsubseteq A' \right) }
+		R(\overline{S\Gamma}(A_W))\sqsubseteq A' \right) }
 \]
 \end{theorem}
 \begin{proof}
-TODO
+By induction on the derivation of $|-s$.
+\begin{itemize}
+\item[case](\rulename{Var$_s$})
+	From the \rulename{Var$_s$} rule, we know that
+	$S'\sigma \in S'\Gamma$, where $\sigma\in\Gamma$,
+	and $S'\sigma\sqsubseteq A'$.
+	By definition of $\sqsubseteq$, $A'$ has the form
+	$S'A[B_1/X_1]\cdots[B_n/X_n]$ where $\sigma = \forall X_1\dots X_n.A$.
+
+	From \rulename{Var$_W$} rule, we know that
+	$S = \emptyset $ and $A_W = A[X_1'/X_1]\cdots[X_n'/X_n]$
+	where $X_1',\dots,X_n'$ are fresh.
+
+	Let $R=S'$, then, we are done.
+
+\item[case](\rulename{Abs$_s$})
+	We want to show that \vspace*{-2em}
+	\begin{singlespace}
+	\[\inference{S'\Gamma |-s t : A -> B}{
+	\begin{matrix} W((\Gamma, x:X),t) \\ ~> (S,S X -> B_W) \end{matrix}
+	~\land~
+	\exists R.
+		\left(\begin{matrix}
+			S'\Gamma=R(S\Gamma) ~~ \land \\
+			R(\overline{S\Gamma}(SX -> B_W))\sqsubseteq A -> B
+		\end{matrix}\right) } \]
+	\end{singlespace}
+
+	Without loss of generality, we can choose $A = X$,
+	since we can choose $S'$ accordingly such that $S'X = A$.
+	Then, we have \vspace*{-2em}
+	\begin{singlespace}
+	\[\inference{S'\Gamma |-s t : S'X -> B}{
+	\begin{matrix} W((\Gamma, x:X),t) \\ ~> (S,S X -> B_W) \end{matrix}
+	~\land~
+	\exists R.
+		\left(\begin{matrix}
+			S'\Gamma=R(S\Gamma) ~~ \land \\
+			R(\overline{S\Gamma}(SX -> B_W))\sqsubseteq S'X -> B
+		\end{matrix}\right) } \]
+	\end{singlespace}
+
+	By induction, we know that  \vspace*{-2em}
+	\begin{singlespace}
+	\[\inference{S'(\Gamma,x:X) |-s t : B}{
+	W((\Gamma, x:X),t) ~> (S,B_W) ~\land~
+	\exists R.
+		\left(\begin{matrix}
+			S'(\Gamma,x:X)=R(S(\Gamma,x:X)) \\ \land~\;
+			R(\overline{S(\Gamma,x:X)}(B_W))\sqsubseteq B
+		\end{matrix}\right) } \]
+	\end{singlespace}
+
+	By Proposition~\ref{prop:Abssrev}, we can replace the assumption
+	$S'(\Gamma,x:X) |-s t:B$ with
+	$S'\Gamma |- \l x.t : S'X -> B$.
+
+	By applying \rulename{Abs$_W$} rule to
+	$W((\Gamma, x:X),t) ~> (S,B_W)$ where $X$ fresh,
+	we have $W(\Gamma,\l x.t) ~> (S,S X -> B_W)$.
+
+	From $S'(\Gamma,x:X)=R(S(\Gamma,x:X))$, we know that
+	$S'\Gamma = R(S\Gamma)$ and $S'X = R(S X)$.
+
+	If we can show that
+	$R(\overline{S\Gamma}(S X -> B_W)) \sqsubseteq S'X -> B$,
+	we are done. Since
+	$R(\overline{S\Gamma}(S X -> B_W)) =
+	R(\overline{S\Gamma}(S X)) -> R(\overline{S\Gamma}(B_W))$,
+	what we need to show are
+	$R(\overline{S\Gamma}(S X))\sqsubseteq S'X$ and
+	$R(\overline{S\Gamma}(B_W)) \sqsubseteq B$.
+	The former is true by Proposition \ref{prop:substclosure} and
+	the facts that $S'X = R(S X)$ and
+	$X\notin \dom(\Gamma)$ since $X$ is fresh:
+	$R(\overline{S\Gamma}(S X)) =
+	R(S(\overline{\Gamma}(X))) = R(S(X)) = S'X
+	\sqsubseteq S' X$.
+	The latter is true since $ R(\overline{S\Gamma}(B_W)) 
+	\sqsubseteq R(\overline{S(\Gamma,x:X)}(B_W)) \sqsubseteq B$.
+
+\item[case](\rulename{App$_s$})
+	TODO
+
+\item[case](\rulename{Let$_s$})
+	TODO
+
+\vspace*{-2em}
+\end{itemize}
 \end{proof}
 TODO
 
