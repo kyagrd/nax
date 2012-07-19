@@ -855,8 +855,7 @@ By induction on the derivation of $|-s$.
 	\exists R.
 		\left(\begin{matrix}
 			S'\Gamma=R((S_2\circ S_1)\Gamma) ~~ \land \\
-			R(\overline{(S_2\circ S_1)\Gamma}(A_2))
-			\sqsubseteq A_2'
+			R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2'
 		\end{matrix}\right) } \]
 	\end{singlespace}
 
@@ -870,8 +869,7 @@ By induction on the derivation of $|-s$.
 	\exists R_1.
 		\left(\begin{matrix}
 			S_1'\Gamma=R_1(S_1\Gamma) ~~ \land \\
-			R_1(\overline{S_1\Gamma}(A_1))
-			\sqsubseteq A_1'
+			R_1(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'
 		\end{matrix}\right) }
 	\\
 	\label{WcompleteLetsCase2}
@@ -940,46 +938,43 @@ By induction on the derivation of $|-s$.
 	\end{align}
 	Note that the assumption of (\ref{usingLetsrev1}),
 	$S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'$,
-	implies the assumptions of both (\ref{WcompleteLetsCase1})
-	and (\ref{WcompleteLetsCase2}). So, we can merge the conclusions
-	of (\ref{WcompleteLetsCase1}) and (\ref{WcompleteLetsCase2})
+	implies the assumption of (\ref{WcompleteLetsCase1})
+	instantiated by $S_1'=S_2'\circ S_1$.
+	and the assumption (\ref{WcompleteLetsCase2})
+	So, we can merge the conclusion of (\ref{WcompleteLetsCase1}) and
+	the conclusion of (\ref{WcompleteLetsCase2})
+	instantiated by $S_1'=S_2'\circ S_1$.
 	to synthesize what we want to prove.
 
 	Applying \rulename{Let$_W$} rule to left-hand arguments of $\land$
 	in the conclusions of (\ref{WcompleteLetsCase1}) and
 	(\ref{WcompleteLetsCase2}), we get
-	$W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)$,
-	which is exactly the left-hand argument of $\land$
-	in the conclusion of what we want to prove.
+	$W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)$.
 
 	Let $R_2=R$ in the right-hand side in the conclusion of
-	(\ref{WcompleteLetsCase2}). Using similar steps we have
-	done in the case (\rulename{Lam$_s$}), we get exactly the right-hand
-	argument of $\land$ in the conclusion of what we want to prove.
+	(\ref{WcompleteLetsCase2}). Then, we get
+	$\exists R.\left(  S_2'(S_1\Gamma)=R((S_2\circ S_1)\Gamma) ~\land~
+	R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2' \right)$
+	by similar steps we took for the case (\rulename{Abs$_s$}).
 
 	In summary, we get \vspace*{-2em}
 	\begin{singlespace}
-	\[\inference{S'\Gamma |-s \<let> x=s \<in> t : A_2'}{
+	\[\inference{S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'}{
 	\begin{matrix} W(\Gamma,\<let> x=s \<in> t) \\
 		~> (S_2\circ S_1,A_2)
 	\end{matrix}
 	~\land~
 	\exists R.
 		\left(\begin{matrix}
-			S'\Gamma=R((S_2\circ S_1)\Gamma) ~~ \land \\
-			R(\overline{(S_2\circ S_1)\Gamma}(A_2))
-			\sqsubseteq A_2'
+			S_2'(S_1\Gamma)=R((S_2\circ S_1)\Gamma) ~~ \land \\
+			R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2'
 		\end{matrix}\right) } \]
 	\end{singlespace}
-	This is almost exactly what we want to prove,
-	except that the assumption is
-	$S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'$
-	instead of $S'\Gamma |-s \<let> x=s \<in> t : A_2'$.
+	which is almost exactly what we want to prove,
+	except that $S_2'(S_1\Gamma)$ is used in place of $S'\Gamma$.
 
-	Without loss of generality, we can assume
-	$S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'$
-	instead of $S'\Gamma |-s \<let> x=s \<in> t : A_2'$.
-	By Proposition \ref{prop:Letsrev},
+	Without loss of generality, we can use $S_2'(S_1\Gamma)$
+	instead of $S'\Gamma$. By Proposition \ref{prop:Letsrev},
 	$S'\Gamma |-s \<let> x=s \<in> t : A_2'$ implies
 	$S'\Gamma |-s s : A_1'$ for some $A_1'$.
 	Applying (\ref{WcompleteLetsCase1}) to 
