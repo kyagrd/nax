@@ -548,7 +548,7 @@ $\overline{\Gamma}(A) \sqsubseteq \forall X.\sigma$ by definition
 of $\sqsubseteq$.
 \end{proof}
 
-\begin{lemma}[generalizing typing context is safe]
+\begin{lemma}[generalizing typing context is safe] \label{lem:genGamma}
 $ \inference{\Gamma |-s t : A & \Gamma' \sqsubseteq \Gamma}
 	    {\Gamma' |-s t : A} $ where
 \begin{quote}
@@ -696,6 +696,12 @@ By induction on the recursion of the algorithm $W$.
 $ \inference{\Gamma |-s \l x   .t : A -> B}{\Gamma,x:A |-s t:B} $
 \end{proposition}
 
+\begin{proposition}[\rulename{Let$_s$} inverse] \label{prop:Letsrev}
+$ \inference{\Gamma |-s \<let> x=s \<in> t : B}{
+	\exists A.\left( \Gamma |-s s : A ~\land~
+			\Gamma,x:\overline{\Gamma}(A) |-s t : B \right)} $
+\end{proposition}
+
 \begin{theorem}[Completeness of $W$] \label{thm:completeW}
 \[ \inference{ S'\Gamma |-s t : A' }{
 	W(\Gamma,t) ~> (S,A_W) ~\land~
@@ -723,8 +729,8 @@ By induction on the derivation of $|-s$.
 \item[case](\rulename{Abs$_s$})
 	We want to show that \vspace*{-2em}
 	\begin{singlespace}
-	\[\inference{S'\Gamma |-s t : A -> B}{
-	\begin{matrix} W((\Gamma, x:X),t) \\ ~> (S,S X -> B_W) \end{matrix}
+	\[\inference{S'\Gamma |-s \l x.t : A -> B}{
+	\begin{matrix} W(\Gamma,\l x.t) \\ ~> (S,S X -> B_W) \end{matrix}
 	~\land~
 	\exists R.
 		\left(\begin{matrix}
@@ -737,8 +743,8 @@ By induction on the derivation of $|-s$.
 	since we can choose $S'$ accordingly such that $S'X = A$.
 	Then, we have \vspace*{-2em}
 	\begin{singlespace}
-	\[\inference{S'\Gamma |-s t : S'X -> B}{
-	\begin{matrix} W((\Gamma, x:X),t) \\ ~> (S,S X -> B_W) \end{matrix}
+	\[\inference{S'\Gamma |-s \l x.t : S'X -> B}{
+	\begin{matrix} W(\Gamma,\l x.t) \\ ~> (S,S X -> B_W) \end{matrix}
 	~\land~
 	\exists R.
 		\left(\begin{matrix}
@@ -787,15 +793,202 @@ By induction on the derivation of $|-s$.
 	\sqsubseteq R(\overline{S(\Gamma,x:X)}(B_W)) \sqsubseteq B$.
 
 \item[case](\rulename{App$_s$})
+	We want to show that \vspace*{-2em}
+	\begin{singlespace}
+	\[\inference{S'\Gamma |-s s\;t : S'X}{
+	\begin{matrix} W(\Gamma,s\;t) ~\qquad~ \\ ~> (S_3\circ S_2\circ S_1,S_3 X)
+	\end{matrix}
+	~\land~
+	\exists R.
+		\left(\begin{matrix}
+			S'\Gamma=R((S_3\circ S_2\circ S_1)\Gamma) ~~ \land \\
+			R(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X))
+			\sqsubseteq S'X
+		\end{matrix}\right) } \]
+	\end{singlespace}
+	We can use $S'X$ without loss of generality in the assumption,
+	since we can choose $S'$ accordingly, just as we did for the
+	\rulename{Abs$_s$} case.
+	We can use $S_3 X$ instead of $(S_3\circ S_2\circ S_1) X$
+	since $X\notin\dom(S_2)\cup\dom(S_1)$ because
+	$X$ has been picked fresh after $S_2$ and $S_1$ has been computed
+	in \rulename{App$_W$} rule.
+	So, $(S_3\circ S_2\circ S_1) X = S_3 X$.
+
+	By induction, we know that \vspace*{-2em}
+	\begin{singlespace}
+	\begin{align}
+	\inference{S_1'\Gamma |-s s : A_1'}{
+	W(\Gamma,s) ~> (S_1,A_1) ~\land~
+	\exists R_1.
+		\left(\begin{matrix}
+			S_1'\Gamma=R_1(S_1\Gamma) ~~\land\\
+			R_1(\overline{S_1\Gamma}(A_1))
+			\sqsubseteq A_1'
+		\end{matrix}\right) }
+		\\
+	\inference{S_2'(S_1\Gamma) |-s t : A_2'}{
+	W(S_1\Gamma,t) ~> (S_2,A_2) ~\land~
+	\exists R_2.
+		\left(\begin{matrix}
+			S_2'\Gamma=R_2(S_2(S_1\Gamma)) ~~\land\\
+			R_2(\overline{S_2(S_1\Gamma)}(A_2))
+			\sqsubseteq A_2'
+		\end{matrix}\right) }
+	\end{align}
+	\end{singlespace}
+
+	From the property of unification, we know that
+	$S_3(S_2 A_1) = S_3(A_2 -> X)$ and $S_3$ is a most general unifier.
+
 	TODO
 
+
 \item[case](\rulename{Let$_s$})
-	TODO
+	We want to show that \vspace*{-2em}
+	\begin{singlespace}
+	\[\inference{S'\Gamma |-s \<let> x=s \<in> t : A_2'}{
+	\begin{matrix} W(\Gamma,\<let> x=s \<in> t) \\
+		~> (S_2\circ S_1,A_2)
+	\end{matrix}
+	~\land~
+	\exists R.
+		\left(\begin{matrix}
+			S'\Gamma=R((S_2\circ S_1)\Gamma) ~~ \land \\
+			R(\overline{(S_2\circ S_1)\Gamma}(A_2))
+			\sqsubseteq A_2'
+		\end{matrix}\right) } \]
+	\end{singlespace}
+
+	By induction, we know that \vspace*{-2em}
+	\begin{singlespace}
+	\begin{align}
+	\label{WcompleteLetsCase1}
+	\inference{S_1'\Gamma |-s s : A_1'}{
+	W(\Gamma,s) ~> (S_1,A_1)
+	~\land~
+	\exists R_1.
+		\left(\begin{matrix}
+			S_1'\Gamma=R_1(S_1\Gamma) ~~ \land \\
+			R_1(\overline{S_1\Gamma}(A_1))
+			\sqsubseteq A_1'
+		\end{matrix}\right) }
+	\\
+	\label{WcompleteLetsCase2}
+	\inference{S_2'(S_1\Gamma,x:\overline{S_1\Gamma}(A_1)) |-s t : A_2'}{
+	\begin{smallmatrix} W((S_1\Gamma,x:\overline{S_1\Gamma}(A_1)),t) \\
+		~> (S_2,A_2)
+	\end{smallmatrix}
+	~\land~
+	\exists R_2.
+		\left(\begin{smallmatrix}
+			S_2'(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))=R_2(S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))) \\ \land ~~
+			R_2(\overline{S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))}(A_2))
+			\sqsubseteq A_2'
+		\end{smallmatrix}\right) }
+	\end{align}
+	\end{singlespace}
+
+	Instantiating (\ref{WcompleteLetsCase1})
+	by $S_1'=S_2'\circ S_1$ and $R_1=S_2'$,
+	we have \vspace*{-2em}
+	\begin{singlespace}
+	\[
+	\inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
+	W(\Gamma,s) ~> (S_1,A_1)
+	~\land~
+		\left(\begin{matrix}
+			S_2'(S_1\Gamma)=S_2'(S_1\Gamma) ~~ \land \\
+			S_2'(\overline{S_1\Gamma}(A_1))
+			\sqsubseteq A_1'
+		\end{matrix}\right) }
+	\]
+	\end{singlespace}
+	Removing the trivial equation $S_2'(S_1\Gamma)=S_2'(S_1\Gamma)$
+	from above, we have \vspace*{-2em}
+	\begin{singlespace}
+	\[
+	\inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
+	W(\Gamma,s) ~> (S_1,A_1) ~\land~
+	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1' }
+	\]
+	\end{singlespace}
+	Using above and Lemma \ref{lem:genGamma}, we have
+	\[
+	\inference{ S_2'(S_1\Gamma),x:A_1' |-s t : A_2' &
+	   \inference{
+		\inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
+		S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'} }{
+			S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1))
+			\sqsubseteq
+			S_2'(S_1\Gamma),x:A_1' } }{
+	   S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
+	\]
+	which can be summarized as
+	\[
+	\inference{ S_2'(S_1\Gamma),x:A_1' |-s t : A_2' &
+		    S_2'(S_1\Gamma) |-s s : A_1' }{
+	   S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
+	\]
+	By Proposition \ref{prop:Letsrev}, we have
+	\begin{align} \label{usingLetsrev1}
+	\inference{
+	   \inference{ S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2' }{
+		S_2'(S_1\Gamma),x:A_1' |-s t : A_2' ~\land~
+		S_2'(S_1\Gamma) |-s s : A_1' } }{
+	   S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
+	\end{align}
+	Note that the assumption of (\ref{usingLetsrev1}),
+	$S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'$,
+	implies the assumptions of both (\ref{WcompleteLetsCase1})
+	and (\ref{WcompleteLetsCase2}). So, we can merge the conclusions
+	of (\ref{WcompleteLetsCase1}) and (\ref{WcompleteLetsCase2})
+	to synthesize what we want to prove.
+
+	Applying \rulename{Let$_W$} rule to left-hand arguments of $\land$
+	in the conclusions of (\ref{WcompleteLetsCase1}) and
+	(\ref{WcompleteLetsCase2}), we get
+	$W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)$,
+	which is exactly the left-hand argument of $\land$
+	in the conclusion of what we want to prove.
+
+	Let $R_2=R$ in the right-hand side in the conclusion of
+	(\ref{WcompleteLetsCase2}). Using similar steps we have
+	done in the case (\rulename{Lam$_s$}), we get exactly the right-hand
+	argument of $\land$ in the conclusion of what we want to prove.
+
+	In summary, we get \vspace*{-2em}
+	\begin{singlespace}
+	\[\inference{S'\Gamma |-s \<let> x=s \<in> t : A_2'}{
+	\begin{matrix} W(\Gamma,\<let> x=s \<in> t) \\
+		~> (S_2\circ S_1,A_2)
+	\end{matrix}
+	~\land~
+	\exists R.
+		\left(\begin{matrix}
+			S'\Gamma=R((S_2\circ S_1)\Gamma) ~~ \land \\
+			R(\overline{(S_2\circ S_1)\Gamma}(A_2))
+			\sqsubseteq A_2'
+		\end{matrix}\right) } \]
+	\end{singlespace}
+	This is almost exactly what we want to prove,
+	except that the assumption is
+	$S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'$
+	instead of $S'\Gamma |-s \<let> x=s \<in> t : A_2'$.
+
+	Without loss of generality, we can assume
+	$S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'$
+	instead of $S'\Gamma |-s \<let> x=s \<in> t : A_2'$.
+	By Proposition \ref{prop:Letsrev},
+	$S'\Gamma |-s \<let> x=s \<in> t : A_2'$ implies
+	$S'\Gamma |-s s : A_1'$ for some $A_1'$.
+	Applying (\ref{WcompleteLetsCase1}) to 
+	$S'\Gamma |-s s : A_1'$ with $S_1'=S'$,
+	we have $S'\Gamma = R_1(S_1\Gamma)$ for some $R_1$.
 
 \vspace*{-2em}
 \end{itemize}
 \end{proof}
-TODO
 
 \begin{corollary}[Completeness of $W$ under closed context]
 \[
