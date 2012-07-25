@@ -1,48 +1,100 @@
 \documentclass{llncs}
-\title{Nax design full title \\ can change lines in title}
-\titlerunning{Nax design short title}
+\usepackage[numbers]{natbib}
+
+\title{The Nax programming language \\
+	{\small\rm(extended abstract)}}
+\titlerunning{The Nax programming language}
 \author{Ki Yung Ahn\inst{1} \and Tim Sheard\inst{1} \and
 	Author2 SName2\inst{2} % \and Author2 SName2\inst{2}
 	}
 \institute{
-	Portland State University, Portland, Oregon, USA \thanks{TODO thanks} \\
-		\email{kya@cs.pdx.edu} \email{sheard@cs.pdx.edu}
+	Portland State University, Portland, Oregon, USA \thanks{supported by NSF grant 0910500.}
+	\\ \email{kya@cs.pdx.edu} \qquad \email{sheard@cs.pdx.edu}
 	\and
-	University of Cambridge, Cambridge, UK \\
-		\email{todo@cl.cam.ac.uk} % \and \email{todo@cl.cam.ac.uk}
+	University of Cambridge, Cambridge, UK
+	\\ \email{todo@cl.cam.ac.uk} % \and \email{todo@cl.cam.ac.uk}
 	}
+
+\newcommand{\Wi}{\ensuremath{W_i}}
+
+\newcommand{\Fi}{\ensuremath{\mathsf{F}_i}}
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
+
 \begin{document}
 \maketitle
-\begin{abstract}
-	Write abstract here. Write abstract here.
-	Write abstract here. Write abstract here.
-	Write abstract here. Write abstract here.
-	Write abstract here. Write abstract here.
-	Write abstract here. Write abstract here.
-	Write abstract here. Write abstract here.
-	Write abstract here. Write abstract here.
-	Write abstract here. Write abstract here.
-\keywords{asdf, asdf, asdf, asdf}
-\end{abstract}
+%% \begin{abstract}
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% \keywords{asdf, asdf, asdf, asdf}
+%% \end{abstract}
 
-\section{TODO}
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
-Let's write a paper? Let's write a paper. Let's write a paper!
+\section{Introduction}
 
-\section{TODO}
+proof assistants mechanized theorem proving
+Curry-Howard correspondence.
+
+A light-weight verification
+indexed datatypes
+Programming with indexed datatypes has become popular in functional programming
+due to the support of the Generalized Algebraic Data Type (GADT) extension to
+Haskell in Glasgow Haskell Compiler (GHC).
+
+\subsection{Indexed datatypes}
+
+Type-indexed datatypes
+
+Term-indexed datatypes
+
+\subsection{Mendler-style recursion combinators}
+
+TODO
+
+\subsection{Contributions}
+
+TODO
+
+\section{Syntax}
+TODO
+
+\section{Typing rules}
+We define two set of typing rules
+
+declarative typing rules
+syntax-directed typing rules
+
 \cite{Girard72} dummy citation
 \cite{AhnShe11}
 
-\bibliographystyle{splncs03}
+\citet{Girard72} citet test
+\citet{AhnShe11} citet test
+
+\citeauthor{Girard72} citeauthor test
+\citeauthor{AhnShe11} citeauthor test
+
+\section{Embedding Nax into System \Fi}
+
+\section{The type inference algorithm \Wi}
+
+\section{Implementation}
+
+\section{Ongoing and future work}
+
+\subsection{Correctness of the type inference algorithm}
+
+\subsection{Large eliminations}
+
+\subsection{Generalized arrow types in the recursion combinators}
+
+\subsection{Non-logical language fragments}
+
+%% \bibliographystyle{splncs03}
+\bibliographystyle{splncsnat}
 \bibliography{main}
 
 \end{document}
