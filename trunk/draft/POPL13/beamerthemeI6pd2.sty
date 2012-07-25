@@ -8,8 +8,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% \setbeamercolor{headline}{fg=tabutter,bg=black}
-%% \setbeamercolor{footline}{fg=tabutter, bg=ta3gray}
-%% \setbeamerfont{footline}{size=\large,series=\tt}
+\setbeamercolor{footline}{fg=tabutter, bg=ta3gray}
+\setbeamerfont{footline}{size=\small,series=\rm}
 %% \setbeamercolor{separation line}{bg=ta2orange}
 %% \setbeamercolor{title in headline}{fg=tabutter}
 %% \setbeamercolor{author in headline}{fg=ta2orange}
@@ -23,6 +23,7 @@
 % \setbeamercolor*{block body}{bg=ta3aluminium,fg=black}
 \setbeamercolor*{block title}{fg=ta3chameleon,bg=taaluminium}
 \setbeamerfont{block title}{size=\Large,series=\bf}
+\setbeamerfont{block body}{size=\normalsize}
 % \setbeamercolor{upper separation line head}{fg=ta2orange}
 
 \setbeamercolor*{example body}{fg=ta3aluminium,bg=black}
@@ -45,8 +46,10 @@
     {\phantom{Gi}\Large\insertblocktitle}% phantom because of baseline problem
   \end{beamercolorbox}%
   {\ifbeamercolorempty[bg]{block body}{}{\nointerlineskip\vskip-0.5pt}}%
+  %
+  \setstretch{1.3}%
   \usebeamerfont{block body}%
-  \begin{beamercolorbox}[leftskip=1em,colsep*=.75ex,sep=0.5ex,vmode]{block body}%
+  \begin{beamercolorbox}[leftskip=1em,colsep*=.75ex,sep=0.5ex,vmode]{block body}% 
     \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
   }
   \setbeamertemplate{block end}{
@@ -79,17 +82,27 @@
       \begin{column}{.02\paperwidth}
       \end{column}
     \end{columns}
-        \vskip7ex
     \begin{columns}
-      \begin{column}{.25\paperwidth}\end{column}
-      \begin{column}{.35\paperwidth}\centering
-        \usebeamercolor{author in headline}{\color{fg}\bf\rm\Huge{\insertauthor}}
+      \begin{column}{.25\paperwidth}
+        \includegraphics[width=.7\linewidth]{acm_4c_grad_vtag_b_pos}
       \end{column}
-      \begin{column}{.3\paperwidth}
-        \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}}     
-\end{column}
+      \begin{column}{.70\paperwidth}\raggedleft
+        \usebeamercolor{author in headline}{\color{fg}\bf\rm\Huge{\insertauthor}}
+        $~\qquad$ $\qquad~$
+        \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}}
+      \end{column}
     \end{columns}
-    \vskip2ex
+    \begin{columns}
+      \begin{column}{.29\paperwidth}
+      \end{column}
+      \begin{column}{.78\paperwidth}
+	{\normalsize colloaborators:
+	{\rm\large Tim Sheard}
+          {\normalsize\texttt{sheard@pdx.edu}} \\ \vskip1ex \hskip6.5em
+	{\rm\large Marcelo Fiore} and {\rm\large Andrew M. Pitts}
+          {\normalsize\texttt{\{Marcelo.Firoe,Andy.Pitts\}@cl.cam.ac.uk}}}
+      \end{column}
+    \end{columns}
   \end{beamercolorbox}
 
   \begin{beamercolorbox}[wd=\paperwidth]{lower separation line head}
@@ -123,6 +136,11 @@
 %    \texttt{http://www-i6.informatik.rwth-aachen.de}
 %    \hfill
 %    \texttt{<surname>@cs.rwth-aachen.de}
+    $~~$ A poster submitted to the \emph{ACM Student Research Competition}
+    hosted by
+    \emph{the 17th ACM SIGPLAN International Conference on Functional Programming}
+	(\emph{ICFP '12}),
+    Copenhagen, Denmark; September 10-12$^{\textit{th}}$, 2012 
     \vskip1ex
   \end{beamercolorbox}
   \vskip0pt%
@@ -145,9 +163,9 @@
 % or define your own template using \defbeamertemplate{itemize item}, see beameruserguide.pdf
 
 % equal font sizes for all levels
-\setbeamerfont{itemize/enumerate body}{size=\normalsize}
-\setbeamerfont{itemize/enumerate subbody}{size=\normalsize}
-\setbeamerfont{itemize/enumerate subsubbody}{size=\normalsize}
+\setbeamerfont{itemize/enumerate body}{size=\large}
+\setbeamerfont{itemize/enumerate subbody}{size=\large}
+\setbeamerfont{itemize/enumerate subsubbody}{size=\large}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Local Variables: 

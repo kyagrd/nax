@@ -1,13 +1,15 @@
-\documentclass[final]{beamer} % beamer 3.10: do NOT use option hyperref={pdfpagelabels=false} !
-%\documentclass[final,hyperref={pdfpagelabels=false}]{beamer} % beamer 3.07: get rid of beamer warnings
+\documentclass[final]{beamer}
+%% beamer 3.10: do NOT use option hyperref={pdfpagelabels=false} !
 
-\mode<presentation> {  %% check http://www-i6.informatik.rwth-aachen.de/~dreuw/latexbeamerposter.php for examples
-  % \usetheme{Berlin}    %% you should define your own theme e.g. for big headlines using your own logos 
+\mode<presentation> {
+%% examples http://www-i6.informatik.rwth-aachen.de/~dreuw/latexbeamerposter.php
+% \usetheme{Berlin}
+%% you should define your own theme e.g. for big headlines using your own logos 
   \usetheme{I6pd2}
 }
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
-\usepackage{amsmath,amsthm, amssymb, latexsym}
+\usepackage{amsmath,amsthm, amssymb,latexsym,textcomp,setspace}
 %\usepackage{times}\usefonttheme{professionalfonts}  % times is obsolete
 \usefonttheme[onlymath]{serif}
 \boldmath
@@ -15,79 +17,87 @@
 
 \newcommand{\Fi}{\ensuremath{\mathsf{F}_{\!i}}}
 
-\title[Fancy Posters]{{\VERYHuge System \Fi:}
-		\text{\huge a higher-order polymorphic $\lambda$-caclulus} \\
-		\text{\huge with erasable term $i$ndices}
+\title[Fancy Posters]{{\VERYHuge System \Fi} {\Huge :}
+		{\huge a Higher-Order Polymorphic $\lambda$-caclulus} \\
+		{\huge with Erasable Term Indices}
   }
-\author[Ahn
-	%% \& Sheard
-	]{
-		Ki Yung Ahn $~~$ {\Large\texttt{kya@cs.pdx.edu}}
-		%% and Tim Sheard
-	}
+\author[Ki Yung Ahn]{ Ki Yung $\,$Ahn $\,$ {\Large\texttt{kya@cs.pdx.edu}} }
 \institute[Portland State University]{
-	Department of Computer Science,
-	Portland State University }
+	Department of Computer Science, Portland State University }
 \date{2012-09}
 \begin{document}
 \begin{frame}
-  \vfill
-  \begin{block}{Fontsizes}
-    \centering
-    {\tiny tiny}\par
-    {\scriptsize scriptsize}\par
-    {\footnotesize footnotesize}\par
-    {\normalsize normalsize}\par
-    {\large large}\par
-    {\Large Large}\par
-    {\LARGE LARGE}\par
-    {\Huge Huge}\par
-    {\veryHuge veryHuge}\par
-    {\VeryHuge VeryHuge}\par
-    {\VERYHuge VERYHuge}\par
-  \end{block}
-  \vfill
-  \begin{columns}[t]
-      \begin{column}{.48\linewidth}
-        \begin{block}{Introduction}
-          \begin{itemize}
-          \item some items
-          \item some items
-          \item some items
-          \item some items
-          \end{itemize}
-        \end{block}
-      \end{column}
-      \begin{column}{.48\linewidth}
-        \begin{block}{Introduction}
-          \begin{itemize}
-          \item some items and $\alpha=\gamma, \sum_{i}$
-          \item some items
-          \item some items
-          \item some items
-          \end{itemize}
-          $$\alpha=\gamma, \sum_{i}$$
-        \end{block}
+%%   \vfill
+%%   \begin{block}{Fontsizes}
+%%     \centering
+%%     {\tiny tiny}\par
+%%     {\scriptsize scriptsize}\par
+%%     {\footnotesize footnotesize}\par
+%%     {\normalsize normalsize}\par
+%%     {\large large}\par
+%%     {\Large Large}\par
+%%     {\LARGE LARGE}\par
+%%     {\Huge Huge}\par
+%%     {\veryHuge veryHuge}\par
+%%     {\VeryHuge VeryHuge}\par
+%%     {\VERYHuge VERYHuge}\par
+%%   \end{block}
+\vfill
+\begin{columns}[t]
 
-        \begin{block}{Introduction}
-          \begin{itemize}
-          \item some items
-          \item some items
-          \item some items
-          \item some items
-          \end{itemize}
-        \end{block}
+\begin{column}{.48\linewidth}
 
-        \begin{block}{Introduction}
-          \begin{itemize}
-          \item some items and $\alpha=\gamma, \sum_{i}$
-          \item some items
-          \item some items
-          \item some items
-          \end{itemize}
-          $$\alpha=\gamma, \sum_{i}$$
-        \end{block}
-      \end{column}
-  \end{columns}
+\begin{block}{Indexed Datatypes}
+\begin{itemize}
+\item Indexed datatyeps are non-regular datatypes
+	with \emph{static (or, compile-time) dependencies}.\\
+        (c.f. full-fledged dependent datatypes can have
+        both static and dynamic dependencies) \\
+	Also known as higer-kinded datatypes, or higher-rank datatypes.
+\item Type-indexed datatypes
+      nested datatypes,
+      representation types for datatype geneirc programming
+\item Term-indexed datatypes
+        length-indexed list
+\item some items
+\item has become popular in
+        functional programming.
+\end{itemize} $$\alpha=\gamma, \sum_{i}$$
+\end{block}
+
+\begin{block}{Introduction}
+\begin{itemize}
+\item some items
+\item some items
+\item some items
+\item some items
+\end{itemize}
+\end{block}
+
+\end{column}
+%%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{column}{.48\linewidth}
+\begin{block}{Introduction}
+\begin{itemize}
+\item some items
+\item some items
+\item some items
+\item some items
+\end{itemize}
+\end{block}
+
+\begin{block}{Introduction}
+\begin{itemize}
+\item some items and $\alpha=\gamma, \sum_{i}$
+\item some items
+\item some items
+\item some items
+\end{itemize}
+$$\alpha=\gamma, \sum_{i}$$
+\end{block}
+
+\end{column}
+\end{columns}
+
 \end{frame}
 \end{document}
