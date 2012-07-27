@@ -1,0 +1,722 @@
+\section{Nax}\label{sec:nax}
+\begin{figure}
+\paragraph{Syntax:}
+\begin{align*}
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Kinds}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \kappa	&~ ::= ~ * \mid \kappa -> \kappa \mid A -> \kappa
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Type Constructors}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& F,G,A,B	&~ ::= ~ X \mid T
+			   \mid \mu^\kappa(T\,\overline\tau)
+			   \mid F\;G \mid F\,\{s\}
+			   \mid A -> B
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Type Schemes}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \sigma	&~ ::= A
+			   \mid \forall X.\sigma
+			   \mid \forall i.\sigma
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Terms}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& r,s,t		&~ ::= ~ x \mid `x \mid i
+			   \mid \lambda x.t \mid r\;s
+			   \mid \<let> x=s \<in> t %% \\
+%% &	&		&~~~~~
+			   \mid \varphi^\psi
+			   \mid \<MIt> x.\varphi^\psi
+			   \mid \In^\kappa
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Program}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& Prog		&~ ::= ~ \overline{D};t
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Declarations}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& D		&~ ::= \<data> T : \overline{K} -> * \<where>
+                               \overline{C : \overline{A} -> T\,\overline{\tau}}
+			 ~~\mid~ `x = t
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{List of Declarations}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \overline{D}	&~ ::= \cdot \mid D,\overline{D}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Kind Arguments}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& K		&~ ::= ~ \kappa \mid A
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Type Arguments}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \tau		&~ ::= ~ G \mid \{s\}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Type Argument Variables}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \iota		&~ ::= ~ X \mid i
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Index Transformers}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \psi		&~ ::= \cdot \mid \overline\iota . B
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Case Branches}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \varphi	&~ ::= \overline{C\,\overline{x} -> t}
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \text{Contexts}
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \Sigma	&~ ::= ~ \cdot
+			   \mid \Sigma, T: \kappa
+			   \mid \Sigma, C: \sigma
+			   \mid \Sigma, `x: \sigma
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \Delta	&~ ::= ~ \cdot
+			   \mid \Delta, X^\kappa
+			   \mid \Delta, i^\sigma
+ \!\!\!\! \!\!\!\! \\
+&\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+	& \Gamma	&~ ::= ~ \cdot \mid \Gamma,x:\sigma
+ \!\!\!\! \!\!\!\!
+\end{align*}
+
+\paragraph{Well-formed contexts:}
+\[ \fbox{$|- \Sigma$}
+ ~~~~
+   \inference{}{|- \cdot}
+ ~~~~
+   \inference{|- \Sigma & \Sigma |- \kappa:\square}
+             {|- \Sigma,T:\kappa}
+      \big( T\notin\dom(\Sigma) \big)
+\]
+\[ \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
+             {|- \Sigma,C:\sigma}
+      \big( C\notin\dom(\Sigma) \big)
+ ~~~~
+   \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
+             {|- \Sigma,`x:\sigma}
+      \big( `x\notin\dom(\Sigma) \big)
+\]
+\[ \fbox{$\Sigma|- \Delta$}
+ ~~~~
+   \inference{|- \Sigma}{\Sigma |- \cdot}
+ ~~~~
+   \inference{\Sigma |- \Delta & \Sigma |- \kappa:\square}
+             {\Sigma |- \Delta,X^\kappa}
+      \big( X\notin\dom(\Delta) \big)
+ ~~~~ 
+   \inference{\Sigma |- \Delta & \Sigma;\cdot |- \sigma:*}
+             {\Sigma |- \Delta,i^\sigma}
+      \big( i\notin\dom(\Delta) \big)
+\]
+\[ \fbox{$\Sigma;\Delta |- \Gamma$}
+ ~~~~
+   \inference{\Sigma |- \Delta}{\Sigma;\Delta |- \cdot}
+ ~~~~
+   \inference{\Sigma;\Delta |- \Gamma & \Sigma;\Delta |- A:*}
+             {\Sigma;\Delta |- \Gamma,x:A}
+      \big( x\notin\dom(\Gamma) \big)
+\]
+~\\
+
+\paragraph{Reduction:}
+$ \fbox{$t \rightsquigarrow t'$}
+ ~~~~
+   \inference{}{(\lambda x.t)\,s \rightsquigarrow [s/x]t}
+ ~~~~
+   \inference{}{\<let> x=s \<in> t \rightsquigarrow [s/x]t}
+$
+\[ \inference{ C\,\overline{x} -> t \in \varphi }
+             { \varphi^\psi (C\,\overline{t})  \rightsquigarrow
+               [\overline{t}/\overline{x}]t }
+ ~~~~
+   \inference{}
+             { \<MIt> x.\varphi^\psi\;(\In^\kappa t) \rightsquigarrow
+               [\<MIt> x.\varphi^\psi/x]\varphi^\psi ~ t}
+ ~~~~
+   \inference{ `x=t \in \overline{D} }{ `x \rightsquigarrow t }
+\]
+\[  \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
+ ~~~~
+   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+ ~~~~
+   \inference{t_i \rightsquigarrow t_i'}
+             {C~t_1\cdots t_i \cdots t_n \rightsquigarrow
+              C~t_1\cdots t_i'\cdots t_n }
+\]
+\[ \inference{s\rightsquigarrow s'}
+             {\<let> x=s \<in> t \rightsquigarrow \<let> x=s' \<in> t}
+ ~~~~
+ \inference{t\rightsquigarrow t'}
+             {\<let> x=s \<in> t \rightsquigarrow \<let> x=s \<in> t'}
+ ~~~~
+   \inference{\varphi^\psi \rightsquigarrow \varphi'^\psi}
+             {\<MIt> x.\varphi^\psi \rightsquigarrow \<MIt> x.\varphi'^\psi}
+\]
+\[ \inference{t_i \rightsquigarrow t_i'}
+      {(C_1\,\overline{x_1} -> t_1;\cdots
+       ;C_i\,\overline{x_i} -> t_i;\cdots
+       ;C_n\,\overline{x_n} -> t_n)^\psi
+      ~\rightsquigarrow~
+       (C_1\,\overline{x_1} -> t_1;\cdots
+       ;C_i\,\overline{x_i} -> t_i';\cdots
+       ;C_n\,\overline{x_n} -> t_n)^\psi
+      }
+\]
+\caption{Syntax and Reduction rules of Nax}
+\label{fig:NaxSyntax}
+\end{figure}
+
+\begin{figure}
+\paragraph{Sorting:}
+\[ \fbox{$\Sigma |- \kappa : \square$}
+ ~~~~
+  \inference[($A$)]{}{\Sigma |- * : \square}
+ ~~
+   \inference[($R$)]{ \Sigma |- \kappa  : \square
+                    & \Sigma |- \kappa' : \square }
+                    { \Sigma |- \kappa -> \kappa' : \square }
+ ~~
+   \inference[($Ri$)]{\Sigma;\cdot |- A : * & \Sigma |- \kappa : \square}
+                     {\Sigma |- A -> \kappa : \square}
+\]
+
+\paragraph{Kinding:}
+$ \fbox{$\Sigma;\Delta |- \sigma : \kappa$ }
+ ~~~~
+   \inference[($\forall$)]{\Sigma;\Delta, X^\kappa |- \sigma : *}
+                          {\Sigma;\Delta |- \forall X . \sigma : *}
+ ~~~~
+   \inference[($\forall i$)]{\Sigma;\Delta, i^A |- \sigma : *}
+                            {\Sigma;\Delta |- \forall i . \sigma : *}
+$
+\[ \fbox{$\Sigma;\Delta |- F : \kappa$}
+ ~~~~
+   \inference[($Var$)]{X^\kappa\in\Delta & \Sigma |- \Delta}
+                      {\Sigma;\Delta |- X : \kappa}
+ ~~~~
+   \inference[($TCon$)]{T:\kappa\in\Sigma & \Sigma |- \Delta}
+                       {\Sigma;\Delta |- T : \kappa}
+ ~~~~
+   \inference[($\mu$)]{\Sigma;\Delta |- T\,\overline\tau : \kappa -> \kappa}
+                      {\Sigma;\Delta |- \mu^\kappa(T\,\overline\tau) : \kappa}
+\]
+\[ \inference[($@$)]{ \Sigma;\Delta |- F : \kappa -> \kappa'
+                    & \Sigma;\Delta |- G : \kappa }
+                    {\Sigma;\Delta |- F\,G : \kappa'}
+ ~~~~
+   \inference[($@i$)]{ \Sigma;\Delta |- F : A -> \kappa
+                     & \Sigma;\Delta;\cdot |- s : A }
+                     {\Sigma;\Delta |- F\,\{s\} : \kappa}
+\]
+\[ \inference[($->$)]{\Sigma;\Delta |- A : * & \Sigma;\Delta |- B : *}
+                     {\Sigma;\Delta |- A -> B : * }
+ ~~~~
+   \inference[($Conv$)]{ \Sigma;\Delta |- A : \kappa
+                       & \Sigma |- \kappa = \kappa' : \square }
+                       {\Sigma;\Delta |- A : \kappa'}
+\]
+
+
+\paragraph{Typing:}
+\[ \fbox{$\Sigma |- Prog : A$}
+ ~~~~
+   \inference[($\cdot;t$)]{\Sigma;\cdot;\cdot |- t:A}
+                          {\Sigma |- \cdot;t : A}
+ ~~~~
+   \inference[($D$)]{ \Sigma |- D \Rrightarrow \Sigma'
+                    & \Sigma' |- \overline{D};\; t : A}
+                    {\Sigma |- D,\overline{D};\; t : A}
+\]
+\[ \fbox{$\Sigma;\Delta;\Gamma |- t : A$}
+ ~~~~
+   \inference[($=$)]{ \Sigma;\Delta;\Gamma |- t : A
+                    & \Sigma;\Delta |- A = B : *}
+                    {\Sigma;\Delta;\Gamma |- t : B}
+\]
+\[ \inference[($:$)]
+      { x:\sigma \in \Gamma & \Sigma;\Delta |- A\prec\sigma
+      & \Sigma;\Delta |- \Gamma }
+      {\Sigma;\Delta;\Gamma |- x:A}
+ ~~~~
+   \inference[($:i$)]
+      { i^\sigma \in \Delta & \Sigma;\Delta |- A\prec\sigma
+      & \Sigma;\Delta |- \Gamma }
+      {\Sigma;\Delta;\Gamma |- i:A}
+\]
+\[ \inference[($:C$)]
+      { C:\sigma \in \Sigma & \Sigma;\Delta |- A\prec\sigma
+      & \Sigma;\Delta |- \Gamma }
+      {\Sigma;\Delta;\Gamma |- C:A}
+ ~~~~
+ \inference[($:`$)]
+      { `x:\sigma \in \Sigma & \Sigma;\Delta |- A\prec\sigma
+      & \Sigma;\Delta |- \Gamma }
+      {\Sigma;\Delta;\Gamma |- `x:A}
+\]
+\[ \inference[($->$$I$)]{\Sigma;\Delta;\Gamma,x:A |- t : B}
+                        {\Sigma;\Delta;\Gamma |- \lambda x.t : A -> B}
+ ~~~~ ~~~~ ~~~~ ~~~~
+   \inference[($->$$E$)]{ \Sigma;\Delta;\Gamma |- r : A -> B
+                        & \Sigma;\Delta;\Gamma |- s : A}
+                        {\Sigma;\Delta;\Gamma |- r\;s : B}
+\]
+\[ \inference[(let)]
+      { \Sigma;\Delta,\overline{\iota^K};\Gamma |- s : A \\
+        \Sigma;\Delta;\Gamma,x:\forall\,\overline{\iota}.A |- t : B }
+      {\Sigma;\Delta;\Gamma |- \<let> x=s \<in> t : B }
+      \begin{pmatrix} \overline{\iota} \cap \FV(s) = \emptyset \\
+                      \overline{\iota} \cap \FV(\Gamma) = \emptyset
+      \end{pmatrix}
+ ~~~~
+   \inference[(case)]
+      { \Sigma;\Delta;\Gamma |-^\psi \varphi
+                             : \forall\,\overline\iota . F\,\overline\iota
+                                                    -> \psi(\overline\iota) }
+      {\Sigma;\Delta;\Gamma |- \varphi^\psi
+                             : F\;\overline\tau -> \psi(\overline\tau) }
+\]
+\[ \inference[(MIt)]
+      { \Sigma;\Delta,X^\kappa;
+               \Gamma,x:\forall\,\overline{\iota'} . X\overline{\iota'}
+                                              -> \psi(\overline{\iota'})
+           |-^\psi \varphi
+           : \forall\,\overline\iota . F\,X\,\overline\iota
+                                     -> \psi(\overline\iota) }
+      {\Sigma;\Delta;\Gamma
+           |- \<MIt> x.\varphi^\psi
+           : \mu^{\kappa}\,F\;\overline\tau -> \psi(\overline\tau) }
+      \big( X\notin\FV(\Gamma) \big)
+\]
+\[ \inference[(In)] %% TODO well kindedness
+      {}
+      {\Sigma;\Delta;\Gamma |- \In^\kappa
+        : F(\mu^\kappa F)\,\overline{\tau} -> \mu^\kappa F\;\overline{\tau} }
+\]
+\[ \fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi : \sigma$}
+ ~~
+   \inference
+      { \Sigma|_T = \overline{C_k:\sigma_k}^{\;k=1..n} &
+        \overline{
+        \begin{matrix}
+         \Sigma;\Delta
+           |- \overline{A} -> T\,\overline{\tau}\,\overline{\tau}_k
+              \prec
+              \sigma_k
+        &
+         \Sigma;\Delta;\Gamma,\overline{x:A} |- t : \psi(\overline{\tau}_k) 
+        \end{matrix} }^{\;k=1..n} }
+      { \Sigma;\Delta;\Gamma
+           |-^\psi \overline{C_k\;\overline{x} -> t}^{\;k=1..n}
+           : \forall\,\overline\iota . T\,\overline{\tau}\,\overline\iota
+                                    -> \psi(\overline\iota) }
+\]
+
+\paragraph{Extending the Global Context:}
+\fbox{$\Sigma |- D \Rrightarrow \Sigma'$}
+\[ \inference[($\Sigma,T$)]
+      { \overline{ \Sigma,T:\kappa;\;\overline{\iota^K}
+                      |- \overline{A} -> T\,\overline\tau :*} }
+      { \Sigma |- \<data> T : \kappa \<where>
+                  \overline{C : \overline{A} -> T\,\overline\tau }
+               ~\Rrightarrow~
+                  \Sigma,T:\kappa
+                        ,\overline{C:\forall\,\overline{\iota}.\overline{A}
+                                                       -> T\,\overline\tau} }
+\]
+\[ \inference[($\Sigma,`x$)]
+       {\Sigma;\overline{\iota^K};\cdot |- t : A}
+       {\Sigma |- `x = t \Rrightarrow \Sigma,`x:\forall\,\overline{\iota}.A}
+      \big( \overline{\iota} \cap \FV(t) = \emptyset \big)
+\]
+\caption{Typing rules of Nax}
+\label{fig:NaxTyping}
+\end{figure}
+
+\subsection{Language definition}
+The Nax language definition is described in \Fig{NaxSyntax} and \Fig{NaxTyping}.
+\Fig{NaxSyntax} illustrates syntax, reduction rules, and well-formedness
+conditions for typing contexts.
+\Fig{NaxTyping} illustrates sorting, kinding, and typing rules.
+
+\paragraph{Typing contexts}
+The typing context of Nax is separated into three zones. In addition to
+the two zones of \Fi (the type level context $\Delta$ and
+the term level context $\Gamma$), we have top level contexts ($\Sigma$).
+The top level contexts can contain three kinds of bindings:
+type constructor bindings ($T:\kappa$), data constructor bindings ($C:\sigma$),
+and top level variable bindings ($`x:\sigma$). These bindings are introduced
+from declarations ($D$). Type constructor bindings ($T:\kappa$) and
+data constructor bindings ($C:\sigma$) are introduced from datatype declarations
+($\<data> T:\dots \<where> \dots$). Top level variable bindings ($`x:\sigma$)
+are introduced from top level definitions ($`x = t$).
+The rules for well-formed contexts in Nax are similar to those rules in \Fi.
+
+\paragraph{Kinds and their sorting rules}
+The kind syntax of Nax is exactly the same as the kind syntax of \Fi.
+The sorting rules are the same as \Fi\ except we judge the sorts of kinds
+under the top level context ($\Sigma$).
+
+\paragraph{Type constructors and their kinding rules}
+The syntax for type constructors of Nax is similar to \Fi, but
+different from \Fi\ in two aspects.
+
+Firstly, polymorphic types are separate out as type schemes ($\sigma$) in Nax
+since the type system of Nax is in flavour of Hindley-Milner to support
+type inference (or, reconstruction).
+
+Secondly, there are no type level abstractions and index abstractions in Nax.
+Instead of defining type constructors expecting type arguments by abstraction
+and index abstraction at type level, Nax supports datatype declarations
+($\<data> T:\kappa \<where> \dots$) and recursive type operators
+($\mu^\kappa$) as language constructs.
+
+Intuitively, the kinding rule for the recursive type operator should be
+$\Sigma |- \mu^\kappa : (\kappa -> \kappa) -> \kappa$. However, we restrict
+the recursive type operator ($\mu^\kappa$) only to be applied to datatypes
+($T\,\overline{\tau}$). This restriction is evident in both
+the type constructor syntax in \Fig{NaxSyntax}
+and the kinding rule ($\mu$) in \Fig{NaxTyping}. What this restriction
+really excludes are nested applications of recursive type operators.
+For instance, $\mu^\kappa(\mu^{\kappa -> \kappa} F)$ where
+$F:(\kappa -> \kappa) -> \kappa -> \kappa$ is not allowed
+although it would be well-kinded under the less restrictive kinding rule
+($\Sigma |- \mu^\kappa : (\kappa -> \kappa) -> \kappa$).
+Motivation behind this restriction is type inference.
+In order to infer a type for a Mendler style iterator, we need to restrict
+the form of its body since the body must be polymorphic over the indices
+(see (MIt) rule). In general, we do not want polymorphic types to be first
+class since we want type inference. One simple design choice is to allow
+case branches ($\varphi$) to have polymorphic types, or type schemes, and
+annotate case branches with index transformers ($\varphi^\psi$). For the
+exact same reason (\ie, type inference), we restrict the body of the
+Mendler style iterators be case terms (\ie, ($\<MIt> x.\varphi^\psi$)
+instead of ($\<MIt> x.t$)).
+
+\paragraph{Terms and their typing rules}
+The term syntax of Nax has six additional term constructs than \Fi:
+data constructors ($C$), top level variables ($`x$),
+polymorphic let bindings ($\<let> x=s \<in> t$),
+eliminators for datatypes ($\varphi^\psi$),
+Mendler style iterators ($\<MIt>x.\varphi^\psi$), and
+constructors for recursive types ($\In^\kappa$).
+Typing rules for them are provided in \Fig{NaxTyping}.
+
+The typing rules ($:C$) and ($:`$) are for data constructors ($C$)
+and top level variables ($`x$) bound in the top level context ($\Sigma$).
+Data constructors ($C$) are introduced from datatype declarations
+($\<data> T:\kappa \<where> \dots$) by the rule ($\Sigma,T$), and
+top level variables ($`x$) are introduced from top level definitions
+($`x=t$) by the rule ($\Sigma,`x$).
+The typing rules ($:C$) and ($:`$) behave similar to the rule ($:$)
+for the variables and the rule ($:i$) for index variables.
+All these four rules ($:$), ($:i$), ($:C$), and ($:`$) for
+identifiers look up a certain context (one of the three zones $\Sigma$,
+$\Delta$, and $\Gamma$). Since the Nax type system is in flavour of
+Hindley-Milner, identifiers are bound to type schemes ($\sigma$) and
+the typing rules for the identifiers instantiate type schemes to types ($A$).
+Note, a type instantiation ($\Sigma;\Delta |- A\prec\sigma$) is a judgement
+under the top level context ($\Sigma$) and the type level context ($\Delta$),
+since the instantiated type needs to be well-kinded under
+$\Sigma$ and $\Delta$.
+
+Polymorphic let bindings in Nax are just the usual polymorphic bindings of
+Hindley-Milner type system for generalizing types of local definitions into
+type schemes. In Nax, we generalize over term indices as well as types.
+The typing rule for let bindings is the (let) rule.
+
+Eliminators for datatypes ($\varphi^\psi$), or case-terms, are
+case branches ($\varphi$) annotated by index transformers ($\psi$).
+For non-indexed types, case-terms are the usual single level pattern matching
+expressions in functional languages. For example, a Nax case-term applied to
+non-indexed typed term ($\varphi^\cdot~s$) corresponds to a Haskell
+case-expression over that term ($\mathbf{case}~s~\mathbf{of}~\{\varphi\}$).
+Note, we give trivial index transformer annotation (\ie, $\psi=\cdot$) for
+non-indexed types (\eg, booleans, natural numbers) since there are no indices
+to worry about. For indexed types, the indexed transformer annotations
+proivide useful information for type reconstruction. For example, consider
+the following datatype declaration:
+\begin{align*}
+\<data> \mathtt{Judgement : Bool -> *} \<where>
+&~\mathtt{TJ : Formula -> Judgement~\{True\}};\\
+&~\mathtt{FJ : Formula -> Judgement~\{False\}}
+\end{align*}
+The datatype $\mathtt{Judgement}$ is index by boolean terms
+(\eg, $\mathtt{True}$ and $\mathtt{False}$ of type $\mathtt{Bool}$).
+The data constructor $\mathtt{TJ}$ contains a formula expected to be true and
+the data constructor $\mathtt{FJ}$ contains a formula expected to be false.
+We can define a function, which produces an inverted judgement by negating
+the formula contained in a given judgement, as follows\footnote{case branches
+are laid out in multiple lines for better readability}:
+\[
+\begin{pmatrix}
+ \mathtt{TJ}~x -> \mathtt{FJ} (\mathop{neg}~x);\\
+ \mathtt{FJ}~x -> \mathtt{TJ} (\mathop{neg}~x)\phantom{;}
+\end{pmatrix}^{i\,.\,\mathtt{Judgement}~\{`not~i\}}
+~~~
+\begin{matrix}
+ \text{where $neg$ is a function that produces negated formula}\\
+~~~\text{and $`not$ is a top level function that negates booleans.}
+\end{matrix}
+\]
+Note that the index transformer ($i\,.\,\mathtt{Judgement}~\{`not~i\}$)
+captures the idea that the resulting inverted judgement has opposite
+expectations from the given judgement. The types of such case-terms
+involving indexed types can also be inferred when we annotate
+the case-terms with appropriate index transformers.
+Reduction rules for case-terms (\Fig{NaxSyntax}) are standard.
+
+Mendler style iterators ($\<MIt> x.\varphi^\psi$) are eliminators for
+recursive types. A case-term expects a datatype argument
+(of type $T\,\overline\tau$).
+A Mendler style iterator expects a recursive type argument
+(of type $\mu^\kappa(T\,\overline\tau)$).
+Intuitively, Mendler style iterators open up the recursive type
+($\mu^\kappa(T\,\overline\tau)$) and case branch over
+its base datatype structure (of type $T\,\overline\tau$).
+This intuition is captured by the reduction rule for
+Mendler style iterators (\Fig{NaxSyntax}):
+$\<MIt> x.\varphi^\psi\;(\In^\kappa t) \rightsquigarrow
+ [\<MIt> x.\varphi^\psi/x]\varphi^\psi\;t$.
+Note that a Mendler style iterator ($\<MIt> x.\varphi^\psi$) applied to
+a term of recursive type ($\In^\kappa t)$ constructed by the $\In^\kappa$
+constructor reduces to a case-term ($[\<MIt> x.\varphi^\psi/x]\varphi^\psi$)
+applied to the base structure ($t$) contained in the $\In^\kappa$ constructor.
+The variable ($x$) bound by $\<MIt>$ is a label for the recursive call.
+Note that the case-term ($[\<MIt> x.\varphi^\psi/x]\varphi^\psi$) appearing in
+the reduction rule substitutes $x$ with the Mendler style iterator itself.
+However, unlike the fixpoint operator for unrestricted general recursion,
+Mendler style iterators are guaranteed to normalize because of their carefully
+designed typing rule (MIt) due to Mendler.
+
+The constructors for recursive types ($\In^\kappa$) are standard
+(see rule (In) in \Fig{NaxTyping}). The kind annotation $\kappa$ on
+the $\In^\kappa$ constructor aids kind inference. If we were to simulate
+the recursive type operator $\mu^\kappa$ and its constructor $\In^\kappa$ in
+a functional language like Haskell (with GADT and kind annotation extensions),
+we would simulate them by the following recursive datatype:
+\[ \<data> \mu^\kappa : (\kappa -> \kappa) -> \kappa \<where>
+      \In^\kappa : X(\mu^\kappa X)\overline\iota -> \mu^\kappa X\, \overline\iota \]
+However, such a simulation of $\mu^\kappa$ by a recursive datatype
+cannot guarantee normalization of the language, since unlimited elimination
+of $\In^\kappa$ via case branches is already powerful enough to encode
+non-terminating computation even without using any recursion at term level.
+Thus, Nax provides $\mu^\kappa$ and $\In^\kappa$ as primitive language
+constructs, and only allow elimination of $\In^\kappa$ via
+Mendler style iteration. %\footnote{More recursion schemes}
+%%% TODO example?
+% Nax does not provide eliminators, or inverse functions of $\In^\kappa$,
+% which are often denoted as $\In^{-1}$, \textsf{unIn}, or \textsf{out},
+% since we want to support arbitrary recursive types in a normalizing language.
+
+\paragraph{Nax programs and their typing rules}
+A Nax program ($\overline{D};t$) is a list of declarations ($\overline{D}$)
+followed by a term ($t$). A declaration can be either a datatype declaration
+($\<data> T : \kappa \<where> \dots$) or a top level definition ($`x=t$).
+The list of declarations ($\overline{D}$) are processed by the rules
+($\Sigma,T$) and ($\Sigma,`x$) before type checking the term ($t$).
+The kinding and typing information from the datatype declarations and
+the top level definitions preceding the term are captured into
+the top level context ($\Sigma$) according to the rules ($\Sigma,T$)
+and ($\Sigma,`x$). The top level context extended by these rules are
+used for type checking the term following the list of declarations.
+Therefore, the sorting, kinding, and typing rules of Nax (\Fig{NaxTyping})
+involves $\Sigma$ in addtion to $\Delta$ and $\Gamma$, while
+the corresponding rule of \Fi\ (\Fig{Fi}) involves $\Delta$ and $\Gamma$
+only.
+%% TODO talk about embedding (fwd ref)???
+
+\paragraph{Reduction rules}
+Reduction rules are defined in \Fig{NaxSyntax}. First five rules are
+the redex rules that makes an actual reduction step on redexes.
+A redex is be one of the following: a lambda term applied to an argument,
+a let binding, a case term applied to a constructor term,
+a Mendler style iterator applied to an $\In^\kappa$-constructed term,
+and a top level variable.
+
+Note, the reduction rule for $`x$ mentions $\overline{D}$).
+Although we illustrate the reduction as a relation on terms
+($t\rightsquigarrow t'$), we implicitly assume that there exists
+some fixed list of declarations ($\overline{D}$)
+for the reduction relation ($\rightsquigarrow$).
+In order to make a reduction step for top level variables,
+we need to know the top level definition for $`x$, which
+should be contained in $\overline{D}$. Since the list of declarations
+are given by the input program ($\overline{D};t$) to type check,
+it is non-ambiguous which $\overline{D}$ to use for reducing $`x$.
+In case when it is ambiguous, we could use a notation like
+$t\stackrel{\overline{D}}\rightsquigarrow t'$ to make it more precise.
+
+The other rules, following the top level variable reduction rule
+($`x\rightsquigarrow t$), are context rules to make a reduction step
+for the terms whose redexes appear inside their subterms.
+
+%% \paragraph{Equality over types and kinds}
+%% TODO
+
+\subsection{Syntax-directed type system and type inference}
+The kinding and typing rules of Nax illustrated in \Fig{NaxTyping} is not
+syntax directed since the conversion rules ($Conv$) and ($=$) are not syntax
+directed. These conversion rules can apply to anywhere regardless of the
+syntactic category of terms and types.
+
+We can easily adapt the system to be syntax directed by embedding
+the conversion rules into application-like rules (\eg, ($@i$), ($->$$E$)).
+%% \KYA{We need to prove that the syntax directed system are equivalent to
+%% the standard system modulo conversion}
+Among the kinding rules, the only place where conversion is truly necessary
+is in the index application rule ($@i$).
+We can define the syntax directed application rule ($@i$)$_s$ as follows:
+\[ \inference[($@i$)$_s$]{ \Sigma;\Delta |-_s F : A -> \kappa
+                     & \Sigma;\Delta;\cdot |-_s s : A'
+                     & \Sigma;\cdot |-_s A=A' : * }
+                     {\Sigma;\Delta |-_s F\,\{s\} : \kappa}
+\]
+Among the typing rules, we need to embed conversion into the ($->$$E$) rule
+and probably the rules (let) and (MIt), and the branch checking rule as well.
+Once we finish describing the syntax directed type system, we should prove
+that it is equivalent to the typing rules in \Fig{NaxTyping}.
+We are still working on describing the type inference algorithm.
+Then, we would need to prove the correctness of the type inference
+algorithm with respect to the syntax directec typing rules.
+
+\begin{comment}
+\subsection{Type inference (or, reconstruction)}
+
+\newcommand{\return}[0]{\mathrel{\rhd}}
+\newcommand{\fresh}[0]{\textit{fresh}}
+\newcommand{\frvar}[0]{\textit{frvar}}
+\newcommand{\unify}[0]{\textit{unify}}
+
+\paragraph{Kinding:}
+$ \fbox{$\Sigma;\Delta |- \sigma \return \kappa$ }
+ ~~~~
+   \inference[($\forall$)]{ X <- \frvar \\
+                            \Sigma;\Delta, X^\kappa |- \sigma \return *}
+                          {\Sigma;\Delta |- \forall X . \sigma \return *}
+ ~~~~
+   \inference[($\forall i$)]{ i <- \frvar \\
+                              \Sigma;\Delta, i^A |- \sigma \return *}
+                            {\Sigma;\Delta |- \forall i . \sigma \return *}
+$
+\[ \fbox{$\Sigma;\Delta |- F \return \kappa$}
+ ~~~~
+   \inference[($Var$)]{X^\kappa\in\Delta & \Sigma |- \Delta}
+                      {\Sigma;\Delta |- X \return \kappa}
+ ~~~~
+   \inference[($TCon$)]{T:\kappa\in\Sigma & \Sigma |- \Delta}
+                       {\Sigma;\Delta |- T \return \kappa}
+ ~~~~
+   \inference[($\mu$)]{\Sigma;\Delta |- T\,\overline\tau : \kappa -> \kappa}
+                      {\Sigma;\Delta |- \mu^\kappa(T\,\overline\tau) : \kappa}
+\]
+\[ \inference[($@$)]{ \Sigma;\Delta |- F : \kappa -> \kappa'
+                    & \Sigma;\Delta |- G : \kappa }
+                    {\Sigma;\Delta |- F\,G : \kappa'}
+ ~~~~
+   \inference[($@i$)]{ \Sigma;\Delta |- F : A -> \kappa
+                     & \Sigma;\Delta;\cdot |- s : A }
+                     {\Sigma;\Delta |- F\,\{s\} : \kappa}
+\]
+\[ \inference[($->$)]{\Sigma;\Delta |- A : * & \Sigma;\Delta |- B : *}
+                     {\Sigma;\Delta |- A -> B : * }
+\]
+
+
+\paragraph{Typing:}
+\fbox{$\Sigma;\Delta;\Gamma |- t \rhd A$}
+\[ \inference[($:$)]
+      { x:\sigma \in \Gamma \\ A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- x \return A}
+ ~~~
+   \inference[($:i$)]
+      { i^\sigma \in \Delta \\ A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- i \return A}
+ ~~~
+   \inference[($:C$)]
+      { C:\sigma \in \Sigma \\ A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- C \return A}
+ ~~~
+ \inference[($:`$)]
+      { `x:\sigma \in \Sigma \\ A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- `x \return A}
+\]
+\[ \inference[($->$$I$)]
+      { A <- \fresh \\ \Sigma;\Delta;\Gamma,x:A |- t \return B }
+      {\Sigma;\Delta;\Gamma |- \lambda x.t \return A -> B}
+ ~~~~
+   \inference[($->$$E$)]{ \Sigma;\Delta;\Gamma |- r \return A'
+                        & \Sigma;\Delta;\Gamma |- s \return A \\
+                          B <- \fresh & \unify(A',\;A -> B) }
+                        {\Sigma;\Delta;\Gamma |- r\;s \return B}
+\]
+\[ \inference[(let)]
+      { \Sigma;\Delta;\Gamma |- s \return A & \sigma <- gen(A) \\
+        \Sigma;\Delta;\Gamma,x:\sigma |- t \return B }
+      {\Sigma;\Delta;\Gamma |- \<let> x=s \<in> t \return B }
+ ~~~~  
+   \inference[(In)]
+      { F <- \fresh & \overline\tau <- \fresh^{|\kappa|} }
+      {\Sigma;\Delta;\Gamma |- \In^\kappa \return
+         F(\mu^\kappa F)\,\overline{\tau} -> \mu^\kappa F\;\overline{\tau} }
+\]
+\[ \inference[(case)]
+      { \Sigma;\Delta;\Gamma |-^\psi \varphi \return \sigma \\
+         A <- inst(\sigma) }
+      {\Sigma;\Delta;\Gamma |- \varphi^\psi \return A }
+ ~~~
+   \inference[(MIt)]
+      { \overline{K} <- \fresh^{|\psi|} & X <- \frvar
+      & \kappa = \overline{K} -> * & \overline{i'} <- \frvar^{|\psi|} \\
+        \Sigma;\Delta,X^\kappa;
+               \Gamma,x:\forall\,\overline{\iota'} . X\overline{\iota'}
+                                              -> \psi(\overline{\iota'})
+           |-^\psi \varphi \return \sigma
+      & A <- inst(\sigma) \\
+        \overline\tau <- \fresh^{|\psi|} & F <- \fresh
+      & \unify( A,\; F\,X\,\overline\tau -> \psi(\overline\tau) ) }
+      {\Sigma;\Delta;\Gamma
+           |- \<MIt> x.\varphi^\psi
+           : \mu^{\kappa}\,F\;\overline\tau -> \psi(\overline\tau) }
+\]
+
+\fbox{$\Sigma;\Delta;\Gamma |-^\psi \varphi \return \sigma$}
+\[ \inference
+      { \Sigma|_T = \overline{C_k:\sigma_k}^{\;k=1..n}
+      & \Sigma;\cdot |- T \return \kappa
+      & \overline\tau <- \fresh^{|\kappa| - |\psi|}
+      & \overline{\textit{InferBranch}}^{\;k=1..n}
+      & \overline\iota <-\fresh^{|\psi|} }
+      { \Sigma;\Delta;\Gamma
+           |-^\psi \overline{C_k\;\overline{x} -> t}^{\;k=1..n} \return
+             \forall\,\overline\iota . T\,\overline{\tau}\,\overline\iota ->
+                                       \psi(\overline\iota) }
+\]
+\begin{align*}
+\text{where} ~~~~
+\textit{InferBranch} ~\defeq~
+&~ \overline{\tau}_k <- \fresh^{|\psi|} \qquad
+   B <- inst(\sigma_k) \qquad 
+   \overline{A} <- \fresh^{|B|} \\
+&~ \unify(B,\; \overline{A} -> T\,\overline{\tau}\,\overline{\tau}_k) \quad
+   \Sigma;\Delta;\Gamma,\overline{x:A} |- t \return B' \quad
+   \unify(B',\; \psi(\overline{\tau}_k))
+\end{align*}
+\end{comment}
