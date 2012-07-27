@@ -1,8 +1,18 @@
 \documentclass{llncs}
-\usepackage[numbers]{natbib}
 
-\title{The Nax programming language \\
-	{\small\rm(extended abstract)}}
+\usepackage[numbers]{natbib}
+% \usepackage[hang]{caption}
+\usepackage{amsmath}
+\usepackage{semantic}
+\usepackage{framed}
+\usepackage{color}
+\usepackage{comment}
+\usepackage{mylhs2tex}
+
+\newcommand{\KYA}[1]{\textcolor{blue}{#1 -- Ki Yung}}
+\newcommand{\TS}[1]{\textcolor{red}{#1 -- Tim}}
+
+\title{The Nax programming language {\small(work in progress)}}
 \titlerunning{The Nax programming language}
 \author{Ki Yung Ahn\inst{1} \and Tim Sheard\inst{1} \and
 	Author2 SName2\inst{2} % \and Author2 SName2\inst{2}
@@ -15,10 +25,49 @@
 	\\ \email{todo@cl.cam.ac.uk} % \and \email{todo@cl.cam.ac.uk}
 	}
 
+\newcommand{\ie}{{i.e.}}
+\newcommand{\eg}{{e.g.}}
+\newcommand{\aka}{{a.k.a.}$\,$}
+
+\newcommand{\Fig}[1]{Fig.\,\ref{fig:#1}}
+
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
+
 \newcommand{\Wi}{\ensuremath{W_i}}
 
 \newcommand{\Fi}{\ensuremath{\mathsf{F}_i}}
 \newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
+\newcommand{\fix}{\mathsf{fix}}
+\newcommand{\Fix}{\mathsf{Fix}}
+\newcommand{\Fixw}{\ensuremath{\Fix_{\omega}}}
+\newcommand{\Fixi}{\ensuremath{\Fix_{i}}}
+
+\newcommand{\Nat}{\ensuremath{\mathsf{Nat}}}
+\newcommand{\Bool}{\ensuremath{\mathsf{Bool}}}
+\newcommand{\sfList}{\ensuremath{\mathsf{List}}}
+\newcommand{\sfVec}{\ensuremath{\mathsf{Vec}}}
+\newcommand{\SAT}{\ensuremath{\mathsf{SAT}}}
+
+\newcommand{\oz}{\oldstylenums{0}}
+\newcommand{\ka}{{\check\kappa}}
+
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\dom}{\mathop{\mathsf{dom}}}
+\newcommand{\FV}{\mathop{\mathrm{FV}}}
+\newcommand{\In}{\mathsf{In}}
+
+\newcommand{\defeq}{\stackrel{\mathrm{def}}{=}}
+\newcommand{\tyinf}{\mathrel{\triangleright}}
+
+
+%%% semantic package commands
+\reservestyle[\mathinner]{\command}{\mathsf}
+\command{MIt[MIt\;]}
+\reservestyle[\mathinner]{\cmd}{\mathbf}
+\cmd{let[let\;],in[\;in\;],data[data~],where[~where~]}
 
 \begin{document}
 \maketitle
@@ -34,64 +83,116 @@
 %% \keywords{asdf, asdf, asdf, asdf}
 %% \end{abstract}
 
-\section{Introduction}
+\input{intro}
 
-proof assistants mechanized theorem proving
-Curry-Howard correspondence.
+% Proof assistants have shown its practical use in mechanizing certain
+% mathematical proofs \cite{4 color problem}, verifying specifications
+% \cite{something}, and mechanizing metatheories of programming languages.
+% However, verified programming, or \emph{``correct by construction''} approach
+% to programming, is yet far from being practical for everyday programming tasks,
+% because proof assistants were designed for aiding formal proof generation,
+% not for writing executable programs.
 
-A light-weight verification
-indexed datatypes
-Programming with indexed datatypes has become popular in functional programming
-due to the support of the Generalized Algebraic Data Type (GADT) extension to
-Haskell in Glasgow Haskell Compiler (GHC).
 
-\subsection{Indexed datatypes}
+% \subsection{Proof assistants}
+% \emph{Proof assistants} based on Curry-Howard correspondence over
+% dependently-typed $\lambda$-calculi is a major application area of type theory.
+% Such proof assistants can \emph{express fine-grained properties} using
+% dependent types and also \emph{guarantee correctness} since they are based on
+% strongly normalizing and logically consistent calculi. For instance, Coq is
+% based on the Calculus of Inductive Constructions, which is a dependently-typed
+% $\lambda$-calculi known to be strongly normalizing and logically consistent.
+% 
+% Proof assistants have shown its practical use in mechanizing certain
+% mathematical proofs \cite{4 color problem}, verifying specifications
+% \cite{something}, and mechanizing metatheories of programming languages.
+% However, verified programming, or \emph{``correct by construction''} approach
+% to programming, is yet far from being practical for everyday programming tasks,
+% because proof assistants were designed for aiding formal proof generation,
+% not for writing executable programs.
 
-Type-indexed datatypes
+% There are basically two ways of
+% \emph{verified programming} in such proof assistants: either
+% (1) extract program exploiting Curry-Howard correspondence (shallow embedding)
+% or
+% (2) write your own verified compiler for your object language (deep embedding).
 
-Term-indexed datatypes
+% since the generated proof term has a notion executable
+% semantics (shallow embedding)
+% (\ie, cut-elimination corresponds to 
+% reduction of proof terms).
 
-\subsection{Mendler-style recursion combinators}
+% \subsection{Functional programming languages}
+% 
+% \emph{Functional programming languages} based on type-safe (\ie, if a term
+% evaluates to a value, the value has the same type as the original term)
+% polymorphic $\lambda$-calculi is another major application of type theory.
+% Many popular functional programming languages, such as Haskell\cite{Haskell 98}
+% and ML, are based on the Hindley-Milner type system, which is not only
+% \emph{type-safe} but also \emph{type-inferable}. Type inference makes type-safe
+% programming easy and productive for everyday programming tasks since programmers
+% are free from tedious type annotations.
+% 
+% But, fine-grained properties are not expressible in these functional languages
+% due to the lack of dependent types. Even if those fine-grained properties were
+% somehow expressible, the type system of these languages cannot give guarantee
+% those properties. Recall that general purpose programming languages are neither
+% strongly normalizing nor logically consistent, because they are capable of
+% expressing diverging computations by design.
 
-TODO
+%% \subsection{Indexed datatypes}
+%% 
+%% Type-indexed datatypes
+%% 
+%% Term-indexed datatypes
+%% 
+%% \subsection{Mendler-style recursion combinators}
+%% 
+%% TODO
 
-\subsection{Contributions}
+\input{example}
 
-TODO
+\input{nax}
 
-\section{Syntax}
-TODO
+%% \cite{Girard72} dummy citation
+%% \cite{AhnShe11}
+%% 
+%% \citet{Girard72} citet test
+%% \citet{AhnShe11} citet test
+%% 
+%% \citeauthor{Girard72} citeauthor test
+%% \citeauthor{AhnShe11} citeauthor test
 
-\section{Typing rules}
-We define two set of typing rules
-
-declarative typing rules
-syntax-directed typing rules
-
-\cite{Girard72} dummy citation
-\cite{AhnShe11}
-
-\citet{Girard72} citet test
-\citet{AhnShe11} citet test
-
-\citeauthor{Girard72} citeauthor test
-\citeauthor{AhnShe11} citeauthor test
-
-\section{Embedding Nax into System \Fi}
-
-\section{The type inference algorithm \Wi}
+\section{Embedding Nax into strongly normalzing calculi}
+We will prove strong normalization and logical consistency of Nax
+by embedding Nax into a calculi known to have theose desired properties.
+We have developed System \Fi, which is an extension of \Fw\ with 
+erasable term indices, and proved its properties.\footnote{
+	We submitted a paper on System \Fi\ on POPL recently.}
+We can embed datatypes of Nax and the \textsf{MIt} and \textsf{MsfIt}
+combinator families into System \Fi. But, other combinator families
+such as \textsf{MPr} is known to be embeddable into a different
+calculus, System \Fixw\ \cite{AbeMat04}, when there are no term indices.
+We can similarly extend \Fixw\ with erasable term indices -- we call this
+calculus \Fixi, which can embed \textsf{MPr} with term indices.
+Properties if \Fixi\ needs to be checked but we strongly believe
+that the desired properties, \ie, strong normalization
+and logical consistency, will hold in \Fixi\ as well as in \Fi.
 
 \section{Implementation}
+We used Haskell and its libraries (\eg, unbound \cite{unbound})
+to implement to the proptotpye of Nax.
 
-\section{Ongoing and future work}
+\section{Summary}
 
-\subsection{Correctness of the type inference algorithm}
-
-\subsection{Large eliminations}
-
-\subsection{Generalized arrow types in the recursion combinators}
-
-\subsection{Non-logical language fragments}
+\subsection{Ongoing and future work}
+Here is the list of ongoing and future work:
+\begin{itemize}
+\item Correctness of the type inference algorithm
+\item Large eliminations
+\item Generalized arrow types in the recursion combinators
+\item Non-logical language fragments
+\end{itemize}
 
 %% \bibliographystyle{splncs03}
 \bibliographystyle{splncsnat}

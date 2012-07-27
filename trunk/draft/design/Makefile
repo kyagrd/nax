@@ -1,10 +1,8 @@
 .PHONY: all pdf ps dvi
 
-# LHSSRC=main.lhs \
-#       example.lhs
-
-TEXSRC=main.tex # \
-#       intro.tex fi.tex data.tex theory.tex relwork.tex concl.tex
+TEXSRC=main.tex mylhs2tex.sty \
+       intro.tex example.tex
+#       fi.tex data.tex theory.tex relwork.tex concl.tex
 
 all: pdf
 
@@ -32,4 +30,12 @@ main.aux:
 main.bbl: main.aux main.bib
 	bibtex main
 	latex main
+
+
+mylhs2tex.sty: mylhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
+example.tex: example.lhs includelhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
 

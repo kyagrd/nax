@@ -1,0 +1,195 @@
+\section{Introduction}
+During the past decade, the functional programming community gained
+partial success in programming with fine-grained properties
+by moderate extension to the type system \cite{CheHin03,CheHin02,Xi03}.
+This approach is often coined as being \emph{``lightweight''}
+(\eg, lightweight dependent types\footnote{
+  \url{http://okmij.org/ftp/Computation/lightweight-dependent-typing.html} },
+  lightweight program verification),
+since using proof assistants for lightweight task is likely to require
+much more effort (heavyweight).
+
+The Generalized Algebraic Data Type (GADT) extension implemented
+in the Glasgow Haskell Compiler (GHC) has popularized this approach
+even to everyday functional programming tasks.
+%
+Unfortunately, implementations supporting the lightweight approach (\eg, GHC)
+lack \textbf{correctness guarantee} and \textbf{type inference} in general.
+In addition, practical implementations often lack support for term indices,
+so, term indices are faked (or, simulated) by types structure replicating
+term structure. We believe that the lightweight approach can become
+more productive and reliable if we can resolve these problems.
+
+\paragraph{Problem 1. \textbf{Correctness guarantee}} ~
+
+Proof assistants based on dependent types can
+\emph{express fine-grained properties} using dependent types and
+also \emph{guarantee correctness} since the calculi they are based on
+are strongly normalizing and logically consistent. For instance, Coq is
+based on the Calculus of Inductive Constructions, which is a dependently-typed
+$\lambda$-calculi known to be strongly normalizing and logically consistent.
+ 
+But, fine-grained properties are not expressible in functional programming
+languages based on polymorphic type system, due to the lack of dependent types.
+Even if those fine-grained properties were somehow expressible, we cannot have
+guarantee of correctness on those properties. Recall that general purpose
+programming languages are neither strongly normalizing nor logically consistent,
+because they are capable of expressing diverging computations by design.
+So, the lightweight approach in conventional functional languages can only
+raise some confidence on correctness (assuming that inconsistent fragment of
+the type system was never used for reasoning about desired properties) 
+but cannot guarantee correctness of the desired properties as
+in proof assistants.
+
+\paragraph{Problem 2. \textbf{Type inference}} ~
+
+Type inference makes type-safe programming pleasant for everyday programming
+tasks since programmers are free from tedious type annotations.
+Many typed functional programming languages including Haskell 98 and SML
+are based on the Hindley-Milner type system (HM), which is not only
+\emph{type-safe} but also \emph{type-inferable}.
+
+An essential feature for the lightweight approach is \emph{indexed datatypes},
+which are datatypes with \emph{heterogeneous type parameters}
+(\aka \emph{indices}). Such datatypes used in the lightweight approach are
+beyond the polymorphic type schemes in HM. Inclusion of rather simple subset of
+indexed datatypes, such as nested datatypes \cite{BirMee98}, already makes
+type inference undecidable \cite{Henglein93}.
+
+So, functional language implementations supporting lightweight approach
+require type annotations on both indexed datatype declarations and
+function definitions involving indexed datatypes, in order to recover
+decidability of type inference.\footnote{
+	Type inference aided by type annotation is also called
+	partial type inference or type reconstruction.}
+Type annotations on datatype declarations are absolutely necessary
+either when the result types of data constructors have heterogeneous indices
+or when there the argument types of data constructors have existential indices.
+However, it still remains to be answered
+\emph{where and how much type annotations are needed on function definitions}.
+
+\paragraph{Problem 3. \textbf{Faked term indices}} ~
+
+The indexed datatypes can only have static dependencies
+(\ie, indices must be static), unlike full-fledged dependent types
+in proof assistants, which can depend on both static and dynamic objects.
+Therefore, having term indices does not imply full-fledged dependent types,
+
+Indexed datatypes can be indexed by either types or terms, or both.
+Type representations \cite{CheHin03} (Fig.\,\ref{fig:rep}) used in
+datatype generic programming is a typical example of a type-indexed datatype.
+The length-index list, or \texttt{Vector}, (Fig.\,\ref{fig:vec})
+should be a typical example of a term-indexed datatype.
+However, the \texttt{Vector} datatype declaration in Fig.\,\ref{fig:vec}
+uses faked term indices, which are empty types \verb|Succ| and \verb|Zero|
+simulating the data constructors of \verb/data Nat = Succ Nat | Zero/
+at term level. Such faked term indices can be problematic since
+they duplicate code (\ie, operations on \texttt{Nat} should be redefined
+at type level) and have less precise semantics than true term indices
+(\eg, cannot prevent \texttt{Succ Bool}).
+
+Although there has been studies of indexed datatypes with true term indices
+\cite{Zenger97}, including term indices in practical functional languages
+is not trivial. Allowing arbitrary terms at type level breaks the decidability
+of type checking due to diverging terms. Term indices in types implies that
+type equality depends on term equality. And, obviously, term equality will loop
+when one of the terms being compared diverges. Undecidability of type checking
+can be lifted once we have resolved \textit{Problem 1}, and make sure that
+indices are normalizing.
+
+\begin{figure}
+\begin{verbatim}
+data Rep t where
+  R_Int  :: Rep Int
+  R_Char :: Rep Char
+  R_List :: Rep a -> Rep [a]
+  R_Pair :: Rep a -> Rep b -> Rep (a,b)
+\end{verbatim}
+\caption{A type representation for \texttt{Int}, \texttt{Char},
+	\texttt{[]}, and \texttt{(,)} in Haskell with GADTs}
+\label{fig:rep}
+\end{figure}
+
+\begin{figure}
+\begin{verbatim}
+data Succ n
+data Zero
+
+data Vector a n where
+  VCons :: a -> Vector m a -> Vector a (Succ m)
+  VNil  :: Zero
+\end{verbatim}
+\caption{Length indexed list datatype \texttt{Vector}
+	in Haskell with GADTs}
+\label{fig:vec}
+\end{figure}
+
+
+
+%% \paragraph{Contribution} ~\\
+\paragraph{} ~\\
+
+To resolve these problems, we have designed and implemented a prototype of
+the Nax programming language. The current proptotpye of Nax is a
+strongly normalizing functional language supporting the following features
+(which are all illustrated in \S\ref{sec:bg}):
+\begin{description}
+
+\item[Two level datatypes.]
+Recursive dataypes are introduced in two stages. First a non-recursive
+{\em structure} is introduced which abstracts over where recursive
+sub-components will appear. Then a {\em fix-point} is taken to define
+the recursive types (\S \ref{2level}). To minimize the extra notation necessary to program
+in this manner an extensive {\em macro-facility} is provided. The most common
+macro forms can be automatically derived. This is illustrated in \S\ref{macro}.
+
+\item[Indexed types with static term indices.]
+A type constructor is applied to arguments. Arguments
+are either parameters or indices. A datatype is polymorphic over
+its parameters (in the sense that parametricity theorems hold over parameters).
+Parameters are always types.
+Indexed arguments can be either types or terms. An index usually
+encodes a static property about the shape or form of a value with
+that type. We use different kinding rules to separate
+term indices from type indices. For instance a length indexed list, \verb+x+,
+might have type (\verb+List Int 2+). The \verb+Int+ is a parameter, indicating
+the list contains integers, but the \verb+2+ is an index indicating
+that the list, \verb+x+, has exactly two elements.
+Types are static in Nax. Types are only used for type checking
+and are computationally irrelevant, even though some parts of a type might include terms.
+In other words, Nax supports \emph{index erasure},
+
+\item[Recursive types of unrestricted polarity but restricted elimination.]
+It is well known that unrestricted recursive types enable diverging computation
+even without any recursion at the term level. To design a normalizing language
+that supports recursive types, we must make a design choice that limits
+the use of recursive types. There are two possible
+design choices. We may restrict the formation of recursive types
+(\ie, type definition) or we may restrict the elimination of recursive types
+(\ie, pattern matching). In Nax, we make the latter design choice, so that we can
+define \emph{all the recursive datatypes} available in modern functional languages.
+
+\item[Mendler style iteration and recursion combinators.] Any useful normalizing
+language should support principled recursion operators that guarantee
+normalization. Such operators should be easy to use, and expressive over datatypes
+with both parameters and indices. Mendler style combinators meet both requirements.
+So, we adopt them in Nax.
+
+\item[Type inference (reconstruction) from minimal annotation.]
+When we extend the Hindley-Milner type system with indexed data types,
+we no longer have type inference for completely unannotated terms.
+For example, this restriction shows up in languages which support GADTs,
+which support a kind of type indexing.
+Although complete
+type inference is not possible, partial type inference (reconstruction of missing
+type information) is
+still possible when sufficient type annotations are provided. Nax's
+systematic partition of type parameters from type indices provides
+a mechanism where it is possible to decide exactly where
+additional type annotations are needed, and to enforce that the
+programmer supply such annotations. This system faithfully extends the Hindley-Milner
+type inference (\ie, no additional annotations are needed for the programs that are
+already inferable by Hindley-Milner).
+\end{description}
+
+
