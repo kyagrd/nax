@@ -1,0 +1,33 @@
+\section{Summary}
+
+%% \subsection{Ongoing and future work}
+Here is the list of ongoing and future work:
+\begin{itemize}
+\item \emph{Embedding Nax into strongly normalizing calculus}
+	As mentioned in \S\ref{sec:theory}, we can prove the desired properties
+	of Nax by embedding the features of Nax, most importantly,
+	the Mendler-style recursion combinators into the calculus
+	equipped with those desired properties. We have already done this for
+	some of the combinators: \textsf{MIt} and \textsf{MsfIt} into \Fi, and,
+	\textsf{MPr} into \Fixi. We believe that the course-of-values
+	combinators \textsf{McvIt} and \textsf{McvPr} are also embeddable
+	into \Fixi.
+\item \emph{Correctness of the type inference algorithm}\\
+	TODO
+\item \emph{Large eliminations}\\
+	The current prototype of Nax only supports limited
+	form of large elimination of mapping indices from
+	argument types to result types due to the limited syntax
+	of the index transformer. We are trying to enrich the index
+	transformer syntax for more expressive large eliminations
+	(\eg, if-then-else or more generally case expressions
+	in index transformers) and still maintain our design goals of
+	having type inference and logically consistent type system.
+	Again, we will make sure that such new features are safe by embedding
+	the new feature into the calculus Nax is based on, such as System \Fi.
+\item \emph{Generalized arrow types in Mendler-style combinators}\\
+	For kinds other than
+\item \emph{Non-logical language fragments}\\
+	Trellys project \cite{TODO_cite_some_trellys_papers}
+\end{itemize}
+
