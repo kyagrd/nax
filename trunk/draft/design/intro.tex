@@ -1,96 +1,101 @@
 \section{Introduction}
-During the past decade, the functional programming community gained
-partial success in programming with fine-grained properties
-by moderate extension to the type system \cite{CheHin03,CheHin02,Xi03}.
-This approach is often coined as being \emph{``lightweight''}
+During the past decade, the functional programming community achieved
+partial success in their goal of maintaining fine-grained properties
+by moderate extensions to the type system of functional languages\cite{CheHin03,CheHin02,Xi03}.
+This approach is often called \emph{``lightweight''}
 (\eg, lightweight dependent types\footnote{
   \url{http://okmij.org/ftp/Computation/lightweight-dependent-typing.html} },
   lightweight program verification),
-since using proof assistants for lightweight task is likely to require
+since using a full blown proof assistant to maintain similar properties is likely to require
 much more effort (heavyweight).
 
-The Generalized Algebraic Data Type (GADT) extension implemented
-in the Glasgow Haskell Compiler (GHC) has popularized this approach
-even to everyday functional programming tasks.
+The Generalized Algebraic Data Type (GADT) extension, implemented
+in the Glasgow Haskell Compiler (GHC), has made this approach
+possible even when performing everyday functional programming tasks.
 %
-Unfortunately, implementations supporting the lightweight approach (\eg, GHC)
-lack \textbf{correctness guarantee} and \textbf{type inference} in general.
-In addition, practical implementations often lack support for term indices,
-so, \textbf{term indices are faked} (or, simulated) by a type structure
-replicating the term structure. We believe that the lightweight approach can
+Unfortunately, implementations supporting a lightweight approach (\eg, GHC)
+lack \textbf{correctness guarantees} and \textbf{type inference} in general.
+In addition, practical implementations often lack support for GADTs indexed
+by terms, so \textbf{term indices are faked} (or simulated) by additional
+type structure replicating the requisite term structure. We believe that the lightweight approach can
 become more productive and reliable if we can resolve these problems.
 
 \paragraph{Problem 1. \textbf{Correctness guarantee}} ~
 
 Proof assistants based on dependent types can
-\emph{express fine-grained properties} using dependent types and
-also \emph{guarantee correctness} since the calculi they are based on
-are strongly normalizing and logically consistent. For instance, Coq is
+\emph{express fine-grained properties} and
+also \emph{guarantee correctness} since these calculi are based on
+strongly normalizing and logically consistent systems. For instance, Coq is
 based on the Calculus of Inductive Constructions, which is a dependently-typed
 $\lambda$-calculi known to be strongly normalizing and logically consistent.
  
-But, fine-grained properties are not expressible in functional programming
-languages based on polymorphic type system, due to the lack of dependent types.
-Even if those fine-grained properties were somehow expressible, we cannot have
-guarantee of correctness on those properties. Recall that general purpose
-programming languages are neither strongly normalizing nor logically consistent,
-because they are capable of expressing diverging computations by design.
-So, the lightweight approach in conventional functional languages can only
-raise some confidence on correctness (assuming that inconsistent fragment of
-the type system was never used for reasoning about desired properties) 
-but cannot guarantee correctness of the desired properties as
-in proof assistants.
+But, the same fine-grained properties are not expressible in ordinary functional
+programming languages with only simple polymorphic types, since such languages lack the
+expressivity of dependent types. Even if these fine-grained properties were somehow
+expressible, one would not have any guarantee of correctness. Recall that general purpose
+programming languages are neither strongly normalizing nor logically consistent, because
+they are (by design) capable of expressing diverging computations. So, the lightweight
+approach in conventional functional languages can only raise programmers confidence of
+correctness (assuming that the inconsistent fragment of the type system was never used for
+reasoning about the desired properties) but cannot guarantee the correctness of the desired
+properties as is the norm in proof assistants.
 
 \paragraph{Problem 2. \textbf{Type inference}} ~
 
-Type inference makes type-safe programming pleasant for everyday programming
-tasks since programmers are free from tedious type annotations.
+Type inference makes type-safe programming pleasant when performomng
+everyday programming tasks, since programmers are freed from including tedious type annotations.
 Many typed functional programming languages including Haskell 98 and SML
 are based on the Hindley-Milner type system (HM), which is not only
-\emph{type-safe} but also \emph{type-inferable}.
+\emph{type-safe} but also supports \emph{type inference}.
 
-An essential feature for the lightweight approach is \emph{indexed datatypes},
+An essential feature of the lightweight approach is \emph{indexed datatypes},
 which are datatypes with \emph{heterogeneous type parameters}
-(\aka \emph{indices}). Such datatypes used in the lightweight approach are
-beyond the polymorphic type schemes in HM. Inclusion of rather simple subset of
-indexed datatypes, such as nested datatypes \cite{BirMee98}, already makes
-type inference undecidable \cite{Henglein93}.
+(\aka \emph{indices}) which are made possible by the GADT extension.
+Such datatypes, often used in lightweight approaches, are
+beyond the capabilities of polymorphic type schemes used in HM. Inclusion of 
+just a simple subset of
+the indexed datatypes, such as nested datatypes \cite{BirMee98}, already make
+type inference undecidable \cite{Henglein93}. More sophisticated
+uses add even more complication\cite{Lin2010}.
 
-So, functional language implementations supporting lightweight approach
-require type annotations on both indexed datatype declarations and
-function definitions involving indexed datatypes, in order to recover
-decidability of type inference.\footnote{
+So, functional language implementations, that support the lightweight approach,
+require type annotations on both indexed datatype declarations and on
+function definitions that pattern match indexed datatypes, in order to recover
+a semblence of type inference.\footnote{
 	Type inference aided by type annotation is also called
 	partial type inference or type reconstruction.}
 Type annotations on datatype declarations are absolutely necessary
-either when the result types of data constructors have indices
-or when there the argument types of data constructors have existential indices.
-However, it still remains to be answered
+when either the result types of their data constructors have indices
+or when the argument types of their data constructors have existential indices.
+However, it still an open question of
 \emph{where and how much type annotations are needed on function definitions}.
 
 \paragraph{Problem 3. \textbf{Faked term indices}} ~
 
-The indexed datatypes can only have static dependencies
-(\ie, indices must be static), unlike full-fledged dependent types
-in proof assistants, which can depend on both static and dynamic objects.
-Therefore, having term indices does not imply full-fledged dependent types,
+The indexed datatypes can only have static dependencies (\ie, indices must be compleytely
+known at type checking time), unlike full-fledged dependent types, as used in proof assistants,
+which can depend on both static and dynamic values. Therefore, having term indices does
+not imply full-fledged dependent types.
 
 Indexed datatypes can be indexed by either types or terms, or both.
 Type representations \cite{CheHin03} (Fig.\,\ref{fig:rep}) used in
-datatype generic programming is a typical example of a type-indexed datatype.
-The length-index list, or \texttt{Vector}, (Fig.\,\ref{fig:vec})
-should be a typical example of a term-indexed datatype.
-However, the \texttt{Vector} datatype declaration in Fig.\,\ref{fig:vec}
-uses faked term indices, which are empty types \verb|Succ| and \verb|Zero|
-simulating the data constructors of \verb/data Nat = Succ Nat | Zero/
-at term level. Such faked term indices can be problematic since
-they duplicate code (\ie, operations on \texttt{Nat} should be redefined
-at type level) and have less precise semantics than true term indices
-(\eg, cannot prevent \texttt{Succ Bool}).
+datatype generic programming are typical examples of type-indexed datatypes.
+The length-indexed list, or \texttt{Vector}, (Fig.\,\ref{fig:vec})
+is an example of a term-indexed datatype.
+However, the \texttt{Vector} datatype declaration in Fig.\; \ref{fig:vec}
+uses faked term indices. These indexes are faked because
+rather than use the real term constructors of the natural numbers
+(defined by \verb/data Nat = Succ Nat | Zero/)
+it uses the uninhabited types \verb|Succ| and \verb|Zero|
+to simulate the data constructors of \verb+Nat+. Such faked term indices are 
+problematic since
+they (1) duplicate code (\ie, operations on \texttt{Nat} must be redefined
+at type level) and (2) have less precise semantics than true term indices
+(\eg, cannot prevent ill-typed types such as \texttt{Succ Bool}).
 
-Although there has been studies of indexed datatypes with true term indices
-\cite{Zenger97}, including term indices in practical functional languages
-is not trivial. Allowing arbitrary terms at type level breaks the decidability
+Although indexed datatypes with true term indices have been studied\cite{Zenger97},
+including term indices in practical functional languages
+is not trivial. Allowing arbitrary terms at the type level breaks the decidability
 of type checking due to diverging terms. Term indices in types implies that
 type equality depends on term equality. And, obviously, term equality will loop
 when one of the terms being compared diverges. Undecidability of type checking
@@ -130,7 +135,7 @@ data Vector a n where
 \paragraph{} ~\\
 
 To resolve these problems, we have designed and implemented a prototype of
-the Nax programming language. The current proptotpye of Nax is a
+the Nax programming language. The current proptotype of Nax is a
 strongly normalizing functional language supporting the following features
 (which are all illustrated in \S\ref{sec:bg}):
 \begin{description}
