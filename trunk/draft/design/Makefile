@@ -1,8 +1,7 @@
-.PHONY: all pdf ps dvi
+.PHONY: all pdf ps dvi touch
 
 TEXSRC=main.tex mylhs2tex.sty \
-       intro.tex example.tex nax.tex
-#       fi.tex data.tex theory.tex relwork.tex concl.tex
+       intro.tex example.tex nax.tex summary.tex
 
 all: pdf
 
@@ -11,6 +10,11 @@ pdf: main.pdf
 ps: main.ps
 
 dvi: main.dvi
+
+touch:
+	touch main.tex
+	touch main.bib
+	touch mylhs2tex.lhs
 
 # main.tex: ${LHSSRC}
 # 	lhs2TeX --poly -v -o main.tex main.lhs
