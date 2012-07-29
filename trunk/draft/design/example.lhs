@@ -859,8 +859,5 @@ each logical feature of Nax into a lower level language known to be
 strongly normalizing and logically consistent. Our approach of distinguishing
 type and term indices is unique, and requires the extension of some
 previous work on normalizing calculi. It is the subject of the sequel.
-We have already wrote a paper on System \Fi, which is an extension of Fw
-Mendler-style iteration
-
 
 

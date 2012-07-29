@@ -16,9 +16,9 @@ even to everyday functional programming tasks.
 Unfortunately, implementations supporting the lightweight approach (\eg, GHC)
 lack \textbf{correctness guarantee} and \textbf{type inference} in general.
 In addition, practical implementations often lack support for term indices,
-so, term indices are faked (or, simulated) by types structure replicating
-term structure. We believe that the lightweight approach can become
-more productive and reliable if we can resolve these problems.
+so, \textbf{term indices are faked} (or, simulated) by a type structure
+replicating the term structure. We believe that the lightweight approach can
+become more productive and reliable if we can resolve these problems.
 
 \paragraph{Problem 1. \textbf{Correctness guarantee}} ~
 
@@ -63,7 +63,7 @@ decidability of type inference.\footnote{
 	Type inference aided by type annotation is also called
 	partial type inference or type reconstruction.}
 Type annotations on datatype declarations are absolutely necessary
-either when the result types of data constructors have heterogeneous indices
+either when the result types of data constructors have indices
 or when there the argument types of data constructors have existential indices.
 However, it still remains to be answered
 \emph{where and how much type annotations are needed on function definitions}.
