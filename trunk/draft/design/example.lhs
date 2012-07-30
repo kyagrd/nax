@@ -830,7 +830,9 @@ facility is necessary. With syntactic support, one hardly even notices.
 
 \item The use of term-indexed types allows programmers to write types that
 act as logical relations, and form the basis for reasoning about programs.
-Formalizing this is a large part of a sequel to this paper.
+We have formalized this is the paper 
+{\em System \Fi: a higher-order polymorphic $\lambda$-calculus with erasable term indices}\cite{POPL13}
+which we have submitted to POPL.
 
 \item Using Mendler-style combinators is expressive, and with syntactic support
 (the |with| equations of the Mendler combinators), is easy to use. In
@@ -851,13 +853,5 @@ Nax faithfully extends Hindley-Milner type inference.
 
 %% The next few sections formalize the theory behind Nax. We want Nax to be
 %% a sound and consistent logic.
-
-In the future we want Nax programs to include both a logical fragment and
-a non-logical (or programatic) fragment, and we want the type system to
-separate the two. Our approach to formalizing the logical Nax, is to embed
-each logical feature of Nax into a lower level language known to be
-strongly normalizing and logically consistent. Our approach of distinguishing
-type and term indices is unique, and requires the extension of some
-previous work on normalizing calculi. It is the subject of the sequel.
 
 

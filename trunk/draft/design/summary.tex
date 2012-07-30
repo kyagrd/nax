@@ -1,40 +1,50 @@
-\section{Summary}
+\section{Future Work}
 
 %% \subsection{Ongoing and future work}
-Here is the list of ongoing and future work:
+
+Nax is one thread of research in the Trellys project,
+a collaborative initiative to design a
+dependently-typed programming language with simple support for general recursion
+and other convenient but logically unsound features, yet still maintain a
+logically sound core. Here is a partial list of ongoing and future work in the Nax thread.
+
 \begin{itemize}
-\item \emph{Embedding Nax into strongly normalizing calculus}
-	As mentioned in \S\ref{sec:theory}, we can prove the desired properties
-	of Nax by embedding the features of Nax, most importantly,
-	the Mendler-style recursion combinators into the calculus
-	equipped with those desired properties. We have already done this for
-	some of the combinators: \textsf{MIt} and \textsf{MsfIt} into \Fi, and,
-	\textsf{MPr} into \Fixi. We believe that the course-of-values
-	combinators \textsf{McvIt} and \textsf{McvPr} are also embeddable
-	into \Fixi.
-\item \emph{Correctness of the type inference algorithm}\\
-	We are describing a type inference algorithm for Nax,
-	which extends the type inference algorithm $W$ for HM.
-	We will prove its correctness with respect to the typing rules of Nax.
+
+\item \emph{Embedding all of Nax into a strongly normalizing calculus}\\
+We can embed datatypes of Nax and the \textsf{MIt} and \textsf{MsfIt}
+combinator families into System \Fi. But, other combinator families,
+such as \textsf{MPr}, are only known to be embeddable into a different
+calculus, System \Fixw\ \cite{AbeMat04}, which does not support term indices.
+We believe we can similarly extend \Fixw\ with erasable term indices -- we call this
+calculus \Fixi, which can then embed \textsf{MPr} over datatypes with term indices.
+Properties of \Fixi\ needs to be checked but we strongly believe
+that the desired properties, \ie, strong normalization
+and logical consistency, will hold in \Fixi\ as well as in \Fi.
+
+\item \emph{Including both a programatic and a logical fragment}
+
+In the future we want Nax programs to include both a logical fragment
+and a non-logical (or programatic) fragment, and we want the type system
+to separate the two. We believe we can extend the proof principles
+outlined in the paper
+{\em Step-Indexed Normalization for a Language with General Recursion}\cite{ccasin:msfp12}
+
+
+% \item \emph{Correctness of the type inference algorithm}\\  TODO
+	
 \item \emph{Large eliminations}\\
-	The current prototype of Nax only supports limited
-	form of large elimination of mapping indices from
-	argument types to result types due to the limited syntax
-	of the index transformer. We are trying to enrich the index
-	transformer syntax for more expressive large eliminations
-	(\eg, if-then-else or more generally case expressions
+	The current prototype of Nax only supports a limited
+	form of large elimination (i.e. mapping indices from
+	argument types to result types) due to the limited syntax
+	of the index transformer. We hope to enrich the index
+	transformer syntax to support more expressive large eliminations
+	(\eg, if-then-else, or more generally, case expressions
 	in index transformers) and still maintain our design goals of
-	having type inference and logically consistent type system.
+	having both type inference and a logically consistent type system.
 	Again, we will make sure that such new features are safe by embedding
 	the new feature into the calculus Nax is based on, such as System \Fi.
-\item \emph{Non-logical language fragments}\\
-	The prototype of the Nax language described by this paper
-	only contains strongly normalizing features for logical consistency.
-	Our eventual goal is include non-logical features into the language
-	and still maintain the desired features within the subset of
-	the language distingiusehd by the type system. We plan to
-	adopt ideas of the Trellys project
-	\cite{plpv12TrellysEq,msfp12TrellysHEq,msfp12TrellysSN4GenRec}
-	to approach our eventual goal.
+
+% \item \emph{Generalized arrow types in Mendler-style combinators}\\ For kinds other than
+
 \end{itemize}
 

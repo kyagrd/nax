@@ -152,7 +152,7 @@
 
 \input{example}
 
-% \input{nax}
+%\input{nax}
 
 %% \cite{Girard72} dummy citation
 %% \cite{AhnShe11}
@@ -164,26 +164,23 @@
 %% \citeauthor{AhnShe11} citeauthor test
 
 \section{Embedding Nax into strongly normalizing calculus}\label{sec:theory}
-We will prove strong normalization and logical consistency of Nax
-by embedding Nax into a calculi known to have those desired properties.
-We have developed System \Fi, which is an extension of \Fw\ with 
+
+Our approach to formalizing the Nax as a logical language, is to
+embed each logical feature of Nax into a lower level language,
+System \Fi, which we have proven to
+be strongly normalizing and logically consistent\cite{POPL13}. 
+We have designed System \Fi, which is an extension of \Fw\ with 
 erasable term indices, and proved its properties.\footnote{
 	We submitted a paper on System \Fi\ on POPL recently.
 	Along with this submission, the draft of that paper on System \Fi\ is
 	included as a supplimentary material.}
-We can embed datatypes of Nax and the \textsf{MIt} and \textsf{MsfIt}
-combinator families into System \Fi. But, other combinator families
-such as \textsf{MPr} is known to be embeddable into a different
-calculus, System \Fixw\ \cite{AbeMat04}, when there are no term indices.
-We can similarly extend \Fixw\ with erasable term indices -- we call this
-calculus \Fixi, which can embed \textsf{MPr} with term indices.
-Properties of \Fixi\ needs to be checked but we strongly believe
-that the desired properties, \ie, strong normalization
-and logical consistency, will hold in \Fixi\ as well as in \Fi.
-
+Our approach of
+distinguishing type and term indices is unique, and requires the
+extension of some previous work on normalizing calculi. 
+		
 \section{Implementation}
 We used Haskell and its libraries (\eg, unbound \cite{unbound})
-to implement to the prototype of Nax.
+to implement a prototype of Nax as an interpreter.
 
 \input{summary}
 
