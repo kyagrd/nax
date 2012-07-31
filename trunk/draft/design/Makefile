@@ -1,4 +1,4 @@
-.PHONY: all pdf ps dvi touch
+.PHONY: all pdf ps dvi touch ifl
 
 TEXSRC=main.tex mylhs2tex.sty \
        intro.tex example.tex nax.tex summary.tex
@@ -15,6 +15,9 @@ touch:
 	touch main.tex
 	touch main.bib
 	touch mylhs2tex.lhs
+
+ifl: main.pdf
+	pdftk main.pdf ../POPL13/main.pdf cat output NaxIFL.pdf
 
 # main.tex: ${LHSSRC}
 # 	lhs2TeX --poly -v -o main.tex main.lhs
