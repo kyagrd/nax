@@ -596,9 +596,31 @@ term after the reduction. For example,
 %% the only ground type is the void type? I am not sure. So, I won't
 %% elaborate on this.
 
-\paragraph{}
-\KYA{TODO there should be a story on type inference and principal types
-	to motivate the HM type system}
+%%% \paragraph{}
+%%% \KYA{TODO there should be a story on type inference and principal types
+%%% 	to motivate the HM type system}
+%%%%%%%%%%% maybe not needed
 
 \subsection{Motivations for polymorphic type systems}\label{sec:stlc:topoly}
-TODO
+A limitation of STLC is that a variable ($x$) can be given only one
+type binding ($x:A$) in a given context ($\Gamma$), in both Church style
+and Curry style. Although typing is not unique in the Curry-style STLC,
+the limitation is still the same since the \rulename{Var} rule is basically
+the same as in Church style. It is possible to give many typings for terms
+other than variables in Curry style (\eg, the abstraction $\l x .x$ 
+in the previous subsection), a type for variable ($x$) is uniquely determined
+once the context ($\Gamma$) is determined. This becomes inconvenient
+when we want to abstract over functions that can be given multiple types,
+such as the identity function $(\l x.x)$. That is, when we have a variable
+$x_\textsf{id}$ that stands for $(\l x.x)$ and have a context $\Gamma$
+such that $x_\textsf{id}:A -> A \in \Gamma$ for some $A$, we cannot apply
+this $x_\textsf{id}$ to arguments of differing types within the same context
+$\Gamma$. Due to this limitation, most typed functional languages are based on
+a polymorphic lambda calculus, which has richer notion of types than STLC.
+Polymorphic lambda calculi supports polymorphic types,
+such as $\forall X.X -> X$ for the type of the identity function,
+which captures the idea that the type variable $X$ can be instantiated to
+many different types, in fact, arbitrary type you need, in each occurrences
+of its use. We will introduce several well-known polymorphic lambda calculi
+and discuss their properties in the following subsections.
+
