@@ -536,7 +536,7 @@ and transitivity of $\sqsubseteq$.
 
 When the last rule is \rulename{Gen}, we know by induction that there exists
 $A$ such that $\overline{\Gamma}(A) \sqsubseteq \sigma$. We also know
-that $X \notin\FV \overline{\Gamma}(A)$ by the definition of generalization closure.
+that $X \notin\FV(\overline{\Gamma}(A))$ by the definition of generalization closure.
 This step follows from a proof by contradiction argument.
 If it were the case that $X\in\overline{\Gamma}(A)$, then it should be the case that
 $X\in\FV(\Gamma)$
@@ -591,10 +591,24 @@ it is clear that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
 \end{proof}
 
 \subsection{The type inference algorithm $W$}\label{sec:hm:W}
-The type inference algorithm $W$ (Figure \ref{fig:algW}) is sound
-with respect to the syntax directed typing rules (Theorem \ref{thm:soundW}).
-%% The type inference algorithm $W$ is sound and complete
-%% with respect to the syntax directed typing rules.
+\citet{DamMil82} presented the type inference algorithm $W$
+(Figure \ref{fig:algW}) and proved its soundness and completeness
+with respect to the declarative typing rules. Here, we show
+soundness and completeness of the type inference algorithm $W$
+with respect to the syntax directed typing rules.
+Each rule of the type inference algorithm $W$ in Figure \ref{fig:algW}
+has a similar structure to its corresponding syntax directed rule.
+The type inference algorithm has additional details of explicitly
+managing fresh type variable introduction and substitution.
+
+$\unify(A_1,A_2)$ succeeds when there exists a substitution $S$ such that
+$S A_1 = S A_2$. When the unification succeeds, we write $\unify(A_1,A_2) ~> S$.
+Furthermore, the result of the unification $S$ is a most general unifier whose
+domain is a subset of $\FV(A_1) \cup \FV(A_2)$. That is, for any unifier $S'$
+such that $S' A_1 = S' A_2$ and $\dom(S') \subseteq \FV(A_1) \cup \FV(A_2)$,
+there exists a substitution $R$ such that $S' = R\circ S$ and
+$\dom(R)\subseteq\dom(S)$. The composition of substitution is defined
+as $(S_2\circ S_1)A = S_2(S_1(A))$.
 
 \begin{figure}
 \begin{singlespace}
