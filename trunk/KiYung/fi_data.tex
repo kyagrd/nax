@@ -172,11 +172,9 @@ not expect logical consistency in such systems.
 \begin{figure}\vspace*{-8pt}
 \begin{singlespace}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
-newtype $\mu_{*}$ (f :: * -> *)
-  = In$_{*}$ (f ($\mu_{*}$ f))
+newtype $\mu_{*}$ (f :: * -> *) = In$_{*}$ (f ($\mu_{*}$ f))
 
-data ListF (a::*) (r::*)
-  = Cons a r       | Nil
+data ListF (a::*) (r::*) = Cons a r | Nil
 
 type List a = $\mu_{*}$ (ListF a)
 cons x xs = In$_{*}$ (Cons x xs)
@@ -188,8 +186,7 @@ mit$_{*}$ phi (In$_{*}$ z) = phi (mit$_{*}$ phi) z
 newtype $\mu_{(*-> *)}$ (f :: (*->*) -> (*->*)) (a::*)
   = In$_{(*-> *)}$ (f (Mu$_{(*-> *)}$ f)) a
 
-data PowlF (r::*->*) (a::*)
-  = PCons a (r(a,a)) | PNil
+data PowlF (r::*->*) (a::*) = PCons a (r(a,a)) | PNil
 
 type Powl a = $\mu_{(*-> *)}$ PowlF a
 pcons x xs = In$_{(*-> *)}$ (PCons x xs)
