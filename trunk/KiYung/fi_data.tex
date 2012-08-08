@@ -1,2 +1,557 @@
 \section{Embedding datatypes and Mendler-style iterators}\label{sec:fi:data}
-TODO
+
+System \Fi\ can express a rich collection of datatypes.
+%% TODO cite some paper that does this with System Fw or System F
+First, we illustrate embeddings for both non-recursive and
+recursive datatypes using Church encodings \cite{Church33} to define
+data constructors (\S\ref{ssec:embedChurch}). Second, we illustrate
+a more involved embedding for recursive datatypes based on two-level types
+(\S\ref{ssec:embedTwoLevel}). Lastly, we discuss an encoding of equality over
+term indices (\S\ref{Leibniz}).
+
+\subsection{Embedding datatypes using Church-encoded terms}
+\label{ssec:embedChurch}
+\begin{figure}
+\begin{singlespace}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{Bool} &=~& \forall X.X -> X -> X \\
+&\!\!\!\!\!\!\mathtt{true}  &\!\!\!:~~& \texttt{Bool} ~~=~ \l x_1.\l x_2. x_1 \\
+&\!\!\!\!\!\!\mathtt{false} &\!\!\!:~~& \texttt{Bool} ~~=~ \l x_1.\l x_2. x_2 \\
+&\!\!\!\!\!\!\mathtt{elim_{Bool}} &\!\!\!:~~& \texttt{Bool} -> \forall X.X -> X -> X \\
+&	&=~& \l x.\l x_1. \l x_2. x\;x_1\,x_2 \qquad
+(\textbf{if}~x~\textbf{then}~x_1~\textbf{else}~x_2)
+\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.4pt}
+\begin{align*}
+&\!\!\!\!\!\!A_1\times A_2 &=~& \forall X. (A_1 -> A_2 -> X) -> X \\
+&\!\!\!\!\!\!\mathtt{pair} &\!\!\!:~~&
+	\forall A_1^{*}.\forall A_2^{*}.A_1\times A_2
+	~~=~ \l x_1.\l x_2.\l x'.x'\,x_1\,x_2 \\
+&\!\!\!\!\!\!\mathtt{elim_{(\times)}} &\!\!\!:~~&
+	\forall A_1^{*}.\forall A_2^{*}.A_1\times A_2 ->
+	\forall X. (A_1 -> A_2 -> X) -> X \\
+	& &=~& \l x.\l x'.x\;x' \\
+ &&&\!\!\!\!\!\!\!\!\text{(by passing appropriate values to $x'$, we get}\\
+ &&&\!\!\!\!\texttt{fst} = \l x.x(\l x_1.\l x_2.x_1),~
+            \texttt{snd} = \l x.x(\l x_1.\l x_2.x_2) ~)
+\end{align*} \vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.4pt}
+\begin{align*}
+&\!\!\!\!\!\!A_1+A_2 &=~&\forall X^{*}. (A_1 -> X) -> (A_2 -> X) -> X \\
+&\!\!\!\!\!\!\mathtt{inl} &\!\!\!:~~& \forall A_1^{*}.\forall A_2^{*}.A_1-> A_1+A_2
+	~~=~ \l x. \l x_1. \l x_2 . x_1\,x \\
+&\!\!\!\!\!\!\mathtt{inr} &\!\!\!:~~& \forall A_1^{*}.\forall A_2^{*}.A_2-> A_1+A_2
+	~~=~ \l x. \l x_1. \l x_2 . x_2\,x \\
+&\!\!\!\!\!\!\mathtt{elim_{(+)}} &\!\!\!:~~&
+	\forall A_1^{*}.\forall A_2^{*}.(A_1+A_2) -> \\
+	&&& \forall X^{*}. (A_1 -> X) -> (A_2 -> X) -> X \\
+	& &=~& \l x.\l x_1. \l x_2. x\;x_1\,x_2 \\
+	&&&			(\textbf{case}~x~\textbf{of}~
+				\{\mathtt{inl}~x' -> x_1\;x';
+				  \mathtt{inr}~x' -> x_2\;x'\})
+\end{align*}~\vspace*{-10pt}
+\end{singlespace}
+\caption{Embedding non-recursive datatypes}
+\label{fig:churchnonrec}
+\end{figure}
+\begin{figure}
+\begin{singlespace}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{List} &\!\!\!\!\!=~& \l A^{*}.\forall X^{*}.(A-> X-> X)-> X-> X
+	\\
+&\!\!\!\!\!\!\texttt{cons} &\!\!\!\!\!:~~& \forall A^{*}.A-> \mathtt{List}\,A-> \mathtt{List}\,A \\
+& & & \qquad~\qquad~\quad\, =~\l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{nil} &\!\!\!\!\!:~~& \forall A^{*}.\texttt{List}\,A
+~~=~ \l x_c.\l x_n.\l x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{List}} &\!\!\!\!:~~& \forall A^{*}.\texttt{List}\,A ->
+	\forall X^{*}.(A -> X -> X) -> X -> X \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n\qquad
+	\text{(\textit{foldr} $x_z$ $x_c$ $x~$ in Haskell)}
+\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.4pt}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{Powl} &\!\!\!\!\!=~& \l A^{*}.\\
+&&&\forall X^{*-> *}.(A-> X(A\times A)-> XA)-> XA -> XA \\
+&\!\!\!\!\!\!\texttt{pcons} &\!\!\!\!\!:~~& \forall A^{*}.A-> \mathtt{Powl}(A\times A)-> \mathtt{Powl}\,A \\
+&&& \qquad~\qquad~\quad\, ~=~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{pnil} &\!\!\!\!\!:~~& \forall A^{*}.\texttt{Powl}\,A
+~~~=~ \l x_c.\l x_n.\l x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{Powl}} &\!\!\!\!:~~& \forall A^{*}.\texttt{Powl}\,A -> \\
+&&& \forall X^{*-> *}.(A -> X(A\times A) -> XA) -> XA -> XA \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
+\end{align*}\vspace*{-19pt} \\ \vspace*{-4pt}
+\rule{\linewidth}{.4pt}
+\begin{align*}
+&\!\!\!\!\!\!\mathtt{Vec} &\!\!\!\!\!\!\!\!=~& \l A^{*}.\l i^{\mathtt{Nat}}.\\
+&&&	\forall X^{\mathtt{Nat}-> *}.
+	(\forall i^\mathtt{Nat}.A-> X\{i\}-> X\{\mathtt{S}\,i\}) ->  \\
+&&& \qquad~\qquad X\{\texttt{Z}\} -> X\{i\} \\
+ &\!\!\!\!\!\!\texttt{vcons} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.A-> \mathtt{Vec}\,A\,\{i\}-> \mathtt{Vec}\,A\,\{\mathtt{S}\,i\} \\
+&&&\;\qquad\qquad\quad =~ \l x_a.\l x.\l x_c.\l x_n. x_c\,x_a\,(x\;x_c\,x_n) \\
+&\!\!\!\!\!\!\mathtt{vnil} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\texttt{Vec}\,A\,\{\mathtt{Z}\} 
+~~~=~ \l x_c.\l x_n.x_n \\
+&\!\!\!\!\!\!\mathtt{elim_{Vec}} &\!\!\!\!\!\!\!\!:~& \forall A^{*}.\forall i^\mathtt{Nat}.\texttt{Vec}\,A\,\{i\} -> \\
+&&& \forall X^{\mathtt{Nat}-> *}.(\forall i^\mathtt{Nat}.A -> X\{i\} -> X\{\mathtt{S}\,i\}) -> \\
+&&& \qquad~\qquad X\{\mathtt{Z}\} -> X\{i\} \\
+& &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
+\end{align*} ~\vspace*{-14pt}
+\end{singlespace}
+\caption{Embedding recursive datatypes}
+\label{fig:churchrec}
+\end{figure}
+\citet{Church33} invented an embedding of the natural numbers into
+the untyped $\lambda$-calculus, which he used to argue
+that the $\lambda$-calculus was expressive enough for the foundation of
+logic and arithmetic. Church encoded the data constructors of natural numbers,
+successor and zero, as higher-order functions,
+$\mathtt{succ}=\l x.\l x_s.\l x_z.x_s(x\,x_s x_z)$ and
+$\mathtt{zero}=\l x_s.\l x_z.x_z$.
+The heart of the Church encoding is that a value is encoded as an elimination function.
+The bound variables $x_s$ and $x_z$ (of both $\mathtt{succ}$ and $\mathtt{zero}$) stand for the operations needed to
+eliminate the successor case and the zero case respectively. The Church encodings of
+successor states: to eliminate $\mathtt{succ}\,x$, ``apply $x_s$
+to the elimination of the predecessor $(x\,x_s x_z)$"; and,
+to eliminate $\mathtt{zero}$, just ``return $x_z$".
+Since values {\it are} elimination functions, the
+eliminator can be defined as applying the value itself to the needed operations. One
+for each of the data constructors. 
+For instance, we can define an eliminator
+for the natural numbers as $\mathtt{elim_{Nat}}=\l x.\l x_s.\l x_z.x\,x_s x_z$.
+This is just an $\eta$-expansion of the identity function $\l x.x$.
+The Church encoded natural numbers are typable in a polymorphic $\lambda$-calculi,
+such as System \Fw, as follows:\vspace*{-2pt}
+\begin{align*}
+&\texttt{Nat} &=~& \forall X^{*}.(X -> X) -> X -> X \qquad\qquad\qquad\\
+&\texttt{S} &\!\!\!:~~& \texttt{Nat} -> \texttt{Nat}
+	~~ =~ \l x.\l x_s.\l x_z.x_s(x\,x_s x_z) \\
+&\texttt{Z} &\!\!\!:~~& \texttt{Nat} \qquad\quad\,
+	~~ =~ \l x_s.\l x_z.x_z \\
+&\mathtt{elim_{Nat}} &\!\!\!:~~& \texttt{Nat} -> \forall X^{*}.(X -> X)-> X-> X \\
+& &=~& \l x.\l x_s.\l x_z.x\,x_s x_z
+\end{align*}~\vspace*{-13pt}
+
+In a Similar fashion, other datatypes are also embeddable into
+polymorphic $\lambda$-calculi.
+Embeddings of some well-known non-recursive datatypes are illustrated
+in Figure \ref{fig:churchnonrec}, and embeddings of the list-like
+recursive datatypes, which we discussed earlier as motivating examples
+(\S\ref{sec:motiv}), are illustrated in Figure \ref{fig:churchrec}.
+Note that the term encodings for the constructors and eliminators of
+the list-like datatypes in Figure \ref{fig:churchrec} are exactly the same.
+For instance, the term encodings for \texttt{nil}, \texttt{pnil}, and
+\texttt{vnil} are all the same term: $\l x_s.\l x_z.x_z$. The nil and cons terms
+capture the linear nature of lists, so they are the same for all list like structures.
+But, the types differ, capturing different invariants about lists -- shape of the elements ({\tt Powl}), and
+length of the list ({\tt Vec}).
+
+\subsection{Embedding recursive datatypes as two-level types}
+\label{ssec:embedTwoLevel}
+We can divide a recursive datatype definition into two parts --
+a recursive type operator and a base structure. The operator ``weaves" recursion
+into the datatype definition, and the base structure describes
+its shape (\ie, number of data constructors and their types).
+One can program with two-level types in any functional language that supports
+higher-order polymorphism\footnote{a.k.a. higher-kinded polymorphism,
+	or type-constructor polymorphism}, such as Haskell. 
+In Figure \ref{fig:twoleveltypes}, we illustrate this by giving an example of a two level definition
+for ordinary lists (all the other types in this paper have similar definitions).
+
+The use of two-level types has been recognized as
+a useful functional programming pearl \cite{Sheard04}, since two-level types
+separate the two concerns of (1) recursion on recursive sub components
+and (2) handling different cases (by pattern matching over the shape of the (non-recursive) base structure).
+An advantage of such an approach, is that a single eliminator can be defined once for
+all datatypes of the same kind. For example, the function $\mathtt{mit}_\kappa$ describes
+Mendler-style iteration\footnote{An iteration is a principled recursion
+	scheme guaranteed to terminate for any well-founded input.
+	Also known as fold, or catamorphism.} for the recursive types
+defined by $\mu_\kappa$. Although it is possible to write programs using two level datatypes
+in a general purpose functional language, one could
+not expect logical consistency in such systems.
+
+\begin{figure}\vspace*{-8pt}
+\begin{singlespace}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+newtype $\mu_{*}$ (f :: * -> *)
+  = In$_{*}$ (f ($\mu_{*}$ f))
+
+data ListF (a::*) (r::*)
+  = Cons a r       | Nil
+
+type List a = $\mu_{*}$ (ListF a)
+cons x xs = In$_{*}$ (Cons x xs)
+nil       = In$_{*}$ Nil
+
+mit$_{*}$ :: ($\forall$ r.(r->x) -> f r -> x) -> Mu0 f -> x
+mit$_{*}$ phi (In$_{*}$ z) = phi (mit$_{*}$ phi) z
+
+newtype $\mu_{(*-> *)}$ (f :: (*->*) -> (*->*)) (a::*)
+  = In$_{(*-> *)}$ (f (Mu$_{(*-> *)}$ f)) a
+
+data PowlF (r::*->*) (a::*)
+  = PCons a (r(a,a)) | PNil
+
+type Powl a = $\mu_{(*-> *)}$ PowlF a
+pcons x xs = In$_{(*-> *)}$ (PCons x xs)
+pnil       = In$_{(*-> *)}$ PNil
+
+mit$_{(*-> *)}$ :: ($\forall$ r a.($\forall$a.r a->x a) -> f r a -> x a)
+        -> $\mu_{(*-> *)}$ f a -> x a
+mit$_{(*-> *)}$ phi (In$_{(*-> *)}$ z) = phi (mit$_{(*-> *)}$ phi) z
+
+-- above is Haskell (with some GHC extensions)
+-- below is Haskell-ish pseudocode
+
+newtype $\mu_{(\mathtt{Nat}-> *)}$ (f::(Nat->*)->(Nat->*)) {n::Nat}
+  = In$_{(\mathtt{Nat}-> *)}$ (f ($\mu_{(\mathtt{Nat}-> *)}$ f)) {n}
+
+data VecF (a::*) (r::Nat->*) {n::Nat} where
+  VCons :: a -> r n -> VecF a r {S n}
+  VNil  :: VecF a r {Z}
+
+type Vec a {n::Nat} = $\mu_{(\mathtt{Nat}-> *)}$ (VecF a) {n}
+vcons x xs = In$_{(\mathtt{Nat}-> *)}$ (VCons x xs)
+vnil       = In$_{(\mathtt{Nat}-> *)}$ VNil
+
+mit$_{(\mathtt{Nat}-> *)}$::($\forall$ r n.($\forall$n.r{n}->x{n})->f r {n}->x{n})
+        -> $\mu_{(\mathtt{Nat}-> *)}$ f {n} -> x{n}
+mit$_{(\mathtt{Nat}-> *)}$ phi (In$_{(\mathtt{Nat}-> *)}$ z) = phi (mit$_{(\mathtt{Nat}-> *)}$ phi) z
+\end{lstlisting}
+\end{singlespace}
+\caption{2-level types and their Mendler-style iterators in Haskell}
+\label{fig:twoleveltypes}
+\end{figure}
+
+Interestingly, there exist embeddings of the recursive type operator
+$\mu_\kappa$, its data constructor $\mathtt{In}_\kappa$, and
+the Mendler-style iterator $\mathtt{mit}_\kappa$ for each kind $\kappa$
+into the higher-order polymorphic $\lambda$-calculus \Fi, as illustrated
+in Figure \ref{fig:mu}. In addition to illustrating the general form of
+embedding $\mu_\kappa$, we also fully expand the embeddings for some
+instances ($\mu_{*}$, $\mu_{*->*}$, $\mu_{\mathtt{Nat}->*}$), which are
+used in Figure \ref{fig:twoleveltypes}. These embeddings support the embedding
+of arbitrary type- and term-indexed recursive datatypes into System \Fi.
+Thus we can reason about these datatypes in a logically consistent calculus.
+
+However, it is important to note that there does not exist an embedding of the
+arbitrary destruction (or, pattern matching away) of the $\mathtt{In}_\kappa$
+constructor. It is known that combining arbitrary recursive datatypes with
+the ability to destruct (or, unroll) their values
+is powerful enough to define non-terminating computations in a type safe way,
+leading to logical inconsistency. Some systems maintain consistency by restricting
+which recursive datatypes can be defined, but allow arbitrary unrolling. In System
+\Fi, we can define any datatype, but restrict unrolling to Mendler style operators
+definable in \Fi. Such operators are quite expressive, capturing at least
+iteration, primitive recursion, and courses of values recursion.
+
+\begin{landscape}
+\begin{figure}
+\begin{singlespace}
+\begin{multline*} \text{notation:}\quad
+   \boldsymbol{\l}\mathbb{I}^\kappa.F =
+	\lambda I_1^{\kappa_1}.\cdots.\lambda I_n^{\kappa_n}.F \qquad
+   \boldsymbol{\forall}\mathbb{I}^\kappa.B =
+	\forall I_1^{\kappa_1}.\cdots.\forall I_n^{\kappa_n}.B \qquad
+   F\mathbb{I} = F I_1 \cdots I_n \qquad
+   F \stackrel{\kappa}{\pmb{\pmb{->}}} G =
+	\boldsymbol{\forall}\mathbb{I}^\kappa.F\mathbb{I} -> G\mathbb{I} \\
+\begin{array}{lll}
+\text{where}
+ 	& \kappa = \kappa_1 -> \cdots -> \kappa_n -> * & \text{and} ~~~
+ 	\text{$I_i$ is an index variable ($i_i$) when $\kappa_i$ is a type,}
+ 		\\
+ 	& \mathbb{I}\,=I_1,\;\dots\;\dots\;,\;I_n& \qquad~\qquad
+ 	\text{a type constructor variable ($X_i$) otherwise.}
+\end{array}
+\end{multline*} ~ \vspace*{-5pt}
+\hrule  \vspace*{-2pt}
+\begin{align*}
+&\mu_\kappa &\!\!\!\!\!~:~~& (\kappa -> \kappa) -> \kappa
+  \qquad\qquad\qquad\qquad\quad
+  = \l F^{\kappa -> \kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
+  \forall X^\kappa.
+  (\forall {X_r}^{\!\!\kappa}.
+  	(X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ->
+	(F X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X)) -> X\mathbb{I} \\
+&\mu_{*} &\!\!\!\!\!~:~~& (* -> *) -> * 
+ \qquad\qquad\qquad\qquad\quad~
+ = \l F^{* -> *}.\phantom{\boldsymbol{\l}\mathbb{I}^\kappa.}
+ \forall X^{*}.(\forall {X_r}^{\!\!*}.(X_r -> X) -> (F\,X_r -> X)) -> X \\
+&\mu_{*-> *} &\!\!\!\!\!~:~~& ((* -> *) -> (* -> *)) -> (* -> *) \\
+&            &\!\!\!\!\!=~&
+  \l F^{(*-> *) -> (*-> *)}.\l X_1^{*}.
+   \forall X^{* -> *}.(\forall {X_r}^{\!\!* -> *}.
+   (\forall X_1^{*}.X_r X_1 -> X X_1) -> (\forall X_1^{*}.F\,X_r X_1 -> X X_1)) -> X X_1 \\
+  &\mu_{\mathtt{Nat}-> *} &\!\!\!\!\!~:~~& ((\mathtt{Nat} -> *) -> (\mathtt{Nat} -> *)) -> (\mathtt{Nat} -> *) \\
+&            &\!\!\!\!\!=~&
+  \l F^{(\mathtt{Nat}-> *) -> (\mathtt{Nat}-> *)}.\l i_1^\mathtt{Nat}.
+  \forall X^{\mathtt{Nat} -> *}.(\forall {X_r}^{\!\!\mathtt{Nat} -> *}.
+  (\forall i_1^\mathtt{Nat}.X_r i_1 -> X i_1) -> (\forall i_1^\mathtt{Nat}.F\,X_r i_1 -> X i_1)) -> X i_1 \qquad\qquad
+\end{align*}
+\begin{align*}
+\mathtt{In}_{\kappa} \,~\,&~~:~ \forall F^{\kappa-> \kappa}.
+	F(\mu_\kappa F) \stackrel{\kappa\;}{\pmb{\pmb{->}}} \mu_\kappa F
+&&=~ \l x_r. \l x_\varphi.x_\varphi\,(\mathtt{mit}_\kappa~x_\varphi)\,x_r
+	\qquad~\qquad~\qquad~\qquad~\quad \\
+\mathtt{mit}_\kappa &~~:~ \forall F^{\kappa-> \kappa}.\forall X^\kappa.
+	(\forall {X_r}^{\!\!\kappa}.
+	 (X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ->
+	 (F X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ) ->
+	(\mu_\kappa F \stackrel{\kappa\;}{\pmb{\pmb{->}}} X)
+&&=~ \l x_\varphi.\l x_r.x_r\,x_\varphi
+\end{align*} ~ \vspace*{-10pt}
+\end{singlespace}
+\caption{Embedding of the recursive operators ($\mu_\kappa$),
+	their data constructors ($\mathtt{In}_\kappa$),
+	and the Mendler-style iterators ($\mathtt{mit}_\kappa$).}
+\label{fig:mu}
+\end{figure}
+\end{landscape}
+
+\begin{example}
+The datatype of \mbox{$\lambda$-terms} in context 
+\begin{verbatim}
+data Lam ( C: Nat -> * ) { i: Nat } where
+  LVar : C{i} -> Lam{i}
+  LApp : Lam{i} -> Lam{i} -> Lam{i}
+  LAbs : Lam{S i} -> Lam{i}
+\end{verbatim}
+is encoded as:
+\[
+\mathtt{Lam} \triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l C^{\mathtt{Nat}\to*}
+\l i^\mathtt{Nat}.\,\forall X^{\mathtt{Nat}\to*}.
+\\[1mm]
+\quad
+  (\forall j^\mathtt{Nat}.\,C\s j \to X\s j)
+\\[1mm]
+\quad\quad
+ \to(\forall j^\mathtt{Nat}.\,X\s j \to X\s j \to X\s j)
+\\[1mm]
+\quad\quad\quad
+\to(\forall j^\mathtt{Nat}.\,X\s{\mathtt S\, j} \to X\s j)
+\\[1mm]
+\quad\quad\quad\quad
+  \to X\s i
+\end{array}
+\]
+For a concrete representation one can consider
+$\mathtt{Lam}\,\mathtt{Fin}$ where
+\begin{verbatim}
+data Fin { i: Nat } where
+  FZ : Fin{S i}
+  FS : Fin{i} -> Fin{S i}
+\end{verbatim}
+This is encoded as
+\[
+\mathtt{Fin}\triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l i^{\mathtt{Nat}}.\,\forall X^{\mathtt{Nat}\to*}.\,
+\\[1mm]
+\quad 
+(\forall j^\mathtt{Nat}.\, X\s{\mathtt S\, j})
+	\to (\forall j^\mathtt{Nat}.\, X\s j\to X\s{\mathtt S\,j})
+\\[1mm]
+	\qquad\to X\s i
+\end{array}
+\]
+\end{example}
+\subsection{Leibniz index equality}
+\label{Leibniz}
+
+The quantification over type-indexed kinding available in System~\Fi\
+allows the definition of \emph{Leibniz-equality type} constructors
+$\Eq_A: A\to A\to *$ on closed types~$A$, defined as follows:
+\[\begin{array}{l}
+\Eq_A \triangleq
+	\l i^A.\, \l j^A.\, 
+	\LEq_A\s i \s j \times \LEq_A\s j \s i
+\enspace,
+\\[1mm]
+\text{where } 
+\LEq_A \triangleq
+	\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
+\enspace.
+\end{array}\]
+For $F_A\in\{\Eq_A,\LEq_A\}$, 
+%\[\begin{array}{c}
+%\Delta;\cdot\vdash s=s':A\enspace\quad \Delta;\cdot\vdash t=t':A
+%\\ \hline \\[-3mm]
+%\Delta\vdash F_A \s s \s t = F_A\s{s'}\s{t'}:*
+%\end{array}\] 
+%and, as further basic properties, 
+observe that the following types are
+inhabited: 
+\[\!\!\!\!\begin{array}{l}
+\text{\small(Reflexive)} 
+~~\,
+\forall i^A.\,F_A\s{i}\s{i}
+\\[1mm]
+\text{\small(Transitive)} 
+~~
+\forall i^A.\,\forall j^A.\,\forall k^A.\,
+  F_A\s{i}\s{j}\to F_A\s{j}\s{k}\to F_A\s{i}\s{k}
+\\[1mm]
+\text{\small(Logical)}
+\quad~\, \forall i^A.\,\forall j^A.\, 
+F_A\s{i}\s{j}\to \forall f^{A\to B}.\, F_B\s{f\,i}\s{f\,j}
+\\[1mm]
+\qquad\qquad~~~
+\forall f^{A\to B}.\,\forall g^{A\to B}.\, 
+F_{A\to B}\s{f}\s{g}\to 
+\forall i^A.\, F_B\s{f\,i}\s{g\,i}
+\end{array}\]
+Hence Leibniz equality is a congruence; in that, in addition to the above
+one also has the inhabitation of the type
+\[\!\!\!\!\begin{array}{l}
+\text{\small(Symmetric)} 
+\quad
+\forall i^A.\,\forall j^A.\,
+  \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{i}
+\end{array}\qquad\qquad\qquad\qquad\qquad\]
+%This is not so for the type 
+%\begin{equation}\label{NonSymmetry}
+%\forall i^A.\,\forall j^A.\, \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
+%\enspace.
+%\end{equation}
+%(Cf.~Example~\ref{PathologicalExampleContinued} in~\S\ref{sec:theory}.)
+
+In applications, the types~$\LEq_A$ are useful in constraining the
+term-indexing of datatypes. %as parameterised by coercions.  
+A general such construction is given by the type constructors $\Ran_{A,B}:
+(A\to B) \to (A\to*) \to B\to *$.  These are defined as 
+\[
+\Ran_{A,B}
+\triangleq
+\l f^{A\to B}.\,
+  \l X^{A\to*}.\,
+    \l j^B.
+      \forall i^A.\,
+        \LEq_B \s j \s{f\,i}
+	  \to X\s i
+\]
+%for closed types~$A$ and $B$, 
+and are in spirit right Kan extensions, a notion that is being extensively
+used in programming,~\eg~\cite{AbeMatUus05,JohannGhani08}. %,Hinze}.  .  
+%%
+%It follows that, %Here, 
+%%for closed $t:A\to B$, $F:A\to*$, and $s:B$, a closed term $u:
+%%(\Ext_{A,B}\ \s t\ F) \s s$ is a polymorphic function that, for every
+%%closed $r:A$, given a generic coercion $\forall X^{B\to*}.\, X\s s \to
+%%X\s{t\,r}$ provides output of type $F\s r$.  In particular, 
+%the type
+%$\forall f^{A\to B}.\,\forall X^{A\to*}.\,\forall i^A.\,
+%(\Ext_{A,B}\ \s f\ X) \s{f\,i}\to X\s i$ is inhabited by 
+%$\l f.\,f(\l x.\,x)$.
+%%
+%%(We note the interesting fact that the type 
+%%$\forall X^{A\to*}.\,\forall j^A.\,\forall i^A.\, 
+%%   X\s i \to (\Ext_{A,A}\ \s{\lambda x.\,x}\ X) \s i$
+%%is inhabited by a retraction.)
+%
+One of their usefulness comes from the fact that the following type
+is inhabited by a section
+\[
+\!\!\!
+\begin{array}{l}
+%\l h.\,\l y.\,\l g.\, h(g\, y):
+\forall Y^{B\to*}.\,\forall X^{A\to*}.\,\forall f^{A\to B}.\,
+\\
+\big(\forall i^A.\,Y\s{f\,i}\to X\s i\big)
+\to
+\big(\forall j^B.\,Y\s j\to (\Ran_{A,B}\s f X)\s j\big)
+\end{array}\]
+This allows one to represent functions from input datatypes with
+constrained indices as plain indexed functions, and vice versa.  For
+instance, by means of the iterators of the previous section one can define
+a vector tail function of type 
+\[
+\forall X^{*}.\,\forall j^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s j \to
+\big(\Ran_{\mathtt{Nat},\mathtt{Nat}}\,\s{\mathtt S}(\mathtt{Vec}\,
+X)\big)\s j 
+\]
+and retract it to one of type
+\[
+\forall X^{*}.\,\forall i^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s{\mathtt
+S\, i} \to \mathtt{Vec}\, X\,\s i
+\enspace.
+\]
+%
+Analogously, one can use an iterator to define a single-variable
+capture-avoiding substitution function of type
+\[\begin{array}{l}
+\forall i^{\mathtt{Nat}}.\,
+(\mathtt{Lam}\,\mathtt{Fin})\s i
+\\[1mm]
+\quad
+\to
+\big(\Ran_{\mathtt{Nat},\mathtt{Nat}}
+\s{\mathtt S}
+(\lambda j^{\mathtt{Nat}}.\,
+\mathtt{Lam}\,\mathtt{Fin}\s j
+\to
+\mathtt{Lam}\,\mathtt{Fin}\s j)\big)
+\s i
+\end{array}\]
+and then retract it to one of type 
+\[
+\forall i^{\mathtt{Nat}}.\,
+(\mathtt{Lam}\,\mathtt{Fin})\s{\mathtt S\, i}
+\to
+(\mathtt{Lam}\,\mathtt{Fin})\s{i}
+\to
+(\mathtt{Lam}\,\mathtt{Fin})\s{i}
+\enspace.
+\]
+
+Type constructors ${\Lan_{A,B}:(A\to B)\to (A\to*)\to B\to *}$, which are
+in spirit left Kan extensions, permit the encoding of functions of type
+$(\forall i^{A}.\, F\s i\to G\s{t\,i})$, for ${F:A\to*}$, ${G:B\to*}$, and
+${t:A\to B}$, as functions of type $(\forall j^{B}.\, (\Lan_{A,B}\s t F)\s
+j\to G\s{j})$.  Left Kan extensions are dual to right Kan extensions, but
+to define them as such one needs existential and product types.  In
+formalisms without them, these have to be encoded.  This can be done as
+follows: 
+\[
+\Lan_{A,B}
+\triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l f^{A\to B}.\,
+\l X^{A\to*}.\,
+\l j^{B}.\, 
+\\[1mm]
+\quad
+\forall Z^{*}.\,
+  (\forall i^A.\, \LEq_B\s{f\,i}\s{j}\to X\s i\to Z)\to Z
+\end{array}
+\]
+The type 
+\[\begin{array}{l}
+\forall X^{A\to*}.\,
+\forall Y^{B\to*}.\,
+\forall f^{A\to B}.\,
+\\[1mm]
+(\forall i^{A}.\, 
+X\s i\to Y\s{f\,i})
+\to
+(\forall j^{B}.\, 
+(\Lan_{A,B}\s f X)\s j\to Y\s{j})
+\end{array}\]
+is thus inhabited by a section, providing a retractable coercion between
+the two functional representations.
+
+Left Kan extensions come with a canonical section of type
+$\forall f^{A\to B}.\,\forall X^{A\to *}.\,\forall i^A.\, X\s i \to
+(\Lan_{A,B}\s f X)\s{f\,i}$ that, according to a reindexing function
+$t:A\to B$, embeds an \mbox{$A$-indexed} type $F$ (at index $s$) into
+the $B$-indexed type $\Lan_{A,B}\s t F$ (at index $t\,s$).  For instance, the
+type constructor $\mathtt{Lan}_{A,A\times A}\s{\l x.\,\mathtt{pair}\,x\,x}$
+embeds arrays of types into matrices along the diagonal; while the type
+constructors $\mathtt{Lan}_{A\times A,A}\s{\mathtt{fst}}$ and
+$\mathtt{Lan}_{A\times A,A}\s{\mathtt{snd}}$ respectively encapsulate matrices
+of types as arrays by columns and by rows.
+
