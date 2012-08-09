@@ -46,23 +46,30 @@
 %% \vfill
 \begin{columns}[t]
 
-\begin{column}{.48\linewidth}
+\begin{column}{.315\linewidth}
 
-\begin{block}{Indexed Datatypes (a.k.a. Lightweight Dependent Types)}
+\begin{block}{Indexed Datatypes
+	{\normalsize({\small a.k.a. }Lightweight Dependent Types)} }
 \begin{itemize}
-\item Indexed datatyeps are non-regular datatypes
-	with \emph{static (or, compile-time) dependencies}.\\
-        (c.f. full-fledged dependent datatypes can have
-        both static and dynamic dependencies) \\
+\item Indexed datatyeps are datatypes
+	with \emph{static (compile-time) dependencies}.
+%%        (c.f. full-fledged dependent types can have
+%%        both static and dynamic dependencies)
 	Also known as higer-kinded datatypes, higher-rank datatypes,
 	or lightweight dependent types
-\item Use of indexed datatypes, or the lightweight approach,
-	has become popular over the past decade
-	in even in real-world functional programming
-	due to the support of the GADT extension in Glasgow Haskell Compiler.
+\item Use of indexed datatypes, or the \textcolor{magenta}{\emph{lightweight approach}},
+	has become popular
+	over the past decade even in real-world functional programming due to
+	the GADT extension in the Glasgow Haskell Compiler.
+\end{itemize}
+~
+\end{block}
+
+\begin{block}{Examples of Indexed Datatypes}
+\begin{itemize}
 \item Type-indexed datatypes
 	\begin{itemize}
-		\item Nested datatypes $\qquad$
+		\item Nested datatypes $\quad$
 			\lstinline[language=Haskell,
 				basicstyle=\ttfamily\small,
 				keywordstyle=\color{green}]!data Powl a = PCons Powl (a,a) | PNil!
@@ -80,7 +87,7 @@
 	\end{itemize}
 \item Term-indexed datatypes
 	\begin{itemize}
-        	\item length-indexed list
+        	\item Length-indexed lists
 		\begin{lstlisting}[language=Haskell,
 			basicstyle=\ttfamily\small,
 			keywordstyle=\color{green},
@@ -89,18 +96,37 @@
 		  VCons :: a -> Vec a {i} -> Vec a {Succ i}
 		  VNil  :: Vec {Zero}
 		\end{lstlisting}
-		\item de Bruijn terms indexed by the size of their context
+		\item de Bruijn terms indexed by size-indexed context
 		\begin{lstlisting}[language=Haskell,
 			basicstyle=\ttfamily\small,
 			keywordstyle=\color{green},
 			literate={::}{$:\!\,:$}1{->}{$\to$}1]
-		data BTerm (c :: Nat -> *) n where
+		data BTerm (c :: Nat -> *) {n :: Nat} where
 		  BVar :: c {i} -> BTerm c {i}
 		  BApp :: BTerm c {i} -> BTerm {i} -> BTerm c {i}
 		  BAbs :: BTerm c {Succ i} -> BTerm c {i}
 		\end{lstlisting}
 	\end{itemize}
 \end{itemize} %% $$\alpha=\gamma, \sum_{i}$$
+\end{block}
+
+\end{column}
+%%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{column}{.315\linewidth}
+
+\begin{block}{Limitations of the Lightweight approach {\normalsize(so far)}}
+Although extending existing programming languages with indexed datatypes
+has been useful, it still suffers from the folllowing problems:
+\begin{itemize}
+\item Increse \emph{confidence} but no \emph{guarnatee} of correctness
+\item Type inference/checking may be impossible/undecidable
+	\begin{itemize}
+		\item TODO annotation
+		\item TODO term equality
+	\end{itemize}
+\item Faked term indices in implementations (until recently)
+\end{itemize}
+~
 \end{block}
 
 \begin{block}{Introduction}
@@ -112,9 +138,11 @@
 \end{itemize}
 \end{block}
 
+
+
 \end{column}
 %%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{column}{.48\linewidth}
+\begin{column}{.315\linewidth}
 \begin{block}{Introduction}
 \begin{itemize}
 \item some items
