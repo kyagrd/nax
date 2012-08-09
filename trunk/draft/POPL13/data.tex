@@ -302,9 +302,9 @@ iteration, primitive recursion, and courses of values recursion.
 The datatype of \mbox{$\lambda$-terms} in context 
 \begin{verbatim}
 data Lam ( C: Nat -> * ) { i: Nat } where
-  LVar : C{i} -> Lam{i}
-  LApp : Lam{i} -> Lam{i} -> Lam{i}
-  LAbs : Lam{S i} -> Lam{i}
+  LVar : C {i} -> Lam C {i}
+  LApp : Lam C {i} -> Lam C {i} -> Lam C {i}
+  LAbs : Lam C {S i} -> Lam C {i}
 \end{verbatim}
 is encoded as:
 \[

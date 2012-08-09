@@ -9,7 +9,8 @@
 }
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
-\usepackage{amsmath,amsthm, amssymb,latexsym,textcomp,setspace}
+\usepackage{listings}
+\usepackage{amsmath,amsthm,amssymb,latexsym,textcomp,setspace}
 %\usepackage{times}\usefonttheme{professionalfonts}  % times is obsolete
 \usefonttheme[onlymath]{serif}
 \boldmath
@@ -26,7 +27,7 @@
 	Department of Computer Science, Portland State University }
 \date{2012-09}
 \begin{document}
-\begin{frame}
+\begin{frame}[fragile]
 %%   \vfill
 %%   \begin{block}{Fontsizes}
 %%     \centering
@@ -42,27 +43,64 @@
 %%     {\VeryHuge VeryHuge}\par
 %%     {\VERYHuge VERYHuge}\par
 %%   \end{block}
-\vfill
+%% \vfill
 \begin{columns}[t]
 
 \begin{column}{.48\linewidth}
 
-\begin{block}{Indexed Datatypes}
+\begin{block}{Indexed Datatypes (a.k.a. Lightweight Dependent Types)}
 \begin{itemize}
 \item Indexed datatyeps are non-regular datatypes
 	with \emph{static (or, compile-time) dependencies}.\\
         (c.f. full-fledged dependent datatypes can have
         both static and dynamic dependencies) \\
-	Also known as higer-kinded datatypes, or higher-rank datatypes.
+	Also known as higer-kinded datatypes, higher-rank datatypes,
+	or lightweight dependent types
+\item Use of indexed datatypes, or the lightweight approach,
+	has become popular over the past decade
+	in even in real-world functional programming
+	due to the support of the GADT extension in Glasgow Haskell Compiler.
 \item Type-indexed datatypes
-      nested datatypes,
-      representation types for datatype geneirc programming
+	\begin{itemize}
+		\item Nested datatypes $\qquad$
+			\lstinline[language=Haskell,
+				basicstyle=\ttfamily\small,
+				keywordstyle=\color{green}]!data Powl a = PCons Powl (a,a) | PNil!
+		\item Representation types in datatype geneirc programming
+		\begin{lstlisting}[language=Haskell,
+				basicstyle=\ttfamily\small,
+				keywordstyle=\color{green},
+				literate={::}{$:\!\,:$}1{->}{$\to$}1]
+		data Rep t where
+		  RInt  :: Rep Int
+		  RBool :: Rep Bool
+		  RPair :: Rep a -> Rep b -> Rep (a,b)
+		  RFun  :: Rep a -> Rep b -> Rep (a -> b)
+		\end{lstlisting}
+	\end{itemize}
 \item Term-indexed datatypes
-        length-indexed list
-\item some items
-\item has become popular in
-        functional programming.
-\end{itemize} $$\alpha=\gamma, \sum_{i}$$
+	\begin{itemize}
+        	\item length-indexed list
+		\begin{lstlisting}[language=Haskell,
+			basicstyle=\ttfamily\small,
+			keywordstyle=\color{green},
+			literate={::}{$:\!\,:$}1{->}{$\to$}1]
+		data Vec (a :: *) {n :: Nat} where
+		  VCons :: a -> Vec a {i} -> Vec a {Succ i}
+		  VNil  :: Vec {Zero}
+		\end{lstlisting}
+		\item de Bruijn terms indexed by the size of their context
+		\begin{lstlisting}[language=Haskell,
+			basicstyle=\ttfamily\small,
+			keywordstyle=\color{green},
+			literate={::}{$:\!\,:$}1{->}{$\to$}1]
+		data BTerm (c :: Nat -> *) n where
+		  BVar :: c {i} -> BTerm c {i}
+		  BApp :: BTerm c {i} -> BTerm {i} -> BTerm c {i}
+		  BAbs :: BTerm c {Succ i} -> BTerm c {i}
+		\end{lstlisting}
+	\end{itemize}
+\end{itemize} %% $$\alpha=\gamma, \sum_{i}$$
 \end{block}
 
 \begin{block}{Introduction}
