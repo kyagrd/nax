@@ -9,14 +9,36 @@
 }
 \usepackage[english]{babel}
 \usepackage[latin1]{inputenc}
-\usepackage{listings}
 \usepackage{amsmath,amsthm,amssymb,latexsym,textcomp,setspace}
+\usepackage{listings}
+\usepackage[inference,ligature]{semantic}
+\mathlig{->}{\to}
+\mathlig{|-}{\vdash}
 %\usepackage{times}\usefonttheme{professionalfonts}  % times is obsolete
 \usefonttheme[onlymath]{serif}
 \boldmath
 \usepackage[orientation=landscape,size=a0,scale=1.4,debug]{beamerposter}
 
+\newcommand{\dom}{\mathop{\mathsf{dom}}}
+\newcommand{\FV}{\mathop{\mathrm{FV}}}
+
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
 \newcommand{\Fi}{\ensuremath{\mathsf{F}_{\!i}}}
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
+
+
+
+\lstset{language=Haskell,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{ta4chameleon},
+	commentstyle=\color{gray},
+	literate =
+		{forall}{{\textcolor{ta3chocolate}{$\forall$}}}1
+		{=}{{\textcolor{ta3chocolate}{$=$}}}1
+		{::}{{\textcolor{ta3chocolate}{$:\!\,:$}}}1
+		{->}{{\textcolor{ta3chocolate}{$\to$}}}1
+	}
 
 \title[Fancy Posters]{{\VERYHuge System \Fi} {\Huge :}
 		{\huge a Higher-Order Polymorphic $\lambda$-calculus} \\
@@ -62,22 +84,17 @@
 	over the past decade even in real-world functional programming due to
 	the GADT extension in the Glasgow Haskell Compiler.
 \end{itemize}
-~
 \end{block}
 
 \begin{block}{Examples of Indexed Datatypes}
 \begin{itemize}
 \item Type-indexed datatypes
+	$\quad$\textcolor{gray}{\normalsize(example code in Haskell)}
 	\begin{itemize}
 		\item Nested datatypes $\quad$
-			\lstinline[language=Haskell,
-				basicstyle=\ttfamily\small,
-				keywordstyle=\color{green}]!data Powl a = PCons Powl (a,a) | PNil!
-		\item Representation types in datatype geneirc programming
-		\begin{lstlisting}[language=Haskell,
-				basicstyle=\ttfamily\small,
-				keywordstyle=\color{green},
-				literate={::}{$:\!\,:$}1{->}{$\to$}1]
+			\lstinline!data Powl a = PCons Powl (a,a) | PNil!
+		\item Representation types in datatype generic programming
+		\begin{lstlisting}
 		data Rep t where
 		  RInt  :: Rep Int
 		  RBool :: Rep Bool
@@ -86,21 +103,16 @@
 		\end{lstlisting}
 	\end{itemize}
 \item Term-indexed datatypes
+	$\quad$\textcolor{gray}{\normalsize(example code in Nax)}
 	\begin{itemize}
         	\item Length-indexed lists
-		\begin{lstlisting}[language=Haskell,
-			basicstyle=\ttfamily\small,
-			keywordstyle=\color{green},
-			literate={::}{$:\!\,:$}1{->}{$\to$}1]
+		\begin{lstlisting}
 		data Vec (a :: *) {n :: Nat} where
 		  VCons :: a -> Vec a {i} -> Vec a {Succ i}
 		  VNil  :: Vec {Zero}
 		\end{lstlisting}
 		\item de Bruijn terms indexed by size-indexed context
-		\begin{lstlisting}[language=Haskell,
-			basicstyle=\ttfamily\small,
-			keywordstyle=\color{green},
-			literate={::}{$:\!\,:$}1{->}{$\to$}1]
+		\begin{lstlisting}
 		data BTerm (c :: Nat -> *) {n :: Nat} where
 		  BVar :: c {i} -> BTerm c {i}
 		  BApp :: BTerm c {i} -> BTerm {i} -> BTerm c {i}
@@ -116,20 +128,30 @@
 
 \begin{block}{Limitations of the Lightweight approach {\normalsize(so far)}}
 Although extending existing programming languages with indexed datatypes
-has been useful, it still suffers from the folllowing problems:
+has been useful, it still suffers from the following problems:
 \begin{itemize}
-\item Increse \emph{confidence} but no \emph{guarnatee} of correctness
-\item Type inference/checking may be impossible/undecidable
-	\begin{itemize}
-		\item TODO annotation
-		\item TODO term equality
-	\end{itemize}
+\item Increase \emph{confidence} but no \emph{guarantee} of correctness
+	\begin{lstlisting}
+	loop :: forall a . a    -- logically inconsistent type system
+	loop = loop       -- allows proof of falsity
+	\end{lstlisting}
 \item Faked term indices in implementations (until recently)
+	\begin{lstlisting}
+	data Zero       -- code duplication at type level
+	data Succ n     -- and cannot prevent (Succ Bool)
+	\end{lstlisting}
+\item Type checking/inference may be undecidable/impossible
+	\begin{itemize}
+		\item type equality check over term-indexed types
+			relies on term equality, which is undecidable
+			when diverging terms exist
+		\item need \emph{annotation} for inference,
+			but \emph{how much} and \emph{where}?
+	\end{itemize}
 \end{itemize}
-~
 \end{block}
 
-\begin{block}{Introduction}
+\begin{block}{Motivating example: embedding datatypes}
 \begin{itemize}
 \item some items
 \item some items
@@ -137,29 +159,80 @@ has been useful, it still suffers from the folllowing problems:
 \item some items
 \end{itemize}
 \end{block}
-
 
 
 \end{column}
 %%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{column}{.315\linewidth}
-\begin{block}{Introduction}
-\begin{itemize}
-\item some items
-\item some items
-\item some items
-\item some items
-\end{itemize}
+
+\begin{block}{\Fi ~= {\normalsize Curry-style} \Fw\ + \{erasable term indices\}}
+$\text{Variables}~~ x,i \qquad\quad \text{Type constructor variables}~~ X$ \\
+$\text{Terms}~~~ r,s,t ~ ::= ~ x \mid \lambda x.t \mid r\;s \qquad\quad\text{\small(Curry-style terms)}$\\
+$\text{Kinds}~~~~ \kappa ~ ::= ~ *
+                                \mid \kappa -> \kappa
+				\mid \newFi{A -> \kappa{\phantom{y}}\!\!} $\\
+$\text{Type Constructors}$\\
+$\quad A,B,F,G               ~ ::= ~ X
+                                \mid A -> B
+                                \mid \lambda X^\kappa.F
+                                \mid F\,G
+                                \mid \forall X^\kappa . B$\\
+$~\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
+\mid \newFi{\lambda i^A.F
+                                \mid F\,\{s\}
+                                \mid \forall i^A . B}$ \\
+$\text{Contexts}
+\qquad \Delta                ~ ::= ~ \cdot
+                                \mid \Delta, X^\kappa
+                                \mid \newFi{\Delta, i^A}
+\qquad \Gamma                ~ ::= ~ \cdot
+                                \mid \Gamma, x : A 
+$
+\vskip-2ex\textcolor{grey}{\hrule}\vskip.7ex
+$\text{Typing rules} \quad
+\inference[($:$)]{ (x:A) \in \Gamma & \Delta |- \Gamma }
+		 {\Delta;\Gamma |- x : A} ~~~
+\newFi{
+\inference[($:i$)]{ i^A \in \Delta & \Delta |- \Gamma }
+		  {\Delta;\Gamma |- i : A}  }
+$ \vskip-1ex ~ \\
+$\text{Kinding rules} \quad
+\newFi{
+\inference[($@i$)]{ \Delta |- F : A -> \kappa & \Delta;\cdot |- s : A }
+                  {\Delta |- F\,\{s\} : \kappa}  }
+$
+\vskip-1ex\textcolor{grey}{\hrule}\vskip.7ex
+$\text{Index Erasure}
+\qquad (A\to\kappa)^{\circ}=\kappa^{\circ} \qquad
+(\Delta,i^A)^\circ = \Delta^\circ $ \\
+$\qquad(\lambda i^{A}.F)^{\circ}=F^{\circ} \qquad
+(F\,\{s\})^{\circ}\;=F^{\circ} \qquad
+(\forall i^{A}.F)^{\circ}=F^{\circ}
+$ \\
+$ \text{Index Erasure Theorem {\small(for terms without index variables)} }$
+\[
+\inference{\Gamma;\Delta|- t:A ~~\text{derivable in \Fi}}
+	  {\Delta^\circ;\Gamma^\circ|- t:A^\circ  ~~\text{derivable in \Fw}}
+	  (\FV(t)\cap\dom(\Delta) = \emptyset)
+\]
+\vskip-1ex\textcolor{grey}{\hrule}\vskip.7ex
+Strongly Normalization TODO\\
+Logical Consistency TODO
 \end{block}
 
-\begin{block}{Introduction}
+\begin{block}{Contribution and Ongoing work}
 \begin{itemize}
-\item some items and $\alpha=\gamma, \sum_{i}$
-\item some items
-\item some items
-\item some items
+\item identifying the features needed for $\lambda$-calculi 
+    to embed term-indexed datatypes, in isolation with other
+    requirements % (e.g., large elimination)
+\item design of a calculus useful for studying properties of
+    term-indexed datatypes
+    {\normalsize
+	    (e.g., proof using \Fi\ that the eliminators for indexed datatypes
+    	in \emph{Ahn\,\&\,Sheard,ICFP'11} are indeed normalizing) }
+\item proof that the calculus enjoys a simple erasure property
+    and inherits metatheoretic results from well-known calculi
 \end{itemize}
-$$\alpha=\gamma, \sum_{i}$$
 \end{block}
 
 \end{column}

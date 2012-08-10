@@ -41,18 +41,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setbeamertemplate{block begin}{
   \vskip.75ex
-  \begin{beamercolorbox}[ht=4.3ex,dp=0.5ex,center,leftskip=-1em,colsep*=.75ex]{block title}%
+  \begin{beamercolorbox}[ht=5ex,dp=0.5ex,center,leftskip=-1em,colsep*=.75ex]{block title}%
     \usebeamerfont*{block title}%
-    {\phantom{Gi}\Large\insertblocktitle}% phantom because of baseline problem
+    {\phantom{fg}\Large\insertblocktitle}% phantom because of baseline problem
   \end{beamercolorbox}%
   {\ifbeamercolorempty[bg]{block body}{}{\nointerlineskip\vskip-0.5pt}}%
   %
   \setstretch{1.3}%
   \usebeamerfont{block body}%
+  \vskip-1.5ex%
   \begin{beamercolorbox}[leftskip=1em,colsep*=.75ex,sep=0.5ex,vmode]{block body}% 
-    \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+    \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip.75ex}\vbox{}%
   }
-  \setbeamertemplate{block end}{
+  \setbeamertemplate{block end}{ \vskip2ex
   \end{beamercolorbox}
 }
 
@@ -97,9 +98,9 @@
       \end{column}
       \begin{column}{.78\paperwidth}
 	{\normalsize colloaborators:
-	{\rm\large Tim Sheard}
+	{\rm\bf\large Tim Sheard}
           {\normalsize\texttt{sheard@pdx.edu}} \\ \vskip1ex \hskip6.5em
-	{\rm\large Marcelo Fiore} and {\rm\large Andrew M. Pitts}
+	{\rm\bf\large Marcelo Fiore} \textrm{\;and\;} {\rm\bf\large Andrew M. Pitts}
           {\normalsize\texttt{\{Marcelo.Firoe,Andy.Pitts\}@cl.cam.ac.uk}}}
       \end{column}
     \end{columns}
