@@ -11,6 +11,7 @@
 \usepackage[latin1]{inputenc}
 \usepackage{amsmath,amsthm,amssymb,latexsym,textcomp,setspace}
 \usepackage{listings}
+\usepackage{setspace}
 \usepackage[inference,ligature]{semantic}
 \mathlig{->}{\to}
 \mathlig{|-}{\vdash}
@@ -22,20 +23,23 @@
 \newcommand{\dom}{\mathop{\mathsf{dom}}}
 \newcommand{\FV}{\mathop{\mathrm{FV}}}
 
-\newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_{\!\omega}}}
 \newcommand{\Fi}{\ensuremath{\mathsf{F}_{\!i}}}
 \definecolor{grey}{rgb}{0.8,0.8,0.8}
-\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
+\definecolor{lightgrey}{rgb}{0.85,0.85,0.85}
+\newcommand{\newFi}[1]{\colorbox{lightgrey}{\ensuremath{#1}}}
 
 
 
 \lstset{language=Haskell,
 	basicstyle=\ttfamily\small,
 	keywordstyle=\color{ta4chameleon},
+	emph={List,Int,Bool},
 	commentstyle=\color{gray},
 	literate =
 		{forall}{{\textcolor{ta3chocolate}{$\forall$}}}1
-		{=}{{\textcolor{ta3chocolate}{$=$}}}1
+		{|}{{\textcolor{ta3chocolate}{$\mid\;\,$}}}1
+		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
 		{::}{{\textcolor{ta3chocolate}{$:\!\,:$}}}1
 		{->}{{\textcolor{ta3chocolate}{$\to$}}}1
 	}
@@ -70,8 +74,8 @@
 
 \begin{column}{.315\linewidth}
 
-\begin{block}{Indexed Datatypes
-	{\normalsize({\small a.k.a. }Lightweight Dependent Types)} }
+\begin{block}{1. Indexed Datatypes
+	{\normalsize(Lightweight Dependent Types)} }
 \begin{itemize}
 \item Indexed datatyeps are datatypes
 	with \emph{static (compile-time) dependencies}.
@@ -79,20 +83,22 @@
 %%        both static and dynamic dependencies)
 	Also known as higer-kinded datatypes, higher-rank datatypes,
 	or lightweight dependent types
-\item Use of indexed datatypes, or the \textcolor{magenta}{\emph{lightweight approach}},
+\item Use of indexed datatypes, or the {\emph{lightweight approach}},
 	has become popular
 	over the past decade even in real-world functional programming due to
 	the GADT extension in the Glasgow Haskell Compiler.
 \end{itemize}
 \end{block}
 
-\begin{block}{Examples of Indexed Datatypes}
+\begin{block}{2. Examples of Indexed Datatypes}
 \begin{itemize}
+\item[]$\!\!\!\!\!\!${\normalsize(c.f.)} Regular datatypes
+	$~$ \lstinline!data List a = Cons a (List a) | Nil!
 \item Type-indexed datatypes
 	$\quad$\textcolor{gray}{\normalsize(example code in Haskell)}
 	\begin{itemize}
 		\item Nested datatypes $\quad$
-			\lstinline!data Powl a = PCons Powl (a,a) | PNil!
+			\lstinline!data Powl a = PCons a (Powl(a,a)) | PNil!
 		\item Representation types in datatype generic programming
 		\begin{lstlisting}
 		data Rep t where
@@ -126,9 +132,56 @@
 %%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{column}{.315\linewidth}
 
-\begin{block}{Limitations of the Lightweight approach {\normalsize(so far)}}
+\begin{block}{4. Motivating example: embedding datatypes}
+\begin{itemize}
+\item Regular datatypes are embeddable in System $\mathsf{F}$ \\
+	{\normalsize
+	$\texttt{List}\,A \triangleq \forall X.X\to(A\to X\to X)\to X$
+	}
+\item Type-indexed datatypes are embeddable in System \Fw \\
+	{\normalsize
+	$ \texttt{Powl} \triangleq \lambda A^{*}.\forall X^{*\to*}.
+		X A\to(A\to X(A\times A)\to X A)\to X A $
+	}\vskip1ex
+\item Term-indexed datatypes are embeddable in
+	\newFi{\,\text{System \Fi}\phantom{^i}\!}
+	{\normalsize
+		\begin{multline*}
+ \texttt{Vec}~ \triangleq
+ \lambda A^{*}.\colorbox{tabutter}{$\lambda i^{\texttt{Nat}}\phantom{\}}\!\!\!$}.
+ \forall X^{\colorbox{ta0scarletred}{\small$\texttt{{Nat}}\to*$}}.\\
+ \colorbox{ta0chameleon}{$X\{\texttt{{Z}}\}$}\to
+ (\colorbox{ta0skyblue}{$\forall i^{\texttt{{Nat}}}\phantom{\}}\!\!\!$}.A\to\colorbox{ta0chameleon}{$X\{i\}$}\to
+ \colorbox{ta0chameleon}{$X\{\texttt{{S}}\; i\}$})\to\colorbox{ta0chameleon}{$X\{i\}$}
+		\end{multline*}
+	}
+	New features of \Fi\ not found in \Fw\ \\ \vskip1ex
+	\begin{minipage}{.4\linewidth}
+	\begin{itemize}
+		\item \colorbox{ta0scarletred}{%
+			\,index-arrow kinds$\phantom{g^I}$\!\!\!\!\!}
+		\item \colorbox{ta0skyblue}{%
+			\,index polymorphism$\phantom{g^I}$\!\!\!\!\!}
+	\end{itemize}
+	\end{minipage}
+	\begin{minipage}{.4\linewidth}
+	\begin{itemize}
+		\item \colorbox{tabutter}{%
+			\,index abstraction$\phantom{g^I}$\!\!\!\!\!}
+		\item \colorbox{ta0chameleon}{%
+			\,index application$\phantom{g^I}$\!\!\!\!\!}
+	\end{itemize}
+	\end{minipage}
+\end{itemize}
+\end{block}
+
+
+\begin{block}{3. Limitations of the Lightweight approach}
+\begin{spacing}{1}\vskip1ex \small
 Although extending existing programming languages with indexed datatypes
-has been useful, it still suffers from the following problems:
+has been useful in practice, but it still suffers from the following problems
+(so far):
+\end{spacing}
 \begin{itemize}
 \item Increase \emph{confidence} but no \emph{guarantee} of correctness
 	\begin{lstlisting}
@@ -147,17 +200,16 @@ has been useful, it still suffers from the following problems:
 			when diverging terms exist
 		\item need \emph{annotation} for inference,
 			but \emph{how much} and \emph{where}?
+\vskip1ex
 	\end{itemize}
 \end{itemize}
-\end{block}
-
-\begin{block}{Motivating example: embedding datatypes}
-\begin{itemize}
-\item some items
-\item some items
-\item some items
-\item some items
-\end{itemize}
+\begin{spacing}{1}\small
+System \Fi\ (details submitted to \textit{POPL '13}) resolves all of above,
+except where and how much annotations are needed for type inference.
+Sequel to this work, we are developing Nax (to appar in \textit{IFL '12}),
+a programming langauge based on System \Fi, which supports type inference
+from small amount of systematic type annotation.
+\end{spacing}
 \end{block}
 
 
@@ -165,7 +217,7 @@ has been useful, it still suffers from the following problems:
 %%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{column}{.315\linewidth}
 
-\begin{block}{\Fi ~= {\normalsize Curry-style} \Fw\ + \{erasable term indices\}}
+\begin{block}{5. \Fi ~= {\normalsize Curry-style} \Fw\ + \{erasable term indices\}}
 $\text{Variables}~~ x,i \qquad\quad \text{Type constructor variables}~~ X$ \\
 $\text{Terms}~~~ r,s,t ~ ::= ~ x \mid \lambda x.t \mid r\;s \qquad\quad\text{\small(Curry-style terms)}$\\
 $\text{Kinds}~~~~ \kappa ~ ::= ~ *
@@ -215,23 +267,32 @@ $ \text{Index Erasure Theorem {\small(for terms without index variables)} }$
 	  {\Delta^\circ;\Gamma^\circ|- t:A^\circ  ~~\text{derivable in \Fw}}
 	  (\FV(t)\cap\dom(\Delta) = \emptyset)
 \]
-\vskip-1ex\textcolor{grey}{\hrule}\vskip.7ex
-Strongly Normalization TODO\\
-Logical Consistency TODO
+\vskip-2ex\textcolor{grey}{\hrule}\vskip1.5ex
+$\!\!\!\!$\textbullet\;
+\textbf{Strong Normalization}: Index Erasure and Strong Normalization of \Fw\\
+$\!\!\!\!$\textbullet\;
+\textbf{Logical Consistency}: strict subset of a logically consistent calculus 
 \end{block}
 
-\begin{block}{Contribution and Ongoing work}
+\begin{block}{6. Contribution and Ongoing work}
 \begin{itemize}
-\item identifying the features needed for $\lambda$-calculi 
-    to embed term-indexed datatypes, in isolation with other
-    requirements % (e.g., large elimination)
-\item design of a calculus useful for studying properties of
+\item Identifying the features needed for polymorhpic $\lambda$-calculi
+	to embed term-indexed datatypes
+	{\normalsize in isolation with other requirements
+		% (e.g., large elimination)
+	}
+\item Design of a calculus useful for studying properties of
     term-indexed datatypes
     {\normalsize
 	    (e.g., proof using \Fi\ that the eliminators for indexed datatypes
-    	in \emph{Ahn\,\&\,Sheard,ICFP'11} are indeed normalizing) }
-\item proof that the calculus enjoys a simple erasure property
-    and inherits metatheoretic results from well-known calculi
+    	in \textit{Ahn\,\&\,Sheard,\,ICFP '11} are indeed normalizing) }
+\item Proof that the calculus enjoys a simple erasure property and
+	inherits metatheoretic results from well-known calculi {\normalsize(\Fw, ICC)}
+\item[\!{\Huge\textbullet}\;] Ongoing work: {\normalsize
+	Leibniz equality on term-indices,
+	type inference in Nax,\\ \vskip-1ex
+	$\quad$ handling non-logical language constructs
+		(ideas from Trellys project)}
 \end{itemize}
 \end{block}
 
