@@ -77,14 +77,14 @@
 \begin{block}{1. Indexed Datatypes
 	{\normalsize(Lightweight Dependent Types)} }
 \begin{itemize}
-\item Indexed datatyeps are datatypes
+\item Indexed datatypes are datatypes
 	with \emph{static (compile-time) dependencies}.
 %%        (c.f. full-fledged dependent types can have
 %%        both static and dynamic dependencies)
-	Also known as higer-kinded datatypes, higher-rank datatypes,
+	Also known as higher-kinded datatypes, higher-rank datatypes,
 	or lightweight dependent types
-\item Use of indexed datatypes, or the {\emph{lightweight approach}},
-	has become popular
+\item Use of indexed datatypes in programming languages,
+	or the {\emph{lightweight approach}}, has become popular
 	over the past decade even in real-world functional programming due to
 	the GADT extension in the Glasgow Haskell Compiler.
 \end{itemize}
@@ -117,7 +117,7 @@
 		  VCons :: a -> Vec a {i} -> Vec a {Succ i}
 		  VNil  :: Vec {Zero}
 		\end{lstlisting}
-		\item de Bruijn terms indexed by size-indexed context
+		\item de Bruijn terms indexed by size-indexed contexts
 		\begin{lstlisting}
 		data BTerm (c :: Nat -> *) {n :: Nat} where
 		  BVar :: c {i} -> BTerm c {i}
@@ -206,8 +206,8 @@ has been useful in practice, but it still suffers from the following problems
 \begin{spacing}{1}\small
 System \Fi\ (details submitted to \textit{POPL '13}) resolves all of above,
 except where and how much annotations are needed for type inference.
-Sequel to this work, we are developing Nax (to appar in \textit{IFL '12}),
-a programming langauge based on System \Fi, which supports type inference
+Sequel to this work, we are developing Nax (to appear in \textit{IFL '12}),
+a programming language based on System \Fi, which supports type inference
 from small amount of systematic type annotation.
 \end{spacing}
 \end{block}
@@ -276,7 +276,7 @@ $\!\!\!\!$\textbullet\;
 
 \begin{block}{6. Contribution and Ongoing work}
 \begin{itemize}
-\item Identifying the features needed for polymorhpic $\lambda$-calculi
+\item Identifying the features needed for polymorphic $\lambda$-calculi
 	to embed term-indexed datatypes
 	{\normalsize in isolation with other requirements
 		% (e.g., large elimination)
