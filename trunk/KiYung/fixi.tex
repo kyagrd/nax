@@ -1,6 +1,303 @@
-\chapter{System \Fixi}\label{ch:fixi} TODO
+\chapter{System \Fixi}\label{ch:fixi}
 
-TODO summry of \Fixw
+It is known that primitive recursion is not embeddable in System \F\ since
+induction is not derivable in second-order dependent type theory
+\cite{Geuvers01}. For similar reasons, it is strongly believed that
+primitive recursion is not embeddable in System \Fw. 
+\citet{AbeMat04} designed \Fixw, an extension of \Fw\ with polarized kinds and
+equi-recursive fixpoint type operator, in order to embed primitive recursion
+over regular datatypes and type-indexed datatypes.
+We present \Fixi, an extension of \Fixw\ with erasable term-indices,
+to embed primitive recursion over term-indexed datatypes.
+The extensions we make from \Fixw\ to \Fixi\ is basically the same
+as the extensions we made from \Fw\ to \Fi\ in Chapter \ref{ch:fi}.
 
-TODO desciption of \Fixi
+TODO our goal is here to embed \McvPr
+This should be easy
+what about out operation
+cast operation
+
+\begin{figure}\begin{singlespace}
+	\small
+\paragraph{Syntax:}
+\begin{align*}
+\!\!\!\!\!\!\!\!&\text{Sort}
+ 	& \square
+	\\
+\!\!\!\!\!\!\!\!&\text{Term Variables}
+ 	& x,i
+\\
+\!\!\!\!\!\!\!\!&\text{Type Constructor Variables}
+ 	& X
+\\
+\!\!\!\!\!\!\!\!&\text{Polarities}
+	& p &~ ::= + \mid - \mid \mathsf{0}
+\\
+\!\!\!\!\!\!\!\!&\text{Kinds}
+ 	& \kappa		&~ ::= ~ *
+				\mid p\kappa -> \kappa
+				\mid \newFi{A -> \kappa}
+\\
+\!\!\!\!\!\!\!\!&\text{Type Constructors}
+	& A,B,F,G		&~ ::= ~ X
+				\mid A -> B
+				\mid \mu F \\ &&& ~\quad
+				\mid \lambda X^{p\kappa}.F
+				\mid F\,G
+				\mid \forall X^\kappa . B \\ &&& ~\quad
+				\mid \newFi{\lambda i^A.F
+				\mid F\,\{s\}
+				\mid \forall i^A . B}
+\\
+\!\!\!\!\!\!\!\!&\text{Terms}
+	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
+\\
+\!\!\!\!\!\!\!\!&\text{Typing Contexts}
+	& \Delta		&~ ::= ~ \cdot
+				\mid \Delta, X^{p\kappa}
+				\mid \newFi{\Delta, i^A} \\
+&	& \Gamma		&~ ::= ~ \cdot
+				\mid \Gamma, x : A
+\end{align*}
+\paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
+\[ 
+   \inference{}{(\lambda x.t)\,s \rightsquigarrow t[s/x]}
+ ~~~~
+   \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
+ ~~~~
+   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+\]
+~\\
+\end{singlespace}
+\caption{Syntax and Reduction rules of \Fixi}
+\label{fig:Fixi}
+\end{figure}
+
+\begin{figure}\begin{singlespace}\small
+\paragraph{Well-formed typing contexts:}
+\[ \fbox{$|- \Delta$}
+ ~~~~
+   \inference{}{|- \cdot}
+ ~~~
+   \inference{|- \Delta & |- \kappa:\square}{|- \Delta,X^{p\kappa}}
+      \big( X\notin\dom(\Delta) \big)
+ ~~~ \newFi{
+   \inference{|- \Delta & \cdot |- A:*}{|- \Delta,i^A}
+      \big( i\notin\dom(\Delta) \big) }
+\]
+$ \fbox{$\Delta |- \Gamma$}
+ ~~~~
+   \inference{|- \Delta}{\mathsf{0}\Delta |- \cdot}
+ ~~~~
+   \inference{\Delta |- \Gamma & \Delta |- A:*}{
+              \Delta |- \Gamma,x:A}
+      \big( x\notin\dom(\Gamma) \big)
+$ \vskip1ex ~
+\paragraph{Sorting:} \fbox{$|- \kappa : \square$}
+$ \quad
+  \inference[($A$)]{}{|- *:\square}
+ ~~~
+   \inference[($R$)]{|- \kappa:\square & |- \kappa':\square}{
+                     |- p\kappa -> \kappa' : \square}
+ ~~~
+   \newFi{
+   \inference[($Ri$)]{\cdot |- A:* & |- \kappa:\square}{
+                      |- A -> \kappa : \square} }
+$
+~\\
+\paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
+$ \qquad
+   \inference[($Var$)]{X^{p\kappa}\in\Delta & |- \Delta}{
+		      \Delta |- X : \kappa} \, (p\in \{+,\mathsf{0}\}) $
+\[
+   \inference[($->$)]{-\Delta |- A : * & \Delta |- B : *}{
+                      \Delta |- A -> B : * }
+ \qquad \qquad
+   \inference[($\mu$)]{\Delta |- F : +\kappa -> \kappa}{
+                      \Delta |- \mu F : \kappa }
+\]
+\[
+  \inference[($\lambda$)]{|- \kappa:\square & \Delta,X^{p\kappa} |- F:\kappa'}{
+                          \Delta |- \lambda X^\kappa.F : p\kappa -> \kappa'}
+ ~~~~ \qquad \;
+ \newFi{
+  \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}{
+			    \Delta |- \lambda i^A.F : A->\kappa} }
+\]
+\[
+   \inference[($@$)]{ \Delta |- F : p\kappa -> \kappa'
+                    & p\Delta |- G : \kappa }{
+                     \Delta |- F\,G : \kappa'}
+ ~~~~
+ \newFi{
+   \inference[($@i$)]{ \Delta |- F : A -> \kappa
+                     & \mathsf{0}\Delta;\cdot |- s : A }{
+		      \Delta |- F\,\{s\} : \kappa} }
+\]
+\[
+   \inference[($\forall$)]{ |- \kappa:\square
+                          & \Delta, X^{\mathsf{0}\kappa} |- B : *}{
+                           \Delta |- \forall X^\kappa . B : *}
+ ~~~~ \qquad ~\,
+	\newFi{
+   \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}{
+                             \Delta |- \forall i^A . B : *} }
+\]
+\[ \newFi{
+   \inference[($Conv$)]{ \Delta |- A : \kappa
+                       & \Delta |- \kappa = \kappa' : \square }{
+                        \Delta |- A : \kappa'} }
+\]
+~\\
+\paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
+$ \qquad
+ ~~~~
+ \inference[($:$)]{(x:A) \in \Gamma & \Delta |- \Gamma}{
+                   \Delta;\Gamma |- x:A}
+ ~~~~ \newFi{
+   \inference[($:i$)]{i^A \in \Delta & \Delta |- \Gamma}{
+                      \Delta;\Gamma |- i:A} }
+$
+\[
+   \inference[($->$$I$)]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}{
+                         \Delta;\Gamma |- \lambda x.t : A -> B}
+ ~~~~ ~~~~
+   \inference[($->$$E$)]{\Delta;\Gamma |- r : A -> B & \Delta;\Gamma |- s : A}{
+                         \Delta;\Gamma |- r\;s : B}
+\]
+\[ \inference[($\forall I$)]{|- \kappa:\square
+	                    & \Delta, X^{0\kappa};\Gamma |- t : B}{
+                             \Delta;\Gamma |- t : \forall X^\kappa.B}
+			    (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
+                            & \Delta |- G:\kappa }{
+                             \Delta;\Gamma |- t : B[G/X]}
+\]
+\[ \newFi{
+   \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}{
+                               \Delta;\Gamma |- t : \forall i^A.B}
+   \left(\begin{matrix}
+		i\notin\FV(t),\\
+		i\notin\FV(\Gamma)\end{matrix}\right)
+ ~~~~
+   \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
+                              & \Delta;\cdot |- s:A}{
+                               \Delta;\Gamma |- t : B[s/i]} }
+\]
+\[ \inference[($=$)]{\Delta;\Gamma |- t : A & \Delta |- A = B : *}{
+                     \Delta;\Gamma |- t : B}
+\]
+\end{singlespace}
+\caption{Sorting, Kinding, and Typing rules of \Fixi}
+\label{fig:Fixi2}
+\end{figure}
+
+\begin{figure}\begin{singlespace}\small
+\paragraph{Kind equality:} \fbox{$|- \kappa=\kappa' : \square$}
+$ \quad
+ ~~~~
+   \inference{}{|- * = *:\square} $
+\[
+   \inference{ |- \kappa_1 = \kappa_1' : \square
+             & |- \kappa_2 = \kappa_2' : \square }{
+              |- p\kappa_1 -> \kappa_2 = p\kappa_1' -> \kappa_2' : \square}
+ ~~~~ \newFi{
+   \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}{
+              |- A -> \kappa = A' -> \kappa' : \square} }
+\]
+\[ \inference{|- \kappa=\kappa':\square}{
+              |- \kappa'=\kappa:\square}
+ ~~~~
+   \inference{ |- \kappa =\kappa' :\square
+             & |- \kappa'=\kappa'':\square}{
+              |- \kappa=\kappa'':\square}
+\]
+~\\
+\paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
+\[
+   \inference{\Delta,X^{p\kappa} |- F:\kappa' & p\Delta |- G:\kappa}{
+	      \Delta |- (\lambda X^{p\kappa}.F)\,G = F[G/X]:\kappa'}
+ ~~~~ \newFi{
+   \inference{\Delta,i^A |- F:\kappa & \mathsf{0}\Delta;\cdot |- s:A}{
+              \Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
+\]
+\[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
+ ~~~~
+   \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+\]
+\[
+ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}{
+              \Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
+ ~~~~ ~
+ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}{
+	      \Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa} }
+\]
+\[
+   \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}{
+              \Delta |- F\,G = F'\,G' : \kappa'}
+ ~~~~
+ \newFi{
+   \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}{
+	      k\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
+\]
+\[
+   \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}{
+              \Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
+ ~~~~ \quad
+ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}{
+              \Delta |- \forall i^A.B=\forall i^A.B':*} }
+\]
+\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+ ~~~~
+   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}{
+              \Delta |- F = F'' : \kappa}
+\]
+\paragraph{Term equality:} \fbox{$\Delta;\Gamma |- t = t' : A$}
+\[
+   \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}{
+              \Delta;\Gamma |- (\lambda x.t)\,s=t[s/x] : B}
+ ~~~~
+   \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
+\]
+\[ \inference{\Delta |- A:* & \Delta;\Gamma,x:A |- t=t':B}{
+              \Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
+ ~~~~
+   \inference{\Delta;\Gamma |- r=r':A-> B & \Delta;\Gamma |- s=s':A}{
+              \Delta;\Gamma |- r\;s=r'\;s':B}
+\]
+\[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}{
+              \Delta;\Gamma |- t=t' : \forall X^\kappa.B}
+	     (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
+             & \Delta |- G:\kappa }{
+              \Delta;\Gamma |- t=t' : B[G/X]}
+\]
+\[ \newFi{
+   \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}{
+              \Delta;\Gamma |- t=t' : \forall i^A.B}
+   \left(\begin{smallmatrix}
+		i\notin\FV(t),\\
+		i\notin\FV(t'),\\
+		i\notin\FV(\Gamma)\end{smallmatrix}\right)
+ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
+             & \Delta;\cdot |- s:A}{
+              \Delta;\Gamma |- t=t' : B[s/i]} }
+\]
+\[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
+ ~~~~
+   \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}{
+              \Delta;\Gamma |- t=t'':A}
+\]
+\end{singlespace}
+\caption{Equality rules of \Fixi}
+\label{fig:eqFixi}
+\end{figure}
+
 
