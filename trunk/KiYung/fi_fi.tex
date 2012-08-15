@@ -1,4 +1,4 @@
-\section{TODO fi system description}\label{sec:fi:fi}
+\section{System \Fi}\label{sec:fi:fi}
 System \Fi\ is a higher-order polymorphic lambda calculus 
 designed to extend System~\Fw\ by the inclusion of term indices.
 The syntax and rules of System~\Fi\ are described in
@@ -279,7 +279,7 @@ $ \quad
              & |- \kappa'=\kappa'':\square}{
               |- \kappa=\kappa'':\square}
 \]
-~\\
+~
 \paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
 \[
    \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}{
@@ -321,6 +321,7 @@ $ \quad
    \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}{
               \Delta |- F = F'' : \kappa}
 \]
+~
 \paragraph{Term equality:} \fbox{$\Delta;\Gamma |- t = t' : A$}
 \[
    \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}{

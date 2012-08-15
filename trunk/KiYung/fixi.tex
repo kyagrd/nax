@@ -9,13 +9,42 @@ equi-recursive fixpoint type operator, in order to embed primitive recursion
 over regular datatypes and type-indexed datatypes.
 We present \Fixi, an extension of \Fixw\ with erasable term-indices,
 to embed primitive recursion over term-indexed datatypes.
-The extensions we make from \Fixw\ to \Fixi\ is basically the same
-as the extensions we made from \Fw\ to \Fi\ in Chapter \ref{ch:fi}.
 
-TODO our goal is here to embed \McvPr
-This should be easy
-what about out operation
-cast operation
+The organization of this chapter is analogous to the chapter on System \Fi\
+(Chapter \ref{ch:fi}). Since the extensions from \Fixw\ to \Fixi\ is
+basically the same as the extensions from \Fw\ to \Fi,
+the description for \Fixi\ will be focused on the differences between \Fi.
+Readers may refer back to Chapter \ref{ch:fi} for the details that are
+in common with System~\Fi.
+
+We describe syntax and typing rules in \S\ref{sec:fixi:def},
+illustrate embeddings of primitive recursion for term-indexed datatypes
+in \S\ref{sec:fixi:data}, and discuss the metatheory \S\ref{sec:fixi:theory}.
+
+
+\section{System \Fixi} \label{sec:fixi:def}
+The syntax and rules of System~\Fi\ are described in
+Figures \ref{fig:Fixi}, \ref{fig:Fixi2} and~\ref{fig:eqFixi}.
+The extensions new to System~\Fixi, which are not original part of
+either System~\Fw\ or System~\Fixw\ are highlighted by either
+\dbox{dashed boxes} or \newFi{\text{grey boxes}}.
+
+The extensions, which are not originally part of System~\Fixw, are highlighted
+by \newFi{\text{grey boxes}}. Those extensions in grey boxes are to support
+term indexing.  Eliding all the grey boxes from Figures~\ref{fig:Fixi},
+\ref{fig:Fixi2} and~\ref{fig:eqFixi},
+one obtains a version of System~\Fixw\ with typing contexts separated into
+two parts.\footnote{The original description of \Fixw \cite{AbeMat04} has
+one combined typing context.} 
+
+
+The extensions, which are not originally part of System \Fw\ but
+present in System~\Fixw, are highlighted by \dbox{dashed boxes}.
+Those extensions in dashed boxes are to support equi-recursive types. 
+Eliding all the dashed boxes, as well as all the grey boxes,
+from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2} and~\ref{fig:eqFixi}, one obtains
+the Curry-style System \Fw\ with typing contexts separated into two parts.
+
 
 \begin{figure}\begin{singlespace}
 	\small
@@ -30,19 +59,19 @@ cast operation
 \!\!\!\!\!\!\!\!&\text{Type Constructor Variables}
  	& X
 \\
-\!\!\!\!\!\!\!\!&\text{Polarities}
-	& p &~ ::= + \mid - \mid \mathsf{0}
+\!\!\!\!\!\!\!\!&\text{\dbox{Polarities}}
+	& \dbox{$p$} &~ ::= + \mid - \mid \mathsf{0}
 \\
 \!\!\!\!\!\!\!\!&\text{Kinds}
  	& \kappa		&~ ::= ~ *
-				\mid p\kappa -> \kappa
+				\mid \dbox{$p\kappa$} -> \kappa
 				\mid \newFi{A -> \kappa}
 \\
 \!\!\!\!\!\!\!\!&\text{Type Constructors}
 	& A,B,F,G		&~ ::= ~ X
 				\mid A -> B
-				\mid \mu F \\ &&& ~\quad
-				\mid \lambda X^{p\kappa}.F
+				\mid \dbox{$\mu F$} \\ &&& ~\quad
+				\mid \lambda \dbox{$X^{p\kappa}$}.F
 				\mid F\,G
 				\mid \forall X^\kappa . B \\ &&& ~\quad
 				\mid \newFi{\lambda i^A.F
@@ -54,7 +83,7 @@ cast operation
 \\
 \!\!\!\!\!\!\!\!&\text{Typing Contexts}
 	& \Delta		&~ ::= ~ \cdot
-				\mid \Delta, X^{p\kappa}
+				\mid \Delta,\dbox{$X^{p\kappa}$}
 				\mid \newFi{\Delta, i^A} \\
 &	& \Gamma		&~ ::= ~ \cdot
 				\mid \Gamma, x : A
@@ -81,7 +110,7 @@ cast operation
  ~~~~
    \inference{}{|- \cdot}
  ~~~
-   \inference{|- \Delta & |- \kappa:\square}{|- \Delta,X^{p\kappa}}
+   \inference{|- \Delta & |- \kappa:\square}{|- \Delta,\dbox{$X^{p\kappa}$}}
       \big( X\notin\dom(\Delta) \big)
  ~~~ \newFi{
    \inference{|- \Delta & \cdot |- A:*}{|- \Delta,i^A}
@@ -89,7 +118,7 @@ cast operation
 \]
 $ \fbox{$\Delta |- \Gamma$}
  ~~~~
-   \inference{|- \Delta}{\mathsf{0}\Delta |- \cdot}
+   \inference{|- \Delta}{\dbox{$\mathsf{0}\Delta$} |- \cdot}
  ~~~~
    \inference{\Delta |- \Gamma & \Delta |- A:*}{
               \Delta |- \Gamma,x:A}
@@ -100,7 +129,7 @@ $ \quad
   \inference[($A$)]{}{|- *:\square}
  ~~~
    \inference[($R$)]{|- \kappa:\square & |- \kappa':\square}{
-                     |- p\kappa -> \kappa' : \square}
+		     |- \dbox{$p\kappa$} -> \kappa' : \square}
  ~~~
    \newFi{
    \inference[($Ri$)]{\cdot |- A:* & |- \kappa:\square}{
@@ -109,36 +138,38 @@ $
 ~\\
 \paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
 $ \qquad
-   \inference[($Var$)]{X^{p\kappa}\in\Delta & |- \Delta}{
-		      \Delta |- X : \kappa} \, (p\in \{+,\mathsf{0}\}) $
+   \inference[($Var$)]{\dbox{$X^{p\kappa}$}\in\Delta & |- \Delta}{
+ 		       \Delta |- X : \kappa}
+		\, \dbox{$(p\in \{+,\mathsf{0}\})$} $
 \[
-   \inference[($->$)]{-\Delta |- A : * & \Delta |- B : *}{
+   \inference[($->$)]{\dbox{$-\Delta$} |- A : * & \Delta |- B : *}{
                       \Delta |- A -> B : * }
- \qquad \qquad
+ \qquad \qquad \dbox{
    \inference[($\mu$)]{\Delta |- F : +\kappa -> \kappa}{
-                      \Delta |- \mu F : \kappa }
+		      \Delta |- \mu F : \kappa } }
 \]
 \[
-  \inference[($\lambda$)]{|- \kappa:\square & \Delta,X^{p\kappa} |- F:\kappa'}{
-                          \Delta |- \lambda X^\kappa.F : p\kappa -> \kappa'}
- ~~~~ \qquad \;
+  \inference[($\lambda$)]{ |- \kappa:\square
+                         & \Delta,\dbox{$X^{p\kappa}$} |- F:\kappa'}{
+  	\Delta |- \lambda \dbox{$X^{p\kappa}$}.F : \dbox{$p\kappa$} -> \kappa'}
+ ~~~~ \qquad
  \newFi{
   \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}{
 			    \Delta |- \lambda i^A.F : A->\kappa} }
 \]
 \[
-   \inference[($@$)]{ \Delta |- F : p\kappa -> \kappa'
-                    & p\Delta |- G : \kappa }{
+  \inference[($@$)]{ \Delta |- F : \dbox{$p\kappa$} -> \kappa'
+		    & \dbox{$p\Delta$} |- G : \kappa }{
                      \Delta |- F\,G : \kappa'}
  ~~~~
  \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
-                     & \mathsf{0}\Delta;\cdot |- s : A }{
+   		     & \dbox{$\mathsf{0}\Delta$\!};\cdot |- s : A }{
 		      \Delta |- F\,\{s\} : \kappa} }
 \]
 \[
    \inference[($\forall$)]{ |- \kappa:\square
-                          & \Delta, X^{\mathsf{0}\kappa} |- B : *}{
+   			  & \Delta,\dbox{$X^{\mathsf{0}\kappa}$} |- B : *}{
                            \Delta |- \forall X^\kappa . B : *}
  ~~~~ \qquad ~\,
 	\newFi{
@@ -168,7 +199,7 @@ $
                          \Delta;\Gamma |- r\;s : B}
 \]
 \[ \inference[($\forall I$)]{|- \kappa:\square
-	                    & \Delta, X^{0\kappa};\Gamma |- t : B}{
+			    & \Delta,\dbox{$X^{0\kappa}$\!};\Gamma |- t : B}{
                              \Delta;\Gamma |- t : \forall X^\kappa.B}
 			    (X\notin\FV(\Gamma))
  ~~~~ ~~~~
@@ -203,7 +234,7 @@ $ \quad
 \[
    \inference{ |- \kappa_1 = \kappa_1' : \square
              & |- \kappa_2 = \kappa_2' : \square }{
-              |- p\kappa_1 -> \kappa_2 = p\kappa_1' -> \kappa_2' : \square}
+   |- \dbox{$p\kappa_1$}-> \kappa_2 = \dbox{$p\kappa_1'$}-> \kappa_2' : \square}
  ~~~~ \newFi{
    \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}{
               |- A -> \kappa = A' -> \kappa' : \square} }
@@ -215,37 +246,49 @@ $ \quad
              & |- \kappa'=\kappa'':\square}{
               |- \kappa=\kappa'':\square}
 \]
-~\\
+~
 \paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
+$\qquad \dbox{$
+   \inference{\Delta|- F:+\kappa-> \kappa}{\Delta|- \mu F=F(\mu F):\kappa}$ } $
 \[
-   \inference{\Delta,X^{p\kappa} |- F:\kappa' & p\Delta |- G:\kappa}{
+   \inference{ \Delta,\dbox{$X^{p\kappa}$} |- F:\kappa'
+   	     & \dbox{$p\Delta$} |- G:\kappa}{
 	      \Delta |- (\lambda X^{p\kappa}.F)\,G = F[G/X]:\kappa'}
  ~~~~ \newFi{
-   \inference{\Delta,i^A |- F:\kappa & \mathsf{0}\Delta;\cdot |- s:A}{
+   \inference{ \Delta,i^A |- F:\kappa
+             & \dbox{$\mathsf{0}\Delta$\!};\cdot |- s:A}{
               \Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
 \]
 \[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
  ~~~~
-   \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+   \inference{-\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+ ~~~~
+   \inference{\Delta |- F=F' : +\kappa -> \kappa}{
+	      \Delta |- \mu F = \mu F' : \kappa}
 \]
 \[
- \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}{
-              \Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
+   \inference{ |- \kappa:\square
+   	     & \Delta,\dbox{$X^{p\kappa}$} |- F=F' : \kappa'}{
+   	\Delta |- \lambda \dbox{$X^{p\kappa}$}.F
+		= \lambda \dbox{$X^{p\kappa}$}.F': \dbox{$\kappa$} -> \kappa'}
  ~~~~ ~
  \newFi{
    \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}{
 	      \Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa} }
 \]
-\[
-   \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}{
+\[\!\!\!\!\!\!\!\!\!\!\!\!
+   \inference{ \Delta |- F=F' : \dbox{$p\kappa$} -> \kappa'
+   	     & \dbox{$p\Delta$} |- G=G':\kappa}{
               \Delta |- F\,G = F'\,G' : \kappa'}
  ~~~~
  \newFi{
-   \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}{
-	      k\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
+   \inference{ \Delta |- F=F': A -> \kappa
+             & \dbox{$\mathsf{0}\Delta$\!};\cdot |- s=s':A}{
+	      \Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
 \]
 \[
-   \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}{
+   \inference{ |- \kappa:\square
+   	     & \Delta,\dbox{$X^{\mathsf{0}\kappa}$} |- B=B':*}{
               \Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
  ~~~~ \quad
  \newFi{
@@ -257,6 +300,7 @@ $ \quad
    \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}{
               \Delta |- F = F'' : \kappa}
 \]
+~
 \paragraph{Term equality:} \fbox{$\Delta;\Gamma |- t = t' : A$}
 \[
    \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}{
@@ -270,7 +314,8 @@ $ \quad
    \inference{\Delta;\Gamma |- r=r':A-> B & \Delta;\Gamma |- s=s':A}{
               \Delta;\Gamma |- r\;s=r'\;s':B}
 \]
-\[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}{
+\[ \inference{ |- \kappa:\square
+	     & \Delta, \dbox{$X^{\mathsf{0}\kappa}$\!};\Gamma |- t=t' : B}{
               \Delta;\Gamma |- t=t' : \forall X^\kappa.B}
 	     (X\notin\FV(\Gamma))
  ~~~~ ~~~~
@@ -300,4 +345,170 @@ $ \quad
 \label{fig:eqFixi}
 \end{figure}
 
+
+
+\section{Embedding datatypes and primitive recursion} \label{sec:fixi:data}
+The embeddings of non-recursive datatypes are exactly the same as in \Fi\ (see
+\S\ref{sec:fi:data}), other than tracking polarities of the type constructor
+variables. That is, we use impredicative encodings of types for the
+church encoded terms of non-recursive datatypes such as booleans,
+natural numbers, pairs, and sums.
+
+We embed recursive datatypes in \Fixi\ by two-level types, taking fixpoints
+($\mu F : \kappa$) of covariant (or positive) base structures
+($F : +\kappa -> \kappa$). Since the fixpoint type operator $\mu$
+is given as a primitive in \Fixi, the embedding is obvious once we
+have the covariant base structure.
+
+We discuss the embedding of primitive recursion over recursive datatypes
+(\S\ref{ssec:fixi:data:pr}) and the embeddings of negative datatypes
+(\S\ref{ssec:fixi:data:neg}) in \Fixi.
+
+\subsection{TODO primitive recursion} \label{ssec:fixi:data:pr}
+
+
+\subsection{TODO embedding negative datatypes??} \label{ssec:fixi:data:neg}
+TODO negative datatpes
+
+\section{Metatheory} \label{sec:fixi:theory}
+
+We can prove strong normalization of by erasing term-indices in the types of
+\Fixi\ into \Fixw\ types. Since we know that \Fixw\ is strongly normalizing
+\cite{AbeMat04}, the existence of erasure that maps a valid typing judgment on
+a term in \Fixi\ to a valid typing judgment on the same term in \Fixw\ implies
+strong normalization of \Fixi.
+
+The definition of the index erasure operation and the proofs for
+the related theorems are almost exactly the same as their counterparts
+in System \Fi\ (see \S\ref{sec:fi:theory}). So, we simply illustrate
+the definition and just give a very brief sketch of the proofs for the
+theorems.
+
+We define a meta-operation of index erasure that projects $\Fixi$ types
+to $\Fixw$ types.
+\begin{definition}[index erasure]\label{def:Fixierase}
+\[ \fbox{$\kappa^\circ$}
+ ~~~~ ~~
+ *^\circ =
+ *
+ ~~~~ ~~
+ (p\kappa_1 -> \kappa_2)^\circ =
+ p{\kappa_1}^\circ -> {\kappa_2}^\circ
+ ~~~~ ~~
+ (A -> \kappa)^\circ =
+ \kappa^\circ
+\]
+\[ \fbox{$F^\circ$}
+ ~~~~
+ X^\circ =
+ X
+ ~~~~ ~~~~
+ (A -> B)^\circ =
+ A^\circ -> B^\circ
+ ~~~~ ~~~~
+ (\mu F)^\circ =
+ \mu F^\circ
+\]
+\[ \qquad
+ (\lambda X^{p\kappa}.F)^\circ =
+ \lambda X^{p\kappa^\circ}.F^\circ
+ ~~~~ ~~~~
+ (\lambda i^A.F)^\circ =
+ F^\circ
+\]
+\[ \qquad
+ (F\;G)^\circ =
+ F^\circ\;G^\circ
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~
+ (F\,\{s\})^\circ =
+ F^\circ
+\]
+\[ \qquad
+ (\forall X^\kappa . B)^\circ =
+ \forall X^{\kappa^\circ} . B^\circ
+ ~~~~ ~~~~
+ (\forall i^A . B)^\circ =
+ B^\circ
+\]
+\[ \fbox{$\Delta^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~
+ (\Delta,X^{p\kappa})^\circ = \Delta^\circ,X^{p\kappa^\circ}
+ ~~~~ ~~
+ (\Delta,i^A)^\circ = \Delta^\circ
+\]
+\[ \fbox{$\Gamma^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~~~
+ (\Gamma,x:A)^\circ = \Gamma^\circ,x:A^\circ
+\]
+\end{definition}
+
+\begin{theorem}[index erasure on well-sorted kinds]
+\label{thm:Fixierasesorting}
+	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
+\end{theorem}
+
+\begin{theorem}[index erasure on well-formed type level contexts]
+\label{thm:Fixierasetyctx}
+\[ \inference{|- \Delta}{|- \Delta^\circ} \]
+\end{theorem}
+
+\begin{theorem}[index erasure on kind equality]\label{thm:Fixierasekindeq}
+$ \inference{|- \kappa=\kappa':\square}
+	{|- \kappa^\circ=\kappa'^\circ:\square}
+$
+\end{theorem}
+
+\begin{theorem}[index erasure on well-kinded type constructors]
+\label{thm:Fixierasekinding}
+\[ \inference{|- \Delta & \Delta |- F : \kappa}
+		{\Delta^\circ |- F^\circ : \kappa^\circ}
+\]
+\end{theorem}
+\begin{theorem}[index erasure on type constructor equality]
+\[ \inference{\Delta |- F=F':\kappa}
+		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
+\]
+\label{thm:Fixierasetyconeq}
+\end{theorem}
+
+\begin{theorem}[index erasure on well-formed term level contexts]
+\label{thm:Fixierasetmctx}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ} \]
+\end{theorem}
+
+\begin{theorem}[index erasure on index-free well-typed terms]
+\label{thm:Fixierasetypingifree}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+		{\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
+\]
+\end{theorem}
+
+
+We introduce an index variable selection meta-operation that selects all
+the index variable bindings from the type level context.
+\begin{definition}[index variable selection]
+\[ \cdot^\bullet = \cdot \qquad
+	(\Delta,X^{p\kappa})^\bullet = \Delta^\bullet \qquad
+	(\Delta,i^A)^\bullet = \Delta^\bullet,i:A
+\]
+\end{definition}
+
+\begin{theorem}[index erasure on well-formed term level contexts
+		prepended by index variable selection]
+\label{thm:Fixierasetmctxivs}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
+\]
+\end{theorem}
+
+\begin{theorem}[index erasure on well-typed terms]
+\label{thm:Fixierasetypingall}
+\[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+\]
+\end{theorem}
 
