@@ -345,8 +345,6 @@ $\qquad \dbox{$
 \label{fig:eqFixi}
 \end{figure}
 
-
-
 \section{Embedding datatypes and primitive recursion} \label{sec:fixi:data}
 The embeddings of non-recursive datatypes are exactly the same as in \Fi\ (see
 \S\ref{sec:fi:data}), other than tracking polarities of the type constructor
@@ -360,22 +358,24 @@ We embed recursive datatypes in \Fixi\ by two-level types, taking fixpoints
 is given as a primitive in \Fixi, the embedding is obvious once we
 have the covariant base structure.
 
-We discuss the embedding of primitive recursion over recursive datatypes
-(\S\ref{ssec:fixi:data:pr}) and the embeddings of negative datatypes
-(\S\ref{ssec:fixi:data:neg}) in \Fixi.
+Embeddigns for both primitive recursion and negative datatypes are discovered
+by \cite{AbeMat04}. We review these embeddings in the context of \Fixi:
+the embedding of primitive recursion over recursive datatypes in
+\S\ref{ssec:fixi:data:pr} and the embeddings of negative datatypes in
+\S\ref{ssec:fixi:data:neg}.
 
 \subsection{TODO primitive recursion} \label{ssec:fixi:data:pr}
-
+\cite{AbeMat04}
 
 \subsection{TODO embedding negative datatypes??} \label{ssec:fixi:data:neg}
 TODO negative datatpes
 
 \section{Metatheory} \label{sec:fixi:theory}
 
-We can prove strong normalization of by erasing term-indices in the types of
-\Fixi\ into \Fixw\ types. Since we know that \Fixw\ is strongly normalizing
-\cite{AbeMat04}, the existence of erasure that maps a valid typing judgment on
-a term in \Fixi\ to a valid typing judgment on the same term in \Fixw\ implies
+We can prove strong normalization of \Fixi\ by erasing term-indices in \Fixi\ 
+types into \Fixw\ types. Since \Fixw\ is strongly normalizing \cite{AbeMat04},
+the existence of a index erasure that maps a valid typing judgment on a term
+in \Fixi\ to a valid typing judgment on the same term in \Fixw\ implies
 strong normalization of \Fixi.
 
 The definition of the index erasure operation and the proofs for
