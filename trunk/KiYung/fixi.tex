@@ -35,8 +35,7 @@ term indexing.  Eliding all the grey boxes from Figures~\ref{fig:Fixi},
 \ref{fig:Fixi2} and~\ref{fig:eqFixi},
 one obtains a version of System~\Fixw\ with typing contexts separated into
 two parts.\footnote{The original description of \Fixw \cite{AbeMat04} has
-one combined typing context.} 
-
+one combined typing context.}
 
 The extensions, which are not originally part of System \Fw\ but
 present in System~\Fixw, are highlighted by \dbox{dashed boxes}.
@@ -70,7 +69,7 @@ the Curry-style System \Fw\ with typing contexts separated into two parts.
 \!\!\!\!\!\!\!\!&\text{Type Constructors}
 	& A,B,F,G		&~ ::= ~ X
 				\mid A -> B
-				\mid \dbox{$\mu F$} \\ &&& ~\quad
+				\mid \dbox{$\fix F$} \\ &&& ~\quad
 				\mid \lambda \dbox{$X^{p\kappa}$}.F
 				\mid F\,G
 				\mid \forall X^\kappa . B \\ &&& ~\quad
@@ -145,8 +144,8 @@ $ \qquad
    \inference[($->$)]{\dbox{$-\Delta$} |- A : * & \Delta |- B : *}{
                       \Delta |- A -> B : * }
  \qquad \qquad \dbox{
-   \inference[($\mu$)]{\Delta |- F : +\kappa -> \kappa}{
-		      \Delta |- \mu F : \kappa } }
+   \inference[($\fix$)]{\Delta |- F : +\kappa -> \kappa}{
+		      \Delta |- \fix F : \kappa } }
 \]
 \[
   \inference[($\lambda$)]{ |- \kappa:\square
@@ -249,7 +248,7 @@ $ \quad
 ~
 \paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
 $\qquad \dbox{$
-   \inference{\Delta|- F:+\kappa-> \kappa}{\Delta|- \mu F=F(\mu F):\kappa}$ } $
+   \inference{\Delta|- F:+\kappa-> \kappa}{\Delta|- \fix F=F(\fix F):\kappa}$ } $
 \[
    \inference{ \Delta,\dbox{$X^{p\kappa}$} |- F:\kappa'
    	     & \dbox{$p\Delta$} |- G:\kappa}{
@@ -264,7 +263,7 @@ $\qquad \dbox{$
    \inference{-\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
  ~~~~
    \inference{\Delta |- F=F' : +\kappa -> \kappa}{
-	      \Delta |- \mu F = \mu F' : \kappa}
+	      \Delta |- \fix F = \fix F' : \kappa}
 \]
 \[
    \inference{ |- \kappa:\square
@@ -345,30 +344,132 @@ $\qquad \dbox{$
 \label{fig:eqFixi}
 \end{figure}
 
-\section{Embedding datatypes and primitive recursion} \label{sec:fixi:data}
+TODO describe dashed box extensions TODO
+
+
+\section{Embedding recursive datatypes and primitive recursion}
+\label{sec:fixi:data}
+Embedding for primitive recursion over datatypes of arbitrary polarities into
+\Fixi\ was discovered by \citet{AbeMat04}. We review these embeddings
+in the context of \Fixi.
+
 The embeddings of non-recursive datatypes are exactly the same as in \Fi\ (see
 \S\ref{sec:fi:data}), other than tracking polarities of the type constructor
-variables. That is, we use impredicative encodings of types for the
-church encoded terms of non-recursive datatypes such as booleans,
-natural numbers, pairs, and sums.
+variables. That is, we use the usual impredicative encodings for non-recursive
+datatypes such as void, unit, pairs, sums, and existential types
+(examples from \citet{AbeMat04}):
+\begin{singlespace} \vskip-3ex
+\begin{align*}
+\bot &~\triangleq~ \forall X^{*}.X
+	&:\;& *\\
+\textsf{Unit} &~\triangleq~ \forall X.\lambda X^{\mathsf{0}*}. X
+	&:\;& * \\
+\times &~\triangleq~
+	\l X_1^{+*}.\l X_2^{+*}.\forall X^{*}.(X_1 -> X_2 -> X) -> X
+	&:\;& +* -> +* -> * \\
++ &~\triangleq~
+	\lambda X_1^{+*}.\l X_2^{+*}.\forall X^{*}.(X_1 -> X) -> (X_2 -> X) -> X
+	&:\;& +* -> +* -> * \\
+\exists_\kappa &~\triangleq~
+	\l X_{\!F}^{\mathsf{0}\kappa -> *}.\forall X^{*}.
+		(\forall X_1^\kappa.X_{\!F}\,X_1 -> X) -> X
+	&:\;& +(\textsf{0}\kappa -> *) -> *
+\end{align*}
+\end{singlespace}
 
-We embed recursive datatypes in \Fixi\ by two-level types, taking fixpoints
-($\mu F : \kappa$) of covariant (or positive) base structures
-($F : +\kappa -> \kappa$). Since the fixpoint type operator $\mu$
-is given as a primitive in \Fixi, the embedding is obvious once we
-have the covariant base structure.
+Embedding recursive datatypes and their Mendler-style primitive recursion
+amounts to embedding $\mu_\kappa$, $\In_\kappa$, and $\MPr_\kappa$ described
+in \S\ref{sec:mpr}. Figure~\ref{fig:embedMPr} illustrates the embeddings
+discovered by \citet{AbeMat04}, reformatted using our conventions (see
+Figure~\ref{fig:mu} in \S\ref{ssec:embedTwoLevel}) and taking term-indices
+into consideration. To confirm the correctness of these embeddings,
+we should check that (1) the embeddings are well-kinded and well-typed
+and that (2) the primitive recursion behaves well
+(\ie, $\MPr_\kappa\;s\;(\In_\kappa) -->+ s\;\textit{id}\;(\MPr_\kappa\;s)\;t$).
+From the term encodings of $\MPr_\kappa$ and $\In_\kappa$, it is obvious that
+the reduction of primitive recursion behaves well. Thus, we only need to check
+that $\mu_\kappa$ is well-kinded and $\MPr_\kappa$ and $\In_\kappa$ are
+well-typed.
+\begin{landscape}
+\begin{figure}
+\begin{singlespace}
+\begin{multline*} \text{notation:}\quad
+   \boldsymbol{\l}\mathbb{I}^\kappa.F =
+	\lambda I_1^{K_1}.\cdots.\lambda I_n^{K_n}.F \qquad
+   \boldsymbol{\forall}\mathbb{I}^\kappa.B =
+	\forall I_1^{K_1}.\cdots.\forall I_n^{K_n}.B \qquad
+   F\mathbb{I} = F I_1 \cdots I_n \qquad
+   F \stackrel{\kappa}{\pmb{\pmb{->}}} G =
+	\boldsymbol{\forall}\mathbb{I}^\kappa.F\mathbb{I} -> G\mathbb{I} \\
+\begin{array}{lll}
+\text{where}
+ 	& \kappa = K_1 -> \cdots -> K_n -> * & \text{and} ~~~
+ 	\text{$I_i$ is an index variable ($i_i$) when $K_i$ is a type,}
+ 		\\
+ 	& \mathbb{I}\,=I_1,\;\dots\;\dots\;,\;I_n& \qquad~\qquad
+		\text{a type constructor variable ($X_i$) otherwise
+			(\ie, $K_n=p_i\kappa_i$).}
+\end{array}
+\end{multline*} ~ \vspace*{-5pt}
+\hrule  \vspace*{-2pt}
+\begin{align*}
+\mu_\kappa &\;:~ \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> \kappa \\
+\mu_\kappa &\triangleq
+\l X_{\!F}^{\mathsf{0}(\mathsf{0}\kappa -> \kappa)}.\fix(\Phi_\kappa\,X_{\!F})\\
+\Phi_\kappa &\;:~ \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> +\kappa -> \kappa \\
+\Phi_\kappa &\triangleq \l X_{\!F}^{\mathsf{0}(\mathsf{0}\kappa -> \kappa)}.
+\l X'^{+\kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
+\forall X_{\!G}^\kappa.
+(\forall X^\kappa. (X \karrow{\kappa} X')
+		-> (X \karrow{\kappa} G)
+		-> X_{\!F}\,X \karrow{\kappa} X_{\!G} ) -> X_{\!G}\,\mathbb{I}\\
+~\\
+\MPr_\kappa &\;:~
+	\forall X_{\!F}^{\kappa-> \kappa}.\forall X^\kappa.
+	(\forall {X_r}^{\!\!\kappa}.
+	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
+	 (X_r \karrow{\kappa} X) ->
+	 (X_{\!F}\,X_r \karrow{\kappa} X) ) ->
+	 (\mu_\kappa X_{\!F} \karrow{\kappa} X) \\
+\MPr_\kappa &\triangleq \l s.\l r.r\;s \\
+~\\
+\In_\kappa &\;:~ \forall X_{\!F}^{\kappa-> \kappa}.
+		X_{\!F}(\mu_\kappa X_{\!F}) \karrow{\kappa} \mu_\kappa X_{\!F}
+\In_\kappa &\triangleq \l t.\l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t \\
+\textit{id} &\triangleq \l x.x
+\end{align*}
+\end{singlespace}
+\caption{Embedding of the recursive operators ($\mu_\kappa$),
+	their data constructors ($\In_\kappa$),
+	and the Mendler-style primitive recursors ($\MPr_\kappa$) in \Fixi.}
+\label{fig:embedMPr}
+\end{figure}
+\end{landscape}
 
-Embeddigns for both primitive recursion and negative datatypes are discovered
-by \cite{AbeMat04}. We review these embeddings in the context of \Fixi:
-the embedding of primitive recursion over recursive datatypes in
-\S\ref{ssec:fixi:data:pr} and the embeddings of negative datatypes in
-\S\ref{ssec:fixi:data:neg}.
+Note that the polarities appearing in the embedding of $\mu_\kappa$ are all
+$\mathsf{0}$. The embedding from a non-polarize kind $\kappa$ into
+a polarize kinds $\ulcorner\kappa\urcorner$ can be defined as:
+\[ \ulcorner * \urcorner = * \qquad
+\ulcorner \kappa_1 -> \kappa_2 \urcorner =
+\mathsf{0}\ulcorner\kappa_1\urcorner -> \ulcorner\kappa_2\urcorner \qquad
+\ulcorner A -> \kappa \urcorner = A -> \ulcorner \kappa \urcorner.
+\]
+It is easy to see that the embedding of the non-polarized recursive
+type operator $\mu_\kappa : \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> \kappa$
+is well-kinded, provided that
+$\Phi_\kappa : \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> +\kappa -> \kappa$
+is well kinded. Note that $\Phi_\kappa$ turns an avariant type constructor
+($\mathsf{0}\kappa -> \kappa$) into a positive type constructor
+($+\kappa -> \kappa$). From the definition of $\Phi_\kappa$, we only need 
+to check that $X \karrow{\kappa} X'$, $(X \karrow{\kappa} G)$,
+$X_F\,X \karrow{\kappa} -> X$ and $X_G\;\mathbb{I}$ are of kind $*$,
+which is not difficult to see.
 
-\subsection{TODO primitive recursion} \label{ssec:fixi:data:pr}
-\cite{AbeMat04}
+TODO $\mu_\kappa$ TODO
 
-\subsection{TODO embedding negative datatypes??} \label{ssec:fixi:data:neg}
-TODO negative datatpes
+We leave checking well-typedness of $\In_\kappa$ as an exercise for the reader
+since it is straightforward once we know the type of $\MPr_\kappa$.
+
 
 \section{Metatheory} \label{sec:fixi:theory}
 

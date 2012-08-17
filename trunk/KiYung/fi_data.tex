@@ -246,19 +246,20 @@ iteration, primitive recursion, and courses of values recursion.
 \begin{singlespace}
 \begin{multline*} \text{notation:}\quad
    \boldsymbol{\l}\mathbb{I}^\kappa.F =
-	\lambda I_1^{\kappa_1}.\cdots.\lambda I_n^{\kappa_n}.F \qquad
+	\lambda I_1^{K_1}.\cdots.\lambda I_n^{K_n}.F \qquad
    \boldsymbol{\forall}\mathbb{I}^\kappa.B =
-	\forall I_1^{\kappa_1}.\cdots.\forall I_n^{\kappa_n}.B \qquad
+	\forall I_1^{K_1}.\cdots.\forall I_n^{K_n}.B \qquad
    F\mathbb{I} = F I_1 \cdots I_n \qquad
    F \stackrel{\kappa}{\pmb{\pmb{->}}} G =
 	\boldsymbol{\forall}\mathbb{I}^\kappa.F\mathbb{I} -> G\mathbb{I} \\
 \begin{array}{lll}
 \text{where}
- 	& \kappa = \kappa_1 -> \cdots -> \kappa_n -> * & \text{and} ~~~
- 	\text{$I_i$ is an index variable ($i_i$) when $\kappa_i$ is a type,}
+ 	& \kappa = K_1 -> \cdots -> K_n -> * & \text{and} ~~~
+ 	\text{$I_i$ is an index variable ($i_i$) when $K_i$ is a type,}
  		\\
  	& \mathbb{I}\,=I_1,\;\dots\;\dots\;,\;I_n& \qquad~\qquad
- 	\text{a type constructor variable ($X_i$) otherwise.}
+ 	\text{a type constructor variable ($X_i$) otherwise
+		(\ie, $K_i=\kappa_i$).}
 \end{array}
 \end{multline*} ~ \vspace*{-5pt}
 \hrule  \vspace*{-2pt}
@@ -268,8 +269,8 @@ iteration, primitive recursion, and courses of values recursion.
   = \l F^{\kappa -> \kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
   \forall X^\kappa.
   (\forall {X_r}^{\!\!\kappa}.
-  	(X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ->
-	(F X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X)) -> X\mathbb{I} \\
+  	(X_r \karrow{\kappa} X) ->
+	(F X_r \karrow{\kappa} X)) -> X\mathbb{I} \\
 &\mu_{*} &\!\!\!\!\!~:~~& (* -> *) -> * 
  \qquad\qquad\qquad\qquad\quad~
  = \l F^{* -> *}.\phantom{\boldsymbol{\l}\mathbb{I}^\kappa.}
@@ -287,20 +288,20 @@ iteration, primitive recursion, and courses of values recursion.
 \end{align*}
 \begin{align*}
 \mathtt{In}_{\kappa} \,~\,&~~:~ \forall F^{\kappa-> \kappa}.
-	F(\mu_\kappa F) \stackrel{\kappa\;}{\pmb{\pmb{->}}} \mu_\kappa F
+	F(\mu_\kappa F) \karrow{\kappa} \mu_\kappa F
 &&=~ \l x_r. \l x_\varphi.x_\varphi\,(\mathtt{mit}_\kappa~x_\varphi)\,x_r
 	\qquad~\qquad~\qquad~\qquad~\quad \\
 \mathtt{mit}_\kappa &~~:~ \forall F^{\kappa-> \kappa}.\forall X^\kappa.
 	(\forall {X_r}^{\!\!\kappa}.
-	 (X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ->
-	 (F X_r \stackrel{\kappa\;}{\pmb{\pmb{->}}} X) ) ->
-	(\mu_\kappa F \stackrel{\kappa\;}{\pmb{\pmb{->}}} X)
+	 (X_r \karrow{\kappa} X) ->
+	 (F X_r \karrow{\kappa} X) ) ->
+	(\mu_\kappa F \karrow{\kappa} X)
 &&=~ \l x_\varphi.\l x_r.x_r\,x_\varphi
 \end{align*} ~ \vspace*{-10pt}
 \end{singlespace}
 \caption{Embedding of the recursive operators ($\mu_\kappa$),
 	their data constructors ($\mathtt{In}_\kappa$),
-	and the Mendler-style iterators ($\mathtt{mit}_\kappa$).}
+	and the Mendler-style iterators ($\mathtt{mit}_\kappa$) in \Fi.}
 \label{fig:mu}
 \end{figure}
 \end{landscape}
