@@ -60,7 +60,7 @@ the Curry-style System \Fw\ with typing contexts separated into two parts.
  	& X
 \\
 \!\!\!\!\!\!\!\!&\text{\dbox{Polarities}}
-	& \dbox{$p$} &~ ::= + \mid - \mid \mathsf{0}
+	& \dbox{$p$} &~ ::= + \mid - \mid 0
 \\
 \!\!\!\!\!\!\!\!&\text{Kinds}
  	& \kappa		&~ ::= ~ *
@@ -118,7 +118,7 @@ the Curry-style System \Fw\ with typing contexts separated into two parts.
 \]
 $ \fbox{$\Delta |- \Gamma$}
  ~~~~
-   \inference{|- \Delta}{\dbox{$\mathsf{0}\Delta$} |- \cdot}
+   \inference{|- \Delta}{\dbox{$0\Delta$} |- \cdot}
  ~~~~
    \inference{\Delta |- \Gamma & \Delta |- A:*}{
               \Delta |- \Gamma,x:A}
@@ -140,7 +140,7 @@ $
 $ \qquad
    \inference[($Var$)]{\dbox{$X^{p\kappa}$}\in\Delta & |- \Delta}{
  		       \Delta |- X : \kappa}
-		\, \dbox{$(p\in \{+,\mathsf{0}\})$} $
+		\, \dbox{$(p\in \{+,0\})$} $
 \[
    \inference[($->$)]{\dbox{$-\Delta$} |- A : * & \Delta |- B : *}{
                       \Delta |- A -> B : * }
@@ -164,12 +164,12 @@ $ \qquad
  ~~~~
  \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
-   		     & \dbox{$\mathsf{0}\Delta$\!};\cdot |- s : A }{
+   		     & \dbox{$0\Delta$\!};\cdot |- s : A }{
 		      \Delta |- F\,\{s\} : \kappa} }
 \]
 \[
    \inference[($\forall$)]{ |- \kappa:\square
-   			  & \Delta,\dbox{$X^{\mathsf{0}\kappa}$} |- B : *}{
+   			  & \Delta,\dbox{$X^{0\kappa}$} |- B : *}{
                            \Delta |- \forall X^\kappa . B : *}
  ~~~~ \qquad ~\,
 	\newFi{
@@ -256,7 +256,7 @@ $\qquad \dbox{$
 	      \Delta |- (\lambda X^{p\kappa}.F)\,G = F[G/X]:\kappa'}
  ~~~~ \newFi{
    \inference{ \Delta,i^A |- F:\kappa
-             & \dbox{$\mathsf{0}\Delta$\!};\cdot |- s:A}{
+             & \dbox{$0\Delta$\!};\cdot |- s:A}{
               \Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
 \]
 \[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
@@ -283,12 +283,12 @@ $\qquad \dbox{$
  ~~~~
  \newFi{
    \inference{ \Delta |- F=F': A -> \kappa
-             & \dbox{$\mathsf{0}\Delta$\!};\cdot |- s=s':A}{
+             & \dbox{$0\Delta$\!};\cdot |- s=s':A}{
 	      \Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
 \]
 \[
    \inference{ |- \kappa:\square
-   	     & \Delta,\dbox{$X^{\mathsf{0}\kappa}$} |- B=B':*}{
+   	     & \Delta,\dbox{$X^{0\kappa}$} |- B=B':*}{
               \Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
  ~~~~ \quad
  \newFi{
@@ -315,7 +315,7 @@ $\qquad \dbox{$
               \Delta;\Gamma |- r\;s=r'\;s':B}
 \]
 \[ \inference{ |- \kappa:\square
-	     & \Delta, \dbox{$X^{\mathsf{0}\kappa}$\!};\Gamma |- t=t' : B}{
+	     & \Delta, \dbox{$X^{0\kappa}$\!};\Gamma |- t=t' : B}{
               \Delta;\Gamma |- t=t' : \forall X^\kappa.B}
 	     (X\notin\FV(\Gamma))
  ~~~~ ~~~~
@@ -348,19 +348,108 @@ $\qquad \dbox{$
 The grey-boxed extensions for term-indexing are essentially the same as
 those grey-boxed extensions in System \Fi\ (\S\ref{sec:fi:fi}). So, we will
 only focus our description on the dashed-box extensions regarding polarities
-and equi-recursive types.
+(\S\ref{ssec:fixi:def:polarity}) and equi-recursive types
+(\S\ref{ssec:fixi:def:equirec}).
 
-\paragraph{Polarities}
+\subsection{Polarities} \label{ssec:fixi:def:polarity}
 Polarities track in which position the type constructor variables are used.
 A polarity ($p$) is either covariant ($+$), contravariant ($-$), or
-avariant ($\mathsf{0}$).\footnote{``invariant'' is more often used
+avariant ($0$). The avariant polarity ($0$) means that it can be used in
+any position.\footnote{``invariant'' is more often used
 	(also in \cite{AbeMat04}, but we think it is a quite misleading jargon,
-	since $\mathsf{0}$ means that it \emph{does not care} about polarities
+	since $0$ means that it \emph{does not care} about polarities
 	rather than maintaining some unchanging properties about polarities.}
-TODO
+We prefix a kind  by a polarity (\ie, $p\kappa$) to specify the variable's
+kind and polarity. For example,
+\[
+\begin{array}{rlrl}
+X_1^{+*},X_2^{-*} |- \!\!\! & X_1 -> X_2 : *
+	& ~~~\text{justifies} & \l X_1^{+*}.\l X_2^{-*}.X_1 -> X_2 \\
+X_1^{0*},X_2^{0*} |- \!\!\! & X_1 -> X_2 : *
+	& ~~~\text{also justifies} & \l X_1^{0*}.\l X_2^{-*}.X_1 -> X_2 \\
+X^{0*} |- \!\!\! & X\phantom{_.} -> X\phantom{_2} : *
+	& ~~~\text{justifies} & \l X^{0*}.X -> X
+\end{array}
+\]
+Note that we can replace $+$ and $-$ in the first example with $0$
+as in the second example, since the variables of avariant polarity can be used
+in any position, that is both in covariant position and contravariant position.
+In the third example, the polarity of $X$ can be neither $+$ nor $-$, but must
+must be $0$, since $X$ appears in both covariant and contravariant positions.
 
-\paragraph{Equi-recursive type operator $\fix$}
-TODO
+\paragraph{Syntax using polarized kinds:}
+The kind syntax are polarized. That is, the domain kind ($\kappa$) of
+an arrow kind ($p\kappa -> \kappa'$) must be prefixed by its polarity ($p$).
+A type abstractions ($\l X^{p\kappa}.F$) in the type syntax are annotated by
+polarity-prefixed kinds ($p\kappa$). Type constructor variables ($X$) bound
+in the type-level contexts ($\Delta$) are annotated by polarity-prefixed kinds
+($p\kappa$), likewise. Note the syntax for extending the type-level context
+$\Delta,X^{p\kappa}$ in Figure~\ref{fig:Fixi}. The kinding rule ($\lambda$)
+make use of all these three uses of polarized kinds -- in type abstractions,
+in kind arrows, and in type-level contexts.
+
+\paragraph{Polarity operation on type-level context ($p\Delta$):}
+The kinding judgment $\Delta |- F : \kappa$ assumes that $F$ is in covariant
+positions. This is why the ($Var$) rule requires the polarity of $X$ to be
+either $+$ or $0$, but not $-$. To judge well-kindedness of type constructors
+in contravariant positions (\eg, $A$ in $A -> B$), we should invert
+the polarities of all the type constructor variables in the context.
+This idea of inverting polarities in the context is captured by $-\Delta$
+operation in the kinding rule ($->$). More generally, the well-kindedness $F$
+expected to be used as $p$-polarity can be determined by the judgement
+$p\Delta |- F : \kappa$, where $p\Delta$ operation is defined as:
+\[
+\begin{array}{lcl}
+p~\cdot &=& \cdot \\
+p(\Delta,X^{p'\kappa}) &=& p\Delta,X^{(pp')\kappa} \\
+p(\Delta,i^A) &=& p\Delta,i^A
+\end{array}
+\quad\text{where $pp'$ is the usual sign product}~~
+\begin{smallmatrix}
++ p' & = & p' \\
+- +  & = & -  \\
+- -  & = & +  \\
+- 0  & = & 0  \\
+0 p' & = & 0
+\end{smallmatrix}
+\]
+Note the use of $p\Delta$ operation in the kinding rule ($@$) in order to
+determine the well-kindedness of $G$ expected to be used as $p$-polarity
+by the type constructor $F : p\kappa -> \kappa'$ being applied to $G$.
+
+\paragraph{Where polarities are irrelevant (or, avariant):}
+Polarities are irrelevant (or, avariant) for universally quantified variables,
+indices, and in the typing rules. This is because the sole purpose of tracking 
+polarities in \Fixi\ is to make sure that we only take the equi-recursive
+fixpoint over covariant type constructors, as in the kinding rule ($\mu$).
+Note that we can only take fixpoints over type constructors of covariant
+arrow kinds whose domain and codomain coincides ($+\kappa -> \kappa$).
+We can never take fixpoints over forall types (or, universal quantification)
+and type constructor expecting an index because they are not of arrow kinds.
+Forall types are always of kind $*$ and type constructors expecting an index
+are of arrow kinds ($A -> \kappa$). So, we give universally quantified variables
+avariant polarity ($X^{0\kappa}$ in the ($\forall$) rule) and nullify polarities
+when type checking indices ($0\Delta$ in the ($@i$) rule). For similar reasons,
+we assume that type-level contexts are nullified in the typing rules;
+note $0\Delta$ in the well-formedness condition for $\Delta |- \Gamma$
+in Figure~\ref{fig:Fixi2}. That is, we always type check under nullified
+type-level context for all terms in general, as well as indices appearing
+in type applications. As a result, the typing rules of \Fixi\ have no dashed-box
+extensions except for $X^{0\kappa}$ in the generalization rule ($\forall$$I$)
+where we introduce a universally quantified type constructor variable.
+
+\subsection{The Equi-recursive type operator $\fix$}
+\label{ssec:fixi:def:equirec}
+is provided as a primitive
+in \Fixi.
+The kinding rule ($\mu$) TODO only positive polarity
+
+\KYA{if there is a citation cite someone who discovered equi-recursive types
+over arbitrary polarity breaks normalization
+and other discussions if we had written the intro we may refer back to that
+but we havn't so well let's see how it goes TODO}
+
+TODO motivate the following section
 
 \section{Embedding datatypes and primitive recursion}
 \label{sec:fixi:data}
@@ -377,7 +466,7 @@ datatypes such as void, unit, pairs, sums, and existential types
 \begin{align*}
 \bot &~\triangleq~ \forall X^{*}.X
 	&:\;& *\\
-\textsf{Unit} &~\triangleq~ \forall X.\lambda X^{\mathsf{0}*}. X
+\textsf{Unit} &~\triangleq~ \forall X.\lambda X^{0*}. X
 	&:\;& * \\
 \times &~\triangleq~
 	\l X_1^{+*}.\l X_2^{+*}.\forall X^{*}.(X_1 -> X_2 -> X) -> X
@@ -386,9 +475,9 @@ datatypes such as void, unit, pairs, sums, and existential types
 	\lambda X_1^{+*}.\l X_2^{+*}.\forall X^{*}.(X_1 -> X) -> (X_2 -> X) -> X
 	&:\;& +* -> +* -> * \\
 \exists_\kappa &~\triangleq~
-	\l X_{\!F}^{\mathsf{0}\kappa -> *}.\forall X^{*}.
+	\l X_{\!F}^{0\kappa -> *}.\forall X^{*}.
 		(\forall X_1^\kappa.X_{\!F}\,X_1 -> X) -> X
-	&:\;& +(\textsf{0}\kappa -> *) -> *
+	&:\;& +(0\kappa -> *) -> *
 \end{align*}
 \end{singlespace}
 
@@ -405,7 +494,7 @@ From the term encodings of $\MPr_\kappa$ and $\In_\kappa$, it is obvious that
 the reduction of primitive recursion behaves well. Thus, we only need to check
 that $\mu_\kappa$ is well-kinded and $\MPr_\kappa$ and $\In_\kappa$ are
 well-typed.
-
+\afterpage{ %%%%%%%%%%%%%%%%%%%%%%% begin afterpage
 \begin{landscape}
 \begin{figure}
 \begin{singlespace}
@@ -429,11 +518,11 @@ well-typed.
 \end{multline*} ~ \vspace*{-5pt}
 \hrule  \vspace*{-2pt}
 \begin{align*}
-\mu_\kappa &\;:~ \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> \kappa \\
+\mu_\kappa &\;:~ 0(0\kappa -> \kappa) -> \kappa \\
 \mu_\kappa &\triangleq
-\l X_{\!F}^{\mathsf{0}(\mathsf{0}\kappa -> \kappa)}.\fix(\Phi_\kappa\,X_{\!F})\\
-\Phi_\kappa &\;:~ \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> +\kappa -> \kappa \\
-\Phi_\kappa &\triangleq \l X_{\!F}^{\mathsf{0}(\mathsf{0}\kappa -> \kappa)}.
+\l X_{\!F}^{0(0\kappa -> \kappa)}.\fix(\Phi_\kappa\,X_{\!F})\\
+\Phi_\kappa &\;:~ 0(0\kappa -> \kappa) -> +\kappa -> \kappa \\
+\Phi_\kappa &\triangleq \l X_{\!F}^{0(0\kappa -> \kappa)}.
 \l X_c^{+\kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
 \forall X^\kappa.
 (\forall X_r^\kappa. (X_r \karrow{\kappa} X_c)
@@ -441,7 +530,7 @@ well-typed.
 		-> (X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}\\
 ~\\
 \MPr_\kappa &\;:~
-	\forall X_{\!F}^{\mathsf{0}\kappa-> \kappa}.\forall X^\kappa.
+	\forall X_{\!F}^{0\kappa-> \kappa}.\forall X^\kappa.
 	(\forall {X_r}^{\!\!\kappa}.
 	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
 	 (X_r \karrow{\kappa} X) ->
@@ -465,7 +554,7 @@ well-typed.
 \begin{singlespace}
 \[
 \text{The type of $r$ can be expanded by the defintion of $\fix$
-	and the equi-recursive equality rule on $\fix$ as folllows:}\]
+	and the equi-recursive equality rule on $\fix$ as follows:}\]
 	\vskip-6ex
 \begin{multline*}\,
 \mu_\kappa X_{\!F}\,\mathbb{I} = \fix(\Phi_\kappa X_{\!F})\mathbb{I}
@@ -482,7 +571,7 @@ well-typed.
 \[
 \inference{
 	\inference{
-	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, X^{\mathsf{0}\kappa},
+	X_{\!F}^{0\kappa-> \kappa}, X^{0\kappa},
 	\mathbb{I}^\kappa
 	; \;
 	s: (\forall {X_r}^{\!\!\kappa}.
@@ -492,7 +581,7 @@ well-typed.
 	r: \mu_\kappa X_{\!F}\,\mathbb{I}
 	|- r\;s : X\,\mathbb{I}
 	}{
-	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, X^{\mathsf{0}\kappa} ; \;
+	X_{\!F}^{0\kappa-> \kappa}, X^{0\kappa} ; \;
 	s: (\forall {X_r}^{\!\!\kappa}.
 	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
 	 (X_r \karrow{\kappa} X) ->
@@ -501,7 +590,7 @@ well-typed.
 	}
 }{
 	\cdot;\cdot |- \l s.\l r.r\;s :
-	\forall X_{\!F}^{\mathsf{0}\kappa-> \kappa}.\forall X^\kappa.
+	\forall X_{\!F}^{0\kappa-> \kappa}.\forall X^\kappa.
 	(\forall {X_r}^{\!\!\kappa}.
 	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
 	 (X_r \karrow{\kappa} X) ->
@@ -517,8 +606,8 @@ well-typed.
 \begin{figure}
 \begin{singlespace}~\qquad
 Let ~ $\Delta =
-	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, \mathbb{I}^\kappa,
-	X^{\mathsf{0}\kappa}$ ~ and ~
+	X_{\!F}^{0\kappa-> \kappa}, \mathbb{I}^\kappa,
+	X^{0\kappa}$ ~ and ~
 $\Gamma =
 	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I},
 	s: (\forall X_r^\kappa.
@@ -550,8 +639,8 @@ $\Gamma =
 			X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
 				\end{array}}
 			}{
-	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, \mathbb{I}^\kappa,
-	X^{\mathsf{0}\kappa}
+	X_{\!F}^{0\kappa-> \kappa}, \mathbb{I}^\kappa,
+	X^{0\kappa}
 	; \;
 	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I},
 	s: (\forall X_r^\kappa.
@@ -561,7 +650,7 @@ $\Gamma =
 	|- s\;\textit{id}\;(\MPr_\kappa\;s)\;t : X\,\mathbb{I}
 			}
 		}{
-	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, \mathbb{I}^\kappa ; \;
+	X_{\!F}^{0\kappa-> \kappa}, \mathbb{I}^\kappa ; \;
 	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
 	|- \l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t :
 	\forall X^\kappa.
@@ -571,7 +660,7 @@ $\Gamma =
 		(X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}
 		}
 	}{
-	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, \mathbb{I}^\kappa ; \;
+	X_{\!F}^{0\kappa-> \kappa}, \mathbb{I}^\kappa ; \;
 	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
 	|- \l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t :
 		\mu_\kappa X_{\!F}\,\mathbb{I} \quad
@@ -590,25 +679,28 @@ $\Gamma =
 \end{figure}
 
 \end{landscape}
+} %%%%%%%%%%%%%%%%%%%%%%% end of afterpage
 
 Note that the polarities appearing in the embedding of $\mu_\kappa$ are all
-$\mathsf{0}$. The embedding from a non-polarize kind $\kappa$ into
+$0$. The embedding from a non-polarize kind $\kappa$ into
 a polarize kinds $\ulcorner\kappa\urcorner$ can be defined as:
 \[ \ulcorner * \urcorner = * \qquad
 \ulcorner \kappa_1 -> \kappa_2 \urcorner =
-\mathsf{0}\ulcorner\kappa_1\urcorner -> \ulcorner\kappa_2\urcorner \qquad
+0\ulcorner\kappa_1\urcorner -> \ulcorner\kappa_2\urcorner \qquad
 \ulcorner A -> \kappa \urcorner = A -> \ulcorner \kappa \urcorner.
 \]
 
 It is easy to see that the embedding of the non-polarized recursive
-type operator $\mu_\kappa : \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> \kappa$
+type operator $\mu_\kappa : 0(0\kappa -> \kappa) -> \kappa$
 is well-kinded, provided that
-$\Phi_\kappa : \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> +\kappa -> \kappa$
+$\Phi_\kappa : 0(0\kappa -> \kappa) -> +\kappa -> \kappa$
 is well kinded. Note that $\Phi_\kappa$ turns an avariant type constructor
-($\mathsf{0}\kappa -> \kappa$) into a positive type constructor
+($0\kappa -> \kappa$) into a positive type constructor
 ($+\kappa -> \kappa$). From the definition of $\Phi_\kappa$, we only need 
-to check that $X \karrow{\kappa} X'$, $(X \karrow{\kappa} G)$,
-$X_F\,X \karrow{\kappa} X$ and $X_G\;\mathbb{I}$ are of kind $*$,
+to check that $(X_r \karrow{\kappa} X_c)$, $(X_r \karrow{\kappa} X)$,
+$X_F\,X_r \karrow{\kappa} X$ and $X\;\mathbb{I}$ are of kind $*$
+under the context $ X_{\!F}^{0(0\kappa -> \kappa)},
+		X_c^{+\kappa}, \mathbb{I}^\kappa, X^{0\kappa}$,
 which is not difficult to see.
 
 Well-typedness of $\MPr_\kappa$ and $\In_\kappa$ are justified in
