@@ -17,10 +17,11 @@ the description for \Fixi\ will be focused on the differences between \Fi.
 Readers may refer back to Chapter \ref{ch:fi} for the details that are
 in common with System~\Fi.
 
-We describe syntax and typing rules in \S\ref{sec:fixi:def},
-illustrate embeddings of primitive recursion for term-indexed datatypes
-in \S\ref{sec:fixi:data}, and discuss the metatheory \S\ref{sec:fixi:theory}.
-
+We describe syntax and typing rules (\S\ref{sec:fixi:def}),
+illustrate embeddings of primitive recursion (\S\ref{sec:fixi:data})
+and course-of-values primitive recursion (\S\ref{sec:fixi:cv})
+for term-indexed datatypes,
+and discuss the metatheory of \Fixi\ (\S\ref{sec:fixi:theory}).
 
 \section{System \Fixi} \label{sec:fixi:def}
 The syntax and rules of System~\Fi\ are described in
@@ -344,10 +345,24 @@ $\qquad \dbox{$
 \label{fig:eqFixi}
 \end{figure}
 
-TODO describe dashed box extensions TODO
+The grey-boxed extensions for term-indexing are essentially the same as
+those grey-boxed extensions in System \Fi\ (\S\ref{sec:fi:fi}). So, we will
+only focus our description on the dashed-box extensions regarding polarities
+and equi-recursive types.
 
+\paragraph{Polarities}
+Polarities track in which position the type constructor variables are used.
+A polarity ($p$) is either covariant ($+$), contravariant ($-$), or
+avariant ($\mathsf{0}$).\footnote{``invariant'' is more often used
+	(also in \cite{AbeMat04}, but we think it is a quite misleading jargon,
+	since $\mathsf{0}$ means that it \emph{does not care} about polarities
+	rather than maintaining some unchanging properties about polarities.}
+TODO
 
-\section{Embedding recursive datatypes and primitive recursion}
+\paragraph{Equi-recursive type operator $\fix$}
+TODO
+
+\section{Embedding datatypes and primitive recursion}
 \label{sec:fixi:data}
 Embedding for primitive recursion over datatypes of arbitrary polarities into
 \Fixi\ was discovered by \citet{AbeMat04}. We review these embeddings
@@ -390,6 +405,7 @@ From the term encodings of $\MPr_\kappa$ and $\In_\kappa$, it is obvious that
 the reduction of primitive recursion behaves well. Thus, we only need to check
 that $\mu_\kappa$ is well-kinded and $\MPr_\kappa$ and $\In_\kappa$ are
 well-typed.
+
 \begin{landscape}
 \begin{figure}
 \begin{singlespace}
@@ -418,14 +434,14 @@ well-typed.
 \l X_{\!F}^{\mathsf{0}(\mathsf{0}\kappa -> \kappa)}.\fix(\Phi_\kappa\,X_{\!F})\\
 \Phi_\kappa &\;:~ \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> +\kappa -> \kappa \\
 \Phi_\kappa &\triangleq \l X_{\!F}^{\mathsf{0}(\mathsf{0}\kappa -> \kappa)}.
-\l X'^{+\kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
-\forall X_{\!G}^\kappa.
-(\forall X^\kappa. (X \karrow{\kappa} X')
-		-> (X \karrow{\kappa} G)
-		-> X_{\!F}\,X \karrow{\kappa} X_{\!G} ) -> X_{\!G}\,\mathbb{I}\\
+\l X_c^{+\kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
+\forall X^\kappa.
+(\forall X_r^\kappa. (X_r \karrow{\kappa} X_c)
+		-> (X_r \karrow{\kappa} X)
+		-> (X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}\\
 ~\\
 \MPr_\kappa &\;:~
-	\forall X_{\!F}^{\kappa-> \kappa}.\forall X^\kappa.
+	\forall X_{\!F}^{\mathsf{0}\kappa-> \kappa}.\forall X^\kappa.
 	(\forall {X_r}^{\!\!\kappa}.
 	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
 	 (X_r \karrow{\kappa} X) ->
@@ -434,7 +450,7 @@ well-typed.
 \MPr_\kappa &\triangleq \l s.\l r.r\;s \\
 ~\\
 \In_\kappa &\;:~ \forall X_{\!F}^{\kappa-> \kappa}.
-		X_{\!F}(\mu_\kappa X_{\!F}) \karrow{\kappa} \mu_\kappa X_{\!F}
+		X_{\!F}(\mu_\kappa X_{\!F}) \karrow{\kappa} \mu_\kappa X_{\!F}\\
 \In_\kappa &\triangleq \l t.\l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t \\
 \textit{id} &\triangleq \l x.x
 \end{align*}
@@ -444,6 +460,135 @@ well-typed.
 	and the Mendler-style primitive recursors ($\MPr_\kappa$) in \Fixi.}
 \label{fig:embedMPr}
 \end{figure}
+
+\begin{figure}
+\begin{singlespace}
+\[
+\text{The type of $r$ can be expanded by the defintion of $\fix$
+	and the equi-recursive equality rule on $\fix$ as folllows:}\]
+	\vskip-6ex
+\begin{multline*}\,
+\mu_\kappa X_{\!F}\,\mathbb{I} = \fix(\Phi_\kappa X_{\!F})\mathbb{I}
+= \Phi_\kappa X_{\!F}(\fix(\Phi_\kappa X_{\!F}))\mathbb{I}
+= \Phi_\kappa X_{\!F}(\mu_\kappa X_{\!F}) \mathbb{I} \\
+= \forall X^\kappa.\underbrace{
+	(\forall X_r^\kappa.
+		(X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
+		(X_r \karrow{\kappa} X) ->
+		(X_{\!F}\,X_r \karrow{\kappa} X) )}_\text{exactly matches with
+						the type of {\,\small$s$}}
+	-> X\,\mathbb{I} \,
+\end{multline*}
+\[
+\inference{
+	\inference{
+	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, X^{\mathsf{0}\kappa},
+	\mathbb{I}^\kappa
+	; \;
+	s: (\forall {X_r}^{\!\!\kappa}.
+	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
+	 (X_r \karrow{\kappa} X) ->
+	 (X_{\!F}\,X_r \karrow{\kappa} X) ),
+	r: \mu_\kappa X_{\!F}\,\mathbb{I}
+	|- r\;s : X\,\mathbb{I}
+	}{
+	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, X^{\mathsf{0}\kappa} ; \;
+	s: (\forall {X_r}^{\!\!\kappa}.
+	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
+	 (X_r \karrow{\kappa} X) ->
+	 (X_{\!F}\,X_r \karrow{\kappa} X) )
+	|- \l s.r\;s : \mu_\kappa X_{\!F} \karrow{\kappa} X
+	}
+}{
+	\cdot;\cdot |- \l s.\l r.r\;s :
+	\forall X_{\!F}^{\mathsf{0}\kappa-> \kappa}.\forall X^\kappa.
+	(\forall {X_r}^{\!\!\kappa}.
+	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
+	 (X_r \karrow{\kappa} X) ->
+	 (X_{\!F}\,X_r \karrow{\kappa} X) ) ->
+	 (\mu_\kappa X_{\!F} \karrow{\kappa} X) 
+}
+\]
+\end{singlespace} \vskip-1.5ex
+\caption{Well-typedness of the $\MPr$ embedding in \Fixi}
+\label{fig:embedMPrJustify}
+\end{figure}
+
+\begin{figure}
+\begin{singlespace}~\qquad
+Let ~ $\Delta =
+	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, \mathbb{I}^\kappa,
+	X^{\mathsf{0}\kappa}$ ~ and ~
+$\Gamma =
+	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I},
+	s: (\forall X_r^\kappa.
+		(X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
+		(X_r \karrow{\kappa} X) ->
+		(X_{\!F}\,X_r \karrow{\kappa} X) )$.
+\[
+\inference{
+	\inference{
+		\inference{
+			\inference{
+				{\begin{array}{llll}
+			\Delta;\Gamma |- s \;:
+			(\mu_\kappa X_{\!F} \karrow{\kappa} \mu_\kappa X_{\!F})
+			~ -> &
+			(\mu_\kappa X_{\!F} \karrow{\kappa} X)
+			~ -> &
+			(X_{\!F}(\mu_\kappa X_{\!F}) \karrow{\kappa} X)
+			& \qquad \text{\small(by instantiating $X_r$
+						with $\mu_\kappa X_{\!F})$}
+				\\
+			\Delta;\Gamma |- \textit{id} :
+			(\mu_\kappa X_{\!F} \karrow{\kappa} \mu_\kappa X_{\!F})
+				\\
+			\Delta;\Gamma |- (\MPr_\kappa\; s) ~~ : &
+			(\mu_\kappa X_{\!F} \karrow{\kappa} X)
+				\\
+			\Delta;\Gamma |- t \qquad\qquad\, : & &
+			X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
+				\end{array}}
+			}{
+	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, \mathbb{I}^\kappa,
+	X^{\mathsf{0}\kappa}
+	; \;
+	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I},
+	s: (\forall X_r^\kappa.
+		(X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
+		(X_r \karrow{\kappa} X) ->
+		(X_{\!F}\,X_r \karrow{\kappa} X) )
+	|- s\;\textit{id}\;(\MPr_\kappa\;s)\;t : X\,\mathbb{I}
+			}
+		}{
+	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, \mathbb{I}^\kappa ; \;
+	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
+	|- \l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t :
+	\forall X^\kappa.
+	(\forall X_r^\kappa.
+		(X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
+		(X_r \karrow{\kappa} X) ->
+		(X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}
+		}
+	}{
+	X_{\!F}^{\mathsf{0}\kappa-> \kappa}, \mathbb{I}^\kappa ; \;
+	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
+	|- \l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t :
+		\mu_\kappa X_{\!F}\,\mathbb{I} \quad
+		\qquad \text{\small(We can expand the type into above
+				as in Figure \ref{fig:embedMPrJustify})}
+	}
+}{
+	\cdot;\cdot |- \l t.\l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t :
+	\forall X_{\!F}^{\kappa-> \kappa}.
+		X_{\!F}(\mu_\kappa X_{\!F}) \karrow{\kappa} \mu_\kappa X_{\!F}
+}
+\]
+\end{singlespace} \vskip-2.5ex
+\caption{Well-typedness of the $\In$ embedding in \Fixi}
+\label{fig:embedInJustify}
+\end{figure}
+
 \end{landscape}
 
 Note that the polarities appearing in the embedding of $\mu_\kappa$ are all
@@ -454,6 +599,7 @@ a polarize kinds $\ulcorner\kappa\urcorner$ can be defined as:
 \mathsf{0}\ulcorner\kappa_1\urcorner -> \ulcorner\kappa_2\urcorner \qquad
 \ulcorner A -> \kappa \urcorner = A -> \ulcorner \kappa \urcorner.
 \]
+
 It is easy to see that the embedding of the non-polarized recursive
 type operator $\mu_\kappa : \mathsf{0}(\mathsf{0}\kappa -> \kappa) -> \kappa$
 is well-kinded, provided that
@@ -462,14 +608,15 @@ is well kinded. Note that $\Phi_\kappa$ turns an avariant type constructor
 ($\mathsf{0}\kappa -> \kappa$) into a positive type constructor
 ($+\kappa -> \kappa$). From the definition of $\Phi_\kappa$, we only need 
 to check that $X \karrow{\kappa} X'$, $(X \karrow{\kappa} G)$,
-$X_F\,X \karrow{\kappa} -> X$ and $X_G\;\mathbb{I}$ are of kind $*$,
+$X_F\,X \karrow{\kappa} X$ and $X_G\;\mathbb{I}$ are of kind $*$,
 which is not difficult to see.
 
-TODO $\mu_\kappa$ TODO
+Well-typedness of $\MPr_\kappa$ and $\In_\kappa$ are justified in
+Figures~\ref{fig:embedMPrJustify} and \ref{fig:embedInJustify}
 
-We leave checking well-typedness of $\In_\kappa$ as an exercise for the reader
-since it is straightforward once we know the type of $\MPr_\kappa$.
-
+\section{Embedding course-of-values primitive recursion}
+\label{sec:fixi:cv}
+TODO
 
 \section{Metatheory} \label{sec:fixi:theory}
 
