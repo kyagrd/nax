@@ -453,12 +453,12 @@ without restricting the polarity of base structure breaks strong normalization.
 
 Note that there are no explicit term syntax that guides the conversion between
 $\fix F$ and $F(\fix F)$, unlike in iso-recursive systems where $\In$ and
-$\mathsf{out}$ term syntax explicitly guide rolling (from $\mu F$ to $F(\mu F)$)
-and unrolling (from $F(\mu F)$ to $\mu F$). Since $\fix F=F(\fix F)$ is given
-definitionally (\ie, by the equality rule definition), the type constructor
-conversion rule ($Conv$) can silently roll (from $F(\fix F)$ to $\fix F$) and
-unroll (from $F(\fix F)$ to $\fix F$) the recursive types, just as it can
-silently $\beta$-convert type constructors.
+$\mathsf{unIn}$ are term syntax that explicitly guide rolling
+(from $\mu F$ to $F(\mu F)$) and unrolling (from $F(\mu F)$ to $\mu F$).
+Since $\fix F=F(\fix F)$ is given definitionally (\ie, by the equality rule
+definition), the type constructor conversion rule ($Conv$) can silently
+roll (from $F(\fix F)$ to $\fix F$) and unroll (from $F(\fix F)$ to $\fix F$)
+the recursive types, just as it can silently $\beta$-convert type constructors.
 
 In the following section, we will review how iso-recursive type operator
 $\mu_\kappa$ and its $\In_\kappa$ constructor, which is well-behaved
@@ -545,7 +545,7 @@ well-typed.
 		-> (X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}\\
 ~\\
 \MPr_\kappa &\;:~
-	\forall X_{\!F}^{0\kappa-> \kappa}.\forall X^\kappa.
+	\forall X_{\!F}^{0(0\kappa-> \kappa)}.\forall X^\kappa.
 	(\forall {X_r}^{\!\!\kappa}.
 	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
 	 (X_r \karrow{\kappa} X) ->
@@ -553,7 +553,7 @@ well-typed.
 	 (\mu_\kappa X_{\!F} \karrow{\kappa} X) \\
 \MPr_\kappa &\triangleq \l s.\l r.r\;s \\
 ~\\
-\In_\kappa &\;:~ \forall X_{\!F}^{\kappa-> \kappa}.
+\In_\kappa &\;:~ \forall X_{\!F}^{0(0\kappa-> \kappa)}.
 		X_{\!F}(\mu_\kappa X_{\!F}) \karrow{\kappa} \mu_\kappa X_{\!F}\\
 \In_\kappa &\triangleq \l t.\l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t \\
 \textit{id} &\triangleq \l x.x
@@ -586,7 +586,7 @@ well-typed.
 \[
 \inference{
 	\inference{
-	X_{\!F}^{0\kappa-> \kappa}, X^{0\kappa},
+	X_{\!F}^{0(0\kappa-> \kappa)}, X^{0\kappa},
 	\mathbb{I}^\kappa
 	; \;
 	s: (\forall {X_r}^{\!\!\kappa}.
@@ -596,7 +596,7 @@ well-typed.
 	r: \mu_\kappa X_{\!F}\,\mathbb{I}
 	|- r\;s : X\,\mathbb{I}
 	}{
-	X_{\!F}^{0\kappa-> \kappa}, X^{0\kappa} ; \;
+	X_{\!F}^{0(0\kappa-> \kappa)}, X^{0\kappa} ; \;
 	s: (\forall {X_r}^{\!\!\kappa}.
 	 (X_r \karrow{\kappa} \mu_\kappa X_{\!F}) ->
 	 (X_r \karrow{\kappa} X) ->
@@ -621,7 +621,7 @@ well-typed.
 \begin{figure}
 \begin{singlespace}~\qquad
 Let ~ $\Delta =
-	X_{\!F}^{0\kappa-> \kappa}, \mathbb{I}^\kappa,
+	X_{\!F}^{0(0\kappa-> \kappa)}, \mathbb{I}^\kappa,
 	X^{0\kappa}$ ~ and ~
 $\Gamma =
 	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I},
@@ -654,7 +654,7 @@ $\Gamma =
 			X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
 				\end{array}}
 			}{
-	X_{\!F}^{0\kappa-> \kappa}, \mathbb{I}^\kappa,
+	X_{\!F}^{0(0\kappa-> \kappa)}, \mathbb{I}^\kappa,
 	X^{0\kappa}
 	; \;
 	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I},
@@ -665,7 +665,7 @@ $\Gamma =
 	|- s\;\textit{id}\;(\MPr_\kappa\;s)\;t : X\,\mathbb{I}
 			}
 		}{
-	X_{\!F}^{0\kappa-> \kappa}, \mathbb{I}^\kappa ; \;
+	X_{\!F}^{0(0\kappa-> \kappa)}, \mathbb{I}^\kappa ; \;
 	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
 	|- \l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t :
 	\forall X^\kappa.
@@ -675,7 +675,7 @@ $\Gamma =
 		(X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}
 		}
 	}{
-	X_{\!F}^{0\kappa-> \kappa}, \mathbb{I}^\kappa ; \;
+	X_{\!F}^{0(0\kappa-> \kappa)}, \mathbb{I}^\kappa ; \;
 	t: X_{\!F}(\mu_\kappa X_{\!F})\mathbb{I}
 	|- \l s.s\;\textit{id}\;(\MPr_\kappa\;s)\;t :
 		\mu_\kappa X_{\!F}\,\mathbb{I} \quad
@@ -724,10 +724,46 @@ Figures~\ref{fig:embedMPrJustify} and \ref{fig:embedInJustify}
 \section{Embedding course-of-values primitive recursion}
 \label{sec:fixi:cv}
 %% For positive base structures, embeddings of the iso-recursive operator
-%% $\mu^+_\kappa$ and its and course-of-values primitive recursor $\McvPr_\kappa$
-%% are trivial, where $\mu^+\kappa \triangleq \fix$,
-%% $In_\kappa \triangleq \textit{id}$, $\mathsf{out}_\kappa$,
-%% are identity function
+%% $\mu^{+}_\kappa$ and its and course-of-values primitive recursor $\McvPr_\kappa$
+%% can be much less involved than $\mu_\kappa$ and $\MPr$. TODO
+
+\begin{landscape}
+\begin{singlespace}
+\begin{align*}
+\mu^{+}_\kappa &\;:~ 0(+\kappa -> \kappa) -> \kappa \\
+\mu^{+}_\kappa &\triangleq
+\l X_{\!F}^{0(+\kappa -> \kappa)}.\fix(\Phi^{+}_\kappa\,X_{\!F})\\
+\Phi^{+}_\kappa &\;:~ 0(+\kappa -> \kappa) -> +\kappa -> \kappa \\
+\Phi^{+}_\kappa &\triangleq \l X_{\!F}^{0(+\kappa -> \kappa)}.
+\l X_c^{+\kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
+\forall X^\kappa.
+(\forall X_r^\kappa. (X_r \karrow{\kappa} X_{\!F}\,X_c)
+		-> (X_r \karrow{\kappa} X_c)
+		-> (X_r \karrow{\kappa} X)
+		-> (X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}\\
+~\\
+\McvPr_\kappa &\;:~
+	\forall X_{\!F}^{+\kappa-> \kappa}.\forall X^\kappa.
+	(\forall {X_r}^{\!\!\kappa}.
+	 (X_r \karrow{\kappa} X_{\!F}\,X_r) ->
+	 (X_r \karrow{\kappa} \mu^{+}_\kappa X_{\!F}) ->
+	 (X_r \karrow{\kappa} X) ->
+	 (X_{\!F}\,X_r \karrow{\kappa} X) ) ->
+	 (\mu^{+}_\kappa X_{\!F} \karrow{\kappa} X) \\
+\McvPr_\kappa &\triangleq \l s.\l r.r\;s\\
+~\\
+\In_\kappa &\;:~ \forall X_{\!F}^{+\kappa-> \kappa}.
+	X_{\!F}(\mu^{+}_\kappa X_{\!F}) \karrow{\kappa} \mu^{+}_\kappa X_{\!F}\\
+\In_\kappa &\triangleq
+\l t. \l s. s\;\unIn_\kappa\;\textit{id}\;(\McvPr\;s)\;t \\
+~\\
+\unIn_\kappa &\;:~ \forall X_{\!F}^{+\kappa-> \kappa}.
+	\mu^{+}_\kappa X_{\!F} \karrow{\kappa} X_{\!F}(\mu^{+}_\kappa X_{\!F})\\
+\unIn_\kappa &\triangleq \\
+\end{align*}
+\end{singlespace}
+\end{landscape}
+
 
 \section{Metatheory} \label{sec:fixi:theory}
 
