@@ -249,7 +249,7 @@ $ \quad
 ~
 \paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
 $\qquad \dbox{$
-   \inference{\Delta|- F:+\kappa-> \kappa}{\Delta|- \fix F=F(\fix F):\kappa}$ } $
+  \inference{\Delta|- F:+\kappa-> \kappa}{\Delta|- \fix F=F(\fix F):\kappa}$ } $
 \[
    \inference{ \Delta,\dbox{$X^{p\kappa}$} |- F:\kappa'
    	     & \dbox{$p\Delta$} |- G:\kappa}{
@@ -440,16 +440,31 @@ where we introduce a universally quantified type constructor variable.
 
 \subsection{The Equi-recursive type operator $\fix$}
 \label{ssec:fixi:def:equirec}
-is provided as a primitive
-in \Fixi.
-The kinding rule ($\mu$) TODO only positive polarity
+\Fixi\ provides the equi-recursive type operator $\fix$.
+The kinding rule ($\fix$) in Figure~\ref{fig:Fixi2} is similar to
+the ($\mu$) rule of System \Fi\ (see Figure~\ref{fig:Fi2} in \S\ref{sec:fi:fi}),
+but requires base structure $F$ to be covariant (or, positive), \ie,
+$F : +\kappa -> \kappa$. This restriction on the polarity of $F$ is due to
+the equi-recursive nature of $\fix$, \ie, $\fix F=F(\fix F)$, which is
+described by the first type constructor equality rule inside a dashed box
+in Figure~\ref{fig:eqFixi}. Recall that adding equi-recursive types
+without restricting the polarity of base structure breaks strong normalization.
+\KYA{TODO should reference intro chapter section which is not written yet}
 
-\KYA{if there is a citation cite someone who discovered equi-recursive types
-over arbitrary polarity breaks normalization
-and other discussions if we had written the intro we may refer back to that
-but we havn't so well let's see how it goes TODO}
+Note that there are no explicit term syntax that guides the conversion between
+$\fix F$ and $F(\fix F)$, unlike in iso-recursive systems where $\In$ and
+$\mathsf{out}$ term syntax explicitly guide rolling (from $\mu F$ to $F(\mu F)$)
+and unrolling (from $F(\mu F)$ to $\mu F$). Since $\fix F=F(\fix F)$ is given
+definitionally (\ie, by the equality rule definition), the type constructor
+conversion rule ($Conv$) can silently roll (from $F(\fix F)$ to $\fix F$) and
+unroll (from $F(\fix F)$ to $\fix F$) the recursive types, just as it can
+silently $\beta$-convert type constructors.
 
-TODO motivate the following section
+In the following section, we will review how iso-recursive type operator
+$\mu_\kappa$ and its $\In_\kappa$ constructor, which is well-behaved
+(\ie, strongly normalize) for base structures of arbitrary polarity,
+can be embedded into \Fixi\ being defined in terms of the equi-recursive
+type operator $\fix$, which is only well-behaved for covariant base structures.
 
 \section{Embedding datatypes and primitive recursion}
 \label{sec:fixi:data}
@@ -708,7 +723,11 @@ Figures~\ref{fig:embedMPrJustify} and \ref{fig:embedInJustify}
 
 \section{Embedding course-of-values primitive recursion}
 \label{sec:fixi:cv}
-TODO
+%% For positive base structures, embeddings of the iso-recursive operator
+%% $\mu^+_\kappa$ and its and course-of-values primitive recursor $\McvPr_\kappa$
+%% are trivial, where $\mu^+\kappa \triangleq \fix$,
+%% $In_\kappa \triangleq \textit{id}$, $\mathsf{out}_\kappa$,
+%% are identity function
 
 \section{Metatheory} \label{sec:fixi:theory}
 
@@ -851,4 +870,8 @@ the index variable bindings from the type level context.
 		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
 \]
 \end{theorem}
+
+
+\KYA{TODO has there been any studies on the logical consistencies of
+	implicit calculus + equi-recursive type?}
 
