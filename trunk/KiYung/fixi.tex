@@ -475,8 +475,8 @@ in the context of \Fixi.
 The embeddings of non-recursive datatypes are exactly the same as in \Fi\ (see
 \S\ref{sec:fi:data}), other than tracking polarities of the type constructor
 variables. That is, we use the usual impredicative encodings for non-recursive
-datatypes such as void, unit, pairs, sums, and existential types
-(examples from \citet{AbeMat04}):
+datatypes such as void, unit, pairs, sums, and existential types:\footnote{
+Examples from \citet{AbeMat04}, except for the last example of $\exists_A$}
 \begin{singlespace} \vskip-3ex
 \begin{align*}
 \bot &~\triangleq~ \forall X^{*}.X
@@ -492,7 +492,11 @@ datatypes such as void, unit, pairs, sums, and existential types
 \exists_\kappa &~\triangleq~
 	\l X_{\!F}^{0\kappa -> *}.\forall X^{*}.
 		(\forall X_1^\kappa.X_{\!F}\,X_1 -> X) -> X
-	&:\;& +(0\kappa -> *) -> *
+	&:\;& +(0\kappa -> *) -> * \\
+\exists_A &~\triangleq~
+	\l X_{\!F}^{A -> *}.\forall X^{*}.
+	(\forall i^A.X_{\!F}\{i\} -> X) -> X
+	&:\;& +(A -> *) -> *
 \end{align*}
 \end{singlespace}
 
@@ -559,7 +563,7 @@ well-typed.
 \textit{id} &\triangleq \l x.x
 \end{align*}
 \end{singlespace}
-\caption{Embedding of the recursive operators ($\mu_\kappa$),
+\caption{Embedding of the recursive type operators ($\mu_\kappa$),
 	their data constructors ($\In_\kappa$),
 	and the Mendler-style primitive recursors ($\MPr_\kappa$) in \Fixi.}
 \label{fig:embedMPr}
@@ -727,7 +731,9 @@ Figures~\ref{fig:embedMPrJustify} and \ref{fig:embedInJustify}
 %% $\mu^{+}_\kappa$ and its and course-of-values primitive recursor $\McvPr_\kappa$
 %% can be much less involved than $\mu_\kappa$ and $\MPr$. TODO
 
+\afterpage{ %%%%%%%%%%%%%%%%%%%%%%% begin afterpage
 \begin{landscape}
+\begin{figure}
 \begin{singlespace}
 \begin{align*}
 \mu^{+}_\kappa &\;:~ 0(+\kappa -> \kappa) -> \kappa \\
@@ -737,7 +743,7 @@ Figures~\ref{fig:embedMPrJustify} and \ref{fig:embedInJustify}
 \Phi^{+}_\kappa &\triangleq \l X_{\!F}^{0(+\kappa -> \kappa)}.
 \l X_c^{+\kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
 \forall X^\kappa.
-(\forall X_r^\kappa. (X_r \karrow{\kappa} X_{\!F}\,X_c)
+(\forall X_r^\kappa. (X_r \karrow{\kappa} X_{\!F}\,X_r)
 		-> (X_r \karrow{\kappa} X_c)
 		-> (X_r \karrow{\kappa} X)
 		-> (X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}\\
@@ -755,14 +761,73 @@ Figures~\ref{fig:embedMPrJustify} and \ref{fig:embedInJustify}
 \In_\kappa &\;:~ \forall X_{\!F}^{+\kappa-> \kappa}.
 	X_{\!F}(\mu^{+}_\kappa X_{\!F}) \karrow{\kappa} \mu^{+}_\kappa X_{\!F}\\
 \In_\kappa &\triangleq
-\l t. \l s. s\;\unIn_\kappa\;\textit{id}\;(\McvPr\;s)\;t \\
-~\\
-\unIn_\kappa &\;:~ \forall X_{\!F}^{+\kappa-> \kappa}.
-	\mu^{+}_\kappa X_{\!F} \karrow{\kappa} X_{\!F}(\mu^{+}_\kappa X_{\!F})\\
-\unIn_\kappa &\triangleq \\
-\end{align*}
-\end{singlespace}
+	\l t. \l s. s~\unIn_{X_{\!F}}\;\textit{id}\;\,(\McvPr\;s)\;\,t \\
+\end{align*}\vskip -2.5ex
+We rely on the fact that there exists
+$\unIn_{F} : \mu^{+}_\kappa F \karrow{\kappa} F(\mu^{+}_\kappa F)$
+for any positive base structure $F:+\kappa -> \kappa$, 
+such that
+\[
+	(\In_\kappa \circ \unIn_F)\;r -->+ r \qquad \qquad
+	(\unIn_F \circ \In_\kappa)\;t -->+ t
+\]
+where the reduction steps above are constant with regards to $r$ and $t$
+(vary between each base structure $F$ though).
+\end{singlespace} \vskip-3.5ex
+\[\text{See Figure \ref{fig:unInExamples} for
+embeddings of unroll operations ($\unIn_F$) for
+some well-known positive base structures ($F$).}
+\]
+\caption{Embedding of the recursive type operators ($\mu^{+}_\kappa$),
+	their data constructors ($\In_\kappa$),
+	and the Mendler-style course-of-values primitive recursors
+	($\McvPr_\kappa$) for positive datatypes in \Fixi.}
+\label{fig:embedMcvPr}
+\end{figure}
+
+\begin{figure}
+\[
+\begin{array}{llcll}
+N &\!\!\!= \l X^{+*}.X + \textsf{Unit} &&
+\unIn_N &\!\!\!= \McvPr_{*} (\l\_.\l\textit{cast}.\l\_.
+	\l x. x\;(\texttt{inL}\circ\textit{cast})\;\texttt{inR})
+	\\
+L &\!\!\!= \l X_a^{0*}.\l X^{+*}.(X_a\times X) + \textsf{Unit} &&
+\unIn_{(L\,A)} &\!\!\!= \McvPr_{*} (\l\_.\l\textit{cast}.\l\_.
+	\l x. x\;(\texttt{inL}\circ(\textit{id}\times cast))\;\texttt{inR})
+	\\
+P &\!\!\!= \l X_a^{0*}.\l X^{+* -> *}.
+	X_a \times X(X_a \times X_a) + \textsf{Unit} &&
+\unIn_{(P\,A)} &\!\!\!= \McvPr_{* -> *} (\l\_.\l\textit{cast}.\l\_.
+	\l x. x\;(\texttt{inL}\circ(\textit{id}\times cast))\;\texttt{inR})
+\end{array}
+\]
+TODO think we need notion of libniz equality and Kan extension for
+	embedding base structure for term-indexed datatypes like vectors
+\[
+V = \l X_a^{0*}.\l i^{\texttt{Nat}}.\l X^{\texttt{Nat} -> *}.
+(\exists j^\texttt{Nat}(i=\texttt{S}\,j). X_a \times X\{j\}) +
+(\exists j^\texttt{Nat}(i=\texttt{Z}   ). X\{\texttt{Z}\})
+\]
+\[
+\unIn_{(V\,A)} = TODO
+\]
+
+$\exists j^A(t).B$ is a shorthand notation for $\exists_A(\ j^A.t)B$
+(see Figure TODO for the definition of $\exists_A$.
+
+\[\text{
+See Figure \ref{fig:embedMcvPr} for the embedding of the Mendler-style
+course-of-values primitive recursor ($\McvPr_\kappa$)}
+\]
+\caption{Embeddings of unroll operations ($\unIn_F$)
+	for some well-known positive base structures ($F$).}
+\label{fig:unInExamples}
+\end{figure}
+
 \end{landscape}
+} %%%%%%%%%%%%%%%%%%%%%%% end of afterpage
+
 
 
 \section{Metatheory} \label{sec:fixi:theory}
