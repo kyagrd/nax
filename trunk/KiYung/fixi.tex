@@ -870,6 +870,50 @@ course-of-values primitive recursor ($\McvPr_\kappa$)}
 } %%%%%%%%%%%%%%%%%%%%%%% end of afterpage
 %% [basicstyle={\ttfamily\small},language=Haskell,mathescape]
 
+\begin{figure}
+\begin{singlespace}
+\lstset{language=Haskell,
+	basicstyle=\ttfamily\small,
+%	keywordstyle=\color{ta4chameleon},
+%	emph={List,Int,Bool},
+%	commentstyle=\color{gray},
+	literate =
+		{forall}{{$\forall$}}1
+%		{|}{{$\mid\;\,$}}1
+%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
+		{::}{{$:\!\,:$}}1
+		{->}{{$\to$}}1
+	}
+\begin{lstlisting}
+data P r i = PC i (r (i,i)) | PN
+type Powl i = Mu1 P i
+pcons x = In1 . PC x
+pnil = In1 PN
+
+newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
+
+mcvpr1 :: (forall r i. (forall i. r i -> f r i) ->
+                 (forall i. r i -> Mu1 f i) ->
+                 (forall i. r i -> a i) ->
+                 (f r i -> a i) )
+       -> Mu1 f i -> a i
+mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
+
+unInP :: Mu1 P i -> P(Mu1 P) i
+unInP = mcvpr1 phi where
+  phi :: forall r i'. (forall i. r i -> P r i) ->
+                (forall i. r i -> Mu1 P i) ->
+                (forall i. r i -> P(Mu1 P) i) ->
+                (P r i' -> P(Mu1 P) i')
+  phi out cast call (PC x xs) = PC x (cast xs)
+  phi out cast call PN = PN
+\end{lstlisting}
+\end{singlespace}
+\caption{Embedding of $\unIn_P$ in Figure~\ref{fig:unInExamples}
+	transcribed into Haskell}
+\label{fig:HaskellunInP}
+\end{figure}
+
 The embedding of unroll operations for some well-known positive datatypes
 are illustrated in Figure~\ref{fig:unInExamples}. The idea is to use
 $\McvPr_\kappa$ to define $\unIn_F$ for the base structure
@@ -922,7 +966,7 @@ Fortunately, there does exists more proper Mendler-style embeddings
 of the course-of-values combinators over arbitrary positive datatypes
 using both iteration and coiteration schemes \cite{TODO}. Since coiteration
 is embeddable in \Fi\ and co(-primitive-)recursion is embeddable in \Fixi,
-these result directly applies without extending our calculi. However,
+the result directly applies without extending our calculi. However,
 to our knowledge, course-of-values combinators over higher-kinded
 type constructors (\ie, type constructors other than kind $*$) has not been
 well studied enough, even in that setting of using both iteration/recursion
@@ -937,49 +981,7 @@ including indirectly recursive datatypes and truly nested datatypes,
 as future work, since coiteration and corecursion are out of the scope of
 this dissertation.
 
-\begin{figure}
-\begin{singlespace}
-\lstset{language=Haskell,
-	basicstyle=\ttfamily\small,
-%	keywordstyle=\color{ta4chameleon},
-%	emph={List,Int,Bool},
-%	commentstyle=\color{gray},
-	literate =
-		{forall}{{$\forall$}}1
-%		{|}{{$\mid\;\,$}}1
-%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
-		{::}{{$:\!\,:$}}1
-		{->}{{$\to$}}1
-	}
-\begin{lstlisting}
-data P r i = PC i (r (i,i)) | PN
-type Powl i = Mu1 P i
-pcons x = In1 . PC x
-pnil = In1 PN
 
-newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
-
-mcvpr1 :: (forall r i. (forall i. r i -> f r i) ->
-                 (forall i. r i -> Mu1 f i) ->
-                 (forall i. r i -> a i) ->
-                 (f r i -> a i) )
-       -> Mu1 f i -> a i
-mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
-
-unInP :: Mu1 P i -> P(Mu1 P) i
-unInP = mcvpr1 phi where
-  phi :: forall r i'. (forall i. r i -> P r i) ->
-                (forall i. r i -> Mu1 P i) ->
-                (forall i. r i -> P(Mu1 P) i) ->
-                (P r i' -> P(Mu1 P) i')
-  phi out cast call (PC x xs) = PC x (cast xs)
-  phi out cast call PN = PN
-\end{lstlisting}
-\end{singlespace}
-\caption{Embedding of $\unIn_P$ in Figure~\ref{fig:unInExamples}
-	transcribed into Haskell}
-\label{fig:HaskellunInP}
-\end{figure}
 
 \section{Metatheory} \label{sec:fixi:theory}
 
