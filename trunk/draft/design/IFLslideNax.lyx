@@ -3779,256 +3779,147 @@ Summary
 \end_layout
 
 \begin_layout Itemize
-The
+We 
 \color none
- 
-\color red
-first main message
-\color none
- of your talk in one or two lines.
+know how to extend higher-order polymorphic lambda calculi with erasable
+ term-indices, which maintain desirable properties
 \end_layout
 
 \begin_layout Itemize
-The
-\color none
- 
-\color red
-second main message
-\color none
- of your talk in one or two lines.
+Mendler-style recursion schemes over indexed datatypes are embeddable these
+ calculi -- only need to believe in those calclui
 \end_layout
 
 \begin_layout Itemize
-Perhaps a
+
 \color none
- 
-\color red
-third message
-\color none
-, but not more than that.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-An outlook is always optional.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-vskip0pt plus.5fill
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Outlook
+Nax is a programming language built on top of the theories above -- programming
+ with GADTs with 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-What we have not done yet.
+real term indices -- no code duplication at type and term level
 \end_layout
 
 \begin_layout Itemize
-Even more stuff.
+
+\color none
+formal correctness guarantee
+\end_layout
+
+\begin_layout Itemize
+
+\color none
+clearly understandable type reconstruction (or, partial type inference)
 \end_layout
 
 \end_deeper
-\begin_layout EndFrame
-
-\end_layout
-
-\begin_layout Section*
-\start_of_appendix
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-All of the following is optional and typically not needed.
-\end_layout
-
-\end_inset
-
-Appendix
-\end_layout
-
-\begin_layout Subsection*
-For Further Reading
-\end_layout
-
 \begin_layout BeginFrame
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-[allowframebreaks]
+Outlook
 \end_layout
 
+\begin_layout Itemize
+Ongoing work
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+writing down embedding of course-of-values iteration & recursion and try
+ some examples over higher-kinded datatypes
+\end_layout
+
+\begin_layout Itemize
+write down typing rules & type inference algorithm of Nax and prove their
+ correspondence
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $Fix_{\omega}$
 \end_inset
 
-For Further Reading
+ is strongly normalizing but is there a superset logically consistent calculi?
 \end_layout
 
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-beamertemplatebookbibitems
+\end_deeper
+\begin_layout Itemize
+Future work
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+try to reduce annotations further
+\begin_inset Newline newline
 \end_inset
 
 
-\begin_inset Note Note
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
-Start with overview books.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Bibliography
-\labelwidthstring References
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "Author1990"
-
-\end_inset
-
-A.
- Author.
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
 
 
 \backslash
-newblock
+quad
 \end_layout
 
 \end_inset
 
+(e.g., kind annotations on Mu and In may be inferable)
+\end_layout
 
-\emph on
-Handbook of Everything
-\emph default
-.
+\begin_layout Itemize
+let polymorphism for kinds may not be harmful
+\begin_inset Newline newline
+\end_inset
+
+
 \begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-newblock
-\end_layout
-
-\end_inset
-
- Some Press, 1990.
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-beamertemplatearticlebibitems
-\end_layout
-
-\end_inset
-
-
-\begin_inset Note Note
 status open
 
 \begin_layout Plain Layout
-Followed by interesting articles.
- Keep the list short.
- 
+
+
+\backslash
+quad
 \end_layout
 
 \end_inset
 
-
+(since HM is STLC by let-inlining)
 \end_layout
 
-\begin_layout Bibliography
-\labelwidthstring References
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "Someone2002"
-
+\begin_layout Itemize
+More large eliminations in Nax?
+\begin_inset Newline newline
 \end_inset
 
-S.
- Someone.
+
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
 
 \backslash
-newblock
+quad
 \end_layout
 
 \end_inset
 
- On this and that
-\emph on
-.
-
-\emph default
- 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-newblock
-\end_layout
-
+(e.g., 
+\family typewriter
+{ x .
+ if x then Nat else (Nat
+\begin_inset Formula $\to$
 \end_inset
 
-
-\emph on
-Journal on This and That
-\emph default
-.
- 2(1):50--100, 2000.
+Nat) }
+\family default
+ )
 \end_layout
 
+\end_deeper
 \begin_layout EndFrame
 
 \end_layout
