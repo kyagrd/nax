@@ -40,7 +40,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setbeamertemplate{block begin}{
-  \vskip.75ex
+  \vskip.7ex
   $\!\!\!$\begin{beamercolorbox}[ht=5ex,dp=0.5ex,center,leftskip=-1em,colsep*=.75ex]{block title}%
     \usebeamerfont*{block title}%
     {\phantom{fg}\Large\insertblocktitle}% phantom because of baseline problem
@@ -53,7 +53,7 @@
   \begin{beamercolorbox}[leftskip=.5em,colsep*=.75ex,sep=0.5ex,vmode]{block body}% 
     \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip.75ex}\vbox{}%
   }
-  \setbeamertemplate{block end}{ \vskip2ex
+  \setbeamertemplate{block end}{ \vskip2.25ex
   \end{beamercolorbox}
 }
 
@@ -66,31 +66,29 @@
     \begin{columns}[T]
       \begin{column}{.01\paperwidth}
       \end{column}
-      \begin{column}{.05\paperwidth}
-	      ~\VERYHuge$\!{\color{green}\bullet}$\!\!\!\!
-      \end{column}
-      \begin{column}{.65\paperwidth}
-        \raggedleft
+      \begin{column}{.95\paperwidth}
+%        \raggedleft
+	\centering
         \usebeamercolor{title in headline}{\color{fg}\textbf{\Huge{\inserttitle}}\\[2ex]}
       \end{column}
       \begin{column}{.02\paperwidth}
       \end{column}
-      \begin{column}{.25\paperwidth}
-        \vskip8ex
-        \begin{center}
-          \includegraphics[width=.95\linewidth]{psulogo_horiz_spot}
-        \end{center}
-        \vskip2ex
-      \end{column}
+%      \begin{column}{.25\paperwidth}
+%        \vskip8ex
+%        \begin{center}
+%          \includegraphics[width=.95\linewidth]{psulogo_horiz_spot}
+%        \end{center}
+%        \vskip2ex
+%      \end{column}
       \begin{column}{.02\paperwidth}
       \end{column}
     \end{columns}
     \begin{columns}
-      \begin{column}{.25\paperwidth}
-        \includegraphics[width=.7\linewidth]{acm_4c_grad_vtag_b_pos}
+      \begin{column}{.25\paperwidth}\vskip4ex
+        \includegraphics[width=.9\linewidth]{acm_4c_grad_vtag_b_pos}
       \end{column}
-      \begin{column}{.70\paperwidth}\raggedleft
-        \usebeamercolor{author in headline}{\color{fg}\bf\rm\Huge{\insertauthor}}
+      \begin{column}{.70\paperwidth}\raggedleft\vskip9ex
+        \usebeamercolor{author in headline}{\color{fg}\bf\rm\huge{\insertauthor}}
         $~\qquad$ $\qquad~$
         \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}}
       \end{column}
@@ -106,7 +104,7 @@
           {\normalsize\texttt{\{Marcelo.Firoe,Andy.Pitts\}@cl.cam.ac.uk}}}
       \end{column}
     \end{columns}
-  \end{beamercolorbox} \vskip-1.5ex
+  \end{beamercolorbox}
 
 %  \begin{beamercolorbox}[wd=\paperwidth]{lower separation line head}
 %    \rule{0pt}{3pt}
@@ -138,7 +136,7 @@
 %    \texttt{http://www-i6.informatik.rwth-aachen.de}
 %    \hfill
 %    \texttt{<surname>@cs.rwth-aachen.de}
-    \small\centering
+    \tiny\centering
     A poster submitted to the \emph{ACM Student Research Competition}
     sponsored by Microsoft Research and hosted by
     \emph{the 17th ACM SIGPLAN
