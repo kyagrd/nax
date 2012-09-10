@@ -1,0 +1,146 @@
+\section{Metatheory} \label{sec:fixi:theory}
+
+We can prove strong normalization of \Fixi\ by erasing term-indices in \Fixi\ 
+types into \Fixw\ types. Since \Fixw\ is strongly normalizing \cite{AbeMat04},
+the existence of a index erasure that maps a valid typing judgment on a term
+in \Fixi\ to a valid typing judgment on the same term in \Fixw\ implies
+strong normalization of \Fixi.
+
+The definition of the index erasure operation and the proofs for
+the related theorems are almost exactly the same as their counterparts
+in System \Fi\ (see \S\ref{sec:fi:theory}). So, we simply illustrate
+the definition and just give a very brief sketch of the proofs for the
+theorems.
+
+We define a meta-operation of index erasure that projects $\Fixi$ types
+to $\Fixw$ types.
+\begin{definition}[index erasure]\label{def:Fixierase}
+\[ \fbox{$\kappa^\circ$}
+ ~~~~ ~~
+ *^\circ =
+ *
+ ~~~~ ~~
+ (p\kappa_1 -> \kappa_2)^\circ =
+ p{\kappa_1}^\circ -> {\kappa_2}^\circ
+ ~~~~ ~~
+ (A -> \kappa)^\circ =
+ \kappa^\circ
+\]
+\[ \fbox{$F^\circ$}
+ ~~~~
+ X^\circ =
+ X
+ ~~~~ ~~~~
+ (A -> B)^\circ =
+ A^\circ -> B^\circ
+ ~~~~ ~~~~
+ (\mu F)^\circ =
+ \mu F^\circ
+\]
+\[ \qquad
+ (\lambda X^{p\kappa}.F)^\circ =
+ \lambda X^{p\kappa^\circ}.F^\circ
+ ~~~~ ~~~~
+ (\lambda i^A.F)^\circ =
+ F^\circ
+\]
+\[ \qquad
+ (F\;G)^\circ =
+ F^\circ\;G^\circ
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~
+ (F\,\{s\})^\circ =
+ F^\circ
+\]
+\[ \qquad
+ (\forall X^\kappa . B)^\circ =
+ \forall X^{\kappa^\circ} . B^\circ
+ ~~~~ ~~~~
+ (\forall i^A . B)^\circ =
+ B^\circ
+\]
+\[ \fbox{$\Delta^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~
+ (\Delta,X^{p\kappa})^\circ = \Delta^\circ,X^{p\kappa^\circ}
+ ~~~~ ~~
+ (\Delta,i^A)^\circ = \Delta^\circ
+\]
+\[ \fbox{$\Gamma^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~~~
+ (\Gamma,x:A)^\circ = \Gamma^\circ,x:A^\circ
+\]
+\end{definition}
+
+\begin{theorem}[index erasure on well-sorted kinds]
+\label{thm:Fixierasesorting}
+	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
+\end{theorem}
+
+\begin{theorem}[index erasure on well-formed type level contexts]
+\label{thm:Fixierasetyctx}
+\[ \inference{|- \Delta}{|- \Delta^\circ} \]
+\end{theorem}
+
+\begin{theorem}[index erasure on kind equality]\label{thm:Fixierasekindeq}
+$ \inference{|- \kappa=\kappa':\square}
+	{|- \kappa^\circ=\kappa'^\circ:\square}
+$
+\end{theorem}
+
+\begin{theorem}[index erasure on well-kinded type constructors]
+\label{thm:Fixierasekinding}
+\[ \inference{|- \Delta & \Delta |- F : \kappa}
+		{\Delta^\circ |- F^\circ : \kappa^\circ}
+\]
+\end{theorem}
+\begin{theorem}[index erasure on type constructor equality]
+\[ \inference{\Delta |- F=F':\kappa}
+		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
+\]
+\label{thm:Fixierasetyconeq}
+\end{theorem}
+
+\begin{theorem}[index erasure on well-formed term level contexts]
+\label{thm:Fixierasetmctx}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ} \]
+\end{theorem}
+
+\begin{theorem}[index erasure on index-free well-typed terms]
+\label{thm:Fixierasetypingifree}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+		{\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
+\]
+\end{theorem}
+
+
+We introduce an index variable selection meta-operation that selects all
+the index variable bindings from the type level context.
+\begin{definition}[index variable selection]
+\[ \cdot^\bullet = \cdot \qquad
+	(\Delta,X^{p\kappa})^\bullet = \Delta^\bullet \qquad
+	(\Delta,i^A)^\bullet = \Delta^\bullet,i:A
+\]
+\end{definition}
+
+\begin{theorem}[index erasure on well-formed term level contexts
+		prepended by index variable selection]
+\label{thm:Fixierasetmctxivs}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
+\]
+\end{theorem}
+
+\begin{theorem}[index erasure on well-typed terms]
+\label{thm:Fixierasetypingall}
+\[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+\]
+\end{theorem}
+
+
+\KYA{TODO has there been any studies on the logical consistencies of
+	implicit calculus + equi-recursive type?}
+

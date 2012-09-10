@@ -1,0 +1,251 @@
+\section{Embedding course-of-values primitive recursion}
+\label{sec:fixi:cv}
+Figure~\ref{fig:embedMcvPr} and Figure~\ref{fig:unInExamples}
+illustrates embeddings of the iso-recursive operator ($\mu^{+}_\kappa$) and
+the course-of-values primitive recursor ($\McvPr_\kappa$), and
+the roll and unroll operations ($\In_F$ and $\unIn_F$) over
+a fairly large class of positive base structures ($F$) in \Fixi.
+The embeddings of $\mu^{+}_\kappa$, $\McvPr_\kappa$, and $\In_F$
+are very similar to the embeddings of $\mu_\kappa$, $\MPr_\kappa$,
+and $\In_\kappa$ for the primitive recursion in the previous section,
+but there should be an additional embedding for the unroll operation $\unIn_F$
+for course-of-values primitive recursion.
+
+\afterpage{ %%%%%%%%%%%%%%%%%%%%%%% begin afterpage
+\begin{landscape}
+\begin{figure}
+\begin{singlespace}
+\begin{align*}
+\mu^{+}_\kappa &\;:~ 0(+\kappa -> \kappa) -> \kappa \\
+\mu^{+}_\kappa &\triangleq
+\l X_{\!F}^{0(+\kappa -> \kappa)}.\fix(\Phi^{+}_\kappa\,X_{\!F})\\
+\Phi^{+}_\kappa &\;:~ 0(+\kappa -> \kappa) -> +\kappa -> \kappa \\
+\Phi^{+}_\kappa &\triangleq \l X_{\!F}^{0(+\kappa -> \kappa)}.
+\l X_c^{+\kappa}.\boldsymbol{\l}\mathbb{I}^\kappa.
+\forall X^\kappa.
+(\forall X_r^\kappa. (X_r \karrow{\kappa} X_{\!F}\,X_r)
+		-> (X_r \karrow{\kappa} X_c)
+		-> (X_r \karrow{\kappa} X)
+		-> (X_{\!F}\,X_r \karrow{\kappa} X) ) -> X\,\mathbb{I}\\
+~\\
+\McvPr_\kappa &\;:~
+	\forall X_{\!F}^{+\kappa-> \kappa}.\forall X^\kappa.
+	(\forall {X_r}^{\!\!\kappa}.
+	 (X_r \karrow{\kappa} X_{\!F}\,X_r) ->
+	 (X_r \karrow{\kappa} \mu^{+}_\kappa X_{\!F}) ->
+	 (X_r \karrow{\kappa} X) ->
+	 (X_{\!F}\,X_r \karrow{\kappa} X) ) ->
+	 (\mu^{+}_\kappa X_{\!F} \karrow{\kappa} X) \\
+\McvPr_\kappa &\triangleq \l s.\l r.r\;s\\
+~\\
+\In_F &\;:~ F(\mu^{+}_\kappa F) \karrow{\kappa} \mu^{+}_\kappa F\\
+\In_F &\triangleq
+	\l t. \l s. s~\unIn_F\;\textit{id}\;\,(\McvPr\;s)\;\,t \\
+\end{align*}\vskip -2.5ex
+Provided that there exists
+$\unIn_{F} : \mu^{+}_\kappa F \karrow{\kappa} F(\mu^{+}_\kappa F)$
+for the base structure $F:+\kappa -> \kappa$, 
+such that
+\[
+	(\In_F \circ \unIn_F)\;r -->+ r \qquad \qquad
+	(\unIn_F \circ \In_F)\;t -->+ t
+\]
+where the reduction steps above are constant with regards to $r$ and $t$
+(vary between each base structure $F$ though).
+\end{singlespace} \vskip-3.5ex
+\[\text{See Figure \ref{fig:unInExamples} for
+embeddings of unroll operations ($\unIn_F$) for
+some well-known positive base structures ($F$).}
+\]
+\caption{Embedding of the recursive type operators ($\mu^{+}_\kappa$),
+	the Mendler-style course-of-values primitive recursors
+	($\McvPr_\kappa$), and the roll operation ($\In_F$) in \Fixi.}
+\label{fig:embedMcvPr}
+\end{figure}
+
+\begin{figure}
+\[\!\!\!\!\!\!\!
+\begin{array}{llcll}
+	& \text{\textbf{Regular datatypes}} \\
+N &\!\!\!\triangleq \l X^{+*}.X + \textsf{Unit} &\qquad&
+\unIn_N &\!\!\!\triangleq \McvPr_{*} (\l\_.\l\textit{cast}.\l\_.
+	\l x. x\;(\texttt{InL}\circ\textit{cast})\;\texttt{InR})
+	\\
+L &\!\!\!\triangleq \l X_a^{+*}.\l X^{+*}.(X_a\times X) + \textsf{Unit} &&
+\unIn_{(LA)} &\!\!\!\triangleq \McvPr_{*} (\l\_.\l\textit{cast}.\l\_.
+	\l x. x\;(\texttt{InL}\circ(\textit{id}\times cast))\;\texttt{InR})
+	\\
+R &\!\!\!\triangleq \l X_a^{+*}.\l X^{+*}.(X_a\times \texttt{List} X) -> X &&
+\unIn_{(RA)} &\!\!\!\triangleq \McvPr_{*} (\l\_.\l\textit{cast}.\l\_.
+	\l x. x\;(\textit{id}\times \textit{map}_\texttt{List}\;cast) )
+	\quad\text{ \textcolor{red}{\sc Not constant} } 
+	\\
+& \text{\textbf{Type-indexed datatypes}} \phantom{G^{G^{G^{G^{G^G}}}}}\\
+P &\!\!\!\triangleq \l X^{+* -> *}.\l X_a^{+*}.
+	X_a \times X(X_a \times X_a) + \textsf{Unit} &&
+\unIn_P &\!\!\!\triangleq \McvPr_{+* -> *} (\l\_.\l\textit{cast}.\l\_.
+	\l x. x \;(\texttt{InL}\circ(\textit{id}\times\textit{cast}))
+		\;\texttt{InR})
+	\\
+B &\!\!\!\triangleq \l X^{+* -> *}.\l X_a^{+*}.
+	X_a \times X(X\,X_a) + \textsf{Unit} &&
+\unIn_B &\!\!\!\triangleq \text{ \textcolor{red}{\sc unknown.}
+	{\small(Not likely to be constant time even if this exists.)}}
+	\\
+	& \text{\textbf{Term-indexed datatypes}} \phantom{G^{G^{G^{G^{G^G}}}}}\\
+\end{array}
+\]\vskip-4.5ex
+\[
+V \triangleq \l X_a^{*}.\l X^{\texttt{Nat} -> *}.\l i^{\texttt{Nat}}.
+(\exists j^\texttt{Nat}.((i=\texttt{succ}\,j) \times X_a \times X\{j\})) +
+(i=\texttt{zero})
+\]
+\[
+\begin{array}{lll}
+\texttt{VCons} &\!\!\!\triangleq \l x_a.\l x.
+	\texttt{InL}(\mathtt{Ex_{Nat}}(\mathtt{Eq_{\,Nat}},x_a,x))
+& : \;
+\forall X_a^{*}. \forall X^{\texttt{Nat} -> *}. \forall i^\texttt{Nat}.
+	X_a -> X\,\{i\} -> V\,X_a\,X\,\{\texttt{succ}\,i\}
+	\\
+\texttt{VNil} &\!\!\!\triangleq \texttt{InR}~\mathtt{Eq_{\,Nat}}
+& : \;
+\forall X_a^{*}. \forall X^{\texttt{Nat} -> *}. V\,X_a\,X\,\{\texttt{zero}\}
+\end{array}
+\]
+\[
+\unIn_{(V\,A)} \triangleq \McvPr_{\texttt{Nat} -> *}(\l\_.\l\textit{cast}.\l\_.
+\l x. x \;(\texttt{InL}\circ
+		(\textit{id}\times\textit{id}\times\textit{cast}))
+	\;\texttt{InR})
+\]
+The notation $\exists j^A.B$ is a shorthand for $\exists_A(\l j^A.B)$
+where $\exists_A$ is defined in Figure~\ref{fig:fixiNonRecData}.
+$\mathtt{Ex_{A}} : \forall F^{A -> *}.\exists_A F$ and
+$\mathtt{Eq_{A}} : \forall i^A.\forall j^A.(i=j)$ are
+the data constructors of the existential type and the equality type.
+\[\text{
+See Figure \ref{fig:embedMcvPr} for the embedding of the Mendler-style
+course-of-values primitive recursor ($\McvPr_\kappa$)}
+\]
+\caption{Embeddings of unroll operator ($\unIn_F$)
+	for some well-known positive base structures ($F$).}
+\label{fig:unInExamples}
+\end{figure}
+
+\end{landscape}
+} %%%%%%%%%%%%%%%%%%%%%%% end of afterpage
+%% [basicstyle={\ttfamily\small},language=Haskell,mathescape]
+
+\begin{figure}
+\begin{singlespace}
+\lstset{language=Haskell,
+	basicstyle=\ttfamily\small,
+%	keywordstyle=\color{ta4chameleon},
+%	emph={List,Int,Bool},
+%	commentstyle=\color{gray},
+	literate =
+		{forall}{{$\forall$}}1
+%		{|}{{$\mid\;\,$}}1
+%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
+		{::}{{$:\!\,:$}}1
+		{->}{{$\to$}}1
+	}
+\begin{lstlisting}
+data P r i = PC i (r (i,i)) | PN
+type Powl i = Mu1 P i
+pcons x = In1 . PC x
+pnil = In1 PN
+
+newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
+
+mcvpr1 :: (forall r i. (forall i. r i -> f r i) ->
+                 (forall i. r i -> Mu1 f i) ->
+                 (forall i. r i -> a i) ->
+                 (f r i -> a i) )
+       -> Mu1 f i -> a i
+mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
+
+unInP :: Mu1 P i -> P(Mu1 P) i
+unInP = mcvpr1 phi where
+  phi :: forall r i'. (forall i. r i -> P r i) ->
+                (forall i. r i -> Mu1 P i) ->
+                (forall i. r i -> P(Mu1 P) i) ->
+                (P r i' -> P(Mu1 P) i')
+  phi out cast call (PC x xs) = PC x (cast xs)
+  phi out cast call PN = PN
+\end{lstlisting}
+\end{singlespace}
+\caption{Embedding of $\unIn_P$ in Figure~\ref{fig:unInExamples}
+	transcribed into Haskell}
+\label{fig:HaskellunInP}
+\end{figure}
+
+The embedding of unroll operations for some well-known positive datatypes
+are illustrated in Figure~\ref{fig:unInExamples}. The idea is to use
+$\McvPr_\kappa$ to define $\unIn_F$ for the base structure
+$F:+\kappa -> \kappa$ without using the abstract recursive call operation
+in order to be constant time. To define the unroll operation, we map
+non-recursive components ($X_a$) as they are using \textit{id} and map
+abstract recursive components ($X_r$) to concrete recursive components
+($\mu^{+}_\kappa F$) using the abstract \textit{cast} operation provided
+by the $\McvPr_\kappa$ combinator. We can embed unroll operations
+for regular datatypes such as natural numbers (the base $N$) and lists
+(the base $L$), type-indexed datatypes such as powerlists (the base $P$),
+and term-indexed datatypes such as vectors (the base $V$) in this way.
+The embeddings of $\unIn_N$ and $\unIn_L$ are self explanatory.
+For intuitive understanding of the embedding of $\unIn_P$, we provide
+a transcription of the $\unIn_P$ into Haskell in Figure~\ref{fig:HaskellunInP}.
+To embed unrolling operation for indexed datatypes we would often need
+existential types (Figure~\ref{fig:fixiNonRecData}) and equality types.
+We can encode equality types in \Fixi\ as a Leibniz equality over indices, \ie,
+$(i=j) \triangleq \forall F^{A -> *}.F\{i\} -> F\{j\} \times F\{i\} -> F\{j\}$,
+as discussed in \S\ref{Leibniz}.
+
+However, not all datatypes seem to have embeddings of constant time 
+unroll operations in this way, as in Figure~\ref{fig:embedMcvPr} and
+Figure~\ref{fig:unInExamples}. For instance, the embeddings of
+unroll operations for indirectly recursive datatypes such as
+the rose tree datatype (the base $R$) are not constant due to the
+use of $\textit{map}_\textit{List}$, which is obviously not constant
+function as it is; We may be able to prove a meta-property that 
+($\textit{map}_\texttt{List}\;\textit{cast}) : \texttt{List}(X_r\,X_a)
+-> \texttt{List}(\mu^{+}_\kappa R\,X_a)$ can be safely optimized
+to constant time identity function since the value of \textit{cast}
+is given as \textit{id} by definition of $\McvPr_\kappa$, but that does
+not mean that we have a constant time embedding of $\unIn_R$ within \Fixi.
+Embeddings of unroll operations for \emph{truly nested datatypes}
+such as bushes (the base $B$) are not known, since we have to cast
+truly nested occurrences of $X_r$s in $(X_r(X_r\,X_a))$ into
+a concrete recursive type constructor $\mu^{+}_\kappa R$ in order
+to cast it into $\mu^{+}_\kappa B((\mu^{+}_\kappa B)X_a)$, which
+is not obvious how to embed. Even if there was a way to embed such
+a truly nested casting, it is not likely to be constant time either.
+
+Apart from the limitations of constant-time undefinability of $\unIn_F$
+discussed above, the embeddings illustrated in Figure~\ref{fig:unInExamples}
+are not in spirit of Mendler-style. Note that the embeddings of $\unIn_F$ are
+polytypic (different term encodings for each different $F$) rather than
+polymorphic (one uniform term encoding whose type is polymorphic over $F$).
+Recall that the key advantage of Mendler-style comes from being polymorhpic.
+
+Fortunately, there does exists more proper Mendler-style embeddings
+of the course-of-values combinators over arbitrary positive datatypes
+using both iteration and coiteration schemes \cite{TODO}. Since coiteration
+is embeddable in \Fi\ and co(-primitive-)recursion is embeddable in \Fixi,
+the result directly applies without extending our calculi. However,
+to our knowledge, course-of-values combinators over higher-kinded
+type constructors (\ie, type constructors other than kind $*$) has not been
+well studied enough, even in that setting of using both iteration/recursion
+and coiteration/corecursion. That is, course-of-values combinators for
+regular indirect recursive datatypes are very likely to be embeddable in
+a calculus like \Fi\ or \Fixi\ directly applying the known results, but
+we may need further investigation to assure ourselves for the behavior of
+course-of-values combinators over higher-kinded datatypes.
+
+We leave the search for embeddings for arbitrary positive datatypes,
+including indirectly recursive datatypes and truly nested datatypes,
+as future work, since coiteration and corecursion are out of the scope of
+this dissertation.
+
+

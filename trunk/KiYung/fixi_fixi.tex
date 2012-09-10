@@ -1,0 +1,443 @@
+\section{System \Fixi} \label{sec:fixi:def}
+The syntax and rules of System~\Fi\ are described in
+Figures \ref{fig:Fixi}, \ref{fig:Fixi2} and~\ref{fig:eqFixi}.
+The extensions new to System~\Fixi, which are not original part of
+either System~\Fw\ or System~\Fixw\ are highlighted by either
+\dbox{dashed boxes} or \newFi{\text{grey boxes}}.
+
+The extensions, which are not originally part of System~\Fixw, are highlighted
+by \newFi{\text{grey boxes}}. Those extensions in grey boxes are to support
+term indexing.  Eliding all the grey boxes from Figures~\ref{fig:Fixi},
+\ref{fig:Fixi2} and~\ref{fig:eqFixi},
+one obtains a version of System~\Fixw\ with typing contexts separated into
+two parts.\footnote{The original description of \Fixw \cite{AbeMat04} has
+one combined typing context.}
+
+The extensions, which are not originally part of System \Fw\ but
+present in System~\Fixw, are highlighted by \dbox{dashed boxes}.
+Those extensions in dashed boxes are to support equi-recursive types. 
+Eliding all the dashed boxes, as well as all the grey boxes,
+from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2} and~\ref{fig:eqFixi}, one obtains
+the Curry-style System \Fw\ with typing contexts separated into two parts.
+
+
+\begin{figure}\begin{singlespace}
+	\small
+\paragraph{Syntax:}
+\begin{align*}
+\!\!\!\!\!\!\!\!&\text{Sort}
+ 	& \square
+	\\
+\!\!\!\!\!\!\!\!&\text{Term Variables}
+ 	& x,i
+\\
+\!\!\!\!\!\!\!\!&\text{Type Constructor Variables}
+ 	& X
+\\
+\!\!\!\!\!\!\!\!&\text{\dbox{Polarities}}
+	& \dbox{$p$} &~ ::= + \mid - \mid 0
+\\
+\!\!\!\!\!\!\!\!&\text{Kinds}
+ 	& \kappa		&~ ::= ~ *
+				\mid \dbox{$p\kappa$} -> \kappa
+				\mid \newFi{A -> \kappa}
+\\
+\!\!\!\!\!\!\!\!&\text{Type Constructors}
+	& A,B,F,G		&~ ::= ~ X
+				\mid A -> B
+				\mid \dbox{$\fix F$} \\ &&& ~\quad
+				\mid \lambda \dbox{$X^{p\kappa}$}.F
+				\mid F\,G
+				\mid \forall X^\kappa . B \\ &&& ~\quad
+				\mid \newFi{\lambda i^A.F
+				\mid F\,\{s\}
+				\mid \forall i^A . B}
+\\
+\!\!\!\!\!\!\!\!&\text{Terms}
+	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
+\\
+\!\!\!\!\!\!\!\!&\text{Typing Contexts}
+	& \Delta		&~ ::= ~ \cdot
+				\mid \Delta,\dbox{$X^{p\kappa}$}
+				\mid \newFi{\Delta, i^A} \\
+&	& \Gamma		&~ ::= ~ \cdot
+				\mid \Gamma, x : A
+\end{align*}
+\paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
+\[ 
+   \inference{}{(\lambda x.t)\,s \rightsquigarrow t[s/x]}
+ ~~~~
+   \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
+ ~~~~
+   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+\]
+~\\
+\end{singlespace}
+\caption{Syntax and Reduction rules of \Fixi}
+\label{fig:Fixi}
+\end{figure}
+
+\begin{figure}\begin{singlespace}\small
+\paragraph{Well-formed typing contexts:}
+\[ \fbox{$|- \Delta$}
+ ~~~~
+   \inference{}{|- \cdot}
+ ~~~
+   \inference{|- \Delta & |- \kappa:\square}{|- \Delta,\dbox{$X^{p\kappa}$}}
+      \big( X\notin\dom(\Delta) \big)
+ ~~~ \newFi{
+   \inference{|- \Delta & \cdot |- A:*}{|- \Delta,i^A}
+      \big( i\notin\dom(\Delta) \big) }
+\]
+$ \fbox{$\Delta |- \Gamma$}
+ ~~~~
+   \inference{|- \Delta}{\dbox{$0\Delta$} |- \cdot}
+ ~~~~
+   \inference{\Delta |- \Gamma & \Delta |- A:*}{
+              \Delta |- \Gamma,x:A}
+      \big( x\notin\dom(\Gamma) \big)
+$ \vskip1ex ~
+\paragraph{Sorting:} \fbox{$|- \kappa : \square$}
+$ \quad
+  \inference[($A$)]{}{|- *:\square}
+ ~~~
+   \inference[($R$)]{|- \kappa:\square & |- \kappa':\square}{
+		     |- \dbox{$p\kappa$} -> \kappa' : \square}
+ ~~~
+   \newFi{
+   \inference[($Ri$)]{\cdot |- A:* & |- \kappa:\square}{
+                      |- A -> \kappa : \square} }
+$
+~\\
+\paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
+$ \qquad
+   \inference[($Var$)]{\dbox{$X^{p\kappa}$}\in\Delta & |- \Delta}{
+ 		       \Delta |- X : \kappa}
+		\, \dbox{$(p\in \{+,0\})$} $
+\[
+   \inference[($->$)]{\dbox{$-\Delta$} |- A : * & \Delta |- B : *}{
+                      \Delta |- A -> B : * }
+ \qquad \qquad \dbox{
+   \inference[($\fix$)]{\Delta |- F : +\kappa -> \kappa}{
+		      \Delta |- \fix F : \kappa } }
+\]
+\[
+  \inference[($\lambda$)]{ |- \kappa:\square
+                         & \Delta,\dbox{$X^{p\kappa}$} |- F:\kappa'}{
+  	\Delta |- \lambda \dbox{$X^{p\kappa}$}.F : \dbox{$p\kappa$} -> \kappa'}
+ ~~~~ \qquad
+ \newFi{
+  \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}{
+			    \Delta |- \lambda i^A.F : A->\kappa} }
+\]
+\[
+  \inference[($@$)]{ \Delta |- F : \dbox{$p\kappa$} -> \kappa'
+		    & \dbox{$p\Delta$} |- G : \kappa }{
+                     \Delta |- F\,G : \kappa'}
+ ~~~~
+ \newFi{
+   \inference[($@i$)]{ \Delta |- F : A -> \kappa
+   		     & \dbox{$0\Delta$\!};\cdot |- s : A }{
+		      \Delta |- F\,\{s\} : \kappa} }
+\]
+\[
+   \inference[($\forall$)]{ |- \kappa:\square
+   			  & \Delta,\dbox{$X^{0\kappa}$} |- B : *}{
+                           \Delta |- \forall X^\kappa . B : *}
+ ~~~~ \qquad ~\,
+	\newFi{
+   \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}{
+                             \Delta |- \forall i^A . B : *} }
+\]
+\[ \newFi{
+   \inference[($Conv$)]{ \Delta |- A : \kappa
+                       & \Delta |- \kappa = \kappa' : \square }{
+                        \Delta |- A : \kappa'} }
+\]
+~\\
+\paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
+$ \qquad
+ ~~~~
+ \inference[($:$)]{(x:A) \in \Gamma & \Delta |- \Gamma}{
+                   \Delta;\Gamma |- x:A}
+ ~~~~ \newFi{
+   \inference[($:i$)]{i^A \in \Delta & \Delta |- \Gamma}{
+                      \Delta;\Gamma |- i:A} }
+$
+\[
+   \inference[($->$$I$)]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}{
+                         \Delta;\Gamma |- \lambda x.t : A -> B}
+ ~~~~ ~~~~
+   \inference[($->$$E$)]{\Delta;\Gamma |- r : A -> B & \Delta;\Gamma |- s : A}{
+                         \Delta;\Gamma |- r\;s : B}
+\]
+\[ \inference[($\forall I$)]{|- \kappa:\square
+			    & \Delta,\dbox{$X^{0\kappa}$\!};\Gamma |- t : B}{
+                             \Delta;\Gamma |- t : \forall X^\kappa.B}
+			    (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
+                            & \Delta |- G:\kappa }{
+                             \Delta;\Gamma |- t : B[G/X]}
+\]
+\[ \newFi{
+   \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}{
+                               \Delta;\Gamma |- t : \forall i^A.B}
+   \left(\begin{matrix}
+		i\notin\FV(t),\\
+		i\notin\FV(\Gamma)\end{matrix}\right)
+ ~~~~
+   \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
+                              & \Delta;\cdot |- s:A}{
+                               \Delta;\Gamma |- t : B[s/i]} }
+\]
+\[ \inference[($=$)]{\Delta;\Gamma |- t : A & \Delta |- A = B : *}{
+                     \Delta;\Gamma |- t : B}
+\]
+\end{singlespace}
+\caption{Sorting, Kinding, and Typing rules of \Fixi}
+\label{fig:Fixi2}
+\end{figure}
+
+\begin{figure}\begin{singlespace}\small
+\paragraph{Kind equality:} \fbox{$|- \kappa=\kappa' : \square$}
+$ \quad
+ ~~~~
+   \inference{}{|- * = *:\square} $
+\[
+   \inference{ |- \kappa_1 = \kappa_1' : \square
+             & |- \kappa_2 = \kappa_2' : \square }{
+   |- \dbox{$p\kappa_1$}-> \kappa_2 = \dbox{$p\kappa_1'$}-> \kappa_2' : \square}
+ ~~~~ \newFi{
+   \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}{
+              |- A -> \kappa = A' -> \kappa' : \square} }
+\]
+\[ \inference{|- \kappa=\kappa':\square}{
+              |- \kappa'=\kappa:\square}
+ ~~~~
+   \inference{ |- \kappa =\kappa' :\square
+             & |- \kappa'=\kappa'':\square}{
+              |- \kappa=\kappa'':\square}
+\]
+~
+\paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
+$\qquad \dbox{$
+  \inference{\Delta|- F:+\kappa-> \kappa}{\Delta|- \fix F=F(\fix F):\kappa}$ } $
+\[
+   \inference{ \Delta,\dbox{$X^{p\kappa}$} |- F:\kappa'
+   	     & \dbox{$p\Delta$} |- G:\kappa}{
+	      \Delta |- (\lambda X^{p\kappa}.F)\,G = F[G/X]:\kappa'}
+ ~~~~ \newFi{
+   \inference{ \Delta,i^A |- F:\kappa
+             & \dbox{$0\Delta$\!};\cdot |- s:A}{
+              \Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
+\]
+\[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
+ ~~~~
+   \inference{-\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+ ~~~~
+   \inference{\Delta |- F=F' : +\kappa -> \kappa}{
+	      \Delta |- \fix F = \fix F' : \kappa}
+\]
+\[
+   \inference{ |- \kappa:\square
+   	     & \Delta,\dbox{$X^{p\kappa}$} |- F=F' : \kappa'}{
+   	\Delta |- \lambda \dbox{$X^{p\kappa}$}.F
+		= \lambda \dbox{$X^{p\kappa}$}.F': \dbox{$\kappa$} -> \kappa'}
+ ~~~~ ~
+ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}{
+	      \Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa} }
+\]
+\[\!\!\!\!\!\!\!\!\!\!\!\!
+   \inference{ \Delta |- F=F' : \dbox{$p\kappa$} -> \kappa'
+   	     & \dbox{$p\Delta$} |- G=G':\kappa}{
+              \Delta |- F\,G = F'\,G' : \kappa'}
+ ~~~~
+ \newFi{
+   \inference{ \Delta |- F=F': A -> \kappa
+             & \dbox{$0\Delta$\!};\cdot |- s=s':A}{
+	      \Delta |- F\,\{s\} = F'\,\{s'\} : \kappa} }
+\]
+\[
+   \inference{ |- \kappa:\square
+   	     & \Delta,\dbox{$X^{0\kappa}$} |- B=B':*}{
+              \Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
+ ~~~~ \quad
+ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}{
+              \Delta |- \forall i^A.B=\forall i^A.B':*} }
+\]
+\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+ ~~~~
+   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}{
+              \Delta |- F = F'' : \kappa}
+\]
+~
+\paragraph{Term equality:} \fbox{$\Delta;\Gamma |- t = t' : A$}
+\[
+   \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}{
+              \Delta;\Gamma |- (\lambda x.t)\,s=t[s/x] : B}
+ ~~~~
+   \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
+\]
+\[ \inference{\Delta |- A:* & \Delta;\Gamma,x:A |- t=t':B}{
+              \Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
+ ~~~~
+   \inference{\Delta;\Gamma |- r=r':A-> B & \Delta;\Gamma |- s=s':A}{
+              \Delta;\Gamma |- r\;s=r'\;s':B}
+\]
+\[ \inference{ |- \kappa:\square
+	     & \Delta, \dbox{$X^{0\kappa}$\!};\Gamma |- t=t' : B}{
+              \Delta;\Gamma |- t=t' : \forall X^\kappa.B}
+	     (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
+             & \Delta |- G:\kappa }{
+              \Delta;\Gamma |- t=t' : B[G/X]}
+\]
+\[ \newFi{
+   \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}{
+              \Delta;\Gamma |- t=t' : \forall i^A.B}
+   \left(\begin{smallmatrix}
+		i\notin\FV(t),\\
+		i\notin\FV(t'),\\
+		i\notin\FV(\Gamma)\end{smallmatrix}\right)
+ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
+             & \Delta;\cdot |- s:A}{
+              \Delta;\Gamma |- t=t' : B[s/i]} }
+\]
+\[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
+ ~~~~
+   \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}{
+              \Delta;\Gamma |- t=t'':A}
+\]
+\end{singlespace}
+\caption{Equality rules of \Fixi}
+\label{fig:eqFixi}
+\end{figure}
+
+The grey-boxed extensions for term-indexing are essentially the same as
+those grey-boxed extensions in System \Fi\ (\S\ref{sec:fi:fi}). So, we will
+only focus our description on the dashed-box extensions regarding polarities
+(\S\ref{ssec:fixi:def:polarity}) and equi-recursive types
+(\S\ref{ssec:fixi:def:equirec}).
+
+\subsection{Polarities} \label{ssec:fixi:def:polarity}
+Polarities track in which position the type constructor variables are used.
+A polarity ($p$) is either covariant ($+$), contravariant ($-$), or
+avariant ($0$). The avariant polarity ($0$) means that it can be used in
+any position.\footnote{``invariant'' is more often used
+	(also in \cite{AbeMat04}, but we think it is a quite misleading jargon,
+	since $0$ means that it \emph{does not care} about polarities
+	rather than maintaining some unchanging properties about polarities.}
+We prefix a kind  by a polarity (\ie, $p\kappa$) to specify the variable's
+kind and polarity. For example,
+\[
+\begin{array}{rlrl}
+X_1^{+*},X_2^{-*} |- \!\!\! & X_1 -> X_2 : *
+	& ~~~\text{justifies} & \l X_1^{+*}.\l X_2^{-*}.X_1 -> X_2 \\
+X_1^{0*},X_2^{0*} |- \!\!\! & X_1 -> X_2 : *
+	& ~~~\text{also justifies} & \l X_1^{0*}.\l X_2^{-*}.X_1 -> X_2 \\
+X^{0*} |- \!\!\! & X\phantom{_.} -> X\phantom{_2} : *
+	& ~~~\text{justifies} & \l X^{0*}.X -> X
+\end{array}
+\]
+Note that we can replace $+$ and $-$ in the first example with $0$
+as in the second example, since the variables of avariant polarity can be used
+in any position, that is both in covariant position and contravariant position.
+In the third example, the polarity of $X$ can be neither $+$ nor $-$, but must
+must be $0$, since $X$ appears in both covariant and contravariant positions.
+
+\paragraph{Syntax using polarized kinds:}
+The kind syntax are polarized. That is, the domain kind ($\kappa$) of
+an arrow kind ($p\kappa -> \kappa'$) must be prefixed by its polarity ($p$).
+A type abstractions ($\l X^{p\kappa}.F$) in the type syntax are annotated by
+polarity-prefixed kinds ($p\kappa$). Type constructor variables ($X$) bound
+in the type-level contexts ($\Delta$) are annotated by polarity-prefixed kinds
+($p\kappa$), likewise. Note the syntax for extending the type-level context
+$\Delta,X^{p\kappa}$ in Figure~\ref{fig:Fixi}. The kinding rule ($\lambda$)
+make use of all these three uses of polarized kinds -- in type abstractions,
+in kind arrows, and in type-level contexts.
+
+\paragraph{Polarity operation on type-level context ($p\Delta$):}
+The kinding judgment $\Delta |- F : \kappa$ assumes that $F$ is in covariant
+positions. This is why the ($Var$) rule requires the polarity of $X$ to be
+either $+$ or $0$, but not $-$. To judge well-kindedness of type constructors
+in contravariant positions (\eg, $A$ in $A -> B$), we should invert
+the polarities of all the type constructor variables in the context.
+This idea of inverting polarities in the context is captured by $-\Delta$
+operation in the kinding rule ($->$). More generally, the well-kindedness $F$
+expected to be used as $p$-polarity can be determined by the judgement
+$p\Delta |- F : \kappa$, where $p\Delta$ operation is defined as:
+\[
+\begin{array}{lcl}
+p~\cdot &=& \cdot \\
+p(\Delta,X^{p'\kappa}) &=& p\Delta,X^{(pp')\kappa} \\
+p(\Delta,i^A) &=& p\Delta,i^A
+\end{array}
+\quad\text{where $pp'$ is the usual sign product}~~
+\begin{smallmatrix}
++ p' & = & p' \\
+- +  & = & -  \\
+- -  & = & +  \\
+- 0  & = & 0  \\
+0 p' & = & 0
+\end{smallmatrix}
+\]
+Note the use of $p\Delta$ operation in the kinding rule ($@$) in order to
+determine the well-kindedness of $G$ expected to be used as $p$-polarity
+by the type constructor $F : p\kappa -> \kappa'$ being applied to $G$.
+
+\paragraph{Where polarities are irrelevant (or, avariant):}
+Polarities are irrelevant (or, avariant) for universally quantified variables,
+indices, and in the typing rules. This is because the sole purpose of tracking 
+polarities in \Fixi\ is to make sure that we only take the equi-recursive
+fixpoint over covariant type constructors, as in the kinding rule ($\mu$).
+Note that we can only take fixpoints over type constructors of covariant
+arrow kinds whose domain and codomain coincides ($+\kappa -> \kappa$).
+We can never take fixpoints over forall types (or, universal quantification)
+and type constructor expecting an index because they are not of arrow kinds.
+Forall types are always of kind $*$ and type constructors expecting an index
+are of arrow kinds ($A -> \kappa$). So, we give universally quantified variables
+avariant polarity ($X^{0\kappa}$ in the ($\forall$) rule) and nullify polarities
+when type checking indices ($0\Delta$ in the ($@i$) rule). For similar reasons,
+we assume that type-level contexts are nullified in the typing rules;
+note $0\Delta$ in the well-formedness condition for $\Delta |- \Gamma$
+in Figure~\ref{fig:Fixi2}. That is, we always type check under nullified
+type-level context for all terms in general, as well as indices appearing
+in type applications. As a result, the typing rules of \Fixi\ have no dashed-box
+extensions except for $X^{0\kappa}$ in the generalization rule ($\forall$$I$)
+where we introduce a universally quantified type constructor variable.
+
+\subsection{The Equi-recursive type operator $\fix$}
+\label{ssec:fixi:def:equirec}
+\Fixi\ provides the equi-recursive type operator $\fix$.
+The kinding rule ($\fix$) in Figure~\ref{fig:Fixi2} is similar to
+the ($\mu$) rule of System \Fi\ (see Figure~\ref{fig:Fi2} in \S\ref{sec:fi:fi}),
+but requires base structure $F$ to be covariant (or, positive), \ie,
+$F : +\kappa -> \kappa$. This restriction on the polarity of $F$ is due to
+the equi-recursive nature of $\fix$, \ie, $\fix F=F(\fix F)$, which is
+described by the first type constructor equality rule inside a dashed box
+in Figure~\ref{fig:eqFixi}. Recall that adding equi-recursive types
+without restricting the polarity of base structure breaks strong normalization.
+\KYA{TODO should reference intro chapter section which is not written yet}
+
+Note that there are no explicit term syntax that guides the conversion between
+$\fix F$ and $F(\fix F)$, unlike in iso-recursive systems where $\In$ and
+$\mathsf{unIn}$ are term syntax that explicitly guide rolling
+(from $\mu F$ to $F(\mu F)$) and unrolling (from $F(\mu F)$ to $\mu F$).
+Since $\fix F=F(\fix F)$ is given definitionally (\ie, by the equality rule
+definition), the type constructor conversion rule ($Conv$) can silently
+roll (from $F(\fix F)$ to $\fix F$) and unroll (from $F(\fix F)$ to $\fix F$)
+the recursive types, just as it can silently $\beta$-convert type constructors.
+
+In the following section, we will review how iso-recursive type operator
+$\mu_\kappa$ and its $\In_\kappa$ constructor, which is well-behaved
+(\ie, strongly normalize) for base structures of arbitrary polarity,
+can be embedded into \Fixi\ being defined in terms of the equi-recursive
+type operator $\fix$, which is only well-behaved for covariant base structures.
+
