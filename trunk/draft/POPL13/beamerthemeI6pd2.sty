@@ -21,7 +21,7 @@
 
 % \setbeamercolor*{normal text}{fg=tachameleon, bg=ta3gray}
 % \setbeamercolor*{block body}{bg=ta3aluminium,fg=black}
-\setbeamercolor*{block title}{fg=ta2chameleon,bg=taaluminium}
+\setbeamercolor*{block title}{fg=ta3chameleon,bg=taaluminium}
 \setbeamerfont{block title}{size=\Large,series=\bf}
 \setbeamerfont{block body}{size=\normalsize}
 % \setbeamercolor{upper separation line head}{fg=ta2orange}
@@ -40,8 +40,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setbeamertemplate{block begin}{
-  \vskip.7ex
-  $\!\!\!$\begin{beamercolorbox}[ht=5ex,dp=0.5ex,center,leftskip=-1em,colsep*=.75ex]{block title}%
+  \vskip.75ex
+  \begin{beamercolorbox}[ht=5ex,dp=0.5ex,center,leftskip=-1em,colsep*=.75ex]{block title}%
     \usebeamerfont*{block title}%
     {\phantom{fg}\Large\insertblocktitle}% phantom because of baseline problem
   \end{beamercolorbox}%
@@ -50,10 +50,10 @@
   \setstretch{1.3}%
   \usebeamerfont{block body}%
   \vskip-1.5ex%
-  \begin{beamercolorbox}[leftskip=.5em,colsep*=.75ex,sep=0.5ex,vmode]{block body}% 
+  \begin{beamercolorbox}[leftskip=1em,colsep*=.75ex,sep=0.5ex,vmode]{block body}% 
     \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip.75ex}\vbox{}%
   }
-  \setbeamertemplate{block end}{ \vskip2.25ex
+  \setbeamertemplate{block end}{ \vskip.7ex
   \end{beamercolorbox}
 }
 
@@ -64,31 +64,31 @@
   \begin{beamercolorbox}[wd=\paperwidth]{headline}
         \vskip4ex
     \begin{columns}[T]
-      \begin{column}{.01\paperwidth}
+      \begin{column}{.02\paperwidth}
       \end{column}
-      \begin{column}{.95\paperwidth}
-%        \raggedleft
-	\centering
+      \begin{column}{.7\paperwidth}
+        \vskip4ex
+        \raggedleft
         \usebeamercolor{title in headline}{\color{fg}\textbf{\Huge{\inserttitle}}\\[2ex]}
       \end{column}
       \begin{column}{.02\paperwidth}
       \end{column}
-%      \begin{column}{.25\paperwidth}
-%        \vskip8ex
-%        \begin{center}
-%          \includegraphics[width=.95\linewidth]{psulogo_horiz_spot}
-%        \end{center}
-%        \vskip2ex
-%      \end{column}
+      \begin{column}{.25\paperwidth}
+        \vskip8ex
+        \begin{center}
+          \includegraphics[width=.95\linewidth]{psulogo_horiz_spot}
+        \end{center}
+        \vskip2ex
+      \end{column}
       \begin{column}{.02\paperwidth}
       \end{column}
     \end{columns}
     \begin{columns}
-      \begin{column}{.25\paperwidth}\vskip4ex
-        \includegraphics[width=.9\linewidth]{acm_4c_grad_vtag_b_pos}
+      \begin{column}{.25\paperwidth}
+        \includegraphics[width=.7\linewidth]{acm_4c_grad_vtag_b_pos}
       \end{column}
-      \begin{column}{.70\paperwidth}\raggedleft\vskip9ex
-        \usebeamercolor{author in headline}{\color{fg}\bf\rm\huge{\insertauthor}}
+      \begin{column}{.70\paperwidth}\raggedleft
+        \usebeamercolor{author in headline}{\color{fg}\bf\rm\Huge{\insertauthor}}
         $~\qquad$ $\qquad~$
         \usebeamercolor{institute in headline}{\color{fg}\large{\insertinstitute}}
       \end{column}
@@ -99,12 +99,12 @@
       \begin{column}{.78\paperwidth}
 	{\normalsize colloaborators:
 	{\rm\bf\large Tim Sheard}
-          {\normalsize\texttt{sheard@cs.pdx.edu}} \\ \vskip1ex \hskip6.5em
+          {\normalsize\texttt{sheard@pdx.edu}} \\ \vskip1ex \hskip6.5em
 	{\rm\bf\large Marcelo Fiore} \textrm{\;and\;} {\rm\bf\large Andrew M. Pitts}
           {\normalsize\texttt{\{Marcelo.Fiore,Andy.Pitts\}@cl.cam.ac.uk}}}
       \end{column}
     \end{columns}
-  \end{beamercolorbox}
+  \end{beamercolorbox} \vskip-1.5ex
 
 %  \begin{beamercolorbox}[wd=\paperwidth]{lower separation line head}
 %    \rule{0pt}{3pt}
@@ -131,17 +131,18 @@
   \begin{beamercolorbox}[wd=\paperwidth]{upper separation line foot}
     \rule{0pt}{3pt}
   \end{beamercolorbox}
+  
   \leavevmode%
   \begin{beamercolorbox}[ht=4ex,leftskip=1em,rightskip=1em]{author in head/foot}
 %    \texttt{http://www-i6.informatik.rwth-aachen.de}
 %    \hfill
 %    \texttt{<surname>@cs.rwth-aachen.de}
-    \tiny\centering
-    A poster submitted to the \emph{ACM Student Research Competition}
-    sponsored by Microsoft Research and hosted by
-    \emph{the 17th ACM SIGPLAN
-    International Conference on Functional Programming} (\emph{ICFP '12}),
+    $~~$ A poster submitted to the \emph{ACM Student Research Competition}
+    hosted by
+    \emph{the 17th ACM SIGPLAN International Conference on Functional Programming}
+	(\emph{ICFP '12}),
     Copenhagen, Denmark; September 10-12$^{\textit{th}}$, 2012 
+    \vskip1ex
   \end{beamercolorbox}
   \vskip0pt%
   \begin{beamercolorbox}[wd=\paperwidth]{lower separation line foot}

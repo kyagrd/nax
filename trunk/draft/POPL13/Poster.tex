@@ -18,7 +18,7 @@
 %\usepackage{times}\usefonttheme{professionalfonts}  % times is obsolete
 \usefonttheme[onlymath]{serif}
 \boldmath
-\usepackage[orientation=portrait,size=a0,scale=1.4,debug]{beamerposter}
+\usepackage[orientation=landscape,size=a0,scale=1.4,debug]{beamerposter}
 
 \newcommand{\dom}{\mathop{\mathsf{dom}}}
 \newcommand{\FV}{\mathop{\mathrm{FV}}}
@@ -44,15 +44,13 @@
 		{->}{{\textcolor{ta3chocolate}{$\to$}}}1
 	}
 
-\title[System \Fi]{
-  {\VERYHuge$\color{white}\frac{\color{green}\bullet}{\bullet}$\qquad\quad~~}
-  {\VERYHuge System \Fi}
-  \qquad\includegraphics[width=23cm]{psulogo_horiz_spot} \\
-{\huge ~~ a Higher-Order Polymorphic $\lambda$-calculus with Erasable Term Indices}
+\title[Fancy Posters]{{\VERYHuge System \Fi} {\Huge :}
+		{\huge a Higher-Order Polymorphic $\lambda$-calculus} \\
+		{\huge with Erasable Term Indices}
   }
 \author[Ki Yung Ahn]{ Ki Yung $\,$Ahn $\,$ {\Large\texttt{kya@cs.pdx.edu}} }
 \institute[Portland State University]{
-	Department of Computer Science\phantom{,} Portland State University }
+	Department of Computer Science, Portland State University }
 \date{2012-09}
 \begin{document}
 \begin{frame}[fragile]
@@ -74,7 +72,7 @@
 %% \vfill
 \begin{columns}[t]
 
-\begin{column}{.485\linewidth}
+\begin{column}{.315\linewidth}
 
 \begin{block}{1. Indexed Datatypes
 	{\normalsize(Lightweight Dependent Types)} }
@@ -130,45 +128,9 @@
 \end{itemize} %% $$\alpha=\gamma, \sum_{i}$$
 \end{block}
 
-\begin{block}{3. Limitations of the Lightweight approach}
-\begin{spacing}{1}\vskip1ex \small
-Although extending existing programming languages with indexed datatypes
-has been useful in practice, but it still suffers from the following problems
-(so far):
-\end{spacing}
-\begin{itemize}
-\item Increase \emph{confidence} but no \emph{guarantee} of correctness
-	\begin{lstlisting}
-	loop :: forall a . a    -- logically inconsistent type system
-	loop = loop       -- allows proof of falsity
-	\end{lstlisting}
-\item Faked term indices in implementations (until recently)
-	\begin{lstlisting}
-	data Zero       -- code duplication at type level
-	data Succ n     -- and cannot prevent (Succ Bool)
-	\end{lstlisting}
-\item Type checking/inference may be undecidable/impossible
-	\begin{itemize}
-		\item type equality check over term-indexed types
-			relies on term equality, which is undecidable
-			when diverging terms exist
-		\item need \emph{annotation} for inference,
-			but \emph{how much} and \emph{where}?
-\vskip1ex
-	\end{itemize}
-\end{itemize}
-\begin{spacing}{1}\small
-System \Fi\ (details submitted to \textit{POPL '13}) resolves all of above,
-except where and how much annotations are needed for type inference.
-Sequel to this work, we are developing Nax (to appear in \textit{IFL '12}),
-a programming language based on System \Fi, which supports type inference
-from small amount of systematic type annotation.
-\end{spacing}
-\end{block}
-
 \end{column}
 %%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{column}{.485\linewidth}
+\begin{column}{.315\linewidth}
 
 \begin{block}{4. Motivating example: embedding datatypes}
 \begin{itemize}
@@ -213,6 +175,47 @@ from small amount of systematic type annotation.
 \end{itemize}
 \end{block}
 
+
+\begin{block}{3. Limitations of the Lightweight approach}
+\begin{spacing}{1}\vskip1ex \small
+Although extending existing programming languages with indexed datatypes
+has been useful in practice, but it still suffers from the following problems
+(so far):
+\end{spacing}
+\begin{itemize}
+\item Increase \emph{confidence} but no \emph{guarantee} of correctness
+	\begin{lstlisting}
+	loop :: forall a . a    -- logically inconsistent type system
+	loop = loop       -- allows proof of falsity
+	\end{lstlisting}
+\item Faked term indices in implementations (until recently)
+	\begin{lstlisting}
+	data Zero       -- code duplication at type level
+	data Succ n     -- and cannot prevent (Succ Bool)
+	\end{lstlisting}
+\item Type checking/inference may be undecidable/impossible
+	\begin{itemize}
+		\item type equality check over term-indexed types
+			relies on term equality, which is undecidable
+			when diverging terms exist
+		\item need \emph{annotation} for inference,
+			but \emph{how much} and \emph{where}?
+\vskip1ex
+	\end{itemize}
+\end{itemize}
+\begin{spacing}{1}\small
+System \Fi\ (details submitted to \textit{POPL '13}) resolves all of above,
+except where and how much annotations are needed for type inference.
+Sequel to this work, we are developing Nax (to appear in \textit{IFL '12}),
+a programming language based on System \Fi, which supports type inference
+from small amount of systematic type annotation.
+\end{spacing}
+\end{block}
+
+
+\end{column}
+%%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{column}{.315\linewidth}
 
 \begin{block}{5. \Fi ~= {\normalsize Curry-style} \Fw\ + \{erasable term indices\}}
 $\text{Variables}~~ x,i \qquad\quad \text{Type constructor variables}~~ X$ \\
