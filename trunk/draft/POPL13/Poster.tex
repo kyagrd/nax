@@ -115,7 +115,7 @@
 		\begin{lstlisting}
 		data Vec (a :: *) {n :: Nat} where
 		  VCons :: a -> Vec a {i} -> Vec a {Succ i}
-		  VNil  :: Vec {Zero}
+		  VNil  :: Vec a {Zero}
 		\end{lstlisting}
 		\item de Bruijn terms indexed by size-indexed contexts
 		\begin{lstlisting}
