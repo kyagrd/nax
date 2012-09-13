@@ -1,0 +1,51 @@
+Thanks for the many fine comments
+
+1) We agree with the comments mentioning that most proofs should be
+omitted and that the real (as opposed to rough) statements should be
+given.  In this respect, we would like to promise that the paper will
+be revised accordingly.  
+
+2)
+Some referees want more motivation and [real]
+examples.  Some of this could be included in the reply with the
+promise of more to follow in the revised paper; though I don't know
+whether the reply allows enough space to do this.  There are a lots of
+other little points that could and should be addressed, but I guess
+that not much can be done at this point and they are to remain as
+
+3) We would like to address a few of the comments made by referree #57B.
+He states
+
+> - theorem 8:
+>
+> * do not understand the proof, why would the theorem 6 or the rule (:i) be used?
+>
+> * I think the theorem does not hold and here is a possible counter example:
+>
+> \Gamma = .
+>
+> \Delta = A^* ; i^A (where A = \forall X ^* . X is closed)
+
+This is clearly a misunderstanding!  \Delta is a context
+and so cannot have A^* for a closed type A!  (Taking instead \Delta =
+X^*, i^A the property holds.)
+
+The referee claims
+
+(1)  \Delta^\dot,\Gamma = i^A
+
+while a simple application of the ^\bullet definition gives
+
+  \Delta^\dot = i:A
+
+Moreover, even if (1) were the case, the further claim of the referee that
+
+  (\Delta^\dot,\Gamma)^\circle = i^(A^\circle)
+
+amounts to
+
+  (i^A)^\circ = i^A
+
+is wrong by the very definition of ^\circ.
+
+--------------------
