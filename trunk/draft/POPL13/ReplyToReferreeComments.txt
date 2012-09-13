@@ -19,47 +19,47 @@ to entry for programmers is to add features one at a time. Adding term-indexed
 types is one feature that experience has shown is an easy transition for
 most functional programmers. 
 
-Adding Term indexed types to Fw adds greatly to its expressitvity yet adds
+Adding Term indexed types to Fw adds greatly to its expressivity yet adds
 little programmer complexity. For example Fw can express datatypes like
 
 REGULAR
 
-data List:: * -> * where
-  Nil :: List a
-  Cons:: a -> List a -> List a
+data List :: * -> * where
+  Nil  :: List a
+  Cons :: a -> List a -> List a
   
 data Nat :: * where
   Zero :: Nat
-  Succ:: Nat -> Nat
+  Succ :: Nat -> Nat
   
 NESTED
 
-data powerList:: * -> * where
-  Nil :: List a
-  Cons :: (a,a) -> List a -> List a
+data PowerList :: * -> * where
+  PNil  :: PowerList a
+  PCons :: (a,a) -> PowerList a -> PowerList a
   
 TYPE INDEXED
 
-data Rep :: * -> * WHERE
-  Int :: Rep a
-  Bool:: Rep Bool
-  Pair:: Rep a -> Rep b -> Rep (a,b)
+data Rep :: * -> * where
+  Int  :: Rep a
+  Bool :: Rep Bool
+  Pair :: Rep a -> Rep b -> Rep (a,b)
 
 But types such as:  
 TERM INDEXED
 
-data Vector:: Nat -> * where
-  Nil:: Vector Zero
-  Cons:: Int -> Vector n -> Vector (Succ n)
+data Vector :: Nat -> * where
+  VNil  :: Vector Zero
+  VCons :: Int -> Vector n -> Vector (Succ n)
 
 Cannot be expressed in Fw, so something more expressive is needed, if
 we are to build a simple, expressive, and sound system.
 There is lots of evidence that just the addition of Term indexing allows
 programmers to exploit the Curry Howard isomorphism to use types to
-specifiy the behavior of programs. The complexity of dependent types is not
+specify the behavior of programs. The complexity of dependent types is not
 required. See papers such as
 
-Dependently Typed Programming with SIngletond
+Dependently Typed Programming with Singletons
   by Eisenberg and Weirich (ICFP 2012)
   
 Singleton types here, Singleton types there, Singleton types everywhere. 
@@ -70,15 +70,15 @@ off point for those who wanted to begin exploring the use of types
 to specify the behavior of programs.
 
 While CIC is expressive, it is often too complex for beginners. In addition
-a system based on Systm Fi makes explicit that all indexes can be erased, so
+a system based on System Fi makes explicit that all indexes can be erased, so
 this leads to both better understanding (for programmers) and more efficient
 implementations.
 
 3) One nice property is that System Fi naturally supports term-indexed
-extensions to Mendler style reucursion operators. In our 2011 ICFP paper
-	"A hierarchy of mendler style recursion combinators: 
+extensions to Mendler style recursion operators. In our 2011 ICFP paper
+	"A hierarchy of Mendler style recursion combinators: 
 	    taming inductive datatypes with negative occurrences"
-we showed how mendler operators can be used to naturally write many programs,
+we showed how Mendler operators can be used to naturally write many programs,
 including those using iteration, primitive recursion, and courses of value
 recursion. So it seems that a system supporting Mendler style operations
 will make a simple, yet expressive logically sound system.
@@ -111,7 +111,7 @@ Note, A^* (where A is not a type variable X) is not even syntactically valid!
 Trying to construct counterexample from syntactically invalid context will
 only be a vacuous argument.
 
-We do very appreciate his very detaild comments on improving clarity of our
+We do very appreciate his very detailed comments on improving clarity of our
 proof layout (.e.g. which part is too detailed, which parts needs more explicit
 reference to definitions). However, his "significant technical concern" on our
 main theorem (theorem 8) is clearly a misunderstanding.
