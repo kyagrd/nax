@@ -13,39 +13,39 @@ whether the reply allows enough space to do this.  There are a lots of
 other little points that could and should be addressed, but I guess
 that not much can be done at this point and they are to remain as
 
-3) We would like to address a few of the comments made by referree #57B.
-He states
+
+
+
+3) We would like to address a few of the comments made by referee #57B.
+
+He states that there is a significant technical concern on our theorems,
+especially on Index Erasure Theorem (theorem 8), but it is clear that his
+concern on theorem 8 comes from a very basic misunderstanding on the
+syntactic definition of the typing context \Delta (which is in fairly standard
+form, nothing exotic).
+
+The beginning part of his comment where he tries to suggest a counterexample
+is quoted below:
 
 > - theorem 8:
 >
-> * do not understand the proof, why would the theorem 6 or the rule (:i) be used?
+> * do not understand the proof, why would the theorem 6 or the rule (:i)
+> be used?
 >
 > * I think the theorem does not hold and here is a possible counter example:
 >
 > \Gamma = .
->
 > \Delta = A^* ; i^A (where A = \forall X ^* . X is closed)
+>
 
-This is clearly a misunderstanding!  \Delta is a context
-and so cannot have A^* for a closed type A!  (Taking instead \Delta =
-X^*, i^A the property holds.)
+The \Delta he suggests here is _syntactically_ invalid. \Delta is a context
+that contains bindings of type level variables (i.e., either X^\kappa or i^A).
+Note, A^* (where A is not a type variable X) is not even syntactically valid!
+Trying to construct counterexample from syntactically invalid context will
+only be a vacuous argument.
 
-The referee claims
+We do very appreciate his very detaild comments on improving clarity of our
+proof layout (.e.g. which part is too detailed, which parts needs more explicit
+reference to definitions). However, his "significant technical concern" on our
+main theorem (theorem 8) is clearly a misunderstanding.
 
-(1)  \Delta^\dot,\Gamma = i^A
-
-while a simple application of the ^\bullet definition gives
-
-  \Delta^\dot = i:A
-
-Moreover, even if (1) were the case, the further claim of the referee that
-
-  (\Delta^\dot,\Gamma)^\circle = i^(A^\circle)
-
-amounts to
-
-  (i^A)^\circ = i^A
-
-is wrong by the very definition of ^\circ.
-
---------------------
