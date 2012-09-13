@@ -5,18 +5,85 @@ omitted and that the real (as opposed to rough) statements should be
 given.  In this respect, we would like to promise that the paper will
 be revised accordingly.  
 
-2)
-Some referees want more motivation and [real]
-examples.  Some of this could be included in the reply with the
-promise of more to follow in the revised paper; though I don't know
-whether the reply allows enough space to do this.  There are a lots of
-other little points that could and should be addressed, but I guess
-that not much can be done at this point and they are to remain as
+2) We will try here to be more clear about our motivation. As part of the
+Trellys project we are interested in systems which use types to partition
+programs in the Trelly language into logical (sound and trusted) and 
+programatic (untrusted) components. System Fi is one candidate for the 
+logical component. How to do this separation is the topic of several other
+papers submitted to POPL by our collaborators.
 
+We desire a system that is simple, yet expressive over a rich collection
+of datatypes. Simplicity is important because the target for the Trellys
+system is programmers, not logicians, and one path for lowering the barriers
+to entry for programmers is to add features one at a time. Adding term-indexed
+types is one feature that experience has shown is an easy transition for
+most functional programmers. 
 
+Adding Term indexed types to Fw adds greatly to its expressitvity yet adds
+little programmer complexity. For example Fw can express datatypes like
 
+REGULAR
 
-3) We would like to address a few of the comments made by referee #57B.
+data List:: * -> * where
+  Nil :: List a
+  Cons:: a -> List a -> List a
+  
+data Nat :: * where
+  Zero :: Nat
+  Succ:: Nat -> Nat
+  
+NESTED
+
+data powerList:: * -> * where
+  Nil :: List a
+  Cons :: (a,a) -> List a -> List a
+  
+TYPE INDEXED
+
+data Rep :: * -> * WHERE
+  Int :: Rep a
+  Bool:: Rep Bool
+  Pair:: Rep a -> Rep b -> Rep (a,b)
+
+But types such as:  
+TERM INDEXED
+
+data Vector:: Nat -> * where
+  Nil:: Vector Zero
+  Cons:: Int -> Vector n -> Vector (Succ n)
+
+Cannot be expressed in Fw, so something more expressive is needed, if
+we are to build a simple, expressive, and sound system.
+There is lots of evidence that just the addition of Term indexing allows
+programmers to exploit the Curry Howard isomorphism to use types to
+specifiy the behavior of programs. The complexity of dependent types is not
+required. See papers such as
+
+Dependently Typed Programming with SIngletond
+  by Eisenberg and Weirich (ICFP 2012)
+  
+Singleton types here, Singleton types there, Singleton types everywhere. 
+  by Stefan Monnier and David Haguenauer. PLPV'2010.  
+  
+So a sound system supporting just term-indexing would be a jumping
+off point for those who wanted to begin exploring the use of types
+to specify the behavior of programs.
+
+While CIC is expressive, it is often too complex for beginners. In addition
+a system based on Systm Fi makes explicit that all indexes can be erased, so
+this leads to both better understanding (for programmers) and more efficient
+implementations.
+
+3) One nice property is that System Fi naturally supports term-indexed
+extensions to Mendler style reucursion operators. In our 2011 ICFP paper
+	"A hierarchy of mendler style recursion combinators: 
+	    taming inductive datatypes with negative occurrences"
+we showed how mendler operators can be used to naturally write many programs,
+including those using iteration, primitive recursion, and courses of value
+recursion. So it seems that a system supporting Mendler style operations
+will make a simple, yet expressive logically sound system.
+
+4) We would like to address a few of the comments made by referee #57B.
 
 He states that there is a significant technical concern on our theorems,
 especially on Index Erasure Theorem (theorem 8), but it is clear that his
