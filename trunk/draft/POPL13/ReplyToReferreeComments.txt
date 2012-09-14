@@ -1,14 +1,89 @@
 Thanks for the many fine comments
 
-1) We agree with the comments mentioning that most proofs should be
-omitted and that the real (as opposed to rough) statements should be
-given.  In this respect, we would like to promise that the paper will
-be revised accordingly.  
 
-2) We will try here to be more clear about our motivation. As part of the
-Trellys project we are interested in systems which use types to partition
-programs in the Trelly language into logical (sound and trusted) and 
-programatic (untrusted) components. System Fi is one candidate for the 
+1) We agree with the comments mentioning that many of the proofs should be
+cut down more concisely and the statements (lemmas, propositions, theorems)
+themselves should be given better focus.  Also we want thank very detailed
+review on the paper -- not just typos but correcting some mistakes (e.g.,
+symmetry of Leibniz equality) and pointers to related work (ICC^*, DML, ...).
+In this respect, we would like to promise to revise the paper accordingly.
+
+
+
+2) We would like to address some of the comments made by referee #57B.
+
+He states that there is a significant technical concern on our theorems,
+especially on Index Erasure Theorem (theorem 8), but it is clear that his
+concern on theorem 8 comes from a very basic misunderstanding on the
+syntactic definition of the typing context \Delta (which is in fairly standard
+form, nothing exotic).
+
+The beginning part of his comment where he tries to suggest a counterexample
+is quoted below:
+
+> - theorem 8:
+>
+> * do not understand the proof, why would the theorem 6 or the rule (:i)
+> be used?
+>
+> * I think the theorem does not hold and here is a possible counter example:
+>
+> \Gamma = .
+> \Delta = A^* ; i^A (where A = \forall X ^* . X is closed)
+>
+
+The \Delta he suggests here is _syntactically_ invalid. \Delta is a context
+that contains bindings of type level variables (i.e., either X^\kappa or i^A).
+Note, A^* (where A is not a type variable X) is not even syntactically valid!
+Trying to construct counterexample from syntactically invalid context will
+only be a vacuous argument.
+
+His last question on rule (:i) comes from misunderstanding on scoping of index
+variables. We do think that we can revise with even more examples to clarify
+the scoping. But, considering that no other referees having problems with
+rather basic and standard features, we are a little dubious about his self-
+classification of his expertise level on the subject.
+
+We do very appreciate his very detailed comments on improving clarity of our
+proof layout (.e.g. which part is too detailed, which parts needs more explicit
+reference to definitions). However, his "significant technical concern" on our
+main theorem (theorem 8) is clearly a misunderstanding and his last question
+as well.
+
+
+
+(3) We will try here to be more clear about our motivation, in particular
+regarding why we do not want to go for full dependent types. In a theoretical
+perspective, impredicative polymorphism is a feature we do not want to give up
+easily (this can be a matter of taste -- many may disagree but yet many will
+agree). One advantage of having impredicative polymorphism is that we can
+have a minimal calculus that can encode recursive datatypes, without having
+to extend the calculus with datatypes given as primitives. In a practical
+perspective, extensions of System F and Fw has been a foundation of industrial
+strength compiler implementation for functional languages (.e.g., GHC core is
+based on Fc), while it is difficult to find any matching examples of dependently
+typed calculus outside of formal proof assistants. We claim that studying a
+moderate extension to Fw to clarify cutting-edge features of functional
+languages and empowering them to also be able to construct proof by
+Curry-Howard formally within a logically consistent subset of the language
+(we claim that things that amounts to System Fi is such a good candidate!)
+has much better chance of being applicable to compiler implementations
+in not so distant future.
+
+For those we are interested in our motivation in a broader context,
+including further agenda how we might apply to language design, see item (4).
+Although having more discussions and background might have helped
+better justified our motivation, widening the context too much may
+become a distraction since this is a paper on a logically consistent calculus
+rather than a new programming language design -- they can be discussed
+separate self-contained papers (we have a companion paper on Nax language
+design for IFL post-proceeding submission to discuss language design issues).
+
+
+
+(4) As part of the Trellys project we are interested in systems which use types
+to partition programs in the Trelly language into logical (sound and trusted)
+and programatic (untrusted) components. System Fi is one candidate for the 
 logical component. How to do this separation is the topic of several other
 papers submitted to POPL by our collaborators.
 
@@ -74,7 +149,9 @@ a system based on System Fi makes explicit that all indexes can be erased, so
 this leads to both better understanding (for programmers) and more efficient
 implementations.
 
-3) One nice property is that System Fi naturally supports term-indexed
+
+
+(5) One nice property is that System Fi naturally supports term-indexed
 extensions to Mendler style recursion operators. In our 2011 ICFP paper
 	"A hierarchy of Mendler style recursion combinators: 
 	    taming inductive datatypes with negative occurrences"
@@ -83,36 +160,5 @@ including those using iteration, primitive recursion, and courses of value
 recursion. So it seems that a system supporting Mendler style operations
 will make a simple, yet expressive logically sound system.
 
-4) We would like to address a few of the comments made by referee #57B.
 
-He states that there is a significant technical concern on our theorems,
-especially on Index Erasure Theorem (theorem 8), but it is clear that his
-concern on theorem 8 comes from a very basic misunderstanding on the
-syntactic definition of the typing context \Delta (which is in fairly standard
-form, nothing exotic).
-
-The beginning part of his comment where he tries to suggest a counterexample
-is quoted below:
-
-> - theorem 8:
->
-> * do not understand the proof, why would the theorem 6 or the rule (:i)
-> be used?
->
-> * I think the theorem does not hold and here is a possible counter example:
->
-> \Gamma = .
-> \Delta = A^* ; i^A (where A = \forall X ^* . X is closed)
->
-
-The \Delta he suggests here is _syntactically_ invalid. \Delta is a context
-that contains bindings of type level variables (i.e., either X^\kappa or i^A).
-Note, A^* (where A is not a type variable X) is not even syntactically valid!
-Trying to construct counterexample from syntactically invalid context will
-only be a vacuous argument.
-
-We do very appreciate his very detailed comments on improving clarity of our
-proof layout (.e.g. which part is too detailed, which parts needs more explicit
-reference to definitions). However, his "significant technical concern" on our
-main theorem (theorem 8) is clearly a misunderstanding.
 
