@@ -11,7 +11,7 @@ iter :: (forall r. (r -> a) -> f r -> a) -> Mu f ->  a
 iter s = s (iter s) . unIn
 
 prim :: (forall r. (r -> Mu f) -> (r -> a) -> f r -> a) -> Mu f ->  a
-prim s = s id (iter s) . unIn
+prim s = s id (prim s) . unIn
 
 
 coit :: (forall r. (a -> r) -> a -> f r) -> a -> Nu f
