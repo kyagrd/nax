@@ -57,3 +57,16 @@ mon2unIn :: (forall a b. (a -> b) -> f a ->  f b) -> Mu f -> f(Mu f)
 mon2unIn m = prim phi where phi cast f x = m cast x
 
 
+
+data B r a = BNil | BCons a (r(r a))
+
+bmap' :: (Functor f,Functor g) =>
+        (forall i j.(i -> j) -> f i -> g j) -> (a -> b) -> B f a -> B g b
+bmap' _ _ BNil = BNil
+bmap' h f (BCons x xs) = BCons (f x) (h id $ fmap (h f) xs)
+
+bmap :: (Functor f,Functor g) =>
+       (forall i. f i -> g i) -> (a -> b) -> B f a -> B g b
+bmap _ _ BNil = BNil
+bmap h f (BCons x xs) = BCons (f x) (h $ fmap (h . fmap f) xs)
+
