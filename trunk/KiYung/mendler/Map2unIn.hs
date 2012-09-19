@@ -57,16 +57,55 @@ mon2unIn :: (forall a b. (a -> b) -> f a ->  f b) -> Mu f -> f(Mu f)
 mon2unIn m = prim phi where phi cast f x = m cast x
 
 
+newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
 
-data B r a = BNil | BCons a (r(r a))
+mcvpr1 :: Functor (Mu1 f) =>
+          (forall r i. Functor r =>
+                       (forall i. r i -> f r i) ->
+                       (forall i. r i -> Mu1 f i) ->
+                       (forall i.r i -> a i) ->
+                       (f r i -> a i) )
+       -> Mu1 f i -> a i
+mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
+
+-- Mu1 P are not exactly functor but we can do things somehow like this
+
+data P r i = PC i (r(i,i)) | PN
+
+instance Functor (Mu1 P) where
+ 
+unInP :: Mu1 P i -> P (Mu1 P) i
+unInP = mcvpr1 phi where
+  phi :: forall r i'. Functor r =>
+                      (forall i. r i -> P r i) ->
+                      (forall i. r i -> Mu1 P i) ->
+                      (forall i. r i -> P (Mu1 P) i) ->
+                      (P r i' -> P (Mu1 P) i')
+  phi _ cast _ (PC x xs) = PC x (cast xs)
+  phi _ _    _ PN = PN
+  
+data B r a = BC a (r(r a)) | BN
 
 bmap' :: (Functor f,Functor g) =>
         (forall i j.(i -> j) -> f i -> g j) -> (a -> b) -> B f a -> B g b
-bmap' _ _ BNil = BNil
-bmap' h f (BCons x xs) = BCons (f x) (h id $ fmap (h f) xs)
+bmap' _ _ BN = BN
+bmap' h f (BC x xs) = BC (f x) (h id $ fmap (h f) xs)
 
 bmap :: (Functor f,Functor g) =>
        (forall i. f i -> g i) -> (a -> b) -> B f a -> B g b
-bmap _ _ BNil = BNil
-bmap h f (BCons x xs) = BCons (f x) (h $ fmap (h . fmap f) xs)
+bmap _ _ BN = BN
+bmap h f (BC x xs) = BC (f x) (h $ fmap (h . fmap f) xs)
+
+
+instance Functor (Mu1 B) where
+
+unInB :: Mu1 B i -> B (Mu1 B) i
+unInB = mcvpr1 phi where
+  phi :: forall r i'. Functor r =>
+                      (forall i. r i -> B r i) ->
+                      (forall i. r i -> Mu1 B i) ->
+                      (forall i. r i -> B (Mu1 B) i) ->
+                      (B r i' -> B (Mu1 B) i')
+  phi _ cast _ (BC x xs) = BC x (cast (fmap cast xs))
+  phi _ _    _ BN = BN
 
