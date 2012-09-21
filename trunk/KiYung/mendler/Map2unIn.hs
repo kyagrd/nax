@@ -59,7 +59,7 @@ mon2unIn m = prim phi where phi cast f x = m cast x
 
 newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
 
-mcvpr1 :: Functor (Mu1 f) =>
+mcvpr1 :: Functor1 f =>
           (forall r i. Functor r =>
                        (forall i. r i -> f r i) ->
                        (forall i. r i -> Mu1 f i) ->
@@ -72,7 +72,32 @@ mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
 
 data P r i = PC i (r(i,i)) | PN
 
-instance Functor (Mu1 P) where
+class Functor1 h where
+  fmap1   :: Functor f => (forall i. f i -> g i)
+          -> h f i -> h g i
+  fmap1'  :: Functor f => (forall i. f i -> g i) -> (a -> b)
+          -> h f a -> h g b
+  fmap1' h f = fmap1 h . fmap f
+  fmap1'' :: Functor f => (forall i j. (i -> j) -> f i -> g j) -> (a -> b)
+          -> h f a -> h g b
+  fmap1'' h f = fmap1' (h id) f
+
+instance (Functor1 h, Functor f) => Functor (h f) where
+   fmap f = fmap1' id f
+
+instance Functor1 P where
+  fmap1 h (PC x a) = PC x (h a)
+  fmap1 _ PN = PN
+
+instance Functor1 B where
+  fmap1 h (BC x a) = BC x (h $ fmap h a)
+  fmap1 _ BN = BN
+
+-- instance Functor1 f => Functor (f (Mu1 f)) where
+--   fmap f = fmap1' id f
+
+instance Functor (f (Mu1 f)) => Functor (Mu1 f) where
+  fmap f = In1 . fmap f . unIn1
  
 unInP :: Mu1 P i -> P (Mu1 P) i
 unInP = mcvpr1 phi where
@@ -86,18 +111,17 @@ unInP = mcvpr1 phi where
   
 data B r a = BC a (r(r a)) | BN
 
-bmap' :: (Functor f,Functor g) =>
-        (forall i j.(i -> j) -> f i -> g j) -> (a -> b) -> B f a -> B g b
+{-
+bmap' :: Functor f =>
+         (forall i j.(i -> j) -> f i -> g j) -> (a -> b) -> B f a -> B g b
 bmap' _ _ BN = BN
 bmap' h f (BC x xs) = BC (f x) (h id $ fmap (h f) xs)
 
-bmap :: (Functor f,Functor g) =>
-       (forall i. f i -> g i) -> (a -> b) -> B f a -> B g b
+bmap :: Functor f =>
+        (forall i. f i -> g i) -> (a -> b) -> B f a -> B g b
 bmap _ _ BN = BN
 bmap h f (BC x xs) = BC (f x) (h $ fmap (h . fmap f) xs)
-
-
-instance Functor (Mu1 B) where
+-}
 
 unInB :: Mu1 B i -> B (Mu1 B) i
 unInB = mcvpr1 phi where
