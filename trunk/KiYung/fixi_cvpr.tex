@@ -77,8 +77,7 @@ L &\!\!\!\triangleq \l X_a^{+*}.\l X^{+*}.(X_a\times X) + \textsf{Unit} &&
 	\\
 R &\!\!\!\triangleq \l X_a^{+*}.\l X^{+*}.(X_a\times \texttt{List} X) -> X &&
 \unIn_{(RA)} &\!\!\!\triangleq \McvPr_{*} (\l\_.\l\textit{cast}.\l\_.
-	\l x. x\;(\textit{id}\times \textit{map}_\texttt{List}\;cast) )
-	\quad\text{ \textcolor{red}{\sc Not constant} } 
+	\l x. x\;(\textit{id}\times \textit{fmap}_\texttt{List}\;cast) )
 	\\
 & \text{\textbf{Type-indexed datatypes}} \phantom{G^{G^{G^{G^{G^G}}}}}\\
 P &\!\!\!\triangleq \l X^{+* -> *}.\l X_a^{+*}.
@@ -89,10 +88,13 @@ P &\!\!\!\triangleq \l X^{+* -> *}.\l X_a^{+*}.
 	\\
 B &\!\!\!\triangleq \l X^{+* -> *}.\l X_a^{+*}.
 	X_a \times X(X\,X_a) + \textsf{Unit} &&
-\unIn_B &\!\!\!\triangleq \text{ \textcolor{red}{\sc unknown.}
-	{\small(Not likely to be constant time even if this exists.)}}
+\unIn_B &\!\!\!\triangleq \McvPr_{+* -> *} (\l\_.\l\textit{cast}.\l\_.
+ 	\l x. x \;(\texttt{InL}\circ
+ 		(\textit{id}\times
+ 			(\textit{cast}\circ\textit{fmap}\;\textit{cast})))
+ 		\;\texttt{InR})
 	\\
-	& \text{\textbf{Term-indexed datatypes}} \phantom{G^{G^{G^{G^{G^G}}}}}\\
+	& \text{\textbf{Term-indexed datatypes}} \phantom{G^{G^{G^{G^{G^G}}}}}
 \end{array}
 \]\vskip-4.5ex
 \[
@@ -120,7 +122,7 @@ V \triangleq \l X_a^{*}.\l X^{\texttt{Nat} -> *}.\l i^{\texttt{Nat}}.
 	\;\texttt{InR})
 \]
 The notation $\exists j^A.B$ is a shorthand for $\exists_A(\l j^A.B)$
-where $\exists_A$ is defined in Figure~\ref{fig:fixiNonRecData}.
+where $\exists_A$ is defined in Figure~\ref{fig:fixiNonRecData}.\\
 $\mathtt{Ex_{A}} : \forall F^{A -> *}.\exists_A F$ and
 $\mathtt{Eq_{A}} : \forall i^A.\forall j^A.(i=j)$ are
 the data constructors of the existential type and the equality type.
@@ -137,49 +139,6 @@ course-of-values primitive recursor ($\McvPr_\kappa$)}
 } %%%%%%%%%%%%%%%%%%%%%%% end of afterpage
 %% [basicstyle={\ttfamily\small},language=Haskell,mathescape]
 
-\begin{figure}
-\begin{singlespace}
-\lstset{language=Haskell,
-	basicstyle=\ttfamily\small,
-%	keywordstyle=\color{ta4chameleon},
-%	emph={List,Int,Bool},
-%	commentstyle=\color{gray},
-	literate =
-		{forall}{{$\forall$}}1
-%		{|}{{$\mid\;\,$}}1
-%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
-		{::}{{$:\!\,:$}}1
-		{->}{{$\to$}}1
-	}
-\begin{lstlisting}
-data P r i = PC i (r (i,i)) | PN
-type Powl i = Mu1 P i
-pcons x = In1 . PC x
-pnil = In1 PN
-
-newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
-
-mcvpr1 :: (forall r i. (forall i. r i -> f r i) ->
-                 (forall i. r i -> Mu1 f i) ->
-                 (forall i. r i -> a i) ->
-                 (f r i -> a i) )
-       -> Mu1 f i -> a i
-mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
-
-unInP :: Mu1 P i -> P(Mu1 P) i
-unInP = mcvpr1 phi where
-  phi :: forall r i'. (forall i. r i -> P r i) ->
-                (forall i. r i -> Mu1 P i) ->
-                (forall i. r i -> P(Mu1 P) i) ->
-                (P r i' -> P(Mu1 P) i')
-  phi out cast call (PC x xs) = PC x (cast xs)
-  phi out cast call PN = PN
-\end{lstlisting}
-\end{singlespace}
-\caption{Embedding of $\unIn_P$ in Figure~\ref{fig:unInExamples}
-	transcribed into Haskell}
-\label{fig:HaskellunInP}
-\end{figure}
 
 The embedding of unroll operations for some well-known positive datatypes
 are illustrated in Figure~\ref{fig:unInExamples}. The idea is to use
@@ -207,9 +166,9 @@ unroll operations in this way, as in Figure~\ref{fig:embedMcvPr} and
 Figure~\ref{fig:unInExamples}. For instance, the embeddings of
 unroll operations for indirectly recursive datatypes such as
 the rose tree datatype (the base $R$) are not constant due to the
-use of $\textit{map}_\textit{List}$, which is obviously not constant
+use of $\textit{fmap}_\textit{List}$, which is obviously not constant
 function. What we can do is to prove a meta-property that 
-($\textit{map}_\texttt{List}\;\textit{cast}) : \texttt{List}(X_r\,X_a)
+($\textit{fmap}_\texttt{List}\;\textit{cast}) : \texttt{List}(X_r\,X_a)
 -> \texttt{List}(\mu^{+}_\kappa R\,X_a)$ can be safely optimized
 to the constant time identity function since the value of \textit{cast}
 is given as \textit{id} by definition of $\McvPr_\kappa$. However, that does
@@ -223,6 +182,136 @@ is not obvious how to embed. Even if there was a way to embed such
 a truly nested casting, it is not likely to be constant time either.
 
 %% (forall x . f x -> g x) -> (a -> b) -> B f a -> B g b
+
+\begin{figure}
+\begin{singlespace}
+\lstset{language=Haskell,
+	basicstyle=\ttfamily\small,
+%	keywordstyle=\color{ta4chameleon},
+%	emph={List,Int,Bool},
+%	commentstyle=\color{gray},
+	literate =
+		{forall}{{$\forall$}}1
+%		{|}{{$\mid\;\,$}}1
+%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
+		{::}{{$:\!\,:$}}1
+		{->}{{$\to$}}1
+	}
+\begin{lstlisting}
+newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
+
+mcvpr1 :: Functor1 f =>
+         (forall r i'. Functor r => (forall i. r i -> f r i) ->
+                               (forall i. r i -> Mu1 f i) ->
+                               (forall i.r i -> a i) ->
+                               (f r i' -> a i') )
+       -> Mu1 f i -> a i
+mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
+
+class Functor1 h where
+  fmap1   :: Functor f => (forall i. f i -> g i) -> h f a -> h g a
+
+  fmap1'  :: Functor f => (forall i. f i -> g i) -> (a -> b)
+          -> h f a -> h g b
+  fmap1' h f = fmap1 h . fmap f
+
+  fmap1'' :: Functor f =>
+           (forall i j.(i -> j) -> f i -> g j) -> (a -> b)
+          -> h f a -> h g b
+  fmap1'' h f = fmap1' (h id) f
+
+instance (Functor1 h, Functor f) => Functor (h f) where
+  fmap f = fmap1' id f
+
+instance Functor (f (Mu1 f)) => Functor (Mu1 f) where
+  fmap f = In1 . fmap f . unIn1
+\end{lstlisting}
+\end{singlespace}
+\caption{$\mu_{* -> *}$ and $\McvPr_{* -> *}$ transcribed into Haskell}
+\label{fig:HaskellFunctor1}
+\end{figure}
+
+
+\begin{figure}
+\begin{singlespace}
+\lstset{language=Haskell,
+	basicstyle=\ttfamily\small,
+%	keywordstyle=\color{ta4chameleon},
+%	emph={List,Int,Bool},
+%	commentstyle=\color{gray},
+	literate =
+		{forall}{{$\forall$}}1
+%		{|}{{$\mid\;\,$}}1
+%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
+		{::}{{$:\!\,:$}}1
+		{->}{{$\to$}}1
+	}
+\begin{lstlisting}
+data P r i = PC i (r (i,i)) | PN
+type Powl i = Mu1 P i
+pcons x = In1 . PC x
+pnil = In1 PN
+
+instance Functor1 P where
+  fmap1 h (PC x a) = PC x (h a)
+  fmap1 _ PN = PN
+
+unInP :: Mu1 P i -> P(Mu1 P) i
+unInP = mcvpr1 phi where
+  phi :: forall r i'. Functor r => (forall i. r i -> P r i) ->
+                             (forall i. r i -> Mu1 P i) ->
+                             (forall i. r i -> P(Mu1 P) i) ->
+                             (P r i' -> P(Mu1 P) i')
+  phi out cast call (PC x xs) = PC x (cast xs)
+  phi out cast call PN = PN
+\end{lstlisting}
+\end{singlespace}
+\caption{Embedding of $\unIn_P$ in Figure~\ref{fig:unInExamples}
+	transcribed into Haskell}
+\label{fig:HaskellunInP}
+\end{figure}
+
+
+\begin{figure}
+\begin{singlespace}
+\lstset{language=Haskell,
+	basicstyle=\ttfamily\small,
+%	keywordstyle=\color{ta4chameleon},
+%	emph={List,Int,Bool},
+%	commentstyle=\color{gray},
+	literate =
+		{forall}{{$\forall$}}1
+%		{|}{{$\mid\;\,$}}1
+%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
+		{::}{{$:\!\,:$}}1
+		{->}{{$\to$}}1
+	}
+\begin{lstlisting}
+data B r i = BC i (r (r i)) | BN
+type Bush i = Mu1 B i
+bcons x = In1 . BC x
+bnil = In1 BN
+
+instance Functor1 B where
+  fmap1 h (BC x a) = BC x (h (fmap h a))
+  fmap1 _ BN = BN
+
+unInB :: Mu1 B i -> B (Mu1 B) i
+unInB = mcvpr1 phi where
+  phi :: forall r i'. Functor r =>
+                      (forall i. r i -> B r i) ->
+                      (forall i. r i -> Mu1 B i) ->
+                      (forall i. r i -> B (Mu1 B) i) ->
+                      (B r i' -> B (Mu1 B) i')
+  phi _ cast _ (BC x xs) = BC x (cast (fmap cast xs))
+  phi _ _    _ BN = BN
+\end{lstlisting}
+\end{singlespace}
+\caption{Embedding of $\unIn_B$ in Figure~\ref{fig:unInExamples}
+	transcribed into Haskell}
+\label{fig:HaskellunInB}
+\end{figure}
+
 
 Apart from the limitations of constant-time undefinability of $\unIn_F$
 discussed above, the embeddings illustrated in Figure~\ref{fig:unInExamples}
@@ -249,5 +338,6 @@ We leave the search for embeddings for arbitrary positive datatypes,
 including indirectly recursive datatypes and truly nested datatypes,
 as future work, since coiteration and corecursion are out of the scope of
 this dissertation.
+
 
 
