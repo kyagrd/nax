@@ -173,11 +173,19 @@ function. What we can do is to prove a meta-property that
 to the constant time identity function since the value of \textit{cast}
 is given as \textit{id} by definition of $\McvPr_\kappa$. However, that does
 not mean that we have a constant time embedding of $\unIn_R$ within \Fixi.
-Embeddings of unroll operations for \emph{truly nested datatypes}
-such as bushes (the base $B$) are not known, since we have to cast
+
+For similar reasons, embeddings of unroll operations for
+\emph{truly nested datatypes} such as bushes (the base $B$) are not likely
+to be constant either. In the embedding of $\unIn_B$, we use
+$\textit{fmap}\;\textit{cast}: (X_r(X_r\,X_a)) -> (X_r(\mu^{+}_{* -> *}B\,X_a))$
+in order to cast the inner abstract recursive type $X_r\,X_a$ into
+the concrete recursive type $\mu^{+}_{* -> *}B\,X_a$. But this time, there is
+yet another subtlty before even worrying about whether the $\unIn_B$
+operation is constant time.
+is not constant since it has to traverse down the B structure
 truly nested occurrences of $X_r$s in $(X_r(X_r\,X_a))$ into
-a concrete recursive type constructor $\mu^{+}_\kappa B$ in order
-to cast it into $\mu^{+}_\kappa B((\mu^{+}_\kappa B)X_a)$, which
+a concrete recursive type constructor $\mu^{+}_{* -> *} B$ in order
+to cast it into $\mu^{+}_{* -> *} B((\mu^{+}_{* -> *} B)X_a)$, which
 is not obvious how to embed. Even if there was a way to embed such
 a truly nested casting, it is not likely to be constant time either.
 
