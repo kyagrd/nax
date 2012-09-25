@@ -68,30 +68,30 @@ mcvpr1 :: Functor1 f =>
        -> Mu1 f i' -> a i'
 mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
 
-data P r i = PC i (r(i,i)) | PN
-
 class Functor1 h where
-  fmap1   :: Functor f => (forall i. f i -> g i)
-          -> h f a -> h g a
-  fmap1'  :: Functor f => (forall i. f i -> g i) -> (a -> b)
+  fmap1  :: Functor f => (forall i j. (i -> j) -> f i -> g j) -> (a -> b)
+        -> h f a -> h g b
+  -- fmap1 h = fmap1' (h id)
+
+  fmap1' :: Functor f => (forall i. f i -> g i) -> (a -> b)
           -> h f a -> h g b
-  fmap1' h f = fmap1 h . fmap f
-  fmap1'' :: Functor f => (forall i j. (i -> j) -> f i -> g j) -> (a -> b)
-          -> h f a -> h g b
-  fmap1'' h f = fmap1' (h id) f
+  fmap1' h = fmap1 (\f -> h . fmap f)
 
 instance (Functor1 h, Functor f) => Functor (h f) where
-  fmap f = fmap1' id f
-
--- instance Functor1 f => Functor (f (Mu1 f)) where
---   fmap f = fmap1' id f
+   fmap = fmap1' id
+       -- fmap1 (\f -> id . fmap f)
 
 instance Functor (f (Mu1 f)) => Functor (Mu1 f) where
   fmap f = In1 . fmap f . unIn1
 
+data P r i = PC i (r(i,i)) | PN
+
 instance Functor1 P where
-  fmap1 h (PC x a) = PC x (h a)
-  fmap1 _ PN = PN
+  fmap1 h f (PC x a) = PC (f x) (h (\(i,j) -> (f i,f j)) a)
+  fmap1 _ _ PN = PN
+--  fmap1' h f (PC x a) = PC (f x) (h $ fmap (\(a1,a2) -> (f a1,f a2)) a)
+--  fmap1' _ _ PN = PN
+
  
 unInP :: Mu1 P i -> P (Mu1 P) i
 unInP = mcvpr1 phi where
@@ -118,8 +118,10 @@ bmap h f (BC x xs) = BC (f x) (h $ fmap (h . fmap f) xs)
 -}
 
 instance Functor1 B where
-  fmap1 h (BC x a) = BC x (h $ fmap h a)
-  fmap1 _ BN = BN
+  fmap1 h f (BC x a) = BC (f x) (h (h f) a)
+  fmap1 _ _ BN = BN
+  -- fmap1' h f (BC x a) = BC (f x) (h $ fmap (h . fmap f) a)
+  -- fmap1' _ _ BN = BN
 
 unInB :: Mu1 B i -> B (Mu1 B) i
 unInB = mcvpr1 phi where
