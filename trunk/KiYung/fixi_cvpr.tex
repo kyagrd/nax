@@ -59,7 +59,8 @@ some well-known positive base structures ($F$).}
 \]
 \caption{Embedding of the recursive type operators ($\mu^{+}_\kappa$),
 	the Mendler-style course-of-values primitive recursors
-	($\McvPr_\kappa$), and the roll operation ($\In_F$) in \Fixi.}
+	($\McvPr_\kappa$), and the roll operation ($\In_F$) in \Fixi,
+        provided that the embedding of $\unIn_F$ exists}
 \label{fig:embedMcvPr}
 \end{figure}
 
@@ -183,18 +184,28 @@ in order to cast the inner abstract recursive type $X_r\,X_a$ into
 the concrete recursive type $\mu^{+}_{* -> *}B\,X_a$, before we do the outer
 $\textit{cast} : (X_r(\mu^{+}_{* -> *}B\,X_a)) ->
                  (\mu^{+}_{* -> *}B(\mu^{+}_{* -> *}B\,X_a))$.
-But this time, there is yet another subtlty other than worring about
-whether $\unIn_B$ is constant time. Note, we boldy assumed that
+But this time, there is yet another subtlety other than worrying about
+whether $\unIn_B$ is constant time. Note, we boldly assumed that
 the abstract recursive type $r$ has an \textit{fmap} operation
 (In Haskell, \texttt{{\bf\ttfamily Functor} r}). Previously, in the embedding
-of $\unIn_R$ for the the rose tree (Figure~\ref{fig:unInExamples}), we used
+of $\unIn_R$ for the rose tree (Figure~\ref{fig:unInExamples}), we used
 \textit{fmap} for \texttt{List}, which is a well known type to have
 \textit{fmap}. In case of $\unIn_B$, we only know the kind of $r : +* -> *$
-but nothing else since $r$ is absract. So, we should rely on a more general
-property that \textit{fmap} is well-defined for all covariant type constuctors
+but nothing else since $r$ is abstract. So, we should rely on a more general
+property that \textit{fmap} is well-defined for all covariant type constructors
 of kind $+* -> *$.
+
+% Embeddings of unroll operations for term-indexed datatypes (e.g. vectors)
+% are intuitively more simple than type-indexed datatypes (e.g. powerlists,
+% bushes). Due to the erasure property, existence of unroll
+% We will discuss the conditions when we can further NO, it's the other way
+% around
+
 \KYA{ TODO state a theorem about this in metatheory and
-	cite some previous work on this maybe?}
+	cite some previous work on this maybe? }
+\KYA{ TODO P do not need Functor requirement but $+* -> *$ kind already
+        implies that so it will be true anyway}
+\KYA{ TODO someone must have proved free theorems for higher-kinded cases? }
 
 \begin{figure}
 \begin{singlespace}

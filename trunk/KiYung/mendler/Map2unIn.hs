@@ -1,5 +1,5 @@
 {-# LANGUAGE TypeFamilies, PolyKinds, KindSignatures, TypeOperators #-}
-{-# LANGUAGE RankNTypes, NoMonoLocalBinds #-}
+{-# LANGUAGE RankNTypes, NoMonoLocalBinds, GADTs #-}
 {-# LANGUAGE StandaloneDeriving, FlexibleInstances, FlexibleContexts #-}
 {-# LANGUAGE UndecidableInstances #-}
 import Control.Monad.Identity
@@ -55,7 +55,7 @@ fibo n = iter phi n fibs where
   phi f (S n) = f n . tailS
 
 mon2unIn :: (forall a b. (a -> b) -> f a ->  f b) -> Mu f -> f(Mu f)
-mon2unIn m = prim phi where phi cast _ x = m cast x
+mon2unIn m = prim (\ cast _ x -> m cast x)
 
 newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
 
@@ -133,3 +133,10 @@ unInB = mcvpr1 phi where
   phi _ cast _ (BC x xs) = BC x (cast (fmap cast xs))
   phi _ _    _ BN = BN
 
+
+{-
+data X r = MkX ((r -> ()) -> r)
+
+instance Functor X where
+  fmap f (MkX h) = MkX (f . \g -> h (g . f))
+-}
