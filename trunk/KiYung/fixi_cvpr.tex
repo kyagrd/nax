@@ -16,17 +16,39 @@
 		{\\}{{$\lambda$}}1
 	}
 
+To add a new Mendler style operation, we need to address several issues.
+\begin{itemize}
+\item First, we need to add an appropriate type-level fixpoint operation
+that is used to build recursive types. This type-level operation needs to
+capture not only the tyeing of the recursive knot, but also the additional
+structure need to encode the new Mendler operation.
+\item Second we need to encode the new operation. This means discovering the
+characteristic equations that the operation should obey.
+\item Third, we need to find an embedding that preserves the characteristic
+equations in the host calculus.
+\item In practice, the second and third steps are intimately entwined as
+the equations and embedding are carefully designed (using a Church-style encoding)
+to acheive the desired result.
+\end{itemize}
+
+To encode a Mendler style operator encoding course of values recursion,
+one must not only satisfy the steps above, but also do this in a manner
+that supports a single step unroll operation $\unIn_F$, which is the key step
+to support course-of-values recursion. For example, recall the defintion
+of fibonocci in Section ???.
 
 Figure~\ref{fig:embedMcvPr} and Figure~\ref{fig:unInExamples}
-illustrates embeddings of the iso-recursive operator ($\mu^{+}_\kappa$) and
-the course-of-values primitive recursor ($\McvPr_\kappa$), and
-the roll and unroll operations ($\In_F$ and $\unIn_F$) over
-a fairly large class of positive base structures ($F$) in \Fixi.
+illustrate the embedding of a new iso-recursive type operator ($\mu^{+}_\kappa$) and
+illustrate the embedding of
+the course-of-values primitive recursor ($\McvPr_\kappa$) in \Fixi. We also encode
+both the roll and unroll operations ($\In_F$ and $\unIn_F$). These
+embeddings are valid for
+a fairly large class of positive base structures ($F$).
+
 The embeddings of $\mu^{+}_\kappa$, $\McvPr_\kappa$, and $\In_F$
 are very similar to the embeddings of $\mu_\kappa$, $\MPr_\kappa$,
-and $\In_\kappa$ for the primitive recursion in the previous section,
-but there should be an additional embedding for the unroll operation $\unIn_F$
-for course-of-values primitive recursion.
+and $\In_\kappa$ in the previous section where we discussed primitive recursion.
+The differences are ...
 
 \afterpage{ %%%%%%%%%%%%%%%%%%%%%%% begin afterpage
 \begin{landscape}
