@@ -1,5 +1,6 @@
 \section{Metatheory} \label{sec:fixi:theory}
 
+\subsection{TODO Strong normalization} \label{ssec:fixi:theory:sn}
 We can prove strong normalization of \Fixi\ by erasing term-indices in \Fixi\ 
 types into \Fixw\ types. Since \Fixw\ is strongly normalizing \cite{AbeMat04},
 the existence of a index erasure that maps a valid typing judgment on a term
@@ -143,4 +144,67 @@ the index variable bindings from the type level context.
 
 \KYA{TODO has there been any studies on the logical consistencies of
 	implicit calculus + equi-recursive type?}
+
+
+
+\subsection{Conditions for well-behaved course-of-values recursion}
+
+\begin{proposition}\label{prop:fixi:fmap}
+For any $F : +* -> *$, there exists
+
+$\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+\end{proposition}
+
+\begin{proposition}\label{prop:fixi:fmapFree}
+If $\textit{fmap}_F:\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+exists, then
+\begin{align*}
+\textit{fmap}_F~\textit{id} &~=~ \textit{id} \\
+\textit{fmap}_F~\textit{f} \;\circ\; \textit{fmap}_F~\textit{g}
+&~=~ \textit{fmap}_F~(f\circ g)
+\end{align*}
+\end{proposition}
+
+\begin{proposition} For any $F : +* -> *$, there exists
+$\unIn_F : \mu^{+}{*} F -> F(\mu^{+}{*} F)$ such that
+$\unIn_F (\In_F\;t) -->+ t$.
+\end{proposition}
+\begin{proof}
+Since we know that $\textit{fmap}_F$ exists by Proposition~\ref{prop:fixi:fmap},
+we can define
+\[ \unIn_F = \McvPr_{*}\;
+            (\l\_.\l\textit{cast}.\l\_.\l x.\textit{fmap}_F\;\textit{cast}\;x)
+\]
+
+From Proposition~\ref{prop:fixi:fmapFree}, we know that
+$\textit{fmap}_F\;\textit{id}\;x -->+ x$.
+Thus,
+\[ \unIn_F (\In_F\;t) -->+ \textit{fmap}_F\;\textit{id}\;t -->+ t \]
+\end{proof}
+
+\begin{align*}
+A \rrarrow_{*} B &~\triangleq~ A -> B \\
+F \rrarrow^{p\kappa -> \kappa'} G &~\triangleq~
+	\forall X^\kappa.\forall Y^\kappa.
+		(X \rrarrow_\kappa Y) -> F X \rrarrow_\kappa F Y \\
+F \rrarrow^{A -> \kappa} G &~\triangleq~
+	\forall i^A.\forall f^{A->A}. F\{i\} \rrarrow_\kappa F\{f\;i\}
+\end{align*}
+
+\[
+\textsf{mon}_\kappa
+  = \l X^{0\kappa}.X \rrarrow^\kappa X
+\]
+
+$\textsf{mon}_{+* -> *} F$ is the type of $\textit{fmap}_F$
+where $F : +* -> *$.
+
+$\textsf{mon}_{+(p* -> *)->(p* -> *)} F$ is the type of $\textit{fmap1}_F$
+where $F : +(p* -> *)->(p* -> *)$.
+
+if $\textsf{mon}_{+(p* -> *)->(p* -> *)}$ is inhabited
+then $\unIn_F$ for any $F : +(p* -> *)->(p* -> *)$?
+
+what about general case? if $\textsf{mon}_\kappa$ is inhabited
+then $\unIn_F$ for any $F : \kappa$?
 

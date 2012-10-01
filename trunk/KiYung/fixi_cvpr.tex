@@ -1,5 +1,22 @@
 \section{Embedding course-of-values primitive recursion}
 \label{sec:fixi:cv}
+
+\lstset{language=Haskell,
+	basicstyle=\ttfamily\small,
+%	keywordstyle=\color{ta4chameleon},
+%	emph={List,Int,Bool},
+	commentstyle=\color{grey},
+	literate =
+		{forall}{{$\forall$}}1
+%		{|}{{$\mid\;\,$}}1
+%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
+		{::}{{$:\!\,:$}}1
+		{->}{{$\to$}}1
+		{=>}{{$\Rightarrow$}}1
+		{\\}{{$\lambda$}}1
+	}
+
+
 Figure~\ref{fig:embedMcvPr} and Figure~\ref{fig:unInExamples}
 illustrates embeddings of the iso-recursive operator ($\mu^{+}_\kappa$) and
 the course-of-values primitive recursor ($\McvPr_\kappa$), and
@@ -40,17 +57,13 @@ for course-of-values primitive recursion.
 ~\\
 \In_F &\;:~ F(\mu^{+}_\kappa F) \karrow{\kappa} \mu^{+}_\kappa F\\
 \In_F &\triangleq
-	\l t. \l s. s~\unIn_F\;\textit{id}\;\,(\McvPr\;s)\;\,t \\
+	\l t. \l s. s~\unIn_F\;\textit{id}\;\,(\McvPr_\kappa\;s)\;\,t \\
 \end{align*}\vskip -2.5ex
 Provided that there exists
 $\unIn_{F} : \mu^{+}_\kappa F \karrow{\kappa} F(\mu^{+}_\kappa F)$
 for the base structure $F:+\kappa -> \kappa$, 
-such that
-\[
-	(\In_F \circ \unIn_F)\;r -->+ r \qquad \qquad
-	(\unIn_F \circ \In_F)\;t -->+ t
-\]
-where the reduction steps above are constant regardless of $r$ and $t$
+such that $\unIn_F(\In_F\;t) -->+ t$
+where the reduction is constant regardless of $t$
 (steps may vary between each base structure $F$ though).
 \end{singlespace} \vskip-3.5ex
 \[\text{See Figure \ref{fig:unInExamples} for
@@ -153,14 +166,126 @@ for regular datatypes such as natural numbers (the base $N$) and lists
 (the base $L$), type-indexed datatypes such as powerlists (the base $P$),
 and term-indexed datatypes such as vectors (the base $V$) in this way.
 The embeddings of $\unIn_N$ and $\unIn_L$ are self explanatory.
-For intuitive understanding of the embedding of $\unIn_P$, we provide
-a transcription of the $\unIn_P$ into Haskell in Figure~\ref{fig:HaskellunInP}
+In fact, we can generalize \lstinline$mcvpr0 (\ _ cast _ ->  fmap cast)$
+For intuitive understanding of the embedding of $\unIn_P$ and $\unIn_B$,
+we provide transcriptions into Haskell in Figures~\ref{fig:HaskellunInP}
+and \ref{fig:HaskellunInB}.
 (see Figure~\ref{fig:HaskellFunctor1} for the defintions of \texttt{Mu1} and
 \texttt{mcvpr1}). To embed unrolling operation for indexed datatypes we would
 often need existential types (Figure~\ref{fig:fixiNonRecData}) and
 equality types. We can encode equality types in \Fixi\ as a Leibniz equality
 over indices, \ie, $(i=j) \triangleq \forall F^{A -> *}.F\{i\} -> F\{j\}$,
 as discussed in \S\ref{Leibniz}.
+
+\begin{figure}
+\begin{singlespace}
+\begin{lstlisting}
+newtype Mu0 f = In0 { unIn0 :: f(Mu0 f) }
+
+mcvpr0 :: Functor f => (forall r. (r -> f r) ->
+                           (r -> Mu0 f) ->
+                           (r -> a) ->
+                           (f r -> a) )
+       -> Mu0 f -> a
+mcvpr0 phi = phi unIn0 id (mcvpr0 phi) . unIn0
+
+newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
+
+mcvpr1 :: Functor1 f =>
+         (forall r i'. Functor r => (forall i. r i -> f r i) ->
+                              (forall i. r i -> Mu1 f i) ->
+                              (forall i. r i -> a i) ->
+                              (f r i' -> a i') )
+       -> Mu1 f i -> a i
+mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
+
+class Functor1 h where
+  fmap1  :: Functor f => (forall i j. (i -> j) -> f i -> g j)
+                     -> (a -> b) -> h f a -> h g b
+  -- fmap1 h = fmap1' (h id)
+
+  fmap1' :: Functor f => (forall i. f i -> g i)
+                     -> (a -> b) -> h f a -> h g b
+  fmap1' h = fmap1 (\f -> h . fmap f)
+
+instance (Functor1 h, Functor f) => Functor (h f) where
+  fmap f = fmap1' id
+        -- fmap1 (\f -> id . fmap f)
+
+instance Functor (f (Mu1 f)) => Functor (Mu1 f) where
+  fmap f = In1 . fmap f . unIn1
+\end{lstlisting}
+\end{singlespace}
+\caption{$\mu_{*}$, $\McvPr_{*}$, and $\mu_{* -> *}$, $\McvPr_{* -> *}$
+	transcribed into Haskell}
+\label{fig:HaskellFunctor1}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}
+data N r   = S r   | Z  deriving Functor
+type Nat = Mu0 N
+data L a r = C a r | N  deriving Functor
+type List a = Mu0 (L a)
+data R a r = F a [r]    deriving Functor -- relies on (Functor [])
+type Rose a = Mu0 (R a)
+
+unInN :: Mu0 N -> N(Mu0 N)
+unInN = mcvpr0 (\ _ cast _ ->  fmap cast)
+unInL :: Mu0(L a) -> (L a) (Mu0(L a))
+unInL = mcvpr0 (\ _ cast _ ->  fmap cast)
+unInR :: Mu0(R a) -> (R a) (Mu0(R a))
+unInR = mcvpr0 (\ _ cast _ ->  fmap cast)
+\end{lstlisting}
+\label{fig:HaskellunInRegular}
+\caption{Embedings of $\unIn_N$, $\unIn_{(L A)}$, $\unIn_{(R A)}$ into Haskell}
+\end{figure}
+
+\begin{figure}
+\begin{singlespace}
+\begin{lstlisting}
+data P r i = PC i (r (i,i)) | PN
+type Powl i = Mu1 P i
+
+instance Functor1 P where
+  fmap1 h f (PC x a) = PC (f x) (h (\(i,j) -> (f i,f j)) a)
+  fmap1 _ _ PN = PN
+
+unInP :: Mu1 P i -> P(Mu1 P) i
+unInP = mcvpr1 (\ _ cast _ -> fmap1' cast id)
+  -- mcvpr1 phi where
+  --   phi _ cast _ (PC x xs) = PC x (cast xs)
+  --   phi _ cast _ PN = PN
+\end{lstlisting}
+\end{singlespace}
+\caption{Embedding of $\unIn_P$ in Figure~\ref{fig:unInExamples}
+	transcribed into Haskell}
+\label{fig:HaskellunInP}
+\end{figure}
+
+
+\begin{figure}
+\begin{singlespace}
+\begin{lstlisting}
+data B r i = BC i (r (r i)) | BN
+type Bush i = Mu1 B i
+
+instance Functor1 B where
+  fmap1 h f (BC x a) = BC (f x) (h (h f) a)
+  fmap1 _ _ BN = BN
+
+unInB :: Mu1 B i -> B (Mu1 B) i
+unInB = mcvpr1 (\ _ cast _ -> fmap1' cast id)
+  -- mcvpr1 phi where
+  --   phi _ cast _ (BC x xs) = BC x (cast (fmap cast xs))
+  --   phi _ cast _ BN = BN
+\end{lstlisting}
+\end{singlespace}
+\caption{Embedding of $\unIn_B$ in Figure~\ref{fig:unInExamples}
+	transcribed into Haskell}
+\label{fig:HaskellunInB}
+\end{figure}
+
 
 However, not all datatypes seem to have embeddings of constant time 
 unroll operations in this way, as in Figure~\ref{fig:embedMcvPr} and
@@ -193,7 +318,16 @@ of $\unIn_R$ for the rose tree (Figure~\ref{fig:unInExamples}), we used
 \textit{fmap}. In case of $\unIn_B$, we only know the kind of $r : +* -> *$
 but nothing else since $r$ is abstract. So, we should rely on a more general
 property that \textit{fmap} is well-defined for all covariant type constructors
-of kind $+* -> *$.
+of kind $+* -> *$. \KYA{TODO someone should have proved this? if so cite.
+	but what about higher kinds?}
+
+Note that the definition of \texttt{unInN}, \texttt{unInL}, \texttt{unInR}
+in Figure~\ref{fig:HaskellunInRegular} are of the same form:
+\lstinline$mvcvp0 (\ _ cast _ ->  fmap cast)$.  Also, note that
+the definition of \texttt{unInP} in Figure~\ref{fig:HaskellunInP}
+and \texttt{unInB} in Figure~\ref{fig:HaskellunInP} are of the same form:
+\lstinline$mvcvp1 (\ _ cast _ ->  fmap1 cast id)$.
+TODO We conjecture that ...
 
 % Embeddings of unroll operations for term-indexed datatypes (e.g. vectors)
 % are intuitively more simple than type-indexed datatypes (e.g. powerlists,
@@ -201,139 +335,14 @@ of kind $+* -> *$.
 % We will discuss the conditions when we can further NO, it's the other way
 % around
 
+\KYA{ TODO cite Monotone Inductive and Coinductive Constructors of Rank 2  - Matthes CSL paper }
+
 \KYA{ TODO state a theorem about this in metatheory and
 	cite some previous work on this maybe? }
 \KYA{ TODO P do not need Functor requirement but $+* -> *$ kind already
         implies that so it will be true anyway}
 \KYA{ TODO someone must have proved free theorems for higher-kinded cases? }
 
-\begin{figure}
-\begin{singlespace}
-\lstset{language=Haskell,
-	basicstyle=\ttfamily\small,
-%	keywordstyle=\color{ta4chameleon},
-%	emph={List,Int,Bool},
-	commentstyle=\color{grey},
-	literate =
-		{forall}{{$\forall$}}1
-%		{|}{{$\mid\;\,$}}1
-%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
-		{::}{{$:\!\,:$}}1
-		{->}{{$\to$}}1
-		{=>}{{$\Rightarrow$}}1
-		{\\}{{$\lambda$}}1
-	}
-\begin{lstlisting}
-newtype Mu1 f i = In1 { unIn1 :: f(Mu1 f)i }
-
-mcvpr1 :: Functor1 f =>
-         (forall r i'. Functor r => (forall i. r i -> f r i) ->
-                              (forall i. r i -> Mu1 f i) ->
-                              (forall i.r i -> a i) ->
-                              (f r i' -> a i') )
-       -> Mu1 f i -> a i
-mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
-
-class Functor1 h where
-  fmap1  :: Functor f => (forall i j. (i -> j) -> f i -> g j)
-                     -> (a -> b) -> h f a -> h g b
-  -- fmap1 h = fmap1' (h id)
-
-  fmap1' :: Functor f => (forall i. f i -> g i)
-                     -> (a -> b) -> h f a -> h g b
-  fmap1' h = fmap1 (\f -> h . fmap f)
-
-instance (Functor1 h, Functor f) => Functor (h f) where
-  fmap f = fmap1' id
-        -- fmap1 (\f -> id . fmap f)
-
-instance Functor (f (Mu1 f)) => Functor (Mu1 f) where
-  fmap f = In1 . fmap f . unIn1
-\end{lstlisting}
-\end{singlespace}
-\caption{$\mu_{* -> *}$ and $\McvPr_{* -> *}$ transcribed into Haskell}
-\label{fig:HaskellFunctor1}
-\end{figure}
-
-
-\begin{figure}
-\begin{singlespace}
-\lstset{language=Haskell,
-	basicstyle=\ttfamily\small,
-%	keywordstyle=\color{ta4chameleon},
-%	emph={List,Int,Bool},
-	commentstyle=\color{grey},
-	literate =
-		{forall}{{$\forall$}}1
-%		{|}{{$\mid\;\,$}}1
-%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
-		{::}{{$:\!\,:$}}1
-		{->}{{$\to$}}1
-		{=>}{{$\Rightarrow$}}1
-		{\\}{{$\lambda$}}1
-	}
-\begin{lstlisting}
-data P r i = PC i (r (i,i)) | PN
-type Powl i = Mu1 P i
-
-instance Functor1 P where
-  fmap1 h f (PC x a) = PC (f x) (h (\(i,j) -> (f i,f j)) a)
-  fmap1 _ _ PN = PN
-
-unInP :: Mu1 P i -> P(Mu1 P) i
-unInP = mcvpr1 phi where
-  phi :: forall r i'. Functor r => (forall i. r i -> P r i) ->
-                            (forall i. r i -> Mu1 P i) ->
-                            (forall i. r i -> P(Mu1 P) i) ->
-                            (P r i' -> P(Mu1 P) i')
-  phi out cast call (PC x xs) = PC x (cast xs)
-  phi out cast call PN = PN
-\end{lstlisting}
-\end{singlespace}
-\caption{Embedding of $\unIn_P$ in Figure~\ref{fig:unInExamples}
-	transcribed into Haskell}
-\label{fig:HaskellunInP}
-\end{figure}
-
-
-\begin{figure}
-\begin{singlespace}
-\lstset{language=Haskell,
-	basicstyle=\ttfamily\small,
-%	keywordstyle=\color{ta4chameleon},
-%	emph={List,Int,Bool},
-	commentstyle=\color{grey},
-	literate =
-		{forall}{{$\forall$}}1
-%		{|}{{$\mid\;\,$}}1
-%		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
-		{::}{{$:\!\,:$}}1
-		{->}{{$\to$}}1
-		{=>}{{$\Rightarrow$}}1
-		{\\}{{$\lambda$}}1
-	}
-\begin{lstlisting}
-data B r i = BC i (r (r i)) | BN
-type Bush i = Mu1 B i
-
-instance Functor1 B where
-  fmap1 h f (BC x a) = BC (f x) (h (h f) a)
-  fmap1 _ _ BN = BN
-
-unInB :: Mu1 B i -> B (Mu1 B) i
-unInB = mcvpr1 phi where
-  phi :: forall r i'. Functor r => (forall i. r i -> B r i) ->
-                            (forall i. r i -> Mu1 B i) ->
-                            (forall i. r i -> B (Mu1 B) i) ->
-                            (B r i' -> B (Mu1 B) i')
-  phi _ cast _ (BC x xs) = BC x (cast (fmap cast xs))
-  phi _ _    _ BN = BN
-\end{lstlisting}
-\end{singlespace}
-\caption{Embedding of $\unIn_B$ in Figure~\ref{fig:unInExamples}
-	transcribed into Haskell}
-\label{fig:HaskellunInB}
-\end{figure}
 
 %% Apart from the limitations of constant-time undefinability of $\unIn_F$
 %% discussed above, the embeddings illustrated in Figure~\ref{fig:unInExamples}

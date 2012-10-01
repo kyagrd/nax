@@ -50,7 +50,18 @@ We introduce a well-known example of the bush datatype, and
 %% We illustrate the Mendler style by writing
 a function that sums up the elements of bush (Figure \ref{fig:bsum}).
 Nested datatypes require us to move from rank 0 Mendler combinators
-to rank 1 Mendler combinators.
+to rank 1 Mendler combinators.\footnote{The rank of a kined is defined by
+the equations $\textrm{rank}(*)=0$ and
+$\textrm{rank}(\kappa -> \kappa')=
+   \textrm{max}(1+\textrm{rank}(\kappa),\textrm{rank}(\kappa'))$.
+Rank 0 Mendler combinators work on recursive types of kind $*$, whose rank 0,
+constructed from rank 1 base structure of kind $* -> *$.
+Rank 1 Mendler combinators work on recursive type constructors of kind $* -> *$,
+whose rank is 1, constructed from rank 1 base structure of kind
+$(* -> *) -> (* -> *)$. We could have called them Rank 1 Mendler combinator
+and Rank 2 Mendler combinator, matching the rank of the base structure
+instead of the rank of the recursive type constructor, but just happen to
+prefer counting from 0.}
 
 The powerlist datatype is defined as follows:
 \begin{code}
