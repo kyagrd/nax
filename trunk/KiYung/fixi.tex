@@ -1,26 +1,32 @@
 \chapter{System \Fixi}\label{ch:fixi}
 
-It is known that primitive recursion cannot be efficiently encoded in System \F.
-See the paper 
+It is known that there cannot be a reduction-preserving embedding of
+primitive recursion\footnote{
+	Although we can define primitive recursion for positive datatypes
+	in terms of iteration, which is embeddable in System \F, such an
+	embedding would not reduction-preserving. That is, it will take
+	more reduction steps than the usual definition of primitive recursion.
+	}
+in System \F, as suggested by the paper 
 {\it Induction is not derivable in second-order dependent type theory}
-\cite{Geuvers01} for a good explanation. For similar reasons, it is also strongly believed that
-primitive recursion cannot be efficiently encoded in System \Fw. 
-\citet{AbeMat04} designed \Fixw, an extension of \Fw\ in order to efficiently
-encode primitive recursion
-over regular datatypes and type-indexed datatypes. Their
-encoding relys on a novel use of
-polarized kinds and
-an equi-recursive fixpoint type operator to  express the encoding.
+\cite{Geuvers01}. For similar reasons, it is also strongly believed that
+there cannot be a reduction-preserving embedding of primitive recursion 
+in System \Fw. \citet{AbeMat04} designed \Fixw, which is an extension of \Fw,
+in order to embed primitive recursion with its desired reduction behavior.
+Their embedding relys on a novel use of the new extensions to \Fixw,
+polarized kinds and an equi-recursive fixpoint type operator,
+in order to define primitive recursion within \Fixw.
 
-As a natural extension of these ideas, we present \Fixi, an extension of \Fixw\ with erasable term-indices,
-to embed primitive recursion over term-indexed datatypes.
+As a natural extension of these ideas, we present \Fixi,
+an extension of \Fixw\ with erasable term-indices,
+to embed primitive recursion over term-indexed datatypes
+as well as type-indexed datatypes and regular datatypes.
 
 The organization of this chapter is analogous to Chapter \ref{ch:fi}, 
-where we added term indices to \Fw\ to obtain \Fi. Here
-we add term indices to \Fixw\ to obtain \Fixi. Our
-description for \Fixi\ will focus on the differences between \Fi\ and \Fixi.
-Readers may refer back to Chapter \ref{ch:fi} for those details that remain
-unchanged from System~\Fi.
+where we added term-indices to \Fw\ to obtain \Fi. Here
+we add term indices to \Fixw\ to obtain \Fixi. We describe \Fixi\ focusing on
+its differences from \Fi. Readers may refer back to Chapter \ref{ch:fi} for
+those details that remain unchanged from System~\Fi.
 
 We describe syntax and typing rules (\S\ref{sec:fixi:def}),
 we illustrate embeddings of primitive recursion (\S\ref{sec:fixi:data})
