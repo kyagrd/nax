@@ -165,7 +165,19 @@ data X r = MkX ((r -> ()) -> r)
 instance Functor X where
   fmap f (MkX h) = MkX (f . \g -> h (g . f))
 -}
-{-
+
+class FunctorI1 (h :: (* -> *) -> * -> *) where
+  fmapI1 :: (forall i . f i -> g i) -> h f j -> h g j
+
+mcvprI :: FunctorI1 f =>
+          (forall r j. (forall i. r i -> f r i) ->
+                       (forall i. r i -> Mu1 f i) ->
+                       (forall i. r i -> a i) ->
+                       (f r j -> a j) )
+       -> Mu1 f i' -> a i'
+mcvprI phi = phi unIn1 id (mcvprI phi) . unIn1
+
+
 data Succ n
 data Zero
 
@@ -173,31 +185,18 @@ data V a r i where
   VC :: a -> r n -> V a r (Succ n)
   VN :: V a r Zero
 
-class FunctorI1 h where
-  fmapI1 :: FunctorI f => (forall i . f i -> g i) -> h f j -> h g j
-
-class FunctorI f where
-  fmapI :: f j -> f j
-
-instance FunctorI (f (Mu1 f)) => FunctorI (Mu1 f) where
-  fmapI f = In1 . fmapI f . unIn1
-
 instance FunctorI1 (V a) where
   fmapI1 h (VC x a) = VC x (h a)
   fmapI1 _ VN = VN
 
-instance (FunctorI1 h, FunctorI f) => FunctorI (h f) where
-  fmapI = fmapI1 
-
-mcvprI :: FunctorI1 f =>
-          (forall r j. FunctorI r =>
-                       (forall i. r i -> f r i) ->
-                       (forall i. r i -> Mu1 f i) ->
-                       (forall i. r i -> a i) ->
-                       (f r j -> a j) )
-       -> Mu1 f i' -> a i'
-mcvprI phi = phi unIn1 id (mcvprI phi) . unIn1
-
 unInV :: Mu1 (V a) i -> (V a) (Mu1 (V a)) i
-unInV = mcvprI (\_ cast _ ->  cast)
--}
+unInV = mcvprI (\_ cast _ -> fmapI1 cast)
+
+
+instance FunctorI1 P where
+  fmapI1 h (PC x a) = PC x (h a)
+  fmapI1 _ PN = PN
+
+unInP' :: Mu1 P a -> P (Mu1 P) a
+unInP' = mcvprI (\_ cast _ -> fmapI1 cast)
+
