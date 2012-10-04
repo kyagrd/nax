@@ -77,7 +77,7 @@ L &\!\!\!\triangleq \l X_a^{+*}.\l X^{+*}.(X_a\times X) + \textsf{Unit} &&
 \unIn_{(LA)} &\!\!\!\triangleq \McvPr_{*} (\l\_.\l\textit{cast}.\l\_.
 	\l x. x\;(\texttt{InL}\circ(\textit{id}\times cast))\;\texttt{InR})
 	\\
-R &\!\!\!\triangleq \l X_a^{+*}.\l X^{+*}.(X_a\times \texttt{List} X) -> X &&
+R &\!\!\!\triangleq \l X_a^{+*}.\l X^{+*}.(X_a\times \texttt{List}\,X) -> X &&
 \unIn_{(RA)} &\!\!\!\triangleq \McvPr_{*} (\l\_.\l\textit{cast}.\l\_.
 	\l x. x\;(\textit{id}\times \textit{fmap}_\texttt{List}\;cast) )
 	\\
@@ -215,19 +215,61 @@ by the $\McvPr_\kappa$ combinator. We can embed unrollers
 for regular datatypes such as natural numbers (the base $N$) and lists
 (the base $L$), type-indexed datatypes such as powerlists (the base $P$),
 and term-indexed datatypes such as vectors (the base $V$) in this way.
+The notation for combining functions for tuples are defined as
+$(f \times g) \triangleq \l x.(f\,x,g\,x)$, and $(f\times g\times h)$
+are defined similarly for triples.
 
+\paragraph{Embeding unrollers for regular datatypes:}
 The embeddings of $\unIn_N$ and $\unIn_{(L A)}$ are self explanatory.
+The embeddings of $\unIn_{(R A)}$ relies on the map function for lists,
+since the rose tree is indirect datatype where recursive subcomponents
+appear inside the list ($\texttt{List}\,X_r$).
+The $\textit{fmap}_\texttt{List}$ function applies \textit{cast} to each of
+the the abstract recursive subcomponents of type $X_r$ inside $F\;X_r$
+values into a concrete recursive type $\mu_{*}^{+}F$ in order to obtain
+$F(\mu_{*}^{+}F)$ values.
 
-The embeddings of $\unIn_{(R A)}$ relies on \textit{fmap} over \texttt{List}s.
-The idea is to \textit{cast} all the abstract recursive subcomponents of type
-$X_r$ inside $F\;X_r$ values into a concrete $\mu_{*}^{+}F$ in order to obtain
-$F(\mu_{*}^{+}F)$ values. The $\textit{fmap}_\texttt{List}$ function applies
-\textit{cast} to each of the the abstract recursive subcomponents of type
-$X_r$ inside $F\;X_r$ values into a concrete recursive type $\mu_{*}^{+}F$
-in order to obtain $F(\mu_{*}^{+}F)$ values. 
+\paragraph{Embeding unrollers for nested datatypes} are no more complicated
+than embedding unrollers for regular datatypes. For instance, the embedding
+of $\unIn_P$ for powerlists is almost identical to the embedding of $\unIn_L$
+for regular lists except the use of $\McvPr_{* -> *}$ instead of $\McvPr_{*}$.
+This is because the cast operation provided by $\McvPr_{* -> *}$ is polymorphic
+over the type index:
+$\textit{cast}:\forall X_i. X_r X_i -> \mu^{+}_{* -> *} X_F X_i$.
+Since unrollers preserve indices, there is no extra work to be done
+other than applying the \textit{cast}. In the embeding of $\unIn_P$,
+the $\texttt{cast}$ function performs an index preserving cast from
+an abstract recursive type $X_r (X_a\times X_a)$ to the concrete powerlist type 
+$\mu^{+}P (X_a\times X_a)$.
 
-Similarly, TODO
+Embedding unrollers for \emph{truly nested datatypes} \cite{AbeMatUus05},
+such as bushes, are similar to embedding unrollers for indirect regular
+recursive types. Truly nested datatypes are recursive datatypes whose
+indices may involve themselves. Truly nested datatypes are similar to
+indirect recursive types in the sense that a bunch of recursive components
+are contained in certain data structures -- in case of truly nested datatypes
+those data structures are exactly the nested datatypes themselves.
+Assuming that the nested datatype has a notion of monotone map, we can
+use \textit{fmap} to push down the \textit{cast} to the inner structure
+and then \textit{cast} the outer structure. Note the use of
+$(\textit{cast} \circ \textit{fmap}\;\textit{cast})$ in the embedding of
+the unroller $\unIn_R$ for bushes.
 
+\paragraph{Embeding unrollers for indexed datatypes} are no more complicated
+than embedding unrollers for regular datatypes, as well. To embed unrollers
+for term-indexed datatypes, we would often need existential types
+(Figure~\ref{fig:fixiNonRecData}) and equality types. We can encode
+equality types in \Fixi\ as a Leibniz equality over indices,
+\ie, $(i=j) \triangleq \forall F^{A -> *}.F\{i\} -> F\{j\}$,
+as discussed in \S\ref{Leibniz}. These extra encodings for maintaining
+term-indices does not terribly complicate the embeddings of unrollers,
+since unrollers are index preserving. The embedding of $\unIn_{(V A)}$ for
+length indexed lists are almost identical to the embedding of $\unIn_{(L A)}$
+for regular lists, except that it has one more \textit{id}. The first
+\textit{id} appearing in $(\textit{id}\times\textit{id}\times\textit{cast})$ is
+for the index equality, to leave the index equality unchanged.
+
+\paragraph{}
 Giving different definitions of $\unIn_F$ for each different $F$ as illustrated
 in Figure~\ref{fig:unInExamples} looks too ad-hoc. So, we will discuss how to
 generalize the embeddings of the $\unIn$ operations, assuming that $F$ has
@@ -242,8 +284,8 @@ and observed common patterns among them. These results are summarized
 in Figures~Figure~\ref{fig:HaskellFunctor1}, \ref{fig:HaskellunInRegular},
 and \ref{fig:HaskellunInNested}.
 
-We provide Haskell transcriptions of the unroller embeddings for
-regular datatypes in Figure~\ref{fig:HaskellunInRegular}
+Haskell transcriptions of the unroller embeddings for regular datatypes are
+in Figure~\ref{fig:HaskellunInRegular}
 (Haskell definitions of \texttt{Mu0} and \texttt{mcvpr0} are
 in Figure~\ref{fig:HaskellFunctor1}).
 Note the definitions of all these unrollers are uniform:
@@ -260,18 +302,12 @@ as follows:
 					\textit{fmap}_{X_F} ~\textit{cast})
 \end{align*}
 
-We provide Haskell transcriptions of the unroller embeddings
-for nested datatypes in Figure~\ref{fig:HaskellunInNested}.
+Haskell transcriptions of the unroller embeddings for nested datatypes
+are in Figure~\ref{fig:HaskellunInNested}.
 we provide Haskell transcriptions of $\unIn_P$ and $\unIn_B$
 in Figure~\ref{fig:HaskellunInNested}
 (Haskell definitions of \texttt{Mu1} and \texttt{mcvpr1} are
 in Figure~\ref{fig:HaskellFunctor1}).
-
-To embed unrollers for term-indexed datatypes, we would often need
-existential types (Figure~\ref{fig:fixiNonRecData}) and equality types.
-We can encode equality types in \Fixi\ as a Leibniz equality over indices,
-\ie, $(i=j) \triangleq \forall F^{A -> *}.F\{i\} -> F\{j\}$, as discussed
-in \S\ref{Leibniz}.
 
 
 Also, note that
@@ -424,7 +460,7 @@ the same type as $(\textit{fmap}_\texttt{List}\;\textit{id}) :
 	\texttt{List}(X_r\,X_a) -> \texttt{List}(\mu^{+}_\kappa R\,X_a)$.
 
 For similar reasons, $\unIn_B$ for the bush datatype, which is a
-\emph{truly nested datatype} \cite{AbeMatUus05}, is not constant time either
+\emph{truly nested datatype}, is not constant time either
 due to the use of $\textit{fmap}\;\textit{cast} :
 			(X_r(X_r\,X_a)) -> (X_r(\mu^{+}_{* -> *}B\,X_a))$,
 which traverses the outer $X_r$ structure (an abstract bush) to cast each
