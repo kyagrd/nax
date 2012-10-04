@@ -285,36 +285,31 @@ in Figures~Figure~\ref{fig:HaskellFunctor1}, \ref{fig:HaskellunInRegular},
 and \ref{fig:HaskellunInNested}.
 
 Haskell transcriptions of the unroller embeddings for regular datatypes are
-in Figure~\ref{fig:HaskellunInRegular}
-(Haskell definitions of \texttt{Mu0} and \texttt{mcvpr0} are
-in Figure~\ref{fig:HaskellFunctor1}).
-Note the definitions of all these unrollers are uniform:
+in Figure~\ref{fig:HaskellunInRegular} (Haskell definitions of \texttt{Mu0}
+and \texttt{mcvpr0} are in Figure~\ref{fig:HaskellFunctor1}).
+Note that the definitions of these unrollers are uniform:
 \lstinline$mvcvp0 (\ _ cast _ ->  fmap cast)$.
 This uniform definition relies on the existence of \textit{fmap} over
 the base structures -- note the \lstinline$deriving Functor$
 in the data declarations. In Section~\ref{ssec:fixi:theory:cv},
 we will show that \textit{fmap} exists for any $F:+* -> *$ in \Fixi.
-So, we can derive a uniform unroller embedding for any base $F:+* -> *$
-as follows:
+So, we can derive a uniform embedding for the unroller $\unIn_{*}$
+for any base $F:+* -> *$ as follows:
 \begin{align*}
 \unIn_{*} &: \forall X_F^{+* -> *}.\mu_{*}^{+}X_F -> X_F(\mu_{*}^{+}X_F) \\
 \unIn_{*} &\triangleq \McvPr_{*} (\lambda\_.\lambda \textit{cast}.\lambda\_.
 					\textit{fmap}_{X_F} ~\textit{cast})
 \end{align*}
 
-Haskell transcriptions of the unroller embeddings for nested datatypes
-are in Figure~\ref{fig:HaskellunInNested}.
-we provide Haskell transcriptions of $\unIn_P$ and $\unIn_B$
-in Figure~\ref{fig:HaskellunInNested}
-(Haskell definitions of \texttt{Mu1} and \texttt{mcvpr1} are
-in Figure~\ref{fig:HaskellFunctor1}).
-
-
-Also, note that
-the definition of \texttt{unInP}
-and \texttt{unInB}
-in Figure~\ref{fig:HaskellunInNested} are of the same form:
+Haskell transcriptions of the unroller embeddings for nested datatypes are
+in Figure~\ref{fig:HaskellunInNested}. (Haskell definitions of \texttt{Mu1},
+\texttt{mcvpr1}, \texttt{fmap1'} are in Figure~\ref{fig:HaskellFunctor1}).
+Note that the definitions of the unrollers \texttt{unInP} for powerlists and
+\texttt{unInB} for bushes are uniform:
 \lstinline$mvcvp1 (\ _ cast _ ->  fmap1 cast id)$.
+The function \texttt{fmap1} is the rank 2 monotone map for type constructors
+of kind $+(+* -> *) -> (+* -> *)$, which analogous to rank 1 monotone map
+\texttt{fmap1} for type constructors of kind $+* -> *$.
 
 \begin{figure}
 \begin{singlespace}
@@ -339,17 +334,17 @@ mcvpr1 :: Functor1 f =>
 mcvpr1 phi = phi unIn1 id (mcvpr1 phi) . unIn1
 
 class Functor1 h where
-  fmap1  :: Functor f => (forall i j. (i -> j) -> f i -> g j)
+  fmap1'  :: Functor f => (forall i j. (i -> j) -> f i -> g j)
                      -> (a -> b) -> h f a -> h g b
-  -- fmap1 h = fmap1' (h id)
+  -- fmap1' h = fmap1 (h id)
 
-  fmap1' :: Functor f => (forall i. f i -> g i)
+  fmap1 :: Functor f => (forall i. f i -> g i)
                      -> (a -> b) -> h f a -> h g b
-  fmap1' h = fmap1 (\f -> h . fmap f)
+  fmap1 h = fmap1' (\f -> h . fmap f)
 
 instance (Functor1 h, Functor f) => Functor (h f) where
-  fmap f = fmap1' id
-        -- fmap1 (\f -> id . fmap f)
+  fmap f = fmap1 id
+        -- fmap1' (\f -> id . fmap f)
 
 instance Functor (f (Mu1 f)) => Functor (Mu1 f) where
   fmap f = In1 . fmap f . unIn1
@@ -392,11 +387,11 @@ data P r i = PC i (r (i,i)) | PN
 type Powl i = Mu1 P i
 
 instance Functor1 P where
-  fmap1 h f (PC x a) = PC (f x) (h (\(i,j) -> (f i,f j)) a)
-  fmap1 _ _ PN = PN
+  fmap1' h f (PC x a) = PC (f x) (h (\(i,j) -> (f i,f j)) a)
+  fmap1' _ _ PN = PN
 
 unInP :: Mu1 P i -> P(Mu1 P) i
-unInP = mcvpr1 (\ _ cast _ -> fmap1' cast id)
+unInP = mcvpr1 (\ _ cast _ -> fmap1 cast id)
   -- mcvpr1 phi where
   --   phi _ cast _ (PC x xs) = PC x (cast xs)
   --   phi _ cast _ PN = PN
@@ -405,11 +400,11 @@ data B r i = BC i (r (r i)) | BN
 type Bush i = Mu1 B i
 
 instance Functor1 B where
-  fmap1 h f (BC x a) = BC (f x) (h (h f) a)
-  fmap1 _ _ BN = BN
+  fmap1' h f (BC x a) = BC (f x) (h (h f) a)
+  fmap1' _ _ BN = BN
 
 unInB :: Mu1 B i -> B (Mu1 B) i
-unInB = mcvpr1 (\ _ cast _ -> fmap1' cast id)
+unInB = mcvpr1 (\ _ cast _ -> fmap1 cast id)
   -- mcvpr1 phi where
   --   phi _ cast _ (BC x xs) = BC x (cast (fmap cast xs))
   --   phi _ cast _ BN = BN
