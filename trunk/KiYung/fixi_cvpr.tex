@@ -277,40 +277,6 @@ a notion of a monotone map (\eg, \textit{fmap} for $F:+* ->*$) in the following
 subsection. Later on, in Section~\ref{ssec:fixi:theory:cv}, we will
 reason about what are the conditions for $F$ to have a notion of a monotone map.
 
-\subsection{Deriving uniform embeddings of the unrollers}
-To derive uniform embeddings of the unrollers, we transcribed the embeddings
-of the unrollers appearing in Figure~\ref{fig:unInExamples} into Haskell
-and observed common patterns among them. These results are summarized
-in Figures~Figure~\ref{fig:HaskellFunctor1}, \ref{fig:HaskellunInRegular},
-and \ref{fig:HaskellunInNested}.
-
-Haskell transcriptions of the unroller embeddings for regular datatypes are
-in Figure~\ref{fig:HaskellunInRegular} (Haskell definitions of \texttt{Mu0}
-and \texttt{mcvpr0} are in Figure~\ref{fig:HaskellFunctor1}).
-Note that the definitions of these unrollers are uniform:
-\lstinline$mvcvp0 (\ _ cast _ ->  fmap cast)$.
-This uniform definition relies on the existence of \textit{fmap} over
-the base structures -- note the \lstinline$deriving Functor$
-in the data declarations. In Section~\ref{ssec:fixi:theory:cv},
-we will show that \textit{fmap} exists for any $F:+* -> *$ in \Fixi.
-So, we can derive a uniform embedding for the unroller $\unIn_{*}$
-for any base $F:+* -> *$ as follows:
-\begin{align*}
-\unIn_{*} &: \forall X_F^{+* -> *}.\mu_{*}^{+}X_F -> X_F(\mu_{*}^{+}X_F) \\
-\unIn_{*} &\triangleq \McvPr_{*} (\lambda\_.\lambda \textit{cast}.\lambda\_.
-					\textit{fmap}_{X_F} ~\textit{cast})
-\end{align*}
-
-Haskell transcriptions of the unroller embeddings for nested datatypes are
-in Figure~\ref{fig:HaskellunInNested}. (Haskell definitions of \texttt{Mu1},
-\texttt{mcvpr1}, \texttt{fmap1'} are in Figure~\ref{fig:HaskellFunctor1}).
-Note that the definitions of the unrollers \texttt{unInP} for powerlists and
-\texttt{unInB} for bushes are uniform:
-\lstinline$mvcvp1 (\ _ cast _ ->  fmap1 cast id)$.
-The function \texttt{fmap1} is the rank 2 monotone map for type constructors
-of kind $+(+* -> *) -> (+* -> *)$, which analogous to rank 1 monotone map
-\texttt{fmap1} for type constructors of kind $+* -> *$.
-
 \begin{figure}
 \begin{singlespace}
 \begin{lstlisting}
@@ -414,6 +380,147 @@ unInB = mcvpr1 (\ _ cast _ -> fmap1 cast id)
 \label{fig:HaskellunInNested}
 \end{figure}
 
+\begin{figure}
+\begin{singlespace}
+\begin{lstlisting}
+class FunctorI1 (h :: (* -> *) -> * -> *) where
+  fmapI1 :: (forall i . f i -> g i) -> h f j -> h g j
+
+mcvprI1 :: FunctorI1 f =>
+          (forall r j. (forall i. r i -> f r i) ->
+                  (forall i. r i -> Mu1 f i) ->
+                  (forall i. r i -> a i) ->
+                  (f r j -> a j) )
+       -> Mu1 f i' -> a i'
+mcvprI1 phi = phi unIn1 id (mcvprI1 phi) . unIn1
+
+
+data Succ n
+data Zero
+
+data V a r i where
+  VC :: a -> r n -> V a r (Succ n)
+  VN :: V a r Zero
+
+instance FunctorI1 (V a) where
+  fmapI1 h (VC x a) = VC x (h a)
+  fmapI1 _ VN = VN
+
+unInV :: Mu1 (V a) i -> (V a) (Mu1 (V a)) i
+unInV = mcvprI1 (\_ cast _ -> fmapI1 cast)
+
+
+instance FunctorI1 P where
+  fmapI1 h (PC x a) = PC x (h a)
+  fmapI1 _ PN = PN
+
+unInP' :: Mu1 P a -> P (Mu1 P) a
+unInP' = mcvprI1 (\_ cast _ -> fmapI1 cast)
+\end{lstlisting}
+\end{singlespace}
+\caption{Embedding of $\unIn_{(V A)}$ and
+	yet another embedding of $\unIn_P$\\ transcribed into Haskell}
+\label{fig:HaskellunInIndexed}
+\end{figure}
+
+\subsection{Deriving uniform embeddings of the unrollers}
+To derive uniform embeddings of the unrollers, we transcribed the embeddings
+of the unrollers appearing in Figure~\ref{fig:unInExamples} into Haskell
+and observed common patterns among them. These results are summarized
+in Figures~\ref{fig:HaskellFunctor1}, \ref{fig:HaskellunInRegular},
+\ref{fig:HaskellunInNested}, and \ref{fig:HaskellunInIndexed}.
+This excercise of Haskell transcription not only helped us derive
+uniform embeddings of the unrollers, but also helped us recognize
+the conditions that the base structures should satisfy in order to
+have an embedding of its unroller in \Fixi.
+
+Haskell transcriptions of the unroller embeddings for regular datatypes are
+given in Figure~\ref{fig:HaskellunInRegular} (Haskell definitions of
+\texttt{Mu0} and \texttt{mcvpr0} are given in Figure~\ref{fig:HaskellFunctor1}).
+Note that the definitions of these unrollers are uniform:
+\lstinline$mvcvp0 (\ _ cast _ ->  fmap cast)$.
+This uniform definition relies on the existence of \textit{fmap} over
+the base structures -- note the \lstinline$deriving Functor$
+in the data declarations. In Section~\ref{ssec:fixi:theory:cv},
+we will show that \textit{fmap} exists for any $F:+* -> *$ in \Fixi.
+So, we can derive a uniform embedding for the unroller $\unIn_{*}$
+for any base $F:+* -> *$ as follows:
+\begin{align*}
+\unIn_{*} &: \forall X_F^{+* -> *}.\mu_{*}^{+}X_F -> X_F(\mu_{*}^{+}X_F) \\
+\unIn_{*} &\triangleq \McvPr_{*} (\lambda\_.\lambda \textit{cast}.\lambda\_.
+					\textit{fmap}_{X_F} ~\textit{cast})
+\end{align*}
+
+Haskell transcriptions of the unroller embeddings for nested datatypes are
+given in Figure~\ref{fig:HaskellunInNested}. (Haskell definitions of
+\texttt{Mu1}, \texttt{mcvpr1}, \texttt{fmap1'} are given
+in Figure~\ref{fig:HaskellFunctor1}). Note that the definitions of
+the unrollers \texttt{unInP} for powerlists and \texttt{unInB} for bushes
+are uniform: \lstinline$mvcvp1 (\ _ cast _ ->  fmap1 cast id)$.
+The function \texttt{fmap1} is the rank 2 monotone map for type constructors
+of kind $+(+* -> *) -> (+* -> *)$, which analogous to rank 1 monotone map
+\texttt{fmap} for type constructors of kind $+* -> *$. Or, you can think of 
+the \texttt{Functor1} class as a bifunctor over type constructors of kind
+$+(+* -> *) -> +* -> *$, whose first argument
+($+\underline{(+* -> *)} -> +* -> *$) is a type constructor
+and second argument ($+(+* -> *) -> +\underline{*} -> *$) is a type.
+
+Lastly, a Haskell transcription of the unroller embedding for
+the length indexed list datatype, which is a term-indexed datatype,
+is given in Figure~\ref{fig:HaskellunInIndexed}. To give an embedding of
+$\unIn_{(V A)}$, we defined another version of Mendler-style course-of-values
+recursion combinator \texttt{mcvprI1}, which is similar to \texttt{mcvpr1}
+in Figure~\ref{fig:HaskellFunctor1} but requires the base structure
+to be an instance of the \texttt{FunctorI1} class rather than an instance of
+the \texttt{Functor1} class. The \texttt{FunctorI1} class is more simple than
+the \texttt{Functor1} class since \texttt{FunctorI1} requires only the first
+argument to be monotone while \texttt{Functor1} requires both the first and
+the second argument to be monotone -- this is evident when you compare
+the types of thier member functions \texttt{fmap1} and \texttt{fmapI1}
+side-by-side:
+\begin{lstlisting}
+    fmap1  :: (Functor f, Functor1 h) =>
+              (forall i. f i -> g i) -> (a -> b) -> h f a -> h g b
+    fmapI1 :: FunctorI1 h =>
+              (forall i. f i -> g i)           -> h f a -> h g a
+\end{lstlisting}
+Note that there fmapI1 does not have the extra \texttt{Functor}
+requirement since it does not require the second argument type
+to be monotone. The function \texttt{fmapI1} only transforms the first type
+constructor argument and preserves the second argument (which may be
+a type index or a term index), while \texttt{fmap1} is able to transform
+both the first and the second arugment. For term-indexed datatypes,
+\texttt{fmapI1} is enough to construct embeddings of the unrollers,
+since there is no need to transform indices -- recall that term-indices
+do not appear at value level, so no values to transform in the first place.
+And even if we had such values, we do not need to transform them anyway
+since unrollers are index preserving by definition.
+Thus, in the type signature of \texttt{mcvprI1}, we need not reqire
+the abstract recursive structure \texttt{r} to be a \texttt{Functor},
+unlike in the type signature of \texttt{mcvpr1} where we did require
+\texttt{Functor r}. The embedding of $\unIn_{(V A)}$ has the shape
+you would expect: \lstinline$mcvprI1 (\_ cast _ ->  fmapI1 cast)$.
+
+An interesting observation is that we can give yet another
+Haskell transcription of $\unIn_P$ via in terms of \texttt{mcvprI1}
+(see \texttt{unInP'} in Figure~\ref{fig:HaskellunInIndexed}),
+rather than in terms of \texttt{mcvpr1}. This is because we did not
+really need the ability to transform type indices to embed unrollers
+for powerlists. However, for truly nested datatypes such as bushes,
+this alternative is not possible. Recall that we do needed to
+transform indices from abstract recursive type to concrete recursive type
+to embed $\unIn_B$, because bushes were indexed by its own structure.
+In summary, unroller embeddings for indexed datatypes, regardless of
+term-indexed or type-indexed, without requiring indices to be monotone
+unless the datatype is truley nested. For truly nested datatype,
+we do have to require indices to be monotone as well as the recursive
+type constructor itself, in order to embed their unrollers. We can have
+a good approximation of this idea by the type system due to the polirzed kinds
+in \Fixi. We conjecture that all base structures of kind $+(+* -> *) -> +* -> *$
+are instances of \texttt{Functor1}, while all base structures of kind
+$+(0* -> *) -> 0* -> *$ are instances of \texttt{Functor1}. We will
+discuss this more formally in Section~\ref{ssec:fixi:theory:cv}.
+
 \subsection{Properties of the unrollers}
 We expect two properties to hold for the embeddings of the unrollers.
 First, $\unIn_F$ must be a left identity of $\In_\kappa$.
@@ -473,19 +580,25 @@ a more general property that \textit{fmap} is well-defined for any
 type constructors of kind $+* -> *$ in \Fixi. We will discuss this
 general property of \textit{fmap} in Section~\ref{ssec:fixi:theory:cv}.
 
+Lastly, we even further optimize the unrollers since we observed
+in the previous subsection that all unroller embeddings have uniform shape of
+\[
+\McvPr_\kappa (\l _.\l cast.\l _.
+		\textit{fmap??}~\textit{cast}~\textit{id}\dots\textit{id}))
+\]
 % Embeddings of unrollers for term-indexed datatypes (e.g. vectors)
 % are intuitively more simple than type-indexed datatypes (e.g. powerlists,
 % bushes). Due to the erasure property, existence of unroll
 % We will discuss the conditions when we can further NO, it's the other way
 % around
 
-\KYA{ TODO cite Monotone Inductive and Coinductive Constructors of Rank 2  - Matthes CSL paper }
-
-\KYA{ TODO state a theorem about this in metatheory and
-	cite some previous work on this maybe? }
-\KYA{ TODO P do not need Functor requirement but $+* -> *$ kind already
-        implies that so it will be true anyway}
-\KYA{ TODO someone must have proved free theorems for higher-kinded cases? }
+%% \KYA{ TODO cite Monotone Inductive and Coinductive Constructors of Rank 2  - Matthes CSL paper }
+%% 
+%% \KYA{ TODO state a theorem about this in metatheory and
+%% 	cite some previous work on this maybe? }
+%% \KYA{ TODO P do not need Functor requirement but $+* -> *$ kind already
+%%         implies that so it will be true anyway}
+%% \KYA{ TODO someone must have proved free theorems for higher-kinded cases? }
 
 
 %% Apart from the limitations of constant-time undefinability of $\unIn_F$

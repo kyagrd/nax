@@ -169,13 +169,13 @@ instance Functor X where
 class FunctorI1 (h :: (* -> *) -> * -> *) where
   fmapI1 :: (forall i . f i -> g i) -> h f j -> h g j
 
-mcvprI :: FunctorI1 f =>
+mcvprI1 :: FunctorI1 f =>
           (forall r j. (forall i. r i -> f r i) ->
                        (forall i. r i -> Mu1 f i) ->
                        (forall i. r i -> a i) ->
                        (f r j -> a j) )
        -> Mu1 f i' -> a i'
-mcvprI phi = phi unIn1 id (mcvprI phi) . unIn1
+mcvprI1 phi = phi unIn1 id (mcvprI1 phi) . unIn1
 
 
 data Succ n
@@ -190,7 +190,7 @@ instance FunctorI1 (V a) where
   fmapI1 _ VN = VN
 
 unInV :: Mu1 (V a) i -> (V a) (Mu1 (V a)) i
-unInV = mcvprI (\_ cast _ -> fmapI1 cast)
+unInV = mcvprI1 (\_ cast _ -> fmapI1 cast)
 
 
 instance FunctorI1 P where
@@ -198,5 +198,5 @@ instance FunctorI1 P where
   fmapI1 _ PN = PN
 
 unInP' :: Mu1 P a -> P (Mu1 P) a
-unInP' = mcvprI (\_ cast _ -> fmapI1 cast)
+unInP' = mcvprI1 (\_ cast _ -> fmapI1 cast)
 
