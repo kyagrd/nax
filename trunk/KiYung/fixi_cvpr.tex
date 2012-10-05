@@ -437,8 +437,8 @@ have an embedding of its unroller in \Fixi.
 Haskell transcriptions of the unroller embeddings for regular datatypes are
 given in Figure~\ref{fig:HaskellunInRegular} (Haskell definitions of
 \texttt{Mu0} and \texttt{mcvpr0} are given in Figure~\ref{fig:HaskellFunctor1}).
-Note that the definitions of these unrollers are uniform:
-\lstinline$mvcvp0 (\ _ cast _ ->  fmap cast)$.
+Note that the definitions of \texttt{unInN}, \texttt{unInL}, and \texttt{unInR}
+are uniform: \lstinline$mvcvp0 (\ _ cast _ ->  fmap cast)$.
 This uniform definition relies on the existence of \textit{fmap} over
 the base structures -- note the \lstinline$deriving Functor$
 in the data declarations. In Section~\ref{ssec:fixi:theory:cv},
@@ -465,9 +465,9 @@ $+(+* -> *) -> +* -> *$, whose first argument
 ($+\underline{(+* -> *)} -> +* -> *$) is a type constructor
 and second argument ($+(+* -> *) -> +\underline{*} -> *$) is a type.
 
-Lastly, a Haskell transcription of the unroller embedding for
-the length indexed list datatype, which is a term-indexed datatype,
-is given in Figure~\ref{fig:HaskellunInIndexed}. To give an embedding of
+A Haskell transcription of the unroller embedding for the length indexed
+list datatype, which is a term-indexed datatype, is given
+in Figure~\ref{fig:HaskellunInIndexed}. To give an embedding of
 $\unIn_{(V A)}$, we defined another version of Mendler-style course-of-values
 recursion combinator \texttt{mcvprI1}, which is similar to \texttt{mcvpr1}
 in Figure~\ref{fig:HaskellFunctor1} but requires the base structure
@@ -501,13 +501,13 @@ unlike in the type signature of \texttt{mcvpr1} where we did require
 \texttt{Functor r}. The embedding of $\unIn_{(V A)}$ has the shape
 you would expect: \lstinline$mcvprI1 (\_ cast _ ->  fmapI1 cast)$.
 
-An interesting observation is that we can give yet another
-Haskell transcription of $\unIn_P$ via in terms of \texttt{mcvprI1}
+Interestingly, we can give yet another
+Haskell transcription of $\unIn_P$ in terms of \texttt{mcvprI1}
 (see \texttt{unInP'} in Figure~\ref{fig:HaskellunInIndexed}),
 rather than in terms of \texttt{mcvpr1}. This is because we did not
 really need the ability to transform type indices to embed unrollers
 for powerlists. However, for truly nested datatypes such as bushes,
-this alternative is not possible. Recall that we do needed to
+this alternative is not possible. Recall that we did need to
 transform indices from abstract recursive type to concrete recursive type
 to embed $\unIn_B$, because bushes were indexed by its own structure.
 In summary, unroller embeddings for indexed datatypes, regardless of
@@ -580,12 +580,15 @@ a more general property that \textit{fmap} is well-defined for any
 type constructors of kind $+* -> *$ in \Fixi. We will discuss this
 general property of \textit{fmap} in Section~\ref{ssec:fixi:theory:cv}.
 
-Lastly, we even further optimize the unrollers since we observed
-in the previous subsection that all unroller embeddings have uniform shape of
+Lastly, we can even further optimize the unrollers based on the observtion
+made in the previous subsection that all unroller embeddings have uniform shape
 \[
-\McvPr_\kappa (\l _.\l cast.\l _.
-		\textit{fmap??}~\textit{cast}~\textit{id}\dots\textit{id}))
+\McvPr_\kappa (\l\_.\l cast.\l\_.\;
+	\underline{\textit{fmap}??~\textit{cast}~\textit{id}\cdots\textit{id}}
+	\,)
 \]
+where the underlined part can be optimized to the identity function \textit{id}.
+
 % Embeddings of unrollers for term-indexed datatypes (e.g. vectors)
 % are intuitively more simple than type-indexed datatypes (e.g. powerlists,
 % bushes). Due to the erasure property, existence of unroll
