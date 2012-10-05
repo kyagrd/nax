@@ -106,8 +106,9 @@ For simplicity, we Nax with just one Mendler-style combinator \textsf{MIt}.
  ~~~~
    \inference{}{|- \cdot}
  ~~~~
-   \inference{|- \Sigma & \Sigma |- \kappa:\square}
-             {|- \Sigma,T:\kappa}
+ %%  \inference{ |- \Sigma & \Sigma |- \kappa:\square }{ |- \Sigma,T:\kappa }
+   %% \inference{  }{  }
+\inference{ |- \Sigma & \Sigma |- \kappa:\square}{ |- \Sigma,T:\kappa }   
       \big( T\notin\dom(\Sigma) \big)
 \]
 \[ \inference{|- \Sigma & \Sigma;\cdot |- \sigma:*}
