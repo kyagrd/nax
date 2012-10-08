@@ -327,21 +327,24 @@ only focus our description on the dashed-box extensions regarding polarities
 (\S\ref{ssec:fixi:def:equirec}).
 
 \subsection{Polarities} \label{ssec:fixi:def:polarity}
-Polarities track in which position the type constructor variables are used.
+Polarities track how type constructor variables are used.
 A polarity ($p$) is either covariant ($+$), contravariant ($-$), or
-avariant ($0$). The avariant polarity ($0$) means that it can be used in
-any position.\footnote{``invariant'' is more often used
-	(also in \cite{AbeMat04}, but we think it is a quite misleading jargon,
-	since $0$ means that it \emph{does not care} about polarities
-	rather than maintaining some unchanging properties about polarities.}
+avariant ($0$). When a type variable is bound, its polarity is 
+made explicit both at its binding site, and in the context.
+The avariant polarity ($0$) means a variable can be used both
+covariantly and contravariantly\footnote{the notation ``invariant'' is sometimes used
+	(see \cite{AbeMat04}), but we think this notation is quite misleading,
+	since $0$ means that the system \emph{does not care} about that
+	variable's polarity,
+	rather than maintaining some unchanging set of properties about the variables polarities.}
 We prefix a kind  by a polarity (\ie, $p\kappa$) to specify the variable's
 kind and polarity. For example,
 \[
 \begin{array}{rlrl}
 X_1^{+*},X_2^{-*} |- \!\!\! & X_1 -> X_2 : *
-	& ~~~\text{justifies} & \l X_1^{+*}.\l X_2^{-*}.X_1 -> X_2 \\
+	& ~~~\text{justifies} & \l X_1^{+*}.\l X_2^{-*}.X_2 -> X_1 \\
 X_1^{0*},X_2^{0*} |- \!\!\! & X_1 -> X_2 : *
-	& ~~~\text{also justifies} & \l X_1^{0*}.\l X_2^{-*}.X_1 -> X_2 \\
+	& ~~~\text{also justifies} & \l X_1^{0*}.\l X_2^{0*}.X_1 -> X_2 \\
 X^{0*} |- \!\!\! & X\phantom{_.} -> X\phantom{_2} : *
 	& ~~~\text{justifies} & \l X^{0*}.X -> X
 \end{array}
