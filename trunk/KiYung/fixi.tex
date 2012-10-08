@@ -1,25 +1,35 @@
 \chapter{System \Fixi}\label{ch:fixi}
 
-It is known that there cannot be a reduction-preserving embedding of
+In this chapter we investigate how the framework we have developed needs to be extended
+to handle Mendler style operators that that support primitive recursion. Recall that
+a primitive recursive operator supplies access to immediate subterms as well as the
+value of recursive calls over those subterms. The factorial function is the
+classic example of a primitive recursive function.
+
+
+
+It is fairly well known that there cannot be a reduction-preserving embedding of
 primitive recursion\footnote{
 	Although we can define primitive recursion for positive datatypes
 	in terms of iteration, which is embeddable in System \F, such an
 	embedding would not reduction-preserving. That is, it will take
 	more reduction steps than the usual definition of primitive recursion.
 	}
-in System \F, as suggested by the paper 
+in System \F. A proof of this is outlined in the paper 
 {\it Induction is not derivable in second-order dependent type theory}
-\cite{Geuvers01}. For similar reasons, it is also strongly believed that
-there cannot be a reduction-preserving embedding of primitive recursion 
-in System \Fw. \citet{AbeMat04} designed \Fixw, which is an extension of \Fw,
-in order to embed primitive recursion with its desired reduction behavior.
-Their embedding relys on a novel use of the new extensions to \Fixw,
+\cite{Geuvers01}. For similar reasons, researchers strongly believed that
+there is no reduction-preserving embedding of primitive recursion 
+in System \Fw. Fortunately, all hope is not lost
+for finding a reduction preserving embedding in a relatively simple calculus. 
+\citet{AbeMat04} have designed \Fixw, which is a simple extension of \Fw,
+which embeds primitive recursion with the desired reduction behavior.
+Their embedding relys on a novel use of the following extensions to \Fixw,
 polarized kinds and an equi-recursive fixpoint type operator,
 in order to define primitive recursion within \Fixw.
 
-As a natural extension of these ideas, we present \Fixi,
+As a natural extension of these ideas, in this chapter we present \Fixi,
 an extension of \Fixw\ with erasable term-indices,
-to embed primitive recursion over term-indexed datatypes
+that embeds primitive recursion over term-indexed datatypes
 as well as type-indexed datatypes and regular datatypes.
 
 The organization of this chapter is analogous to Chapter \ref{ch:fi}, 
