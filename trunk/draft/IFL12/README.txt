@@ -10,5 +10,6 @@ combinators, but only gave rather simple example uses of indexed datatypes
 and already published work on Mendler-style combinators, we think the main
 focus of the paper should be that interesting examples of inexed datatypes
 are programmable in Nax. For example, illustrating typed interpreter for
-a very simple language in Nax is what we have in mind.
+a very simple language in Nax is what we have in mind. More ambitious example
+would be normalizaty by evaluation.
 
