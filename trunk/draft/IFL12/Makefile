@@ -23,7 +23,7 @@ main.ps: main.dvi
 main.dvi: ${TEXSRC} main.bbl
 	latex main
 
-main.aux:
+main.aux: main.tex
 	latex main
 
 main.bbl: main.aux main.bib
