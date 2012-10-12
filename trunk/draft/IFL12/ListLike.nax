@@ -1,0 +1,51 @@
+data Ty = I | B
+
+data Val : Ty -> * where
+  IV : Nat -> Val {I}
+  BV : Bool -> Val {B}
+
+plusV (IV n) (IV m) = IV n
+
+ifV (BV b) v1 v2 = if b then v1 else v2
+
+data E : (Ty -> *) -> (Ty -> *) where
+  VAL : Val {t} -> E r {t}
+  PLUS : r {I} -> r {I} -> E r {I}
+  IF : r {B} -> r {t} -> r {t} -> E r {t}
+    deriving fixpoint Expr
+
+eval x = mcata { {t} . Val {t} } x
+          with
+           ev (VAL v) = v
+           ev (PLUS e1 e2) = plusV (ev e1) (ev e2)
+           ev (IF e e1 e2) = ifV (ev e) (ev e1) (ev e2)
+
+data GL : (List Ty -> List Ty -> *) ->
+          (List Ty -> List Ty -> *) -> (List Ty -> List Ty -> *) where
+  Gnil  : GL x r i i
+  Gcons : x i j -> r j k -> GL x r i k
+    deriving fixpoint GList
+{-
+append l = mcata { {i} {j} . GList f {j} {k} -> GList f {i} {k} } l
+            with
+             app Gnil         ys = ys
+             app (Gcons x xs) ys = gcons x (app xs ys)
+-}
+data Inst : (List Ty -> List Ty -> *) -> (List Ty -> List Ty -> *) where
+  PUSH : Val {t} -> Inst r {ts} {`cons t ts}
+  ADD  : Inst r {`cons I (`cons I ts)} {`cons I ts}
+  IFPOP : GList r {ts} {ts'} -> GList r {ts} {ts'} -> Inst r {`cons B ts} {ts'}
+    deriving fixpoint Instruction
+
+synonym Stack i j = GList (Mu [List Ty -> List Ty -> *] Inst) {i} {j}
+                 -- GList Instruction {i} {j}   <-- can't write this
+
+-- compile : Expr {t} -> GList Instruction {ts} (`cons t ts)
+compile e =
+  mcata { {t} . Stack {ts} {`cons t ts} } e
+   with
+    cmpl (VAL v) = gcons (pUSH v) gnil
+{-
+    cmpl (PLUS e1 e2) = append (append (cmpl e1) (cmpl e2)) (gcons aDD gnil)
+    cmpl (IF e e1 e2) = append (cmpl e) (gcons (IFPOP (cmpl e1) (cmpl e2) gnil))
+-} 
