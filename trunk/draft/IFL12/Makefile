@@ -1,6 +1,6 @@
 .PHONY: all pdf ps dvi touch
 
-TEXSRC=main.tex \
+TEXSRC=main.tex mylhs2tex.sty \
        exEvalHs.tex exEvalAgda.tex exEvalNax.tex \
        exCmplHs.tex exCmplAgda.tex exCmplNax.tex \
        exGListHs.tex exGListAgda.tex exGListNax.tex \
