@@ -81,3 +81,35 @@ eoo 0 = Left EO
 eoo (suc n) = case (eoo n) of λ{ (Left ev) -> Right(OS ev)
                                 ; (Right od) -> Left(ES od) } 
 -}
+
+-- instantiating to a plain list 
+
+record Unit : Set where constructor <>
+
+Elem : (a : Set) -> Unit -> Unit -> Set
+Elem a i j = a
+
+List' : Set -> Set
+-- List' a = GList (Elem a) <> <>
+List' a = GList (λ _ _ -> a) <> <>
+
+nil : {a : Set} -> List' a
+nil = GNil
+
+cons : {a : Set} -> a -> List' a -> List' a
+cons = GCons
+
+-- instantiating to a length indexed list
+
+ElemV : (a : Set) -> ℕ -> ℕ -> Set
+ElemV a i j = a
+
+Vec : Set -> ℕ -> Set
+Vec a n = GList (λ _ _ -> a) n 0
+
+vNil : {a : Set} -> Vec a 0
+vNil = GNil
+
+vCons  : {a : Set} {n : ℕ} ->
+         a -> Vec a n -> Vec a (1 + n)
+vCons = GCons

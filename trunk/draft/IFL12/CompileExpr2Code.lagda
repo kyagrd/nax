@@ -57,12 +57,9 @@ Code sc sc' = GList Inst sc sc'
 
 compile : {t : Ty} -> {ts : List Ty} -> Expr t -> Code ts (t ∷ ts)
 compile (VAL v)       =  GCons (PUSH v) GNil
-compile (PLUS e1 e2)  =  append  (append  (compile e1)
-                                          (compile e2)) 
+compile (PLUS e1 e2)  =  append  (append  (compile e1) (compile e2)) 
                                  (GCons ADD GNil)
 compile (IF e e1 e2)  =  append  (compile e)
-                                 (GCons  (IFPOP  (compile e1)
-                                                 (compile e2))
-                                         GNil)
+                                 (GCons (IFPOP (compile e1) (compile e2)) GNil)
 
 \end{code}

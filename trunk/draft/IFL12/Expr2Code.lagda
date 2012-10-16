@@ -2,16 +2,6 @@
 %include agda.fmt
 %include includelhs2tex.lhs
 
-%% data GList {I : Set} (X : I -> I -> Set) : I -> I -> Set where
-%%   GNil   : {i : Ix} -> GList X i i
-%%   GCons  : {i j k : Ix} ->
-%%            X i j -> GList X j k -> GList X i k
-%% 
-%% 
-%% append :  {Ix : Set} -> {X : Ix -> Ix -> Set} -> {i j k : Ix} ->
-%%           GList X i j -> GList X j k -> GList X i k
-%% append GNil ys           = ys
-%% append (GCons x xs)  ys  = GCons x (append xs ys) 
 \begin{code}
 data Inst : List Ty -> List Ty -> Set where
   PUSH   : {t : Ty} {ts : List Ty} ->

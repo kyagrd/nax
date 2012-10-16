@@ -24,8 +24,15 @@
 
 %format ℕ = "\mathbb{N}"
 %format ∷ = ::
+%format λ = \
+%format <> = "\mathop{\langle\rangle}"
 %format Set = "\star"
 %format Set1
+%format record = "\mathbf{record}"
+%format constructor = "\textrm{constructor}"
+
+%format ElemV = Elem"_{\!"V"}"
+%format MkElemV = MkElem"_{\!"V"}"
 
 %format k0
 
@@ -53,4 +60,3 @@
 %format MIt (a) = "\mathbf{mcata}_{" a "}"
 %format mcata (a) = "\mathbf{mcata}_{" a "}"
 
-%format cons = "{\text{\tiny cons}}"

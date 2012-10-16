@@ -7,8 +7,9 @@ data GList {I : Set} (X : I -> I -> Set) : I -> I -> Set
     GNil   : {i : Ix} -> GList X i i
     GCons  : {i j k : Ix} ->
              X i j -> GList X j k -> GList X i k
+
 {-""-}
-{-""-}
+
 append  : {Ix : Set} ->
           {X : Ix -> Ix -> Set} -> {i j k : Ix} ->
           GList X i j -> GList X j k -> GList X i k

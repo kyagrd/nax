@@ -56,7 +56,7 @@ data Inst :: [Ty] -> [Ty] -> * where
 type Code sc sc' = GList Inst sc sc'
 
 compile :: Expr t -> Code ts (t .: ts)
-compile (VAL v) = GCons (PUSH v) GNil
+compile (VAL v) = {-"\textcolor{red}{"-} GCons (PUSH v) GNil {-"}"-}
          -- Does not type check without (|* : *|) extension.
          -- Error message from GHC 7.4.1:
          -- \quad    Couldn't match kind `|BOX|' against `|*|'

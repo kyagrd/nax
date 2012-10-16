@@ -1,4 +1,4 @@
-{-# LANGUAGE KindSignatures, GADTs, DataKinds, PolyKinds, TypeOperators #-}
+{-# LANGUAGE KindSignatures, GADTs, DataKinds, PolyKinds, TypeOperators, TypeFamilies #-}
 
 data Ty = I | B
 
@@ -23,8 +23,8 @@ eval (PLUS e1 e2) = plusV (eval e1) (eval e2)
 eval (IF e e1 e2) = ifV (eval e) (eval e1) (eval e2)
 
 data GList x i j where
-  Nil  :: GList x i i
-  Cons :: x i j -> GList x j k -> GList x i k
+  GNil  :: GList x i i
+  GCons :: x i j -> GList x j k -> GList x i k
 
 data Inst :: [Ty] -> [Ty] -> * where
   PUSH  :: Val t -> Inst ts (t ': ts)
@@ -47,34 +47,32 @@ compile (VAL v) = undefined -- Cons (PUSH v) Nil -- does not type check without 
 
 
 append :: GList x i j -> GList x j k -> GList x i k
-append Nil         ys = ys
-append (Cons x xs) ys = Cons x (append xs ys)
+append GNil         ys = ys
+append (GCons x xs) ys = GCons x (append xs ys)
 
 
 -- instantiating to a length indexed list
 
 data Nat = Z | S Nat
 
-data VecR a i j where MkVecR :: a -> VecR a (S i) i
+data ElemV a i j where
+  MkElemV :: a -> ElemV a (S n) n
 
-type Vec a n = GList (VecR a) n Z
+type Vec a n = GList (ElemV a) n Z
 
-vNil :: Vec a Z
-vNil = Nil
+vNil = GNil :: Vec a Z
 
 vCons :: a -> Vec a n -> Vec a (S n)
-vCons = Cons . MkVecR
-
+vCons = GCons . MkElemV
 
 -- instantiating to a plain list
 
-data R a i j where MkR :: a -> R a () ()
+data Elem a i j where MkElem :: a -> Elem a () ()
 
-type List a = GList (R a) () ()
+type List a = GList (Elem a) () ()
 
-nil :: List a
-nil = Nil
+nil = GNil :: List a
 
 cons :: a -> List a -> List a
-cons = Cons . MkR
+cons = GCons . MkElem
 

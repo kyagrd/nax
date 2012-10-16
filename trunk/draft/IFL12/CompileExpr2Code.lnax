@@ -57,12 +57,10 @@ synonym  Code sc sc' =  GList (Mu[List Ty -> List Ty -> *] Instr) {sc} {sc'}
 compile e =
   mcata { {t} . Code {ts} {`cons t ts} } e with
     cmpl (VAL v)        = gCons (pUSH v) gNil
-    cmpl (PLUS e1 e2)   = append  (append  (cmpl e1)
-                                           (cmpl e2))
+    cmpl (PLUS e1 e2)   = append  (append (cmpl e1) (cmpl e2))
                                   (gCons aDD gNil)
     cmpl (IF e0 e1 e2)  = append  (cmpl e0)
-                                  (gCons (iFPOP  (cmpl e1)
-                                                 (cmpl e2)) gNil)
+                                  (gCons (iFPOP (cmpl e1) (cmpl e2)) gNil)
 
 
 \end{code}

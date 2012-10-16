@@ -4,6 +4,7 @@ TEXSRC=main.tex \
        exEvalHs.tex exEvalAgda.tex exEvalNax.tex \
        exCmplHs.tex exCmplAgda.tex exCmplNax.tex \
        exGListHs.tex exGListAgda.tex exGListNax.tex \
+       exGListHsEx.tex exGListAgdaEx.tex exGListNaxEx.tex \
        exHaskell.tex exAgda.tex exNax.tex
 
 all: pdf
@@ -76,5 +77,15 @@ exGListHs.tex: GList.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 exGListAgda.tex: GList.lagda includelhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
+
+exGListNaxEx.tex: GListExample.lnax includelhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
+exGListHsEx.tex: GListExample.lhs includelhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
+exGListAgdaEx.tex: GListExample.lagda includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
