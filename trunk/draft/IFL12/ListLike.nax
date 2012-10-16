@@ -38,7 +38,7 @@ data Inst : (List Ty -> List Ty -> *) -> (List Ty -> List Ty -> *) where
     deriving fixpoint Instruction
 
 synonym Stack i j = GList (Mu [List Ty -> List Ty -> *] Inst) {i} {j}
-                 -- GList Instruction {i} {j}   <-- can't write this
+                 -- GList Instruction                         {i} {j}
 
 -- compile : Expr {t} -> GList Instruction {ts} (`cons t ts)
 compile e =
@@ -47,5 +47,5 @@ compile e =
     cmpl (VAL v) = gcons (pUSH v) gnil
 {-
     cmpl (PLUS e1 e2) = append (append (cmpl e1) (cmpl e2)) (gcons aDD gnil)
-    cmpl (IF e e1 e2) = append (cmpl e) (gcons (IFPOP (cmpl e1) (cmpl e2) gnil))
+    cmpl (IF e e1 e2) = append (cmpl e) (gcons (iFPOP (cmpl e1) (cmpl e2) gnil))
 -} 
