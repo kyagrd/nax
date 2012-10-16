@@ -13,7 +13,7 @@ data Instr  :  (List Ty -> List Ty -> *) ->
      deriving fixpoint Inst
 {-""-}
 
-synonym  Code sc sc' {-"~"-} -- |GList Inst {sc} {sc'}|
+synonym  Code sc sc' {-"~"-} -- |= GList Inst {sc} {sc'}|
   =  GList (Mu[List Ty -> List Ty -> *] Instr) {sc} {sc'}
 
 compile e =

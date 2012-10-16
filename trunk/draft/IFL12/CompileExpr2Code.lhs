@@ -47,8 +47,7 @@ append (GCons x xs)  ys  = GCons x (append xs ys)
 data Inst :: [Ty] -> [Ty] -> * where
   PUSH   :: Val t -> Inst ts (t .: ts)
   ADD    :: Inst (I .: I .: ts) (I .: ts)
-  IFPOP  :: GList Inst ts ts' -> GList Inst ts ts' ->
-            Inst (B .: ts) ts'
+  IFPOP  :: GList Inst ts ts' -> GList Inst ts ts' -> Inst (B .: ts) ts'
 
 
 

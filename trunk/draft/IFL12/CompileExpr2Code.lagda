@@ -49,8 +49,7 @@ data Inst : List Ty -> List Ty -> Set where
             Val t -> Inst ts (t ∷ ts) 
   ADD    :  {ts : List Ty } -> Inst (I ∷ I ∷ ts) (I ∷ ts)
   IFPOP  :  {ts ts' : List Ty} ->
-            GList Inst ts ts' -> GList Inst ts ts' ->
-            Inst (B ∷ ts) ts'
+            GList Inst ts ts' -> GList Inst ts ts' -> Inst (B ∷ ts) ts'
 
 Code : List Ty -> List Ty -> Set
 Code sc sc' = GList Inst sc sc'
