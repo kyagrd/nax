@@ -24,13 +24,13 @@ UNLIT = /usr/lib/ghc/unlit
 #
 # To run (or type check) the code you should run "make ListLike"
 # in order to generate ListLike.hs, ListLike.nax, and ListLike.agda.
-# The "make ListLike" command will automatically generate ListLike.hs
-# from all the original *.lhs files above by unliterating and some
-# preprocessing, and similarly, generate ListLike.nax and ListLike.agda
-# well. Since ListLike.* files are automatically generated, manually
-# edited versions of ListLike.* must not be commited to the repository.
-# You can experiment around in your sandbox, but save corresponding
-# changes into the original source files and then run "make ListLike".
+# The "make ListLike" command will automatically generate ListLike.hs,
+# ListLike.nax, and ListLike.agda from all the original source files above
+# by unliterating and some preprocessing (sed, cat). Since ListLike.* files
+# are automatically generated, manually edited versions of ListLike.* must
+# not be commited to the repository. You can experiment in your sandbox,
+# but save corresponding changes into the original source files and then
+# run "make ListLike" to generated updated ListLike.* files automatically.
 #
 # All.lhs, All.lnax, and All.lagda are manually cut/pasted/modifed from
 # the generated ListLike.* files except the content of GListExample.l*.
