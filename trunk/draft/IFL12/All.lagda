@@ -10,7 +10,8 @@ open import Data.Nat
 open import Data.Bool
 open import Data.List
 
-data Ty : Set where  I : Ty;{-"~"-}  B : Ty 
+data Ty : Set where  I : Ty
+                     B : Ty 
 
 data Val : Ty -> Set where
   IV  : ℕ    -> Val I
@@ -33,7 +34,7 @@ eval (PLUS e1 e2)   = plusV (eval e1) (eval e2)
 eval (IF e0 e1 e2)  = ifV (eval e0) (eval e1) (eval e2)
 
 
-data GList {I : Set} (X : I -> I -> Set) : I -> I -> Set where
+data GList {Ix : Set} (X : Ix -> Ix -> Set) : Ix -> Ix -> Set where
   GNil   : {i : Ix} -> GList X i i
   GCons  : {i j k : Ix} -> X i j -> GList X j k -> GList X i k
 

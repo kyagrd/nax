@@ -2,5 +2,5 @@
 %include includelhs2tex.lhs
 
 \begin{code}
-TODO
+{-"TODO"-}
 \end{code}

@@ -25,7 +25,7 @@ compile (PLUS e1 e2)  =
           (GCons ADD GNil)
 compile (IF e e1 e2)  =
   append  (compile e)
-          GCons  (IFPOP  (compile e1)
-                         (compile e2))
-                 GNil)
+          (GCons  (IFPOP  (compile e1)
+                          (compile e2))
+                  GNil)
 \end{code}

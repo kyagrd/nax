@@ -6,7 +6,7 @@ data Ty = I | B
 {-""-}
 
 data Val : Ty -> * where
-  IV  : Nat -> Val {I}
+  IV  : Int -> Val {I}
   BV  : Bool -> Val {B}
 
 {-"\hspace*{-2.5ex}"-} -- |plusV : Val {I} -> Val {I} -> Val {I}|

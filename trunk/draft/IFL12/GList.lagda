@@ -2,7 +2,7 @@
 %include agda.fmt
 %include includelhs2tex.lhs
 \begin{code}
-data GList {I : Set} (X : I -> I -> Set) : I -> I -> Set
+data GList {Ix : Set} (X : Ix -> Ix -> Set) : Ix -> Ix -> Set
   where
     GNil   : {i : Ix} -> GList X i i
     GCons  : {i j k : Ix} ->
