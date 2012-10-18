@@ -5,12 +5,12 @@
 data GL :  (i -> i -> *) ->
            (i -> i -> *) ->
            (i -> i -> *) where
-  GNil   : GL x r i i
-  GCons  : x i j -> r j k -> GL x r i k
+  GNil   : GL x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
+  GCons  : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GL x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
      deriving fixpoint GList
 
 append l =
-  mcata { i j . GList x j k -> GList f i k } l
+  mcata { {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} . GList x {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GList f {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}} } l
     with
       app GNil           ys  = ys
       app  (GCons x xs)  ys  =

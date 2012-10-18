@@ -19,7 +19,7 @@ cons' x = gCons (MkElem x)
 data ElemV : * -> Nat -> Nat -> * where
   MkElemV : a -> ElemV a {succ n} {n}
 
-synonym  Vec a {n}
+synonym  Vec a n
            = GList (ElemV a) {n} {zero}
 
 vNil = gNil {-" ~~ "-} -- |: Vec a Z|

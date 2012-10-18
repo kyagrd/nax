@@ -37,12 +37,12 @@ eval e =  mcata { {t} . Val {t} } e with
 data GL :  (i -> i -> *) ->
            (i -> i -> *) ->
            (i -> i -> *) where
-  GNil   : GL x r i i
-  GCons  : x i j -> r j k -> GL x r i k
+  GNil   : GL x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
+  GCons  : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GL x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
      deriving fixpoint GList
 
 append l =
-  mcata { i j . GList x j k -> GList f i k } l
+  mcata { {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} . GList x {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GList f {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}} } l
     with
       app GNil           ys  = ys
       app  (GCons x xs)  ys  =
@@ -100,7 +100,7 @@ cons' x = gCons (MkElem x)
 data ElemV : * -> Nat -> Nat -> * where
   MkElemV : a -> ElemV a {succ n} {n}
 
-synonym  Vec a {n}
+synonym  Vec a n
            = GList (ElemV a) {n} {zero}
 
 vNil = gNil {-" ~~ "-} -- |: Vec a Z|
