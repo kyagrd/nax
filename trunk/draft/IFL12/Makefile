@@ -74,6 +74,9 @@ main.bbl: main.aux main.bib
 	latex main
 
 
+mylhs2tex.sty: mylhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
 exEvalNax.tex: Eval.lnax includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
