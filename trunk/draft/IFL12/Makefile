@@ -5,7 +5,6 @@ TEXSRC=main.tex mylhs2tex.sty \
        exCmplHs.tex exCmplAgda.tex exCmplNax.tex \
        exGListHs.tex exGListAgda.tex exGListNax.tex \
        exGListHsEx.tex exGListAgdaEx.tex exGListNaxEx.tex \
-       exAllHs.tex exAllAgda.tex exAllNax.tex
 
 UNLIT = /usr/lib/ghc/unlit
 
@@ -73,19 +72,6 @@ main.aux: main.tex
 main.bbl: main.aux main.bib
 	bibtex main
 	latex main
-
-mylhs2tex.sty: mylhs2tex.lhs
-	lhs2TeX --poly -o $@ $<
-
-exAllNax.tex: All.lnax includelhs2tex.lhs
-	lhs2TeX --poly -o $@ $<
-
-exAllHs.tex: All.lhs includelhs2tex.lhs
-	lhs2TeX --poly -o $@ $<
-
-exAllAgda.tex: All.lagda includelhs2tex.lhs
-	lhs2TeX --poly -o $@ $<
-
 
 
 exEvalNax.tex: Eval.lnax includelhs2tex.lhs

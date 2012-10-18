@@ -7,12 +7,12 @@
 data Elem a i j where
   MkElem :: a -> Elem a () ()
 
-type List a = GList (Elem a) () ()
+type List' a = GList (Elem a) () ()
 
-nil = GNil {-"~"-} :: List a
+nil' = GNil {-"~"-} :: List' a
 
-cons :: a -> List a -> List a
-cons = GCons . MkElem
+cons' :: a -> List' a -> List' a
+cons' = GCons . MkElem
 
 -- instantiating to a length indexed list
 

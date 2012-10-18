@@ -2,5 +2,28 @@
 %include includelhs2tex.lhs
 
 \begin{code}
-{-"TODO"-}
+-- instantiating to a plain list
+data Unit = U
+data Elem : * -> Unit -> Unit -> * where
+  MkElem : a -> Elem a {U} {U}
+
+synonym List' a = GList (Elem a) {U} {U}
+
+nil' = gNil {-" ~~ "-} -- |: List' a|
+
+-- |cons : a -> List a -> List' a|
+cons' x = gCons (MkElem x)
+
+-- instantiating to a length indexed list
+
+data ElemV : * -> Nat -> Nat -> * where
+  MkElemV : a -> ElemV a {succ n} {n}
+
+synonym  Vec a {n}
+           = GList (ElemV a) {n} {zero}
+
+vNil = gNil {-" ~~ "-} -- |: Vec a Z|
+
+-- |vCons : a -> Vec a {n} -> Vec a {succ n}|
+vCons x = gCons (MkElemV x)
 \end{code}

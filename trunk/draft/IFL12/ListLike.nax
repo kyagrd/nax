@@ -34,15 +34,15 @@ eval e =  mcata { {t} . Val {t} } e with
 
 
 
-data GL :  (List Ty -> List Ty -> *) ->
-           (List Ty -> List Ty -> *) ->
-           (List Ty -> List Ty -> *) where
+data GL :  (i -> i -> *) ->
+           (i -> i -> *) ->
+           (i -> i -> *) where
   GNil   : GL x r i i
   GCons  : x i j -> r j k -> GL x r i k
      deriving fixpoint GList
 
 append l =
-  mcata { {i} {j} . GList f {j} {k} -> GList f {i} {k} } l
+  mcata { i j . GList x j k -> GList f i k } l
     with
       app GNil           ys  = ys
       app  (GCons x xs)  ys  =
@@ -83,5 +83,28 @@ compile e =
 
 
 
-{-"TODO"-}
+-- instantiating to a plain list
+data Unit = U
+data Elem : * -> Unit -> Unit -> * where
+  MkElem : a -> Elem a {U} {U}
+
+synonym List' a = GList (Elem a) {U} {U}
+
+nil' = gNil {-" ~~ "-} -- |: List' a|
+
+-- |cons : a -> List a -> List' a|
+cons' x = gCons (MkElem x)
+
+-- instantiating to a length indexed list
+
+data ElemV : * -> Nat -> Nat -> * where
+  MkElemV : a -> ElemV a {succ n} {n}
+
+synonym  Vec a {n}
+           = GList (ElemV a) {n} {zero}
+
+vNil = gNil {-" ~~ "-} -- |: Vec a Z|
+
+-- |vCons : a -> Vec a {n} -> Vec a {succ n}|
+vCons x = gCons (MkElemV x)
 

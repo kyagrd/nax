@@ -10,9 +10,8 @@ data GList {Ix : Set} (X : Ix -> Ix -> Set) : Ix -> Ix -> Set
 
 {-""-}
 
-append  : {Ix : Set} ->
-          {X : Ix -> Ix -> Set} -> {i j k : Ix} ->
-          GList X i j -> GList X j k -> GList X i k
+append : {Ix : Set} -> {X : Ix -> Ix -> Set} -> {i j k : Ix}
+  {-"~~"-} -> GList X i j -> GList X j k -> GList X i k
 append GNil ys            = ys
 append  (GCons x xs)  ys  =
         {-"~"-}GCons x (append xs ys) 
