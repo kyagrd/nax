@@ -2,6 +2,9 @@
 %include agda.fmt
 %include includelhs2tex.lhs
 \begin{code}
+{-"\underline{\textsc{Agda}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad}"-}
+
 data Ty : Set where  I : Ty
                      B : Ty 
 

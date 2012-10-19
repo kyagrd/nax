@@ -8,6 +8,9 @@ open import Data.List
 
 
 
+{-"\underline{\textsc{Agda}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad}"-}
+
 data Ty : Set where  I : Ty
                      B : Ty 
 
@@ -40,6 +43,9 @@ eval (IF e0 e1 e2)  =
 
 
 
+{-"\underline{\textsc{Agda}_{\phantom{g}}^{\phantom{A^k}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~} "-}
+{-""-}
 data GList {Ix : Set} (X : Ix -> Ix -> Set) : Ix -> Ix -> Set
   where
     GNil   : {i : Ix} -> GList X i i
@@ -58,6 +64,9 @@ append  (GCons x xs)  ys  =
 
 
 
+
+{-"\underline{\textsc{Agda}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad}"-}
 
 data Inst : List Ty -> List Ty -> Set where
   PUSH   : {t : Ty} {ts : List Ty} ->

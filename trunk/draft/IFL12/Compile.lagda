@@ -3,6 +3,9 @@
 %include includelhs2tex.lhs
 
 \begin{code}
+{-"\underline{\textsc{Agda}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad}"-}
+
 data Inst : List Ty -> List Ty -> Set where
   PUSH   : {t : Ty} {ts : List Ty} ->
            Val t -> Inst ts (t ∷ ts) 

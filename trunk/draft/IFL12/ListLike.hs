@@ -6,6 +6,9 @@ module ListLike where
 
 
 
+{-"\underline{\textsc{Haskell}_{\phantom{g}}
+   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+
 data Ty = I | B   
 {-""-}
 
@@ -38,12 +41,15 @@ eval (IF e0 e1 e2)  =
 
 
 
+{-"\underline{\textsc{Haskell}_{\phantom{g}}
+   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+
+{-""-}
+{-""-}
 data GList x i j where
   GNil   :: GList x i i
   GCons  :: x i j  -> GList x j k
                    -> GList x i k
-{-""-}
-{-""-}
 
 {-""-}
 append :: GList x i j  -> GList x j k
@@ -56,6 +62,9 @@ append (  GCons x xs)  ys  =
 
 
 
+
+{-"\underline{\textsc{Haskell}_{\phantom{g}}
+   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
 
 data Inst :: [Ty] -> [Ty] -> * where
   PUSH   :: Val t -> Inst ts (t ': ts)

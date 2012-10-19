@@ -3,6 +3,9 @@
 %format cons = "{\text{\tiny cons}}"
 %format ` = "\ensuremath{_{\grave{}}}"
 \begin{code}
+{-"\underline{\textsc{Nax}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}"-}
+
 data Instr  :  (List Ty -> List Ty -> *) ->
                (List Ty -> List Ty -> *) where
    PUSH   : Val {t} -> Instr r {ts} {`cons t ts}

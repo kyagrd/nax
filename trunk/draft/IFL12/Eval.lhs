@@ -2,6 +2,9 @@
 %include includelhs2tex.lhs
 
 \begin{code}
+{-"\underline{\textsc{Haskell}_{\phantom{g}}
+   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+
 data Ty = I | B   
 {-""-}
 

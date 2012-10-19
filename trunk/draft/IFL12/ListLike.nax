@@ -3,6 +3,9 @@
 
 
 
+{-"\underline{\textsc{Nax}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i_{g}}}"-}
+
 data Ty = I | B
 {-""-}
 
@@ -34,6 +37,9 @@ eval e =  mcata { {t} . Val {t} } e with
 
 
 
+{-"\underline{\textsc{Nax}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i}}"-}
+
 data GL :  (i -> i -> *) ->
            (i -> i -> *) ->
            (i -> i -> *) where
@@ -52,6 +58,9 @@ append l =
 
 
 
+
+{-"\underline{\textsc{Nax}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}"-}
 
 data Instr  :  (List Ty -> List Ty -> *) ->
                (List Ty -> List Ty -> *) where

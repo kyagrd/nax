@@ -3,6 +3,9 @@
 
 
 \begin{code}
+{-"\underline{\textsc{Haskell}_{\phantom{g}}
+   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+
 data Inst :: [Ty] -> [Ty] -> * where
   PUSH   :: Val t -> Inst ts (t .: ts)
   ADD    :: Inst (I .: I .: ts) (I .: ts)
