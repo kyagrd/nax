@@ -1,3 +1,5 @@
+%include greek.fmt
+
 %format Ix = "\mathit{I}"
 
 %format I = "\mathtt{I}"

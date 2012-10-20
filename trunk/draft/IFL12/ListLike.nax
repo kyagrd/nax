@@ -40,9 +40,9 @@ eval e =  mcata { {t} . Val {t} } e with
 {-"\underline{\textsc{Nax}_{\phantom{g}}
               \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i}}"-}
 
-data GL :  (i -> i -> *) ->
-           (i -> i -> *) ->
-           (i -> i -> *) where
+data GL :  (iota -> iota -> *) ->
+           (iota -> iota -> *) ->
+           (iota -> iota -> *) where
   GNil   : GL x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
   GCons  : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GL x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
      deriving fixpoint GList

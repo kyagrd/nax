@@ -12,7 +12,7 @@ module ListLike where
 data Ty = I | B   
 {-""-}
 
-data Val t where
+data Val :: Ty -> * where
   IV  :: Int  -> Val I
   BV  :: Bool -> Val B
 
@@ -24,7 +24,7 @@ ifV (BV b) v1 v2 = if b then v1 else v2
 
 {-""-}
 
-data Expr t where
+data Expr :: Ty -> * where
   VAL   :: Val t -> Expr t
   PLUS  :: Expr I -> Expr I -> Expr I
   IF    :: Expr B ->

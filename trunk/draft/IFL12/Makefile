@@ -1,6 +1,6 @@
 .PHONY: all pdf ps dvi touch ListLike
 
-TEXSRC=main.tex intro.tex concl.tex mylhs2tex.sty \
+TEXSRC=main.tex intro.tex example.tex concl.tex mylhs2tex.sty \
        exEvalHs.tex exEvalAgda.tex exEvalNax.tex \
        exCmplHs.tex exCmplAgda.tex exCmplNax.tex \
        exGListHs.tex exGListAgda.tex exGListNax.tex \
@@ -75,6 +75,9 @@ main.bbl: main.aux main.bib
 
 
 mylhs2tex.sty: mylhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
+example.tex: example.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 exEvalNax.tex: Eval.lnax includelhs2tex.lhs

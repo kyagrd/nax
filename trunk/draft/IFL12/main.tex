@@ -7,6 +7,7 @@
 \usepackage{lscape}
 %% \usepackage{framed}
 \usepackage{comment}
+\usepackage{afterpage}
 \usepackage{textcomp}
 \usepackage[numbers]{natbib}
 \usepackage{mylhs2tex}
@@ -51,40 +52,13 @@
 
 \section{TODO main example}
 
-\subsection{Type preserving evaluator for an expresion language}
+\subsection{Type preserving evaluator for an expression language}
 \subsection{Generic indexed lists parametrized by a binary relation}
-\subsection{Safe compiler keeping track of stack configurations}
+\subsection{Stack-safe compiler for the expression language}
 
-\begin{landscape}
-\begin{figure}
-\hspace*{-6ex}
-\begin{minipage}{.31\linewidth}\input{exEvalHs}\end{minipage}
-\begin{minipage}{.35\linewidth}\input{exEvalNax}\end{minipage}
-\begin{minipage}{.33\linewidth}\input{exEvalAgda}\end{minipage}
-\caption{eval}
-\end{figure}
-
-\begin{figure}
-\hspace*{-10ex}
-\begin{minipage}{.3\linewidth}\input{exGListHs}\end{minipage}
-\begin{minipage}{.355\linewidth}\input{exGListNax}\end{minipage}
-\begin{minipage}{.345\linewidth}\input{exGListAgda}\end{minipage} \\
-\hspace*{-10ex}
-\begin{minipage}{.3\linewidth}\input{exGListHsEx}\end{minipage}
-\begin{minipage}{.39\linewidth}\input{exGListNaxEx}\end{minipage}
-\begin{minipage}{.33\linewidth}\input{exGListAgdaEx}\end{minipage}
-\caption{glist}
-\end{figure}
-
-\begin{figure}
-\hspace*{-10ex}
-\begin{minipage}{.33\linewidth}\input{exCmplHs}\end{minipage}
-\begin{minipage}{.40\linewidth}\input{exCmplNax}\end{minipage}
-\begin{minipage}{.33\linewidth}\input{exCmplAgda}\end{minipage}
-\caption{compile}
-\end{figure}
-
-\end{landscape}
+\afterpage{
+\input{example}
+}
 
 \section{Related Work}
 TODO
