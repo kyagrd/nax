@@ -48,7 +48,7 @@ data GL :  (iota -> iota -> *) ->
      deriving fixpoint GList
 
 append l =
-  mcata { {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} . GList x {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GList f {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}} } l
+  mcata { {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} . GList x {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GList x {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}} } l
     with
       app GNil           ys  = ys
       app  (GCons x xs)  ys  =

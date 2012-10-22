@@ -7,7 +7,7 @@ module ListLike where
 
 
 {-"\underline{\textsc{Haskell}_{\phantom{g}}
-   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+   \textcolor{gray}{\texttt{+}\;\texttt{DataKind},\;\texttt{KindSignatures}} }"-}
 
 data Ty = I | B   
 {-""-}

@@ -15,17 +15,24 @@ relying on the type preservation property of the host language type system.
 Our object language in Fig.\,\ref{fig:eval} is a simple expression language
 (|Expr|) whose type universe (|Ty|) only consists of numbers (represented by
 the constant term |I|) and booleans (represented by the constant term |B|).
+We want to evaluate an expression to a value, which may be either numeric
+(|IV n|) or boolean (|BV b|). Note that the value datatype (|Val|) is
+indexed by constant terms (|I| and |B|) of the type universe (|Ty|).
+
 An expression is either a value (|VAL v|), a numeric addition (|PLUS e1 e2|),
-or a conditional (|IF e0 e1 e2|). Note tat the term indices in the definition
-of |Expr| ensures that the expressions is type correct by construction. For
-instance, in a conditional expression |IF e0 e1 e2| can only be type checked
-in the host language provided that |e0| is a boolean expression and that |e1|
-and |e2| are expressions of the same type. An expression will evaluate to
-a value, which can be either numeric (|IV n|) or boolean (|BV b|). Note that
-the value datatype (|Val|) is also indexed by the same type universe (|Ty|)
-of the expression language. Then, we can write an evaluator (|eval|)
-from expressions to values, preserving the index that represents
-the object language type.
+or a conditional (|IF e0 e1 e2|). The expression datatype (|Expr|) is also
+indexed by the type universe (|Ty|). Note that the term indices used in
+the definition |Expr| ensures that expressions are type correct by construction.
+For instance, a conditional expression |IF e0 e1 e2| can only be constructed
+when |e0| is a boolean expression (\ie, indexed by |B|) and
+|e1| and |e2| are expressions of the same type (\ie, both indexed by |t|).
+
+Then, we can write the evaluator (|eval|) from expressions to values, which
+preserves the index that represents the object language type. The definition
+of |eval| is fairly straightforward, since our expression language is a very
+simple one. What we really want to focus on is the comparative understanding
+of how term indices are treated in Nax, in comparison to how they are treated
+in Haskell and Agda.
 
 \subsection{Generic indexed lists parametrized by a binary relation}
 TODO
