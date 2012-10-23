@@ -75,11 +75,9 @@ works as follows:
     ($\Jki T\,\overline{\kappa} : |BOX|$).
 In our example, we need not worry about the arguments to the type constructor
 since |Ty| is a just a type (\ie, nullary type constructor).
-The justification for $\Jki |Ty -> * : BOX|$ is illustrated at
-the left bottom corner in the Table\;\ref{tbl:sorting}.
+The justification for $\Jki |Ty -> * : BOX|$ in Haskell is illustrated at
+the left bottom corner of Table\;\ref{tbl:sorting}.
 Note the promotion of |Ty|, from $\Jty |Ty : *|$ to $\Jki |Ty : BOX|$.
-The datatype promotion extension is closely related to, in fact, motivated
-by the universe subtyping in Agda, which we will shortly explain.
 
 \begin{table}
 \hspace*{-3ex}
@@ -138,22 +136,37 @@ we can construct $|Ty'| -> \star_0$. Then, if one needs
 $|Ty| -> \star_1$, we would need yet another duplicate |Ty''|
 at yet another higher level. Universe subtyping provides a remedy
 to this duplication problem by allowing objects at lower universe
-to be considered as objects as higher universe -- in other words,
+to be considered as objects at higher universe -- in other words,
 it is `promoted' to upper level. This gives us a notion of subtyping
 such that $\star_i \leq \star_j$ where $i \leq j$.\footnote{
 	This is not the only rule for universe subtyping.
  	Another important rule is subtyping between arrows.
-	See Ulf Norell's thesis TODO cite for details.}
+	See Ulf Norell's thesis [TODO cite] for details.}
 With universe subtyping, we can construct arrows from |Ty| to any level of
 universe (\eg, $|Ty| -> \star_0$, $|Ty| -> \star_1$, $\dots$). Relating back to
 the datatype promotion in Haskell, $\star_0$ and $\star_1$ corresponds to |*|
 and |BOX| in Haskell. So, we wrote |*| and |BOX| instead of $\star_0$ and
 $\star_1$ in the justification of well-formedness of |Ty -> *| in Agda
-(at right bottom corner in Table\;\ref{tbl:sorting}) to make the comparison
-more apparent.
+(at right bottom corner of Table\;\ref{tbl:sorting}) to make the comparison
+more apparent. In addition to universe subtyping, Agda also supports
+universe polymorphism\footnote{
+\url{http://wiki.portal.chalmers.se/agda/agda.php?n=Main.UniversePolymorphism}},
+which can be viewed as a generalization of the datatype promotion in Haskell.
+But, we only rely on universe subtyping but not universe polymorphism in
+our Agda example codes in Figs.\;\ref{fig:eval}, \ref{fig:glist}, and
+\ref{fig:compile}.
 
-Nax, on the other hand, TODO
+Types can appear in kinds in Nax as well as in Haskell and Agda. However,
+the mechanism that allows types at kind level in Nax is quite different from
+the promotion of type constructors in Haskell or the universe subtyping in Agda.
 
+simple universe structure like Haskell but no promotion
+
+there are two ways of constructing arrow kinds (1) from kind to kind
+(2) from type (\ie, nullary type constructors of kind |*|)a to kind.
+Note that type can only appear in the domain (\ie, left-hand-side of the arrow)
+but not the range (\ie, right-hand-side of the arrow).
+kinds in nax always end up in |*|.
 
 
 \subsubsection{Use of term indices in types:}
