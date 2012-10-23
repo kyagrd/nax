@@ -1,6 +1,7 @@
 \documentclass{llncs}
 
-%% \usepackage[hang]{caption}
+\usepackage[hang,centerlast,bf]{caption}
+\captionfont{
 \usepackage{amsmath}
 \usepackage{semantic}
 \usepackage{color}
@@ -13,6 +14,10 @@
 \usepackage{mylhs2tex}
 
 \definecolor{gray}{rgb}{.7,.7,.7}
+
+\newcommand{\Jtag}[1]{\mathop{\vdash_{\!\!\mathsf{#1}}}}
+\newcommand{\Jty}[0]{\Jtag{ty}}
+\newcommand{\Jki}[0]{\Jtag{k}}
 
 \newcommand{\KYA}[1]{\textcolor{blue}{#1 -- Ki Yung}}
 \newcommand{\TS}[1]{\textcolor{red}{#1 -- Tim}}

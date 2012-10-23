@@ -1,12 +1,15 @@
 %include greek.fmt
 
+%format kappa1
+%format kappa2
+
 %format Ix = "\mathit{I}"
 
 %format I = "\mathtt{I}"
 %format B = "\mathtt{B}"
 
 %format IV = "\mathtt{IV}"
-%format BV = "\mathtt{IV}"
+%format BV = "\mathtt{BV}"
 
 %format VAL = "\mathtt{VAL}"
 %format PLUS = "\mathtt{PLUS}"
