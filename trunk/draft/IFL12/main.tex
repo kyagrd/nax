@@ -1,7 +1,6 @@
 \documentclass{llncs}
 
 \usepackage[hang,centerlast,bf]{caption}
-\captionfont{
 \usepackage{amsmath}
 \usepackage{semantic}
 \usepackage{color}
@@ -22,13 +21,14 @@
 \newcommand{\KYA}[1]{\textcolor{blue}{#1 -- Ki Yung}}
 \newcommand{\TS}[1]{\textcolor{red}{#1 -- Tim}}
 
-\title{The Nax programming language}
+\title{Programming with term-indexed types in Nax}
+\subtitle{A comparative case study against Haskell and Agda}
 \titlerunning{The Nax programming language}
 \author{Ki Yung Ahn\inst{1} \and Tim Sheard\inst{1} \and
-	Marcelo Fiore\inst{2} \and Andrew M. Pitts\inst{2}
-	}
+	Marcelo Fiore\inst{2} \and Andrew M. Pitts\inst{2} }
 \institute{
-	Portland State University, Portland, Oregon, USA \thanks{supported by NSF grant 0910500.}
+	Portland State University, Portland, Oregon, USA
+	\thanks{supported by NSF grant 0910500.}
 	\\ \email{kya@cs.pdx.edu} \qquad \email{sheard@cs.pdx.edu}
 	\and
 	University of Cambridge, Cambridge, UK
@@ -55,15 +55,7 @@
 
 \input{intro}
 
-\section{TODO main example}
-
-\subsection{Type preserving evaluator for an expression language}
-\subsection{Generic indexed lists parametrized by a binary relation}
-\subsection{Stack-safe compiler for the expression language}
-
-\afterpage{
 \input{example}
-}
 
 \section{Related Work}
 TODO

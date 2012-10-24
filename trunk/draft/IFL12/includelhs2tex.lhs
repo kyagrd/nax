@@ -2,6 +2,7 @@
 
 %format kappa1
 %format kappa2
+%format kappa3
 
 %format Ix = "\mathit{I}"
 

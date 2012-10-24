@@ -77,7 +77,8 @@ main.bbl: main.aux main.bib
 mylhs2tex.sty: mylhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
-example.tex: example.lhs includelhs2tex.lhs
+example.tex: example.lhs includelhs2tex.lhs \
+	example_eval.lhs example_glist.lhs example_compile.lhs
 	lhs2TeX --poly -o $@ $<
 
 exEvalNax.tex: Eval.lnax includelhs2tex.lhs
