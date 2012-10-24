@@ -16,46 +16,27 @@
 \vskip-2ex
 \caption{A generic indexed list (|GList|) parameterized by
 	a binary relation (|x|, |X|) over indices (|i,j,k|)
-	and its instantiations (|List|, |Vec|).}
+	and its instantiations (|List'|, |Vec|).}
 \label{fig:glist}
 \end{figure}
 \end{landscape}
 } % end afterpage
 
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
-22222 write text here 22222 write text here 22222 write text here
+The |GList| datatype is a generic list structure that can be instantiated
+into many different types of indexed lists. For example, |GList| can be
+instantiate into plain regular lists (|List'|) and length indexed lists (|Vec|)
+as illustrated in Fig.\;\ref{fig:glist}. Later on, in Fig.\;\ref{fig:compile},
+we will instantiate |GList| into the |Code| type in order to write a stack safe
+compiler.
 
+Nax
 
+|GList| expects three arguments: a binary relation |x| over indices and 
+a pair of indices |i| and |j|.
 
+path
 
+Relation
+possible transitions
+edges
 
