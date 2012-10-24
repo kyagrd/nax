@@ -29,14 +29,28 @@ as illustrated in Fig.\;\ref{fig:glist}. Later on, in Fig.\;\ref{fig:compile},
 we will instantiate |GList| into the |Code| type in order to write a stack safe
 compiler.
 
-Nax
+explain in terms of Nax
 
-|GList| expects three arguments: a binary relation |x| over indices and 
-a pair of indices |i| and |j|.
+|GList| expects three arguments to become a type,
+that is, |GList x {i} {j} : *|. The binary relation |x : iota -> iota -> *|
+gives defines possible transitions (or, edges of a graph)
+and |i, j : \iota| represents initial and final configurations
+(or, two vertices in a graph).  A term of type |GList x {i} {j}| witnesses
+that there exists a path from |i| to |j| following the possible transition
+steps given by the relation |x : iota -> iota -> *|. In other words,
+(|i|, |j|) is in the reflexive transitive closure of |x|.
 
-path
+|gNil : GList x {i} {i}| witnesses an empty path (or, $\epsilon$-transition)
+from vertex a to itself, which always exists regardless of the choice of |x|.
 
-Relation
-possible transitions
-edges
+|gCons : x {i} {j} -> GList x {j} {k} -> GList x {i} {k}| witnesses that
+there exists a path from |i| to |k|, provided that there is a single step
+transition from |i| to |j| in |x| and that there exists path from |j| to |k|.
 
+exists a trivial (or path
+
+|append : GList x {i} {j} -> GList x {j} {k} -> GList x {i} {k}|
+
+
+Haskell is similar
+Agda 

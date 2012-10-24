@@ -134,7 +134,7 @@ are two ways of forming arrows at kind level in Nax:\vspace*{-1ex}
         \Jki |kappa1 -> kappa2|}$,
 and\vskip1ex
 \item[(2)] from a type to a kind
-   $\inference{\Jty |A:*| & \Jki |kappa:BOX|}{
+   $\inference{\Jty |A : *| & \Jki |kappa : BOX|}{
         \Jki |A -> kappa|}$.
 \end{itemize}
 Note that types can only appear in the domain (\ie, left-hand-side of the arrow)
