@@ -77,11 +77,11 @@ we can lift Zero to a type (Haskell), Extend what is a type and kind (Nax),
 unify terms and types and kinds, and use a hierarchy of universes. Nax is
 particularly simple.
 
-Haskell Types are promoted (T: * -> *) promoted to (T : box -> box)
-limits the promotion of types with term-indexes, unless *::*
+Haskell Types are promoted (|T : * -> *|) promoted to (|T : BOX -> BOX|)
+limits the promotion of types with term-indexes, unless |* : *|
 
 Nax, add an additional constructor for kinds, a specail kind of kind-arrow
-to Nat => * is a kind. Everything else follows logically from this.
+to |Nat => *| is a kind. Everything else follows logically from this.
 
 Agda. A hieracrhy of universers allows types and kinds to be prom ....
 
