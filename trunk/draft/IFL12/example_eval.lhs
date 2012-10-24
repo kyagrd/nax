@@ -15,47 +15,53 @@
 \end{landscape}
 } % end afterpage
 
-In a language that supports term-indices, we can write a type preserving
-evaluator as follows: (1) define a type universe for the object language
-as a datatype; (2) define values (into which the object language will evaluate)
-as a datatype indexed by terms of the type universe; (3) define the object
-language as a datatype indexed by the same type universe; and (4) write
-an evaluator from expressions to values such that it preserves the term indices
-representing type of the object language. Once the evaluator type checks,
+In this section we will write similar
+programs in Nax, Haskell, and Agda.
+What we really want to focus on is the use of term indices
+to enforce invariants of programs, we hope the use of several host-languages
+makes this idea accessbile to a larger audience.
+One of our goals is to distinguish the Nax
+approach from other approaches, and to illustrate why this approach 
+has certain advantages.
+
+In a language that supports term-indices, one writes a type preserving
+evaluator as follows: (1) define a datatype Universe which encodes
+types of the object language; (2) define a datatype Value (the range of object language evaluation)
+indexed by terms of the type Universe; (3) define a datatype ObjectLanguage 
+indexed by the same type Universe; and (4) write
+the evaluator (from expressions to values) that preserves the term indices
+representing the type of the object language. Once the evaluator type checks,
 we can be confident that the evaluator is type preserving, relying on
-the type preservation property of the host language type system.
-In Fig.\,\ref{fig:eval}, we demonstrate a concrete example of such
+type preservation of the host-language type system.
+In Fig.\,\ref{fig:eval}, we provide a concrete example of such
 a type preserving evaluator for a very simple expression language (|Expr|).
 
-Our type universe (|Ty|) for the expression language consists of numbers and
+Our Universe (|Ty|) for the expression language consists of numbers and
 booleans, represented by the constants |I| and |B|. We want to evaluate an
-expression to a value, which may be either numeric (|IV n|) or boolean (|BV b|).
-Note that the value datatype (|Val|) is indexed by constant terms (|I| and |B|)
-of the type universe (|Ty|).
+expression, to get a value, which may be either numeric (|IV n|) or boolean (|BV b|).
+Note that the both the |Expr| and |Val| datatypes are indexed by constant terms (|I| and |B|)
+of Universe (|Ty|).
 
-An expression is either a value (|VAL v|), a numeric addition (|PLUS e1 e2|),
-or a conditional (|IF e0 e1 e2|). The expression datatype (|Expr|) is also
-indexed by the type universe (|Ty|). Note that the term indices used in
-the definition |Expr| ensures that expressions are type correct by construction.
+An expression (|Expr|) is either a value (|VAL v|), a numeric addition (|PLUS e1 e2|),
+or a conditional (|IF e0 e1 e2|).  Note that the term indices of |Expr| ensure
+that expressions are type correct by construction.
 For instance, a conditional expression |IF e0 e1 e2| can only be constructed
 when |e0| is a boolean expression (\ie, indexed by |B|) and
 |e1| and |e2| are expressions of the same type (\ie, both indexed by |t|).
 
-Then, we can write the evaluator (|eval|) from expressions to values, which
+Then, we can write an evaluator (|eval|) (from expressions to values) which
 preserves the index that represents the object language type. The definition
 of |eval| is fairly straightforward, since our expression language is a very
-simple one. What we really want to focus on is the comparative understanding
-of how term indices appearing in types are treated in Nax, in contrast to how
-they are treated in Haskell and Agda.
+simple one. What we really want to focus on is the use of term indices
+to enforce invariants of programs. 
 
-\subsubsection{Comparison of the universe structure, kind syntax, and
-               well-sortedness}
+\subsubsection{Universes, kinds, and well-sortedness}
 ~\\ \vskip-5ex
 In all three languages, the datatype |Val| has the kind annotation |Ty -> *|,
 which means that |Val| is a unary type constructor that expects a term of
 type |Ty|, rather than a type (c.f., a unary type constructor that expects
-a type has kind |* -> *|). Although the textual form (|Ty -> *|) of the kind
-happens to coincide in these three languages, each language has its own
+a type has kind |* -> *|). Although the textual form of the kind, (|Ty -> *|),
+coincides in the three languages, each language has its own
 universe structure, kind syntax, and justifications for well-sortedness
 (\aka\ kind validity) as illustrated in Table\;\ref{tbl:sorting}.
 
@@ -63,6 +69,22 @@ In a nutshell, the mechanism that allow types at kind level in Nax
 is closely related to \emph{universe subtyping} in Agda, and,
 the datatype promotion in Haskell is closely related to
 \emph{universe polymorphism} in Agda.
+
+
+Term index types mean that we have to extend how we form both types and kinds.
+Several approaches. a typer like (List Int Zero) will not be well formed.
+we can lift Zero to a type (Haskell), Extend what is a type and kind (Nax),
+unify terms and types and kinds, and use a hierarchy of universes. Nax is
+particularly simple.
+
+Haskell Types are promoted (T: * -> *) promoted to (T : box -> box)
+limits the promotion of types with term-indexes, unless *::*
+
+Nax, add an additional constructor for kinds, a specail kind of kind-arrow
+to Nat => * is a kind. Everything else follows logically from this.
+
+Agda. A hieracrhy of universers allows types and kinds to be prom ....
+
 
 \begin{table}
 \hspace*{-3ex}
