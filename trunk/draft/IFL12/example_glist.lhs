@@ -51,22 +51,34 @@ The function |append : GList x {i} {j} -> GList x {j} {k} -> GList x {i} {k}|
 witnesses that there exists a path from |i| to |i| provided that
 there exists a path from |i| to |j| and a path from |j| to |k|.
 Note that the implementation of |append| is exactly the same as
-plain regular lists.
+the usual append function for plain regular lists.
 
 To instantiate |GList| into a specific list-like structure, one instantiates
-the parameter |x| to a specific relation. Since plain regular lists (|List' a|)
-are path obnoxious, we instantiate |x| to a degenerate relation over
-a singleton set |(Elem a) : Unit -> Unit -> *|, which is tagged by
-a value of type |a|. Then, we define |List' a| as a synonym of
-|GList (Elem a) Unit Unit|.
-Since length indexed lists (|Vec a {n}|) needs
-countably many configurations representing length of the list. So, we 
-instantiate |x| to relation over natural numbers |(ElemV a): Nat -> Nat -> *|
-tagged by a value of type |a|. The relation (|ElemV a|) counts down one step
-from |succ n| to |n|.
+the parameter |x| to a specific relation.
+
+Plain regular lists (|List' a|) are path obnoxious. That is, one can always
+add an element (|a|) to a list (|List' a|) to get a new list (|List' a|).
+We instantiate |x| to a degenerate relation over a singleton set
+|(Elem a) : Unit -> Unit -> *|, which is tagged by a value of type |a|.
+Then, we can define |List' a| as a synonym of |GList (Elem a) Unit Unit|,
+and their constructors |nil'| and |cons'|.
+
+Since length indexed lists (|Vec a {n}|) need countably many configurations
+representing length of the list. So, we instantiate |x| to relation over
+natural numbers |(ElemV a): Nat -> Nat -> *| tagged by a value of type |a|.
+The relation (|ElemV a|) counts down one step from |succ n| to |n|,
+as described in the type signature of |MkElemV : a -> Elem a {`succ n} {n}|.
 Then, we define |Vec a {n}| as a synonym |GList (ElemV a) {n} {`zero}|,
-counting down from |n| to |zero|. Backquote prefixed identifiers appearing
+counting down from |n| to |zero|. In Nax, backquoted identifiers appearing
 inside index terms enclosed by braces refer to the predefined names without
 the backquote. (\eg, |`zero| appearing in |{`zero}| refers to the predefined
 |zero : Nat|).
+
+For plain regular lists and vectors, the relations (|Elem a| and |ElemV a|)
+are independent of the value of type |a| they contain. That is, the transition
+step for adding one value to a list is always the same regardless of the value.
+Note that each of |Elem| and |ElemV| has only one data constructor
+|MkElem| and |MkElemV|, respectively. In the following subsection, we will
+instantiate |GList| with a relation for stack configurations that specifies
+several different transition rules for different machine instruction values.
 

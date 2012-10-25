@@ -2,7 +2,7 @@
 %include agda.fmt
 %include includelhs2tex.lhs
 \begin{code}
--- instantiating to a plain list 
+-- instantiating to a plain regular list 
 
 record Unit : Set where constructor <>
 

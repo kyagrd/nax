@@ -2,7 +2,7 @@
 %include includelhs2tex.lhs
 %format cons = "\textit{cons}\,"
 \begin{code}
--- instantiating to a plain list
+-- instantiating to a plain regular list
 
 data Elem a i j where
   MkElem :: a -> Elem a () ()

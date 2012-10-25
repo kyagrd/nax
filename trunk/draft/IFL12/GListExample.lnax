@@ -2,7 +2,7 @@
 %include includelhs2tex.lhs
 
 \begin{code}
--- instantiating to a plain list
+-- instantiating to a plain regular list
 data Unit = U
 data Elem : * -> Unit -> Unit -> * where
   MkElem : a -> Elem a {U} {U}
