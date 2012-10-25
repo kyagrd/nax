@@ -31,7 +31,7 @@ indexed by terms of the type Universe; (3) define a datatype ObjectLanguage
 indexed by the same type Universe; and (4) write
 the evaluator (from expressions to values) that preserves the term indices
 representing the type of the object language. Once the evaluator type checks,
-we can be confident that the evaluator is type preserving, relying on
+we are confident that the evaluator is type preserving, relying on
 type preservation of the host-language type system.
 In Fig.\,\ref{fig:eval}, we provide a concrete example of such
 a type preserving evaluator for a very simple expression language (|Expr|).
@@ -55,8 +55,8 @@ of |eval| is fairly straightforward, since our expression language is a very
 simple one. What we really want to focus on is the use of term indices
 to enforce invariants of programs. 
 
-\subsubsection{Universes, kinds, and well-sortedness}
-~\\ \vskip-5ex
+\subsubsection{Universes, kinds, and well-sortedness} ~ \vskip1ex
+
 In all three languages, the datatype |Val| has the kind annotation |Ty -> *|,
 which means that |Val| is a unary type constructor that expects a term of
 type |Ty|, rather than a type (c.f., a unary type constructor that expects
