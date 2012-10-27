@@ -56,6 +56,7 @@
 %format GL = G"\!"L
 
 %format . = "\mathbin{.}\,"
+%format :. = "\mathop{:\!\!.}"
 
 %format fixpoint = "\textrm{fixpoint}"
 %format synonym = "\mathbf{synonym}"

@@ -65,14 +65,13 @@ append (  GCons x xs)  ys  =
 
 {-"\underline{\textsc{Haskell}_{\phantom{g}}
    \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
-
-data Inst :: [Ty] -> [Ty] -> * where
-  PUSH   :: Val t -> Inst ts (t ': ts)
-  ADD    :: Inst (I ': I ': ts) (I ': ts)
+data List a = Nil | a :. List a{-"~"-};{-"~"-}infixr :.
+data Inst :: List Ty -> List Ty -> * where
+  PUSH   :: Val t -> Inst ts (t :. ts)
+  ADD    :: Inst (I :. I :. ts) (I :. ts)
   IFPOP  :: GList Inst ts ts' ->
             GList Inst ts ts' ->
-            Inst (B ': ts) ts'
-{-""-}
+            Inst (B :. ts) ts'
 {-""-}
 {-""-}
 {-""-}
@@ -80,17 +79,17 @@ data Inst :: [Ty] -> [Ty] -> * where
 type Code sc sc' = GList Inst sc sc'
 
 {-""-}
-compile :: Expr t -> Code ts (t ': ts)
-compile (VAL v) = {-"\textcolor{red}{"-} GCons (PUSH v) GNil {-"}"-}
--- Doesn't type check without (|* : *|).
--- Error message from GHC 7.4.1:
--- ~~  Couldn't match kind `|BOX|' against `|*|'
--- ~~  Kind incompatibility
--- \qquad when matching types:
--- \qquad \qquad  |k0 :: BOX|
--- \qquad \qquad  |[Ty] :: *|
--- ~~  In the return type of a call of `|GCons|'
--- ~~  In the expression: |GCons (PUSH v) GNil|
+compile :: Expr t -> Code ts (t :. ts)
+compile (VAL v) =
+  GCons (PUSH v) GNil
+compile (PLUS e1 e2) =
+  append  (append  (compile e1) (compile e2)) 
+          (GCons ADD GNil)
+compile (IF e e1 e2) =
+  append  (compile e)
+          (GCons  (IFPOP  (compile e1)
+                          (compile e2))
+                  GNil)
 
 
 
