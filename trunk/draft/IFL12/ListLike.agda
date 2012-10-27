@@ -98,7 +98,7 @@ compile (IF e e1 e2)  =
 
 
 
--- instantiating to a plain list 
+-- instantiating to a plain regular list 
 
 record Unit : Set where constructor <>
 

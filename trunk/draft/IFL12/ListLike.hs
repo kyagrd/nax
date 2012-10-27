@@ -96,7 +96,7 @@ compile (VAL v) = {-"\textcolor{red}{"-} GCons (PUSH v) GNil {-"}"-}
 
 
 
--- instantiating to a plain list
+-- instantiating to a plain regular list
 
 data Elem a i j where
   MkElem :: a -> Elem a () ()
