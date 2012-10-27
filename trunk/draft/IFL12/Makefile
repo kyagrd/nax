@@ -122,8 +122,8 @@ exGListAgdaEx.tex: GListExample.lagda includelhs2tex.lhs
 
 
 
-
 ListLike: ListLike.agda ListLike.nax ListLike.hs
+
 
 ListLike.agda: Header.agda _Eval.agda _GList.agda _Compile.agda _GListExample.agda
 	cat $+ > $@
@@ -142,7 +142,7 @@ _GListExample.agda: GListExample.lagda
 
 
 ListLike.hs: Header.hs _Eval.hs _GList.hs _Compile.hs _GListExample.hs
-	cat $+ > $@ && sed -i "s/\.:/':/g" $@
+	cat $+ > $@ # && sed -i "s/\.:/':/g" $@
 
 _Eval.hs: Eval.lhs
 	$(UNLIT) $< $@
@@ -157,9 +157,9 @@ _GListExample.hs: GListExample.lhs
 	$(UNLIT) $< $@
 
 
-# the generated nax file won't type check since it cannot type check apppend
 ListLike.nax: Header.nax _Eval.nax _GList.nax _Compile.nax _GListExample.nax
-	cat $+ > $@ && sed -i 's/^{-"\\hs.*"-} //g' $@
+	echo "module ListLike where" > $@
+	cat $+ >> $@ && sed -i 's/^{-"\\hs.*"-} //g' $@
 
 _Eval.nax: Eval.lnax
 	$(UNLIT) $< $@
@@ -174,5 +174,17 @@ _GListExample.nax: GListExample.lnax
 	$(UNLIT) $< $@
 
 
+Env: Env.agda Env.nax
 
+_Env.agda: Env.lagda
+	$(UNLIT) $< $@
 
+_Env.nax: Env.lnax
+	$(UNLIT) $< $@
+
+Env.agda: Header.agda _Env.agda
+	echo "module Env where" > $@
+	cat $+ >> $@
+
+Env.nax: Header.nax _Env.nax
+	cat $+ > $@
