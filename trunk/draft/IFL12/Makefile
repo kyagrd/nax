@@ -174,7 +174,7 @@ _GListExample.nax: GListExample.lnax
 	$(UNLIT) $< $@
 
 
-Env: Env.agda Env.nax
+EnvLike: EnvLike.agda EnvLike.nax
 
 _Env.agda: Env.lagda
 	$(UNLIT) $< $@
@@ -182,9 +182,9 @@ _Env.agda: Env.lagda
 _Env.nax: Env.lnax
 	$(UNLIT) $< $@
 
-Env.agda: Header.agda _Env.agda
-	echo "module Env where" > $@
+EnvLike.agda: Header.agda _Env.agda
+	echo "module EnvLike where" > $@
 	cat $+ >> $@
 
-Env.nax: Header.nax _Env.nax
+EnvLike.nax: Header.nax _Env.nax
 	cat $+ > $@
