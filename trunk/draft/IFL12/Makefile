@@ -126,7 +126,8 @@ ListLike: ListLike.agda ListLike.nax ListLike.hs
 
 
 ListLike.agda: Header.agda _Eval.agda _GList.agda _Compile.agda _GListExample.agda
-	cat $+ > $@
+	echo "module ListLike where" > $@
+	cat $+ >> $@
 
 _Eval.agda: Eval.lagda
 	$(UNLIT) $< $@
@@ -158,8 +159,7 @@ _GListExample.hs: GListExample.lhs
 
 
 ListLike.nax: Header.nax _Eval.nax _GList.nax _Compile.nax _GListExample.nax
-	echo "module ListLike where" > $@
-	cat $+ >> $@ && sed -i 's/^{-"\\hs.*"-} //g' $@
+	cat $+ > $@ && sed -i 's/^{-"\\hs.*"-} //g' $@
 
 _Eval.nax: Eval.lnax
 	$(UNLIT) $< $@
