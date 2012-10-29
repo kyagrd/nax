@@ -2,9 +2,20 @@
 %include includelhs2tex.lhs
 
 \section{TODO discussion}
+from Edwin Brady's example in Idris
+concurrncy paper
 
-\begin{figure}
+~\\
+Agda
+
 %include Env.lagda
 
+~\\
+Nax
+
 %include Env.lnax
-\end{figure}
+
+~\\
+cannot do this in Haskelll (GHC)
+
+TODO
