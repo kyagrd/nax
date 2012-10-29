@@ -5,17 +5,17 @@
 {-"\underline{\textsc{Nax}_{\phantom{g}}
               \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i}}"-}
 
-data GL :  (iota -> iota -> *) ->
+data P :  (iota -> iota -> *) ->
            (iota -> iota -> *) ->
            (iota -> iota -> *) where
-  GNil   : GL x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
-  GCons  : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GL x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
-     deriving fixpoint GList
+  PNil   : P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
+  PCons  : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
+     deriving fixpoint Path
 
 append l =
-  mcata { {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} . GList x {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> GList x {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}} } l
+  mcata { {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} . Path x {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> Path x {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}} } l
     with
-      app GNil           ys  = ys
-      app  (GCons x xs)  ys  =
-           gCons x (app xs ys)
+      app PNil           ys  = ys
+      app  (PCons x xs)  ys  =
+           pCons x (app xs ys)
 \end{code}

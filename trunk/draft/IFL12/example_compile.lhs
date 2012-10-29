@@ -14,37 +14,8 @@
 \end{landscape}
 } % end afterpage
 
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-33333 write text here 33333 write text here 33333 write text here
-
-
+The stack safe compiler for the |Expr| language
+more interesting use of 
+The type preserving evaluator in Fig.\;\ref{fig:eval} is an index preserving
+program where the index of the input type and the result type are just
+the same.

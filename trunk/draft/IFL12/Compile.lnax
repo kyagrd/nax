@@ -10,25 +10,25 @@ data Instr  :  (List Ty -> List Ty -> *) ->
                (List Ty -> List Ty -> *) where
    PUSH   : Val {t} -> Instr r {ts} {`cons t ts}
    ADD    : Instr r {`cons I (`cons I ts)} {`cons I ts}
-   IFPOP  :  GList r {ts} {ts'} ->
-             GList r {ts} {ts'} ->
+   IFPOP  :  Path r {ts} {ts'} ->
+             Path r {ts} {ts'} ->
              Instr r {`cons B ts} {ts'}
      deriving fixpoint Inst
 {-""-}
 
-synonym  Code sc sc' {-"~"-} -- |= GList Inst {sc} {sc'}|
-  =  GList (Mu[List Ty -> List Ty -> *] Instr) {sc} {sc'}
+synonym  Code sc sc' {-"~"-} -- |= Path Inst {sc} {sc'}|
+  =  Path (Mu[List Ty -> List Ty -> *] Instr) {sc} {sc'}
 
 compile e =
   mcata { {t} . Code {ts} {`cons t ts} } e with
     cmpl (VAL v)        =
-      gCons (pUSH v) gNil
+      pCons (pUSH v) pNil
     cmpl (PLUS e1 e2)   =
       append  (append  (cmpl e1) (cmpl e2))
-              (gCons aDD gNil)
+              (pCons aDD pNil)
     cmpl (IF e e1 e2)  =
       append  (cmpl e)
-              (gCons  (iFPOP  (cmpl e1)
+              (pCons  (iFPOP  (cmpl e1)
                               (cmpl e2))
-                      gNil)
+                      pNil)
 \end{code}

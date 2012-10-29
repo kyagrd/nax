@@ -46,19 +46,19 @@ eval (IF e0 e1 e2)  =
 {-"\underline{\textsc{Agda}_{\phantom{g}}^{\phantom{A^k}}
               \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~} "-}
 {-""-}
-data GList {Ix : Set} (X : Ix -> Ix -> Set) : Ix -> Ix -> Set
+data Path {Ix : Set} (X : Ix -> Ix -> Set) : Ix -> Ix -> Set
   where
-    GNil   : {i : Ix} -> GList X i i
-    GCons  : {i j k : Ix} ->
-             X i j -> GList X j k -> GList X i k
+    PNil   : {i : Ix} -> Path X i i
+    PCons  : {i j k : Ix} ->
+             X i j -> Path X j k -> Path X i k
 
 {-""-}
 
 append : {Ix : Set} -> {X : Ix -> Ix -> Set} -> {i j k : Ix}
-  {-"~~"-} -> GList X i j -> GList X j k -> GList X i k
-append GNil ys            = ys
-append  (GCons x xs)  ys  =
-        {-"~"-}GCons x (append xs ys) 
+  {-"~~"-} -> Path X i j -> Path X j k -> Path X i k
+append PNil ys            = ys
+append  (PCons x xs)  ys  =
+        {-"~"-}PCons x (append xs ys) 
 
 
 
@@ -74,25 +74,25 @@ data Inst : List Ty -> List Ty -> Set where
   ADD    : {ts : List Ty } ->
            Inst (I ∷ I ∷ ts) (I ∷ ts)
   IFPOP  : {ts ts' : List Ty} ->
-           GList Inst ts ts' ->
-           GList Inst ts ts' ->
+           Path Inst ts ts' ->
+           Path Inst ts ts' ->
            Inst (B ∷ ts) ts'
 
 Code : List Ty -> List Ty -> Set
-Code sc sc' = GList Inst sc sc'
+Code sc sc' = Path Inst sc sc'
 
 compile  : {t : Ty} -> {ts : List Ty} ->
            Expr t -> Code ts (t ∷ ts)
 compile (VAL v)       =
-  GCons (PUSH v) GNil
+  PCons (PUSH v) PNil
 compile (PLUS e1 e2)  =
   append  (append  (compile e1) (compile e2)) 
-          (GCons ADD GNil)
+          (PCons ADD PNil)
 compile (IF e e1 e2)  =
   append  (compile e)
-          (GCons  (IFPOP  (compile e1)
+          (PCons  (IFPOP  (compile e1)
                           (compile e2))
-                  GNil)
+                  PNil)
 
 
 
@@ -103,23 +103,23 @@ compile (IF e e1 e2)  =
 record Unit : Set where constructor <>
 
 List' : Set -> Set
-List' a = GList (λ i j -> a) <> <>
+List' a = Path (λ i j -> a) <> <>
  
 nil' : {a : Set} -> List' a
-nil' = GNil
+nil' = PNil
 
 cons' : {a : Set} -> a -> List' a -> List' a
-cons' = GCons
+cons' = PCons
 
 -- instantiating to a length indexed list
 
 Vec : Set -> ℕ -> Set
-Vec a n = GList (λ i j -> a) n zero
+Vec a n = Path (λ i j -> a) n zero
 
 vNil : {a : Set} -> Vec a zero
-vNil = GNil
+vNil = PNil
 
 vCons  : {a : Set} {n : ℕ} ->
          a -> Vec a n -> Vec a (suc n)
-vCons = GCons
+vCons = PCons
 

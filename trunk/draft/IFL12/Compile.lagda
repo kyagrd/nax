@@ -12,23 +12,23 @@ data Inst : List Ty -> List Ty -> Set where
   ADD    : {ts : List Ty } ->
            Inst (I ∷ I ∷ ts) (I ∷ ts)
   IFPOP  : {ts ts' : List Ty} ->
-           GList Inst ts ts' ->
-           GList Inst ts ts' ->
+           Path Inst ts ts' ->
+           Path Inst ts ts' ->
            Inst (B ∷ ts) ts'
 
 Code : List Ty -> List Ty -> Set
-Code sc sc' = GList Inst sc sc'
+Code sc sc' = Path Inst sc sc'
 
 compile  : {t : Ty} -> {ts : List Ty} ->
            Expr t -> Code ts (t ∷ ts)
 compile (VAL v)       =
-  GCons (PUSH v) GNil
+  PCons (PUSH v) PNil
 compile (PLUS e1 e2)  =
   append  (append  (compile e1) (compile e2)) 
-          (GCons ADD GNil)
+          (PCons ADD PNil)
 compile (IF e e1 e2)  =
   append  (compile e)
-          (GCons  (IFPOP  (compile e1)
+          (PCons  (IFPOP  (compile e1)
                           (compile e2))
-                  GNil)
+                  PNil)
 \end{code}

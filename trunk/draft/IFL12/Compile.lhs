@@ -9,25 +9,25 @@ data List a = Nil | a :. List a{-"~"-};{-"~"-}infixr :.
 data Inst :: List Ty -> List Ty -> * where
   PUSH   :: Val t -> Inst ts (t :. ts)
   ADD    :: Inst (I :. I :. ts) (I :. ts)
-  IFPOP  :: GList Inst ts ts' ->
-            GList Inst ts ts' ->
+  IFPOP  :: Path Inst ts ts' ->
+            Path Inst ts ts' ->
             Inst (B :. ts) ts'
 {-""-}
 {-""-}
 {-""-}
 
-type Code sc sc' = GList Inst sc sc'
+type Code sc sc' = Path Inst sc sc'
 
 {-""-}
 compile :: Expr t -> Code ts (t :. ts)
 compile (VAL v) =
-  GCons (PUSH v) GNil
+  PCons (PUSH v) PNil
 compile (PLUS e1 e2) =
   append  (append  (compile e1) (compile e2)) 
-          (GCons ADD GNil)
+          (PCons ADD PNil)
 compile (IF e e1 e2) =
   append  (compile e)
-          (GCons  (IFPOP  (compile e1)
+          (PCons  (IFPOP  (compile e1)
                           (compile e2))
-                  GNil)
+                  PNil)
 \end{code}

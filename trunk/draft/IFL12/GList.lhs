@@ -7,15 +7,15 @@
 
 {-""-}
 {-""-}
-data GList x i j where
-  GNil   :: GList x i i
-  GCons  :: x i j  -> GList x j k
-                   -> GList x i k
+data Path x i j where
+  PNil   :: Path x i i
+  PCons  :: x i j  -> Path x j k
+                   -> Path x i k
 
 {-""-}
-append :: GList x i j  -> GList x j k
-                       -> GList x i k
-append GNil            ys  = ys
-append (  GCons x xs)  ys  =
-          GCons x (append xs ys)
+append :: Path x i j  -> Path x j k
+                      -> Path x i k
+append PNil            ys  = ys
+append (  PCons x xs)  ys  =
+          PCons x (append xs ys)
 \end{code}

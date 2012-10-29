@@ -52,9 +52,6 @@
 %format plusV = plus"_{\!"V"}"
 %format ifV = "\textit{if}_{\!"V"}"
 
-%format GList = G"\!"List
-%format GL = G"\!"L
-
 %format . = "\mathbin{.}\,"
 %format :. = "\mathop{:\!\!.}"
 

@@ -7,23 +7,23 @@
 record Unit : Set where constructor <>
 
 List' : Set -> Set
-List' a = GList (λ i j -> a) <> <>
+List' a = Path (λ i j -> a) <> <>
  
 nil' : {a : Set} -> List' a
-nil' = GNil
+nil' = PNil
 
 cons' : {a : Set} -> a -> List' a -> List' a
-cons' = GCons
+cons' = PCons
 
 -- instantiating to a length indexed list
 
 Vec : Set -> ℕ -> Set
-Vec a n = GList (λ i j -> a) n zero
+Vec a n = Path (λ i j -> a) n zero
 
 vNil : {a : Set} -> Vec a zero
-vNil = GNil
+vNil = PNil
 
 vCons  : {a : Set} {n : ℕ} ->
          a -> Vec a n -> Vec a (suc n)
-vCons = GCons
+vCons = PCons
 \end{code}

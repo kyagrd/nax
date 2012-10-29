@@ -44,17 +44,17 @@ eval (IF e0 e1 e2)  =
 
 {-""-}
 {-""-}
-data GList x i j where
-  GNil   :: GList x i i
-  GCons  :: x i j  -> GList x j k
-                   -> GList x i k
+data Path x i j where
+  PNil   :: Path x i i
+  PCons  :: x i j  -> Path x j k
+                   -> Path x i k
 
 {-""-}
-append :: GList x i j  -> GList x j k
-                       -> GList x i k
-append GNil            ys  = ys
-append (  GCons x xs)  ys  =
-          GCons x (append xs ys)
+append :: Path x i j  -> Path x j k
+                      -> Path x i k
+append PNil            ys  = ys
+append (  PCons x xs)  ys  =
+          PCons x (append xs ys)
 
 
 
@@ -67,27 +67,27 @@ data List a = Nil | a :. List a{-"~"-};{-"~"-}infixr :.
 data Inst :: List Ty -> List Ty -> * where
   PUSH   :: Val t -> Inst ts (t :. ts)
   ADD    :: Inst (I :. I :. ts) (I :. ts)
-  IFPOP  :: GList Inst ts ts' ->
-            GList Inst ts ts' ->
+  IFPOP  :: Path Inst ts ts' ->
+            Path Inst ts ts' ->
             Inst (B :. ts) ts'
 {-""-}
 {-""-}
 {-""-}
 
-type Code sc sc' = GList Inst sc sc'
+type Code sc sc' = Path Inst sc sc'
 
 {-""-}
 compile :: Expr t -> Code ts (t :. ts)
 compile (VAL v) =
-  GCons (PUSH v) GNil
+  PCons (PUSH v) PNil
 compile (PLUS e1 e2) =
   append  (append  (compile e1) (compile e2)) 
-          (GCons ADD GNil)
+          (PCons ADD PNil)
 compile (IF e e1 e2) =
   append  (compile e)
-          (GCons  (IFPOP  (compile e1)
+          (PCons  (IFPOP  (compile e1)
                           (compile e2))
-                  GNil)
+                  PNil)
 
 
 
@@ -98,12 +98,12 @@ compile (IF e e1 e2) =
 data Elem a i j where
   MkElem :: a -> Elem a () ()
 
-type List' a = GList (Elem a) () ()
+type List' a = Path (Elem a) () ()
 
-nil' = GNil {-"~"-} :: List' a
+nil' = PNil {-"~"-} :: List' a
 
 cons' :: a -> List' a -> List' a
-cons' = GCons . MkElem
+cons' = PCons . MkElem
 
 -- instantiating to a length indexed list
 
@@ -112,10 +112,10 @@ data Nat = Z | S Nat
 data ElemV a i j where
   MkElemV :: a -> ElemV a (S n) n
 
-type Vec a n = GList (ElemV a) n Z
+type Vec a n = Path (ElemV a) n Z
 
-vNil = GNil {-"~"-} :: Vec a Z
+vNil = PNil {-"~"-} :: Vec a Z
 
 vCons :: a -> Vec a n -> Vec a (S n)
-vCons = GCons . MkElemV
+vCons = PCons . MkElemV
 
