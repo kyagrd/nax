@@ -29,10 +29,12 @@ deeply nested datatypes while Haskell's datatype promotion does not.
 \label{fig:env}
 \end{figure}
 
-On the contrary, Haskell supports datatypes that hold types,
-although limited to elements of non-indexed types, but Nax does not.
-Heterogeneous lists indexed by the list of element types in Figure 3
-is well-known example of 
+On the contrary, Haskell supports datatypes that hold types as elements,
+although limited to types witout term indices, but Nax does not.
+The heterogeneous list datatype (|HList|) in Fig.\;\ref{fig:hlist}
+is a well-known example that makes use of datatypes containing types.
+Note that |HList| is index by |List{-"\;"-}*|, which is a promoted
+regluar list whose elements are of kind |*| (\ie, elemens are types).
 
 \begin{figure}
 \begin{code}
