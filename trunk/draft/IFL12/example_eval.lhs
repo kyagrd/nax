@@ -197,7 +197,7 @@ it is `promoted' to upper level. This gives us a notion of subtyping
 such that $\star_i \leq \star_j$ where $i \leq j$.\footnote{
 	This is not the only rule for subtyping in Agda.
  	Another important rule is subtyping between arrows.
-	See Ulf Norell's thesis [TODO cite] (\S 1.4) for details.}
+	See Ulf Norell's thesis [TODO cite] (Sect.\;1.4) for details.}
 With universe subtyping, we can form arrows from |Ty| to any level of universe
 (\eg, $|Ty| -> \star_0$, $|Ty| -> \star_1$, $\dots$). Relating back to
 the datatype promotion in Haskell, $\star_0$ and $\star_1$ corresponds to |*|

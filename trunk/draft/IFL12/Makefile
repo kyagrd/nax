@@ -1,11 +1,7 @@
 .PHONY: all pdf ps dvi touch ListLike
 
 TEXSRC=main.tex mylhs2tex.sty \
-       intro.tex example.tex discuss.tex concl.tex \
-       exEvalHs.tex exEvalAgda.tex exEvalNax.tex \
-       exCmplHs.tex exCmplAgda.tex exCmplNax.tex \
-       exGListHs.tex exGListAgda.tex exGListNax.tex \
-       exGListHsEx.tex exGListAgdaEx.tex exGListNaxEx.tex \
+       intro.tex example.tex discuss.tex concl.tex
 
 UNLIT = /usr/lib/ghc/unlit
 
@@ -79,10 +75,15 @@ mylhs2tex.sty: mylhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 example.tex: example.lhs includelhs2tex.lhs \
-	example_eval.lhs example_glist.lhs example_compile.lhs
+	example_eval.lhs example_glist.lhs example_compile.lhs \
+	exEvalHs.tex exEvalAgda.tex exEvalNax.tex \
+	exCmplHs.tex exCmplAgda.tex exCmplNax.tex \
+	exGListHs.tex exGListAgda.tex exGListNax.tex \
+	exGListHsEx.tex exGListAgdaEx.tex exGListNaxEx.tex
 	lhs2TeX --poly -o $@ $<
 
-discuss.tex: discuss.lhs includelhs2tex.lhs
+discuss.tex: discuss.lhs includelhs2tex.lhs \
+	Env.lagda Env.lnax
 	lhs2TeX --poly -o $@ $<
 
 exEvalNax.tex: Eval.lnax includelhs2tex.lhs

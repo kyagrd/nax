@@ -341,10 +341,10 @@ We prefix a kind  by a polarity (\ie, $p\kappa$) to specify the variable's
 kind and polarity. For example,
 \[
 \begin{array}{rlrl}
-X_1^{+*},X_2^{-*} |- \!\!\! & X_2 -> X_1 : *
-	& ~~~\text{justifies} & \l X_1^{+*}.\l X_2^{-*}.X_2 -> X_1 \\
-X_1^{0*},X_2^{0*} |- \!\!\! & X_2 -> X_1 : *
-	& ~~~\text{also justifies} & \l X_1^{0*}.\l X_2^{0*}.X_2 -> X_1 \\
+X_1^{-*},X_2^{+*} |- \!\!\! & X_1 -> X_2 : *
+	& ~~~\text{justifies} & \l X_1^{-*}.\l X_2^{+*}.X_1 -> X_2 \\
+X_1^{0*},X_2^{0*} |- \!\!\! & X_1 -> X_2 : *
+	& ~~~\text{also justifies} & \l X_1^{0*}.\l X_2^{0*}.X_1 -> X_2 \\
 X^{0*} |- \!\!\! & X\phantom{_.} -> X\phantom{_2} : *
 	& ~~~\text{justifies} & \l X^{0*}.X -> X
 \end{array}
