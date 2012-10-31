@@ -3,7 +3,7 @@
 
 \begin{code}
 {-"\underline{\textsc{Haskell}_{\phantom{g}}
-   \textcolor{gray}{\texttt{+}\;\texttt{DataKind},\;\texttt{KindSignatures}} }"-}
+   \textcolor{gray}{\texttt{+}\;\texttt{DataKinds},\;\texttt{KindSignatures}} }"-}
 
 data Ty = I | B   
 {-""-}

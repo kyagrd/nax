@@ -4,7 +4,7 @@
 
 \begin{code}
 {-"\underline{\textsc{Haskell}_{\phantom{g}}
-   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKinds},\;\texttt{PolyKinds}} }"-}
 data List a = Nil | a :. List a{-"~"-};{-"~"-}infixr :.
 data Inst :: List Ty -> List Ty -> * where
   PUSH   :: Val t -> Inst ts (t :. ts)

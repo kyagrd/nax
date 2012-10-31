@@ -3,7 +3,7 @@
 
 \begin{code}
 {-"\underline{\textsc{Haskell}_{\phantom{g}}
-   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKinds},\;\texttt{PolyKinds}} }"-}
 
 {-""-}
 {-""-}
