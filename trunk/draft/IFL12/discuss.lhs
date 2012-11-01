@@ -4,20 +4,20 @@
 \section{TODO discussion}
 
 \subsection{Universes, kinds, and well-sortedness}
-
-In all three languages, the datatype |Val| has the kind annotation |Ty -> *|,
-which means that |Val| is a unary type constructor that expects a term of
-type |Ty|, rather than a type (c.f., a unary type constructor that expects
-a type has kind |* -> *|). Although the textual form of the kind, (|Ty -> *|),
-coincides in the three languages, each language has its own
-universe structure, kind syntax, and justifications for well-sortedness
-(\aka\ kind validity) as illustrated in Fig.\;\ref{fig:sorting}.
+The kind annotation on datatypes looks very similar among the three languages.
+in Figs.\;\ref{fig:eval}, \ref{fig:glist}, and \ref{fig:}. For instance,
+the kind |List Ty -> *| has exactly the same textual representation in
+all the three languages. Although the textual form of the kind coincides,
+each language has its own universe structure, kind syntax, and sorting
+(\aka\ kind validity) rules as summarized in Figs.\;\ref{fig:sorting}.
 
 In a nutshell, the mechanism that allow types at kind level in Nax
 is closely related to \emph{universe subtyping} in Agda, and,
 the datatype promotion in Haskell is closely related to
-\emph{universe polymorphism} in Agda.
-
+\emph{universe polymorphism} in Agda. Figure \ref{fig:sortingEx}
+illustrates differences and similarities between the mechanism
+for checking well-sortedness, by comparing the justification for
+well-sortedness of the kind |List Ty -> *| in each language.
 
 Term index types mean that we have to extend how we form both types and kinds.
 Several approaches. a typer like (List Int Zero) will not be well formed.
@@ -148,6 +148,7 @@ term/type/kind/sort merged into one pseudo-term syntax
 \end{align*}
 \caption{Justifications for well-sortedness of the kind |List Ty -> *|
          in Nax, Haskell, Agda}
+\label{fig:sortingEx}
 \end{figure}
 
 
@@ -290,7 +291,7 @@ and it has type |HList (Int :. Bool :. List Int :. Nil)|.
 \begin{figure}
 \qquad\begin{minipage}{.5\linewidth}
 $\underline{
- \textsc{Haskell}
+ \textsc{Haskell}~
  \textcolor{gray}{
   \texttt{+}\;\texttt{GADTs},\;\texttt{DataKinds},\;\texttt{PolyKinds}}
  \phantom{_{g_g}} \qquad\qquad\qquad

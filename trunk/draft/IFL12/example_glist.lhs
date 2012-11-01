@@ -29,6 +29,7 @@ indexed lists. For example, we can instantiate |Path| into plain regular lists
 (|List'|) and length indexed lists (|Vec|) as illustrated
 in Fig.\;\ref{fig:glist}. Later on, in Fig.\;\ref{fig:compile}, we will
 instantiate |Path| into the |Code| type in order to write a stack safe compiler.
+We will explain the code in Fig.\;\ref{fig:glist} mainly following the Nax code.
 
 |Path| expects three arguments to become a type,
 that is, |Path x {i} {j} : *|. The binary relation |x : {iota} -> {iota} -> *|
@@ -40,11 +41,10 @@ steps given by the relation |x : {iota} -> {iota} -> *|. In other words,
 (|i|, |j|) is in the reflexive transitive closure of |x|.
 
 The |Path| datatype provides two ways of constructing witness for existence of
-paths:
-
+paths. Firstly,
 |pNil : Path x {i} {i}| witnesses an empty path (or, $\epsilon$-transition)
 from vertex a to itself, which always exists regardless of the choice of |x|.
-
+Secondly,
 |pCons : x {i} {j} -> Path x {j} {k} -> Path x {i} {k}| witnesses that
 there exists a path from |i| to |k|, provided that there is a single step
 transition from |i| to |j| in |x| and that there exists path from |j| to |k|.
@@ -83,4 +83,11 @@ Note that each of |Elem| and |ElemV| has only one data constructor
 |MkElem| and |MkElemV|, respectively. In the following subsection, we will
 instantiate |Path| with a relation for stack configurations that specifies
 several different transition rules for different machine instruction values.
+
+Haskell code is pretty much similar to the Nax code, except that it uses
+general recursion and kinds are not explicitly annotated on datatypes.\footnote{
+	In Haskell, kinds are inferred by default.
+	The \texttt{KindSignatures} extension in GHC allows kind annotations.}
+In Aaga, there is no need to define wrapper datatypes like |Elem| and |ElemV|
+since we can use type level functions no different from term level functions.
 
