@@ -37,6 +37,8 @@
 %format record = "\mathbf{record}"
 %format constructor = "\textrm{constructor}"
 
+%format Path = P"\!"ath
+
 %format ElemV = Elem"_{\!"V"}"
 %format MkElemV = MkElem"_{\!"V"}"
 

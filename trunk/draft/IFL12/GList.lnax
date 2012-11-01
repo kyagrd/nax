@@ -5,11 +5,11 @@
 {-"\underline{\textsc{Nax}_{\phantom{g}}
               \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i}}"-}
 
-data P :  (iota -> iota -> *) ->
-           (iota -> iota -> *) ->
-           (iota -> iota -> *) where
-  PNil   : P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
-  PCons  : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
+data P :  ({iota} -> {iota} -> *) ->
+          ({iota} -> {iota} -> *) ->
+          ({iota} -> {iota} -> *) where
+  PNil    : P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
+  PCons   : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
      deriving fixpoint Path
 
 append l =

@@ -1,17 +1,23 @@
 -- nothing to do for nax
 
 
+
+
+
+-- Environments for stateful resources index by length indexed lists
+
 data V : * -> (Nat -> *) -> Nat -> * where
   VNil  : V a r {`zero}
   VCons : a -> r {n} -> V a r {`succ n}
     deriving fixpoint Vec
 
-data Envr : ( ({st} -> *) -> Vec st n -> * )
-         -> ( ({st} -> *) -> Vec st n -> * ) where
+data Envr : ( ({st} -> *) -> Vec st {n} -> * )
+         -> ( ({st} -> *) -> Vec st {n} -> * ) where
   Empty  : Envr r res {`vNil}
   Extend : res {x} -> r res {xs} -> Envr r res {`vCons x xs}
     deriving fixpoint Env
-
+{-""-}
+-- Usage example
 data St = Read | Write {-"~~"-} -- resource state
 
 data Res : St -> * where {-"~~"-} -- resource
@@ -20,20 +26,20 @@ data Res : St -> * where {-"~~"-} -- resource
 
 -- |myenv : Env Res {`vCons Read (`vCons Write `vNil)}|
 myenv = extend File1 (extend File2 empty)
-
-
+{-""-}
+-- Environments additionaly index by singleton natural numbers
 
 data SN : (Nat -> *) -> (Nat -> *) where
   Szer : SN r {`zero}
   Ssuc : r {n} -> SN r {`succ n}
     deriving fixpoint SNat
 
-data Envr' : (({st} -> *) -> SNat n -> Vec st n -> *)
-          -> (({st} -> *) -> SNat n -> Vec st n -> *) where
+data Envr' : (({st} -> *) -> SNat {n} -> Vec st {n} -> *)
+          -> (({st} -> *) -> SNat {n} -> Vec st {n} -> *) where
   Empty'  : Envr' r res {`szer} {`vNil}
   Extend' : res {x} -> r res {n} {xs} -> Envr' r res {`ssuc n} {`vCons x xs}
     deriving fixpoint Env'
 
--- myenv' : Env' Res {`ssuc(`ssuc `szer)} {`vCons Read (`vCons Write `vNil)}
+-- |myenv' : Env' Res {`ssuc(`ssuc `szer)} {`vCons Read (`vCons Write `vNil)}|
 myenv' = extend' File1 (extend' File2 empty')
 

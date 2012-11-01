@@ -4,6 +4,8 @@
 \begin{landscape}
 \begin{figure}
 \vskip-7.3ex
+\qquad\quad\;\textcolor{gray}{\texttt{GADTs},}
+\\\vskip-5.7ex
 \hspace*{-10ex}
 \begin{minipage}{.3\linewidth}\input{exGListHs}\end{minipage}
 \begin{minipage}{.355\linewidth}\input{exGListNax}\end{minipage}
@@ -11,8 +13,8 @@
 \vskip-4ex ~ \\
 \hspace*{-10ex}
 \begin{minipage}{.3\linewidth}\input{exGListHsEx}\end{minipage}
-\begin{minipage}{.39\linewidth}\input{exGListNaxEx}\end{minipage}
-\begin{minipage}{.33\linewidth}\input{exGListAgdaEx}\end{minipage}
+\begin{minipage}{.355\linewidth}\input{exGListNaxEx}\end{minipage}
+\begin{minipage}{.345\linewidth}\input{exGListAgdaEx}\end{minipage}
 \vskip-2ex
 \caption{A generic indexed list (|Path|) parameterized by
 	a binary relation (|x|, |X|) over indices (|i,j,k|)
@@ -29,12 +31,12 @@ in Fig.\;\ref{fig:glist}. Later on, in Fig.\;\ref{fig:compile}, we will
 instantiate |Path| into the |Code| type in order to write a stack safe compiler.
 
 |Path| expects three arguments to become a type,
-that is, |Path x {i} {j} : *|. The binary relation |x : iota -> iota -> *|
+that is, |Path x {i} {j} : *|. The binary relation |x : {iota} -> {iota} -> *|
 gives defines possible transitions (or, edges of a graph)
 and |i : iota| and |j : iota| represent initial and final configurations
 (or, two vertices in a graph).  A term of type |Path x {i} {j}| witnesses
 that there exists a path from |i| to |j| following the possible transition
-steps given by the relation |x : iota -> iota -> *|. In other words,
+steps given by the relation |x : {iota} -> {iota} -> *|. In other words,
 (|i|, |j|) is in the reflexive transitive closure of |x|.
 
 The |Path| datatype provides two ways of constructing witness for existence of

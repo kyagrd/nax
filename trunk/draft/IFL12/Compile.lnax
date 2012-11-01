@@ -26,8 +26,8 @@ compile e =
     cmpl (PLUS e1 e2)   =
       append  (append  (cmpl e1) (cmpl e2))
               (pCons aDD pNil)
-    cmpl (IF e e1 e2)  =
-      append  (cmpl e)
+    cmpl (IF e0 e1 e2)  =
+      append  (cmpl e0)
               (pCons  (iFPOP  (cmpl e1)
                               (cmpl e2))
                       pNil)

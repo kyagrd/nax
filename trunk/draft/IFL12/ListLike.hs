@@ -5,7 +5,7 @@
 
 
 {-"\underline{\textsc{Haskell}_{\phantom{g}}
-   \textcolor{gray}{\texttt{+}\;\texttt{DataKind},\;\texttt{KindSignatures}} }"-}
+   \textcolor{gray}{\texttt{+}\;\texttt{DataKinds},\;\texttt{KindSignatures}} }"-}
 
 data Ty = I | B   
 {-""-}
@@ -40,7 +40,7 @@ eval (IF e0 e1 e2)  =
 
 
 {-"\underline{\textsc{Haskell}_{\phantom{g}}
-   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+   \textcolor{gray}{\texttt{+}\;\texttt{DataKinds},\;\texttt{PolyKinds}} \qquad}"-}
 
 {-""-}
 {-""-}
@@ -62,7 +62,7 @@ append (  PCons x xs)  ys  =
 
 
 {-"\underline{\textsc{Haskell}_{\phantom{g}}
-   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKind},\;\texttt{PolyKind}} }"-}
+   \textcolor{gray}{\texttt{+}\;\texttt{GADTs},\;\texttt{DataKinds},\;\texttt{PolyKinds}} }"-}
 data List a = Nil | a :. List a{-"~"-};{-"~"-}infixr :.
 data Inst :: List Ty -> List Ty -> * where
   PUSH   :: Val t -> Inst ts (t :. ts)
@@ -83,8 +83,8 @@ compile (VAL v) =
 compile (PLUS e1 e2) =
   append  (append  (compile e1) (compile e2)) 
           (PCons ADD PNil)
-compile (IF e e1 e2) =
-  append  (compile e)
+compile (IF e0 e1 e2) =
+  append  (compile e0)
           (PCons  (IFPOP  (compile e1)
                           (compile e2))
                   PNil)

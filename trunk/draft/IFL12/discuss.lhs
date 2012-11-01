@@ -49,63 +49,106 @@ $\stackrel{\parallel}{|*|}~\,\stackrel{\parallel}{|BOX|}~~\quad\qquad\qquad$
 \\ \\
 |kappa ::= * || kappa -> kappa | $\mid$
   \textcolor{magenta}{$T\,$}$\overline{\kappa}$
-& \qquad
+& 
 |kappa ::= * || kappa -> kappa | $\mid$
    \textcolor{magenta}{|{A}|}\,|-> kappa|
-& \quad
-\begin{minipage}{.37\linewidth}\small\centering
-term/type/kind/sort syntax are\\ merged into one pseudo-term
+&
+\begin{minipage}{.35\linewidth}\small\centering
+term/type/kind/sort merged into one pseudo-term syntax
 \end{minipage}
-\\
-\begin{minipage}{.25\linewidth}
-\[ \inference{\Jki |kappa1 : BOX| & \Jki |kappa2 : BOX|}{
-              \Jki |kappa1 -> kappa2 : BOX|} \]
-\[ \inference{\Jty T : |*|^n -> |*| }{\Jki T : |BOX|^n -> |BOX|} \]
+\\~\\
+\begin{minipage}{.36\linewidth}
+\inference[($->$)]{\Jki |kappa1 : BOX| & \Jki |kappa2 : BOX|}{
+     \Jki |kappa1 -> kappa2 : BOX|}
+~\vskip.5ex
+\inference[($\uparrow_{|*|}^{|BOX|}$)]{
+          \Jty T : |*|^n -> |*| \qquad~~\quad \\
+          \Jki |kappa : BOX|~\text{for each}~\kappa\in\overline{\kappa}}{
+     \Jki T\,\overline{\kappa} : |BOX|}
+~\vskip.5ex
 \end{minipage}
 &
-\begin{minipage}{.25\linewidth}
-\[ \inference{\Jty |A : *| & \Jki |kappa : BOX|}{\Jki |{A} -> kappa : BOX|} \]
-\[ \phantom{\inference{||- \kappa : s & s \leq s'}{||- \kappa : s'} } \]
+\begin{minipage}{.33\linewidth}
+\inference[($->$)]{\Jki |kappa1 : BOX| & \Jki |kappa2 : BOX|}{
+        \Jki |kappa1 -> kappa2 : BOX|}
+~\vskip1ex
+\inference[(\raisebox{1pt}{\tiny\{\}}$->$)]{
+        \Jty |A : *| & \Jki |kappa : BOX|}{
+        \Jki |{A} -> kappa : BOX|}
+~\\
 \end{minipage}
 &
-\begin{minipage}{.25\linewidth}
-\[ \inference{||- \kappa_1 : \star_i & ||- \kappa_2 : \star_i}{
-              ||- \kappa_1 -> \kappa_2 : \star_i} \]
-\[ \inference{||- \kappa : s & s \leq s'}{||- \kappa : s'} \]
+\begin{minipage}{.36\linewidth}
+\inference[($->$)]{||- \kappa_1 : \star_i & ||- \kappa_2 : \star_i}{
+                   ||- \kappa_1 -> \kappa_2 : \star_i}
+~\vskip1ex
+\inference[(|<=|)]{||- \kappa : s & s \leq s'}{||- \kappa : s'}
+~\\
 \end{minipage}
 \end{tabular}
 
-\caption{The universe structure, kind syntax, and some selected sorting rules
-   of the three different languages, Haskell, Nax, and Agda.}
+\caption{Universes, kind syntax, and some selected sorting rules
+   of Haskell, Nax, Agda.}
 \label{fig:sorting}
 \end{figure}
- and
-   justifications for well-sortedness of the kind |List Ty -> *|
-   in three different languages.
 
-
-{ \inference{ \!\!\!\!\!\!\!\!\!\!\!\!
-              \inference{ \!\!\!\!\!\!\!
-                        \inference{\Jty |List: * -> *|}{
-                             \Jki |List: BOX -> BOX|}
-                        & \inference{\Jty |Ty : *|}{\Jki |Ty : BOX|} }{
-              \Jki |List Ty : BOX|}
-            & \Jki |* : BOX| }{
-    \Jki |{List Ty} -> * : BOX| }
-}
-
-{ \inference{ \!\!\!\!\!\!\!\!\!\!\!\!
-            \inference{\Jty |List : * -> *| \\ \Jty |Ty : *| \qquad }{
+\begin{figure}
+\begin{align*}
+\textsc{Nax} & \qquad\quad
+  \inference[\tiny(\{\}$->$)]{
+  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+            \inference{\Jty |List : * -> *| & \Jty |Ty : *|}{
               \Jty |List Ty : *| }
             & \Jki |* : BOX| }{
-     \Jki |List Ty -> * : BOX| }
-}
-
-\[ \inference{ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-              \inference{||- |Ty : *| & |* <= BOX|}{||- |Ty : BOX|}
+     \Jki |{List Ty} -> * : BOX| }
+\\ \\
+\textsc{Agda}
+ & \qquad\qquad\quad
+  \inference[\tiny(|->|)]{ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+              \inference[\tiny(|<=|)\!\!\!]{ \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+                          \inference[\tiny(|->|)\!\!\!]{
+                                 ||- |List : * -> *|
+                               & ||- |Ty : *|}{
+                            ||- |List Ty : *|}
+                          & |* <= BOX|}{
+              ||- |List Ty : BOX|}
             & ||- |* : BOX| }{
-    ||- |Ty -> * : BOX| }
-\]
+    ||- |List Ty -> * : BOX| }
+\\ \\
+\textsc{Haskell} & \qquad\qquad\qquad
+  \inference[\tiny(|->|)]{
+  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+              \inference[\tiny($\uparrow_\star^\square$)\!\!\!]{
+                          \Jty |List: * -> *|
+                        & \inference[\tiny($\uparrow_\star^\square$)\!\!\!]{
+                              \Jty |Ty : *|}{
+                          \Jki |Ty : BOX|} }{
+              \Jki |List Ty : BOX|}
+            & \Jki |* : BOX| }{
+    \Jki |List Ty -> * : BOX| }
+\\ \\
+\raisebox{15pt}{$
+\mathop{
+\mathop{\qquad~~\textsc{Agda}_{\phantom{g_g}}\!\!\!\!}
+\limits_{+ ~ \text{universe}}}
+\limits_{\text{polymorphism}}$}
+& \qquad\qquad\quad
+  \inference[\tiny(|->|)]{
+  \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+              \inference{
+                          \inference{
+                              ||- |List| : \forall\{i\} -> \star_i -> \star_i}{
+                            ||- |List: BOX -> BOX|}
+                        & \inference{
+                              ||- |Ty| : \forall\{i\} -> \star_i}{
+                            ||- |Ty : BOX|} }{
+              ||- |List Ty : BOX|}
+            & ||- |* : BOX| }{
+    ||- |List Ty -> * : BOX| }
+\end{align*}
+\caption{Justifications for well-sortedness of the kind |List Ty -> *|
+         in Nax, Haskell, Agda}
+\end{figure}
 
 
 

@@ -6,6 +6,7 @@ open import Data.List
 
 
 
+
 data Vec (a : Set) : ℕ -> Set where
   VNil  : {n : ℕ} -> Vec a n
   VCons : {n : ℕ} -> a -> Vec a n -> Vec a (suc n)

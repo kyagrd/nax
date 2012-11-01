@@ -40,11 +40,11 @@ eval e =  mcata { {t} . Val {t} } e with
 {-"\underline{\textsc{Nax}_{\phantom{g}}
               \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i}}"-}
 
-data P :  (iota -> iota -> *) ->
-           (iota -> iota -> *) ->
-           (iota -> iota -> *) where
-  PNil   : P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
-  PCons  : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
+data P :  ({iota} -> {iota} -> *) ->
+          ({iota} -> {iota} -> *) ->
+          ({iota} -> {iota} -> *) where
+  PNil    : P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
+  PCons   : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
      deriving fixpoint Path
 
 append l =
@@ -82,8 +82,8 @@ compile e =
     cmpl (PLUS e1 e2)   =
       append  (append  (cmpl e1) (cmpl e2))
               (pCons aDD pNil)
-    cmpl (IF e e1 e2)  =
-      append  (cmpl e)
+    cmpl (IF e0 e1 e2)  =
+      append  (cmpl e0)
               (pCons  (iFPOP  (cmpl e1)
                               (cmpl e2))
                       pNil)
@@ -109,7 +109,7 @@ cons' x = pCons (MkElem x)
 data ElemV : * -> Nat -> Nat -> * where
   MkElemV : a -> ElemV a {succ n} {n}
 
-synonym  Vec a n
+synonym  Vec a {n}
            = Path (ElemV a) {n} {zero}
 
 vNil = pNil {-" ~~ "-} -- |: Vec a Z|

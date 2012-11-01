@@ -25,8 +25,8 @@ compile (VAL v) =
 compile (PLUS e1 e2) =
   append  (append  (compile e1) (compile e2)) 
           (PCons ADD PNil)
-compile (IF e e1 e2) =
-  append  (compile e)
+compile (IF e0 e1 e2) =
+  append  (compile e0)
           (PCons  (IFPOP  (compile e1)
                           (compile e2))
                   PNil)
