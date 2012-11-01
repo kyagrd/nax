@@ -17,13 +17,13 @@ cons' x = pCons (MkElem x)
 -- instantiating to a length indexed list
 
 data ElemV : * -> Nat -> Nat -> * where
-  MkElemV : a -> ElemV a {succ n} {n}
+  MkElemV : a -> ElemV a {`succ n} {n}
 
 synonym  Vec a {n}
-           = Path (ElemV a) {n} {zero}
+           = Path (ElemV a) {n} {`zero}
 
 vNil = pNil {-" ~~ "-} -- |: Vec a Z|
 
--- |vCons : a -> Vec a {n} -> Vec a {succ n}|
+-- |vCons : a -> Vec a {n} -> Vec a {`succ n}|
 vCons x = pCons (MkElemV x)
 \end{code}
