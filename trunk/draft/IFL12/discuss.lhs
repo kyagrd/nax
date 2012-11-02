@@ -2,39 +2,40 @@
 %include includelhs2tex.lhs
 
 \section{TODO discussion} \label{sec:discuss}
-To support term indexed types, such as |Val : Ty -> *| in Fig.\;\ref{fig:eval},
-the type system needs to allow formation of the kinds for
-those term indexed types, such as |Ty -> *|, as valid kinds. In other words,
-the class of indexed types supported in a language is determined by
-sorting out \emph{``what valid kinds are''} in the language. Thus,
-the sorting rules, which define kind validity (or, well-sortedness),
-is a core design choice for a programming language that supports term indices.
+Indexed types, such as |Val : Ty -> *| in Fig.\;\ref{fig:eval}, are
+classified by kinds. What do valid kinds look like?
+Sorting rules define kind validity (or, well-sortedness).
+Different programming languages, that support term indices, have
+made different design choices.
 
-We discuss the sorting rules of Nax, in comparison with the sorting rules
-of other languages (Sect.\;\ref{ssec:sorting}). Then, we introduce examples
-that highlights the class of indexed datatypes Nax supports, in comparison
-to what other languages supports (Sect.\;\ref{ssec:sortingEx}).
+In this section, we compare the sorting rules of Nax with the sorting rules
+of other languages (Sect.\;\ref{ssec:sorting}). Then, we
+compare the class of indexed datatypes supported by Nax with
+those supported in other languages (Sect.\;\ref{ssec:sortingEx}).
 We also discuss the use of singleton types (Sect.\;\ref{ssec:singleton})
 and kind polymorphism (Sect.\;\ref{ssec:kindpoly}) in Nax.
 
 
 \subsection{Universes, kinds, and well-sortedness} \label{ssec:sorting}
 
-The kind annotations on datatypes look very similar among the three languages
-in the examples we discussed in Sect.\;\ref{sec:example} (Figs.\;\ref{fig:eval},
-\ref{fig:glist}, and \ref{fig:compile}). For instance, the kind |Ty -> *|
-has exactly the same textual representation in all the three languages.
-Although the textual form of the kinds coincides, each language has its own
-universe structure, kind syntax, and sorting (or, kind validity) rules
-as summarized in Fig.\;\ref{fig:sorting}.
+A datatype declaration assigns a kind to the type being introduced.
+The concrete syntax of these kinds is similar in Haskell, Nax, and Agda.
+See the examples discussed in Sect.\;\ref{sec:example} (Figs.\;\ref{fig:eval},
+\ref{fig:glist}, and \ref{fig:compile}) for a comparison. For instance, the kind |Ty -> *|
+has exactly the same textual representation in all three of the languages.
+Although the textual form of the kind coincides, each language has its own
+universe structure, kind syntax, and sorting rules. These are
+summarized in Fig.\;\ref{fig:sorting}. 
 
-In a nutshell, the mechanism that allow types at kind level in Nax
-is closely related to \emph{universe subtyping} in Agda, and,
-the datatype promotion in Haskell is closely related to
-\emph{universe polymorphism} in Agda. Figure \ref{fig:sortingEx}
+Figure \ref{fig:sortingEx}
 illustrates differences and similarities between the mechanism
 for checking well-sortedness, by comparing the justification for
-well-sortedness of the kind |List Ty -> *| in each language.
+the well-sortedness of the kind |List Ty -> *|.
+The important lessons of Figure \ref{fig:sortingEx} are
+that the mechanism that allow types at kind level in Nax
+is closely related to \emph{universe subtyping} in Agda, and,
+the datatype promotion in Haskell is closely related to
+\emph{universe polymorphism} in Agda. 
 
 \begin{figure}
 \hspace*{-3ex} \centering
@@ -89,10 +90,10 @@ term/type/kind/sort merged into one pseudo-term syntax
 \end{minipage}
 \end{tabular}
 
-\caption{Universes, kind syntax, and some selected sorting rules
-   of Haskell, Nax, Agda.
-   Haskell and Nax's kind syntax is simplified, excluding kind polymorphism.
-   Agda's (|->|) rule simplified for non-dependent kind arrows.}
+\caption{Universes, kind syntax, and selected sorting rules
+   of Haskell, Nax, and Agda.
+   Haskell's and Nax's kind syntax are simplified, excluding kind polymorphism.
+   Agda's (|->|) rule is simplified allowing only non-dependent kind arrows.}
 \label{fig:sorting}
 \end{figure}
 
@@ -155,20 +156,21 @@ term/type/kind/sort merged into one pseudo-term syntax
 \label{fig:sortingEx}
 \end{figure}
 
-In Nax, we introduce a new way of forming kind arrow |{A} -> kappa|
-where |A| is a type (\ie, $\Jty |A : *|$). Note that types can only appear
-in the domain (\ie, left-hand-side of the arrow) but not the range
-(\ie, right-hand-side of the arrow).  Modulo right associativity of arrows
+In Nax, we may form a kind arrow |{A} -> kappa|
+whenever |A| is a type (\ie, $\Jty |A : *|$). Note that types may only appear
+in the domain (the left-hand-side of the arrow) but not the range
+(the right-hand-side of the arrow).  Modulo right associativity of arrows
 (\ie, |kappa1 -> kappa2 -> kappa3| means |kappa1 -> (kappa2 -> kappa3)|),
-kinds in Nax always end up in |*| (\eg, |* -> * -> *|, |{Nat} -> {Nat} -> *|,
+kinds in Nax always terminate in |*| (\eg, |* -> * -> *|, |{Nat} -> {Nat} -> *|,
 |({Nat} -> *) -> {Nat} -> *|).\footnote{Nax implementation allows programmers
 to omit curly braces in kinds when it is obvious that the domain is a type
-rather than a kind (\eg, |Nat -> *| really means |{Nat} -> *|).
-In Sect.\ref{sec:example}, we omitted curly braces to help readers understand
-Nax comparing to other languages with similar syntax  (Rosetta stone approach).
+rather than a kind, |Nat -> *| really means |{Nat} -> *|, this is obvious
+when the domain is a type constructor, which always start with capital letters.
+In Sect.\ref{sec:example}, we omitted curly braces to help readers 
+compare Nax with other languages (the Rosetta stone approach).
 From now on, we will consistently put curly braces everywhere for clarity.}
-The sorting rule ($\uparrow_{|*|}^{|BOX|}$) could be understood as a specific
-use of universe subtyping (|* <= BOX|) hard-wired with the arrow formation.
+The sorting rule (\raisebox{1pt}{\tiny\{\}}$->$) could be understood as a specific
+use of universe subtyping (|* <= BOX|) hard-wired within the arrow formation rule.
 Agda needs a more general notion of universe subtyping since Agda is
 a dependently typed language with stratified universes, which we will
 shortly explain.
