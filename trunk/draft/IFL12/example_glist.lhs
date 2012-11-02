@@ -1,5 +1,5 @@
-\subsection{Generic indexed lists parametrized by a binary relation}
-
+\subsection{Generic |Path|s parametrized by a binary relation}
+\label{ssec:glist}
 \afterpage{
 \begin{landscape}
 \begin{figure}

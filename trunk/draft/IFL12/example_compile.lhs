@@ -1,4 +1,5 @@
 \subsection{Stack safe compiler for the expression language}
+\label{ssec:compile}
 \afterpage{
 \begin{landscape}
 \begin{figure}

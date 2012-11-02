@@ -2,12 +2,11 @@
 %include includelhs2tex.lhs
 
 \section{TODO discussion} \label{sec:discuss}
-Indexed types, such as |Val : Ty -> *| in Fig.\;\ref{fig:eval}, are
-classified by kinds. What do valid kinds look like?
+Indexed types (\eg, |Val| in Fig.\;\ref{fig:eval}) are
+classified by kinds (\eg, |Ty -> *|). What do valid kinds look like?
 Sorting rules define kind validity (or, well-sortedness).
 Different programming languages, that support term indices, have
 made different design choices.
-
 In this section, we compare the sorting rules of Nax with the sorting rules
 of other languages (Sect.\;\ref{ssec:sorting}). Then, we
 compare the class of indexed datatypes supported by Nax with
@@ -32,12 +31,12 @@ illustrates differences and similarities between the mechanism
 for checking well-sortedness, by comparing the justification for
 the well-sortedness of the kind |List Ty -> *|.
 The important lessons of Figure \ref{fig:sortingEx} are
-that the mechanism that allow types at kind level in Nax
-is closely related to \emph{universe subtyping} in Agda, and,
-the datatype promotion in Haskell is closely related to
+that the Nax appraoch is closely related to \emph{universe subtyping} in Agda,
+and, the datatype promotion in Haskell is closely related to
 \emph{universe polymorphism} in Agda. 
 
-\begin{figure}
+\afterpage{
+\begin{figure}[t]
 \hspace*{-3ex} \centering
 \begin{tabular}{ccc}
 \textsc{Haskell} \textcolor{gray}{\texttt{+ DataKinds}} &
@@ -49,7 +48,7 @@ the datatype promotion in Haskell is closely related to
 |* : BOX| &
 $\star_0 : \star_1 : \star_2 : \star_3 : \cdots$ \\ & &
 $\stackrel{\parallel}{|*|}~\,\stackrel{\parallel}{|BOX|}~~\quad\qquad\qquad$
-\\ \\
+\\
 |kappa ::= * || kappa -> kappa | $\mid$
   \textcolor{magenta}{$T\,$}$\overline{\kappa}$
 & 
@@ -89,7 +88,6 @@ term/type/kind/sort merged into one pseudo-term syntax
 ~\\
 \end{minipage}
 \end{tabular}
-
 \caption{Universes, kind syntax, and selected sorting rules
    of Haskell, Nax, and Agda.
    Haskell's and Nax's kind syntax are simplified, excluding kind polymorphism.
@@ -97,7 +95,8 @@ term/type/kind/sort merged into one pseudo-term syntax
 \label{fig:sorting}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
+\vskip-3ex
 \begin{align*}
 \textsc{Nax} & \qquad\quad
   \inference[\tiny(\{\}$->$)]{
@@ -155,10 +154,12 @@ term/type/kind/sort merged into one pseudo-term syntax
          in Nax, Haskell, Agda}
 \label{fig:sortingEx}
 \end{figure}
+} %%%%%%%%%%%%%%%%%%%%% end afterpage
+
 
 In Nax, we may form a kind arrow |{A} -> kappa|
 whenever |A| is a type (\ie, $\Jty |A : *|$). Note that types may only appear
-in the domain (the left-hand-side of the arrow) but not the range
+in the domain (the left-hand-side of the arrow) but not in the codomain 
 (the right-hand-side of the arrow).  Modulo right associativity of arrows
 (\ie, |kappa1 -> kappa2 -> kappa3| means |kappa1 -> (kappa2 -> kappa3)|),
 kinds in Nax always terminate in |*| (\eg, |* -> * -> *|, |{Nat} -> {Nat} -> *|,
@@ -204,10 +205,10 @@ $\star_1$ in the Agda sorting rules and in the justification of well-formedness
 of |List Ty -> *| in Agda, to make the comparison more apparent.
 
 In addition to universe subtyping, Agda also supports
-universe polymorphism,\footnote{
-\url{http://wiki.portal.chalmers.se/agda/agda.php?n=Main.UniversePolymorphism}
+universe polymorphism,\footnote{See 
+\url{http://wiki.portal.chalmers.se/agda/agda.php?n=Main.UniversePolymorphism}.
 We only rely on universe subtyping but not universe polymorphism in
-our Agda example codes in Figs.\;\ref{fig:eval}, \ref{fig:glist}, and
+the Agda example code from Figs.\;\ref{fig:eval}, \ref{fig:glist}, and
 \ref{fig:compile}.
 }
 which can be viewed as a generalization of the datatype promotion in Haskell.
@@ -218,57 +219,32 @@ universes |*| and |BOX| in Haskell, we can think of datatypes like |List| and
 |List : BOX -> BOX| as well as |List : * -> *|, and similarly,
 |Ty : BOX| as well as |Ty : *|. So, |List : BOX -> BOX| can be appplied to
 |Ty : BOX| at kind level, just as |List : * -> *| can be applied at type level.
-Haskell kinds must also end up in |*| since Haskell is not a dependently typed
-language (\eg, |* -> Nat| may make sense in Agda but nonsense in Haskell),
-although it is not evident in the kind syntax. So, there are should be
-axillary sorting rules to prevent kinds not to end up with promoted types.
+Haskell kinds must also terminate in |*|, since Haskell is not a dependently
+typed language (\eg, |* -> Nat| may make sense in Agda but nonsense in Haskell),
+although it is not evident in the kind syntax. So, there should be
+axillary sorting rules to prevent kinds not to terminate with promoted types.
 
 In summary, Nax provides a new way of forming kind arrows by allowing
-types, already fully applied at type level, as the domain of an arrow.
+types, which are already fully applied at the type level, as the domain
+of an arrow.
 On the contrary, Haskell first promotes type constructors (\eg, |List|)
-and their argument types (\eg, |Ty|) to kind level, and everything else
+and their argument types (\eg, |Ty|) to the kind level, and everything else
 (application of |List| to |Ty| and kind arrow formation) happens at
 kind level.
 
 \subsection{Deeply indexed datatypes and datatypes containing types}
 \label{ssec:sortingEx}
 
-Examples in Sect.\;\ref{sec:example} consisted of rather simple
-indexed datatypes, where the terms indices are of datatypes
-without any term indices (\eg, |Unit|, |Nat|, |Bool|).
-One can imagine more complex indexed datatypes, where some term indices
-are themselves of indexed datatypes. Such deeply indexed datatypes are
-often useful in dependently typed programming. For instance, \citet{BraHam10}
-defines a datatype for environments that contain stateful resources in order
-to implement their embedded domain specific language (EDSL) for verified
-resource usage protocols. Figure \ref{fig:env} is a transcription of
-their environment datatype (|Env|) in Idris into Nax. Note that the datatype
-|Env| is indexed by a term of a length indexed list datatype, which is again
-indexed by a natural number term. There is no Haskell transcription because
-datatype promotion \cite{YorgeyWCJVM12} is limited to datatypes without any
-term indices. That is, Nax supports deeply nested datatypes while Haskell's
-datatype promotion does not.
-
 \begin{figure}
 \qquad\begin{minipage}{.8\linewidth}
-%include Env.lagda
-% ~\\
 %include Env.lnax
+~\\
+%include Env.lagda
 \end{minipage}
 \caption{Environments of stateful resources
 	indexed by the length indexed list of states}
 \label{fig:env}
 \end{figure}
-
-On the contrary, Haskell supports datatypes that hold types as elements,
-although limited to types without term indices, but Nax does not.
-The heterogeneous list datatype (|HList|) in Fig.\;\ref{fig:hlist}
-is a well-known example that makes use of datatypes containing types.
-Note that |HList| is index by |List{-"\;"-}*|, which is a promoted
-regular list whose elements are of kind |*| (\ie, element are types).
-For instance, |hlist| in Fig.\;\ref{fig:hlist} contains
-three elements |3 : Int|, |True : Bool|, and |(1 :.2 :. Nil) : List Int|,
-and it has type |HList (Int :. Bool :. List Int :. Nil)|.
 
 \begin{figure}
 \qquad\begin{minipage}{.5\linewidth}
@@ -293,6 +269,32 @@ hlist = HCons 3 (HCons True (HCons (1 :. 2 :. Nil) HNil))
 	 the list of element types (|List{-"\;"-}*|).}
 \label{fig:hlist}
 \end{figure}
+
+Nax supports deeply nested datatypes while Haskell's datatype promotion
+does not. Examples in Sect.\;\ref{sec:example} consisted of rather simple
+indexed datatypes, where the terms indices are of datatypes
+without any term indices (\eg, |Unit|, |Nat|, |Bool|).
+One can imagine more complex indexed datatypes, where some term indices
+are themselves of indexed datatypes. Such deeply indexed datatypes are
+often useful in dependently typed programming. For instance, \citet{BraHam10}
+defines a datatype for environments that contain stateful resources in order
+to implement their embedded domain specific language (EDSL) for verified
+resource usage protocols. Figure \ref{fig:env} is a transcription of
+their environment datatype (|Env|) in Idris into Nax and Agda. Note that
+the datatype |Env| is indexed by a term of a length indexed list datatype
+(|Vec|), which is again indexed by a natural number term. There is
+no Haskell transcription because datatype promotion \cite{YorgeyWCJVM12}
+is limited to datatypes without any term indices.
+
+On the contrary, Haskell supports datatypes that hold types as elements,
+although limited to types without term indices, but Nax does not.
+The heterogeneous list datatype (|HList|) in Fig.\;\ref{fig:hlist}
+is a well-known example that makes use of datatypes containing types.
+Note that |HList| is index by |List{-"\;"-}*|, which is a promoted
+regular list whose elements are of kind |*| (\ie, element are types).
+For instance, |hlist| in Fig.\;\ref{fig:hlist} contains
+three elements |3 : Int|, |True : Bool|, and |(1 :.2 :. Nil) : List Int|,
+and it has type |HList (Int :. Bool :. List Int :. Nil)|.
 
 \subsection{Singleton types} \label{ssec:singleton}
 TODO
