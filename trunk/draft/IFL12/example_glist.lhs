@@ -88,6 +88,6 @@ Haskell code is pretty much similar to the Nax code, except that it uses
 general recursion and kinds are not explicitly annotated on datatypes.\footnote{
 	In Haskell, kinds are inferred by default.
 	The \texttt{KindSignatures} extension in GHC allows kind annotations.}
-In Aaga, there is no need to define wrapper datatypes like |Elem| and |ElemV|
+In Agda, there is no need to define wrapper datatypes like |Elem| and |ElemV|
 since we can use type level functions no different from term level functions.
 

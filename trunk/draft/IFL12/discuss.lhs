@@ -1,15 +1,32 @@
 %include lhs2TeX.fmt
 %include includelhs2tex.lhs
 
-\section{TODO discussion}
+\section{TODO discussion} \label{sec:discuss}
+To support term indexed types, such as |Val : Ty -> *| in Fig.\;\ref{fig:eval},
+the type system needs to allow formation of the kinds for
+those term indexed types, such as |Ty -> *|, as valid kinds. In other words,
+the class of indexed types supported in a language is determined by
+sorting out \emph{``what valid kinds are''} in the language. Thus,
+the sorting rules, which define kind validity (or, well-sortedness),
+is a core design choice for a programming language that supports term indices.
 
-\subsection{Universes, kinds, and well-sortedness}
-The kind annotation on datatypes looks very similar among the three languages.
-in Figs.\;\ref{fig:eval}, \ref{fig:glist}, and \ref{fig:}. For instance,
-the kind |List Ty -> *| has exactly the same textual representation in
-all the three languages. Although the textual form of the kind coincides,
-each language has its own universe structure, kind syntax, and sorting
-(\aka\ kind validity) rules as summarized in Figs.\;\ref{fig:sorting}.
+We discuss the sorting rules of Nax, in comparison with the sorting rules
+of other languages (Sect.\;\ref{ssec:sorting}). Then, we introduce examples
+that highlights the class of indexed datatypes Nax supports, in comparison
+to what other languages supports (Sect.\;\ref{ssec:sortingEx}).
+We also discuss the use of singleton types (Sect.\;\ref{ssec:singleton})
+and kind polymorphism (Sect.\;\ref{ssec:kindpoly}) in Nax.
+
+
+\subsection{Universes, kinds, and well-sortedness} \label{ssec:sorting}
+
+The kind annotations on datatypes look very similar among the three languages
+in the examples we discussed in Sect.\;\ref{sec:example} (Figs.\;\ref{fig:eval},
+\ref{fig:glist}, and \ref{fig:compile}). For instance, the kind |Ty -> *|
+has exactly the same textual representation in all the three languages.
+Although the textual form of the kinds coincides, each language has its own
+universe structure, kind syntax, and sorting (or, kind validity) rules
+as summarized in Fig.\;\ref{fig:sorting}.
 
 In a nutshell, the mechanism that allow types at kind level in Nax
 is closely related to \emph{universe subtyping} in Agda, and,
@@ -18,21 +35,6 @@ the datatype promotion in Haskell is closely related to
 illustrates differences and similarities between the mechanism
 for checking well-sortedness, by comparing the justification for
 well-sortedness of the kind |List Ty -> *| in each language.
-
-Term index types mean that we have to extend how we form both types and kinds.
-Several approaches. a typer like (List Int Zero) will not be well formed.
-we can lift Zero to a type (Haskell), Extend what is a type and kind (Nax),
-unify terms and types and kinds, and use a hierarchy of universes. Nax is
-particularly simple.
-
-Haskell Types are promoted (|T : * -> *|) promoted to (|T : BOX -> BOX|)
-limits the promotion of types with term-indexes, unless |* : *|
-
-Nax, add an additional constructor for kinds, a specail kind of kind-arrow
-to |Nat => *| is a kind. Everything else follows logically from this.
-
-Agda. A hieracrhy of universers allows types and kinds to be prom ....
-
 
 \begin{figure}
 \hspace*{-3ex} \centering
@@ -151,6 +153,17 @@ term/type/kind/sort merged into one pseudo-term syntax
 \label{fig:sortingEx}
 \end{figure}
 
+TODO
+
+Agda. A hierarchy of universes allows types and kinds to be prom ....
+
+Nax, add an additional constructor for kinds, a special kind of kind-arrow
+to |Nat => *| is a kind. Everything else follows logically from this.
+
+In Haskell, type constructors are promoted, that is, made available to be
+applied to other kinds. (|T : * -> *|) promoted to (|T : BOX -> BOX|)
+limits the promotion of types with term-indexes, unless |* : *|
+
 
 
 The datatype promotion extension ({\small\texttt{DataKinds}}) for Haskell
@@ -237,19 +250,8 @@ But, we only rely on universe subtyping but not universe polymorphism in
 our Agda example codes in Figs.\;\ref{fig:eval}, \ref{fig:glist}, and
 \ref{fig:compile}.
 
-\subsection{Kind polymorphism}
-TODO
-
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-
-
 \subsection{Deeply indexed datatypes and datatypes containing types}
+\label{ssec:sortingEx}
 
 Examples in Sect.\;\ref{sec:example} consisted of rather simple
 indexed datatypes, where the terms indices are of datatypes
@@ -269,8 +271,8 @@ datatype promotion does not.
 
 \begin{figure}
 \qquad\begin{minipage}{.8\linewidth}
-%% %include Env.lagda
-%% ~\\
+%include Env.lagda
+% ~\\
 %include Env.lnax
 \end{minipage}
 \caption{Environments of stateful resources
@@ -312,14 +314,10 @@ hlist = HCons 3 (HCons True (HCons (1 :. 2 :. Nil) HNil))
 \label{fig:hlist}
 \end{figure}
 
-\subsection{Singleton types}
+\subsection{Singleton types} \label{ssec:singleton}
 TODO
 
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
+\subsection{Kind polymorphism} \label{ssec:kindpoly}
+TODO
+
 
