@@ -91,20 +91,20 @@
 \newcommand{\reqpsize}{8.113395cm}%{\columnwidth}
 
 \newcommand{\req}[2]{\begin{center}\colorbox{grey}{\begin{minipage}{\reqpsize} 
-  \mytextsf{Research question}\hfill$^{\mbox{\scriptsize #1 }}$\\[-5.5mm]
+  \mytextsf{Research question}\hfill$^{\mbox{\scriptsize see #1 }}$\\[-5.5mm]
   \begin{btritemize}
   \item #2
   \end{btritemize}
 \end{minipage}}\end{center}}
 
 \newcommand{\reqs}[2]{\begin{center}\colorbox{grey}{\begin{minipage}{\reqpsize}
-  \mytextsf{Research questions}\hfill$^{\mbox{\scriptsize #1 }}$\\[-5.5mm]
+  \mytextsf{Research questions}\hfill$^{\mbox{\scriptsize see #1 }}$\\[-5.5mm]
   \begin{btritemize}
   \item #2
   \end{btritemize}
 \end{minipage}}\end{center}}
 \newcommand{\rep}[2]{\begin{center}\colorbox{grey}{\begin{minipage}{\reqpsize}
-  \mytextsf{Research pathway}\hfill$^{\mbox{\scriptsize #1 }}$\\[-5.5mm]
+  \mytextsf{Research pathway}\hfill$^{\mbox{\scriptsize see #1 }}$\\[-5.5mm]
   \begin{btritemize}
   \item #2
   \end{btritemize}
@@ -450,9 +450,9 @@ The required naturality condition amounts to the $\beta$ and $\eta$ laws.
 The similarity between the bijective correspondence on the right above and
 the typing rule for \mbox{$\lambda$-abstraction}~(\ref{LambdaAbstraction})
 is not casual, and it is now well-understood that the Simply-Typed Lambda
-Calculus provides an internal language for Cartesian Closed Categories;
-namely, it is the calculus of all such models.  This view further enriches the
-Propositions-as-Types correspondence as in Figure\,\ref{PAT},
+Calculus with products provides an internal language for Cartesian Closed
+Categories; namely, it is the calculus of all such models.  This view further
+enriches the Propositions-as-Types correspondence as in Figure\,\ref{PAT}.
 \begin{figure}[h]
 \caption{Propositions-As-Types correspondence}
 \vspace*{2mm}
@@ -468,13 +468,13 @@ Propositions-as-Types correspondence as in Figure\,\ref{PAT},
 \vspace*{-2mm}
 \label{PAT}
 \end{figure}
-and it has become the standard with respect to which analogous developments in
-the area are measured.  
+It is by now the standard with respect to which analogous developments in the
+area are measured.  
 
 \paragraph{Type theory and programming.}
 
-The Simply-Typed Lambda Calculus, regarded as a language (rather than as a
-metalanguage), is a prototypical functional programming language.  The change
+The Simply-Typed Lambda Calculus, regarded as a language rather than as a
+metalanguage, is a prototypical functional programming language.  The change
 of perspective from Type Theory to Programming Theory is not straightforward
 and comes with considerations that enrich both subjects.  
 
@@ -494,7 +494,7 @@ Combinatory Logic\footnote{Combinatory Logic is an important symbolic
   Logic.} 
 this problem was solved by Hindley~\cite{Hindley1969}.  Independently,
 however, Milner~\cite{Milner1978} solved it in a context more relevant to
-programming for the Simply-Typed Lambda Calculus with parametric
+programming; namely, for the Simply-Typed Lambda Calculus with parametric
 polymorphism.  The algorithm is now known as the Hindley-Milner type
 inference method.  The approach is very robust, having proved to extend
 broadly.  
@@ -509,11 +509,11 @@ as overloading and accounts for uses of a program with different types
 indicates the use of a uniform program for all types (like a duplicator
 program making copies of its input).
 
-Reynolds formalised the programming intuition by introducing the Polymorphic
-Typed Lambda Calculus; an extension of the Simply-Typed Lambda Calculus with
-polymorphic types.  Roughly, these are abstract parametric types whose
-programs can be used for all instances of the parameter.  Strikingly, this
-system had already been proposed several years earlier by
+Reynolds~\cite{Reynolds} formalised the programming intuition by introducing
+the Polymorphic Typed Lambda Calculus; an extension of the Simply-Typed Lambda
+Calculus with polymorphic types.  Roughly, these are abstract parametric types
+whose programs can be used for all instances of the parameter.  Strikingly,
+this system had already been proposed several years earlier by
 Girard~\cite{GirardSystemF} under the name of {\SystemF}, as the
 type-theoretic counterpart of Second-Order Propositional Logic in the
 context of the Propositions-as-Types correspondence.  Further, Girard had
@@ -575,10 +575,10 @@ Lambek~\cite{LambekI} recognised the similarity between the basic
 structure of a category, given by identities and
 composition~(see\pref{Category}), and the wiring of logical deduction
 systems, specifically Gentzen's sequent calculi~\cite{Gentzen1935}, given
-by the axiom and cut rules.  Intuitionistic sequents led Lambek to
-axiomatize their algebra under the concept of multicategory.  This
-correspondence is roughly as outlined below (where the vector notation
-$\vec{\,\cdot\,}$ stands for finite sequences of objects): 
+by the axiom and cut rules.  Intuitionistic sequents led
+Lambek~\cite{LambekII} to axiomatize their algebra under the concept of
+multicategory.  This correspondence is roughly as outlined below (where the
+vector notation $\vec{\,\cdot\,}$ stands for finite sequences of objects): 
 \begin{center}\begin{tabular}{|c|c|}\hline
     \begin{tabular}{c}
       \small Intuitionistic\\[-1mm] \small Sequent Calculus
@@ -609,9 +609,9 @@ $\vec{\,\cdot\,}$ stands for finite sequences of objects):
     \hspace*{-2mm}(Cut) 
     \\[1mm]
     $\begin{array}{c}
-    \Gamma\vdash A\quad\Gamma_1,A,\Gamma_2\vdash B
+    \Gamma\vdash P\quad\Gamma_1,P,\Gamma_2\vdash Q
     \\ \hline 
-    \Gamma_1,\Gamma,\Gamma_2\vdash B
+    \Gamma_1,\Gamma,\Gamma_2\vdash Q
     \end{array}$
   \end{tabular}
   &
@@ -641,7 +641,7 @@ introduction of polycategories.
 The structure of multicategory appeared independently in a very different
 mathematical context, the work of May~\cite{May} on homotopical algebra, under
 the name of Operad.  Operads are now central to studies in higher-dimensional
-algebra, see~\eg~\cite{Leinster,LodayVallette}.  
+algebra (see~\eg~\cite{Leinster,LodayVallette}).  
 
 \rep{(\ref{WiringStructureParagraph})}
 {Investigate interactions between logical sequent calculi and algebraic operad
@@ -676,17 +676,19 @@ follows
   \vdash \Pi\,{i:\!I}.\, T(i) \mbox{ \mysf type}
   \end{array}
 \]
-respectively known as dependent sums and dependent product types.  These
-generalise the product and function types of Simply-Typed Lambda Calculus and,
-under the Propositions-as-Types correspondence, amount to existential and
-universal quantification.  We omit discussing the syntax of terms for these
-types.  As for their equational theory, we only mention that dependent sums
-may be weak or strong and that dependent products may be intensional (under
-$\beta$ equality) or extensional (under $\beta\eta$ equality). 
+respectively known as dependent sums and dependent product types
+(see~\eg~\cite{Jacobs}).  These generalise the product and function types of
+Simply-Typed Lambda Calculus and, under the Propositions-as-Types
+correspondence, amount to existential and universal quantification.  We omit
+discussing the syntax of terms for these types.  As for their equational
+theory, we only mention that dependent sums may be weak or strong and that
+dependent products may be intensional (under $\beta$ equality) or extensional
+(under $\beta\eta$ equality). 
 %---see \eg~\cite{?}.
 
 A basic question in this area, for which there is as yet no satisfactory
 answer is worth noting:
+\marginpar{\color{red}REVISE}
 \req{(\ref{IntensionalTypeTheoryParagraph})}
   {What is a model of intensional type theory?}
 This is part of the proposed investigations
@@ -695,7 +697,8 @@ in Section\pref{IntensionalTypeTheoryParagraph}.
 The passage from sum and product types to their dependent versions
 required new type theories.  Categorical models suggest further
 generalisations.  These are the subject of
-Sections\,(\ref{GeneralisedTypeTheoryParagraph}\,\&\,\ref{DirectedTypeTheoryParagraph})
+%Sections\,(\ref{GeneralisedTypeTheoryParagraph}\,\&\,\ref{DirectedTypeTheoryParagraph})
+Section\pref{CalculiSubsection}
 under the following. 
 \rep{(\ref{CalculiSubsection})}
   {Develop type theories from mathematical models.}
@@ -732,7 +735,7 @@ In view of the many possible applications, it is natural to ask:
     and then incorporated into mechanical proof assistants?}
 
 This question should not only be considered from the topos-theoretic viewpoint
-mentioned above, but also from other approaches, notably that of the related
+mentioned above; but also from other approaches, notably that of the related
 forcing technique of Cohen~\cite{Cohen} (introduced by him to prove the
 independence of both the axiom of choice and the continuum hypothesis from
 Zermelo-Fraenkel Set Theory) and its elaboration by Scott and Solovay as
@@ -783,7 +786,7 @@ resources and effects, were proposed by Girard~\cite{GirardLinearLogic} and by
 Moggi~\cite{MoggiLambdaC}.  The former was in the contexts of logic and proof
 theory; the latter in that of denotational semantics and category theory.
 Both, however, have had tremendous impact in programming language theory.  The
-resource analysis in the form of Linear Logic calculi, and the effect analysis
+resource analysis in the form of Linear Logic calculi; the effect analysis
 in the form of Computational \mbox{$\lambda$-calculi}.
 
 From the viewpoint of categorical models, the resource and effect management
@@ -792,30 +795,31 @@ Comonads and monads being dual categorical concepts that arose in the context
 of cohomology theory in the 1960s~\cite{BeckThesis}.
 
 A classical basic result of category theory establishes a strong
-correspondence between (co)monads and adjoint functors,
-see~\eg~\cite{MacLane}.  One aspect of this is that every adjunction 
+correspondence between (co)monads and adjoint functors
+(see~\eg~\cite{MacLane}).  One aspect of this is that every adjunction
 \begin{equation}\label{ResourceEffectAdjunction}
   \xymatrix@C=40pt{
     \cat D \ar@/^.75em/[r]|(.625){\mbox{$\,G\,$}}\ar@{}[r]|-\swvdash&
     \ar@/^.75em/[l]|(.625){\mbox{$\,F\,$}} \cat C }
 \end{equation}
 with $F$ and $G$ respectively left and right adjoint to each other, gives
-rise (by composition) to a comonad on $\cat D$ and a monad on $\cat C$.  
+rise (by composition) to a comonad on $\cat D$ and a monad on $\cat C$.  This
+viewpoint gave impetus to further analyses based on the more primitive notion
+of adjunction.  
 
-This viewpoint gave impetus to further analyses based on the more primitive
-notion of adjunction.  Models of Linear Logic are founded on the theory of
+Models of Linear Logic are founded on the theory of
 monoidal categories~\cite[Chapter~VII.1]{MacLane}.  For them, one requests
 that the adjunction be monoidal with respect to linear structure on $\cat D$
-and cartesian (or multiplicative) structure on $\cat C$,
-see~\eg~\cite{MelliesCMLL}.  On the other hand, models of Computational
+and cartesian (or multiplicative) structure on $\cat C$
+(see~\eg~\cite{MelliesCMLL}).  On the other hand, models of Computational
 \mbox{$\lambda$-calculi} rely on enriched category theory~\cite{KellyBook}.
 Here, the structure is roughly given by an enriched adjunction with $\cat C$
 cartesian and $\cat D$ with powers (or exponentials) relative to $\cat C$.
 
-Examples in the context of linear logic are the mixed linear/cartesian models
+In the context of linear logic, examples are the mixed linear/cartesian models
 and calculi of Benton and Wadler~\cite{BentonWadler} and of Barber and
-Plotkin~\cite{BarberPlotkin}; and, in the context of effect calculi, the
-Call-By-Push-Value of Levy~\cite{LevyCBPV} and the Enriched Effect
+Plotkin~\cite{BarberPlotkin}.  In the context of effect calculi, examples are
+the Call-By-Push-Value of Levy~\cite{LevyCBPV} and the Enriched Effect
 Calculus of Egger, M{\o}gelberg, and Simpson~\cite{EEC}.  Metaphorically
 speaking, both these lines of work regard resources and effects as being
 opposite sides of the same coin.  However, this is not so in all models;
@@ -830,7 +834,7 @@ viewpoint, this further enriches the computational picture with the
 ability of distinguishing between eager \vs~lazy modes of computation and
 data structure.  We incorporate this into the following.
 %
-\rep{(\ref{ProgrammingEffectsParagraph})}
+\rep{(\ref{PolarisationParagraph}\,\&\,\ref{ProgrammingEffectsParagraph})}
   {Study and develop the theory of resource management, computational
     effects, and polarisation.  Percolate this down into the design of
     programming languages.}
@@ -841,7 +845,7 @@ considered them as such (see \eg~\cite{Kobayashi}).  %BiermanDePaiva
 The field of modal logics is broad, with many subfields of specialised
 logics motivated by computation, linguistics, and philosophy.  While a
 class of modal logics known as temporal logics have played a prominent
-role and been very successful in the area of computer aided verification;
+role, and been very successful, in the area of computer aided verification;
 the impact of modal logics on programming languages has been peripheral.
 It is thus natural and important to reconsider them in this context. 
 %
@@ -856,7 +860,7 @@ computation with reflection.
 
 A theme that runs orthogonal to the logics under consideration is whether
 they are specified in natural deduction or sequent calculus
-style~\cite{Gentzen1935}.
+style (see \eg~\cite{vonPlato}).
 
 Most of the work on the Propositions-As-Types correspondence has been done
 for natural deduction systems; especially in relation to programming
@@ -877,7 +881,7 @@ in~\eg~\cite{Wadler,Munch,CurienMunch}.
 The main novel features of {\SystemL}, and its philosophy, are an
 intrinsic symmetry (reflecting the computation roles of program and
 environment) and a close connection with abstract machines (which are
-internalised into the calculus).  From this perspective:
+internalised into the calculus).  From this perspective we ask:
 %
 \req{(\ref{ProgrammingEffectsParagraph})}
   {What can the proof theory of sequent calculi do for programming?}
@@ -949,16 +953,17 @@ under four headings as follows.
   of mathematical models for type theories and logical systems. 
 
   We will investigate model theories targeting semantic problems at the
-  forefront of current understanding, specifically for intensional type theory
-  and polarised logic.
+  forefront of current understanding, specifically for 
+  \marginpar{\color{red}REVISE}
+  intensional type theory and polarised logic.
   
 \item[{\bfseries 3\enspace Calculi:}]\mbox{}\enspace\thinspace
   Development of formalisms of deduction as internal languages of mathematical
   theories.
   
   We will research type theories that go beyond current logical
-  frameworks, especially motivated by higher-dimensional category theory
-  and complexity theory.
+  frameworks, especially motivated by (higher-dimensional) category theory.
+  %and complexity theory.
   
 \item[{\bfseries 4\enspace Programming:}]\mbox{}\enspace\thinspace
   Design and implementation of, and experimentation with, novel computational
@@ -1025,17 +1030,17 @@ monads~(a notion
 %originally introduced in cohomology theory by Beck~\cite{Check???}, 
 arising in algebra from free constructions).
 
-Each of the approaches to algebraic theories of the Algebraic Trinity
-gives a different viewpoint of the subject.  For instance, Equational
-Logic provides the deductive system for formal reasoning about equations
-from axioms; Universal Algebra provides a general notion of model from
-which one derives an abstract notion of syntactic structure by means of
-freely generated models; Categorical Algebra provides a notion of
-translation between theories that lifts to adjoint functors between
-categories of models.
+Each of the approaches to algebraic theories in the Algebraic Trinity gives a
+different viewpoint of the subject.  Thus, it is important to consider them
+all.  For instance, Equational Logic provides the deductive system for formal
+reasoning about equations from axioms; Universal Algebra provides a general
+notion of model from which one derives an abstract notion of syntactic
+structure by means of freely generated models; Categorical Algebra provides an
+invariant notion of theory together with a notion of translation between them
+that lifts to adjoint functors between categories of models.
 
-Having deconstructed type theories down to many-sorted algebraic theories, can
-one reconstruct them back (and in the process enrich them) as a unified
+Having deconstructed type theories down to many-sorted algebraic theories:
+Can one reconstruct them back, and in the process enrich them, as a unified
 mathematical theory encompassing all aspects of the Algebraic Trinity?  This
 is the main general goal of this research track.
 
@@ -1099,7 +1104,7 @@ operators.  The extension to simple type theories should follow along
 similar lines further taking into account the algebraic structure of
 types.  As for the other points of the research space in
 Figure\,\ref{TypeTheoryResearchSpace}, they are yet to be investigated.  For
-these we have the following goals.
+these we have the following specific goals.
 \begin{resenumerate}\setcounter{CC}{0}
 \item
   To develop a mathematical algebraic framework for the semantics of
@@ -1119,16 +1124,19 @@ these we have the following goals.
 \item
   To test and apply the above mathematical theories by formalising them in
   Coq or Agda, while at the same time exercising these systems to the
-  limit to identify shortcomings to trigger new research in the context of
+  limit to identify shortcomings triggering new research in the context of
   proof assistants.
 \end{resenumerate}
 The outcome of this work will be mathematical foundations for the
 aforementioned aspects of type theories that are currently treated in an
-ad~hoc fashion.  Furthermore, it will provide a principled approach by which
+ad~hoc fashion.  
+\hide{
+Furthermore, it will provide a principled approach by which
 to reconsider the problem of integrating polymorphism and dependent types. 
 %%%to tackle the problem of integrating polymorphism and dependent types in 
 %%% a satisfactory 
 %%%manner---the unknown in Figure\,\ref{TypeTheoryResearchSpace}. 
+}
 
 \hide{ polynomial functors (from discrete to groupoidal) --- the meaning of
   typing rules}
@@ -1320,7 +1328,7 @@ established answer.  This is in opposite contrast with the extensional
 case, where categorical models are well understood~\cite{Jacobs}.  There
 are various reasons for this situation.
 
-\marginpar{\color{red}revise --- \cite{DybjerITT}}
+\marginpar{\color{red}REVISE --- \cite{DybjerITT}}
 
 Firstly, current categorical models are not flexible enough to dispense with
 extensionality.  In this respect, the work on Algebraic Type Theory of
@@ -2738,6 +2746,11 @@ J.\,Lambek (1968).
 \newblock Deductive systems and categories I.
 \newblock \emph{J.\ Math.\ Systems Theory}, 2:278--318.
 
+\bibitem{LambekII}
+J.\,Lambek (1969).
+\newblock Deductive systems and categories II.
+\newblock LNM 86, pp\,76--122.
+
 \bibitem{LambekScott}
 J.\,Lambek and P.\,Scott (1986).
 \newblock \emph{Introduction to Higher Order Categorical Logic}.
@@ -2968,6 +2981,11 @@ J.\,van Heijenoort, ed.\ (1967).
   logic, 1879--1931}.
 %\newblock Harvard University Press.
 
+\bibitem{vonPlato}
+J.\,von Plato (2012).
+\newblock Gentzen's proof systems: byproducts in a work of genius.
+\newblock \emph{Bull.\ Symbolic Logic}, 18(3):313--367.
+
 \bibitem{EqProofICFP12}
 D.\,Vytiniotis, S.\,Peyton~Jones, and J.P.\,Magalhaes (2012). 
 \newblock Equality proof and deferred type errors. 
@@ -2978,9 +2996,10 @@ P,\,Wadler (2003).
 \newblock Call-by-value is dual to call-by-name.
 \newblock In \emph{ICFP'03}, pp\,189--201.
 
-%\bibitem{Haskell}
-%The Haskell Programming Language.
-%\newblock \url{http://www.haskell.org/haskellwiki/Haskell}.
-\end{thebibliography}}
+\bibitem{Haskell}
+The Haskell Programming Language.
+\newblock \url{http://www.haskell.org/haskellwiki/Haskell}.
+\end{thebibliography}
+}
 
 \end{document}
