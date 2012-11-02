@@ -1163,25 +1163,47 @@ composition, and a total (or simultaneous) one of the form
   \\[.75mm] \hline\\[-2.5mm]
     g\circ(f_1,\ldots,f_n):\vec{X_1},\ldots,\vec{X_n}\to B
 \end{array}\end{equation}}%
-In the presence of identities, both notions become equivalent.  An interesting
+In the presence of identities, both notions are equivalent.  An interesting
 observation from the theory of operads is that this is not so
 otherwise~\cite{Markl}.
 
-Algebraically, the total composition structure~(\ref{TotalComposition}) is
-well understood as given by semigroup structure (technically in the
-category of Joyal Linear Species~\cite{JoyalAdvMath} with respect to the
-substitution tensor product~\cite{KellyOperads,JoyalLNM1234}).  But, what
-about the concept of partial composition?  That, after all, is the
-predominant in logic and type theory.  For it, Fiore has recently
-uncovered an unexpected connection with structure stemming from
-Lie-algebra theory; specifically, the pre-Lie algebra structure of
-Gerstenhaber~\cite{Gerstenhaber}.  Furthermore, and analogous, though more
-interesting situation occurs with polycategories~\cite{Szabo} and the
-Lie-admissible algebraic structure of Albert~\cite{Albert}.
+The %Algebraically, the 
+total composition structure~(\ref{TotalComposition}) is well understood
+(see~\eg~\cite{FioreFossacs}).
+%as given by semigroup structure (technically in the category of Joyal Linear
+%Species~\cite{JoyalAdvMath} with respect to the substitution tensor
+%product~\cite{KellyOperads,JoyalLNM1234}).  
+But, what about the concept of partial composition?  That, after all, is the
+predominant in logic and type theory.  For it, Fiore has recently uncovered an
+unexpected connection with structure stemming from the mathematical theory of
+\emph{Lie algebras}. %~\cite{LieRef}. 
+%; specifically, the pre-Lie algebra structure of
+%Gerstenhaber~\cite{Gerstenhaber}.  Furthermore, and analogous, though more
+%interesting situation occurs with polycategories~\cite{Szabo} and the
+%Lie-admissible algebraic structure of Albert~\cite{Albert}.
+%
+%We regard these observations as the starting point for interactions between
+%operad theory and logic and type theory for pursuing research as follows.
+%
+This is the starting point for research on
+\begin{resenumerate}\setcounter{CC}{0}
+\item
+  New interactions between abstract algebra, and proof and type theory.
+\end{resenumerate}
+Specifically, 
+\begin{resenumerate}\setcounter{CC}{1}
+\item 
+  There is a rich variety of algebraic structures with notions of composition,
+  \eg~motivated by studies in combinatorics, geometry, physics.  What do they,
+  and their mathematical theory, transfer to in proof and type theory?  
+  
+\item 
+  Conversely, the binding operators of logic and type theory introduce
+  algebraic structure of a kind so far unseen in mathematics.  This enriches
+  the theory and is worth investigating.
+\end{resenumerate}
 
-We regard these observations as the starting point for interactions between
-operad theory and logic and type theory for pursuing research as follows.
-
+\hide{%%% BEGIN hide
 \noindent
 From operad theory to logic and type theory:
 \begin{resenumerate}\setcounter{CC}{0}
@@ -1253,6 +1275,7 @@ From logic and type theory to operad theory:
     algebraic structure which thereby enriches the theory and is worth
     investigating.
   \end{resenumerate}
+}%%% END hide 
 
 \subsection{Models}
 \label{Models}
@@ -1816,6 +1839,7 @@ Theory~\cite{LiftingKZ} and possibly establish connections with the
 Complete Cuboidal Sets model of Axiomatic Domain
 Theory~\cite{CompleteCuboidalSets} opening new directions.  
 
+\hide{%%% BEGIN hide
 \paragraph{Substructural Type Theory.}
 \label{SubstructuralTypeTheoryParagraph}
 
@@ -1859,6 +1883,7 @@ on
   Realisability models relative to the Linear Combinatory Algebras of
   Abramsky, Haghverdi, and Scott~\cite{AHS}.
 \end{resenumerate}
+}%%% END hide
 
 \subsection{Programming}
 \label{Programming}
@@ -2344,16 +2369,16 @@ Investigator.
 
 {\setstretch{0}\footnotesize
 \begin{thebibliography}{000}
-\bibitem{AHS}
-S.\,Abramsky, E.\,Haghverdi and P.\,Scott (2002). 
-\newblock Geometry of Interaction and linear combinatory algebras. 
-%\newblock \emph{Mathematical Structures in Computer Science} 12:625--665.
-\newblock \emph{MSCS} 12.
+%\bibitem{AHS}
+%S.\,Abramsky, E.\,Haghverdi and P.\,Scott (2002). 
+%\newblock Geometry of Interaction and linear combinatory algebras. 
+%%\newblock \emph{Mathematical Structures in Computer Science} 12:625--665.
+%\newblock \emph{MSCS} 12.
 
-\bibitem{AguiarMahajan}
-M.\,Aguiar and S.\,Mahajan (2010).
-\newblock \emph{Monoidal functors, species, and Hopf algebras}.
-\newblock CRM Monograph Series, AMS.
+%\bibitem{AguiarMahajan}
+%M.\,Aguiar and S.\,Mahajan (2010).
+%\newblock \emph{Monoidal functors, species, and Hopf algebras}.
+%\newblock CRM Monograph Series, AMS.
 
 \bibitem{AhnSheard}
 K.Y.\,Ahn and T.\,Sheard (2011).
@@ -2362,10 +2387,10 @@ K.Y.\,Ahn and T.\,Sheard (2011).
 \newblock A Hierarchy of Mendler style Recursion Combinators. 
 \newblock In \emph{ICFP'11}.  
 
-\bibitem{Albert}
-A.A.\,Albert (1948).
-\newblock Power-associative rings.
-\newblock \emph{Trans.\ Amer.\ Math.\ Soc.}, 64(3):552--593.
+%\bibitem{Albert}
+%A.A.\,Albert (1948).
+%\newblock Power-associative rings.
+%\newblock \emph{Trans.\ Amer.\ Math.\ Soc.}, 64(3):552--593.
 
 %\bibitem{AltArtemov}
 %J.\,Alt and S.\,Artemov (2001).
@@ -2417,21 +2442,21 @@ J.\,Beck (1967).
 \newblock \emph{Triples, algebras and cohomology}.
 \newblock \emph{Reprints in TAC} 2, 2003. 
 
-\bibitem{BeckmannBussFriedman}
-A.\,Beckmann, S.\,Buss, and S.\,Friedman (2012).
-\newblock Safe Recursive Set Functions.
-%\newblock Available on-line.
+%\bibitem{BeckmannBussFriedman}
+%A.\,Beckmann, S.\,Buss, and S.\,Friedman (2012).
+%\newblock Safe Recursive Set Functions.
+%%\newblock Available on-line.
 
 \bibitem{BeesonBook}
 M.\,Beeson (1984).
 \newblock Foundations of constructive mathematics.
 \newblock Springer Verlag.
 
-\bibitem{BellantoniCook}
-S.\,Bellantoni and S.\,Cook (1992).
-\newblock A new recursion-theoretic characterisation of the polytime
-functions.
-\newblock \emph{Computational Complexity}, 2:97--110.
+%\bibitem{BellantoniCook}
+%S.\,Bellantoni and S.\,Cook (1992).
+%\newblock A new recursion-theoretic characterisation of the polytime
+%functions.
+%\newblock \emph{Computational Complexity}, 2:97--110.
 
 \bibitem{Benabou}
 J.~B{\'e}nabou (1967). 
@@ -2466,10 +2491,10 @@ T\,Borghuis (1998).
 Representation.  
 \newblock \emph{Journal of Logic, Language, and Information}, 7:265--296. 
 
-\bibitem{ChapotonLivernet}
-F.\,Chapoton and M.\,Livernet (2001).
-\newblock Pre-Lie algebras and the rooted trees operad.
-\newblock \emph{Int.\ Math.\ Res.\ Not.}, 8:395--408.
+%\bibitem{ChapotonLivernet}
+%F.\,Chapoton and M.\,Livernet (2001).
+%\newblock Pre-Lie algebras and the rooted trees operad.
+%\newblock \emph{Int.\ Math.\ Res.\ Not.}, 8:395--408.
 
 \bibitem{Church1936}
 A.\,Church (1936).
@@ -2535,12 +2560,12 @@ P.~Dybjer (1996).
 \newblock Internal Type Theory.
 \newblock In \emph{TYPES}, LNCS 1158, pp\,120--134.
 
-\bibitem{DybjerIR}
-P.\,Dybjer (2000).
-\newblock A General Formulation of Simultaneous Inductive-Recursive
-Definitions in Type Theory. 
-%\newblock \emph{J.\ Symb.\ Log.}, 65(2):525--549.
-\newblock \emph{JSL} 65.
+%\bibitem{DybjerIR}
+%P.\,Dybjer (2000).
+%\newblock A General Formulation of Simultaneous Inductive-Recursive
+%Definitions in Type Theory. 
+%%\newblock \emph{J.\ Symb.\ Log.}, 65(2):525--549.
+%\newblock \emph{JSL} 65.
 
 \bibitem{EEC}
 J.\,Egger, R.\,M{\o}gelberg, and A.\,Simpson (2009). 
@@ -2634,10 +2659,10 @@ G.\,Gentzen (1935).
 \newblock Untersuchungen \"uber das logische Schlie{\ss}en. 
 \newblock Mathematische Zeitschrift 39:176--210.
 
-\bibitem{Gerstenhaber}
-M.\,Gerstenhaber (1963).
-\newblock The cohomology structure of an associative ring.
-\newblock \emph{Annals of Mathematics}, 78(2):267--288.
+%\bibitem{Gerstenhaber}
+%M.\,Gerstenhaber (1963).
+%\newblock The cohomology structure of an associative ring.
+%\newblock \emph{Annals of Mathematics}, 78(2):267--288.
 
 \bibitem{GirardSystemF}
 J.-Y.\,Girard (1972).
@@ -2700,15 +2725,15 @@ P.\,Johnstone (2002).
 \newblock Sketches of an Elephant: A Topos Theory Compendium. 
 \newblock Oxford University Press.
 
-\bibitem{JoyalAdvMath}
-A.\,Joyal (1981). 
-\newblock Une th\'eorie combinatoire des s\'eries formelles. 
-\newblock \emph{Advances in Mathematics}, 42:1--82.
+%\bibitem{JoyalAdvMath}
+%A.\,Joyal (1981). 
+%\newblock Une th\'eorie combinatoire des s\'eries formelles. 
+%\newblock \emph{Advances in Mathematics}, 42:1--82.
 
-\bibitem{JoyalLNM1234}
-A.\,Joyal (1986). 
-\newblock Foncteurs analytiques et esp\`eces de structures. 
-\newblock \emph{Combinatoire \'Enum\'erative}, LNM 1234, pp\,126--159.
+%\bibitem{JoyalLNM1234}
+%A.\,Joyal (1986). 
+%\newblock Foncteurs analytiques et esp\`eces de structures. 
+%\newblock \emph{Combinatoire \'Enum\'erative}, LNM 1234, pp\,126--159.
 
 \bibitem{Kan}
 D.\,Kan (1958).
@@ -2721,10 +2746,10 @@ G.M.\,Kelly (1982).
 \newblock \emph{Basic Concepts of Enriched Category Theory}.
 \newblock \emph{Reprints in TAC} 10, 2005.
 
-\bibitem{KellyOperads}
-G.M.\,Kelly (1972).
-\newblock On the operads of J.P.\,May.
-\newblock \emph{Reprints in TAC} 13, 2005.
+%\bibitem{KellyOperads}
+%G.M.\,Kelly (1972).
+%\newblock On the operads of J.P.\,May.
+%\newblock \emph{Reprints in TAC} 13, 2005.
 
 \bibitem{Kobayashi}
 S.\,Kobayashi (1997).
@@ -2785,10 +2810,10 @@ F.\,Linton (1966).
 \newblock Some aspects of equational theories.
 \newblock In {\em Proc.\ Conf.\ on Categorical Algebra at La Jolla}, pp\,84--95.
 
-\bibitem{Permutads}
-J.-L.\,Loday and M.\,Ronco (2012).
-\newblock Permutads.
-%\newblock In \url{http://arxiv.org/abs/1105.5271}.
+%\bibitem{Permutads}
+%J.-L.\,Loday and M.\,Ronco (2012).
+%\newblock Permutads.
+%%\newblock In \url{http://arxiv.org/abs/1105.5271}.
 
 \bibitem{LodayVallette}
 J.-L.\,Loday and B.\,Vallette (2012).
@@ -2902,10 +2927,10 @@ J.\,Reynolds (1983).
 \newblock Types, abstraction and parametric polymorphism.
 \newblock \emph{Information Processing} 83, pp\,513--523.
 
-\bibitem{RoncoShuffleBialgebras}
-M.\,Ronco (2008). 
-\newblock Shuffle bialgebras.
-%\newblock In \url{http://arxiv.org/abs/math/0703437}.
+%\bibitem{RoncoShuffleBialgebras}
+%M.\,Ronco (2008). 
+%\newblock Shuffle bialgebras.
+%%\newblock In \url{http://arxiv.org/abs/math/0703437}.
 
 \bibitem{Russell1902}
 B.\,Russell (1902).
