@@ -47,6 +47,7 @@ preserves the index that represents the object language type. The definition
 of |eval| is fairly straightforward, since our expression language is a very
 simple one.
 
-What we really want to focus on is the use of term indices
-to enforce invariants of programs. 
+TODO |deriving fixpoint|
+
+TODO |mcata|
 
