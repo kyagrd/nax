@@ -24,21 +24,23 @@
 \end{landscape}
 } % end afterpage
 
-The |Path| datatype can be instantiated into many different types of
-indexed lists. For example, we can instantiate |Path| into plain regular lists
-(|List'|) and length indexed lists (|Vec|) as illustrated
-in Fig.\;\ref{fig:glist}. Later on, in Fig.\;\ref{fig:compile}, we will
-instantiate |Path| into the |Code| type in order to write a stack safe compiler.
-We will explain the code in Fig.\;\ref{fig:glist} mainly following the Nax code.
+In this section we introduce a generic |Path| datatype.
+We will instantiate |Path| into three different types of
+lists --  Plain lists, length indexed lists 
+(|List'| and |Vec| in Fig.\;\ref{fig:glist})
+and a |Code| type, in order to write a stack safe compiler
+(Fig.\;\ref{fig:compile}).
 
-|Path| expects three arguments to become a type,
-that is, |Path x {i} {j} : *|. The binary relation |x : {iota} -> {iota} -> *|
-gives defines possible transitions (or, edges of a graph)
-and |i : iota| and |j : iota| represent initial and final configurations
-(or, two vertices in a graph).  A term of type |Path x {i} {j}| witnesses
-that there exists a path from |i| to |j| following the possible transition
-steps given by the relation |x : {iota} -> {iota} -> *|. In other words,
-(|i|, |j|) is in the reflexive transitive closure of |x|.
+We will explain Fig.\;\ref{fig:glist} by discussing the Nax code.
+The type construtor |Path| expects three arguments,
+that is, |Path x {i} {j} : *|.  The argument |x : {iota} -> {iota} -> *|
+is binary relation describing legal transitions (i.e. |x {i} {j}| is inhabited
+if one can legally step from |i| to |j|).
+
+The arguments |i : iota| and |j : iota| represent the initial and final vertices 
+of the |Path|. A term of type |Path x {i} {j}| witnesses
+a path from |i| to |j| following the legal transition
+steps given by the relation |x : {iota} -> {iota} -> *|. 
 
 The |Path| datatype provides two ways of constructing witness for existence of
 paths. Firstly,
