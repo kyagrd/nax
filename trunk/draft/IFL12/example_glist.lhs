@@ -26,39 +26,36 @@
 
 In this section we introduce a generic |Path| datatype.
 We will instantiate |Path| into three different types of
-lists --  Plain lists, length indexed lists 
+lists --  plain lists, length indexed lists 
 (|List'| and |Vec| in Fig.\;\ref{fig:glist})
 and a |Code| type, in order to write a stack safe compiler
 (Fig.\;\ref{fig:compile}).
 
 We will explain Fig.\;\ref{fig:glist} by discussing the Nax code.
-The type construtor |Path| expects three arguments,
+The type constructor |Path| expects three arguments,
 that is, |Path x {i} {j} : *|.  The argument |x : {iota} -> {iota} -> *|
 is binary relation describing legal transitions (i.e. |x {i} {j}| is inhabited
 if one can legally step from |i| to |j|).
-
-The arguments |i : iota| and |j : iota| represent the initial and final vertices 
-of the |Path|. A term of type |Path x {i} {j}| witnesses
+The arguments |i : iota| and |j : iota| represent the initial and
+final vertices of the |Path|. A term of type |Path x {i} {j}| witnesses
 a path from |i| to |j| following the legal transition
 steps given by the relation |x : {iota} -> {iota} -> *|. 
 
-The |Path| datatype provides two ways of constructing witness for existence of
-paths. Firstly,
-|pNil : Path x {i} {i}| witnesses an empty path (or, $\epsilon$-transition)
-from vertex a to itself, which always exists regardless of the choice of |x|.
-Secondly,
-|pCons : x {i} {j} -> Path x {j} {k} -> Path x {i} {k}| witnesses that
-there exists a path from |i| to |k|, provided that there is a single step
-transition from |i| to |j| in |x| and that there exists path from |j| to |k|.
+The |Path| datatype provides two ways of constructing witness paths.
+Firstly, |pNil : Path x {i} {i}| witnesses an empty path (or,
+$\epsilon$-transition) from a vertex to itself, which always exists
+regardless of the choice of |x|.
+Secondly, |pCons : x {i} {j} -> Path x {j} {k} -> Path x {i} {k}| witnesses
+a path from |i| to |k|, provided that there is a single step transition from
+|i| to |j| and that there exists path from |j| to |k|.
 
 The function |append : Path x {i} {j} -> Path x {j} {k} -> Path x {i} {k}|
 witnesses that there exists a path from |i| to |i| provided that
 there exists a path from |i| to |j| and a path from |j| to |k|.
 Note that the implementation of |append| is exactly the same as
-the usual append function for plain regular lists.
+the usual append function for plain lists.
 
-To instantiate |Path| into a specific list-like structure, one instantiates
-the parameter |x| to a specific relation.
+We instantiate |Path| by providing a specific relation to the parameter |x|.
 
 Plain regular lists (|List' a|) are path obnoxious. That is, one can always
 add an element (|a|) to a list (|List' a|) to get a new list (|List' a|).
@@ -78,7 +75,7 @@ inside index terms enclosed by braces refer to the predefined names without
 the backquote. (\eg, |`zero| appearing in |{`zero}| refers to the predefined
 |zero : Nat|).
 
-For plain regular lists and vectors, the relations (|Elem a| and |ElemV a|)
+For plain lists and vectors, the relations (|Elem a| and |ElemV a|)
 are independent of the value of type |a| they contain. That is, the transition
 step for adding one value to a list is always the same regardless of the value.
 Note that each of |Elem| and |ElemV| has only one data constructor

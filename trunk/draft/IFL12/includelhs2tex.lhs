@@ -51,6 +51,11 @@
 %format e1
 %format e2
 
+%format ts0
+%format ts1
+%format ts2
+%format ts3
+
 %format plusV = plus"_{\!"V"}"
 %format ifV = "\textit{if}_{\!"V"}"
 
