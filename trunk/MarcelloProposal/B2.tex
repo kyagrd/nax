@@ -455,7 +455,7 @@ Calculus with products provides an internal language for Cartesian Closed
 Categories; namely, it is the calculus of all such models.  This view further
 enriches the Propositions-as-Types correspondence as in Figure\,\ref{PAT}.
 \begin{figure}[h]
-\caption{Propositions-As-Types correspondence}
+\caption{Propositions-as-Types correspondence}
 \vspace*{2mm}
 \[\xymatrix@C=10pt@R=12.5pt{
     & \ar@{<->}[dl]_(.5){\null\hspace*{-15mm}\txt{\scriptsize Internal
@@ -568,6 +568,7 @@ type-theoretic developments.
 that will be kept in the background of our investigations.
 }
 
+\hide{%%% BEGIN hide
 \paragraph{Logical wiring.}
 \label{LogicalWiringSubsection}
 
@@ -646,6 +647,7 @@ algebra (see~\eg~\cite{Leinster,LodayVallette}).
 \rep{(\ref{WiringStructureParagraph})}
 {Investigate interactions between logical sequent calculi and algebraic operad
   theory.}
+}%%% END hide
 
 \paragraph{Dependent types.}
 \label{DependentTypesParagraph}
@@ -847,7 +849,7 @@ the impact of modal logics on programming languages has been peripheral.
 It is thus natural and important to reconsider them in this context. 
 %
 \rep{(\ref{ModalLogicsParagraph}\,\&\,\ref{MetaprogrammingParagraph})}
-  {Investigate the Propositions-As-Types correspondence for modal logics,
+  {Investigate the Propositions-as-Types correspondence for modal logics,
     and apply it to programming languages.}
 Let us stress that we are specially interested in modalities for
 computation with reflection.
@@ -859,7 +861,7 @@ A theme that runs orthogonal to the logics under consideration is whether
 they are specified in natural deduction or sequent calculus
 style (see \eg~\cite{vonPlato}).
 
-Most of the work on the Propositions-As-Types correspondence has been done
+Most of the work on the Propositions-as-Types correspondence has been done
 for natural deduction systems; especially in relation to programming
 language theory, where the logical syntax matches that of functional
 languages.  
@@ -1137,6 +1139,7 @@ to reconsider the problem of integrating polymorphism and dependent types.
 \hide{ polynomial functors (from discrete to groupoidal) --- the meaning of
   typing rules}
 
+\hide{%%% BEGIN hide
 \paragraph{Wiring structure.}
 \label{WiringStructureParagraph}
 
@@ -1270,6 +1273,7 @@ From logic and type theory to operad theory:
     investigating.
   \end{resenumerate}
 }%%% END hide 
+}%%% END hide
 
 \subsection{Models}
 \label{Models}
@@ -1677,7 +1681,7 @@ previous section with the
 Our overall goal here is to
 \begin{resenumerate}\setcounter{CC}{1}
 \item
-  Develop the Propositions-As-Types correspondence for modal logics.
+  Develop the Propositions-as-Types correspondence for modal logics.
 \end{resenumerate}
 Here, we are specially interested in grounding it through categorical model
 theories (see Figure\,\ref{PAT}), that have been scarcely investigated.
@@ -1753,7 +1757,7 @@ metric spaces.
 The general goal of our research here is to:
 \begin{resenumerate}\setcounter{CC}{0}
 \item\label{GeneralisedTypeTheoryItem}
-   Develop a type theory providing a Propositions-As-Types interpretation
+   Develop a type theory providing a Propositions-as-Types interpretation
    of the Generalised Logical Calculus.
 \end{resenumerate}
 This is to be investigated in two stages, respectively corresponding to
@@ -2013,7 +2017,7 @@ research on the bottom-up approach, which has not been explored
 systematically.  A strong pragmatic reason for this is that our upmost
 interest is in a language targeted to programmers.  This does not mean that we
 are not interested in the activity of proving as in constructive proof
-assistants; but our main goal, under the Propositions-As-Types paradigm, is:
+assistants; but our main goal, under the Propositions-as-Types paradigm, is:
 \begin{resenumerate}\setcounter{CC}{1}
 \item
   To Prove as a by-product of programming; rather than to extract programs
@@ -2054,6 +2058,7 @@ Families~\cite{DybjerIF}.  It would be interesting to establish a formal
 connection between these approaches so that they can inform each other;
 in particular in the context of the termination checkers. %~\cite{AbelFoetus}. 
 
+\hide{
 Dually, we will also:
 \begin{resenumerate}\setcounter{CC}{4}
 \item
@@ -2061,9 +2066,10 @@ Dually, we will also:
   principles.
 \end{resenumerate}
 These have received less attention.
+}
 
 The above design considerations are to be shaped by the following maxim:
-\begin{resenumerate}\setcounter{CC}{5}
+\begin{resenumerate}\setcounter{CC}{4}%{5}
 \item
   Design language constructs with minimal type annotation supporting
   maximal type inference.
@@ -2078,7 +2084,7 @@ structure in dependent type theory is discrete.  In many applications,
 however, one is interested in indexed types that furthermore relate
 structure on indices to structure on the associated indexed family of types.
 The question arises as to how to:
-\begin{resenumerate}\setcounter{CC}{6}
+\begin{resenumerate}\setcounter{CC}{5}%{6}
 \item
   Build idioms or language abstractions for defining and then programming
   with indexed types equipped with internal varying structure.
@@ -2121,7 +2127,7 @@ These investigations will also require mathematical principles to be
 developed.  Specifically, we will 
 \begin{resenumerate}\setcounter{CC}{3}
 \item
-  Establish the Propositions-As-Types axis corresponding to internal
+  Establish the Propositions-as-Types axis corresponding to internal
   languages (see Figure\,\ref{PAT}) relating {\SystemL} to adjoints.
 \end{resenumerate}
 
@@ -2244,11 +2250,13 @@ conference calls, and/or visits to their respective sites.
 Their academic credentials together with the specific areas of the project
 to which they will be engaged follow.
 
-\myparagraph{Pierre-Louis Curien.}\ldots\\
+\smallskip\noindent
+\textbf{\em Pierre-Louis Curien}
+
 \begin{tabular}{l|l}
 Section & Keyword
 \\ \hline
-(\ref{WiringStructureParagraph}) & operads
+%(\ref{WiringStructureParagraph}) & operads
 \\
 (\ref{IntensionalTypeTheoryParagraph}) & dependent types, parametricity
 \\
@@ -2260,7 +2268,9 @@ Section & Keyword
 \\
 \end{tabular}
 
-\myparagraph{Peter Dybjer.}\ldots\\
+\smallskip\noindent
+\textbf{\em Peter Dybjer}
+
 \begin{tabular}{l|l}
 Section & Keyword
 \\\hline
@@ -2270,19 +2280,21 @@ Section & Keyword
 \\
 (\ref{MethodologyMathematicalUniversesParagraph}) & NbE, glueing
 \\
-(\ref{SubstructuralTypeTheoryParagraph}) & induction-recursion
+%(\ref{SubstructuralTypeTheoryParagraph}) & induction-recursion
 \\
 (\ref{IndexedProgrammingParagraph}) & Agda
 \\
 \end{tabular}
 
-\myparagraph{Timothy Sheard.}\ldots\\
+\smallskip\noindent
+\textbf{\em Timothy Sheard}
+
 \begin{tabular}{l|l}
 Section & Keyword
 \\\hline
 (\ref{ModalLogicsParagraph}) & MetaML
 \\
-(\ref{SubstructuralTypeTheoryParagraph}) & iterators
+%(\ref{SubstructuralTypeTheoryParagraph}) & iterators
 \\
 (\ref{IndexedProgrammingParagraph}) & Nax, Omega
 \\
@@ -2306,11 +2318,15 @@ as it starts.
   years of duration of the project.
 \end{myitemize}
 
-\myparagraph{Ki Yung Ahn.}\ldots\\
+\smallskip\noindent
+\textbf{\em Ki Yung Ahn}
+is a PhD student at the Department of Computer Science, Portland State
+University.
+
 \begin{tabular}{l|l}
 Section & Keyword
 \\\hline
-(\ref{SubstructuralTypeTheoryParagraph}) & iterators
+%(\ref{SubstructuralTypeTheoryParagraph}) & iterators
 \\
 (\ref{IndexedProgrammingParagraph}) & Nax
 \\
@@ -2318,34 +2334,119 @@ Section & Keyword
 \\
 \end{tabular}
 
-\myparagraph{Nicola Gambino.}\ldots\\
-\begin{tabular}{l|l}
-Section & Keyword
-\\\hline
-(\ref{WiringStructureParagraph}) & generalised species
-\\
-(\ref{IntensionalTypeTheoryParagraph}) & HoTT
-\\
-(\ref{MethodologyMathematicalUniversesParagraph}) & sheaves, Algebraic Set
-Theory
-\\
-(\ref{GeneralisedTypeTheoryParagraph}) & generalised species
-\\
-(\ref{DirectedTypeTheoryParagraph}) & HoTT
-\\
-\end{tabular}
+\smallskip\noindent
+\textbf{\em Nicola Gambino}
+%
+%\begin{tabular}{l|l}
+%Section & Keyword
+%\\\hline
+%(\ref{WiringStructureParagraph}) & generalised species
+%\\
+%(\ref{IntensionalTypeTheoryParagraph}) & HoTT
+%\\
+%(\ref{MethodologyMathematicalUniversesParagraph}) & sheaves, Algebraic Set
+%Theory
+%\\
+%(\ref{GeneralisedTypeTheoryParagraph}) & generalised species
+%\\
+%(\ref{DirectedTypeTheoryParagraph}) & HoTT
+%\\
+%\end{tabular}
+%
+is University Researcher in Mathematical Logic at the University of Palermo
+since December 2008.  He has a consistent record of publications in leading
+journals in theoretical computer science and mathematics, and is frequently
+invited to speak at international conferences.  
+In particular, he has been one of the plenary invited speakers at the 2010
+Logic Colloquium.  
+He has held visiting positions at several research institutions. 
+%, including the Institut Mittag-Leffler (Stockholm), the Fields Institute
+%(Toronto), and the Centre de Recerca Matem\`atica (Barcelona).  
+The most recent one, as %He has also been 
+a member of the IAS School of Mathematics (Princeton) in the Autumn of 2011.
+There he worked in contact with Voevodsky %and Awodey 
+on Homotopy Type Theory, one of the areas of the proposed research (see
+Section\pref{IntensionalTypeTheoryParagraph}). 
+%He is currently on the editorial board of the journal Mathematical Structures
+%in Computer Science.
 
-\myparagraph{Guillaume Munch-Maccagnoni.} \ldots\\
-\begin{tabular}{l|l}
-Section & Keyword
-\\\hline
-(\ref{PolarisationParagraph}) & polarisation
-\\
-(\ref{ModalLogicsParagraph}) & Linear Logic
-\\
-(\ref{ProgrammingEffectsParagraph}) & \SystemL, delimited control
-\\
-\end{tabular}
+Dr Gambino has expertise and experience in type theory and category theory,
+two of the research areas of the proposal (see Figure\,\ref{ResearchAreas}). 
+%, which he gained working under the
+%mentorship of some of the leading scholars in these areas, including Aczel
+%(The School of Computer Science, University of Manchester), Hyland (DPMMS,
+%University of Cambridge), and Joyal (D\'epartement de math\'ematiques,
+%UQ\`AM).  
+%In joint research with Garner (Department of Computing, Macquarie University)
+%he obtained some of the first results relating precisely type theory and
+%homotopy theory.  
+During his EPSRC Postdoctoral Fellowship at the DPMMS, University of
+Cambridge, he collaborated successfully with the Principal Investigator on a
+project that forms part of the proposed research in
+Section\pref{GeneralisedTypeTheoryParagraph}.
+
+\smallskip\noindent
+\textbf{\em Guillaume Munch-Maccagnoni} 
+%
+%\begin{tabular}{l|l}
+%Section & Keyword
+%\\\hline
+%(\ref{PolarisationParagraph}) & polarisation
+%\\
+%(\ref{ModalLogicsParagraph}) & Linear Logic
+%\\
+%(\ref{ProgrammingEffectsParagraph}) & \SystemL, delimited control
+%\\
+%\end{tabular}
+%
+is a PhD student at Laboratoire PPS, Universit\'e Paris Diderot - Paris~7.
+He is currently writing up his dissertation, where he contributes to the
+Propositions-as-Types correspondence of Figure\,\ref{PAT} in the context of
+classical logic and programming languages with effects and rich type
+structures.  Some of his results have already been published at conference
+proceedings. %\eg~\cite{Munch,CurienMunch}.
+For instance, 
+%
+%At the ``Proof Theory'' vertex of the triangle, he contributed to the
+%understanding of polarisation in the framework of Krivine's Classical
+%Realisability~\cite{}, extending the latter in particular to a call-by-value
+%mode of evaluation (thus answering an open question of Danos
+%and Beffara~\cite{}). He also contributed to the understanding of Girard's
+%controversial involutive classical negation, by developing a computational
+%interpretation in terms of Smalltalk-style control operators.
+%%Ref Gir? Ref Parigot/LQTdF for the controversy?
+%
+in~\cite{Munch}, 
+%At the ``Programming Languages'' vertex, 
+he gave an original way of representing proofs in linear logic (including the
+modalities) in a way that turns out to match closely the model theories
+(\ref{LCBPV}) and (\ref{LEEC}).  This is relevant to the proposed
+investigations in Section\mbox{\pref{PolarisationParagraph}}, and for further
+research on modalities as proposed in Section\pref{ModalLogicsParagraph}.
+%
+%He also showed that the semantic construction behind polarisation generalises
+%to models of computation with effects such as ``delimited control'' calculi,
+%including the one of Danvy and Filinski.  We noticed similarities with the
+%models mentioned in b-2.iii, and it allows an original approach to effects in
+%Section b-4.ii.%(add internal refs)
+
+%The ``Category Theory'' vertex of the triangle aims at a further algebraic
+%understanding of both the syntax and the semantics considered; it is currently
+%under development in his ongoing collaboration with the Principal
+%Investigator. For instance they develop a notion of ``non-associative
+%category'' for which there are concrete results in preliminary form.
+%Questions from sections b-2.iii, 2.iv and 4.ii stem from this collaboration.
+
+Supported by \ldots, Munch-Maccagnoni visited the Principal Investigator at
+the Computer Laboratory, University of Cambridge, during March--May~2011.
+Discussions on topics of Sections\pref{PolarisationParagraph} started then.
+These pave the way for the proposed research in
+Section\pref{ProgrammingEffectsParagraph}.
+
+%The triangle is held together by his variant of the L system which replaces
+%the $\lambda$ calculus at the center of the new triangle --- it remedies the
+%defects of the latter notation, which becomes insufficient when it comes to
+%the interactive forms of computation considered.
 
 \paragraph*{Additional costs.}
 
