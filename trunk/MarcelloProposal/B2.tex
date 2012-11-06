@@ -65,6 +65,7 @@
 
 \newcommand{\hide}[1]{}
 \newcommand{\hidefootnote}[2]{}
+\newcommand{\hidewiring}[1]{}
 \newcommand{\note}[1]%{}
 {\begin{quote}{\color{blue}$\leadsto$ \bf\em #1}\end{quote}}
 \newcommand{\hidenote}{\hide}
@@ -204,8 +205,8 @@ gives a schematic view of the areas together with their interactions.
 \label{ResearchAreas}
 \end{figure}\vfigspace{-2mm}
 We contend that an approach neglecting any one of them is to the detriment of
-the others, missing the depth and richness of the subject, and also missing
-opportunities for research and development.  
+the others, missing the depth and richness of the subject, and furthermore
+missing opportunities for research and development.  
 
 In Section\pref{Origins} we outline the origins and influences that led
 to this conception. %, roughly expanding through 1935 to 1985.
@@ -376,8 +377,8 @@ a `language' to becoming a `metalanguage';~\ie, a language in which it is
 possible to represent and work with other languages, in this particular case
 for simple type theories.  When regarded as a metalanguage, the Simply-Typed
 Lambda Calculus is considered as an equational theory, with the
-\mbox{$\beta$-rule}~(\ref{BetaReduction}) stated as an equation together with
-the extensionality equation
+computational \mbox{$\beta$-rule}~(\ref{BetaReduction}) stated as an
+equation together with the extensionality equation
 \[\begin{array}{rll}
 (\eta) & \lambda x.\,(t)x = t 
 & \mbox{, where $x$ is not free in $t$}
@@ -460,7 +461,8 @@ morphisms as follows:
     C\to A\Rightarrow B
   \end{array}
 \]
-The required naturality condition amounts to the $\beta$ and $\eta$ laws.
+The required naturality condition amounts to the computational $\beta$
+laws and the extensionality $\eta$ laws.
 
 The similarity between the bijective correspondence on the right above and the
 typing rule for \mbox{$\lambda$-abstraction}~(\ref{LambdaAbstraction}) is not
@@ -583,7 +585,7 @@ type-theoretic developments.
 that will be kept in the background of our investigations.
 }
 
-\hide{%%% BEGIN hide
+\hidewiring{%%% BEGIN hide
 \paragraph{Logical wiring.}
 \label{LogicalWiringSubsection}
 
@@ -1154,7 +1156,7 @@ to reconsider the problem of integrating polymorphism and dependent types.
 \hide{ polynomial functors (from discrete to groupoidal) --- the meaning of
   typing rules}
 
-\hide{%%% BEGIN hide
+\hidewiring{%%% BEGIN hide
 \paragraph{Wiring structure.}
 \label{WiringStructureParagraph}
 
