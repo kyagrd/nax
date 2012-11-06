@@ -1,5 +1,7 @@
 \documentclass[11pt,twocolumn]{article}
 
+\usepackage{graphicx}
+
 \usepackage{amsfonts,euler}
 \usepackage{MnSymbol}
 
@@ -960,9 +962,9 @@ under four headings as follows.
 \item[{\bfseries 1\enspace Foundations:}]\mbox{}\enspace\thinspace 
   A comprehensive research programme on the metamathematics of type theories.
 
-  We will provide an algebraic answer to what type theories are, establishing
-  connections with areas of abstract algebra where related structures play a
-  central role.
+  We will provide an algebraic answer to what type theories are.
+  \hidewiring{, establishing connections with areas of abstract algebra
+    where related structures play a central role.}
 
 \item[{\bfseries 2\enspace Models:}]\mbox{}\enspace\thinspace
   Study %Development and study 
@@ -2575,10 +2577,10 @@ M.\,Artin, A.\,Grothendieck, and J.-L.\,Verdier, eds. (1972).
 \newblock \emph{SGA~4}, LNM 269. 
 
 \bibitem{UnivalentProgramme}
-S.\,Awodey, T\,Coquand, and V.\,Voevodsky (2012)
+S.\,Awodey, T.\,Coquand, and V.\,Voevodsky (2012)
 \newblock Univalent Foundations of Mathematics.
-\newblock IAS School of Mathematics program,
-\url{http://www.math.ias.edu/sp/univalent}.  
+\newblock IAS School of Mathematics program, Princeton.
+%\url{http://www.math.ias.edu/sp/univalent}.  
 
 %\bibitem{AwodeyHofstraWarren}
 %S.\,Awodey, P.\,Hofstra and M.\,Warren (2012).
@@ -2771,10 +2773,10 @@ structures.
 %\newblock In \emph{FOSSACS'05}, LNCS 3441, pp\,25--46.  
 \newblock In \emph{FOSSACS'05}, LNCS 3441. 
 
-\bibitem{FioreMFPS}
-M.\,Fiore (2006).
-\newblock On the structure of substitution.  
-\newblock MFPS XXII invited address. 
+%\bibitem{FioreMFPS}
+%M.\,Fiore (2006).
+%\newblock On the structure of substitution.  
+%\newblock MFPS XXII invited address. 
 
 \bibitem{FioreICALP}
 M.\,Fiore (2012).   
@@ -2944,10 +2946,10 @@ J.\,Lambek (1968).
 \newblock Deductive systems and categories I.
 \newblock \emph{J.\ Math.\ Systems Theory}, 2:278--318.
 
-\bibitem{LambekII}
-J.\,Lambek (1969).
-\newblock Deductive systems and categories II.
-\newblock LNM 86, pp\,76--122.
+%\bibitem{LambekII}
+%J.\,Lambek (1969).
+%\newblock Deductive systems and categories II.
+%\newblock LNM 86, pp\,76--122.
 
 \bibitem{LambekScott}
 J.\,Lambek and P.\,Scott (1986).
@@ -2965,13 +2967,13 @@ F.W.\,Lawvere (1973).
 \newblock Metric spaces, generalized logic and closed categories.
 \newblock \emph{Reprints in TAC} 1, 2002.
 
-\bibitem{Leinster}
-T.\,Leinster (2004). 
-\newblock \emph{Higher Operads, Higher Categories}.
-%\newblock London Mathematical Society Lecture Note Series 298, Cambridge
+%\bibitem{Leinster}
+%T.\,Leinster (2004). 
+%\newblock \emph{Higher Operads, Higher Categories}.
+%%\newblock London Mathematical Society Lecture Note Series 298, Cambridge
+%%University Press.
+%\newblock LMS Lecture Note Series 298, Cambridge
 %University Press.
-\newblock LMS Lecture Note Series 298, Cambridge
-University Press.
 
 \bibitem{LevyCBPV}
 P.\,Levy (2005).
@@ -2988,31 +2990,31 @@ F.\,Linton (1966).
 %\newblock Permutads.
 %%\newblock In \url{http://arxiv.org/abs/1105.5271}.
 
-\bibitem{LodayVallette}
-J.-L.\,Loday and B.\,Vallette (2012).
-\newblock \emph{Algebraic Operads}.
-%\newblock Grundlehren der mathematischen Wissenschaften, Volume 346. 
-\newblock Grundlehren der mathematischen Wissenschaften.
+%\bibitem{LodayVallette}
+%J.-L.\,Loday and B.\,Vallette (2012).
+%\newblock \emph{Algebraic Operads}.
+%%\newblock Grundlehren der mathematischen Wissenschaften, Volume 346. 
+%\newblock Grundlehren der mathematischen Wissenschaften.
 
 \bibitem{MacLane}
 S.\,Mac Lane (1945).
 \newblock Categories for the Working Mathematician (Second Edition).
 \newblock Springer Verlag, 1998.
 
-\bibitem{Markl}
-M.\,Markl (2006). 
-\newblock Operads and PROPs.
-%\newblock In \url{http://arxiv.org/abs/math/0601129}.
+%\bibitem{Markl}
+%M.\,Markl (2006). 
+%\newblock Operads and PROPs.
+%%\newblock In \url{http://arxiv.org/abs/math/0601129}.
 
 \bibitem{MartinLofETT}
 P.\,Martin-L{\"o}f (1984).
 \newblock Intuitionistic Type Theory.
 \newblock Bibliopolis.
 
-\bibitem{May}
-J.P.\,May (1972).
-\newblock \emph{The geometry of iterated loop spaces}.
-\newblock LNM 271.
+%\bibitem{May}
+%J.P.\,May (1972).
+%\newblock \emph{The geometry of iterated loop spaces}.
+%\newblock LNM 271.
 
 \bibitem{Epigram}
 C.\,McBride.
@@ -3110,6 +3112,7 @@ B.\,Russell (1902).
 \newblock Letter to Frege. 
 \newblock In \emph{\cite{vanHeijenoort}}, pp\,124--125. 
 
+\newpage
 \bibitem{Russell1903}
 B.\,Russell (1903).
 \newblock \emph{The principles of mathematics}.
@@ -3155,10 +3158,10 @@ C.\,Strachey (1967).
 %2000.
 \newblock In \emph{HOSC}, 13:11--49, 2000.
 
-\bibitem{Szabo}
-M.\,Szabo (1975).
-\newblock Polycategories.
-\newblock \emph{Communications in Algebra}, 3(8):663--689.
+%\bibitem{Szabo}
+%M.\,Szabo (1975).
+%\newblock Polycategories.
+%\newblock \emph{Communications in Algebra}, 3(8):663--689.
 
 \bibitem{ToHBCurry}
 J.\,Seldin and J.R.\,Hindley (1980).
@@ -3199,5 +3202,9 @@ The Haskell Programming Language.
 \newblock \url{http://www.haskell.org/haskellwiki/Haskell}.
 \end{thebibliography}
 }
+
+%{\hspace*{-6cm}
+%\includegraphics[height=16.5cm,width=11.5cm]
+%{costs.pdf}}
 
 \end{document}
