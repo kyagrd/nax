@@ -341,7 +341,7 @@ by Curry~\cite{Curry1934} and Howard~\cite{Howard1969}
 in two slightly different, though related, logical
 contexts (technically, Hilbert-style deduction %~\cite{Hilbert} 
 and Gentzen's natural deduction in sequent form~\cite{Gentzen1935}).
-We will refer to thois discovery as the 
+We will refer to this discovery as the 
 Propositions-as-Types correspondence. %(or Curry-Howard correspondence).  
 Roughly, it establishes a correspondence between terms having types and proofs
 proving propositions.  For the Simply-Typed Lambda Calculus, the correspondence
@@ -517,13 +517,13 @@ this problem was solved by Hindley~\cite{Hindley1969}.  Independently,
 however, Milner~\cite{Milner1978} solved it in a context more relevant to
 programming; namely, for the Simply-Typed Lambda Calculus with parametric
 polymorphism.  The algorithm is now known as the Hindley-Milner type
-inference method.  The approach is very robust, having proved to extend
-broadly.  
+inference method.  The approach is very robust, extending broadly to
+many related systems.
  
 Polymorphism in programming refers to languages that support abstraction
 mechanisms by which a program (function or procedure) can be used with a
 variety of types.  The concept was introduced by Strachey~\cite{Strachey1967},
-who further classifies it as ad-hoc polymorphism and parametric polymorphism.
+who further classifies the phenomena into ad-hoc polymorphism and parametric polymorphism.
 The former is also referred to as overloading and accounts for uses of a
 program with different types (like integers and reals) by means of different
 algorithms.  The latter indicates the use of a uniform program for all types
@@ -539,13 +539,13 @@ type-theoretic counterpart of Second-Order Propositional Logic in the
 context of the Propositions-as-Types correspondence.  Further, Girard had
 also introduced {\SystemFomega}; the type-theoretic counterpart of
 Higher-Order Propositional Logic.  These logical systems widely extend the
-expressiveness of the Symply-Typed Lambda Calculus, notably by the
+expressiveness of the Simply-Typed Lambda Calculus, notably by the
 possibility of encoding inductive data types~\cite{BoehmBerarducci}.
 {\SystemFomega} lies at the core of the Haskell programming
 language. %~\cite{EqProofICFP12}.
 
-The type systems mentioned above aim at providing logical foundations and, as
-such, when viewed as programming languages can only introduce terminating
+The type systems mentioned above aim at providing logical foundations. 
+When viewed as programming languages, they can only introduce terminating
 computations.  There are various ways in which one can extend them to Turing
 complete computational languages.  In this direction, and motivated by
 model-theoretic studies of the \lcalculus, Scott~\cite{ScottTCS}
@@ -564,11 +564,11 @@ plays a central role throughout the proposal.
 \subsection{State of the art: Questions and pathways for research}
 \label{StateOfTheArtSubsection}
 
-Having introduced the scientific framework, we turn attention to topics of
-active research in the area.  The intent is not to be comprehensive.
-Rather we identify main questions and pathways for research that are to be
-the stepping stones for the research plan detailed in
-Section\pref{MethodologySection}.
+Having introduced the scientific framework, we turn our attention to topics of
+active research.  In each subsection below we identify one or more
+broad questions or pathways for research.
+In Section\pref{MethodologySection} we return to these questions, point by point,
+and construct a detailed research plan.
 
 \setcounter{paragraph}{0}
 \paragraph{Foundations.}
@@ -673,8 +673,8 @@ algebra (see~\eg~\cite{Leinster,LodayVallette}).
 \label{DependentTypesParagraph}
 
 Dependent type theory is a formalism introduced by
-de~Bruijn~\cite{deBruijn} that extends that of simple type theories by
-allowing types to be indexed or parameterised by other types.  Such
+de~Bruijn~\cite{deBruijn} that extends simple type theories by
+allowing types to be indexed (or parameterised by) other types.  Such
 objects abound in computer science and mathematics.  For instance, in
 combinatorics one is interested in the type of permutations $\mathfrak
 S(n)$ on $n$ elements, as the index (or parameter) $n$ ranges over the
@@ -783,8 +783,8 @@ which will be generically referred to as indexed programming.
 Indexed programming developed from two main influences (none to do with
 presheaves though): the practical needs of supporting data structures able to
 maintain strong data invariants, like nested %~\cite{?} 
-and generalised %~\cite{?}
-datatypes in functional programming~\cite{Omega,Haskell}; and the
+and generalised algebraic %~\cite{?}
+datatypes (GADTs) in functional programming~\cite{Omega,Haskell}; and the
 experimentation with dependently-typed programming
 languages~\cite{Cayenne,Epigram} as a by-product of dependent type theory.
 These two views somehow pull in opposite directions and, as such, lead to
@@ -916,7 +916,7 @@ international team of world-leading experts in each of the project
 research areas.  
 
 The team consists of \emph{Principal Investigator} Marcelo Fiore;
-\emph{Senior Researchers} Pierre-Louis Curien, Peter Dybjer, and Timothy
+\emph{Senior Researchers} Pierre-Louis Curien, Peter Dybjer, and Tim
 Sheard; and \emph{Junior Researchers} Ki Yung Ahn, Nicola Gambino, and
 Guillaume Munch-Maccagnoni.  Figure\,\ref{ercTeam} gives a schematic
 presentation of the team that matches the research areas as rendered in
@@ -962,7 +962,6 @@ under four headings as follows.
 \begin{myitemize}
 \item[{\bfseries 1\enspace Foundations:}]\mbox{}\enspace\thinspace 
   A comprehensive research programme on the metamathematics of type theories.
-
   We will provide an algebraic answer to what type theories are.
   \hidewiring{, establishing connections with areas of abstract algebra
     where related structures play a central role.}
@@ -970,7 +969,6 @@ under four headings as follows.
 \item[{\bfseries 2\enspace Models:}]\mbox{}\enspace\thinspace
   Study %Development and study 
   of mathematical models for type theories and logical systems. 
-
   We will investigate model theories targeting semantic problems at the
   forefront of current understanding, specifically for dependent type theory
   and polarised logic.
@@ -978,7 +976,6 @@ under four headings as follows.
 \item[{\bfseries 3\enspace Calculi:}]\mbox{}\enspace\thinspace
   Development of formalisms of deduction as internal languages of mathematical
   theories.
-  
   We will research type theories that go beyond current logical
   frameworks, especially motivated by (higher-dimensional) category theory.
   %and complexity theory.
@@ -986,7 +983,6 @@ under four headings as follows.
 \item[{\bfseries 4\enspace Programming:}]\mbox{}\enspace\thinspace
   Design and implementation of, and experimentation with, novel computational
   languages.  
-  
   We will target languages with indexed data structures, programming paradigms
   stemming from sequent calculi embodying computational effects, and explore
   extensions for metaprogramming.
@@ -1961,8 +1957,8 @@ programming (recall Section\pref{IndexedProgrammingIntro}).
 The main problem to be addressed here is to:
 \begin{resenumerate}\setcounter{CC}{0}
 \item
-  Design a language for programming indexed data structures that will be
-  archetypal for the next generation of such languages.
+  Design a language for programming indexed data structures that will
+  inform the design of the next generation of programming languages.
 \end{resenumerate}
 The task can be approached from two different viewpoints.  In a top-down
 fashion, one may turn dependent type theories into programming languages;
@@ -2037,7 +2033,7 @@ where the main features inherent to each approach are also listed.
 Most of the work in this area has concentrated on exploring the top-down
 approach (see~\eg~\cite{Cayenne} and~\cite{Epigram}).  Here we will pursue
 research on the bottom-up approach, which has not been explored
-systematically.  A strong pragmatic reason for this is that our upmost
+systematically.  A strong pragmatic reason for this is that our uppermost
 interest is in a language targeted to programmers.  This does not mean that we
 are not interested in the activity of proving as in constructive proof
 assistants.  However, our main goal, under the Propositions-as-Types paradigm,
@@ -2060,7 +2056,7 @@ In the above direction, we are investigating:
 \end{resenumerate}
 {\SystemFi} is to serve as the mathematical foundation for designing, and
 giving operational semantics to, our programming language.  We stress here
-that indices are static, \ie~determined at compile time.  This is a main
+that indices are static, \ie~determined at compile time.  This is the main
 feature pulling us away from traditional dependently-typed formalisms.
 
 The logical consistency of {\SystemFi} amounts to establishing its strong
@@ -2080,7 +2076,7 @@ defined datatypes of possibly mixed variance.  Thus, going beyond the
 typical inductive types of type theory stemming from Dybjer's Inductive
 Families~\cite{DybjerIF}.  It would be interesting to establish a formal
 connection between these approaches so that they can inform each other;
-in particular in the context of the termination checkers. %~\cite{AbelFoetus}. 
+in particular in the context of termination checking. %~\cite{AbelFoetus}. 
 
 \hide{
 Dually, we will also:
@@ -2098,7 +2094,7 @@ The above design considerations are to be shaped by the following maxim:
   Design language constructs with minimal type annotation supporting
   maximal type inference.
 \end{resenumerate}
-Indeed, this is a main open problem in dependently-typed programming language
+Indeed, this is the main open problem in dependently-typed programming language
 theory.
 
 Finally, let us mention an intriguing possibility suggested by the
@@ -2114,7 +2110,7 @@ The question arises as to how to:
   with indexed types equipped with internal varying structure.
 \end{resenumerate}
 A specific motivation for this comes from the possibility of directly
-programming, as opposed to having to code, presheaf structure (\eg~as it is
+programming, as opposed to having to code, presheaf structure (\eg~as is
 needed in Normalisation by Evaluation~\cite{FiorePPDP}).
 
 \paragraph{Effects.}
