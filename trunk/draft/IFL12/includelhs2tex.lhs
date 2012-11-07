@@ -67,7 +67,7 @@
 %format with = "\,\mathbf{with}"
 %format where = "\;\mathbf{where}"
 %format Mu (k) = "\mu_{" k "}"
-%format In (k) = "\In^{" k "}"
+%format In (k) = "\In_{" k "}"
 %format MIt (a) = "\mathbf{mcata}_{" a "}"
 %format mcata (a) = "\mathbf{mcata}_{" a "}"
 

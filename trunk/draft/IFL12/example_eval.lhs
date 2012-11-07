@@ -47,7 +47,3 @@ preserves the index that represents the object language type. The definition
 of |eval| is fairly straightforward, since our expression language is a very
 simple one.
 
-TODO |deriving fixpoint|
-
-TODO |mcata|
-
