@@ -24,10 +24,10 @@ list-like structures with indices (Sect. \ref{ssec:glist}), and
 \item A stack safe compiler for the same simple expression lagnauge,
 which uses the |Path| datatype (Sect. \ref{ssec:compile}).
 \end{itemize}
-We adopted the examples from Conor McBride's keynote talk \cite{McBride012} at ICFP 2012
-(originally written in Agda). All the example code was tested in GHC 7.4.1 (should also work
-in later versions such as GHC 7.6.x), our prototype Nax implementation,
-and Agda 2.3.0.1.
+We adopted the examples from Conor McBride's keynote talk \cite{McBride12}
+at ICFP 2012 (originally written in Agda). All the example code was tested
+in GHC 7.4.1 (should also work in later versions such as GHC 7.6.x),
+our prototype Nax implementation, and Agda 2.3.0.1.
 
 
 %include example_eval.lhs

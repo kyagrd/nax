@@ -25,28 +25,26 @@ uses the index to enforce stack safety
 -- an expression of type |t| compiles to some code, which when run on
 a stack machine with an initial stack configuration |ts|, terminates 
 with the final stack configuration |cons t ts|.
+
 A stack configuration is an abstraction of the stack 
 that tracks only the types of the values stored there.
-
-
 We represent a stack configuration as
-a list of type representations (|List Ty|). For instance,
-the configuration for the stack containing three values (from top to bottom)
-[3, True, 4] is |cons I (cons B (cons I Nil))|.
-
-
-DOES NOT BELONG HERE
-The astute reader may wonder why we define |List| again instead of using
-already defined |List'| in Fig.\;\ref{fig:glist}, which is exactly
-the plain regular list specialized from generic |Path|.
-It is possible to represent stack configuration as |List' Ty| in Nax and Agda,
-but unfortunately not in Haskell. Haskell's datatype promotion does not allow
-promoting datatypes indexed by already promoted datatypes. So, in Haskell,
-we cannot index types by |List' Ty|, which is a synonym of
-|Path (Elem Ty) () ()| indexed by a promoted Haskell unit term |()|
-of the promoted Haskell unit type |()|.
-In Sect. \label{sec:discuss}, we will discuss further on how the two approaches
-of Nax verses Haskell differ in their treatment of term indexed types.
+a list of type representations (|List Ty|).\footnote{
+	The astute reader may wonder why we use |List| instead of
+	already defined |List'| in Fig.\;\ref{fig:glist}, which is exactly
+	the plain list we want. In Nax and Agda, it is possible have
+	term indices of |List' Ty| instead of |List Ty|. (In Nax and Agda,
+	the |List| datatype is defined in their standard libraries.)
+	Unfortunately, it is not the case in Haskell.
+	Haskell's datatype promotion does not allow promoting datatypes
+	indexed by already promoted datatypes. Recall that |List' Ty| is
+	a synonym of |Path (Elem Ty) () ()|, which cannot be promoted to
+	an index since it is indexed by already promoted unit term |()|.
+	In the following section, we will discuss further on how
+	the two approaches of Nax verses Haskell differ
+	in their treatment of term indexed types.}
+For instance, the configuration for the stack containing three values
+(from top to bottom) [3, True, 4] is |cons I (cons B (cons I Nil))|.
 
 To enforce stack safety, each instruction 
 (|Inst : List Ty -> List Ty -> *|) is indexed with its initial and
@@ -66,5 +64,4 @@ For example, the compiled code consisting of the three instructions
 |inst2 : Inst {ts1} {ts2}|, and
 |inst3 : Inst {ts2} {ts3}| has the type |Code {ts0} {ts3}|.
  
-
 
