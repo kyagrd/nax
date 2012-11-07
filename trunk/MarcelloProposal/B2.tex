@@ -231,19 +231,19 @@ The inception of computer science was Hilbert's %~\cite{?}
 1928 Entscheidungsproblem (decision problem),
 asking whether there is an algorithmic procedure for deciding mathematical
 statements.  Negative answers were provided independently by
-Church~\cite{Church1936} and Turing~\cite{Turing} around 1936--1937,
+Church~\cite{Church1936} in 1936 and Turing~\cite{Turing} in 1937,
 giving birth to the mathematical theory of computation.  Their completely
 different approaches gave rise to different branches of theoretical
-computer science that still permeate the field.  
-On the one hand, the line
+computer science that still persist today.  
+On one hand, the line
 of development starting with Church's {\lcalculus} %~\cite{?} 
-is concerned with prototypical computational languages that are
-instrumental in studying high-level programming languages.  
+concerns itself with prototypical computational languages that are
+used to study high-level programming languages.  
 On the other hand, Turing's machines %~\cite{?} 
 are the most widely 
 used model for analysing computational complexity.
 
-Church's view is central to our concerns here.  The {\lcalculus} is a
+Church's view is central to this proposal.  The {\lcalculus} is a
 deceptively simple formal system.  Its syntax consists of three types of
 phrases: variables, applications, and abstraction.  Church's seminal
 innovation was in introducing the latter one, 
@@ -255,16 +255,16 @@ Binding operators are an integral part of all high-level  programming
 languages.  Their mathematical theory is subtle %, see~\ref{}, 
 because they define syntax up to the consistent renaming of bound
 variables (technically referred to as \mbox{$\alpha$-equivalence}).
-Consider, for instance, the anecdotal fact that the first definitions of
+This subtlety is made evident by the anecdotal fact that the first definitions of
 substitution were formally flawed.  
 %These important topics are core to our proposed research in
 %Section\pref{AlgebraicTypeTheoryParagraph}.
 
 Incidentally, the notion of variable binding was initially introduced much
-earlier, again in the context of mathematical logic.  This was done by
-Frege~\cite{Frege1879} for the purpose of defining a formal symbolic
+earlier, by Frege~\cite{Frege1879}, in the context of mathematical logic.  
+He used binders to define a formal symbolic
 system axiomatising not only the propositional connectives of Boolean
-logic~\cite{Boole} but, for the first time, also the quantifiers of
+logic~\cite{Boole} but also, for the first time, the quantifiers of
 predicate logic.
 
 In modern notation, the \lcalculus\ syntax is given by
@@ -286,29 +286,30 @@ self application.
 \paragraph{Type theory and logic.}
 \label{SectionATypeTheoryAndLogicParagraph}
 
-The concept of `type' was also born as a result of solving a foundational
-problem.  In~\cite{Frege1903}, building on~\cite{Frege1879}, Frege put
-forward a logical system as a foundation for mathematics including
-arithmetic.  By his now famous paradox, Russell~\cite{Russell1902}
+The concept of `type' was conceived to solve a foundational
+problem.  In~\cite{Frege1903}, building on~\cite{Frege1879}, Frege proposed
+a logical system as a foundation for mathematics including
+arithmetic.  In his now famous paradox, Russell~\cite{Russell1902}
 observed that one of Frege's axioms led to inconsistency.  He was led to
-this by related contradictions found while developing his account of set
-theory.  Russell's introduction of the `doctrine of
-types'~\cite[Appendix~B]{Russell1903} came as a direct result to overcome
-such foundational problems.
+this contradiction by related contradictions he found while developing his account of set
+theory.  Russell's introduction of the `doctrine of types'~\cite[Appendix~B]{Russell1903} 
+was introduced to overcome such foundational problems -- well-typed systems do
+not have these inconsistencies.
 
-Type Theory as we now know it arose however from the integration by Church
+Type Theory, as we now know it, arose from the integration by Church
 of types into his \lcalculus~\cite{Church1940}.  This was a natural step,
-having in mind the naive interpretation of \mbox{$\lambda$-abstraction} as
+particularly if one held the naive interpretation of \mbox{$\lambda$-abstraction} as
 defining functions.  The type theory known as the Simply-Typed Lambda
-Calculus has set of types consisting of basic ones closed under a
+Calculus has a set of types consisting of basic ones closed under a
 function-type constructor:
   \[\begin{array}{rcll}
     \sigma,\tau & ::= & & \mbox{(simple types)}\\
     & \mid & \theta & \quad\mbox{(basic types)}\\
     & \mid & \sigma\to\tau & \quad\mbox{(function types)}
   \end{array}\]
-In it, \mbox{$\lambda$-terms}~$t$ are classified according to types~$\tau$ in
-contexts $\Gamma$ assigning types to variables, for which the notation
+In the Simply-Typed Lambda
+Calculus, \mbox{$\lambda$-terms}~$t$ are classified by types~$\tau$, in
+contexts $\Gamma$ (assigning types to variables), for which the notation
   \[
   \Gamma\vdash t:\tau
 \]
@@ -335,16 +336,17 @@ mathematical vernacular are presented as follows
   \end{array}
 \end{equation}
 
-A fundamental discovery in two slightly different, though related, logical
+A fundamental discovery was made
+by Curry~\cite{Curry1934} and Howard~\cite{Howard1969}
+in two slightly different, though related, logical
 contexts (technically, Hilbert-style deduction %~\cite{Hilbert} 
-and Gentzen's natural deduction in sequent form~\cite{Gentzen1935}), was made
-by Curry~\cite{Curry1934} and Howard~\cite{Howard1969}.  This will be
-referred to here as the 
+and Gentzen's natural deduction in sequent form~\cite{Gentzen1935}).
+We will refer to thois discovery as the 
 Propositions-as-Types correspondence. %(or Curry-Howard correspondence).  
-Roughly, it establishes a correspondence between terms of types and proofs
-of propositions.  For the Simply-Typed Lambda Calculus, the correspondence
-can be illustrated by noting that the erasure of term information in its
-typing rules yields the deduction rules
+Roughly, it establishes a correspondence between terms having types and proofs
+proving propositions.  For the Simply-Typed Lambda Calculus, the correspondence
+can be illustrated by noting that the erasure of term information in the typing 
+rules (given above) yields the deduction rules
   \begin{center}
   $\begin{array}{c}
     1\leq i\leq n
@@ -369,14 +371,14 @@ typing rules yields the deduction rules
 of Intuitionistic %Minimal 
 Logic. %~\cite{?}.
 
-In another very important direction, Church introduced a Simple Theory of
-Types~\cite{Church1940} as an axiomatization of Higher-Order Logic
-formalised within a Simply-Typed Lambda Calculus with basic types
-for individuals and propositions enriched with constants for the logical
+In another very important direction Church introduced a Simple Theory of
+Types~\cite{Church1940} as an axiomatization of Higher-Order Logic.
+This axiomatization was formalised within a Simply-Typed Lambda Calculus with basic types
+for both individuals and propositions, further enriched with constants for the logical
 connectives.  In doing so, he adopted a radically new perspective,
-shifting the status of the Simply-Typed Lambda Calculus from that of being
-a `language' to becoming a `metalanguage';~\ie, a language in which it is
-possible to represent and work with other languages, in this particular case
+shifting the status of the Simply-Typed Lambda Calculus from that of 
+a `language' to a `metalanguage';~\ie, a language in which it is
+possible to represent and work with other languages. In this particular case
 for simple type theories.  When regarded as a metalanguage, the Simply-Typed
 Lambda Calculus is considered as an equational theory, with the
 computational \mbox{$\beta$-rule}~(\ref{BetaReduction}) stated as an
@@ -386,17 +388,16 @@ equation together with the extensionality equation
 & \mbox{, where $x$ is not free in $t$}
   \end{array}\]
 
-Such abstraction processes from languages to metalanguages have become a
-common activity in computer science and play an important role in our
+The processes of abstracting from languages to metalanguages has become a
+common activity in computer science, and plays an important role in our
 proposed investigations.  
 
 \paragraph{Category theory, logic, and type theory.}
 
 The theory of categories was introduced by Eilenberg and Mac
 Lane~\cite{EilenbergMacLane}.  A category is a mathematical structure
-consisting of objects and morphisms.  The latter are classified
-according to pairs of the former: as their domain and codomain.  In a
-category, the notation $f:A\to B$ stipulates that $A$ and $B$ are objects, and
+consisting of objects and morphisms.  Morphisms are classified
+by pairs of objects. The notation $f:A\to B$ stipulates that $A$ and $B$ are objects, and
 that $f$ is a morphism with domain $A$ and codomain~$B$.  
 Categories come equipped with an associative law that composes pairs of
 morphisms 
@@ -417,7 +418,7 @@ that is a neutral element for composition.
 %categories, which in turn was defined to introduce natural transformations, a
 %notion of morphism between functors.
 
-It is helpful to appreciate that there are two main uses for categories: in the
+It is helpful, in understanding categories, that they have two kinds of uses: in the
 large and in the small.  In the large, categories are seen as mathematical
 universes of discourse (within which mathematical constructions take place,
 typically by means of universal properties); like the categories of: sets and
@@ -454,13 +455,13 @@ morphisms as follows:
   \begin{array}{c}
     C\to A \enspace,\enspace C\to B
     \\ \hline\hline
-    C\to A\times B
+    C\to (A\times B)
   \end{array}
   \quad\qquad
   \begin{array}{c}
-    C\times A\to B
+    (C\times A)\to B
     \\ \hline\hline
-    C\to A\Rightarrow B
+    C\to (A\Rightarrow B)
   \end{array}
 \]
 The required naturality condition amounts to the computational $\beta$
