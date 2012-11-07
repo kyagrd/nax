@@ -44,24 +44,34 @@ data L : * -> * -> * where  {-"\qquad\qquad"-}  synonym List a = Mu [*] (L a)
   Nil   : L a r                                 nil       = In [*] Nil
   Cons  : a -> r -> L a r                       cons x xs = In [*] (Cons x xs)
     deriving fixpoint List
-\end{code}\vskip1ex
+\end{code}\vskip.5ex
 The |synonym| keyword defines a type synonym,
 just like Haskell's |type| keyword.
 
-\quad In Nax, |data| declarations do not directly support recursive definitions.
+\quad
+In Nax, |data| declarations do not directly support recursive definitions.
 Instead, one defines recursive types using a fixpoint type operator
-|Mu[kappa] : (kappa -> kappa) -> kappa|
-over base structures of kind |kappa -> kappa| (\eg, |(L a) : * -> *|).
-Nax provides the usual data constructor |In[kappa]| for |Mu[kappa]|, which
-can be used for defining constructor functions of recursive types (\eg, |nil|
-and |cons|).
+|Mu[kappa] : (kappa -> kappa) -> kappa| over base structures of kind
+|kappa -> kappa| (\eg, |(L a) : * -> *|).
+Nax provides the usual data constructor |In[kappa]| for |Mu[kappa]|,
+which can be used for defining constructor functions of recursive types
+(\eg, |nil| and |cons|).
 
-\quad However, one cannot freely destruct values of recursive types 
+\quad
+However, one cannot freely eliminate (or, destruct) values of recursive types
 in Nax (\ie, cannot patten match against |In[kappa]|) since recursive types
-in Nax are Mendler-style. TODO |mcata|
+in Nax are Mendler-style. Nax provides several well-behaved (\ie, always
+terminate) Mendler-style recursion combinators, such as {\bf mcata},
+that works particularly well with indexed types. To aid type inference,
+Nax syntax requires to annotate the combinators with index tranformers,
+when one needs to recurese over values of indexed types. For instance,
+let |x : T1 {i} {j}| then we can infer that
+|mcata { {i} {j} . T2 {j} {i} } x with {-"\cdots"-} : T1 {i} {j} -> T2 {j} {i}|
+with the help of the index transformer annotation
+{\tiny |{ {i} {j} . T2 {j} {i} }|}.
 \end{tcolorbox}
 \caption{\textsc{Nax} features:
-		|deriving fixpoint|, |synonym|, |Mu|, |In|, and |mcata|}
+	|deriving fixpoint|, |synonym|, $\mu$, {\tt In}, and {\bf mcata}}
 \vskip-10ex
 \label{tbl:naxfeatures}
 \end{table}
