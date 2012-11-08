@@ -38,55 +38,61 @@ is binary relation describing legal transitions (i.e. |x {i} {j}| is inhabited
 if one can legally step from |i| to |j|).
 The arguments |i : iota| and |j : iota| represent the initial and
 final vertices of the |Path|. A term of type |Path x {i} {j}| witnesses
-a path from |i| to |j| following the legal transition
+a (possibly many step) path from |i| to |j| following the legal transition
 steps given by the relation |x : {iota} -> {iota} -> *|. 
 
-The |Path| datatype provides two ways of constructing witness paths.
-Firstly, |pNil : Path x {i} {i}| witnesses an empty path (or,
+The |Path| datatype provides two ways of constructing witnesses of paths.
+First, |pNil : Path x {i} {i}| witnesses an empty path (or,
 $\epsilon$-transition) from a vertex to itself, which always exists
 regardless of the choice of |x|.
-Secondly, |pCons : x {i} {j} -> Path x {j} {k} -> Path x {i} {k}| witnesses
+Second, |pCons : x {i} {j} -> Path x {j} {k} -> Path x {i} {k}| witnesses
 a path from |i| to |k|, provided that there is a single step transition from
-|i| to |j| and that there exists path from |j| to |k|.
+|i| to |j| and that there exists a path from |j| to |k|.
 
 The function |append : Path x {i} {j} -> Path x {j} {k} -> Path x {i} {k}|
-witnesses that there exists a path from |i| to |i| provided that
-there exists a path from |i| to |j| and a path from |j| to |k|.
+witnesses that there exists a path from |i| to |k| provided that
+there exists a path from |i| to |j| and there exists another path from |j| to |k|.
 Note that the implementation of |append| is exactly the same as
 the usual append function for plain lists.
+We instantiate |Path| by providing a specific relation to 
+instantiate the parameter |x|.
 
-We instantiate |Path| by providing a specific relation to the parameter |x|.
-
-Plain regular lists (|List' a|) are path obnoxious. That is, one can always
+Plain lists (|List' a|) are path oblivious. That is, one can always
 add an element (|a|) to a list (|List' a|) to get a new list (|List' a|).
-We instantiate |x| to a degenerate relation over a singleton set
-|(Elem a) : Unit -> Unit -> *|, which is tagged by a value of type |a|.
+We instantiate |x| to the degenerate relation
+|(Elem a) : Unit -> Unit -> *|, which is tagged by a value of type |a|
+and witnesses a step with no interesting information.
 Then, we can define |List' a| as a synonym of |Path (Elem a) Unit Unit|,
-and their constructors |nil'| and |cons'|.
+and its constructors |nil'| and |cons'|.
 
-Since length indexed lists (|Vec a {n}|) need countably many configurations
-representing length of the list. So, we instantiate |x| to relation over
-natural numbers |(ElemV a): Nat -> Nat -> *| tagged by a value of type |a|.
-The relation (|ElemV a|) counts down one step from |succ n| to |n|,
+Length indexed lists (|Vec a {n}|) need a natural number index to
+represent the length of the list. So, we instantiate |x| to a relation over
+natural numbers |(ElemV a): Nat -> Nat -> *| tagged by a value of type |a|
+witnessing steps of size one.
+The relation (|ElemV a|) counts down exactly one step, from |succ n| to |n|,
 as described in the type signature of |MkElemV : a -> Elem a {`succ n} {n}|.
 Then, we define |Vec a {n}| as a synonym |Path (ElemV a) {n} {`zero}|,
-counting down from |n| to |zero|. In Nax, backquoted identifiers appearing
-inside index terms enclosed by braces refer to the predefined names without
-the backquote. (\eg, |`zero| appearing in |{`zero}| refers to the predefined
-|zero : Nat|).
+counting down from |n| to |zero|. In Nax, in a declaration, backquoted identifiers appearing
+inside index terms enclosed by braces refer to functions or constants in the 
+current scope
+(\eg, |`zero| appearing in |Path (ElemV a) {n} {`zero}| refers to the predefined
+|zero : Nat|). Names without backquotes (\eg, |n| and |a|) are implicitly universally quantified.
 
-For plain lists and vectors, the relations (|Elem a| and |ElemV a|)
-are independent of the value of type |a| they contain. That is, the transition
-step for adding one value to a list is always the same regardless of the value.
-Note that each of |Elem| and |ElemV| has only one data constructor
-|MkElem| and |MkElemV|, respectively. In the following subsection, we will
-instantiate |Path| with a relation for stack configurations that specifies
-several different transition rules for different machine instruction values.
+For plain lists and vectors, the relations, (|Elem a|) and (|ElemV a|),
+are parameterized by the type |a|. That is, the transition
+step for adding one value to the path is always the same,
+independent of the value.
+Note that both |Elem| and |ElemV| have only one data constructor
+|MkElem| and |MkElemV|, respectively, since all ``small" steps
+are the same. In the next subsection, we will
+instantiate |Path| with a relation witnessing stack configurations,
+with multiple constructors, each witnessing different transition 
+steps for different machine instructions.
 
-Haskell code is pretty much similar to the Nax code, except that it uses
+The Haskell code is similar to the Nax code, except that it uses
 general recursion and kinds are not explicitly annotated on datatypes.\footnote{
 	In Haskell, kinds are inferred by default.
 	The \texttt{KindSignatures} extension in GHC allows kind annotations.}
 In Agda, there is no need to define wrapper datatypes like |Elem| and |ElemV|
-since we can use type level functions no different from term level functions.
+since type level functions are no different from term level functions.
 

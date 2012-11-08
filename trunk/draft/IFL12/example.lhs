@@ -33,9 +33,9 @@ our prototype Nax implementation, and Agda 2.3.0.1.
 \begin{table}[h]
 \vskip-3ex
 \begin{tcolorbox}[boxsep=-1mm]
-\quad The ``|deriving fixpoint|'' clause following 
+\quad The ``|deriving fixpoint T|'' clause following 
 |data F : {-"\,\overline{k}"-} -> kappa -> kappa where {-"\cdots"-}|
-derives a recursive type synonym of |Mu[kappa](F {-"\,\overline{a}"-}) : kappa|
+derives a recursive type synonym |T {-"\,\overline{a}"-} = Mu[kappa](F {-"\,\overline{a}"-}) : kappa|
 and its constructor functions.
 For instance, the deriving clause below left derives the definitions
 below right:\vskip.7ex
@@ -49,25 +49,28 @@ The |synonym| keyword defines a type synonym,
 just like Haskell's |type| keyword.
 
 \quad
-In Nax, |data| declarations do not directly support recursive definitions.
-Instead, one defines recursive types using a fixpoint type operator
-|Mu[kappa] : (kappa -> kappa) -> kappa| over base structures of kind
+In Nax, |data| declarations cannot be recursive.
+Instead, to define recursive types one uses a fixpoint type operator
+|Mu[kappa] : (kappa -> kappa) -> kappa| over non-recursive base structures of kind
 |kappa -> kappa| (\eg, |(L a) : * -> *|).
-Nax provides the usual data constructor |In[kappa]| for |Mu[kappa]|,
-which can be used for defining constructor functions of recursive types
+Nax provides the usual data constructor |In[kappa]| to construct
+recursive values of the type |Mu[kappa]|.
+|In[kappa]| is used to defining the normal constructor functions of recursive types
 (\eg, |nil| and |cons|).
 
 \quad
-However, one cannot freely eliminate (or, destruct) values of recursive types
-in Nax (\ie, cannot patten match against |In[kappa]|) since recursive types
-in Nax are Mendler-style. Nax provides several well-behaved (\ie, always
-terminate) Mendler-style recursion combinators, such as {\bf mcata},
-that works particularly well with indexed types. To aid type inference,
-Nax syntax requires to annotate the combinators with index tranformers,
-when one needs to recurese over values of indexed types. For instance,
-let |x : T1 {i} {j}| then we can infer that
-|mcata { {i} {j} . T2 {j} {i} } x with {-"\cdots"-} : T1 {i} {j} -> T2 {j} {i}|
-with the help of the index transformer annotation
+However, one cannot freely eliminate (or destruct) values of $\mu$ types.
+In Nax one cannot patten match against |In[kappa] e|. Instead Nax 
+provides several well-behaved (\ie, always
+terminating) Mendler-style recursion combinators, such as {\bf mcata},
+that work naturally over $\mu$ types, even with indices. 
+
+\quad 
+To support type inference,
+Nax syntax requires programmers to annotate mendler combinators with 
+index tranformers. For instance, Nax can infer that the term
+|(\ x -> mcata { {i} {j} . T2 {j} {i} } x with {-"\cdots"-})| has type |T1 {i} {j} -> T2 {j} {i}|
+using the information in the index transformer annotation
 {\tiny |{ {i} {j} . T2 {j} {i} }|}.
 \end{tcolorbox}
 \caption{\textsc{Nax} features:

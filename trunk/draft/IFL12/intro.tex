@@ -21,6 +21,21 @@ so \textbf{term indices are faked} (or, simulated) by additional
 type structure replicating the requisite term structure.
 A recent GHC extension, datatype promotion,
 
+\begin{itemize}
+\item Nax is strongly normalizing, and logically consistent, so the
+type of Nax programs can be given logical interpretations as propositions.
+
+\item Nax supports type inference. Types appear only in data declarations
+and index transformers attached to mendler operators. Index transformers
+are the ``minimal"  annotation necessary to support type inference over GADTs.
+
+\item Nax programs are expressive and concise. Nax programs
+are similar in size to their Haskell and Agda equivalents, yet they
+still retain logicality and type inference. We don't pay for the
+complexity of two level types and mendler morphisms.
+
+\end{itemize}
+
 TODO contribution of Nax
 
 TODO contribution of this paper

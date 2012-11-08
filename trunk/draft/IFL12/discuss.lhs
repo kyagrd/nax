@@ -31,7 +31,7 @@ illustrates differences and similarities between the mechanism
 for checking well-sortedness, by comparing the justification for
 the well-sortedness of the kind |List Ty -> *|.
 The important lessons of Figure \ref{fig:sortingEx} are
-that the Nax appraoch is closely related to \emph{universe subtyping} in Agda,
+that the Nax approach is closely related to \emph{universe subtyping} in Agda,
 and, the datatype promotion in Haskell is closely related to
 \emph{universe polymorphism} in Agda. 
 
@@ -90,8 +90,8 @@ term/type/kind/sort merged into one pseudo-term syntax
 \end{tabular}
 \caption{Universes, kind syntax, and selected sorting rules
    of Haskell, Nax, and Agda.
-   Haskell's and Nax's kind syntax are simplified, excluding kind polymorphism.
-   Agda's (|->|) rule is simplified allowing only non-dependent kind arrows.}
+   Haskell's and Nax's kind syntax are simplified to exclude kind polymorphism.
+   Agda's (|->|) rule is simplified to only allow non-dependent kind arrows.}
 \label{fig:sorting}
 \end{figure}
 
@@ -162,8 +162,7 @@ whenever |A| is a type (\ie, $\Jty |A : *|$). Note that types may only appear
 in the domain (the left-hand-side of the arrow) but not in the codomain 
 (the right-hand-side of the arrow).  Modulo right associativity of arrows
 (\ie, |kappa1 -> kappa2 -> kappa3| means |kappa1 -> (kappa2 -> kappa3)|),
-kinds in Nax always terminate in |*| (\eg, |* -> * -> *|, |{Nat} -> {Nat} -> *|,
-|({Nat} -> *) -> {Nat} -> *|).\footnote{Nax implementation allows programmers
+kinds in Nax always terminate in |*| \eg:\footnote{Nax implementation allows programmers
 to omit curly braces in kinds when it is obvious that the domain is a type
 rather than a kind. For instance, |Nat -> *| really means |{Nat} -> *| since
 |Nat| is obviously a (nullary) type constructor because it starts with an
@@ -171,10 +170,17 @@ uppercase letter.
 In Sect.\ref{sec:example}, we omitted curly braces to help readers 
 compare Nax with other languages (the Rosetta stone approach).
 From now on, we will consistently put curly braces everywhere for clarity.}
+
+\begin{itemize}
+\item |* -> * -> *|
+\item |{Nat} -> {Nat} -> *|
+\item |({Nat} -> *) -> {Nat} -> *|
+\end{itemize}
+
 The sorting rule (\raisebox{1pt}{\tiny\{\}}$->$) could be understood as
 a specific use of universe subtyping (|* <= BOX|) hard-wired within
 the arrow formation rule. Agda needs a more general notion of
-universe subtyping since Agda is a dependently typed language
+universe subtyping, since Agda is a dependently typed language
 with stratified universes, which we will shortly explain.
 
 Agda has countably many stratified type universes for several good reasons.
@@ -186,24 +192,26 @@ to be in exactly the same universe can cause a lot of code duplication.
 For example, $|List Ty| -> \star_0$ cannot be justified by the (|->|) rule
 since $||- |List Ty| : \star_0$ while $||- \star_0:\star_1$. To work around
 the universe difference, one could define datatypes |List'| and |Ty'|,
-which is isomorphic to |List| and |Ty| but at one higher level, such that
+which are isomorphic to |List| and |Ty|, only at one higher level, such that
 $||- |List' Ty'| : \star_1$. Only then, one can construct
 $|List' Ty'| -> \star_0$. Furthermore, if one needs to form
 $|List Ty| -> \star_1$ we would need yet another set of
 duplicate datatypes |List''| and |Ty''| at yet another higher level.
 Universe subtyping provides a remedy to such a code duplication problem
-by allowing objects at lower universe to be considered as objects
-at higher universe. This gives us a notion of subtyping such that
+by allowing objects in a lower universe to be considered as objects
+in a higher universe. This gives us a notion of subtyping such that
 $\star_i \leq \star_j$ where $i \leq j$.\footnote{
 	This is not the only rule for subtyping in Agda.
  	Another important rule is subtyping between arrows.
 	See Ulf Norell's thesis [TODO cite] (Sect.\;1.4) for details.}
 With universe subtyping, we can form arrows from |Ty| to any level of universe
-(\eg, $|List Ty| -> \star_0$, $|List Ty| -> \star_1$, $\dots$). Relating back to
-the datatype promotion in Haskell, $\star_0$ and $\star_1$ corresponds to |*|
-and |BOX| in Haskell. So, we wrote |*| and |BOX| instead of $\star_0$ and
+(\eg, $|List Ty| -> \star_0$, $|List Ty| -> \star_1$, $\dots$). 
+
+Relating Agda's universes to sorts in Haskell and Nax,
+$\star_0$ and $\star_1$ correspond to |*|
+and |BOX|. So, we write |*| and |BOX| instead of $\star_0$ and
 $\star_1$ in the Agda sorting rules and in the justification of well-formedness
-of |List Ty -> *| in Agda, to make the comparison more apparent.
+of |List Ty -> *| in Agda, to make the comparisons align.
 
 In addition to universe subtyping, Agda also supports
 universe polymorphism,\footnote{See 
