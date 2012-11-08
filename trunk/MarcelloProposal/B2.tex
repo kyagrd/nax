@@ -37,6 +37,25 @@
    \setlength{\leftmargin}{1em}
    \setlength{\labelwidth}{.5em}}}
   {\end{list}}
+\newenvironment{myindentitemize}
+  {\begin{list}{$-$}
+  {\setlength{\topsep}{2pt}
+   \setlength{\partopsep}{2pt}
+   \setlength{\itemsep}{2.5pt}
+   \setlength{\parsep}{2.5pt}
+   \setlength{\leftmargin}{2.125em}
+   \setlength{\labelwidth}{1.625em}}}
+  {\end{list}}
+\newenvironment{myquote}
+  {\begin{list}{}
+  {\setlength{\topsep}{2pt}
+   \setlength{\partopsep}{2pt}
+   \setlength{\itemsep}{2.5pt}
+   \setlength{\parsep}{2.5pt}
+   \setlength{\rightmargin}{1em}
+   \setlength{\leftmargin}{1em}
+   \setlength{\labelwidth}{.5em}}}
+  {\end{list}}
 \newenvironment{btritemize}
   {\begin{list}{\btr}
   {\setlength{\topsep}{2pt}
@@ -167,6 +186,130 @@
 \section{\underline{State of the art and ob}j\underline{ectives}}
 \label{StateOfTheArtSection}
 
+We propose research in logical methods for computer science.
+Specifically, in formal languages and their mathematical models.
+
+We are interested here in two kinds of formal languages:
+\begin{myindentitemize}
+  \item
+    languages for mathematical proof, and 
+  \item
+    languages for computer programming.
+\end{myindentitemize}
+The research spectrum covered by these is by now too broad and eclectic to aim
+at encompassing them all.  Our focus is on research driven by the thesis that
+\begin{myquote}
+\item
+Languages for mathematical proof and languages for computer programming
+are of the same character.
+\end{myquote}
+This view %conception 
+is of course not original to us.  It started developing in the 1970s, with
+proponents from computer science (\eg~Dijkstra, Hoare, Strachey) and from
+mathematics (\eg~de Bruijn, Scott, Martin-L\"of); and it is currently central
+to research in programming languages and in constructive mathematics.
+
+An aspect of the thesis that is fundamental to us here
+%There is an aspect of the thesis that is rooted in the constructive approach
+%to mathematical practice and is fundamental to us here.  This 
+can be 
+impressionistically %roughly 
+presented as a correspondence as follows
+%\begin{equation}\label{PATproportion}\xymatrix@C5pt{
+%  \frac{\txt{program}}{\txt{Type}} 
+%  & \mbox{\Large$\approx$} & 
+%  \frac{\txt{proof}}{\txt{Proposition}}
+%}\end{equation}
+\[
+  \mbox{program : Type} \enspace \approx \enspace \mbox{proof : Proposition} 
+\]
+One can intuitively argue for it along the lines below:
+\begin{myitemize} 
+\item 
+  to type a program is to establish a property of it (\eg~that certain
+  input/output behaviour or invariant is maintained); while 
+\item 
+  to give a constructive proof of a proposition (\eg~that every number is
+  smaller than some prime number) is to construct a program that 
+  certifies %realises
+  the statement (\eg~one that on inputing a number, outputs a prime number
+  bigger than it).
+\end{myitemize} 
+
+Two disciplines are clearly involved in investigating this correspondence:
+Mathematical Logic and Programming Theory.  
+%Much research, as the one proposed here, is geared towards finding a middle
+%ground that can accommodate the concerns of both, and expand their 
+%realms. %domains.
+%
+This is however only half of the picture.  The full strength of the
+correspondence involves also the disciplines of Type Theory and Category
+Theory.  
+%Their role is to enrich~(\ref{PATproportion}) as follows 
+%\[\xymatrix@C5pt@R2.5pt{
+%  & \frac{\txt{\small construction}}{\txt{\small Type}} 
+%    \ar@{}[rd]|-{\rotatebox[origin=c]{-45}{\Large$\approx$}}
+%  & 
+%    \\
+%    \frac{\txt{\small program}}{\txt{\small Type}} 
+%    \ar@{}[ru]|-{\rotatebox[origin=c]{-135}{\Large$\approx$}}
+%    & & 
+%    \frac{\txt{\small proof}}{\txt{\small Proposition}}
+%  \\
+%  & \frac{\txt{\small morphism}}{\txt{\small Object}} 
+%  \ar@{}[ru]|-{\rotatebox[origin=c]{-135}{\Large$\approx$}}
+%  & 
+%}\]
+Figure\,\ref{ResearchAreas} 
+\vfigspace{-2mm}\begin{figure}[h]
+\caption{Research areas and interactions.}
+\vspace*{2mm}
+\begin{center}
+\hspace*{.5mm}
+\xymatrix@R=25pt@C=12.5pt{
+& 
+\raisebox{7mm}{\fbox{\txt{\small Mathematical\\\small Logic}}}
+\ar@/_1em/@{<->}[ddl]<-1em>|-
+  {\txt{\scriptsize Propositions\\\scriptsize as Types}}
+\ar@/^1em/@{<->}[ddr]<1em>|-
+  {\txt{\scriptsize Proofs as\\\scriptsize Programs}} 
+& 
+\\
+& 
+\ar@{<->}[dl]|-
+  {\txt{\scriptsize Internal\\\scriptsize Languages}}
+\ar@{<->}[dr]|-
+  {\txt{\scriptsize Denotational\\\scriptsize Semantics}} 
+\ar@{<->}[u]|-
+{\txt{\scriptsize Model Theory}}
+\fbox{\txt{\small Category\\\small Theory}}
+& 
+\\
+  \fbox{\txt{\small Type\\\quad\small Theory\quad\null}}
+\ar@/_1em/@{<->}[rr]|-
+  {\txt{\scriptsize Programming\\\scriptsize Languages}}
+& & 
+\fbox{\txt{\small Programming\\\small Theory}}
+}
+\end{center}
+\vspace*{-2mm}
+\label{ResearchAreas}
+\end{figure}\vfigspace{-2mm}
+gives a schematic view of the interactions between these four research areas
+in this context.  Each of them is complementary to the others.  Together, they
+have shaped fields of logic and computation as a unified whole.  Indeed,
+consider for instance that: \ldots {\color{red}FINISH}
+
+It is within the above framework that we propose cross-cutting research in
+Category Theory, Mathematical Logic, Programming Theory, and Type Theory.  We
+contend that an approach neglecting any one of them is to the detriment of the
+others, missing the depth and richness of the subject and, furthermore,
+missing opportunities for research and development.  
+
+\ldots {\color{red}FINISH} \ldots
+
+\hide{%%% BEGIN hide
+\noindent\hrulefill
 We propose cross-cutting research in four areas: category theory,
 mathematical logic, programming theory, and type theory.  Each of these 
 areas is complementary to the others. Together they form a unified whole.
@@ -209,25 +352,31 @@ gives a schematic view of the areas together with their interactions.
 We contend that an approach neglecting any one of them is to the detriment of
 the others, missing the depth and richness of the subject, and furthermore
 missing opportunities for research and development.  
+\noindent\hrulefill
+}%%% END hide
 
-In Section\pref{Origins} we outline the origins and influences that led
-to this conception. %, roughly expanding through 1935 to 1985.
+\marginpar{\color{red}REVISE}
+Section\pref{Origins} outlines the origins and influences that led to the
+holistic Figure\,\ref{ResearchAreas}. 
+%, roughly expanding through 1935 to 1985.
 Section\pref{StateOfTheArtSubsection} describes the current state of the
 field and raises questions for research.  %Having set the scene,
 Section\pref{ObjectivesSubsection} describes the research objectives we wish
-to pursue and the {\erc} team we have assembled to reach them.  Both of these points
-are further expounded upon in
+to pursue and the {\erc} team we have assembled to reach them.  Both of
+these points are further expounded upon in
 Sections\,(\ref{MethodologySection}\,\&\,\ref{ResourcesSection}).
 
 \subsection{Origins and influences}
 \label{Origins}
 
+%It is worth recalling that 
 Computer science was born as a branch of mathematics, specifically
 mathematical logic, even before the first electronic computers were built.
 
 \paragraph{Logic and computation.}
 
-The inception of computer science was Hilbert's %~\cite{?}
+The inception of computer science 
+was Hilbert's %~\cite{?}
 1928 Entscheidungsproblem (decision problem),
 asking whether there is an algorithmic procedure for deciding mathematical
 statements.  Negative answers were provided independently by
@@ -267,7 +416,8 @@ system axiomatising not only the propositional connectives of Boolean
 logic~\cite{Boole} but also, for the first time, the quantifiers of
 predicate logic.
 
-In modern notation, the \lcalculus\ syntax is given by
+The %In modern notation, the 
+{\lcalculus} syntax is given by
   \[\begin{array}{rcll}
     s , t & ::= & & \mbox{($\lambda$-terms)}\\
       & \mid & x & \quad\mbox{(variables)}\\
@@ -314,7 +464,7 @@ contexts $\Gamma$ (assigning types to variables), for which the notation
   \Gamma\vdash t:\tau
 \]
 is commonly used.  This is done according to syntax-directed rules that in the
-mathematical vernacular are presented as follows
+mathematical vernacular are presented as follows\\[-2mm]
   \[\begin{array}{c}
     \\ \hline
     x_1:\tau_1,\ldots,x_n:\tau_n\vdash x_i:\tau_i
@@ -346,13 +496,13 @@ Propositions-as-Types correspondence. %(or Curry-Howard correspondence).
 Roughly, it establishes a correspondence between terms having types and proofs
 proving propositions.  For the Simply-Typed Lambda Calculus, the correspondence
 can be illustrated by noting that the erasure of term information in the typing 
-rules (given above) yields the deduction rules
+rules (given above) yields the deduction rules\\[-7mm]
   \begin{center}
   $\begin{array}{c}
-    1\leq i\leq n
     \\ \hline
     \tau_1,\ldots,\tau_n\vdash \tau_i
-  \end{array}$
+  \end{array}
+  \enspace(1\leq i\leq n)$
   \\[2mm]
   $\begin{array}{c}
     \Gamma\vdash \sigma\to\tau
@@ -368,6 +518,7 @@ rules (given above) yields the deduction rules
     \Gamma\vdash\sigma\to\tau
   \end{array}$
 \end{center}
+\vspace*{-1mm}
 of Intuitionistic %Minimal 
 Logic. %~\cite{?}.
 
@@ -574,7 +725,7 @@ and construct a detailed research plan.
 \paragraph{Foundations.}
 
 We have already mentioned several type theories, and we will mention a few
-more in the sequel.  However, the following fundamental open question
+more in the sequel.  However, the following fundamental question
 remains open:
 \req{(\ref{AlgebraicTypeTheoryParagraph})}
 {What is a type theory?}
@@ -949,7 +1100,7 @@ Figure\,\ref{ResearchAreas}.
 \raisebox{0mm}{\fbox{\txt{\small Peter\\ \small\ Dybjer\ \ }}}
 \ar@/_1em/@{<->}[rr]
 & & 
-\raisebox{0mm}{\fbox{\txt{\small Tim\\ \small Sheard}}}
+\raisebox{0mm}{\fbox{\txt{\small Tim\\ \small\ Sheard\ \ }}}
 }
 \end{center}
 \vspace*{-2mm}
@@ -2227,7 +2378,7 @@ Portland State University), who was also on sabbatical leave during the
 2011-12 academic year, visited Microsoft Research Cambridge during
 October--December 2011 together with his PhD student Ki Yung Ahn who
 instead visited the Computer Laboratory (University of Cambridge).  The
-Programming Language axis of Figure\,\ref{ercTeam} was established then.
+Programming Theory axis of Figure\,\ref{ercTeam} was established then.
 
 To complete the team, for the Type Theory axis of Figure\,\ref{ercTeam} it
 was most natural to recruit Peter Dybjer (Department of Computer Science
@@ -2341,12 +2492,13 @@ as it starts.
 
 \smallskip\noindent
 \textbf{\em Ki Yung Ahn}
+\marginpar{\color{red}REVISE}
 is a PhD candidate at the Department of Computer Science,
 Portland State University. He is currently writing up his dissertation on Nax,
 a language designed to support indexed programming from a bottom-up fashion 
 (Section (\ref{IndexedProgrammingParagraph})) but also aim for logical
 consistency. His recent work, supported by U.S. National Science Foundation
-grant 0910500, include Mendler-style recursion schemes \cite{AhnSheard11},
+grant 0910500, include Mendler-style recursion schemes~\cite{AhnSheard11},
 indexed programming in Nax (awaiting review process to appear in IFL'12),
 and \SystemFi\ (to be published).
 Discussions on \SystemFi, which is a theoretical foundation of Nax,
@@ -2359,7 +2511,7 @@ indexed programming into the real-world software development practices.
 
 He has also been actively contributing to the Haskell community.
 His contributions include open source Haskell libraries (yices, logic-TPTP),
-a publication in the Haskell symposium \cite{AhnSheard08}, and
+a publication in the Haskell symposium~\cite{AhnSheard08}, and
 a Korean translation of Hutton's Haskell programming textbook \cite{Hutton07}.
 The prototype implementations of \SystemFi\ and Nax are also developed
 in Haskell by Ahn and Sheard.
@@ -2585,7 +2737,7 @@ K.Y.\,Ahn and T.\,Sheard (2011).
 J.-M.\,Andreoli (1992).
 \newblock Logic programming with focusing proof in linear logic.
 %\newblock \emph{Journal of Logic and Computation}, 2(3):297--347.
-\newblock \emph{J.\ of Logic and Computation}, 2:297--347.
+\newblock \emph{J.\ of Logic and Computation} 2.
 
 \bibitem{ArtemovLP}
 S.\,Artemov (2001).
@@ -2640,7 +2792,7 @@ J.\,Beck (1967).
 \bibitem{BeesonBook}
 M.\,Beeson (1984).
 \newblock Foundations of constructive mathematics.
-\newblock Springer Verlag.
+%\newblock Springer Verlag.
 
 %\bibitem{BellantoniCook}
 %S.\,Bellantoni and S.\,Cook (1992).
@@ -2651,7 +2803,8 @@ M.\,Beeson (1984).
 \bibitem{Benabou}
 J.~B{\'e}nabou (1967). 
 \newblock \emph{Introduction to bicategories}. 
-\newblock In LNM 47, pp\,1--77. 
+%\newblock In LNM 47, pp\,1--77. 
+\newblock In LNM 47.
 
 \bibitem{BentonWadler}
 N.\,Benton and P.\,Wadler (1996). 
@@ -2673,7 +2826,7 @@ C.\,Boehm and A.\,Berarducci (1985).
 G.\,Boole (1847).
 \newblock \emph{The Mathematical Analysis of Logic}.%, Being an Essay Towards
   %a Calculus of Deductive Reasoning}. 
-\newblock Macmillan, Barclay, \& Macmillan. 
+%\newblock Macmillan, Barclay, \& Macmillan. 
 
 \bibitem{ModalPTS}
 T\,Borghuis (1998).
@@ -2684,7 +2837,8 @@ Representation.
 \bibitem{Cartmell}
 J\,Cartmell (1986).
 \newblock Generalised algebraic theories and contextual categories.
-\newblock \emph{Annals of Pure and Applied Logic}, 32:209--243.
+%\newblock \emph{Annals of Pure and Applied Logic}, 32:209--243.
+\newblock \emph{Annals of Pure and Applied Logic} 32. %:209--243.
 
 %\bibitem{ChapotonLivernet}
 %F.\,Chapoton and M.\,Livernet (2001).
@@ -2694,7 +2848,8 @@ J\,Cartmell (1986).
 \bibitem{Church1936}
 A.\,Church (1936).
 \newblock An unsolvable problem of elementary number theory.
-\newblock \emph{American Journal of Mathematics}, 58:345--363. 
+%\newblock \emph{American Journal of Mathematics}, 58:345--363. 
+\newblock \emph{American Journal of Mathematics} 58.
 
 \bibitem{Church1940}
 A.\,Church (1940).
@@ -2704,7 +2859,7 @@ A.\,Church (1940).
 \bibitem{Cohen}
 P.\,Cohen (1966).
 \newblock \emph{Set theory and the continuum hypothesis}.
-\newblock W A Benjamin.
+%\newblock W A Benjamin.
 
 \bibitem{CoquandNote}
 T.\,Coquand and G.\,Jaber (2012).
@@ -2729,8 +2884,9 @@ P.-L.\,Curien and G.\,Munch-Maccagnoni (2010).
 \bibitem{Curry1934}
 H.\,Curry (1934).
 \newblock Functionality in Combinatory Logic.
-\newblock In \emph{Proceedings of the National Academy of Sciences},
-  20:584--590.
+%\newblock In \emph{Proceedings of the National Academy of Sciences},
+%  20:584--590.
+\newblock In \emph{Proceedings of the National Academy of Sciences} 20.
 
 \bibitem{Day}
 B.\,Day (1970).
@@ -2840,14 +2996,15 @@ M.\,Fiore, G.\,Plotkin and A.J.\,Power (1997).
 G.\,Frege (1879).
 \newblock \emph{Begriffsschrift, a formula language, modeled upon that of
   arithmetic, for pure thought}. 
-\newblock In \emph{\cite{vanHeijenoort}}, pp\,1--82.
+%\newblock In \emph{\cite{vanHeijenoort}}, pp\,1--82.
+\newblock In \emph{\cite{vanHeijenoort}}. 
 
 \bibitem{Frege1903}
 G.\,Frege (1893/1903).
 \newblock 
-\emph{Grundgesetze der Arithmetik}.%\footnote{Basic laws of arithmetic.}
+%\emph{Grundgesetze der Arithmetik}.%\footnote{Basic laws of arithmetic.}
 %\newblock Vol.\,I Jenna, 1893.  Vol.\,II 1903.
-\newblock Vols.\,I/II.
+\emph{Grundgesetze der Arithmetik I/II}.
 
 \bibitem{Gentzen1935}
 G.\,Gentzen (1935). 
@@ -2923,7 +3080,7 @@ G.\,Jaber, N.\,Tabareau and M.\,Sozeau (2012).
 \bibitem{Jacobs}
 B\,Jacobs (1999).
 \newblock \emph{Categorical Logic and Type Theory}.
-\newblock Elsevier.
+%\newblock Elsevier.
 
 \bibitem{Elephant}
 P.\,Johnstone (2002).
@@ -2959,7 +3116,8 @@ G.M.\,Kelly (1982).
 \bibitem{Kobayashi}
 S.\,Kobayashi (1997).
 \newblock Monad as modality.
-\newblock In \emph{TCS}, 175:29--74.
+%\newblock In \emph{TCS}, 175:29--74.
+\newblock In \emph{TCS} 175.
 
 \bibitem{KrivineRA}
 J.-L.\,Krivine (2011).
@@ -3027,9 +3185,9 @@ F.\,Linton (1966).
 %\newblock Grundlehren der mathematischen Wissenschaften.
 
 \bibitem{MacLane}
-S.\,Mac Lane (1945).
-\newblock Categories for the Working Mathematician (Second Edition).
-\newblock Springer Verlag, 1998.
+S.\,Mac Lane (1971).
+\newblock Categories for the Working Mathematician.
+\newblock Springer Verlag, Second Edition 1998.
 
 %\bibitem{Markl}
 %M.\,Markl (2006). 
@@ -3049,7 +3207,7 @@ P.\,Martin-L{\"o}f (1984).
 \bibitem{Epigram}
 C.\,McBride.
 \newblock Epigram: practical programming with dependent types.
-\newblock In \emph{AFP'04}, pp\,i130--170.
+\newblock In \emph{AFP'04}, pp\,130--170.
 
 \bibitem{MelliesCMLL}
 P.-A.\,Melli\`es (2009).
@@ -3065,7 +3223,8 @@ P.-A.\,Melli\`es and N.\,Tabareau (2010).
 \bibitem{MendlerMMCK}
 M.\,Mendler and S.\, Scheele (2011).
 \newblock Cut-free Gentzen calculus for multimodal CK.
-\newblock \emph{Information and Computation}, 209(12):1465--1490.
+%\newblock \emph{Information and Computation}, 209(12):1465--1490.
+\newblock \emph{Inf.\ \& Comp.}, 209(12):1465--1490.
 
 \bibitem{MendlerIter}
 N.\,Mendler (1991). 
@@ -3103,7 +3262,7 @@ S.\,Park and H.\,Im (2011).
 
 \bibitem{PlotkinCBVCBN}
 G.\,Plotkin (1975).
-\newblock Call-by-name, call-by-value and the $\lambda$-calculus.
+\newblock Call-by-name, call-by-value and the \mbox{$\lambda$-calculus}.
 \newblock \emph{Theoretical Computer Science}, 1:125--159.
 
 \bibitem{PlotkinLCF}
@@ -3142,11 +3301,11 @@ B.\,Russell (1902).
 \newblock Letter to Frege. 
 \newblock In \emph{\cite{vanHeijenoort}}, pp\,124--125. 
 
-\newpage
 \bibitem{Russell1903}
 B.\,Russell (1903).
 \newblock \emph{The principles of mathematics}.
-\newblock Cambridge University Press. 
+%\newblock Cambridge University Press. 
+\newblock CUP.
 
 \bibitem{ScottSolovay}
 D.\,Scott (1967).
