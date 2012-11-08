@@ -1,26 +1,27 @@
-\section{TODO intro}
+\section{Introduction}
+During the past decade, the functional programming community achieved
+partial success in their goal of maintaining fine-grained properties
+by moderate extensions to the type system of functional languages
+\cite{CheHin03,CheHin02,Xi03}.
+This approach is often called \emph{``lightweight''}\footnote{e.g.,
+  \url{http://okmij.org/ftp/Computation/lightweight-dependent-typing.html} }
+since using a full blown proof assistant to maintain similar properties
+is likely to require much more effort (heavyweight).
 
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
+The Generalized Algebraic Data Type (GADT) extension implemented
+in the Glasgow Haskell Compiler (GHC) has made this approach
+widely avialibe to everyday functional programming tasks.
+OCaml encodings of GADTs has been reported \cite{ManStu09}
+and recent versions of OCaml supports GADTs natively \cite{GarNor11}.
 
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
+Unfortunately, implementations supporting a lightweight approach (\eg, GHC)
+lack \textbf{correctness guarantees} and \textbf{type inference} in general.
+In addition, those implementations often lack support term indexing,
+so \textbf{term indices are faked} (or, simulated) by additional
+type structure replicating the requisite term structure.
+A recent GHC extension, datatype promotion,
 
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
-Write text here.  Write text here.  Write text here.  Write text here.
+TODO contribution of Nax
+
+TODO contribution of this paper
+
