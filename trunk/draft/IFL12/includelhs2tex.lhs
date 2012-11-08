@@ -42,6 +42,9 @@
 %format ElemV = Elem"_{\!"V"}"
 %format MkElemV = MkElem"_{\!"V"}"
 
+%format T1
+%format T2
+
 %format k0
 
 %format v1
