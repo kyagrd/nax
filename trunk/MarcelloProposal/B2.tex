@@ -2341,19 +2341,39 @@ as it starts.
 
 \smallskip\noindent
 \textbf{\em Ki Yung Ahn}
-is a PhD student at the Department of Computer Science, Portland State
-University.
+is a PhD candidate at the Department of Computer Science,
+Portland State University. He is currently writing up his dissertation on Nax,
+a language designed to support indexed programming from a bottom-up fashion 
+(Section (\ref{IndexedProgrammingParagraph})) but also aim for logical
+consistency. His recent work, supported by U.S. National Science Foundation
+grant 0910500, include Mendler-style recursion schemes \cite{AhnSheard11},
+indexed programming in Nax (awaiting review process to appear in IFL'12),
+and \SystemFi\ (to be published).
+Discussions on \SystemFi, which is a theoretical foundation of Nax,
+started during the Cambridge visit, October-December 2011.
 
-\begin{tabular}{l|l}
-Section & Keyword
-\\\hline
-%(\ref{SubstructuralTypeTheoryParagraph}) & iterators
-\\
-(\ref{IndexedProgrammingParagraph}) & Nax
-\\
-(\ref{ProgrammingEffectsParagraph}) & Haskell
-\\
-\end{tabular}
+His research interest is to investigate how to incorporate resources and effects
+into indexed programming (Section (\ref{ProgrammingEffectsParagraph})),
+especially in the context of extending the Nax language, hoping to promote
+indexed programming into the real-world software development practices.
+
+He has also been actively contributing to the Haskell community.
+His contributions include open source Haskell libraries (yices, logic-TPTP),
+a publication in the Haskell symposium \cite{AhnSheard08}, and
+a Korean translation of Hutton's Haskell programming textbook \cite{Hutton07}.
+The prototype implementations of \SystemFi\ and Nax are also developed
+in Haskell by Ahn and Sheard.
+
+%% \begin{tabular}{l|l}
+%% Section & Keyword
+%% \\\hline
+%% %(\ref{SubstructuralTypeTheoryParagraph}) & iterators
+%% \\
+%% (\ref{IndexedProgrammingParagraph}) & Nax
+%% \\
+%% (\ref{ProgrammingEffectsParagraph}) & Haskell
+%% \\
+%% \end{tabular}
 
 \smallskip\noindent
 \textbf{\em Nicola Gambino}
@@ -2536,12 +2556,20 @@ R\,Adams (2006).
 \newblock Pure type systems with judgmental equality.
 \newblock \emph{Journal of Functional Programming}, 16(2):219--246.
 
-\bibitem{AhnSheard}
+\bibitem{AhnSheard08}
+K.Y.\,Ahn and T.\,Sheard (2008).
+%\newblock A Hierarchy of Mendler style Recursion Combinators: Taming
+%  Inductive Datatypes with Negative Occurrences.  
+\newblock Shared subtypes: subtyping recursive parametrized algebraic data types.
+\newblock In \emph{Haskell'08}.  
+
+\bibitem{AhnSheard11}
 K.Y.\,Ahn and T.\,Sheard (2011).
 %\newblock A Hierarchy of Mendler style Recursion Combinators: Taming
 %  Inductive Datatypes with Negative Occurrences.  
 \newblock A Hierarchy of Mendler style Recursion Combinators. 
 \newblock In \emph{ICFP'11}.  
+
 
 %\bibitem{Albert}
 %A.A.\,Albert (1948).
@@ -2881,6 +2909,11 @@ R.\,Hindley (1969).
 W.\,Howard (1969).
 \newblock The formulae-as-types notion of construction.
 \newblock In \emph{\cite{ToHBCurry}}, pp\,479--490. 
+
+\bibitem{Hutton07}
+G.\,Hutton (2007).
+\newblock Programming in Haskell.
+\newblock Cambridge University Press.
 
 \bibitem{TypeTheoryWithForcing}
 G.\,Jaber, N.\,Tabareau and M.\,Sozeau (2012).
