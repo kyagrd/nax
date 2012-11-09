@@ -2362,10 +2362,25 @@ of programming languages with effects.
 
 \paragraph{Metaprogramming.}
 \label{MetaprogrammingParagraph}
+{\bf feel free to change any of this -- Tim}
 
-\note{generic programming}
+In a metaprogramming system there are two languages of interest. The
+object-language which is the object of study and the meta-language which
+manipulates object programs as data. The purpose of the meta-language is
+to define algorithms for the purpose of constructing or analyzing
+object-programs. Metaprograms play a role in many kinds of systems
 
-\note{reflection}
+{\bf Generic programming.}
+One style of generic programming defines a datastucture that reflects how
+users define new types. For example, a value of type \verb+Def Tree+
+describes how a new \verb+Tree+ datatype is defined. A generic program then
+analyzes this structure of \verb+Def+ types to write code parametric over
+any user defined type. For example a generic equality might have type
+\verb+Def t -> t -> t -> Bool+ and a generic marshalling function
+might have type \verb+Def t -> t -> List Bit+. 
+
+{\bf Reflection.} One kind of reflection is where the object-language and the meta-language
+coincide
 
 \note{TDPE with sums: reflection with delimited control operators}
 
@@ -2375,6 +2390,7 @@ of programming languages with effects.
 \hidenote{\SystemL internalisation of stacks?}
 
 \hidenote{ssreflect?}
+
 
 \section{\underline{Resources}}
 \label{ResourcesSection}
