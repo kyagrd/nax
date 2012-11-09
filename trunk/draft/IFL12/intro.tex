@@ -5,38 +5,54 @@ by moderate extensions to the type system of functional languages
 \cite{CheHin03,CheHin02,Xi03}.
 This approach is often called \emph{``lightweight''}\footnote{e.g.,
   \url{http://okmij.org/ftp/Computation/lightweight-dependent-typing.html} }
-since using a full blown proof assistant to maintain similar properties
-is likely to require much more effort (heavyweight).
-
+in contrast to proof assistant based on a fullly dependent types
+(\eg, Coq, Agda).
 The Generalized Algebraic Data Type (GADT) extension implemented
-in the Glasgow Haskell Compiler (GHC) has made this approach
+in the Glasgow Haskell Compiler (GHC) has promoted the lightweight approach
 widely avialibe to everyday functional programming tasks.
 OCaml encodings of GADTs has been reported \cite{ManStu09}
 and recent versions of OCaml supports GADTs natively \cite{GarNor11}.
 
-Unfortunately, implementations supporting a lightweight approach (\eg, GHC)
-lack \textbf{correctness guarantees} and \textbf{type inference} in general.
-In addition, those implementations often lack support term indexing,
-so \textbf{term indices are faked} (or, simulated) by additional
-type structure replicating the requisite term structure.
-A recent GHC extension, datatype promotion,
+Unfortunately, most practical language implementations that support
+the lightweight approach lack \textbf{logical consistency} and
+\textbf{type inference}. In addtion, they often lack support for
+term indexing, so \textbf{term indices are faked} (or, simulated)
+by additional type structure replicating the requisite term structure.
+A recent extension in GHC, datatype promotion, attempts to address
+the issue of term indices, but the issuses of logical consistency
+and type inference still remain.
 
-\begin{itemize}
-\item Nax is strongly normalizing, and logically consistent, so the
-type of Nax programs can be given logical interpretations as propositions.
+\begin{description}
+\item[$(1)$ Nax is strongly normalizing and logically consistent.]~\\
+Types in Nax programs can be given logical interpretations as propositions
+and the Nax programs can be interpreted as proofs. TODO Mendler-style
 
-\item Nax supports type inference. Types appear only in data declarations
-and index transformers attached to mendler operators. Index transformers
-are the ``minimal"  annotation necessary to support type inference over GADTs.
+\item[$(2)$ Nax supports Hindley--Milner-style type inference.]~\\
+Type annotations only appear in the data declarations and
+the index transformers attached to Mendler-style recursion combinators
+(for recursive values) and case expresssions (for non-recursive values).
+Index transformers are the ``minimal''  annotation necessary to support
+type inference over programs involving GADTs. Nax does not need annotations
+for every the top-level functions, which are usually required for
+bidirectional type checking [TODO cite] used in dependnelty typed
+proof assistants.
 
-\item Nax programs are expressive and concise. Nax programs
-are similar in size to their Haskell and Agda equivalents, yet they
-still retain logicality and type inference. We don't pay for the
+\item[$(3)$ Nax programs are expressive and concise.]~\\
+Nax programs are similar in size to their Haskell and Agda equivalents,
+yet they still retain logicality and type inference. We don't pay for the
 complexity of two level types and mendler morphisms.
+TODO fwd ref Sect.\;\ref{sec:example}
 
-\end{itemize}
+\item[$(4)$ Nax type system TODO.]~\\
+TODO fwd ref Sect.\;\ref{sec:discuss}
 
-TODO contribution of Nax
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
-TODO contribution of this paper
+\end{description}
+
+TODO contribution/structure of this paper
 

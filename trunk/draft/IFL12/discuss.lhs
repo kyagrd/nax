@@ -162,21 +162,17 @@ whenever |A| is a type (\ie, $\Jty |A : *|$). Note that types may only appear
 in the domain (the left-hand-side of the arrow) but not in the codomain 
 (the right-hand-side of the arrow).  Modulo right associativity of arrows
 (\ie, |kappa1 -> kappa2 -> kappa3| means |kappa1 -> (kappa2 -> kappa3)|),
-kinds in Nax always terminate in |*| \eg:\footnote{Nax implementation allows programmers
-to omit curly braces in kinds when it is obvious that the domain is a type
-rather than a kind. For instance, |Nat -> *| really means |{Nat} -> *| since
-|Nat| is obviously a (nullary) type constructor because it starts with an
-uppercase letter.
-In Sect.\ref{sec:example}, we omitted curly braces to help readers 
-compare Nax with other languages (the Rosetta stone approach).
-From now on, we will consistently put curly braces everywhere for clarity.}
-
-\begin{itemize}
-\item |* -> * -> *|
-\item |{Nat} -> {Nat} -> *|
-\item |({Nat} -> *) -> {Nat} -> *|
-\end{itemize}
-
+kinds in Nax always terminate in |*|. For example,\footnote{
+	Nax implementation allows programmers to omit curly braces in kinds
+	when it is obvious that the domain of arrow kind is a type,
+	rather than a kind. For instance, Nax understnads |Nat -> *| as
+	|{Nat} -> *| since |Nat| is obviously a (nullary) type constructor
+	because it starts with an uppercase letter.
+	In Sect.\ref{sec:example}, we omitted curly braces to help readers 
+	compare Nax with other languages (the Rosetta stone approach).
+	From now on, we will consistently put curly braces for clarity.} \\ $~$
+\quad |* -> * -> *|, \qquad |{Nat} -> {Nat} -> *|, \qquad
+|({Nat} -> *) -> {Nat} -> *|. \\
 The sorting rule (\raisebox{1pt}{\tiny\{\}}$->$) could be understood as
 a specific use of universe subtyping (|* <= BOX|) hard-wired within
 the arrow formation rule. Agda needs a more general notion of
@@ -206,12 +202,10 @@ $\star_i \leq \star_j$ where $i \leq j$.\footnote{
 	See Ulf Norell's thesis [TODO cite] (Sect.\;1.4) for details.}
 With universe subtyping, we can form arrows from |Ty| to any level of universe
 (\eg, $|List Ty| -> \star_0$, $|List Ty| -> \star_1$, $\dots$). 
-
-Relating Agda's universes to sorts in Haskell and Nax,
-$\star_0$ and $\star_1$ correspond to |*|
-and |BOX|. So, we write |*| and |BOX| instead of $\star_0$ and
-$\star_1$ in the Agda sorting rules and in the justification of well-formedness
-of |List Ty -> *| in Agda, to make the comparisons align.
+Relating Agda's universes to sorts in Haskell and Nax, $\star_0$ and $\star_1$
+correspond to |*| and |BOX|. So, we write |*| and |BOX| instead of $\star_0$
+and $\star_1$ in the justification of well-formedness of |List Ty -> *|
+in Agda, to make the comparisons align in Fig.\;\ref{fig:sortingEx}.
 
 In addition to universe subtyping, Agda also supports
 universe polymorphism,\footnote{See 
@@ -285,14 +279,14 @@ without any term indices (\eg, |Nat|, |List Ty|).
 One can imagine more complex indexed datatypes, where some term indices
 are themselves of indexed datatypes. Such deeply indexed datatypes are
 often useful in dependently typed programming. For instance, \citet{BraHam10}
-defines a datatype for environments that contain stateful resources in order
-to implement their embedded domain specific language (EDSL) for verified
-resource usage protocols. Figure \ref{fig:env} is a transcription of their
-environment datatype (|Env|) in Idris \cite{Brady11} into Nax and Agda.
-Note that the datatype |Env| is indexed by a term of a length indexed list
-(|Vec|), which is again indexed by a natural number. There is no Haskell
-transcription for |Env| because datatype promotion \cite{YorgeyWCJVM12}
-is limited to datatypes without any term indices.
+implement their embedded domain specific language (EDSL) for verified
+resource usage protocols using an environment datatype, which contains
+stateful resources. Figure \ref{fig:env} is a transcription of their
+environment datatype (|Env|), originally written in Idris \cite{Brady11},
+into Nax and Agda. Note that the datatype |Env| is indexed by a term of
+a length indexed list (|Vec|), which is again indexed by a natural number.
+There is no Haskell transcription for |Env| because datatype promotion
+\cite{YorgeyWCJVM12} is limited to datatypes without any term indices.
 
 On the contrary, Haskell supports promoted datatypes that hold types as
 elements, although limited to types without term indices, while Nax does not.
