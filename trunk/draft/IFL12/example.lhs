@@ -1,7 +1,7 @@
 %include lhs2TeX.fmt
 %include includelhs2tex.lhs
 
-\begin{table}
+\begin{table}[h]
 \vskip-1ex
 \begin{tcolorbox}[boxsep=-1mm]
 \quad The ``|deriving fixpoint T|'' clause following 

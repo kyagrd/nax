@@ -15,44 +15,37 @@ and recent versions of OCaml supports GADTs natively \cite{GarNor11}.
 
 Unfortunately, most practical language implementations that support
 the lightweight approach lack \textbf{logical consistency} and
-\textbf{type inference}. In addtion, they often lack support for
+\textbf{type inference}. In addition, they often lack support for
 term indexing, so \textbf{term indices are faked} (or, simulated)
 by additional type structure replicating the requisite term structure.
-A recent extension in GHC, datatype promotion, attempts to address
-the issue of term indices, but the issuses of logical consistency
-and type inference still remain.
+A recent extension in GHC, datatype promotion \cite{YorgeyWCJVM12},
+attempts to address the issue of term indices, but the issues of
+logical consistency and type inference still remain.
 
+Nax is a language TODO \newpage
 \begin{description}
 \item[$(1)$ Nax is strongly normalizing and logically consistent.]~\\
 Types in Nax programs can be given logical interpretations as propositions
 and the Nax programs can be interpreted as proofs. TODO Mendler-style
 
 \item[$(2)$ Nax supports Hindley--Milner-style type inference.]~\\
-Type annotations only appear in the data declarations and
+Type annotations are only required in the GADT declarations and
 the index transformers attached to Mendler-style recursion combinators
-(for recursive values) and case expresssions (for non-recursive values).
-Index transformers are the ``minimal''  annotation necessary to support
-type inference over programs involving GADTs. Nax does not need annotations
-for every the top-level functions, which are usually required for
-bidirectional type checking [TODO cite] used in dependnelty typed
-proof assistants.
+(for recursive cases) and case expressions (for non-recursive cases).
+Nax does not need annotations for every top-level functions, which are usually
+required for bidirectional type checking in dependently typed languages.
 
 \item[$(3)$ Nax programs are expressive and concise.]~\\
-Nax programs are similar in size to their Haskell and Agda equivalents,
-yet they still retain logicality and type inference. We don't pay for the
-complexity of two level types and mendler morphisms.
-TODO fwd ref Sect.\;\ref{sec:example}
+Nax programs are similar in size to their Haskell and Agda equivalents
+(Sect.\;\ref{sec:example}), yet they still retain logical consistency
+and type inference. Despite the features unique to Nax
+(Table\;\ref{tbl:naxfeatures}), it does not necessary add verbosity.
 
-\item[$(4)$ Nax type system TODO.]~\\
-TODO fwd ref Sect.\;\ref{sec:discuss}
-
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
+\item[$(4)$ Nax supports term indices within a relatively simple type system.]
+The type system of Nax (Sect.\;\ref{ssec:sorting}) is based on
+two sorted universes ($\star$ and $\square$), just like Haskell,
+yet it can express deeply indexed datatypes (Sect.\;\ref{ssec:sortingEx})
+used in dependently typed languages, which are based on countably many
+stratified universes ($\star_1,\star_2,\dots$).
 \end{description}
-
-TODO contribution/structure of this paper
 
