@@ -48,15 +48,13 @@ For instance, the configuration for the stack containing three values
 
 To enforce stack safety, each instruction 
 (|Inst : List Ty -> List Ty -> *|) is indexed with its initial and
-final stack configuration. For example, |pLUS : Inst {`cons I (`cons I ts)} {`cons I ts}|
+final stack configuration. For example, |aDD : Inst {`cons I (`cons I ts)} {`cons I ts}|
 instruction expects two numeric values on top of the stack. 
-Running the |pLUS| instruction
-will consume those two values, replacing them with a new numeric value
-(the result of the addition) on top of the stack, leaving the
-rest of the stack unchanged.
+Running the |aDD| instruction will consume those two values,
+replacing them with a new numeric value (the result of the addition)
+ on top of the stack, leaving the rest of the stack unchanged.
 
-We define |Code| as a |Path|
-of stack consistent instructions
+We define |Code| as a |Path| of stack consistent instructions
 (\ie, |Code {ts} {ts'}| is a synonym for |Path Inst {ts} {ts'}|
 from Sect. \ref{ssec:glist}).
 For example, the compiled code consisting of the three instructions
