@@ -22,18 +22,24 @@ A recent extension in GHC, datatype promotion \cite{YorgeyWCJVM12},
 attempts to address the issue of term indices, but the issues of
 logical consistency and type inference still remain.
 
-Nax is a language TODO \newpage
+Nax is a programming language designed to support indexed datatypes,
+while resolving all the three issues mentioned above.
+More specifically,\footnote{
+The detailed mechanism behind (1) and (2) above are beyond of the scope of
+this paper, to be discussed in sequel publications and Ki Yung's dissertation.}
 \begin{description}
 \item[$(1)$ Nax is strongly normalizing and logically consistent.]~\\
-Types in Nax programs can be given logical interpretations as propositions
-and the Nax programs can be interpreted as proofs. TODO Mendler-style
+Types in Nax can be given logical interpretations as propositions
+and the programs of those types as proofs of those propositions.
+Background theories behind strong normalization and logical consistency of Nax
+are Mendler-style recursion \cite{AhnShe11} and System \Fi\ (to be published).
 
 \item[$(2)$ Nax supports Hindley--Milner-style type inference.]~\\
 Type annotations are only required in the GADT declarations and
 the index transformers attached to Mendler-style recursion combinators
 (for recursive cases) and case expressions (for non-recursive cases).
 Nax does not need annotations for every top-level functions, which are usually
-required for bidirectional type checking in dependently typed languages.
+required for bidirectional type checking in dependently typed proof assistants.
 
 \item[$(3)$ Nax programs are expressive and concise.]~\\
 Nax programs are similar in size to their Haskell and Agda equivalents
