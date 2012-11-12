@@ -328,26 +328,27 @@ Furthermore, we contend that an approach neglecting any one of them is to the
 detriment of the others, missing the depth and richness of the subject and,
 crucially, missing opportunities for research and development.  
 
-The reasons and motivations for our proposal are specifically as follows:
+The reasons and motivations for our %research 
+proposal are specifically as follows: 
 \begin{myitemize}
-\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-1.5mm}
+\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
   To elucidate what we hope to be the next-generation framework of Type Theory
   relevant to computer science and mathematics.
-\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-1.5mm}
+\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
   To exercise and test Category Theory both as a unifying and as a
   foundational mathematical language.
-\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-1.5mm}
+\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
   To broaden the current role of Mathematical Logic in computation.
-\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-1.5mm}
+\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
   %To develop Programming Theory, designing, implementing, and experimenting
   %with languages of the future.
   To design, implement, and experiment within Programming Theory, looking
   into the languages of the future.
 \end{myitemize}
-To these ends, Principal Investigator Marcelo Fiore has drawn the research
-programme of this proposal, expanding through metamathematical
-foundations, mathematical models, computational calculi, and programming
-languages.  
+Towards these goals, Principal Investigator Marcelo Fiore has conceived
+the research programme of this proposal, expanding through
+metamathematical foundations, mathematical models, computational calculi,
+and programming languages.  
 %
 %{\erc} assembles a world-leading team of theoretical and applied computer
 %scientists:  Principal Investigator Marcelo Fiore; Senior Visiting Researchers
@@ -454,12 +455,14 @@ substitution were formally flawed.
 %These important topics are core to our proposed research in
 %Section\pref{AlgebraicTypeTheoryParagraph}.
 
+\hide{
 Incidentally, the notion of variable binding was initially introduced much
 earlier, by Frege~\cite{Frege1879}, in the context of mathematical logic.  
 He used binders to define a formal symbolic
 system axiomatising not only the propositional connectives of Boolean
 logic~\cite{Boole} but also, for the first time, the quantifiers of
 predicate logic.
+}
 
 The %In modern notation, the 
 {\lcalculus} syntax is given by
@@ -1809,11 +1812,12 @@ the following programme.
   Plotkin and Power~\cite{PlotkinPowerAlgOpsAndGenEffs}, and
   (ii)~revisiting and refining Filinski's result on representing
   monads~\cite{Filinski} that reduces general monadic effects to the
-  storage and escape effects.  Either of these approaches will necessarily
+  storage and escape effects.  
+  \hide{Either of these approaches will necessarily
   have to overcome serious shortcomings.  For instance, on the one hand,
   there is as yet no general operational theory of algebraic effects; and,
   on the other, a logical system for storage is not yet in place.  These
-  problems will be investigated.
+  problems will be investigated.}
 \item\label{ItemFour}
   The previous development will provide foundational metalanguages.  The
   next step in the programme is to promote them to programming languages,
@@ -1991,7 +1995,9 @@ The general goal of our research here is to:
 \end{resenumerate}
 This is to be investigated in two stages, respectively corresponding to
 enrichment over cartesian closed categories and over symmetric monoidal
-closed categories.  In the first case, one roughly has the following
+closed categories.  
+\hide{
+In the first case, one roughly has the following
 translation table between the Generalised Logical Calculus and Predicate
 Logic.
 \begin{center}\small\begin{tabular}{|c|c|}\hline
@@ -2005,6 +2011,7 @@ Logic.
   \hline
 \end{tabular}\end{center}
 The second stage introduces linearity. 
+}
 
 Success in this endeavour will yield a system where the mathematical
 calculations done with profunctors (\eg~in the context of the coherence of
@@ -2618,44 +2625,58 @@ the proposal at various points of
 %\\
 %\end{tabular}}
 %
-is Professor and Head of the Division of Computing Science in the Department
-of Computer Science at Chalmers University of Technology.
-{\color{red}REVISE}
+is Professor and Head of the Division of Computing Science in the
+Department of Computer Science at Chalmers University of Technology.
 
-Dybjer's main field of research is Type Theory, including its connections 
-with Logic and Category Theory, and its implementation in Proof Assistants 
-such as Agda. He has made several fundamental contributions to type theory, 
-especially Martin-L\"of's intuitionistic type theory.
+Dybjer's main research area is Type Theory, including its connections to
+Category Theory and Logic, and its implementation in proof assistants.
+%(such as Agda). 
+In this field, he has made several fundamental contributions, especially
+to Martin-L\"of's Intuitionistic Type Theory.  
 
-Several of these contributions are directly relevant to this proposal, for 
-example, his exploration of the syntax and semantics of Inductive Families 
-in Type Theory. He has made several contributions directly relevant to the 
-present proposal of direct relevance to the present proposal.
+Many of Dybjer's contributions are of direct relevance to this proposal.
+For instance: 
+%
+$(i)$~his notion of Category with Families~\cite{DybjerITT}, a categorical
+notion of model of dependent types with a close connection to the syntax
+(which features in Section\mbox{\pref{IntensionalTypeTheoryParagraph}}); 
+%
+$(ii)$~his exploration of the syntax and semantics of Inductive Families
+in type theory~\cite{DybjerIF} (which features in
+Section\mbox{\pref{IndexedProgrammingParagraph}}); 
+%
+$(iii)$~his result with Clairambault~\cite{DybjerClairambault} properly
+establishing the biequivalence between Martin-L\"of type theory and
+locally cartesian closed categories 
+%thereby correcting the well-known, but erroneous, result by Seely of the
+%equivalence of these theories.
+(which is relevant to 
+Sections\,(\mbox{\ref{AlgebraicTypeTheoryParagraph}}\,\&\,%
+\ref{IntensionalTypeTheoryParagraph}));
+%
+$(iv)$~his powerful notion of an inductive-recursive definition, 
+that %It extends the notion of an inductive definitions and 
+is useful for understanding universes and reflection principles in type
+theory 
+%Dybjer has (together with Setzer) proved a general result about the
+%correspondence between inductive-recursive definitions and initial
+%algebras. 
+(and is relevant to Sections\,(\ref{IndexedProgrammingParagraph}\,\&\,%
+\ref{MetaprogrammingParagraph}); 
+%
+and 
+%
+$(v)$~his work on Normalisation By Evaluation, a theoretically and
+practically attractive technique 
+%(with interesting connections to categorical semantics)
+to normalisation in logic and lambda calculi.  
 
-He has made several contributions of direct relevance to the present proposal, 
-for example on Categorical Semantics of Type Theory. For example, he invented 
-the notion of a Category with Families, a categorical notion of model of 
-dependent types with a close connection to the syntax of the theory. He also 
-discovered the new powerful notion of an inductive-recursive definition. It 
-extends the notion of an inductive definitions and is useful for understanding 
-universes and reflection principles in Type Theory. Dybjer has (together with 
-Setzer) proved a general result about the correspondence between 
-inductive-recursive definitions and initial algebras. Moreover, he has recently 
-(together with Clairambault) proved the biequivalence between Martin-Löf type 
-theory and locally cartesian closed categories, thereby correcting the 
-well-known, but erroneous, result by Seely of the equivalence of these theories.
+Dybjer is also a member of the team at Chalmers which develops the
+dependently typed programming language (and proof assistant) Agda.  He is
+the initiator of the biannual Agda implementors meetings.
 
-Dybjer is also one of the main contributors to the technique of normalization 
-by evaluation, a new approach to normalization in logic and lambda calculus. 
-This technique is attractive both from a theoretical and practical point of view, 
-and has interesting connections with Categorical Semantics.
-
-Dybjer is also a member of the team at Chalmers which develops the dependently 
-typed programming language (and proof assistant) Agda. He is the initiator of 
-the biannual Agda implementors Meetings.
-
-Dybjer will be visiting the Institute of Advanced Study during its current 
-special year dedicated to Voevodsky's Univalent Foundations.
+%Dybjer will be visiting the Institute of Advanced Study during its current
+%special year dedicated to Voevodsky's Univalent Foundations.
 
 \smallskip\noindent
 \textbf{\em Tim Sheard} 
@@ -2673,7 +2694,12 @@ Section & Keyword
 \\
 (\ref{MetaprogrammingParagraph}) & MetaML
 \\
-\end{tabular}}
+\end{tabular}
+
+8\\9\\10\\
+1\\2\\3\\4\\5\\6\\7\\8\\9\\10\\
+1\\2\\3\\4\\5\\6\\7\\8\\9\\10
+}
 
 \paragraph*{Research Associates.}
 
@@ -3020,11 +3046,11 @@ C.\,Boehm and A.\,Berarducci (1985).
 %\newblock \emph{Theoretical Computer Science}, 39:135--154.
 \newblock \emph{TCS} 39.
 
-\bibitem{Boole}
-G.\,Boole (1847).
-\newblock \emph{The Mathematical Analysis of Logic}.%, Being an Essay Towards
-  %a Calculus of Deductive Reasoning}. 
-%\newblock Macmillan, Barclay, \& Macmillan. 
+%\bibitem{Boole}
+%G.\,Boole (1847).
+%\newblock \emph{The Mathematical Analysis of Logic}.%, Being an Essay Towards
+%  %a Calculus of Deductive Reasoning}. 
+%%\newblock Macmillan, Barclay, \& Macmillan. 
 
 \bibitem{ModalPTS}
 T\,Borghuis (1998).
@@ -3054,6 +3080,12 @@ A.\,Church (1940).
 \newblock A formulation of the simple theory of types.
 \newblock {\em J.\,Symbolic Logic}, 5:56--68. 
   
+\bibitem{DybjerClairambault}
+P.,Clairambault and P.\,Dybjer (2011).
+\newblock The biequivalence of locally cartesian closed categories and
+Martin-L\"of type theories.
+\newblock In \emph{TLCA'11}.
+
 \bibitem{Cohen}
 P.\,Cohen (1966).
 \newblock \emph{Set theory and the continuum hypothesis}.
