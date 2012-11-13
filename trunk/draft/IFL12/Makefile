@@ -1,7 +1,7 @@
 .PHONY: all pdf ps dvi touch ListLike
 
 TEXSRC=main.tex mylhs2tex.sty \
-       intro.tex example.tex discuss.tex concl.tex
+       intro.tex example.tex discuss.tex related.tex concl.tex
 
 UNLIT = /usr/lib/ghc/unlit
 
@@ -28,12 +28,8 @@ UNLIT = /usr/lib/ghc/unlit
 # but save corresponding changes into the original source files and then
 # run "make ListLike" to generated updated ListLike.* files automatically.
 #
-# All.lhs, All.lnax, and All.lagda are manually cut/pasted/modifed from
-# the generated ListLike.* files except the content of GListExample.l*.
-# All.l* files are just fist phase excercise to experiment formatting
-# before I have splitted them into differenet files of Eval, GList,
-# Compile, and GListExample. So, I may remove it from the repository
-# and also take out from the LaTeX document at some point.
+#
+# There is a similar set of examples Env.l* which generates EnvLike.*
 #
 ##########################################################################
 
@@ -84,6 +80,9 @@ example.tex: example.lhs includelhs2tex.lhs \
 
 discuss.tex: discuss.lhs includelhs2tex.lhs \
 	Env.lagda Env.lnax
+	lhs2TeX --poly -o $@ $<
+
+related.tex: related.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 exEvalNax.tex: Eval.lnax includelhs2tex.lhs

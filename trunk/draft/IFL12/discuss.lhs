@@ -11,11 +11,8 @@ In this section, we compare the sorting rules of Nax with the sorting rules
 of other languages (Sect.\;\ref{ssec:sorting}). Then, we
 compare the class of indexed datatypes supported by Nax with
 those supported in other languages (Sect.\;\ref{ssec:sortingEx}).
-We also discuss the use of singleton types (Sect.\;\ref{ssec:singleton})
-and kind polymorphism (Sect.\;\ref{ssec:kindpoly}) in Nax.
 
-
-\subsection{Universes, kinds, and well-sortedness} \label{ssec:sorting}
+\subsection{Universes, Kinds, and Well-sortedness} \label{ssec:sorting}
 
 A datatype declaration assigns a kind to the type being introduced.
 The concrete syntax of these kinds is similar in Haskell, Nax, and Agda.
@@ -234,7 +231,7 @@ and their argument types (\eg, |Ty|) to the kind level, and everything else
 (application of |List| to |Ty| and kind arrow formation) happens at
 kind level.
 
-\subsection{Deeply indexed datatypes and datatypes containing types}
+\subsection{Deeply Indexed Datatypes and Datatypes Containing Types}
 \label{ssec:sortingEx}
 
 \begin{figure}
@@ -290,19 +287,14 @@ There is no Haskell transcription for |Env| because datatype promotion
 
 On the contrary, Haskell supports promoted datatypes that hold types as
 elements, although limited to types without term indices, while Nax does not.
-The heterogeneous list datatype (|HList|) in Fig.\;\ref{fig:hlist}
-is a well-known example that uses datatypes containing types.
+The heterogeneous list datatype (|HList|) in Fig.\;\ref{fig:hlist} is
+a well-known example\footnote{The |HList| library in Haskell by
+\citet{HList-HW04} was originally introduced using type class constraints,
+rather than using GADTs and other relatively new extensions.}
+that uses datatypes containing types.
 Note that |HList| is index by |List{-"\;"-}*|, which is a promoted list
 whose elements are of kind |*|, that is, element are types.
 For instance, |hlist| in Fig.\;\ref{fig:hlist} contains
 three elements |3 : Int|, |True : Bool|, and |(1 :.2 :. Nil) : List Int|,
 and its type is |HList (Int :. Bool :. List Int :. Nil)|.
-
-\subsection{Singleton types} \label{ssec:singleton}
-
-TODO
-
-\subsection{Kind polymorphism} \label{ssec:kindpoly}
-
-paradoxes
 
