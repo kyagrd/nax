@@ -195,23 +195,26 @@ Specifically, in formal languages and their mathematical models.
 We are interested here in two kinds of formal languages:
 \begin{myindentitemize}
   \item
-    languages for mathematical proof, and 
+    languages for computer programming, and 
   \item
-    languages for computer programming.
+    languages for mathematical proof.
 \end{myindentitemize}
 The research spectrum covered by these is by now too broad and eclectic to aim
 at encompassing them all.  Our focus is on research driven by the thesis that
 \begin{myquote}
 \item
-Languages for mathematical proof and languages for computer programming
+Languages 
+for computer programming
+and languages 
+for mathematical proof 
 are of the same character.
 \end{myquote}
 This view %conception 
 %is of course not original to us.  It 
 started developing in the 1970s, with proponents from computer science
-(\eg~Dijkstra, Hoare, Strachey) and from mathematics (\eg~de Bruijn, Scott,
-Martin-L\"of); and is currently central to research in programming languages
-and in constructive mathematics.
+(\eg~McCarthy, Dijkstra, Hoare, Strachey) and from mathematics (\eg~de Bruijn,
+Scott, Martin-L\"of); and is currently central to research in programming
+languages and in constructive mathematics.
 
 An aspect of the thesis that is fundamental to us here
 %There is an aspect of the thesis that is rooted in the constructive approach
@@ -219,14 +222,13 @@ An aspect of the thesis that is fundamental to us here
 can be 
 impressionistically %roughly 
 presented as a correspondence as follows
-%\begin{equation}\label{PATproportion}\xymatrix@C5pt{
+\begin{equation}\label{PATproportion}%\xymatrix@C5pt{
 %  \frac{\txt{program}}{\txt{Type}} 
 %  & \mbox{\Large$\approx$} & 
 %  \frac{\txt{proof}}{\txt{Proposition}}
-%}\end{equation}
-\[
+%}
   \mbox{program : Type} \enspace \approx \enspace \mbox{proof : Proposition} 
-\]
+\end{equation}
 One can intuitively argue for it along 
 these lines: %the lines below:
 \begin{myitemize} 
@@ -240,7 +242,8 @@ these lines: %the lines below:
   bigger than it).
 \end{myitemize} 
 
-Two disciplines are clearly involved in investigating this correspondence:
+Two disciplines are clearly involved in investigating the
+correspondence~(\ref{PATproportion}):
 Mathematical Logic and Programming Theory.  
 %Much research, as the one proposed here, is geared towards finding a middle
 %ground that can accommodate the concerns of both, and expand their 
@@ -301,7 +304,7 @@ Figure\,\ref{ResearchAreas}
 \end{figure}
 gives a schematic view of the interactions between these four research areas
 in this context.  Each of them is complementary to the others.  Together, as a
-unified whole, have shaped fields of computer science and mathematics.
+unified whole, they have shaped fields of computer science and mathematics.
 \hide{
 Indeed, consider for instance that: 
 \begin{myitemize}
@@ -321,15 +324,15 @@ Indeed, consider for instance that:
   categories~\cite{Hyland}.
 \end{myitemize}
 }
-
-It is within this spirit that we propose cross-cutting research in
+%
+It is within this framework that we propose cross-cutting research in
 Category Theory, Mathematical Logic, Programming Theory, and Type Theory.
 Furthermore, we contend that an approach neglecting any one of them is to the
 detriment of the others, missing the depth and richness of the subject and,
 crucially, missing opportunities for research and development.  
 
-The reasons and motivations for our %research 
-proposal are specifically as follows: 
+The motivations for our %research 
+proposal are specifically as follows. 
 \begin{myitemize}
 \item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
   To elucidate what we hope to be the next-generation framework of Type Theory
@@ -639,7 +642,7 @@ of mathematics.
 %mathematical logic, mathematical physics, topology, and theoretical computer
 %science, as well as a growing research area in its own right.
 %
-The connection between category theory, logic, and type theory was
+The connection between Category Theory, Logic, and Type Theory was
 initiated by Lawvere~\cite{LawvereAinF} and Lambek~\cite{LambekI}, both
 of whom recognised logical systems and type theories as categories with
 structure.  
@@ -1065,7 +1068,7 @@ To answer it, a broader view of the subject involving the orthogonal
 notion of polarisation seems to be needed.  From the programming-language
 viewpoint, this further enriches the computational picture with the
 ability of distinguishing between eager \vs~lazy modes of computation and
-data structure.  We incorporate this into the following.
+data structures.  We incorporate this into the following.
 %
 \rep{(\ref{PolarisationParagraph}\,\&\,\ref{ProgrammingEffectsParagraph})}
   {Study and develop the theory of resource management, computational
@@ -1241,7 +1244,7 @@ of Figure\,\ref{AlgebraicTrinity}.
       &
       & 
       \txt{\small Universal\\ \small Algebra} 
-    }$\]
+    }\]
   \vspace*{-10mm}
 \label{AlgebraicTrinity}
 \end{figure}
@@ -2425,7 +2428,6 @@ of programming languages with effects.
 
   System $F_\omega^*$: Tillmann Rendel, Klaus Ostermann, Christian
   Hofer (2009),Typed Self-Representation
-}
 
 {\bf feel free to change any of this -- Tim}
 
@@ -2446,6 +2448,7 @@ might have type \verb+Def t -> t -> List Bit+.
 
 {\bf Reflection.} One kind of reflection is where the object-language and
 the meta-language coincide
+}
 
 \hidenote{System~{\SysL} internalisation of stacks?}
 
@@ -2915,6 +2918,12 @@ the Research Associates, and the cost of books and broadband for the Principal
 Investigator.
 \end{myitemize}
 
+\begin{figure*}[t]
+\caption{Costs}
+\hspace*{30mm}
+\vspace*{15cm}%\includegraphics[width=11cm]{mycosts.pdf}
+\end{figure*}
+
 {\setstretch{0}\footnotesize
 \begin{thebibliography}{000}
 %\bibitem{AHS}
@@ -3082,7 +3091,7 @@ A.\,Church (1940).
 \newblock {\em J.\,Symbolic Logic}, 5:56--68. 
   
 \bibitem{DybjerClairambault}
-P.,Clairambault and P.\,Dybjer (2011).
+P.\,Clairambault and P.\,Dybjer (2011).
 \newblock The biequivalence of locally cartesian closed categories and
 Martin-L\"of type theories.
 \newblock In \emph{TLCA'11}.
@@ -3663,9 +3672,5 @@ The Haskell Programming Language.
 \newblock \url{http://www.haskell.org/haskellwiki/Haskell}.
 \end{thebibliography}
 }
-
-%{\hspace*{-6cm}
-%\includegraphics[height=16.5cm,width=11.5cm]
-%{costs.pdf}}
 
 \end{document}
