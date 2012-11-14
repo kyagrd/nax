@@ -194,9 +194,9 @@ Universe subtyping provides a remedy to such a code duplication problem
 by allowing objects in a lower universe to be considered as objects
 in a higher universe. This gives us a notion of subtyping such that
 $\star_i \leq \star_j$ where $i \leq j$.\footnote{
-	This is not the only rule for subtyping in Agda.
- 	Another important rule is subtyping between arrows.
-	See Ulf Norell's thesis [TODO cite] (Sect.\;1.4) for details.}
+	This is not the only subtyping relation in Agda.
+ 	Another important subtyping relatoin is between arrows.
+	See Ulf Norell's thesis \cite{Norell07thesis} (Sect.\;1.4) for details.}
 With universe subtyping, we can form arrows from |Ty| to any level of universe
 (\eg, $|List Ty| -> \star_0$, $|List Ty| -> \star_1$, $\dots$). 
 Relating Agda's universes to sorts in Haskell and Nax, $\star_0$ and $\star_1$

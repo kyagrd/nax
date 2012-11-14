@@ -1,4 +1,5 @@
 %include greek.fmt
+%include forall.fmt
 
 %format kappa1
 %format kappa2
@@ -42,6 +43,8 @@
 %format ElemV = Elem"_{\!"V"}"
 %format MkElemV = MkElem"_{\!"V"}"
 
+%format calX = "\mathcal{X}"
+
 %format T1
 %format T2
 
@@ -53,6 +56,10 @@
 %format e0
 %format e1
 %format e2
+
+%format inst1
+%format inst2
+%format inst3
 
 %format ts0
 %format ts1
