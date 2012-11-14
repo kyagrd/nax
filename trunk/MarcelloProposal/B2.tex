@@ -211,7 +211,7 @@ are of the same character.
 \end{myquote}
 This view %conception 
 %is of course not original to us.  It 
-started developing in the 1970s, with proponents from computer science
+started developing in the 1960s, with proponents from computer science
 (\eg~McCarthy, Dijkstra, Hoare, Strachey) and from mathematics (\eg~de Bruijn,
 Scott, Martin-L\"of); and is currently central to research in programming
 languages and in constructive mathematics.
@@ -242,8 +242,32 @@ these lines: %the lines below:
   bigger than it).
 \end{myitemize} 
 
+This line of research has been very fruitful over the years.  We have reached
+the state in which many mathematical theories have been implemented as
+computer systems, and tested both academically and industrially.  Two %main
+cases in point are: programming languages (for high-assurance code) and proof
+assistants (for computer-aided verification); %two 
+examples of which are 
+Haskell, %~\cite{Haskell} 
+an industrial-strength programming language, 
+and Coq, %~\cite{Coq} 
+a proof assistant in which whole bodies of mathematics are being verified.
+These developments of transfer from mathematical theories to computer systems,
+%and back, 
+have required %important 
+technical (theoretical) and technological (practical) progress.  This has
+necessarily demanded increasingly specialised and fragmentary research.  
+Importantly, %Very importantly, %though, 
+the field has reached a first plateau; encompassing a substantial body of work
+and expertise.  How will it continue to advance?  By considering new
+directions and challenges, of course.  However, it is our firm view, that it
+is essential to do this by generating questions and tackling problems from the
+perspectives of 
+a variety of %disparate 
+research areas.  It is both of these aspects that we put forward here.
+
 Two disciplines are clearly involved in investigating the
-correspondence~(\ref{PATproportion}):
+correspondence~(\ref{PATproportion}) above:
 Mathematical Logic and Programming Theory.  
 %Much research, as the one proposed here, is geared towards finding a middle
 %ground that can accommodate the concerns of both, and expand their 
@@ -348,11 +372,13 @@ proposal are specifically as follows.
   To design, implement, and experiment within Programming Theory, looking
   into the languages of the future.
 \end{myitemize}
-Towards these goals, Principal Investigator Marcelo Fiore has conceived
-the research programme of this proposal, expanding through
-metamathematical foundations, mathematical models, computational calculi,
-and programming languages.  
-%
+
+Principal Investigator Marcelo Fiore has conceived the research programme of
+this proposal, 
+%expanding through metamathematical foundations, mathematical models,
+%computational calculi, and programming languages
+and assembled the team, to precisely to target these goals.
+
 %{\erc} assembles a world-leading team of theoretical and applied computer
 %scientists:  Principal Investigator Marcelo Fiore; Senior Visiting Researchers
 %Pierre-Louis Curien, Peter Dybjer, and Tim Sheard; and Research Associates Ki
@@ -408,16 +434,17 @@ missing opportunities for research and development.
 \subsection{Origins and influences}
 \label{Origins}
 
-This section %Section\pref{Origins} 
-outlines the origins and influences that led to the holistic conception of
-Figure\,\ref{ResearchAreas}. 
+This section outlines the origins and influences that led to the holistic
+conception of Figure\,\ref{ResearchAreas}. 
+%%, roughly expanding through 1935 to 1985.
+%Section\pref{StateOfTheArtSubsection} describes the current state of the
+%field and raises questions for research.  %Having set the scene,
+%Section\pref{ObjectivesSubsection} presents the research objectives we
+%wish to pursue and the team that we have assembled to reach them.  
+%%Both of these points are further expounded upon in
+%%Sections\,(\ref{MethodologySection}\,\&\,\ref{ResourcesSection}).
 %, roughly expanding through 1935 to 1985.
-Section\pref{StateOfTheArtSubsection} describes the current state of the
-field and raises questions for research.  %Having set the scene,
-Section\pref{ObjectivesSubsection} presents the research objectives we
-wish to pursue and the team that we have assembled to reach them.  
-%Both of these points are further expounded upon in
-%Sections\,(\ref{MethodologySection}\,\&\,\ref{ResourcesSection}).
+This is important to appreciate and understand our scientific framework.
 
 \paragraph{Logic and computation.}
 
@@ -453,8 +480,9 @@ Binding operators are an integral part of all high-level  programming
 languages.  Their mathematical theory is subtle %, see~\ref{}, 
 because they define syntax up to the consistent renaming of bound
 variables (technically referred to as \mbox{$\alpha$-equivalence}).
-This subtlety is made evident by the anecdotal fact that the first definitions of
-substitution were formally flawed.  
+\hide{
+This subtlety is made evident by the anecdotal fact that the first definitions
+of substitution were formally flawed.}
 %These important topics are core to our proposed research in
 %Section\pref{AlgebraicTypeTheoryParagraph}.
 
@@ -1179,32 +1207,90 @@ The overall research objectives that we are to undertake are classified
 under four headings as follows.
 \begin{myitemize}
 \item[{\bfseries 1\enspace Foundations:}]\mbox{}\enspace\thinspace 
-  A comprehensive research programme on the metamathematics of type theories.
-  We will provide an algebraic answer to what type theories are, 
-  \hidewiring{, establishing connections with areas of abstract algebra
-    where related structures play a central role.}
-  and in the process rethink them.
+%  A comprehensive research programme on the metamathematics of type theories.
+%  We will provide an algebraic answer to what type theories are, 
+%  \hidewiring{, establishing connections with areas of abstract algebra
+%    where related structures play a central role.}
+%  and in the process rethink them.
+%
+  \emph{A comprehensive research programme on the metamathematics of type
+    theories.}
+  %--- addressing the problem of what type theories are.
+
+  %\vspace*{1mm}
+  We will address the fundamental question of what type theories are,
+  which will also lead us to rethink them.  Our approach is novel and
+  ambitious in that it aims at an algebraic framework that will generalise
+  to type theories all aspects of our current understanding of algebraic
+  theories. %, from the perspectives of categorical algebra,
+  %equational logic, and universal algebra. 
+  %%(see the Algebraic Trinity of Figure~\ref{} on page~\pageref{}).  
+  The scale at which we will be attempting this is unprecedented,
+  systematically exploring a wide spectrum of key type-theoretic features.
+  %\vspace*{1mm}
 
 \item[{\bfseries 2\enspace Models:}]\mbox{}\enspace\thinspace
-  Study %Development and study 
-  of mathematical models for type theories and logical systems. 
-  We will investigate model theories targeting semantic problems at the
-  forefront of current understanding, specifically for dependent type theory
-  and polarised logic.
-  
+%  Study %Development and study 
+%  of mathematical models for type theories and logical systems. 
+%  We will investigate model theories targeting semantic problems at the
+%  forefront of current understanding, specifically for dependent type theory
+%  and polarised logic.
+%  
+  \emph{Study of mathematical models for type theories and logical systems.}
+  %--- targeting semantic problems at the forefront of current understanding. 
+
+  %\vspace*{1mm}
+  We will tackle semantic problems at the forefront of current understanding.
+  %
+  In the context of type theories, we will conduct investigations around a
+  main open problem in the area: to reconcile extensional equality and
+  intensional identity (which roughly correspond to the mathematical and
+  computational notions of sameness).  
+  %
+  In the context of logical systems, we will develop novel calculi suggested
+  by mathematical models and new models for so far intractable calculi
+  encompassing aspects of resource management and computational effects.  A
+  distinguishing novelty of our approach is that it will be informed by the
+  logical notion of polarisation.
+  %\vspace*{1mm}
+
 \item[{\bfseries 3\enspace Calculi:}]\mbox{}\enspace\thinspace
-  Development of formalisms of deduction as internal languages of mathematical
-  theories.
-  We will research type theories that go beyond current logical
-  frameworks, especially motivated by (higher-dimensional) category theory.
-  %and complexity theory.
+%  Development of formalisms of deduction as internal languages of mathematical
+%  theories.
+%  We will research type theories that go beyond current logical
+%  frameworks, especially motivated by (higher-dimensional) category theory.
+%  %and complexity theory.
+%  
+  \emph{Development of formalisms of deduction as internal languages of
+    mathematical models.}
+  %--- researching type theories that go beyond current logical frameworks. 
   
+  %\vspace*{1mm}
+  We will aim at evolving the term and type structure of current type
+  theories, which in essence has not changed since the late 1960s.  Pursuing
+  the view that further evolution will come from mathematical input, we will
+  research type theories as formal languages of (higher-dimensional)
+  categorical structures.  
+  %\vspace*{1mm}
+
 \item[{\bfseries 4\enspace Programming:}]\mbox{}\enspace\thinspace
-  Design and implementation of, and experimentation with, novel computational
-  languages.  
-  We will target languages with indexed data structures, programming paradigms
-  stemming from sequent calculi embodying computational effects, and explore
-  extensions for metaprogramming.
+%  Design and implementation of, and experimentation with, novel computational
+%  languages.  
+%  We will target languages with indexed data structures, programming paradigms
+%  stemming from sequent calculi embodying computational effects, and explore
+%  extensions for metaprogramming.
+%
+  \emph{Design and implementation of novel computational languages.}
+  %--- %looking into the 
+  %engineering %of first 
+  %principles and concepts from mathematical theories.
+
+  \vspace*{.5mm}
+  Guided by mathematical theories and pragmatics, we will look into the
+  engineering of principles and concepts for programming, exporting them to
+  language designs and implementations.  We will specifically target
+  experimental languages, supporting indexed data structures, computational
+  effects, and metaprogramming.  
 \end{myitemize}
 
 \section{\underline{Methodolo}gy\hspace{-1mm}\underline{\,}}
@@ -1246,7 +1332,7 @@ of Figure\,\ref{AlgebraicTrinity}.
       & 
       \txt{\small Universal\\ \small Algebra} 
     }\]
-  \vspace*{-10mm}
+  \vspace*{-2.5mm}
 \label{AlgebraicTrinity}
 \end{figure}
 Equational Logic is the metalanguage of algebraic theories, while
@@ -1328,12 +1414,14 @@ $\xymatrix@C=2.5pt@R=25pt{
 where the \emph{linearity} dimension could be transported along or mixed
 with all the other ones.
 
-Initial investigations in this direction have been carried out by Fiore
-and PhD~students~\cite{FioreHur,FioreMahmoud}.  These extend the Algebraic
-Trinity to the realm of Binding Algebra,~\viz~algebraic languages with binding
-operators.  The extension to simple type theories should follow along
-similar lines further taking into account the algebraic structure of
-types.  As for the other points of the research space in
+This research rests on fundamental work, old and recent, of
+Fiore~\etal~\cite{FiorePlotkinTuri,FioreLICS08,FioreHurLMCS,FioreSecOrdEqLog,FioreMahmoud},
+that started with the first algebraic model of abstract syntax with variable
+binding and progressively led to an extension of the
+Algebraic Trinity to the realm of Binding Algebra (\viz~algebraic languages
+with binding operators).  The further extension to simple type theories should
+follow along similar lines further taking into account the algebraic structure
+of types.  As for the other points of the research space in
 Figure\,\ref{TypeTheoryResearchSpace}, they are yet to be investigated.  For
 these we have the following specific goals.
 \begin{resenumerate}\setcounter{CC}{0}
@@ -2253,7 +2341,7 @@ Identity types %~\cite{IdTypes}
 where the main features inherent to each approach are also listed.}
 
 Most of the work in this area has concentrated on exploring the top-down
-approach (see~\eg~\cite{Cayenne} and~\cite{Epigram}).  Here we will pursue
+approach (see~\eg~\cite{Cayenne} and \cite{Epigram}).  Here we will pursue
 research on the bottom-up approach, which has not been explored
 systematically.  A strong pragmatic reason for this is that our uppermost
 interest is in a language targeted to programmers.  This does not mean that we
@@ -2319,6 +2407,7 @@ The above design considerations are to be shaped by the following maxim:
 Indeed, this is the main open problem in dependently-typed programming language
 theory.
 
+\hide{
 Finally, let us mention an intriguing possibility suggested by the
 model-theoretic considerations of
 Section\pref{MethodologyMathematicalUniversesParagraph}.  The indexing
@@ -2334,6 +2423,7 @@ The question arises as to how to:
 A specific motivation for this comes from the possibility of directly
 programming, as opposed to having to code, presheaf structure (\eg~as is
 needed in Normalisation by Evaluation~\cite{FiorePPDP}).
+}
 
 \paragraph{Effects.}
 \label{ProgrammingEffectsParagraph}
@@ -2373,7 +2463,7 @@ developed.  Specifically, we will
   %correspondence for sequent calculi through Category Theory (see
   %Figure\,\ref{ResearchAreas}) relating the system~{\SysL} to adjoints.
   trinity (see (\ref{PATtrinity})) between classical sequent calculi and
-  computational languages with effects and rich type structures through
+  computational languages with effects and rich type structure through
   adjoint interpretations.
 \end{resenumerate}
 
@@ -2401,7 +2491,7 @@ operators, it goes beyond algebraic models.  This is indeed so with
 respect to (first-order) algebraic theories.  Interestingly, as it has
 transpired in conversation between Fiore and Staton, the consideration of
 the richer Second-Order Algebraic Theories of Fiore
-\etal~\cite{FioreHur,FioreMahmoud} seems to enrich the class of
+\etal~\cite{FioreHurLMCS,FioreMahmoud} seems to enrich the class of
 specifiable effects to incorporate aspects of control.  Thus, our research
 into this topic will also
 \begin{resenumerate}\setcounter{CC}{5}
@@ -2496,29 +2586,32 @@ Palermo).
 
 \paragraph*{Principal investigator.}
 
-As Principal Investigator, \textbf{\em Marcelo Fiore} would be concerned
+As Principal Investigator (PI), \textbf{\em Marcelo Fiore} would be concerned
 with and engaged in all areas of the project, heading the %{\erc} 
 team. 
 \begin{myitemize}
 \item
-For the Principal Investigator, salary is requested for eight months per
+For the Principal Investigator, salary is requested for eight months (75\%) per
 year for the five years of the duration of the project.  
 \end{myitemize}
-The reduction acknowledges that the Principal Investigator will concentrate on the project while continuing with some teaching to attract new PhD students and still have some departmental administration duties.
+The reduction acknowledges that the PI will concentrate on the project while
+continuing with some teaching to attract new PhD students and still have some
+departmental administration duties.
 
 \paragraph*{Senior Visiting Researchers.}
 
-The Senior Visiting Researchers Pierre-Louis Curien, Peter Dybjer, and Tim
-Sheard are renown researchers in their respective field of expertise.  
+The Senior Visiting Researchers (SVRs) Pierre-Louis Curien, Peter Dybjer, and
+Tim Sheard are renown researchers in their respective field of expertise.  
 \begin{myitemize}
 \item
-For the Senior Visiting Researchers, funding is requested for annual one-month
-research visits to the Computer Laboratory (University of Cambridge) for the
-five years of the duration of the project.  
+For the SVRs, funding is requested for annual one-month research visits, and
+for sporadic visits, to the Computer Laboratory (University of Cambridge)
+during the five years of the duration of the project.  
 \end{myitemize}
-Our collaboration will however go beyond each visit; continuing by email,
-conference calls, and/or visits to their respective sites. 
-%(for which travel funding is also requested).  
+Our collaboration will however go beyond these visits; continuing by email,
+conference calls, and/or visits of the PI to their respective sites.
+%(for which travel funding is requested).  
+%
 Their academic credentials together with the areas of the project
 to which they will be engaged follow.
 
@@ -2659,10 +2752,10 @@ locally cartesian closed categories
 Sections\,(\mbox{\ref{AlgebraicTypeTheoryParagraph}}\,\&\,%
 \ref{IntensionalTypeTheoryParagraph}));
 %
-$(iv)$~his powerful notion of an inductive-recursive definition, 
-that %It extends the notion of an inductive definitions and 
-is useful for understanding universes and reflection principles in type
-theory 
+$(iv)$~his powerful notion of an inductive-recursive
+definition~\cite{DybjerIR}, that %It extends the notion of an inductive
+definitions and is useful for understanding universes and reflection
+principles in type theory 
 %Dybjer has (together with Setzer) proved a general result about the
 %correspondence between inductive-recursive definitions and initial
 %algebras. 
@@ -2708,16 +2801,16 @@ Section & Keyword
 
 \paragraph*{Research Associates.}
 
-The Research Associates Ki Yung Ahn, Nicola Gambino, and Guillaume
+The Research Associates (RAs) Ki Yung Ahn, Nicola Gambino, and Guillaume
 Munch-Maccagnoni will be based at the Computer Laboratory (University of
-Cambridge), working in the project full time.  Ahn and Munch-Maccagnoni
-are currently finishing their PhD dissertations.  Nicola Gambino is
-already an established researcher.  All would be ready to join the project
-from the start.  
+Cambridge), working in the project full time.  Ahn and Munch-Maccagnoni are
+currently finishing their PhD dissertations.  Nicola Gambino is already an
+established researcher.  All would be ready to join the project from the
+start.  
 \begin{myitemize}
 \item 
-  Salary is requested to employ each Research Associate full-time for the five
-  years of duration of the project.
+  Salary is requested to employ each RA full-time for the five years of
+  duration of the project.
 \end{myitemize}
 
 \smallskip\noindent
@@ -2824,9 +2917,10 @@ Section\pref{GeneralisedTypeTheoryParagraph}.
 is a PhD student at Laboratoire PPS, Universit\'e Paris Diderot - Paris~7.
 He is currently writing up his dissertation, where he contributes to the
 Propositions-as-Types correspondence of Figure\,\ref{ResearchAreas} in the
-context of classical logic and programming languages with effects and rich
-type structures.  Some of his results have already been published at
-conference proceedings. %\eg~\cite{Munch,CurienMunch}.
+context of classical logic and 
+calculi %programming languages 
+with effects and rich type structures.  Some of his results have already been
+published at conference proceedings. %\eg~\cite{Munch,CurienMunch}.
 For instance, 
 %
 %At the ``Proof Theory'' vertex of the triangle, he contributed to the
@@ -2874,10 +2968,11 @@ way for the proposed research in Section\pref{ProgrammingEffectsParagraph}.
 
 \begin{myitemize}
 \item
-Travel funding is requested for attending meetings (conferences,
-workshops,~\etc),\hidefootnote{\Eg~CALCO, CIE, CSL, CT, ICALP, ICFP, LICS,
-  MFPS,  POPL, PPDP, PSSL, RTA, TLCA, TYPES, WOLLIC.}{} 
-and for visiting and inviting researchers. \hidefootnote{\Eg~Aarhus
+Travel funding for the PI and RAs is requested for international, european,
+and national meetings (conferences, workshops, research
+visits,~\etc),\hidefootnote{\Eg~CALCO, CIE, CSL, CT, ICALP, ICFP, LICS, MFPS,
+  POPL, PPDP, PSSL, RTA, TLCA, TYPES, WOLLIC.}{} 
+and for the PI to visit the SVRs at their sites. \hidefootnote{\Eg~Aarhus
   (A\,Kock); 
   Bamberg (Mendler);
   Barcelona (J\,Kock);
@@ -2914,15 +3009,19 @@ and for visiting and inviting researchers. \hidefootnote{\Eg~Aarhus
   Sydney (Garner, Lack, Street);
   Warsaw (Zawadowski).}.
 \item
-Further funds are requested for notebooks for the Principal Investigator and
-the Research Associates, and the cost of books and broadband for the Principal
-Investigator.
+Funding is also requested for inviting research collaborators to the Computer
+Laboratory, University of Cambridge, to work with the team.
+
+\item
+Further funds are requested for notebooks for the PI and RAs, and the cost of
+books and broadband for the PI.
 \end{myitemize}
 
 \begin{figure*}[t]
 \caption{Costs}
 \hspace*{30mm}
-\vspace*{15cm}%\includegraphics[width=11cm]{mycosts.pdf}
+\vspace*{15cm}
+%\includegraphics[width=11cm]{mycosts.pdf}
 \end{figure*}
 
 {\setstretch{0}\footnotesize
@@ -3158,12 +3257,12 @@ P.~Dybjer (1996).
 \newblock Internal Type Theory.
 \newblock In \emph{TYPES}, LNCS 1158, pp\,120--134.
 
-%\bibitem{DybjerIR}
-%P.\,Dybjer (2000).
-%\newblock A General Formulation of Simultaneous Inductive-Recursive
-%Definitions in Type Theory. 
-%%\newblock \emph{J.\ Symb.\ Log.}, 65(2):525--549.
-%\newblock \emph{JSL} 65.
+\bibitem{DybjerIR}
+P.\,Dybjer (2000).
+\newblock A General Formulation of Simultaneous Inductive-Recursive
+Definitions in Type Theory. 
+%\newblock \emph{J.\ Symb.\ Log.}, 65(2):525--549.
+\newblock \emph{JSL} 65.
 
 \bibitem{EEC}
 J.\,Egger, R.\,M{\o}gelberg, and A.\,Simpson (2009). 
@@ -3188,11 +3287,13 @@ M.\,Fiore (1995).
 %\newblock In \emph{CTCS'96}, LNCS 953, pp.\,146--158.  
 \newblock In \emph{CTCS'96}.
 
+\hide{
 \bibitem{FiorePPDP}
 M.\,Fiore (2002). 
 \newblock Semantic analysis of Normalisation By Evaluation for typed
 lambda calculus.  
 \newblock In \emph{PPDP'02}.
+}
 
 \bibitem{FioreFossacs}
 M.\,Fiore (2005).  
@@ -3205,6 +3306,11 @@ structures.
 %M.\,Fiore (2006).
 %\newblock On the structure of substitution.  
 %\newblock MFPS XXII invited address. 
+
+\bibitem{FioreLICS08}
+M.\,Fiore (2008).
+\newblock Second-order and dependently-sorted abstract syntax. 
+\newblock In \emph{LICS'08}, pp.\,57--68. 
 
 \bibitem{FioreICALP}
 M.\,Fiore (2012).   
@@ -3223,11 +3329,16 @@ M.\,Fiore, N.\,Gambino, M.\,Hyland, and G.\,Winskel (2008).
 structures.
 \newblock \emph{J.\ London Math.\ Soc.}, 77:203-220. 
 
-\bibitem{FioreHur}
+\bibitem{FioreSecOrdEqLog}
 M.\,Fiore and C.-K.\,Hur (2010).   
 \newblock Second-order equational logic.  
 \newblock In \emph{CSL'10}, LNCS 6247, pp\,320--335. 
   
+\bibitem{FioreHurLMCS}
+M.\,Fiore and C.-K.\,Hur (2011).   
+\newblock On the mathematical synthesis of equational logics.
+\newblock \emph{LMCS}-7(3:12).
+
 \bibitem{FioreMahmoud}
 M.\,Fiore and O.\,Mahmoud (2010).   
 \newblock Second-order algebraic theories.  
@@ -3238,6 +3349,11 @@ M.\,Fiore, G.\,Plotkin and A.J.\,Power (1997).
 \newblock Complete cuboidal sets in axiomatic domain theory.  
 %\newblock In \emph{LICS'97}, pp.\,268--279.  
 \newblock In \emph{LICS'97}.
+
+\bibitem{FiorePlotkinTuri}
+M.\,Fiore, G.\,Plotkin and D.\,Turi (1999). 
+\newblock Abstract syntax and variable binding.
+\newblock In \emph{LICS'99}.
 
 \bibitem{Frege1879}
 G.\,Frege (1879).
