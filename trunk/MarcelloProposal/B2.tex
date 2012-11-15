@@ -2660,7 +2660,7 @@ could be then executed in a Categorical Abstract Machine~\cite{CAM}.
 %(which gave
 %the name to the programming language CAML).  
 %
-Since then he has been regularly coming back to the theme of abstract
+Since then he regularly returned to the theme of abstract
 machines, most recently within the polarised version of the duality of
 computation~\cite{CurienMunch} in the setting of system~{\SysL}, which
 features in Sections\,(\ref{SequentCalculiParagraph}\,\&\,%
@@ -2757,26 +2757,22 @@ typed programming language (and proof assistant) Agda.
 
 \smallskip\noindent
 \textbf{\em Tim Sheard} 
-
-{\color{red}\begin{tabular}{l|l}
-Section & Keyword
-\\\hline
-(\ref{ModalLogicsParagraph}) & MetaML
-\\
-%(\ref{SubstructuralTypeTheoryParagraph}) & iterators
-\\
-(\ref{IndexedProgrammingParagraph}) & Nax, Omega
-\\
-(\ref{ProgrammingEffectsParagraph}) & PL design \& implementation
-\\
-(\ref{MetaprogrammingParagraph}) & MetaML
-\\
-\end{tabular}
-
-8\\9\\10\\
-1\\2\\3\\4\\5\\6\\7\\8\\9\\10\\
-1\\2\\3\\4\\5
-}
+is a professor of computer science at Portland
+State University in Portland Oregon. Tim's interests include
+programming language design, functional programming, and the intersection of
+programming and logic.  He is best known for
+a number of experimental languages, which have been widely distributed,
+and whose main ideas have been incorporated into other languages.
+Perhaps the best known example is MetaML\cite{TS97}, a staged language, where
+programs write programs which are run in later stages. The best ideas
+of MetaML have been incorporated into the O'Caml system and into the
+GHC in its Template Haskell\cite{Sheard:2002:TMP} extensions. Another example is the language
+Omega, which pioneered the use of GADTs\cite{ONWARD,sheardLFM04} and indexed types
+(the theory of which is discussed in section {\bf b-4.i} and on which the new language Nax is based). These features
+are now supported in many other languages. The most recent example is FunLog
+which supports the high level embedding of external decision
+procedures (such as SAT solvers, SMT solvers, Integer programming tools, and
+Markov Logic Networks) into a host language. 
 
 \paragraph*{Research Associates.}
 
@@ -3781,7 +3777,34 @@ P.\,Wadler (2003).
 \bibitem{Haskell}
 The Haskell Programming Language.
 \newblock \url{http://www.haskell.org/haskellwiki/Haskell}.
-\end{thebibliography}
-}
 
+\bibitem{ONWARD}
+Tim Sheard.
+\newblock Languages of the future.
+\newblock October 2004.
+\newblock OOPSLA Companion Volume.
+
+\bibitem{sheardLFM04}
+Tim Sheard and Emir Pasalic.
+\newblock Meta-programming with built-in type equality.
+\newblock In {\em Proceedings of the Fourth International Workshop on Logical
+  Frameworks and Meta-Languages (LFM'04).
+  \verb+http://cs-www.cs.yale.edu/homes/carsten/lfm04/+}, pages 106--124, Cork,
+  Ireland, July 2004.
+  
+\bibitem{Sheard:2002:TMP}
+Tim Sheard and Simon~Peyton Jones.
+\newblock Template meta-programming for {Haskell}.
+\newblock {\em ACM SIG{\-}PLAN Notices}, 37(12):60--75, December 2002.
+  
+\bibitem{TS97}
+Walid Taha and Tim Sheard.
+\newblock Multi-stage programming with explicit annotations.
+\newblock In {\em Proceedings of the Symposium on Partial Evaluation and
+  Semantic-Based Program Manipulation {(PEPM)}}, pages 203--217, Amsterdam,
+  1997. ACM Press.
+\end{thebibliography}
+
+}
+  
 \end{document}
