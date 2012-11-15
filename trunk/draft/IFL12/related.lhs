@@ -53,9 +53,8 @@ combinations of them (|forall calX alpha i.kappa|). For example, the kinds of
 polymorphic kinds (|forall calX.kappa|) quantified over kind variables
 (|calX : BOX|) since everything is already promoted to the kind level.
 
-avoid paradoxes TODO cite things realted System $U^{-}$
-
-first class polymorphic types
-
-but not first class polymorphic kinds
-
+In Nax, kind polymorphism is limited to rank-1 since it is well-known that
+higher-rank kind polymorphism leads to paradoxes [TODO cite System $U^{-}$
+related things].
+In fact, type polymorphism in Nax is limited to rank-1 as well since
+the type infernce is based on Hindley-Minler [TODO cite this too].
