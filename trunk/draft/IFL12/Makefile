@@ -3,11 +3,45 @@
 TEXSRC=main.tex mylhs2tex.sty \
        intro.tex example.tex discuss.tex related.tex concl.tex
 
+# usually unlit is installed as below in Linux.
+# If you are on windows edit it for different path
 UNLIT = /usr/lib/ghc/unlit
 
 ##########################################################################
+# List of source files for editing the document
+##########################################################################
 #
+# includelhs2tex.lhs
+#
+# main.tex
+#   intro.tex
+#   example.lhs
+#     example_eval.lhs
+#       Eval.lhs
+#       Eval.lnax
+#       Eval.lagda
+#     example_glist.lhs
+#       GList.lhs
+#       GList.lnax
+#       GList.lagda
+#       GListExample.lhs
+#       GListExample.lnax
+#       GListExample.lagda
+#     example_compile.lhs
+#       Compile.lhs
+#       Compile.lnax
+#       Compile.lagda
+#   discuss.lhs
+#     Env.lagda
+#     Env.lnax
+#   related.lhs
+#   concl.tex
+#
+##########################################################################
+
+##########################################################################
 # How Haskell, Nax, Agda source files work
+##########################################################################
 #
 # Orignal souce files are
 #	Eval.lhs   GList.lhs   GListExample.lhs   Compile.lhs  
@@ -32,7 +66,6 @@ UNLIT = /usr/lib/ghc/unlit
 # There is a similar set of examples Env.l* which generates EnvLike.*
 #
 ##########################################################################
-
 
 all: pdf
 
