@@ -189,18 +189,13 @@
 \section{\underline{State of the art and ob}j\underline{ectives}}
 \label{StateOfTheArtSection}
 
-We propose research in logical methods for computer science.
-Specifically, in formal languages and their mathematical models.
+We propose research in logical methods for computer science.  Specifically, in
+formal languages and mathematical models for computer programming and
+mathematical proof.
 
-We are interested here in two kinds of formal languages:
-\begin{myindentitemize}
-  \item
-    languages for computer programming, and 
-  \item
-    languages for mathematical proof.
-\end{myindentitemize}
-The research spectrum covered by these is by now too broad and eclectic to aim
-at encompassing them all.  Our focus is on research driven by the thesis that
+%\paragraph*{Working thesis.}
+
+The research is driven by the thesis that
 \begin{myquote}
 \item
 Languages 
@@ -210,64 +205,77 @@ for mathematical proof
 are of the same character.
 \end{myquote}
 This view %conception 
-%is of course not original to us.  It 
-started developing in the 1960s, with proponents from computer science
-(\eg~McCarthy, Dijkstra, Hoare, Strachey) and from mathematics (\eg~de Bruijn,
-Scott, Martin-L\"of); and is currently central to research in programming
-languages and in constructive mathematics.
+%%is of course not original to us.  It 
+started developing in the 1960s %, with proponents from computer science
+%(\eg~McCarthy, Dijkstra, Hoare, Strachey) and from mathematics (\eg~de Bruijn,
+%Scott, Martin-L\"of); 
+and is now central to research in programming languages and constructive
+mathematics.
 
-An aspect of the thesis that is fundamental to us here
-%There is an aspect of the thesis that is rooted in the constructive approach
-%to mathematical practice and is fundamental to us here.  This 
-can be 
-impressionistically %roughly 
-presented as a correspondence as follows
-\begin{equation}\label{PATproportion}%\xymatrix@C5pt{
+An aspect of the thesis that is fundamental to us here is usually referred
+to as the Proofs-as-Programs or Propositions-as-Types correspondence.
+%There is an aspect of the thesis that is rooted in the constructive
+%approach to mathematical practice and is fundamental to us here.  This 
+It can be impressionistically %roughly 
+presented %as a correspondence 
+as follows
+\[%\begin{equation}\label{PATproportion}%\xymatrix@C5pt{
 %  \frac{\txt{program}}{\txt{Type}} 
 %  & \mbox{\Large$\approx$} & 
 %  \frac{\txt{proof}}{\txt{Proposition}}
 %}
-  \mbox{program : Type} \enspace \approx \enspace \mbox{proof : Proposition} 
-\end{equation}
-One can intuitively argue for it along 
-these lines: %the lines below:
-\begin{myitemize} 
-\item 
-  to type a program is to establish a property of it (\eg~that certain
-  input/output behaviour or invariant is maintained); while 
-\item 
-  to give a constructive proof of a proposition (\eg~that every number is
-  smaller than a prime number) is to construct a program that certifies the
-  statement (\eg~one that on inputing a number, outputs some prime number
-  bigger than it).
-\end{myitemize} 
+%
+  \mbox{proof : Proposition} 
+  \enspace \approx \enspace 
+  \mbox{program : Type} 
+%\end{equation}
+\]
+and one intuitively argues for it along these lines: %the lines below:
+%\begin{myitemize} 
+%\item 
+  to give a constructive proof of a proposition 
+  %(\eg~that every number is smaller than a prime number) 
+  is to construct a program that certifies the statement, 
+  %(\eg~one that on inputing a number, outputs some prime number bigger
+  %than it);
+  while
+%\item 
+  to type a program is to establish a property of it.
+  %(\eg~that certain input/output behaviour or invariant is maintained). 
+%\end{myitemize} 
 
-This line of research has been very fruitful over the years.  We have reached
-the state in which many mathematical theories have been implemented as
-computer systems, and tested both academically and industrially.  Two %main
-cases in point are: programming languages (for high-assurance code) and proof
-assistants (for computer-aided verification); %two 
-examples of which are 
+Research stemming form the Propositions-as-Types correspondence has been
+very fruitful.  Many of its mathematical theories have been implemented as
+computer systems, and used academically and industrially.  Cases in point
+are: programming languages for high-assurance code and proof assistants
+for computer-aided verification; examples of which are
 Haskell, %~\cite{Haskell} 
-an industrial-strength programming language, 
+an industrial-strength functional programming language, 
 and Coq, %~\cite{Coq} 
-a proof assistant in which whole bodies of mathematics are being verified.
-These developments of transfer from mathematical theories to computer systems,
-%and back, 
-have required %important 
-technical (theoretical) and technological (practical) progress.  This has
-necessarily demanded increasingly specialised and fragmentary research.  
-Importantly, %Very importantly, %though, 
-the field has reached a first plateau; encompassing a substantial body of work
-and expertise.  How will it continue to advance?  By considering new
-directions and challenges, of course.  However, it is our firm view, that it
-is essential to do this by generating questions and tackling problems from the
-perspectives of 
-a variety of %disparate 
-research areas.  It is both of these aspects that we put forward here.
+a proof assistant in which bodies of mathematics are being verified.
+
+%\paragraph*{The future.}
+
+The developments of transfer from mathematical theories to computer
+systems have required technical/theoretical and technological/applied
+progress.  This has necessarily demanded increasingly specialised, and to
+some extent fragmentary, research.  
+Importantly, %though, 
+the field has reached a first plateau; encompassing a substantial body of
+work and expertise.  
+How %But, how
+will it continue to advance?  By considering new directions and
+challenges, of course.  But, %However, 
+as in the very beginning of the subject, it is our firm view that it will be
+essential to do so generating questions and tackling problems from the
+perspectives of a variety of research areas.  It is both of these aspects that
+we put forward here.
+
+%\paragraph*{Our philosophy.}
 
 Two disciplines are clearly involved in investigating the
-correspondence~(\ref{PATproportion}) above:
+Proofs-as-Programs 
+correspondence: %~(\ref{PATproportion}) above:
 Mathematical Logic and Programming Theory.  
 %Much research, as the one proposed here, is geared towards finding a middle
 %ground that can accommodate the concerns of both, and expand their 
@@ -328,7 +336,7 @@ Figure\,\ref{ResearchAreas}
 \end{figure}
 gives a schematic view of the interactions between these four research areas
 in this context.  Each of them is complementary to the others.  Together, as a
-unified whole, they have shaped fields of computer science and mathematics.
+unified whole, they have shaped fields of computer science and mathematics.  
 \hide{
 Indeed, consider for instance that: 
 \begin{myitemize}
@@ -349,17 +357,21 @@ Indeed, consider for instance that:
 \end{myitemize}
 }
 %
-It is within this framework that we propose cross-cutting research in
-Category Theory, Mathematical Logic, Programming Theory, and Type Theory.
-Furthermore, we contend that an approach neglecting any one of them is to the
-detriment of the others, missing the depth and richness of the subject and,
-crucially, missing opportunities for research and development.  
+It is within this framework that we propose cross-cutting research in Category
+Theory, Mathematical Logic, Programming Theory, and Type Theory.  
+We %Furthermore, we 
+contend that an approach neglecting any one of them is to the detriment of
+the others; missing the depth and richness of the subject and, crucially,
+missing opportunities for research and development.  
 
-The motivations for our %research 
-proposal are specifically as follows. 
+%\paragraph*{Main goals.}
+
+The motivations for our research proposal are specifically as follows. 
 \begin{myitemize}
 \item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
-  To elucidate what we hope to be the next-generation framework of Type Theory
+  To search for %elucidate 
+  %what we hope to be 
+  the next-generation framework of Type Theory
   relevant to computer science and mathematics.
 \item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
   To exercise and test Category Theory both as a unifying and as a
@@ -373,63 +385,13 @@ proposal are specifically as follows.
   into the languages of the future.
 \end{myitemize}
 
+We particularly aim to contribute with: a framework to analyse and synthesise
+type theories; mathematical theories and models for computational phenomena;
+formal calculi for proof and/or computation; and experimental high-level
+programming languages.
+
 Principal Investigator Marcelo Fiore has conceived the research programme of
-this proposal, 
-%expanding through metamathematical foundations, mathematical models,
-%computational calculi, and programming languages
-and assembled the team, to precisely to target these goals.
-
-%{\erc} assembles a world-leading team of theoretical and applied computer
-%scientists:  Principal Investigator Marcelo Fiore; Senior Visiting Researchers
-%Pierre-Louis Curien, Peter Dybjer, and Tim Sheard; and Research Associates Ki
-%Yung Ahn, Nicola Gambino, and Guillaume Munch-Maccagnoni.  
-
-\hide{%%% BEGIN hide
-\noindent\hrulefill
-We propose cross-cutting research in four areas: category theory,
-mathematical logic, programming theory, and type theory.  Each of these 
-areas is complementary to the others. Together they form a unified whole.
-Figure\,\ref{ResearchAreas}
-gives a schematic view of the areas together with their interactions.
-\begin{figure}[h]
-\caption{Research areas and interactions.}
-\vspace*{2mm}
-\begin{center}
-\hspace*{.5mm}
-\xymatrix@R=25pt@C=12.5pt{
-& 
-\raisebox{7mm}{\fbox{\txt{\small Mathematical\\\small Logic}}}
-\ar@/_1em/@{<->}[ddl]<-1em>|-
-  {\txt{\scriptsize Propositions\\\scriptsize as Types}}
-\ar@/^1em/@{<->}[ddr]<1em>|-
-  {\txt{\scriptsize Proofs as\\\scriptsize Programs}} 
-& 
-\\
-& 
-\ar@{<->}[dl]|-
-  {\txt{\scriptsize Internal\\\scriptsize Languages}}
-\ar@{<->}[dr]|-
-  {\txt{\scriptsize Denotational\\\scriptsize Semantics}} 
-\ar@{<->}[u]|-
-{\txt{\scriptsize Model Theory}}
-\fbox{\txt{\small Category\\\small Theory}}
-& 
-\\
-  \fbox{\txt{\small Type\\\quad\small Theory\quad\null}}
-\ar@/_1em/@{<->}[rr]|-
-  {\txt{\scriptsize Formal\\\scriptsize Languages}}
-& & 
-\fbox{\txt{\small Programming\\\small Theory}}
-}
-\end{center}
-\vspace*{-2mm}
-\label{ResearchAreas}
-\end{figure}
-We contend that a study neglecting any one of them is to the detriment of
-the others, missing the depth and richness of the subject, and furthermore
-missing opportunities for research and development.  
-\noindent\hrulefill
-}%%% END hide
+this proposal, and assembled the team, to precisely target these goals.
 
 \subsection{Origins and influences}
 \label{Origins}
