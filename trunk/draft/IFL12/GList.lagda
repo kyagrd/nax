@@ -15,7 +15,7 @@ data Path {Ix : Set} (X : Ix -> Ix -> Set) : Ix -> Ix -> Set
 
 append : {Ix : Set} -> {X : Ix -> Ix -> Set} -> {i j k : Ix}
   {-"~~"-} -> Path X i j -> Path X j k -> Path X i k
-append PNil ys            = ys
+append  PNil          ys  = ys
 append  (PCons x xs)  ys  =
         {-"~"-}PCons x (append xs ys) 
 \end{code}
