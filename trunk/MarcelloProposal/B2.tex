@@ -1,6 +1,7 @@
 \documentclass[11pt,twocolumn]{article}
 
 \usepackage{graphicx}
+\usepackage{pdfpages}
 
 \usepackage{amsfonts,euler}
 \usepackage{MnSymbol}
@@ -22,10 +23,6 @@
 
 \usepackage{color}
 \definecolor{grey}{gray}{.85}
-
-\setcounter{secnumdepth}{4}
-\newcommand{\myparagraph}[1]{\paragraph*{\em #1}}
-\newcommand{\mynumparagraph}[1]{\paragraph{\em #1}}
 
 %%% BEGIN macros
 \newenvironment{myitemize}
@@ -126,6 +123,7 @@
   \item #2
   \end{btritemize}
 \end{minipage}}\end{center}}
+
 \newcommand{\rep}[2]{\begin{center}\colorbox{grey}{\begin{minipage}{\reqpsize}
   \mytextsf{Research pathway}\hfill$^{\mbox{\scriptsize see #1 }}$\\[-5.5mm]
   \begin{btritemize}
@@ -143,7 +141,7 @@
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\lhead{Marcelo Fiore}
+\lhead{\emph{Marcelo Fiore}}
 \chead{Part\,B2}
 \rhead{\erc}
 \lfoot{}
@@ -162,6 +160,8 @@
 \makeatletter
 \renewcommand\@biblabel[1]{#1}
 \makeatother
+
+\setcounter{secnumdepth}{4}
 
 \renewcommand{\thesection}{\alph{section}}
 \renewcommand{\thesubsection}{\alph{section}-\arabic{subsection}}
@@ -206,7 +206,8 @@ are of the same character.
 \end{myquote}
 This view %conception 
 %%is of course not original to us.  It 
-started developing in the 1960s %, with proponents from computer science
+was first developed %started developing 
+in the 1960s %, with proponents from computer science
 %(\eg~McCarthy, Dijkstra, Hoare, Strachey) and from mathematics (\eg~de Bruijn,
 %Scott, Martin-L\"of); 
 and is now central to research in programming languages and constructive
@@ -231,7 +232,9 @@ as follows
   \mbox{program : Type} 
 %\end{equation}
 \]
-and one intuitively argues for it along these lines: %the lines below:
+One %and one
+intuitively explains the correspondence along 
+these lines: %the lines below:
 %\begin{myitemize} 
 %\item 
   to give a constructive proof of a proposition 
@@ -241,7 +244,7 @@ and one intuitively argues for it along these lines: %the lines below:
   %than it);
   while
 %\item 
-  to type a program is to establish a property of it.
+  to type a program is to establish a property of that program.
   %(\eg~that certain input/output behaviour or invariant is maintained). 
 %\end{myitemize} 
 
@@ -250,14 +253,14 @@ very fruitful.  Many of its mathematical theories have been implemented as
 computer systems, and used academically and industrially.  Cases in point
 are: programming languages for high-assurance code and proof assistants
 for computer-aided verification; examples of which are
-Haskell, %~\cite{Haskell} 
+Haskell~\cite{Haskell},
 an industrial-strength functional programming language, 
-and Coq, %~\cite{Coq} 
+and Coq~\cite{Coq}, 
 a proof assistant in which bodies of mathematics are being verified.
 
 %\paragraph*{The future.}
 
-The developments of transfer from mathematical theories to computer
+Transferring mathematical theories to computer
 systems have required technical/theoretical and technological/applied
 progress.  This has necessarily demanded increasingly specialised, and to
 some extent fragmentary, research.  
@@ -286,7 +289,7 @@ Mathematical Logic and Programming Theory.
 %ground that can accommodate the concerns of both, and expand their 
 %realms. %domains.
 %
-This is however only half of the picture.  The full strength of the
+This is only half of the picture.  The full strength of the
 correspondence involves also the disciplines of Type Theory and Category
 Theory.  
 %Their role is to enrich~(\ref{PATproportion}) as follows 
@@ -1121,16 +1124,20 @@ calculus).  From this perspective we ask:
 \subsection{Research objectives}
 \label{ObjectivesSubsection}
 
-The general aim of the project %{\erc} 
-is to build a group dedicated to combined research in Category Theory,
+The %general aim of the 
+project %{\erc} 
+builds %is to build 
+a group dedicated to combined research in Category Theory,
 Mathematical Logic, Programming Theory, and Type Theory.  
 %to advance current knowledge in their mathematical foundations and practical
 %applications.
 Specifically, to understand and develop formal languages and mathematical
 models for computer programming and mathematical proof.
 %
-To this end, {\erc} assembles an international team of world-leading experts
-in each of the project research areas.  
+To this end, 
+we have assembled %{\erc} assembles 
+an international team of world-leading experts in each of the project
+research areas.  
 
 The team consists of Principal Investigator Marcelo Fiore; Senior Visiting
 Researchers Pierre-Louis Curien, Peter Dybjer, and Tim Sheard; and Research
@@ -1283,7 +1290,7 @@ To understand our approach it is best to start by stripping type theories
 down to their essential bare structure.  To do so, let us eliminate type
 constructors and binding operators from them.  What one is left with is a
 notion of type theory that reduces to that of many-sorted algebraic
-theory~\cite{Birkhoff}, a thoroughly studied area of algebra.
+theory~\cite{Birkhoff}, a thoroughly studied area of abstract algebra.
 
 The modern understanding of many-sorted algebraic equational theories is
 through three interrelated perspectives as in the Algebraic Trinity 
@@ -1332,11 +1339,10 @@ Can one reconstruct them back, and in the process enrich them, as a unified
 mathematical theory encompassing all aspects of the Algebraic Trinity?  This
 is the main general goal of this research track.
 
-To make substantial progress in the area, our proposal is to
-systematically explore a broad spectrum of key features present in type
-theories. The scale at which we will be attempting this is unprecedented,
-and is graphically represented by the research space of investigation in
-Figure\,\ref{TypeTheoryResearchSpace}, 
+To make substantial progress in the area, we will systematically explore a
+broad spectrum of key features present in type theories.  The scale at which
+we will be attempting this is graphically represented by the research space of
+investigation in Figure\,\ref{TypeTheoryResearchSpace}, 
 \begin{figure}[h]
 \caption{Algebraic Type Theory research space}
 \vspace*{1mm}
@@ -1386,25 +1392,25 @@ where the \emph{linearity} dimension could be transported along or mixed
 with all the other ones.
 
 This research rests on fundamental work, old and recent, of
-Fiore~\etal~\cite{FiorePlotkinTuri,FioreLICS08,FioreHurLMCS,FioreSecOrdEqLog,FioreMahmoud},
+Fiore~\etal~\cite{FiorePlotkinTuri,FioreLICS08,FioreHurLMCS,FioreSecOrdEqLog,FioreMahmoud,FioreICALP},
 that started with the first algebraic model of abstract syntax with variable
-binding and progressively led to an extension of the
-Algebraic Trinity to the realm of Binding Algebra (\viz~algebraic languages
-with binding operators).  The further extension to simple type theories should
-follow along similar lines further taking into account the algebraic structure
-of types.  As for the other points of the research space in
-Figure\,\ref{TypeTheoryResearchSpace}, they are yet to be investigated.  For
-these we have the following specific goals.
+binding and progressively led to an extension of the Algebraic Trinity to the
+realm of Binding Algebra (\viz~algebraic languages with binding operators).
+The further extension to simple type theories should follow along similar
+lines further taking into account the algebraic structure of types.  As for
+the other points of the research space in
+Figure\,\ref{TypeTheoryResearchSpace}, they are yet to be investigated.
+For these we have the following specific goals.
 \begin{resenumerate}\setcounter{CC}{0}
 \item
-  To develop a mathematical algebraic framework for the semantics of
-  language phrases, whereby free models universally characterise the
-  abstract syntax of the language.
+  To develop a mathematical algebraic framework for the semantics of language
+  phrases, whereby free models universally characterise the abstract syntax of
+  the language; 
+  and
 
 \item
-  To synthesise metalanguages for type theories in the form of formal
-  systems for equational deduction, that are sound and complete for the
-  model theory.
+  To synthesise metalanguages for type theories in the form of formal systems
+  for equational deduction, that are sound and complete for the model theory.
 
 \item
   To extract syntactic notions of translations between type theories as
@@ -1579,7 +1585,7 @@ From logic and type theory to operad theory:
 We have briefly mentioned  intensional and extensional type theory in
 Section\pref{DependentTypesParagraph}.  This section examines these two
 flavours of type theory and presents a research programme geared to
-investigate the main open problem in the area: 
+investigate a main problem in the area: 
 \begin{resenumerate}\setcounter{CC}{0}
 \item
   Reconcile Intensional and Extensional Type Theory in a computational
@@ -1597,7 +1603,7 @@ congruence relation
 %  \Gamma \vdash M_1 = M_2: A
 %\]
 %for valid judgements $\Gamma\vdash M_i:A$ ($i=1,2$), 
-henceforth referred to as judgmental equality.
+henceforth referred to as judgemental equality.
 
 In Pure Intensional Type Theory, judgemental equality is generated by $\beta$
 rules of computation (recall
@@ -1647,7 +1653,7 @@ embodies dependent sums and dependent products, as well as Identity Types,
 W~Types, and Universes~\cite{ProgMLTT}.  As such, a type theory is to be
 thought not just as a single universe of discourse, but rather as a
 variety of universes of discourse corresponding to the various possible
-restrictions.  From this perspective, it is thus important to understand the
+restrictions.  From this perspective, it is important to understand the
 interaction of modularly extending type theories, central to which is the
 notion of conservative extension.  Informally, an extension $T'$ of $T$ is
 conservative if the restriction of the judgemental equality of $T'$ to $T$
@@ -1659,7 +1665,8 @@ but it has been overlooked for dependent type theories.  We propose here to:
 \begin{resenumerate}\setcounter{CC}{3}
 \item
   Develop a model-theoretic framework for establishing conservative
-  extension results for Martin-L\"of Type Theory (and Pure Type Systems).
+  extension results for Martin-L\"of Type Theory (and, more generally, Pure
+  Type Systems).  
 \end{resenumerate}
 This will lead to sophisticated model constructions that will deepen our
 understanding of the subject.  In particular because it was already the case
@@ -2943,6 +2950,7 @@ proposed research in Section\pref{ProgrammingEffectsParagraph}.
 %defects of the latter notation, which becomes insufficient when it comes to
 %the interactive forms of computation considered.
 
+
 \paragraph*{Additional costs.}
 
 \begin{myitemize}
@@ -2986,7 +2994,7 @@ and for the PI to visit the SVRs at their sites. \hidefootnote{\Eg~Aarhus
   Strathclyde (Ghani, McBride);
   Swansea (Beckmann, Berger);
   Sydney (Garner, Lack, Street);
-  Warsaw (Zawadowski).}.
+  Warsaw (Klin, Zawadowski).}.
 \item
 Funding is also requested for inviting research collaborators to the Computer
 Laboratory, University of Cambridge, to work with the team.
@@ -2997,10 +3005,9 @@ books and broadband for the PI.
 \end{myitemize}
 
 \begin{figure*}[t]
-\caption{Costs}
+\caption{Project costs}
 \hspace*{30mm}
-\vspace*{15cm}
-%\includegraphics[width=11cm]{mycosts.pdf}
+\vspace*{15cm}%\includegraphics[width=11cm]{Costs.pdf}
 \end{figure*}
 
 {\setstretch{0}\footnotesize
@@ -3018,7 +3025,7 @@ books and broadband for the PI.
 
 \bibitem{Adams}
 R.\,Adams (2006).
-\newblock Pure type systems with judgmental equality.
+\newblock Pure type systems with judgemental equality.
 \newblock \emph{Journal of Functional Programming}, 16(2):219--246.
 
 \bibitem{AhnSheard08}
@@ -3811,10 +3818,16 @@ P.\,Wadler (2003).
 \newblock Call-by-value is dual to call-by-name.
 \newblock In \emph{ICFP'03}, pp\,189--201.
 
+\bibitem{Coq}
+The Coq Proof Assistant.
+\newblock \url{http://coq.inria.fr}.
+
 \bibitem{Haskell}
 The Haskell Programming Language.
 \newblock \url{http://www.haskell.org/haskellwiki/Haskell}.
 \end{thebibliography}
 }
   
+%\includepdf[pages=16-17]{EthicsIssues.pdf}
+
 \end{document}
