@@ -213,7 +213,8 @@ and is now central to research in programming languages and constructive
 mathematics.
 
 An aspect of the thesis that is fundamental to us here is usually referred
-to as the Proofs-as-Programs or Propositions-as-Types correspondence.
+to as the Proofs-as-Programs or Propositions-as-Types
+correspondence~\cite{Curry1934,Howard1969}.
 %There is an aspect of the thesis that is rooted in the constructive
 %approach to mathematical practice and is fundamental to us here.  This 
 It can be impressionistically %roughly 
@@ -268,7 +269,8 @@ will it continue to advance?
 By considering new directions and challenges, of course.  
 But, 
 it is our firm view that, 
-as in the very beginning of the subject, 
+as in the early days of the
+subject~\cite{deBruijn,LawvereAinF,ScottCV,MartinLofITT}, %MartinLofCMCP}, 
 it will be essential to do so generating questions and tackling problems
 from the perspectives of a variety of research areas.  
 %
@@ -2610,7 +2612,7 @@ to which they will be engaged follow.
 %\\
 %\end{tabular}
 %
-is a CNRS researcher at Laboratoire PPS, Universit\'e Paris Diderot -
+is a CNRS Researcher at Laboratoire PPS, Universit\'e Paris Diderot -
 Paris~7, a laboratory dedicated to research on logic in computer science
 that he established in 1998 and directed thereafter for 10 years.  
 %
@@ -2763,12 +2765,13 @@ programming language design, functional programming, and the intersection of
 programming and logic.  He is best known for
 a number of experimental languages, which have been widely distributed,
 and whose main ideas have been incorporated into other languages.
-Perhaps the best known example is MetaML\cite{TS97}, a staged language, where
+Perhaps the best known example is MetaML~\cite{TS97}, a staged language, where
 programs write programs which are run in later stages. The best ideas
 of MetaML have been incorporated into the O'Caml system and into the
-GHC in its Template Haskell\cite{Sheard:2002:TMP} extensions. Another example is the language
-Omega, which pioneered the use of GADTs\cite{ONWARD,sheardLFM04} and indexed types
-(the theory of which is discussed in section {\bf b-4.i} and on which the new language Nax is based). These features
+GHC in its Template Haskell~\cite{Sheard:2002:TMP} extensions. Another example is the language
+Omega, which pioneered the use of GADTs~\cite{Omega,sheardLFM04} and indexed types
+(the theory of which is discussed in
+Section\pref{IndexedProgrammingParagraph} and on which the new language Nax is based). These features
 are now supported in many other languages. The most recent example is FunLog
 which supports the high level embedding of external decision
 procedures (such as SAT solvers, SMT solvers, Integer programming tools, and
@@ -3565,6 +3568,19 @@ S.\,Mac Lane (1971).
 %\newblock Operads and PROPs.
 %%\newblock In \url{http://arxiv.org/abs/math/0601129}.
 
+\bibitem{MartinLofITT}
+P.\,Martin-L{\"o}f (1975).
+\newblock An intuitionistic theory of types: predicative part.
+\newblock In \emph{Logic Colloquium} 1973, pp\,73--118.
+
+\hide{
+\bibitem{MartinLofCMCP}
+P.\,Martin-L{\"o}f (1982).
+\newblock Constructive mathematics and computer programming.
+\newblock In \emph{Proc.\ Logic, Methodology and Philosophy of Science},
+pp\,153--175.
+}
+
 \bibitem{MartinLofETT}
 P.\,Martin-L{\"o}f (1984).
 \newblock Intuitionistic Type Theory.
@@ -3697,13 +3713,11 @@ D.\,Scott (1969).
 %1993.
 \newblock In \emph{TCS}, 121(1--2):411--440, 1993.
 
-\hide{
 \bibitem{ScottCV}
 D.\,Scott (1970).
 \newblock Constructive validity.
 %\newblock In LNM 125, pp\,237--275.
 \newblock In LNM 125. 
-}
 
 \bibitem{Schonfinkel}
 M.\,Sch\"{o}nfinkel (1924).
@@ -3714,6 +3728,12 @@ M.\,Sch\"{o}nfinkel (1924).
 R.\,Seely (1989).
 \newblock Linear logic, *-autonomous categories and cofree coalgebras 
 \newblock \emph{Contemporary Mathematics} 92. 
+
+\bibitem{ToHBCurry}
+J.\,Seldin and J.\,R.\,Hindley (1980).
+\newblock \emph{To H.B.\,Curry: Essays on Combinatory Logic, Lambda
+  Calculus and Formalism}.
+%\newblock Academic Press. 
 
 \hide{
 \bibitem{Selinger}
@@ -3726,7 +3746,22 @@ P.\,Selinger (2011).
 \bibitem{Omega}
 T.\,Sheard (2004).
 \newblock Languages of the future.
-\newblock In \emph{SIGPLAN Notices}.
+\newblock In \emph{SIGPLAN Notices} OOPSLA Companion Volume.
+
+\bibitem{sheardLFM04}
+T.\,Sheard and E.\,Pasalic (2004).
+\newblock Meta-programming with built-in type equality.
+%\newblock In {\em Proceedings of the Fourth International Workshop on Logical
+%  Frameworks and Meta-Languages (LFM'04).
+%  \verb+http://cs-www.cs.yale.edu/homes/carsten/lfm04/+}, pages 106--124, Cork,
+%  Ireland, July 2004.
+\newblock In {\em LFM'04}, pp\,106--124.
+
+\bibitem{Sheard:2002:TMP}
+T.\,Sheard and S.\,Peyton Jones (2002).
+\newblock Template meta-programming for {Haskell}.
+%\newblock {\em ACM SIG{\-}PLAN Notices}, 37(12):60--75. 
+\newblock {\em ACM SIGPLAN Notices} 37.
 
 \bibitem{Strachey1967}
 C.\,Strachey (1967).
@@ -3740,12 +3775,14 @@ C.\,Strachey (1967).
 %\newblock Polycategories.
 %\newblock \emph{Communications in Algebra}, 3(8):663--689.
 
-\bibitem{ToHBCurry}
-J.\,Seldin and J.\,R.\,Hindley (1980).
-\newblock \emph{To H.B.\,Curry: Essays on Combinatory Logic, Lambda
-  Calculus and Formalism}.
-%\newblock Academic Press. 
- 
+\bibitem{TS97}
+W.\,Taha and T.\,Sheard (1997).
+\newblock Multi-stage programming with explicit annotations.
+%\newblock In {\em Proceedings of the Symposium on Partial Evaluation and
+%Semantic-Based Program Manipulation {(PEPM)}}, pages 203--217, Amsterdam,
+%1997. ACM Press.
+\newblock In {\em PEPM}, pp\,203--217.
+
 \bibitem{Turing}
 A.\,Turing (1937). 
 \newblock On computable numbers, with an application to the
@@ -3777,34 +3814,7 @@ P.\,Wadler (2003).
 \bibitem{Haskell}
 The Haskell Programming Language.
 \newblock \url{http://www.haskell.org/haskellwiki/Haskell}.
-
-\bibitem{ONWARD}
-Tim Sheard.
-\newblock Languages of the future.
-\newblock October 2004.
-\newblock OOPSLA Companion Volume.
-
-\bibitem{sheardLFM04}
-Tim Sheard and Emir Pasalic.
-\newblock Meta-programming with built-in type equality.
-\newblock In {\em Proceedings of the Fourth International Workshop on Logical
-  Frameworks and Meta-Languages (LFM'04).
-  \verb+http://cs-www.cs.yale.edu/homes/carsten/lfm04/+}, pages 106--124, Cork,
-  Ireland, July 2004.
-  
-\bibitem{Sheard:2002:TMP}
-Tim Sheard and Simon~Peyton Jones.
-\newblock Template meta-programming for {Haskell}.
-\newblock {\em ACM SIG{\-}PLAN Notices}, 37(12):60--75, December 2002.
-  
-\bibitem{TS97}
-Walid Taha and Tim Sheard.
-\newblock Multi-stage programming with explicit annotations.
-\newblock In {\em Proceedings of the Symposium on Partial Evaluation and
-  Semantic-Based Program Manipulation {(PEPM)}}, pages 203--217, Amsterdam,
-  1997. ACM Press.
 \end{thebibliography}
-
 }
   
 \end{document}
