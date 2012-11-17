@@ -1133,9 +1133,10 @@ plan outlined in the next section.
 \setcounter{paragraph}{0}
 \paragraph*{Foundations.}
 
-We have already mentioned several type theories, and we will mention a few
-more in the sequel.  However, the following fundamental question remains
-open:
+Type theories are ubiquitous in computer science and mathematics, but 
+%We have already mentioned several type theories, and we will mention a few
+%more in the sequel.  However, 
+the following fundamental question remains open:
 \req{(\ref{AlgebraicTypeTheoryParagraph})}
 {What is a type theory?}
 
@@ -1234,9 +1235,12 @@ algebra (see~\eg~\cite{Leinster,LodayVallette}).
 \paragraph*{Dependent types.}
 \label{DependentTypesParagraph}
 
-Dependent type theory is a formalism introduced by
-de~Bruijn %~\cite{deBruijn} 
-that extends simple type theories by allowing types to be indexed 
+Dependent type theory 
+was %is a formalism 
+introduced by
+de~Bruijn. %~\cite{deBruijn} 
+It %that 
+is an extension of simple type theory that allows types to be indexed by
 %(or parameterised by) 
 other types.  Such objects abound in computer science and mathematics.  
 %For instance, in
@@ -1247,8 +1251,10 @@ other types.  Such objects abound in computer science and mathematics.
 %  \[
 %  n:\mathbb N \vdash \mathfrak S(n) \mbox{ \mysf type}
 %\]
-There are two fundamental constructions on %such 
-dependent judgements: %as follows
+Two %There are two 
+essential %fundamental 
+constructions on %such 
+dependent judgements are: %as follows
 %\[
 %  \begin{array}{c}
 %  i: I \vdash T(i) \mbox{ \mysf type}
@@ -1264,22 +1270,27 @@ dependent judgements: %as follows
 %\]
 %respectively known as 
 dependent sums and dependent product types.  %(see~\eg~\cite{Jacobs}).  
-They generalise the product and function types of Simply-Typed Lambda
-Calculus and, under the Propositions-as-Types correspondence, amount to
-existential and universal quantification.  
+Under %They generalise the product and function types of Simply-Typed Lambda
+%Calculus and, under 
+the Propositions-as-Types correspondence, 
+they 
+amount to existential and universal quantification.  
 %We omit discussing the syntax of terms for these types.  As for their
 %equational theory, we only mention that dependent sums may be weak or strong
 %and that dependent products may be intensional or extensional.
 %%---see \eg~\cite{?}.
-
-A fundamental problem in the area is to:
+%
+A crucial %fundamental 
+problem %in the area 
+is to:
 \rep{(\ref{IntensionalTypeTheoryParagraph})}
   {Investigate equality and identity in dependent type theory.}
 %This lays at the core of our proposed investigations in
 %Section\pref{IntensionalTypeTheoryParagraph}.
 
-The passage from sum and product types to their dependent versions
-required new type theories.  Categorical models suggest further
+Passing %The passage 
+from sum and product types to their dependent versions
+required new type theories.  Categorical models suggest %further
 generalisations 
 and the following: %These are the subject of
 %Sections\,(\ref{GeneralisedTypeTheoryParagraph}\,\&\,\ref{DirectedTypeTheoryParagraph})
@@ -1292,19 +1303,24 @@ and the following: %These are the subject of
 \paragraph*{Mathematical universes.}
 \label{MathematicalUniversesParagraph}
 
-The ability to construct new mathematical universes of discourse from old ones
-is a fundamental part of the technical toolkit of researchers in semantics. 
+The 
+construction of %ability to construct 
+new mathematical universes of discourse from old ones is 
+basic %a fundamental part of the technical toolkit of researchers 
+in semantics. 
 %, be it either in logic or computation.
 %
-One technique to do so is to enrich the semantic universe with a `mode of
-variation' by means of a so-called presheaf construction.  
+%One technique to do so 
+%is by means of the %to enrich the semantic universe with a `mode of
+%variation' by means of a 
+%so-called presheaf construction.  
 %In its basic form, starting from the universe of sets and functions~$\Set$ one
 %considers the universe~$\Set^{\scat C}$ of so-called presheaves consisting of
 %the \mbox{$\scat C$-variable} sets for a small category~$\scat C$.  
 %The importance of this passage is that the kind of variation embodied in the
 %parameter small category translates to new, often surprising, internal
 %structure in the universe of presheaves.  
-
+%
 %The presheaf construction was introduced by Grothendieck together with a
 %more sophisticated and important refinement of it known as the sheaf
 %construction~\cite{SGA4} (in the context of the Weil conjectures in
@@ -1312,25 +1328,35 @@ variation' by means of a so-called presheaf construction.
 %mathematics known as Topos Theory~\cite{Elephant}; a topos being a
 %universe of discourse for Higher-Order Intuitionistic
 %Logic~\cite{LambekScott}.  
-
-The use of presheaf models in computer science applications has been
-prominent;~\eg~in 
-concurrency theory, %~\cite{?}, 
-domain theory, %~\cite{?}, 
-lambda calculus, %~\cite{?}, 
-programming-language theory, %~\cite{?}, 
-and type theory. %~\cite{?}.  
+%
+%Its %The 
+%use %of presheaf models 
+%in computer science %applications 
+%has been prominent. %;~\eg~in 
+%concurrency theory, %~\cite{?}, 
+%domain theory, %~\cite{?}, 
+%lambda calculus, %~\cite{?}, 
+%programming-language theory, %~\cite{?}, 
+%and type theory. %~\cite{?}.  
 %
 %In this view, 
 %In view of the many possible applications, 
-It is %thus %it is 
+It 
+is %thus %it is 
 natural to ask:
 \reqs{(\ref{MethodologyMathematicalUniversesParagraph})}
-  {Which mechanisms are there for changing from a type theory to another one
+  {What mechanisms are there for changing from a type theory to another one
     as universes of discourse? 
 %
-    Can this be done while maintaining the relevant computational properties
-    and then incorporated into mechanical proof assistants?}
+%    Can this be done while maintaining the relevant computational properties
+%    and then incorporated into mechanical proof assistants?
+}
+
+One technique to do so 
+is %by means of the %to enrich the semantic universe with a `mode of
+%variation' by means of a 
+the %so-called 
+presheaf construction.  
 
 %This question should not only be considered from the topos-theoretic viewpoint
 %mentioned above; but also from other approaches, notably that of the related
@@ -1349,24 +1375,30 @@ natural to ask:
 \paragraph*{Indexed programming.}
 \label{IndexedProgrammingIntro}
 
-\hideMathematicalUniverses{
-In their most elementary discrete form, presheaves can be found in programming
-languages as indexed datatypes; programming with which will be %generically
+%\hideMathematicalUniverses{
+In %their most elementary 
+discrete form, 
+pre\-sheaves can be found in programming
+languages as indexed data\-types; programming with which will be %generically
 referred to as indexed programming.  
-}
+%}
 
-Indexed programming developed from two main influences:
+Indexed programming developed from %two main influences:
 %(none to do with presheaves though): 
-the practical needs of supporting data structures able to
-maintain strong data invariants, 
+the practical needs of supporting data structures 
+with %able to maintain 
+strong %data 
+invariants 
 %, like nested %~\cite{?} 
 %and generalised algebraic %~\cite{?}
 %datatypes (GADTs) in functional programming~\cite{Omega,Haskell}; 
 and the experimentation with dependently-typed programming
-languages %~\cite{Cayenne,Epigram} 
-as a by-product of dependent type theory.  These two views somehow pull in
-opposite directions and, as such, lead to conceptually different
-languages.  One is lead to investigate the following.
+languages. %~\cite{Cayenne,Epigram}
+%as a by-product of dependent type theory.  
+These two views %somehow 
+pull in opposite directions and %, as such, 
+lead to conceptually different languages.  One is lead to investigate
+the following.
 \rep{(\ref{IndexedProgrammingParagraph})} 
   {Develop foundational type theories for indexed datatypes.  
    % 
@@ -1378,14 +1410,14 @@ languages.  One is lead to investigate the following.
 \paragraph*{Resources, effects, modalities.}
 \label{ResourcesEffectsModalitiesParagraph}
 
-In the late 1980s, two important analyses of computation, respectively for
-resources and effects, were proposed by Girard %~\cite{GirardLinearLogic} 
-and by Moggi. %~\cite{MoggiLambdaC}.  
-The former was in the contexts of logic and proof theory; the latter in that
-of denotational semantics and category theory.  Both %, however, have 
-had tremendous impact in programming-language theory.  
-%The resource analysis in the form of Linear Logic calculi; the effect
-%analysis in the form of Computational \mbox{$\lambda$-calculi}.
+Girard~\cite{GirardLinearLogic} and Moggi~\cite{MoggiLambdaC} propose two
+important analyses of computation, respectively for resources and effects.
+The former in the contexts of logic and proof theory; the latter in that
+of denotational semantics and category theory.  
+%Both %, however, have 
+%had tremendous impact in programming-language theory.  
+%%The resource analysis in the form of Linear Logic calculi; the effect
+%%analysis in the form of Computational \mbox{$\lambda$-calculi}.
 
 \hide{
 From the viewpoint of categorical models, the resource and effect management
@@ -1426,17 +1458,21 @@ and the Enriched Effect Calculus of
 Egger, M{\o}gelberg, and Simpson. %~\cite{EEC}.  
 }
 The predominant model-theoretic view of resources and effects is as
-structures arising at opposite sides of an adjunction.  This is not so in
-all models and the following question remains unanswered.
+categorical structures arising at opposite sides of an adjunction.  This
+is not so in all models and the following %question 
+remains unanswered.
 %
 \req{\pref{PolarisationParagraph}}
   {How can resources and effects be reconciled and unified?}
 %
-To answer it, a broader view of the subject involving the orthogonal
-notion of polarisation seems to be needed.  
+The answer seems to involve
+%To answer it, %a broader view of the subject involving the orthogonal
+the logical notion of polarisation~\cite{Andreoli}. %seems to be needed.  
 This %From the programming-language viewpoint, this 
-further enriches the computational picture with the ability of
-distinguishing between eager \vs~lazy modes of computation and data
+%further 
+enriches the computational scenario %picture 
+with %the ability of distinguishing between 
+eager \vs~lazy modes of computation and data
 structures.  We incorporate this into the following.
 %
 \rep{(\ref{PolarisationParagraph}\,\&\,\ref{ProgrammingEffectsParagraph})}
@@ -1466,16 +1502,21 @@ reflection.
 \paragraph*{Sequent calculi.}
 \label{SequentCalculiParagraph}
 
-A theme that runs orthogonal to the logics under consideration is whether
+A theme %that runs 
+orthogonal to the logics under consideration is whether
 they are specified in natural deduction or sequent calculus
 style. %(see \eg~\cite{vonPlato}).
 
-Most of the work on the Propositions-as-Types correspondence has been done for
-natural deduction systems. %; especially in relation to programming
+Work %Most of the work 
+on the Propositions-as-Types correspondence has 
+focussed on %been done for
+natural deduction systems, %; especially in relation to programming
 %language theory, where the logical syntax matches that of functional
 %languages.  
 %
-On the other hand, there is as yet no established syntax for sequent-style
+mainly because 
+%On the other hand, 
+there is as yet no established syntax for sequent %-style 
 calculi.  
 %A question at the core of this situation is:
 Two questions at the core of this situation are:
