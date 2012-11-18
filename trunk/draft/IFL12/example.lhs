@@ -2,7 +2,7 @@
 %include includelhs2tex.lhs
 
 \begin{table}[h]
-\vskip-1ex
+\vskip-4ex
 \begin{tcolorbox}[boxsep=-1mm]
 \quad The ``|deriving fixpoint T|'' clause following 
 |data F : {-"\,\overline{k}"-} -> kappa -> kappa where {-"\cdots"-}|
@@ -38,16 +38,15 @@ terminating) Mendler-style recursion combinators, such as {\bf mcata},
 that work naturally over $\mu$ types, even with indices. 
 
 \quad 
-To support type inference,
-Nax syntax requires programmers to annotate Mendler-style combinators with 
-index tranformers. For instance, Nax can infer that the term
+To support type inference, Nax requires programmers to annotate Mendler-style
+combinators with index tranformers. For instance, Nax can infer that the term
 |(\ x -> mcata { {i} {j} . T2 {j} {i} } x with {-"\,\cdots"-})| has type |T1 {i} {j} -> T2 {j} {i}|
 using the information in the index transformer
 {\tiny |{ {i} {j} . T2 {j} {i} }|}.
 \end{tcolorbox}
 \caption{\textsc{Nax} features:
 	|deriving fixpoint|, |synonym|, $\mu$, {\tt In}, and {\bf mcata}}
-\vskip-5ex
+\vskip-4ex
 \label{tbl:naxfeatures}
 \end{table}
 

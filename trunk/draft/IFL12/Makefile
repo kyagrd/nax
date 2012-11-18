@@ -35,7 +35,7 @@ UNLIT = /usr/lib/ghc/unlit
 #     Env.lagda
 #     Env.lnax
 #   related.lhs
-#   concl.tex
+#   concl.lhs
 #
 ##########################################################################
 
@@ -116,6 +116,9 @@ discuss.tex: discuss.lhs includelhs2tex.lhs \
 	lhs2TeX --poly -o $@ $<
 
 related.tex: related.lhs includelhs2tex.lhs
+	lhs2TeX --poly -o $@ $<
+
+concl.tex: concl.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 exEvalNax.tex: Eval.lnax includelhs2tex.lhs

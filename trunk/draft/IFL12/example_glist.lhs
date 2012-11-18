@@ -51,7 +51,7 @@ a path from |i| to |k|, provided that there is a single step transition from
 
 The function |append : Path x {i} {j} -> Path x {j} {k} -> Path x {i} {k}|
 witnesses that there exists a path from |i| to |k| provided that
-there exists a path from |i| to |j| and there exists another path from |j| to |k|.
+there exist two paths from |i| to |j| and from |j| to |k|.
 Note that the implementation of |append| is exactly the same as
 the usual append function for plain lists.
 We instantiate |Path| by providing a specific relation to 

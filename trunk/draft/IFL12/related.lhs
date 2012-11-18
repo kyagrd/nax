@@ -21,6 +21,13 @@ earlier in Sect.\;\ref{ssec:sortingEx}, since |Env'| has a direct handle
 on size of the environment at type level, just by referring to the |SNat| index,
 without extra type level computation or reasoning on the vector index.
 
+\citet{EisWei12}, in the setting of Haskell's datatype promotion,
+automatically derives a singleton type (\eg, singleton natural numbers) and
+its associated functions (\eg, addition over singleton natural numbers) from
+their non-singleton counterparts (\eg, natural numbers and their addition).
+We think it would be possible to apply similar startegies to Nax, and even
+better, singleton types for already indexed datatypes would be derivable.
+
 \paragraph{The kind arrow |({A}->kappa)|{\rm ,}\!} from a type to a kind,
 predates Nax. Our kind syntax in Fig.\;\ref{fig:sorting}, although
 developed independently, happens to coincide with the kind syntax of Deputy
