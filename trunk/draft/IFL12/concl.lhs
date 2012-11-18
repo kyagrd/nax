@@ -17,6 +17,6 @@ restricted to depth $n-1$ where $n$ is the number of universes.
 On the other hand, universe polymorphism can reuse datatypes at term level
 (|List a| where |a: *|) at type-level to contain type elements
 (\eg, |List| |*|), which is beyond universe subtyping. We envision that
-Nax extended with first-class datatype descriptions \cite{DagMcb12} can
-express the same concept reflected at term level, so that we have no need for
-type level datatypes.
+Nax extended with first-class datatype descriptions \cite{DagMcb12} would
+be able express the same concept reflected at term level, so that we would
+have no need for type level datatypes.

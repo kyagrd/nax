@@ -69,3 +69,6 @@ higher-rank kind polymorphism leads to paradoxes
 In fact, type polymorphism in Nax is limited to rank-1 as well since
 the type infernce is based on Hindley-Milner \cite{Miln78a}.
 
+\paragraph{Gradual typing??? Concoqtion}
+TODO \KYA{I just found out that Concoqtion is closely related to Nax
+I saved some space so I can make a short comment about it here}
