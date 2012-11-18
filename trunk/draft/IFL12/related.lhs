@@ -61,7 +61,11 @@ polymorphic kinds (|forall calX.kappa|) quantified over kind variables
 (|calX : BOX|) since everything is already promoted to the kind level.
 
 In Nax, kind polymorphism is limited to rank-1 since it is well-known that
-higher-rank kind polymorphism leads to paradoxes [TODO cite System $U^{-}$
-related things].
+higher-rank kind polymorphism leads to paradoxes
+\cite{hurkens95simplification}
+%%%% there are several more things to cite according to below,
+%%%% but I can't figure them out except above
+%%%% http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=4&cad=rja&ved=0CEUQFjAD&url=http%3A%2F%2Fwww.cse.chalmers.se%2Fresearch%2Fgroup%2Flogic%2FTypesSS05%2FExtra%2Fmiquel_sl3.pdf&ei=SkOoULS-Gen-iwKnnYD4DA&usg=AFQjCNEGQtWmZpveVqykzrgpNUBuad7Yjw&sig2=piFq-fSCuWIeL0glaIQ8JA
 In fact, type polymorphism in Nax is limited to rank-1 as well since
-the type infernce is based on Hindley-Minler [TODO cite this too].
+the type infernce is based on Hindley-Milner \cite{Miln78a}.
+
