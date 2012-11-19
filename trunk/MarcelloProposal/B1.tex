@@ -93,7 +93,7 @@
 \newcommand{\hide}[1]{}
 \newcommand{\hidebib}[1]{}%{#1}
 
-\newcommand{\hl}{\emph}
+\newcommand{\hl}[1]{#1}%{\emph{#1}}
 
 \newcommand{\eg}{\emph{eg.}}
 \newcommand{\Eg}{\emph{Eg.}}
@@ -237,10 +237,10 @@ Proposal duration: 60 months
 
 \renewcommand{\abstractname}{\bfseries\large Summary}
 \begin{abstract}\normalsize
-Headed by Principal Investigator Marcelo Fiore, the project builds a group
-of international world-leading experts in theoretical and applied computer
-science.  This team will be dedicated to combined research in Category
-Theory, Mathematical Logic, Programming Theory, and Type Theory.
+Headed by Principal Investigator Marcelo Fiore, the project builds an
+international group of world-leading experts in theoretical and applied
+computer science.  This team will be dedicated to combined research in
+Category Theory, Mathematical Logic, Programming Theory, and Type Theory.
 Specifically, to understand and develop formal languages and mathematical
 models for computer programming and mathematical proof. 
 
@@ -267,10 +267,10 @@ programming languages.
 
 \paragraph*{General aim.}
 
-Headed by Principal Investigator Marcelo Fiore, the project builds a group
-of international world-leading experts in theoretical and applied computer
-science.  This team will be dedicated to combined research in Category
-Theory, Mathematical Logic, Programming Theory, and Type Theory.
+Headed by Principal Investigator Marcelo Fiore, the project builds an
+international group of world-leading experts in theoretical and applied
+computer science.  This team will be dedicated to combined research in
+Category Theory, Mathematical Logic, Programming Theory, and Type Theory.
 Specifically, to understand and develop formal languages and mathematical
 models for computer programming and mathematical proof. 
 
@@ -313,9 +313,10 @@ this has necessarily demanded increasingly specialised, and to some extent
 fragmentary, research.  Importantly, there is now a consolidated body of
 work and expertise.  How will the field continue to advance?  By
 considering new directions and challenges, of course.  But, it is our firm
-view that it will be essential to do so generating questions and tackling
-problems from the perspectives of a variety of research areas.  Both of
-these aspects are put forward here.
+view that, %as in the early days of the subject, 
+it will be essential to do so generating questions and tackling problems
+from the perspectives of a variety of research areas.  This is %indeed 
+what we put forward here.
 
 \paragraph*{Our philosophy.}
 
@@ -368,7 +369,7 @@ opportunities for research and development.
 
 \paragraph*{Main goals.}
 
-The motivations for our research proposal are specifically: 
+The motivations for our research proposal are specifically as follows. 
 \begin{myitemize}
 \item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
   To identify the next-generation framework of Type Theory relevant to
@@ -402,7 +403,7 @@ above.  It is organised in four strands as outlined below.
   will also lead us to rethink them.  Our approach aims at an algebraic
   framework that will generalise to type theories all aspects of our current
   understanding of algebraic theories.  The scale at which this will be
-  attempted this is unprecedented, systematically exploring a wide spectrum of
+  attempted is unprecedented, systematically exploring a wide spectrum of
   key type-theoretic features.
   \vspace*{1mm}
 
@@ -441,7 +442,7 @@ above.  It is organised in four strands as outlined below.
   Guided by mathematical theories and pragmatics, we will look into the
   engineering of principles and concepts for programming, exporting them to
   language designs and implementations.  We will specifically consider
-  experimental languages, \eg~supporting indexed data structures,
+  experimental languages, \eg~supporting indexed data,
   computational effects, and metaprogramming.  
 \end{myitemize}
 
@@ -459,7 +460,7 @@ Univerist\'e Paris Diderot - Paris~7):
   a leading expert in programming-language semantics, with contributions into
   category theory, logic, %rewriting theory, 
   and type theory; 
-  \emph{Peter Dybjer} (%Department of Computer Science, 
+  \emph{Peter \mbox{Dybjer}} (%Department of Computer Science, 
 Chalmers University of Technology): 
   a leading expert in type theory, including its connections with category
   theory and logic, and its implementation in proof assistants; and 
@@ -472,13 +473,13 @@ The PI is to collaborate with the SVRs by mutual research visits, email, and
 conference calls.
 %
 The team is completed by three outstanding Research Associates~(RAs) to be
-based at the Computer Laboratory, University of Cambridge, under the PI.  They
+based at the Computer Laboratory (University of Cambridge) under the PI.  They
 are
   \emph{Ki Yung Ahn} (%Department of Computer Science, 
 Portland State University): 
   a PhD student of Sheard writing up his dissertation on the design and
   implementation of a language for indexed programming;
-  \emph{Nicola Gambino} (%Dipartimento di Matematica e Informatica, 
+  \emph{Nicola \mbox{Gambino}} (%Dipartimento di Matematica e Informatica, 
 Universit\`a degli Studi di Palermo):  
   an established researcher in the areas of type theory and category theory,
   with whom the PI has already collaborated; and 
@@ -492,39 +493,53 @@ to join the project from the start.
 \subsection{Origins and influences}
 \label{Origins}
 
-We sketch the background of our scientific framework.
+We sketch the background of our scientific framework, 
+touching upon %mentioning 
+developments that led to the holistic conception of
+Figure\,\ref{ResearchAreas}.
+
 
 \paragraph*{Logic and computation.}
 
 Computer science was born as a branch of mathematics, specifically
 mathematical logic.  Its inception was Hilbert's %~\cite{?}
-Decision Problem, asking whether there is an algorithmic procedure for
+Decision Problem asking whether there is an algorithmic procedure for
 deciding mathematical statements.  Negative answers were provided
 independently by Church %~\cite{Church1936} 
 and Turing, %~\cite{Turing},
 giving birth to the mathematical theory of computation.  Their approaches
-founded different branches of theoretical computer science.  The line of
-development starting with Church's {\lcalculus} %~\cite{?} 
+founded different branches of theoretical computer science.  
+The %On one hand, the 
+line of development starting with Church's {\lcalculus} %~\cite{?} 
 is concerned with prototypical computational languages that are used to study
 high-level programming languages.  
+%On the other hand, 
+Turing's machines %~\cite{?} 
+are the most widely used model for analysing computational complexity.
 
 \paragraph*{Type theory and logic.}
 \label{SectionATypeTheoryAndLogicParagraph}
 
-Type Theory, as we now know it, arose from Church's integration of types into
-his \lcalculus, yielding the Simply-Typed Lambda Calculus. %~\cite{Church1940}.
+Type Theory, as we %now 
+know it, arose from Church's typing of
+his \lcalculus, that yielded the 
+Simply-Typed Lambda Calculus. %~\cite{Church1940}.
 This was a natural step under the naive interpretation of
-\mbox{$\lambda$-abstraction} as defining functions.  Howard %~\cite{Howard1969}
-made a fundamental discovery relating Mathematical Logic to Type Theory in
-this context.  This is the Propositions-as-Types correspondence, referred to
+\mbox{$\lambda$-abstraction} as defining functions.  In this
+context,
+Howard %~\cite{Howard1969}
+made a fundamental discovery relating Mathematical Logic to Type Theory.
+This is the Prop\-o\-si\-tions-as-Types correspondence, referred to
 in Section~\ref{Proposal}.
 
-In another very important direction, Church introduced a Simple Theory of
-Types %~\cite{Church1940} 
-as an axiomatization of Higher-Order Logic.  This axiomatization was
-formalised within a Simply-Typed Lambda Calculus.  In doing so, he adopted a
+In another %very 
+important direction, Church introduced 
+an axiomatization of Higher-Order Logic, the 
+Simple Theory of Types, %~\cite{Church1940},
+within a Simply-Typed Lambda Calculus.  In doing so, he adopted a
 radically new perspective, shifting the status of the Simply-Typed Lambda
-Calculus from that of a `language' to a `metalanguage'. 
+Calculus from that of a `language' to a `metalanguage'; \ie~a language in
+which it is possible to represent and work with other languages. 
 
 \paragraph*{Category theory, logic, and type theory.}
 
@@ -535,41 +550,45 @@ and Lambek. %~\cite{LambekI}.
 Lawvere's insight was to understand logical connectives and type constructors
 as categorical structures arising from adjoint functors.  It is now
 well-understood that the Simply-Typed Lambda Calculus with products provides
-an internal language for Cartesian Closed Categories: it is the calculus of
-all such models.  This view further enriches the Propositions-as-Types
-correspondence as into a trinity consisting of Simply-Typed Lambda Calculus
-with products, Cartesian Closed Categories, and Propositional Intuitionistic
-Logic.
+an internal language for Cartesian Closed Categories; \viz~it is the
+calculus of all such models.  This view extends the Propositions-as-Types
+correspondence to a trinity consisting of the Simply-Typed Lambda Calculus
+with products, Cartesian Closed Categories, and Propositional
+Intuitionistic Logic.
 
 \paragraph*{Type theory and programming.}
 
 The Simply-Typed Lambda Calculus is a prototypical functional programming
-language.  In this light, the problem of type inference is of central
+language.  In this light, the problem of type inference became of central
 practical importance.  Milner %~\cite{Milner1978} 
 solved it for the Simply-Typed Lambda Calculus with parametric polymorphism.  
  
-Polymorphism in programming was introduced by Strachey. %~\cite{Strachey1967}.
-Reynolds %~\cite{Reynolds} 
-formalised it by introducing the Polymorphic Typed Lambda Calculus.
+Polymorphism in programming was introduced by Strachey %~\cite{Strachey1967}.
+and formalised by Reynolds %~\cite{Reynolds} 
+in his Polymorphic Typed Lambda Calculus.
 Strikingly, this system had already been proposed by
 Girard %~\cite{GirardSystemF} 
-as the type-theoretic counterpart of Second-Order Propositional Logic.  Girard
+as the type-theoretic counterpart of Second-Order Propositional Logic. 
+In fact, he %Girard
 had also introduced {\SystemFomega}, the type-theoretic counterpart of
-Higher-Order Propositional Logic.  {\SystemFomega} lies at the core of the
-Haskell programming language. 
+Higher-Order Propositional Logic.  
+This is the system %{\SystemFomega} 
+at the core of the Haskell programming language. 
 
-These type systems aim at logical foundations and only introduce terminating
-computations.  As for Turing complete languages, Scott %~\cite{ScottTCS}
+These type systems aim at logical foundations and thus only introduce
+terminating computations.  As for Turing-complete languages, 
+%motivated by model-theoretic studies of the {\lcalculus} 
+Scott %~\cite{ScottTCS}
 introduced an extension of Typed Combinatory Logic with a fixpoint combinator. 
 Plotkin %~\cite{PlotkinLCF} 
-studied the calculus as a programming language, and enriched type theory with
-concerns from programming: the distinction between call-by-value and
-call-by-name. %~\cite{PlotkinCBVCBN}.
+studied the calculus as a programming language, enriching type
+theory with concerns from programming; \viz~the distinction between
+call-by-value and call-by-name. %~\cite{PlotkinCBVCBN}.
 
 \subsection{Questions and pathways for research}
 
-We present the basis for the research methodology and plan outlined in the
-next section.
+We turn attention to topics of current research, presenting the basis for
+the research methodology and plan outlined in the next section.
 
 \paragraph*{Foundations.}
 
@@ -580,8 +599,8 @@ the following fundamental question remains open:
 
 \paragraph*{Dependent types.}
 
-Dependent type theory was introduced by de~Bruijn. %~\cite{deBruijn} 
-It is an extension of simple type theory that allows types to be indexed by
+Dependent type theory was introduced by de~Bruijn %~\cite{deBruijn} 
+as an extension of simple type theory that allows types to be indexed by
 other types.  Such objects abound in computer science and mathematics.  
 Two essential constructions on dependent judgements are: dependent sums and
 dependent product types.  %(see~\eg~\cite{Jacobs}).  
@@ -591,7 +610,7 @@ is to:
 \rep{\ref{IntensionalTypeTheoryParagraph}}
   {Investigate equality and identity in dependent type theory.}
 
-Passing from sum and product types to their dependent versions required new
+The passage from sum and product types to their dependent versions required new
 type theories.  Categorical models suggest generalisations and the following: 
 \rep{\ref{CalculiSubsection}}
   {Develop type theories from mathematical models.}
@@ -607,20 +626,21 @@ basic in semantics.  It is thus natural to ask:
 %    Can this be done while maintaining the relevant computational properties
 %    and then incorporated into mechanical proof assistants?
 }
-
+%
 One technique to do so is the presheaf construction.  
 
 \paragraph*{Indexed programming.}
 
-In discrete form, pre\-sheaves can be found in programming languages as
-indexed data\-types; programming with which will be referred to as indexed
+Discrete %In %their most basic %elementary discrete form, 
+pre\-sheaves can be found in programming languages as
+indexed data\-types, programming with which will be referred to as indexed
 programming.  
 
 Indexed programming developed from the practical needs of supporting data
 structures with strong invariants and the experimentation with
 dependently-typed programming languages. %~\cite{Cayenne,Epigram}
-These two views pull in opposite directions and lead to conceptually different
-languages.  One is lead to investigate the following.
+These two views pull the design of languages for indexed programming in
+opposite directions.  One is lead to:
 \rep{\ref{IndexedProgrammingParagraph}} 
   {Develop foundational type theories for indexed datatypes.  
    % 
@@ -629,8 +649,8 @@ languages.  One is lead to investigate the following.
 
 \paragraph*{Resources, effects, modalities.}
 
-Girard %~\cite{GirardLinearLogic} and 
-Moggi %~\cite{MoggiLambdaC} 
+Girard %~\cite{GirardLinearLogic} 
+and Moggi %~\cite{MoggiLambdaC} 
 proposed two important analyses of computation, respectively for resources and
 effects.  The former in the contexts of logic and proof theory; the latter in
 that of denotational semantics and category theory.  Both had tremendous
@@ -645,7 +665,7 @@ not so in all models and the following remains unanswered.
 %
 The answer seems to involve the logical notion of
 polarisation. %~\cite{Andreoli}. 
-This enriches the computational scenario with eager \vs~lazy modes of
+This further enriches the computational scenario with eager \vs~lazy modes of
 computation and data structures.  We incorporate this into the following.
 %
 \rep{\ref{PolarisationParagraph}\,\&\,\ref{ProgrammingEffectsParagraph}}

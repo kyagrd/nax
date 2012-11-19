@@ -269,8 +269,8 @@ considering new directions and challenges, of course.  But, it is our firm
 view that, as in the early days of the
 subject~\cite{deBruijn,LawvereAinF,ScottCV,MartinLofITT}, %MartinLofCMCP}, 
 it will be essential to do so generating questions and tackling problems
-from the perspectives of a variety of research areas.  Both of these
-aspects are put forward here.
+from the perspectives of a variety of research areas.  This is %indeed 
+what we put forward here.
 
 %\paragraph*{Our philosophy.}
 
@@ -367,10 +367,10 @@ missing opportunities for research and development.
 
 %\paragraph*{Main goals.}
 
-The motivations for our research proposal are specifically: %as follows. 
+The motivations for our research proposal are specifically as follows. 
 \begin{myitemize}
 \item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
-  To search for %elucidate 
+  To identify %search for %elucidate 
   %what we hope to be 
   the next-generation framework of Type Theory
   relevant to computer science and mathematics.
@@ -397,17 +397,20 @@ this proposal, and assembled the team, to precisely target these goals.
 \subsection{Origins and influences}
 \label{Origins}
 
-This section outlines the origins and influences that led to the holistic
-conception of Figure\,\ref{ResearchAreas}. 
+%This section outlines the origins and influences that led to the holistic
+%conception of Figure\,\ref{ResearchAreas}. 
+%%%, roughly expanding through 1935 to 1985.
+%%Section\pref{StateOfTheArtSubsection} describes the current state of the
+%%field and raises questions for research.  %Having set the scene,
+%%Section\pref{ObjectivesSubsection} presents the research objectives we
+%%wish to pursue and the team that we have assembled to reach them.  
+%%%Both of these points are further expounded upon in
+%%%Sections\,(\ref{MethodologySection}\,\&\,\ref{ResourcesSection}).
 %%, roughly expanding through 1935 to 1985.
-%Section\pref{StateOfTheArtSubsection} describes the current state of the
-%field and raises questions for research.  %Having set the scene,
-%Section\pref{ObjectivesSubsection} presents the research objectives we
-%wish to pursue and the team that we have assembled to reach them.  
-%%Both of these points are further expounded upon in
-%%Sections\,(\ref{MethodologySection}\,\&\,\ref{ResourcesSection}).
-%, roughly expanding through 1935 to 1985.
-It is important to appreciate and understand our scientific framework.
+%It is important to appreciate and understand our scientific framework.
+
+We give the background of our scientific framework, outlining developments
+that led to the holistic conception of Figure\,\ref{ResearchAreas}.
 
 \paragraph{Logic and computation.}
 
@@ -416,7 +419,7 @@ Computer science was born as a branch of mathematics, specifically
 mathematical logic, even before the first electronic computers were built.
 Its inception %The inception of computer science 
 was Hilbert's %~\cite{?}
-1928 Entscheidungsproblem (decision problem),
+1928 Entscheidungsproblem (decision problem)
 asking whether there is an algorithmic procedure for deciding mathematical
 statements.  Negative answers were provided independently by
 Church~\cite{Church1936} in 1936 and Turing~\cite{Turing} in 1937,
@@ -435,12 +438,12 @@ used model for analysing computational complexity.
 
 Church's view is central to this proposal.  The {\lcalculus} is a
 deceptively simple formal system.  Its syntax consists of three types of
-phrases: variables, applications, and abstraction.  Church's seminal
+phrases: variables, application, and abstraction.  Church's seminal
 innovation was in introducing the latter one, 
 %the other two being already familiar form the realm of
 %algebra~\cite{Birkhoff}, 
 which in modern terminology is referred to as a binding operator, a notion
-that goes beyond the operators of universal algebra~\cite{Birkhoff}.
+that goes beyond the operators of universal algebra. %~\cite{Birkhoff}.
 Binding operators are an integral part of all high-level  programming
 languages.  Their mathematical theory is subtle %, see~\ref{}, 
 because they define syntax up to the consistent renaming of bound
@@ -484,11 +487,11 @@ The concept of `type' was conceived to solve a foundational problem.
 In~\cite{Frege1903}, building on~\cite{Frege1879}, Frege proposed a logical
 system as a foundation for mathematics including arithmetic.  In his now
 famous paradox, Russell~\cite{Russell1902} observed that one of Frege's axioms
-led to inconsistency.  He was led to this contradiction by related
-contradictions he found while developing his account of set theory.  To
-overcome such foundational problems, Russell introduced the `doctrine of
-types'~\cite[Appendix~B]{Russell1903} --- typed systems can avoid these
-inconsistencies.
+led to inconsistency.  He was led to this %contradiction 
+by related contradictions that he found while developing his account of
+set theory.  To overcome such foundational problems, Russell introduced
+the `doctrine of types'~\cite[Appendix~B]{Russell1903}.  Typed systems can
+avoid these inconsistencies.
 
 Type Theory, as we now know it, arose from Church's integration of types into
 his \lcalculus~\cite{Church1940}.  This was a natural step under the naive
@@ -534,15 +537,15 @@ mathematical vernacular are presented as follows
 
 A fundamental discovery relating Mathematical Logic and Type Theory was made
 by Curry~\cite{Curry1934} and Howard~\cite{Howard1969}
-in two slightly different, though related, 
+in two slightly different, though re\-lat\-ed, 
 contexts (technically, Hilbert-style deduction %~\cite{Hilbert} 
-and Gentzen's natural deduction in sequent form~\cite{Gentzen1935}).
-We will refer to this discovery as the 
-Propositions-as-Types correspondence. %(or Curry-Howard correspondence).  
-Roughly, it establishes a correspondence between terms having types and proofs
+and Gentzen's natural deduction in sequent form). %~\cite{Gentzen1935}).
+This discovery is the 
+Propositions-as-Types correspondence, %(or Curry-Howard correspondence),  
+roughly establishing a correspondence between terms having types and proofs
 proving propositions.  For the Simply-Typed Lambda Calculus, the correspondence
 can be illustrated by noting that the erasure of term information in the typing 
-rules (given above) yields the deduction rules
+rules given above yields the deduction rules
 \[\begin{array}{c}
   \begin{array}{c}
     \\ \hline
@@ -565,7 +568,7 @@ rules (given above) yields the deduction rules
   \end{array}
 \end{array}
 \]
-of Intuitionistic %Minimal 
+of Propositional Intuitionistic %Minimal 
 Logic. %~\cite{?}.
 
 In another very important direction Church introduced a Simple Theory of
@@ -574,7 +577,7 @@ This axiomatization was formalised within a Simply-Typed Lambda Calculus with ba
 for both individuals and propositions, further enriched with constants for the logical
 connectives.  In doing so, he adopted a radically new perspective,
 shifting the status of the Simply-Typed Lambda Calculus from that of 
-a `language' to a `metalanguage';~\ie, a language in which it is
+a `language' to a `metalanguage'; \ie~a language in which it is
 possible to represent and work with other languages. In this particular case
 for simple type theories.  When regarded as a metalanguage, the Simply-Typed
 Lambda Calculus is considered as an equational theory, with the
@@ -721,7 +724,7 @@ Combinatory Logic\footnote{Combinatory Logic is an important symbolic
   formalism introduced by Sch\"onfinkel~\cite{Schonfinkel} closely related
   to the {\lcalculus}, but based on algebraic combinators, that enjoys the
   Propositions-as-Types correspondence with respect to the Hilbert-style
-  deduction system for Intuitionistic %Minimal 
+  deduction system for Propositional Intuitionistic %Minimal 
   Logic.} 
 this problem was solved by Hindley~\cite{Hindley1969}.  Independently,
 Milner~\cite{Milner1978} solved it in a context more relevant to
@@ -745,8 +748,9 @@ Calculus with polymorphic types.  Roughly, these are abstract parametric types
 whose programs can be used for all instances of the parameter.  Strikingly,
 this system had already been proposed several years earlier by
 Girard~\cite{GirardSystemF} under the name of {\SystemF}, as the
-type-theoretic counterpart of Second-Order Propositional Logic in the
-context of the Propositions-as-Types correspondence.  Further, Girard had
+type-theoretic counterpart of Second-Order Propositional Logic.
+%in the context of the Propositions-as-Types correspondence.  
+Further, Girard had
 also introduced {\SystemFomega}; the type-theoretic counterpart of
 Higher-Order Propositional Logic.  These logical systems widely extend the
 expressiveness of the Simply-Typed Lambda Calculus, notably by the
@@ -755,17 +759,17 @@ possibility of encoding inductive data types~\cite{BoehmBerarducci}.
 language. %~\cite{EqProofICFP12}.
 
 The type systems mentioned above aim at providing logical foundations. 
-When viewed as programming languages, they can only introduce terminating
-computations.  There are various ways in which one can extend them to Turing
-complete computational languages.  In this direction, and motivated by
-model-theoretic studies of the \lcalculus, Scott~\cite{ScottTCS}
+When viewed as programming languages they can only introduce terminating
+computations.  There are various ways in which one can extend them to
+Turing-complete computational languages.  In this direction, and motivated
+by model-theoretic studies of the \lcalculus, Scott~\cite{ScottTCS}
 introduced an extension of Typed Combinatory Logic with a fixpoint
 combinator for general recursion.  Plotkin~\cite{PlotkinLCF} studied it as a
 programming language, shifting from Typed Combinatory Logic to Simply-Typed
 Lambda Calculus.  In doing so, he opened up further possible distinctions in
 the study of type theories for computation; namely, the consideration of
 equational theories for different function call mechanisms: by value or by
-name~\cite{PlotkinCBVCBN}, as in ML or Haskell.  
+name~\cite{PlotkinCBVCBN}, as in ML or in Haskell.  
 
 The influence of mathematical models on type theories, logical systems, and
 programming languages %as advocated by Scott~\cite{?} 
@@ -774,10 +778,12 @@ plays a central role throughout the proposal.
 \subsection{State of the art: Questions and pathways for research}
 \label{StateOfTheArtSubsection}
 
-Having introduced the scientific framework, we turn attention to topics of
+We %Having introduced the scientific framework, we 
+turn attention to topics of
 active research.  In each subsection below we identify broad questions and/or
 pathways for research.  In Section\pref{MethodologySection} we return to them,
-point by point, and construct a detailed research plan.
+point by point, and construct a detailed 
+plan of action. %research programme.
 
 \setcounter{paragraph}{0}
 \paragraph{Foundations.}
@@ -986,7 +992,7 @@ domain theory, %~\cite{?},
 concurrency theory, %~\cite{?}, 
 and type theory. %~\cite{?}.  
 In particular, in their most elementary discrete form, presheaves can be
-found in programming languages as indexed datatypes; programming with
+found in programming languages as indexed datatypes, programming with
 which will be generically referred to as indexed programming.  
 
 Indexed programming developed from two main influences (none to do with
@@ -1260,14 +1266,15 @@ under four headings as follows.
   Guided by mathematical theories and pragmatics, we will look into the
   engineering of principles and concepts for programming, exporting them to
   language designs and implementations.  We will specifically target
-  experimental languages, supporting indexed data structures, computational
+  experimental languages, supporting indexed data, computational
   effects, and metaprogramming.  
 \end{myitemize}
 
 \section{\underline{Methodolo}gy\hspace{-1mm}\underline{\,}}
 \label{MethodologySection}
 
-We expand on the research objectives, formulating our proposed plan of action.
+We expand on the research objectives, formulating our proposed 
+research programme. %plan of action.
 
 \subsection{Foundations}
 \label{Foundations}
@@ -1285,7 +1292,7 @@ theory~\cite{Birkhoff}, a thoroughly studied area of algebra.
 The modern understanding of many-sorted algebraic equational theories is
 through three interrelated perspectives as in the Algebraic Trinity 
 of Figure\,\ref{AlgebraicTrinity}.
-\begin{figure}[H]
+\begin{figure}[h]
   \caption{Algebraic Trinity}
   \vspace*{-2.5mm}
     \[\xymatrix@R=7.5pt@C=35pt{
@@ -1331,7 +1338,7 @@ is the main general goal of this research track.
 
 To make substantial progress in the area, our proposal is to
 systematically explore a broad spectrum of key features present in type
-theories. The scale at which we will be attempting this is unprecedented,
+theories. The scale at which this will be attempted is unprecedented,
 and is graphically represented by the research space of investigation in
 Figure\,\ref{TypeTheoryResearchSpace}, 
 \begin{figure}[h]
@@ -3000,7 +3007,8 @@ and the cost of books and broadband for the PI.
 \begin{figure*}[t]
 \caption{Project costs}
 \hspace*{30mm}
-\vspace*{15cm}%\includegraphics[width=11cm]{Costs.pdf}
+\vspace*{15cm}
+%\includegraphics[width=11cm]{Costs.pdf}
 \end{figure*}
 
 {\setstretch{0}\footnotesize
