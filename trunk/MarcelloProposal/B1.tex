@@ -241,8 +241,8 @@ Headed by Principal Investigator Marcelo Fiore, the project builds an
 international group of world-leading experts in theoretical and applied
 computer science.  This team will be dedicated to combined research in
 Category Theory, Mathematical Logic, Programming Theory, and Type Theory.
-Specifically, to understand and develop formal languages and mathematical
-models for computer programming and mathematical proof. 
+Specifically, our goal is to understand and develop formal languages and
+mathematical models for computer programming and mathematical proof. 
 
 {\color{red}TO BE FINISHED}
 
@@ -271,8 +271,8 @@ Headed by Principal Investigator Marcelo Fiore, the project builds an
 international group of world-leading experts in theoretical and applied
 computer science.  This team will be dedicated to combined research in
 Category Theory, Mathematical Logic, Programming Theory, and Type Theory.
-Specifically, to understand and develop formal languages and mathematical
-models for computer programming and mathematical proof. 
+Specifically, our goal is to understand and develop formal languages and
+mathematical models for computer programming and mathematical proof. 
 
 \paragraph*{Working thesis.}
 
@@ -315,7 +315,8 @@ work and expertise.  How will the field continue to advance?  By
 considering new directions and challenges, of course.  But, it is our firm
 view that, %as in the early days of the subject, 
 it will be essential to do so generating questions and tackling problems
-from the perspectives of a variety of research areas.  This is %indeed 
+from the perspectives and interplay of a variety of research areas.  This
+is %indeed 
 what we put forward here.
 
 \paragraph*{Our philosophy.}
@@ -358,7 +359,8 @@ Theory.  Figure~\ref{ResearchAreas}
 \vspace*{-2mm}
 \label{ResearchAreas}
 \end{figure}
-gives a schematic view of the interactions between these four research areas
+gives a schematic view of the interactions between 
+these four research areas
 in this context.  Each of them is complementary to the others.  Together, as a
 unified whole, they have shaped fields of computer science and mathematics.
 It is within this framework that we propose cross-cutting research in Category
@@ -392,7 +394,9 @@ high-level programming languages.
 \paragraph*{Research programme.}
 
 The research programme has been precisely conceived to target the goals
-above.  It is organised in four strands as outlined below.
+above.  It is organised in four strands %as outlined below.
+each of which involves the interaction of at least two research areas as in
+Figure\,\ref{ResearchAreas}.
 \begin{myitemize}
 \item[{\bfseries 1\enspace Foundations:}]\mbox{}\enspace\thinspace 
   \emph{A comprehensive research programme on the metamathematics of type
@@ -402,7 +406,8 @@ above.  It is organised in four strands as outlined below.
   We will address the fundamental question of what type theories are, which
   will also lead us to rethink them.  Our approach aims at an algebraic
   framework that will generalise to type theories all aspects of our current
-  understanding of algebraic theories.  The scale at which this will be
+  understanding of algebraic theories.  
+  The scale at which this will be
   attempted is unprecedented, systematically exploring a wide spectrum of
   key type-theoretic features.
   \vspace*{1mm}
@@ -456,7 +461,7 @@ University of Cambridge):
     semantics, sheaf theory, and type theory.  
 He will be backed up by an international group of three Senior Visiting
 Researchers~(SVRs): \emph{Pierre-Louis Curien} (%Laboratoire PPS, 
-Univerist\'e Paris Diderot - Paris~7): 
+Universit\'e Paris Diderot - Paris~7): 
   a leading expert in programming-language semantics, with contributions into
   category theory, logic, %rewriting theory, 
   and type theory; 
@@ -484,7 +489,7 @@ Universit\`a degli Studi di Palermo):
   an established researcher in the areas of type theory and category theory,
   with whom the PI has already collaborated; and 
   \emph{Guillaume Munch-Maccagnoni} (%Laboratoire PPS, 
-Univerist\'e Paris Diderot - Paris~7): 
+Universit\'e Paris Diderot - Paris~7): 
   a PhD student of Curien writing up his dissertation on the
   Propositions-as-Types correspondence in classical logic.
 Currently, the two junior RAs lack future funding.  All RAs would be ready
@@ -509,10 +514,10 @@ independently by Church %~\cite{Church1936}
 and Turing, %~\cite{Turing},
 giving birth to the mathematical theory of computation.  Their approaches
 founded different branches of theoretical computer science.  
-The %On one hand, the 
-line of development starting with Church's {\lcalculus} %~\cite{?} 
-is concerned with prototypical computational languages that are used to study
-high-level programming languages.  
+While Turing machines are the most widely used model for analysing
+computational complexity, the line of development starting with Church's
+{\lcalculus} is concerned with prototypical computational languages that
+are used to study high-level programming languages.  
 %On the other hand, 
 Turing's machines %~\cite{?} 
 are the most widely used model for analysing computational complexity.
@@ -553,6 +558,7 @@ well-understood that the Simply-Typed Lambda Calculus with products provides
 an internal language for Cartesian Closed Categories; \viz~it is the
 calculus of all such models.  This view extends the Propositions-as-Types
 correspondence to a trinity consisting of the Simply-Typed Lambda Calculus
+\pagebreak%%%HACK!!!
 with products, Cartesian Closed Categories, and Propositional
 Intuitionistic Logic.
 
@@ -592,26 +598,34 @@ the research methodology and plan outlined in the next section.
 
 \paragraph*{Foundations.}
 
-Type theories are ubiquitous in computer science and mathematics.  However,
-the following fundamental question remains open:
+As we have seen in the previous section, type theories are ubiquitous in
+computer science and mathematics.  However, the following fundamental question
+remains open:
 \req{\ref{AlgebraicTypeTheoryParagraph}}
-{What is a type theory?}
+%{What is a type theory?}
+%{What are type theories?}
+%{What kind of mathematical structures are type theories?}
+{What is the mathematical structure of type theories?}
 
 \paragraph*{Dependent types.}
 
-Dependent type theory was introduced by de~Bruijn %~\cite{deBruijn} 
-as an extension of simple type theory that allows types to be indexed by
-other types.  Such objects abound in computer science and mathematics.  
+Besides simple and polymorphic type theories, a main development in the
+evolution of type theory has been that of Dependent Type Theory.  Dependent
+judgements and dependent types were introduced by de~Bruijn %~\cite{deBruijn}
+in the 1960s as an extension of their simple versions that allow types to be
+indexed by other types.  His motivation came from automating mathematics,
+where such objects abound.  
+
 Two essential constructions on dependent judgements are: dependent sums and
-dependent product types.  %(see~\eg~\cite{Jacobs}).  
-Under the Propositions-as-Types correspondence, they amount to existential and
-universal quantification.  A crucial problem 
-is to:
+dependent product types.  Under the Propositions-as-Types correspondence, they
+amount to existential and universal quantification.  A crucial problem is to:
 \rep{\ref{IntensionalTypeTheoryParagraph}}
   {Investigate equality and identity in dependent type theory.}
 
 The passage from sum and product types to their dependent versions required new
-type theories.  Categorical models suggest generalisations and the following: 
+type theories.  Categorical models suggest further generalisations of
+dependent sum and dependent product types; and, more generally, the following:
+=======
 \rep{\ref{CalculiSubsection}}
   {Develop type theories from mathematical models.}
 
@@ -632,33 +646,37 @@ One technique to do so is the presheaf construction.
 \paragraph*{Indexed programming.}
 
 Discrete %In %their most basic %elementary discrete form, 
-pre\-sheaves can be found in programming languages as
-indexed data\-types, programming with which will be referred to as indexed
-programming.  
+pre\-sheaves can be found in programming languages as indexed data\-types
+(like the type $\mbox{\small$\mathsf{Vec}$}\:\alpha\:n$ of
+\mbox{$n$-dimentional} vectors of type $\alpha$).  Programming with indexed
+datatypes will be referred to as indexed programming.  
 
-Indexed programming developed from the practical needs of supporting data
-structures with strong invariants and the experimentation with
-dependently-typed programming languages. %~\cite{Cayenne,Epigram}
-These two views pull the design of languages for indexed programming in
-opposite directions.  One is lead to:
+Indexed programming is being developed from one of two main influences:
+functional programming and dependent type theory.  
+Since %the intrinsic concerns of each of 
+these two views somehow pull the design of indexed programming languages in
+contrasting directions, one is lead to reconsider the approach.
 \rep{\ref{IndexedProgrammingParagraph}} 
   {Develop foundational type theories for indexed datatypes.  
    % 
-   Design and implement indexed programming languages from these and
-   pragmatics.}
+   Base the design and implementation of indexed programming languages on
+   these and pragmatics.}
 
 \paragraph*{Resources, effects, modalities.}
 
+In the late 1980s, 
 Girard %~\cite{GirardLinearLogic} 
 and Moggi %~\cite{MoggiLambdaC} 
 proposed two important analyses of computation, respectively for resources and
 effects.  The former in the contexts of logic and proof theory; the latter in
-that of denotational semantics and category theory.  Both had tremendous
+that of denotational semantics and category theory.  Both have had tremendous
 impact in programming-language theory.  
 
-The predominant model-theoretic view of resources and effects is as
-categorical structures arising at opposite sides of an adjunction.  This is
-not so in all models and the following remains unanswered.
+The predominant model-theoretic view of resources and effects is as dual
+categorical structures, resource comonads and computational monads, arising at
+opposite sides of an adjunction, intuitively between linear and multiplicative
+structure or between computations and values.  This is not so in all models
+and the following remains unanswered.
 %
 \req{\ref{PolarisationParagraph}}
   {How can resources and effects be reconciled and unified?}
@@ -677,10 +695,13 @@ computation and data structures.  We incorporate this into the following.
 
 A theme orthogonal to the logics under consideration is whether they are
 specified in natural deduction or sequent calculus style. 
+\pagebreak%%%HACK!!!
 
 Work on the Propositions-as-Types correspondence has focussed on natural
-deduction systems, mainly because there is as yet no established syntax for
-sequent calculi.  Two questions at the core of this situation are:
+deduction systems, mainly because there is as yet no 
+widely-adopted %established 
+syntax for sequent calculi.  Two questions at the core of this situation
+are:
 %
 \reqs{\ref{ProgrammingEffectsParagraph}}
   {What is the categorical algebra of classical sequent calculi? %}
@@ -742,7 +763,9 @@ type constructors.  As such, a type theory is to be thought not just as a
 single universe of discourse, but rather as a variety of universes of
 discourse.  From this perspective, it is important to understand the
 interaction of modularly extending type theories.  A key notion is that of
-conservative extension.  Informally, an extension of a type theory is
+conservative extension.  
+\pagebreak%%%HACK!!!
+Informally, an extension of a type theory is
 conservative when it does not modify the judgemental equality of the extended
 type theory.
 
@@ -785,15 +808,14 @@ A distinguishing aspect of polarised calculi is that they make call-by-value
 (or eager) and call-by-name (or lazy) modes of computation explicit, allowing
 for their combination in a framework with eager and lazy data structures.
 
-Our investigations in this context will \hl{aim} at a model-theoretic study of
+Our investigations in this context will aim at a model-theoretic study of
 a rich variety of calculi encompassing aspects of resource management
 (categorically, comonadic structure) %~\cite{Seely}) 
 and computational effects (categorically, monadic 
 structure) %~\cite{MoggiLambdaC})
 as informed by polarisation.
-
-Details of the models to be considered are in the full scientific proposal.
-Here let us just mention that they subsume 
+%
+Our models will subsume 
 %
 Girard's Intuitionistic Linear Logic; %~\cite{GirardLinearLogic};
 %
@@ -804,11 +826,11 @@ and
 %
 Melli\`es and Tabareau's Tensor Logic. %~\cite{TensorLogic}
 %
-In fact, we will go far beyond tackling the open \hl{problem} of developing a
+In fact, we will go far beyond, tackling the open \hl{problem} of developing a
 model theory for Girard's~\LC.
 
 Importantly, our investigations will target so-called direct-style languages
-and models; so that they can directly feed into the proposed research of
+and models; so that they can be directly feed into the proposed research of
 Section~\ref{ProgrammingEffectsParagraph}.
 
 \paragraph{Modal logics.}
@@ -816,10 +838,12 @@ Section~\ref{ProgrammingEffectsParagraph}.
 
 Resource comonads and effect monads are logical modalities.  Polarisation in
 the general context of modal logic has not been considered yet, and we will
-complement the previous studies with the \hl{investigation} of Polarised
+complement the previous studies 
+with the \hl{investigation} of Polarised
 Modal Logics.  Our \hl{goal} is to develop the Propositions-as-Types
 correspondence for modal logics.  We are specially interested in grounding it
-through categorical models, that have been scarcely investigated.
+through categorical models, that have been scarcely investigated in this
+context.
 
 In connection to Section~\ref{MetaprogrammingParagraph}, we will 
 consider: 
@@ -872,10 +896,9 @@ In a related vein, our \hl{aim} is to discover a notion of Directed Type
 connecting Higher-Dimensional Category Theory and Dependent Type Theory on
 which to establish a body of work on Directed Type Theory (DiTT).  Our
 \hl{motivation} for this comes from computation.  Indeed, while Identity
-Types establish the intentional equality of elements in a type, Directed Types
+Types establish the intensional equality of elements in a type, Directed Types
 would instead represent the ways in which an element of a type may evolve to
-another one in a possibly irreversible manner.  The full scientific proposal
-includes preliminary thoughts for development in this direction.
+another one in a possibly irreversible manner.  
 
 \subsubsection{Programming}
 \label{Programming}
@@ -931,7 +954,7 @@ As for polarisation, we believe that programmers will be able to intuitively
 assimilate the eager {\vs}~lazy modes of computation and data structures
 underlying it.  But, pragmatically, we will need to \hl{investigate} the
 kind of programming style and language that will easily allow a programmer to
-code polarisation.
+code and exploit polarisation.
 
 The full scientific proposal contains further considerations on \hl{research}
 possibilities for system~\SysL\ in programming and for effects encompassing
@@ -943,9 +966,7 @@ control.
 \mbox{}\newline
 {\color{red}MISSING}
 
-\subsection{Conclusion}
-
-{\color{red}MISSING}
+%\subsection{Conclusion}
 
 \hidebib{\setstretch{0}\footnotesize
 \begin{thebibliography}{00}
