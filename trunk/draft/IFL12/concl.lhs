@@ -20,3 +20,4 @@ On the other hand, universe polymorphism can reuse datatypes at term level
 Nax extended with first-class datatype descriptions \cite{DagMcb12} would
 be able express the same concept reflected at term level, so that we would
 have no need for type level datatypes.
+
