@@ -61,7 +61,7 @@ different languages -- like the Rosetta Stone
 We have crafted these programs to look as similar as
 possible, by choosing the same identifiers and syntax structure whenever
 possible, so that anyone already familiar with Haskell-like languages
-or Agda-like languges will understand our Nax programs
+or Agda-like languages will understand our Nax programs
 just by comparing them with the programs on the left and right.
 The features unique to Nax are summarized in Tabel\;\ref{tbl:naxfeatures}.
 

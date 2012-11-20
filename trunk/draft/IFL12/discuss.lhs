@@ -207,9 +207,9 @@ which is closely reated to datatype promotion. In fact, it is more intuitive to
 understand the datatype promotion in Haskell as a special case of
 universe polymorphism. Since there are only two universes |*| and |BOX|
 in Haskell, we can think of datatypes like |List| and |Ty| are defined
-polymophically at both |*| and |BOX|. That is, |List : BOX -> BOX| as well as
+polymorphically at both |*| and |BOX|. That is, |List : BOX -> BOX| as well as
 |List : * -> *|, and similarly, |Ty : BOX| as well as |Ty : *|.
-So, |List : BOX -> BOX| can be appplied to |Ty : BOX| at kind level,
+So, |List : BOX -> BOX| can be applied to |Ty : BOX| at kind level,
 just as |List : * -> *| can be applied at type level.
 
 In summary, Nax provides a new way of forming kind arrows by allowing
@@ -265,7 +265,7 @@ indexed datatypes, whose terms indices are of non-indexed types
 where some term indices are themselves of term-indexed datatypes.
 Such nested term indices are often useful in dependently typed programming.
 For instance, \citet{BraHam10} used an environment datatype with nested term
-indices in the implemention of their EDSL for verified resource usage protocols.
+indices in the implementation of their EDSL for verified resource usage protocols.
 Figure \ref{fig:env} illustrates transcriptions of their environment datatype
 (|Env|), originally written in Idris \cite{Brady11}, into Nax and Agda.
 The datatype |Env| is indexed by a length indexed list (|Vec|), which is again

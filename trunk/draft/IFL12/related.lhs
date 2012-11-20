@@ -25,7 +25,7 @@ without extra type level computation on the |Vec| index.
 automatically derives a singleton type (\eg, singleton natural numbers) and
 its associated functions (\eg, addition over singleton natural numbers) from
 their non-singleton counterparts (\eg, natural numbers and their addition).
-We think it would be possible to apply similar startegies to Nax, and even
+We think it would be possible to apply similar strategies to Nax, and even
 better, singleton types for already indexed datatypes would be derivable.
 
 \paragraph{The kind arrow |({A}->kappa)|{\rm ,}\!} from a type to a kind,
@@ -67,20 +67,20 @@ higher-rank kind polymorphism leads to paradoxes
 %%%% but I can't figure them out except above
 %%%% http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=4&cad=rja&ved=0CEUQFjAD&url=http%3A%2F%2Fwww.cse.chalmers.se%2Fresearch%2Fgroup%2Flogic%2FTypesSS05%2FExtra%2Fmiquel_sl3.pdf&ei=SkOoULS-Gen-iwKnnYD4DA&usg=AFQjCNEGQtWmZpveVqykzrgpNUBuad7Yjw&sig2=piFq-fSCuWIeL0glaIQ8JA
 In fact, type polymorphism in Nax is limited to rank-1 as well since
-the type infernce is based on Hindley-Milner \cite{Miln78a}.
+the type inference is based on Hindley-Milner \cite{Miln78a}.
 
 
 \paragraph{Concoqtion}\hspace*{-.6ex}\cite{FogPasSeiTah07} is an extention of
 MetaOCaml with indexed types. Concoqtion share some similar design principles --
-Hindley--Minlner-style type inference and \emph{gradual typing by erasure} over
+Hindley--Milner-style type inference and \emph{gradual typing by erasure} over
 (term) indices. Both in Nax and Concoqtion, a program using indexed types must
 still type check within the non-indexed sub-language (OCaml for Concoqtion)
-when all indices are erased from the program. However, indices in Concocqtion
+when all indices are erased from the program. However, indices in Concoqtion
 differ from term indices discussed in this paper (Nax, datatype promotion, and
-dependently typed languages in Agda). Concocqtion indices are Coq terms rather
-than Concocqtion terms. Although this obviously leads to code duplication
-between the index world (Coq) and the program world (OCaml), Concocqtion enjoys
+dependently typed languages in Agda). Concoqtion indices are Coq terms rather
+than Concoqtion terms. Although this obviously leads to code duplication
+between the index world (Coq) and the program world (OCaml), Concoqtion enjoys
 practical benefits of having access to the Coq libraries for reasoning about
-indices. Comparison of Concocqtion and other related systems is discussed in
+indices. Comparison of Concoqtion and other related systems is discussed in
 their technical report \citet{PasSieTah06}.
 

@@ -1,4 +1,4 @@
-.PHONY: all pdf ps dvi touch ListLike
+.PHONY: all pdf ps dvi touch ListLike EnvLike draft
 
 TEXSRC=main.tex mylhs2tex.sty \
        intro.tex example.tex discuss.tex related.tex concl.tex
@@ -74,6 +74,9 @@ pdf: main.pdf
 ps: main.ps
 
 dvi: main.dvi
+
+draft: main.pdf
+	cp $< IFL12draft.pdf
 
 touch:
 	touch main.tex
