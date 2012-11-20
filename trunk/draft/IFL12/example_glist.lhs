@@ -24,14 +24,16 @@
 \end{landscape}
 } % end afterpage
 
-In this section we introduce a generic |Path| datatype.
+In this section we introduce a generic |Path| datatype.\footnote{
+	There is a Haskell library package for this
+	\url{http://hackage.haskell.org/package/thrist} }
 We will instantiate |Path| into three different types of
 lists --  plain lists, length indexed lists 
 (|List'| and |Vec| in Fig.\;\ref{fig:glist})
 and a |Code| type, in order to write a stack safe compiler
 (Fig.\;\ref{fig:compile}).
 
-We will explain Fig.\;\ref{fig:glist} by discussing the Nax code.
+%% We will explain Fig.\;\ref{fig:glist} by discussing the Nax code.
 The type constructor |Path| expects three arguments,
 that is, |Path x {i} {j} : *|.  The argument |x : {iota} -> {iota} -> *|
 is binary relation describing legal transitions (i.e. |x {i} {j}| is inhabited
