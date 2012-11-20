@@ -85,11 +85,10 @@
 \newcommand{\ERC}{Mathematical Structures for Type Theories,\\[-.5mm] Logical
   Systems, and Programming Languages}
 
+\newcommand{\nohide}[1]{#1}
 \newcommand{\hide}[1]{}
 \newcommand{\hidefootnote}[2]{}
 \newcommand{\hidewiring}[1]{}
-\newcommand{\note}[1]%{}
-{\begin{quote}{\color{blue}$\leadsto$ \bf\em #1}\end{quote}}
 \newcommand{\hidenote}{\hide}
 
 \newcommand{\pref}[1]{\,(\ref{#1})}
@@ -339,7 +338,7 @@ Figure\,\ref{ResearchAreas}
 gives a schematic view of the interactions between these four research areas
 in this context.  Each of them is complementary to the others.  Together, as a
 unified whole, they have shaped fields of computer science and mathematics.  
-\hide{
+\hide{%
 Indeed, consider for instance that: 
 \begin{myitemize}
 \item
@@ -449,13 +448,13 @@ Binding operators are an integral part of all high-level  programming
 languages.  Their mathematical theory is subtle %, see~\ref{}, 
 because they define syntax up to the consistent renaming of bound
 variables (technically referred to as \mbox{$\alpha$-equivalence}).
-\hide{
+\nohide{%
 This subtlety is made evident by the anecdotal fact that the first definitions
 of substitution were formally flawed.}
 %These important topics are core to our proposed research in
 %Section\pref{AlgebraicTypeTheoryParagraph}.
 
-\hide{
+\hide{%
 Incidentally, the notion of variable binding was initially introduced much
 earlier, by Frege~\cite{Frege1879}, in the context of mathematical logic.  
 He used binders to define a formal symbolic
@@ -799,7 +798,7 @@ remains open:
 Section\pref{AlgebraicTypeTheoryParagraph} aims at a comprehensive
 mathematical answer, that will also serve as a framework for our other
 type-theoretic developments.  
-\hide{
+\hide{%
   We regard this as a step towards the related open question:
 \req{}{What is a programming language?}
 that will be kept in the background of our investigations.
@@ -889,15 +888,17 @@ algebra (see~\eg~\cite{Leinster,LodayVallette}).
 \paragraph{Dependent types.}
 \label{DependentTypesParagraph}
 
-Dependent type theory is a formalism introduced by
-de~Bruijn~\cite{deBruijn} that extends simple type theories by
-allowing types to be indexed (or parameterised) by other types.  Such
-objects abound in computer science and mathematics.  For instance, in
-combinatorics one is interested in the type of permutations $\mathfrak
-S(n)$ on $n$ elements, as the index (or parameter) $n$ ranges over the
-natural numbers $\mathbb N$.  In modern notation, this is presented by a
-judgement of the form
-  \[
+Besides simple and polymorphic type theories, a main development in the
+evolution of type theory has been that of Dependent Type Theory.
+Dependent judgements and dependent types were introduced by
+de~Bruijn~\cite{deBruijn} in the 1960s as an extension of their simple
+versions allowing types to be indexed (or parameterised) by other types.
+He was motivated by the formalisation of mathematical theories, where such
+objects abound.  For instance, in combinatorics one is interested in the
+type of permutations $\mathfrak S(n)$ on $n$ elements, as the index (or
+parameter) $n$ ranges over the natural numbers $\mathbb N$.  In modern
+notation, this is presented by a judgement of the form
+\[
   n:\mathbb N \vdash \mathfrak S(n) \mbox{ \mysf type}
 \]
 There are two fundamental constructions on such dependent judgements as
@@ -931,13 +932,14 @@ This lays at the core of our proposed investigations in
 Section\pref{IntensionalTypeTheoryParagraph}.
 
 The passage from sum and product types to their dependent versions
-required new type theories.  Categorical models suggest further
-generalisations.  These are the subject of
-%Sections\,(\ref{GeneralisedTypeTheoryParagraph}\,\&\,\ref{DirectedTypeTheoryParagraph})
-Section\pref{CalculiSubsection}
-under the following. 
+required new type theories.  
+%
+Categorical models suggest further generalisations of dependent sum and
+dependent product types (in the form of so-called coends and ends); and,
+more generally, the following:
 \rep{(\ref{CalculiSubsection})}
   {Develop type theories from mathematical models.}
+This is the subject of Section\pref{CalculiSubsection}.
 
 \paragraph{Mathematical universes.}
 \label{MathematicalUniversesParagraph}
@@ -987,32 +989,41 @@ Boolean-valued models~\cite{ScottSolovay}.
 \label{IndexedProgrammingIntro}
 
 The use of presheaf categories in computer science applications has been
-prominent;~\eg~in 
+prominent; \eg~in 
 programming language theory, %~\cite{?}, 
 lambda calculus, %~\cite{?}, 
 domain theory, %~\cite{?}, 
 concurrency theory, %~\cite{?}, 
 and type theory. %~\cite{?}.  
+%
 In particular, in their most elementary discrete form, presheaves can be
-found in programming languages as indexed datatypes, programming with
-which will be generically referred to as indexed programming.  
+found in programming languages as indexed datatypes, like the type
+$\mbox{\small$\mathsf{Vec}$}\:\alpha\:n$ of \mbox{$n$-dimensional} vectors
+of type $\alpha$.  
+%
+Programming with indexed datatypes will be generically referred to as
+indexed programming.  
 
-Indexed programming developed from two main influences (none to do with
-presheaves though): the practical needs of supporting data structures able to
-maintain strong data invariants, like nested %~\cite{?} 
-and generalised algebraic %~\cite{?}
-datatypes (GADTs) in functional programming~\cite{Omega,Haskell}; and the
-experimentation with dependently-typed programming
+Indexed programming is being developed from one of two main influences
+(none to do with presheaves though): 
+%
+the practical needs of supporting data structures able to maintain strong
+data invariants, like nested %~\cite{?} 
+and generalised algebraic datatypes (GADTs) %~\cite{?}
+in functional programming~\cite{Omega,Haskell}; and 
+%
+the experimentation with dependently-typed programming
 languages~\cite{Cayenne,Epigram} as a by-product of dependent type theory.
-These two views somehow pull in opposite directions and, as such, lead to
-conceptually different languages.  One is lead to investigate the following.
+%
+Since %the intrinsic concerns of each of 
+these two views somehow pull the design of indexed programming languages
+in contrasting directions, one is lead to reconsider the approach as
+follows.
 \rep{(\ref{IndexedProgrammingParagraph})} 
   {Develop foundational type theories for indexed datatypes.  
-    
-   Design and %subsequently 
-   implement indexed programming languages from these and
-   %programming-language 
-   pragmatics.}
+   % 
+   Base the design and implementation of indexed programming languages on
+   these and pragmatics.}
 
 \paragraph{Resources, effects, modalities.}
 \label{ResourcesEffectsModalitiesParagraph}
@@ -1054,12 +1065,17 @@ cartesian and $\cat D$ with powers (or exponentials) relative to $\cat C$.
 
 In the context of Linear Logic, examples are the mixed linear/cartesian models
 and calculi of Benton and Wadler~\cite{BentonWadler} and of Barber and
-Plotkin~\cite{BarberPlotkin}.  In the context of effect calculi, examples are
-the Call-By-Push-Value of Levy~\cite{LevyCBPV} and the Enriched Effect
-Calculus of Egger, M{\o}gelberg, and Simpson~\cite{EEC}.  Metaphorically
-speaking, both these lines of work regard resources and effects as being
-opposite sides of the same coin.  However, this is not so in all models;
-and the following question remains unanswered.
+Plotkin~\cite{BarberPlotkin}.  In the context of effect calculi, examples
+are the Call-By-Push-Value of Levy~\cite{LevyCBPV} and the Enriched Effect
+Calculus of Egger, M{\o}gelberg, and Simpson~\cite{EEC}.  
+%
+Both these lines of work regard resources and effects as dual categorical
+structures, resource comonads and computational monads, arising at
+opposite sides of an adjunction, intuitively between linear and cartesian
+structures or between computations and values.  
+%
+However, this is not so in all models; and the following question remains
+unanswered.
 %
 \req{\pref{PolarisationParagraph}}
   {How can resources and effects be reconciled and unified?}
@@ -1085,9 +1101,10 @@ role, and been very successful, in the area of computer aided verification;
 the impact of modal logics on programming languages has been peripheral.
 It is thus natural and important to reconsider them in this context. 
 %
-\rep{(\ref{ModalLogicsParagraph}\,\&\,\ref{MetaprogrammingParagraph})}
+\rep{(\ref{ModalLogicsParagraph}%\,\&\,\ref{MetaprogrammingParagraph}
+)}
   {Investigate the Propositions-as-Types 
-    correspondence %Trinity 
+    correspondence %trinity 
     for modal logics, and apply it to programming languages.}
 We stress that we are specially interested in modalities for computation with
 reflection.
@@ -1419,16 +1436,18 @@ these we have the following specific goals.
   suggested by the mathematical models, and to use these to provide
   constructions for the modular combination of type theories.
 
-\item
-  To test and apply the above mathematical theories by formalising them in
-  Coq or Agda, while at the same time exercising these systems to the
-  limit to identify shortcomings triggering new research in the context of
-  proof assistants.
+\item\label{ATTGenericProgramming}
+  To test the above mathematical theories by formalising them in 
+  Coq or Agda %a proof assistant, say Coq or Agda, 
+  and to apply them for the purpose of generic programming for type theories
+  (see \eg~\cite{DybjerGP}), while at the same time exercising these systems
+  to the limit to identify shortcomings that will trigger new research in the
+  context of proof assistants.
 \end{resenumerate}
 The outcome of this work will be mathematical foundations for the
 aforementioned aspects of type theories that are currently treated in an
 ad~hoc fashion.  
-\hide{
+\hide{%
 Furthermore, it will provide a principled approach by which
 to reconsider the problem of integrating polymorphism and dependent types. 
 %%%to tackle the problem of integrating polymorphism and dependent types in 
@@ -1436,7 +1455,7 @@ to reconsider the problem of integrating polymorphism and dependent types.
 %%%manner---the unknown in Figure\,\ref{TypeTheoryResearchSpace}. 
 }
 
-\hide{ polynomial functors (from discrete to groupoidal) --- the meaning of
+\hide{polynomial functors (from discrete to groupoidal) --- the meaning of
   typing rules}
 
 \hidewiring{%%% BEGIN hide
@@ -1529,7 +1548,7 @@ Sections\,(\ref{PolarisationParagraph}\,\&\,\ref{ProgrammingEffectsParagraph}).
     seem to be related to a type theory for non-commutative linear logic of
     Polakow and Pfenning~\cite{NatDedForIntNonCommLinLog}.
 
-\hide{
+\hide{%
   \item
     Foundations for a TTyacc (Type Theory yacc) \ldots this is related to what
     is a Type Theory? \ldots The feasibility of building a TTyacc will be
@@ -1701,7 +1720,7 @@ are currently receiving renewed special attention, stemming from connections
 with homotopy theory and higher-dimensional category
 theory~\cite{UnivalentProgramme}.  For them some fundamental matters are still
 to be understood.  For instance, 
-\hide{
+\hide{%
 whether the introduced intensional identity
 %(an internal notion of equality) 
 affects 
@@ -1788,7 +1807,7 @@ construction on a partial order in the Calculus of Constructions, and then
 re-interpreted back the Calculus of Constructions in the internal presheaf
 model.  However, not only a wide spectrum of other possible constructions
 (as detailed in
-item~\textbf{\ref{MethodologyMathematicalUniversesParagraph}}\thinspace\itemref{ConstructionsOnTypeTheories}
+item~\ref{MethodologyMathematicalUniversesParagraph}\thinspace\itemref{ConstructionsOnTypeTheories}
 above) remains to be explored; but, even in this basic setting, work remains
 to be done: notably to incorporate Inductive Types.
 
@@ -1804,10 +1823,10 @@ This is important in many applications, for which the reader may
 consult~\cite{FioreFossacs}, %, and complementary to our proposed
 %investigations in Section\pref{SubstructuralTypeTheoryParagraph}.
 that will be at the core of
-item~\mbox{\textbf{\ref{MethodologyMathematicalUniversesParagraph}}\thinspace\textbf{\itemref{MMUPAppItem}}}
+item~\mbox{\ref{MethodologyMathematicalUniversesParagraph}\thinspace\itemref{MMUPAppItem}}
 above.
 
-\hide{
+\hide{%
 The study of Cohen Forcing for type theory was stated as an open problem
 by Beeson~\cite{BeesonBook}, who wrote: ``Forcing has yet to be worked out
 directly for Martin-L\"of's system.''.  Work in this direction has only
@@ -1928,7 +1947,7 @@ works.
 
 Let us now return to the distinction between metalanguages and programming
 languages briefly mentioned in
-item~\textbf{\ref{PolarisationParagraph}}\thinspace\itemref{ItemFour} above.
+item~\ref{PolarisationParagraph}\thinspace\itemref{ItemFour} above.
 Model theoretically, this can be roughly seen as follows: whereas the
 metalanguage is an internal language for co/monadic structure; the programming
 language is the internal language for the derived structure of co/free
@@ -1989,13 +2008,11 @@ Our overall goal here is to
 \item
   Develop the Propositions-as-Types correspondence for modal logics.
 \end{resenumerate}
-Here, we are specially interested in grounding it through categorical models
-(see Figure\,\ref{ResearchAreas}), that have been scarcely investigated in
-this context.
+We are specially interested in grounding it through categorical models (see
+Figure\,\ref{ResearchAreas}), that have been scarcely investigated in this
+context.
 
-Looking ahead in connection to the proposed research in
-Section\pref{MetaprogrammingParagraph}, we will 
-consider: %be particularly interested in studying: 
+Logical systems to be studied include:
 %
 Borghuis' Modal Pure Type Systems~\cite{ModalPTS};
 %
@@ -2004,15 +2021,23 @@ Artemov's Logic of Proofs~\cite{ArtemovLP} and related systems;
 %Daniyar S Shamkanov: Strong Normalization and Confluence for Reflexive
 %  Combinatory Logic 
 %
-Mendler's Multimodal CK~\cite{MendlerMMCK};
+Mendler's Mul\-ti\-mod\-al CK~\cite{MendlerMMCK};
 and
 %
 Park and Im's Calculus $S_\Delta$~\cite{ParkIm}.
+%
+A particularly interesting aspect of many of these systems is that they have
+reflective features~\cite{ReflectionSmith}, in that they can internally
+represent and manipulate themselves.  In this respect, and in connection to
+the proposed research in Section\pref{Programming}, we will:
+\begin{resenumerate}\setcounter{CC}{2}
+\item\label{ReflectiveProgrammingLanguages}
+  Investigate the role of modal calculi supporting reflection in the design of
+  reflective programming languages.
+\end{resenumerate}
 
 \subsection{Calculi}
 \label{CalculiSubsection}
-
-\hidenote{\ldots}
 
 \setcounter{paragraph}{0}
 \paragraph*{Categorical Type Theory.}
@@ -2070,7 +2095,7 @@ The general goal of our research here is to:
 This is to be investigated in two stages, respectively corresponding to
 enrichment over cartesian closed categories and over symmetric monoidal
 closed categories.  
-\hide{
+\hide{%
 In the first case, one roughly has the following
 translation table between the Generalised Logical Calculus and Predicate
 Logic.
@@ -2106,11 +2131,11 @@ Taking this view seriously, we will aim to:
 \begin{resenumerate}\setcounter{CC}{1}
 \item
   Extend
-  item~\textbf{\ref{GeneralisedTypeTheoryParagraph}}\thinspace\itemref{GeneralisedTypeTheoryItem}
+  item~\ref{GeneralisedTypeTheoryParagraph}\thinspace\itemref{GeneralisedTypeTheoryItem}
   to a fully-fledged, possibly higher-dimensional, dependent type theory.  
 \end{resenumerate}
 
-\hide{
+\hide{%
 Finally, in an intriguing complementary direction,
 Fiore~\cite{FioreFossacs} has suggested a graphical reading of the
 Generalised Logical Calculus that is surprisingly close to formalisms for
@@ -2177,7 +2202,7 @@ general notion of fibration~\cite{SGA1} and aim to:
   Develop a type theory modelled on Grothendieck fibrations.
 \end{resenumerate}
 
-\hide{
+\hide{%
 As a final point, we note that yet another approach would be to:
 \begin{resenumerate}\setcounter{CC}{4}
 \item
@@ -2204,7 +2229,7 @@ safe ones.  Recursion is allowed on normal arguments but not on safe ones.  In
 the terminology that we have been using, normal arguments are linear while
 safe ones are cartesian.  In fact, the notion of safe composition
 coincides with that for mixed linear/cartesian operads (see
-item~\textbf{\ref{WiringStructureParagraph}}\thinspace\itemref{BellantoniCook}).
+item~\ref{WiringStructureParagraph}\thinspace\itemref{BellantoniCook}).
 %on page~\pageref{BellantoniCook}).  
 Since then, the role of resource management in taming complexity has been
 prominently recognised, and a big body of work on implicit computational
@@ -2378,19 +2403,19 @@ typical inductive types of type theory stemming from Dybjer's Inductive
 Families~\cite{DybjerIF}.  It would be interesting to establish a formal
 connection between these approaches so that they can inform each other;
 in particular in the context of termination checking. %~\cite{AbelFoetus}. 
-
-\hide{
+%
+\nohide{%
 Dually, we will also:
 \begin{resenumerate}\setcounter{CC}{4}
 \item
   Develop programming primitives corresponding to coinduction proof
   principles.
 \end{resenumerate}
-These have received less attention.
+%These have received less attention.
 }
 
 The above design considerations are to be shaped by the following maxim:
-\begin{resenumerate}\setcounter{CC}{4}%{5}
+\begin{resenumerate}\setcounter{CC}{5}
 \item
   Design language constructs with minimal type annotation supporting
   maximal type inference.
@@ -2398,15 +2423,16 @@ The above design considerations are to be shaped by the following maxim:
 Indeed, this is the main open problem in dependently-typed programming language
 theory.
 
-\hide{
-Finally, let us mention an intriguing possibility suggested by the
-model-theoretic considerations of
+\hide{%
+Finally, let us also mention an intriguing possibility 
+\hide{%
+suggested by the model-theoretic considerations of
 Section\pref{MethodologyMathematicalUniversesParagraph}.  The indexing
 structure in dependent type theory is discrete.  In many applications,
 however, one is interested in indexed types that furthermore relate
 structure on indices to structure on the associated indexed family of types.
 The question arises as to how to:
-\begin{resenumerate}\setcounter{CC}{5}%{6}
+\begin{resenumerate}\setcounter{CC}{6}
 \item
   Build idioms or language abstractions for defining and then programming
   with indexed types equipped with internal varying structure.
@@ -2414,6 +2440,14 @@ The question arises as to how to:
 A specific motivation for this comes from the possibility of directly
 programming, as opposed to having to code, presheaf structure (\eg~as is
 needed in Normalisation by Evaluation~\cite{FiorePPDP}).
+}
+in the direction of metaprogramming:
+\begin{resenumerate}\setcounter{CC}{6}%{7}
+\item
+  Extend {\SystemFi} with typed self representation based on Indexed
+  Abstract Syntax, rather than Higher-Order Abstract Syntax %~\cite{}
+  as has been the norm (see \eg~\cite{Rendel}).
+\end{resenumerate}
 }
 
 \paragraph{Effects.}
@@ -2497,39 +2531,66 @@ of programming languages with effects.
 
 \hidenote{Dependent CBPV}
 
+\hide{%
 \paragraph{Metaprogramming.}
 \label{MetaprogrammingParagraph}
 
-{\color{red}
+Metaprogramming is the activity of writing programs that manipulate other
+programs.  To support this programming style, a meta\-pro\-gram\-ming system
+embodies two languages: the object language, which is the object of study, and
+the metalanguage, which is used to 
+compute with %define algorithms for the purpose of constructing or analysing
+object programs as data.  
+%
+In some metaprogramming systems, like LISP, %~\cite{}, 
+the object language and the metalanguage coincide.  Such languages are
+reflective, in that they can manipulate themselves.  Other systems, chiefly
+typed ones, support this ability via self representation.
 
-  generic programming
+We are interested here in both the activity of meta\-programming and the
+development of metaprogramming languages.  
 
-  reflection
+Different kinds of metaprogramming are possible.  In particular, generic
+programming 
+%One style of generic programming defines a data structure that reflects how
+%users define new types. For example, a value of type \verb+Def Tree+ describes
+%how a new \verb+Tree+ datatype is defined. A generic program then analyzes
+%this structure of \verb+Def+ types to write code parametric over any
+%user-defined type. For example a generic equality might have type
+%\verb+Def t -> t -> t -> Bool+ and a generic marshalling function might have
+%type \verb+Def t -> t -> List Bit+. 
+focusses on code that is parametric over user-defined types.  In this context,
+we will:
+\begin{resenumerate}\setcounter{CC}{0}
+\item
+  Explore the metamathematical foundations for type theories of the Algebraic
+  Type Theory programme (Section~\pref{AlgebraicTypeTheoryParagraph}) to
+  develop generic programming for type theories.
+\end{resenumerate}
+One challenge here is to develop generic substitution programs for binding,
+polymorphic, and/or dependent type theories.
 
+As for metaprogramming languages, one possible direction is to:
+\begin{resenumerate}\setcounter{CC}{1}
+\item
+  Extend {\SystemFi} with typed self representation (based on Indexed Abstract
+  Syntax, rather than Higher-Order Abstract Syntax %~\cite{}
+  as has been the norm).
+\end{resenumerate}
+More generally, we propose to:
+\begin{resenumerate}\setcounter{CC}{2}
+\item
+  Investigate the role of logical calculi supporting reflection
+  (\eg~\cite{AltArtemov}) in programming language design, in particular in the
+  context of the previous two sections.
+\end{resenumerate}
+}
+
+\hide{%
   TDPE with sums: reflection with delimited control operators
 
   System $F_\omega^*$: Tillmann Rendel, Klaus Ostermann, Christian
   Hofer (2009),Typed Self-Representation
-
-{\bf feel free to change any of this -- Tim}
-
-In a metaprogramming system there are two languages of interest. The
-object-language which is the object of study and the meta-language which
-manipulates object programs as data. The purpose of the meta-language is
-to define algorithms for the purpose of constructing or analyzing
-object-programs. Metaprograms play a role in many kinds of systems
-
-{\bf Generic programming.}
-One style of generic programming defines a datastucture that reflects how
-users define new types. For example, a value of type \verb+Def Tree+
-describes how a new \verb+Tree+ datatype is defined. A generic program then
-analyzes this structure of \verb+Def+ types to write code parametric over
-any user defined type. For example a generic equality might have type
-\verb+Def t -> t -> t -> Bool+ and a generic marshalling function
-might have type \verb+Def t -> t -> List Bit+. 
-
-{\bf Reflection.} One kind of reflection is where the object-language and
-the meta-language coincide
 }
 
 \hidenote{System~{\SysL} internalisation of stacks?}
@@ -2571,7 +2632,7 @@ Palermo).
 %functors~\cite{GambinoHylad,GambinoKock,FioreICALP} which is also
 %relevant to topics of the proposal.  
 
-\note{Makoto --- Marco --- Martin --- Michael}
+\hidenote{Makoto --- Marco --- Martin --- Michael}
 
 }%%% END hide
 
@@ -2680,7 +2741,7 @@ computation~\cite{CurienMunch} in the setting of system~{\SysL}, which
 features in Sections\,(\ref{SequentCalculiParagraph}\,\&\,%
 \ref{ProgrammingEffectsParagraph}).
 
-\hide{
+\hide{%
 %In the last few years, %In the recent past, 
 Curien has been following developments in 
 %the areas of 
@@ -2729,8 +2790,9 @@ Many of Dybjer's contributions are of direct relevance to this proposal.
 For instance: 
 %
 $(i)$~his notion of Category with Families~\cite{DybjerITT}, a categorical
-notion of model of dependent types with a close connection to the syntax
-(which features in Section\mbox{\pref{IntensionalTypeTheoryParagraph}}); 
+%notion of 
+model of dependent types with a close connection to the syntax
+(that features in Section\mbox{\pref{IntensionalTypeTheoryParagraph}}); 
 %
 $(ii)$~his exploration of the syntax and semantics of Inductive Families
 in type theory~\cite{DybjerIF} (which features in
@@ -2746,14 +2808,17 @@ Sections\,(\mbox{\ref{AlgebraicTypeTheoryParagraph}}\,\&\,%
 \ref{IntensionalTypeTheoryParagraph}));
 %
 $(iv)$~his powerful notion of an inductive-recursive
-definition~\cite{DybjerIR}, that %It extends the notion of an inductive
-definitions and is useful for understanding universes and reflection
-principles in type theory 
+definition~\cite{DybjerIR}, that %It extends the notion of inductive
+%definition and 
+is useful for understanding universes and reflection principles in type theory 
 %Dybjer has (together with Setzer) proved a general result about the
 %correspondence between inductive-recursive definitions and initial
 %algebras. 
-(and is relevant to Sections\,(\ref{IndexedProgrammingParagraph}\,\&\,%
-\ref{MetaprogrammingParagraph})). %; 
+(and %which 
+is relevant to
+Sections\,(\ref{AlgebraicTypeTheoryParagraph}\thinspace\itemref{ATTGenericProgramming}\,\& \mbox{\ref{IndexedProgrammingParagraph}}%\,\&\,%
+%%\ref{MetaprogrammingParagraph})
+). %; 
 %
 %and 
 %
@@ -2836,7 +2901,7 @@ textbook~\cite{Hutton07}.
 His general interest is to promote research on programming-language theory
 into real-world software development practices.  This is important for the
 proposed investigations in
-Sections\,(\ref{ProgrammingEffectsParagraph}\,\&\,\ref{MetaprogrammingParagraph}).
+Section\,(\ref{ModalLogicsParagraph}\thinspace\itemref{ReflectiveProgrammingLanguages}\,\&\,\ref{Programming}).
 %For instance, to turn resource and effect calculi into programming
 %languages, possibly in the context of extending the Nax language. 
 
@@ -3115,7 +3180,7 @@ J.\,Beck (1967).
 %\newblock Safe Recursive Set Functions.
 %%\newblock Available on-line.
 
-\hide{
+\hide{%
 \bibitem{BeesonBook}
 M.\,Beeson (1984).
 \newblock Foundations of constructive mathematics.
@@ -3133,6 +3198,11 @@ J.~B{\'e}nabou (1967).
 \newblock \emph{Introduction to bicategories}. 
 %\newblock In LNM 47, pp\,1--77. 
 \newblock In LNM 47.
+
+\bibitem{DybjerGP}
+M.\,Benke, P.\,Dybjer, and P.\,Jansson (2003).
+\newblock Universes for generic programs and proofs in dependent type theory.
+\newblock \emph{Nordic Journal of Computing}, 10:265--269.
 
 \bibitem{BentonWadler}
 N.\,Benton and P.\,Wadler (1996). 
@@ -3195,7 +3265,7 @@ P.\,Cohen (1966).
 \newblock \emph{Set theory and the continuum hypothesis}.
 %\newblock W A Benjamin.
 
-\hide{
+\hide{%
 \bibitem{CoquandNote}
 T.\,Coquand and G.\,Jaber (2012).
 \newblock A note on forcing and type theory.
@@ -3277,7 +3347,7 @@ A.\,Filinski (1994).
 %\newblock In \emph{POPL'94}, pp\,446--457.
 \newblock In \emph{POPL'94}.
 
-\hide{
+\hide{%
 \bibitem{LiftingKZ}
 M.\,Fiore (1995).  
 \newblock Lifting as a KZ-doctrine.  
@@ -3285,7 +3355,7 @@ M.\,Fiore (1995).
 \newblock In \emph{CTCS'96}.
 }
 
-\hide{
+\hide{%
 \bibitem{FiorePPDP}
 M.\,Fiore (2002). 
 \newblock Semantic analysis of Normalisation By Evaluation for typed
@@ -3342,7 +3412,7 @@ M.\,Fiore and O.\,Mahmoud (2010).
 \newblock Second-order algebraic theories.  
 \newblock In \emph{MFCS'10}, LNCS 6281, pp\,368--380. 
 
-\hide{
+\hide{%
 \bibitem{CompleteCuboidalSets}
 M.\,Fiore, G.\,Plotkin and A.J.\,Power (1997). 
 \newblock Complete cuboidal sets in axiomatic domain theory.  
@@ -3396,7 +3466,7 @@ J.-Y.\,Girard (1991).
 \newblock A new constructive logic: Classical logic.
 \newblock \emph{Math.\ Struct.\ Comp.\ Sci.}, 1(3).
 
-\hide{
+\hide{%
 \bibitem{Griffin}
 T.\,Griffin.
 \newblock A Formulae-as-Types notion of control.
@@ -3442,7 +3512,7 @@ G.\,Hutton (2007).
 \newblock Programming in Haskell.
 \newblock Cambridge University Press.
 
-\hide{
+\hide{%
 \bibitem{Hyland}
 M.\,Hyland (1988).
 \newblock A small complete category.
@@ -3497,14 +3567,14 @@ S.\,Kobayashi (1997).
 %\newblock In \emph{TCS}, 175:29--74.
 \newblock In \emph{TCS} 175.
 
-\hide{
+\hide{%
 \bibitem{KrivineRA}
 J.-L.\,Krivine (2011).
 \newblock Realizability algebras: a program to well order R.
 \newblock \emph{LMCS}-7(3:2).
 }
 
-\hide{
+\hide{%
 \bibitem{Lafont}
 Y.\,Lafont (1990).
 \newblock Interaction nets.
@@ -3586,7 +3656,7 @@ P.\,Martin-L{\"o}f (1975).
 \newblock An intuitionistic theory of types: predicative part.
 \newblock In \emph{Logic Colloquium} 1973, pp\,73--118.
 
-\hide{
+\hide{%
 \bibitem{MartinLofCMCP}
 P.\,Martin-L{\"o}f (1982).
 \newblock Constructive mathematics and computer programming.
@@ -3660,7 +3730,7 @@ S.\,Park and H.\,Im (2011).
 \newblock A modal logic internalizing normal proofs.
 \newblock \emph{Information and Computation}, 209:1519--1535.
 
-\hide{
+\hide{%
 \bibitem{Pierce}
 B.\,Pierce (2002).
 \newblock \emph{Types and programming languages}.
@@ -3748,7 +3818,7 @@ J.\,Seldin and J.\,R.\,Hindley (1980).
   Calculus and Formalism}.
 %\newblock Academic Press. 
 
-\hide{
+\hide{%
 \bibitem{Selinger}
 P.\,Selinger (2011).
 \newblock A survey of graphical languages for monoidal categories.
@@ -3775,6 +3845,13 @@ T.\,Sheard and S.\,Peyton Jones (2002).
 \newblock Template meta-programming for {Haskell}.
 %\newblock {\em ACM SIG{\-}PLAN Notices}, 37(12):60--75. 
 \newblock {\em ACM SIGPLAN Notices} 37.
+
+\bibitem{ReflectionSmith}
+B.\,Smith (1982). 
+\newblock Procedural Reflection in Programming Languages. 
+%\newblock Department of Electrical Engineering and Computer Science,
+%Massachusetts Institute of Technology, PhD Thesis.
+\newblock MIT, PhD Thesis.
 
 \bibitem{Strachey1967}
 C.\,Strachey (1967).

@@ -518,9 +518,6 @@ While Turing machines are the most widely used model for analysing
 computational complexity, the line of development starting with Church's
 {\lcalculus} is concerned with prototypical computational languages that
 are used to study high-level programming languages.  
-%On the other hand, 
-Turing's machines %~\cite{?} 
-are the most widely used model for analysing computational complexity.
 
 \paragraph*{Type theory and logic.}
 \label{SectionATypeTheoryAndLogicParagraph}
@@ -558,7 +555,7 @@ well-understood that the Simply-Typed Lambda Calculus with products provides
 an internal language for Cartesian Closed Categories; \viz~it is the
 calculus of all such models.  This view extends the Propositions-as-Types
 correspondence to a trinity consisting of the Simply-Typed Lambda Calculus
-\pagebreak%%%HACK!!!
+%\pagebreak%%%HACK!!!
 with products, Cartesian Closed Categories, and Propositional
 Intuitionistic Logic.
 
@@ -612,9 +609,9 @@ remains open:
 Besides simple and polymorphic type theories, a main development in the
 evolution of type theory has been that of Dependent Type Theory.  Dependent
 judgements and dependent types were introduced by de~Bruijn %~\cite{deBruijn}
-in the 1960s as an extension of their simple versions that allow types to be
-indexed by other types.  His motivation came from automating mathematics,
-where such objects abound.  
+in the 1960s as an extension of their simple versions allowing types to be
+indexed by other types.  He was motivated by the formalisation of
+mathematical theories, where such objects abound.  
 
 Two essential constructions on dependent judgements are: dependent sums and
 dependent product types.  Under the Propositions-as-Types correspondence, they
@@ -622,10 +619,12 @@ amount to existential and universal quantification.  A crucial problem is to:
 \rep{\ref{IntensionalTypeTheoryParagraph}}
   {Investigate equality and identity in dependent type theory.}
 
-The passage from sum and product types to their dependent versions required new
-type theories.  Categorical models suggest further generalisations of
-dependent sum and dependent product types; and, more generally, the following:
-=======
+The passage from sum and product types to their dependent versions
+required new type theories.  
+%
+Categorical models suggest further generalisations of dependent sum and
+dependent product types (in the form of so-called coends and ends); and,
+more generally, the following:
 \rep{\ref{CalculiSubsection}}
   {Develop type theories from mathematical models.}
 
@@ -648,7 +647,7 @@ One technique to do so is the presheaf construction.
 Discrete %In %their most basic %elementary discrete form, 
 pre\-sheaves can be found in programming languages as indexed data\-types
 (like the type $\mbox{\small$\mathsf{Vec}$}\:\alpha\:n$ of
-\mbox{$n$-dimentional} vectors of type $\alpha$).  Programming with indexed
+\mbox{$n$-dimensional} vectors of type $\alpha$).  Programming with indexed
 datatypes will be referred to as indexed programming.  
 
 Indexed programming is being developed from one of two main influences:
@@ -675,7 +674,7 @@ impact in programming-language theory.
 The predominant model-theoretic view of resources and effects is as dual
 categorical structures, resource comonads and computational monads, arising at
 opposite sides of an adjunction, intuitively between linear and multiplicative
-structure or between computations and values.  This is not so in all models
+structures or between computations and values.  This is not so in all models
 and the following remains unanswered.
 %
 \req{\ref{PolarisationParagraph}}
@@ -695,7 +694,7 @@ computation and data structures.  We incorporate this into the following.
 
 A theme orthogonal to the logics under consideration is whether they are
 specified in natural deduction or sequent calculus style. 
-\pagebreak%%%HACK!!!
+%\pagebreak%%%HACK!!!
 
 Work on the Propositions-as-Types correspondence has focussed on natural
 deduction systems, mainly because there is as yet no 
@@ -764,7 +763,7 @@ single universe of discourse, but rather as a variety of universes of
 discourse.  From this perspective, it is important to understand the
 interaction of modularly extending type theories.  A key notion is that of
 conservative extension.  
-\pagebreak%%%HACK!!!
+%\pagebreak%%%HACK!!!
 Informally, an extension of a type theory is
 conservative when it does not modify the judgemental equality of the extended
 type theory.
@@ -845,21 +844,24 @@ correspondence for modal logics.  We are specially interested in grounding it
 through categorical models, that have been scarcely investigated in this
 context.
 
-In connection to Section~\ref{MetaprogrammingParagraph}, we will 
-consider: 
+Logical systems to be studied include:
 %
 Borghuis' Modal Pure Type Systems; %~\cite{ModalPTS};
 %
 Artemov's Logic of Proofs %~\cite{ArtemovLP} 
 and related systems;
-%(\eg~\cite{AltArtemov,ArtemovIemhoff}); 
-%Daniyar S Shamkanov: Strong Normalization and Confluence for Reflexive
-%  Combinatory Logic 
 %
 Mendler's Multimodal $CK$; %~\cite{MendlerMMCK};
 and
 %
 Park and Im's Calculus $S_\Delta$. %~\cite{ParkIm}.
+
+A particularly interesting aspect of many of these systems is that they
+have reflective features, in that they can internally represent and
+manipulate themselves.  In this respect, and in connection to the proposed
+research in Section\,\ref{Programming}, we will investigate the role of
+modal calculi supporting reflection in the design of reflective
+programming languages.
 
 \subsubsection{Calculi}
 \label{CalculiSubsection}
@@ -960,11 +962,8 @@ The full scientific proposal contains further considerations on \hl{research}
 possibilities for system~\SysL\ in programming and for effects encompassing
 control.
 
-\paragraph{Metaprogramming.}
-\label{MetaprogrammingParagraph}
-
-\mbox{}\newline
-{\color{red}MISSING}
+%\paragraph{Metaprogramming.}
+%\label{MetaprogrammingParagraph}
 
 %\subsection{Conclusion}
 
@@ -1354,7 +1353,7 @@ Henrik Enstr{\o}m (Aarhus University, 1998).
 \item
 Computer Science Tripos Examiner for Part IB, Part II, Part II (General),
 and Diploma in 2006/07, 2007/08, and 2008/09 (Chair).  
-\pagebreak
+%\pagebreak
 Computer Laboratory, University of Cambridge.  
 \end{myitemize}
 
@@ -1449,7 +1448,7 @@ Computer Laboratory, University of Cambridge.
 \begin{myitemize}
 \item[]\small\ at the Computer Laboratory, University of Cambridge
 \end{myitemize}
-\pagebreak
+%\pagebreak
 
 \noindent
 PhD Student Ki Yung Ahn 
