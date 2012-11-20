@@ -69,6 +69,18 @@ higher-rank kind polymorphism leads to paradoxes
 In fact, type polymorphism in Nax is limited to rank-1 as well since
 the type infernce is based on Hindley-Milner \cite{Miln78a}.
 
-\paragraph{Gradual typing??? Concoqtion}
-TODO \KYA{I just found out that Concoqtion is closely related to Nax
-I saved some space so I can make a short comment about it here}
+
+\paragraph{Concoqtion}\hspace*{-.6ex}\cite{FogPasSeiTah07} is an extention of
+MetaOCaml with indexed types. Concoqtion share some similar design principles --
+Hindley--Minlner-style type inference and \emph{gradual typing by erasure} over
+(term) indices. Both in Nax and Concoqtion, a program using indexed types must
+still type check within the non-indexed sub-language (OCaml for Concoqtion)
+when all indices are erased from the program. However, indices in Concocqtion
+differ from term indices discussed in this paper (Nax, datatype promotion, and
+dependently typed languages in Agda). Concocqtion indices are Coq terms rather
+than Concocqtion terms. Although this obviously leads to code duplication
+between the index world (Coq) and the program world (OCaml), Concocqtion enjoys
+practical benefits of having access to the Coq libraries for reasoning about
+indices. Comparison of Concocqtion and other related systems is discussed in
+their technical report \citet{PasSieTah06}.
+
