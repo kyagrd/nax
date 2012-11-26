@@ -160,7 +160,7 @@ the typing context into two parts is the simplest solution.
  ~~~~
    \inference{\Delta |- \Gamma & \Delta |- A:*}{
               \Delta |- \Gamma,x:A}
-      \big( x\notin\dom(\Gamma) \big)
+      \big( x\notin\dom(\Gamma)\cup\dom(\Delta) \big)
 \]
 ~\\
 \paragraph{Sorting:} \fbox{$|- \kappa : \square$}
@@ -404,8 +404,8 @@ term level contexts.
 \paragraph{Well-formed typing contexts.}
 A type level context $\Delta$ is well-formed if (1) it is either empty,
 or (2) extended by a type variable binding $X^\kappa$ whose kind $\kappa$ is
-well-sorted under $\Delta$, or (3) extended by an index binding $i^A$
-whose type $A$ is well-kinded under the empty type level context at kind $*$.
+well-sorted, or (3) extended by an index binding $i^A$ whose type $A$ is
+well-kinded under the empty type level context at kind $*$.
 This restriction is similar to the one that occurs in the sorting rule ($Ri$)
 for term-indexed arrow kinds (see the paragraph {\bf\textit{Sorting}}).
 The consequence of this is that, in typing contexts and in sorts,
@@ -452,7 +452,7 @@ extended by type constructor equality when comparing indexed arrow kinds
 (see \Fig{eqFi}).
 
 \paragraph{Terms and their typing rules}
-The term syntax is exactly the same as other Curry-style calclui.
+The term syntax is exactly the same as other Curry-style calculi.
 We write $x$ for ordinary term variables introduced by
 term level abstractions ($\lambda x.t$).
 We write $i$ for index variables introduced by
@@ -469,11 +469,11 @@ The index generalization rule ($\forall I i$) is similar to
 the type generalization rule ($\forall I$), but generalizes over
 index variables ($i$) rather than type consturctor variables ($X$).
 The rule ($\forall I i$) has two side conditions
-while the rule ($\forall I$) has only one side conditions.
+while the rule ($\forall I$) has only one.
 The additional side condition $i\notin\FV(t)$ in the ($\forall I i$) rule
 prevents terms from accessing the type level index variables introduced by
 index polymorphism. Without this side condition, $\forall$-binder
-would no longer behave polymorphicaly, but instead would behave as
+would no longer behave polymorphically, but instead would behave as
 a dependent function, which are usually denoted by the $\Pi$-binder in
 dependent type theories. The rule ($\forall I$) for ordinary
 type generalization does not need such additional side condition
