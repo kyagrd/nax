@@ -24,7 +24,7 @@ Figure \ref{fig:sortingEx}
 illustrates differences and similarities between the mechanism
 for checking well-sortedness, by comparing the justification for
 the well-sortedness of the kind |List Ty -> *|.
-The important lessons of Figure \ref{fig:sortingEx} are
+The important lessons of Fig.\;\ref{fig:sortingEx} are
 that the Nax approach is closely related to \emph{universe subtyping} in Agda,
 and, the datatype promotion in Haskell is closely related to
 \emph{universe polymorphism} in Agda. 
