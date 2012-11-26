@@ -62,7 +62,7 @@ polymorphic kinds (|forall calX.kappa|) quantified over kind variables
 
 In Nax, kind polymorphism is limited to rank-1 since it is well-known that
 higher-rank kind polymorphism leads to paradoxes
-\cite{hurkens95simplification}
+\cite{hurkens95simplification}.
 %%%% there are several more things to cite according to below,
 %%%% but I can't figure them out except above
 %%%% http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=4&cad=rja&ved=0CEUQFjAD&url=http%3A%2F%2Fwww.cse.chalmers.se%2Fresearch%2Fgroup%2Flogic%2FTypesSS05%2FExtra%2Fmiquel_sl3.pdf&ei=SkOoULS-Gen-iwKnnYD4DA&usg=AFQjCNEGQtWmZpveVqykzrgpNUBuad7Yjw&sig2=piFq-fSCuWIeL0glaIQ8JA
@@ -77,10 +77,10 @@ Hindley--Milner-style type inference and \emph{gradual typing by erasure} over
 still type check within the non-indexed sub-language (OCaml for Concoqtion)
 when all indices are erased from the program. However, indices in Concoqtion
 differ from term indices discussed in this paper (Nax, datatype promotion, and
-dependently typed languages in Agda). Concoqtion indices are Coq terms rather
-than Concoqtion terms. Although this obviously leads to code duplication
+dependently typed languages like Agda). Concoqtion indices are Coq terms rather
+than OCaml terms. Although this obviously leads to code duplication
 between the index world (Coq) and the program world (OCaml), Concoqtion enjoys
 practical benefits of having access to the Coq libraries for reasoning about
-indices. Comparison of Concoqtion and other related systems is discussed in
-their technical report \citet{PasSieTah06}.
+indices. Comparison of Concoqtion and other related systems can be found in
+the technical report by \citet{PasSieTah06}.
 

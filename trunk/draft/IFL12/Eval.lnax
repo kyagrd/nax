@@ -24,7 +24,7 @@ data E : (Ty -> *) -> (Ty -> *) where
   PLUS  : r {I} -> r {I} -> E r {I}
   IF    : r {B} -> r {t} -> r {t} -> E r {t}
     deriving fixpoint Expr
-
+{-"\hspace*{-2.5ex}"-}-- |eval : Expr {t} -> Val {t}|
 eval e =  mcata { {t} . Val {t} } e with
             ev (VAL v)        = v
             ev (PLUS e1 e2)   =
