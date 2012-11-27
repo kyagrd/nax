@@ -281,7 +281,7 @@ a well-known example\footnote{The |HList| library in Haskell by
 \citet{HList-HW04} was originally introduced using type class constraints,
 rather than using GADTs and other relatively new extensions.}
 that uses datatypes containing types.
-Note that |HList| is index by |List{-"\;"-}*|, which is a promoted list
+Note that |HList| is indexed by |List{-"\;"-}*|, which is a promoted list
 whose elements are of kind |*|, that is, element are types.
 For instance, |hlist| in Fig.\;\ref{fig:hlist} contains
 three elements |3 : Int|, |True : Bool|, and |(1 :.2 :. Nil) : List Int|,

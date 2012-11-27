@@ -64,7 +64,7 @@ add an element (|a|) to a list (|List' a|) to get a new list (|List' a|).
 We instantiate |x| to the degenerate relation
 |(Elem a) : Unit -> Unit -> *|, which is tagged by a value of type |a|
 and witnesses a step with no interesting information.
-Then, we can define |List' a| as a synonym of |Path (Elem a) Unit Unit|,
+Then, we can define |List' a| as a synonym of |Path (Elem a) {U} {U}|,
 and its constructors |nil'| and |cons'|.
 
 Length indexed lists (|Vec a {n}|) need a natural number index to

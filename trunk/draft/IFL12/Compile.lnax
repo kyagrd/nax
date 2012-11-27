@@ -16,8 +16,8 @@ data Instr  :  (List Ty -> List Ty -> *) ->
      deriving fixpoint Inst
 {-""-}
 
-synonym  Code sc sc' {-"~"-} -- |= Path Inst {sc} {sc'}|
-  =  Path (Mu[List Ty -> List Ty -> *] Instr) {sc} {sc'}
+synonym  Code {sc} {sc'} = Path Inst {sc} {sc'}
+    -- ~ |Path (Mu[List Ty -> List Ty -> *] Instr) {sc} {sc'}|
 
 compile e =
   mcata { {t} . Code {ts} {`cons t ts} } e with

@@ -11,7 +11,7 @@ synonym List' a = Path (Elem a) {U} {U}
 
 nil' = pNil {-" ~~ "-} -- |: List' a|
 
--- |cons : a -> List' a -> List' a|
+-- |cons' : a -> List' a -> List' a|
 cons' x = pCons (MkElem x)
 
 -- instantiating to a length indexed list

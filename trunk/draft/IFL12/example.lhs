@@ -27,7 +27,7 @@ Instead, to define recursive types one uses a fixpoint type operator
 |kappa -> kappa| (\eg, |(L a) : * -> *|).
 Nax provides the usual data constructor |In[kappa]| to construct
 recursive values of the type |Mu[kappa]|.
-|In[kappa]| is used to defining the normal constructor functions of recursive types
+|In[kappa]| is used to define the normal constructor functions of recursive types
 (\eg, |nil| and |cons|).
 
 \quad

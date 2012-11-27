@@ -33,7 +33,7 @@
 \institute{
 	Portland State University, Portland, Oregon, USA
 	\thanks{supported by NSF grant 0910500.}
-	\\ \email{kya@cs.pdx.edu} \qquad \email{sheard@cs.pdx.edu}
+	\\ \email{\{kya,sheard\}@cs.pdx.edu}
 	\and
 	University of Cambridge, Cambridge, UK
 	\\ \email{\{Marcelo.Fiore,Andrew.Pitts\}@cl.cam.ac.uk}
@@ -45,15 +45,15 @@
 
 \begin{document}
 \maketitle
-\begin{abstract}
+\begin{abstract}\vskip-2ex
 Nax, a language designed to support term indices, enjoys the merits of
-logical consistency (in Curry--Howard sense) like formal proof assistants
+logical consistency (in the Curry--Howard sense) like formal proof assistants
 (\eg, Agda) and Hindley--Milner-style type inference like functional languages
 (\eg, Haskell). Examples in this article demonstrate that programming with
 term-indices in Nax is as pleasant as in Haskell and Agda, while enjoying
 the merits of both. We also discuss strengths and limitations of the Nax
-approach to indexed types.
-\keywords{indexed datatypes, GADTs, lightweight dependent types}
+approach to indexed types.\vskip-1ex
+\keywords{indexed datatypes, GADTs, lightweight dependent types, universe polymorphism, universe subtyping, term-indexed types}
 \end{abstract}
 
 \input{intro}
