@@ -4,12 +4,12 @@
 \section{Related Work} \label{sec:related}
 
 \paragraph{Singleton types{\rm ,}\!} first coined by \citet{Hayashi91},
-has been used in lightweight verification by simulating dependent types
+have been used in lightweight verification to simulate dependent types
 \cite{XiPfe98,KisSha07}. \citet{SheHooLin05} demonstrated that singleton types
 can be defined just like any other datatypes in Omega \cite{SheardOmega04},
-a language equipped with GADTs and rich kinds structure. Our universe and
-kind structure are much simpler (\eg, no user defined kinds in Nax) than Omega,
-yet singleton types are definable with less worries for code duplication
+a language equipped with GADTs and rich kinds structure. Nax's universe and
+kind structure is much simpler than Omega's (\eg, no user defined kinds in Nax),
+yet singleton types are definable with fewer worries about code duplication
 across different universes. Singleton types are typically indexed by
 the values of their non-singleton counterparts. For example,
 in Fig\;\ref{fig:env}, singleton natural numbers (|SNat|) are indexed by

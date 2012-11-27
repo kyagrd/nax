@@ -41,9 +41,9 @@ of |Expr| ensure that expressions are type correct by construction.
 For instance, a conditional expression |IF e0 e1 e2| can only be constructed
 when |e0| is a boolean expression (\ie, indexed by |B|) and
 |e1| and |e2| are expressions of the same type (\ie, both indexed by |t|).
-
 Then, we can write an evaluator (|eval|) (from expressions to values) which
 preserves the index that represents the object language type. The definition
 of |eval| is fairly straightforward, since our expression language is a very
-simple one.
+simple one. Note that the functions in Nax do not
+need type annotations (they appear as comments).
 

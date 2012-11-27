@@ -31,9 +31,8 @@ recursive values of the type |Mu[kappa]|.
 (\eg, |nil| and |cons|).
 
 \quad
-However, one cannot freely eliminate (or destruct) values of $\mu$ types.
-In Nax one cannot patten match against |In[kappa] e|. Instead Nax 
-provides several well-behaved (\ie, always
+However, in Nax one cannot patten match against |In[kappa] e|. 
+Instead, Nax provides several well-behaved (\ie, always
 terminating) Mendler-style recursion combinators, such as {\bf mcata},
 that work naturally over $\mu$ types, even with indices. 
 
@@ -71,7 +70,7 @@ The three examples we introduce are the following:
 (Sect. \ref{ssec:eval}),
 \item A generic |Path| datatype that can be specialized to various
 list-like structures with indices (Sect. \ref{ssec:glist}), and
-\item A stack safe compiler for the same simple expression lagnauge,
+\item A stack safe compiler for the same simple expression langauge,
 which uses the |Path| datatype (Sect. \ref{ssec:compile}).
 \end{itemize}
 We adopted the examples from Conor McBride's keynote talk \cite{McBride12}

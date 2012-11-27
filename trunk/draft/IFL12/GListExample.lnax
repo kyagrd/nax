@@ -22,7 +22,7 @@ data ElemV : * -> Nat -> Nat -> * where
 synonym  Vec a {n}
            = Path (ElemV a) {n} {`zero}
 
-vNil = pNil {-" ~~ "-} -- |: Vec a Z|
+vNil = pNil {-" ~~ "-} -- |: Vec a {`zero}|
 
 -- |vCons : a -> Vec a {n} -> Vec a {`succ n}|
 vCons x = pCons (MkElemV x)

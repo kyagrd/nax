@@ -1,31 +1,30 @@
 \section{Introduction}
 During the past decade, the functional programming community achieved
 partial success in their goal of maintaining fine-grained properties
-by moderate extensions to the type system of functional languages
+by only moderately extending functional language type systems
 \cite{CheHin03,CheHin02,Xi03}.
 This approach is often called \emph{``lightweight''}\footnote{e.g.,
   \url{http://okmij.org/ftp/Computation/lightweight-dependent-typing.html} }
-in contrast to proof assistant based on a fully dependent types
+in contrast to the approach taken by fully dependent type systems
 (\eg, Coq, Agda).
-The Generalized Algebraic Data Type (GADT) extension implemented
-in the Glasgow Haskell Compiler (GHC) has promoted the lightweight approach
-widely availing to everyday functional programming tasks.
-OCaml encoding of GADTs has been reported \cite{ManStu09}
-and recent versions of OCaml support GADTs natively \cite{GarNor11}.
+The Generalized Algebraic Data Type (GADT) extension, implemented
+in the Glasgow Haskell Compiler (GHC) and in OCaml\cite{ManStu09,GarNor11}, 
+has made the lightweight approach
+widely applicable to everyday functional programming tasks.
 
-Unfortunately, most practical implementations based on
-the lightweight approach lack \textbf{logical consistency} and
+Unfortunately, most practical lightweight implementations 
+lack \textbf{logical consistency} and
 \textbf{type inference}. In addition,
 they often lack term indexing, so \textbf{term indices are faked}
 (or, simulated) by additional type structure replicating the requisite term
 structure.
 A recent extension in GHC, datatype promotion \cite{YorgeyWCJVM12},
-attempts to address the issue of term indices, but the issues of
+addresses the issue of term indices, but the issues of
 logical consistency and type inference still remain.
 
-Nax is a programming language designed to support indexed datatypes,
-while resolving all the three issues mentioned above.
-More specifically,
+Nax is a programming language designed to support both type and
+term indexed datatypes,
+logical consistency, and type inference.
 \begin{description}
 \item[$(1)$ Nax is strongly normalizing and logically consistent.]~\\
 Types in Nax can be given logical interpretations as propositions
@@ -34,31 +33,34 @@ Theories behind strong normalization and logical consistency are
 Mendler-style recursion \cite{AhnShe11} and System \Fi\ (to be published).
 
 \item[$(2)$ Nax supports Hindley--Milner-style type inference.]~\\
-Nax does not need annotations for every top-level functions, which are usually
-required for bidirectional type checking in dependently typed languages.
-Type annotations are only required in the GADTs declarations and
-the index transformers attached to pattern matching constructs for GADTs
+Nax needs few type annotations. In particular,
+annotations for top-level functions, which are usually
+required for bidirectional type checking in dependently typed languages,
+are unnecessary.
+Type annotations are only required when introducing GADTs and as
+index transformers attached to pattern matching constructs for GADTs
 (Table\;\ref{tbl:naxfeatures}).
 
 \item[$(3)$ Nax programs are expressive and concise.]~\\
 Nax programs are similar in size to their Haskell and Agda equivalents
 (Sect.\;\ref{sec:example}), yet they still retain logical consistency
-and type inference. Despite the features unique to Nax
-(Table\;\ref{tbl:naxfeatures}), it does not necessary add verbosity.
+and type inference. Despite several features unique to Nax,
+explained in Table\;\ref{tbl:naxfeatures}, these features
+do not necessarily add verbosity.
 
 \item[$(4)$ Nax supports term indices within a relatively simple type system.]
-The type system of Nax (Sect.\;\ref{ssec:sorting}) is based on
-two levels of universe, just like Haskell, yet it allows nested term indices
-(Sect.\;\ref{ssec:sortingEx}) used in dependently typed languages based on
-countably many stratified universes.
+The type system of Nax (Sect.\;\ref{ssec:sorting}) is based on a
+two level universe structure, just like Haskell, yet it allows nested term indices
+(Sect.\;\ref{ssec:sortingEx}) as in languages
+based on a universe stucture of countably many levels, e.g., Coq and Agda.
 \end{description}
+
 The detailed mechanism behind (1) and (2) above are beyond of the scope of
-this paper, to be discussed in sequel publications and Ahn's dissertation.
-In this article, we demonstrate that programming with indexed datatypes in Nax
-is as handy as in Haskell or Agda, going through a series of examples --
-a type preserving evaluator (Sect.\;\ref{ssec:eval}),
+this paper, and will be discussed in sequel publications and Ahn's dissertation.
+We demonstrate, through a series of examples -- a type preserving evaluator (Sect.\;\ref{ssec:eval}),
 a generic path datatype (Sect.\;\ref{ssec:glist}), and
-a stack safe compiler (Sect.\;\ref{ssec:compile}).
+a stack safe compiler (Sect.\;\ref{ssec:compile}), that programming in Nax 
+is as simple as programming in Haskell or Agda.
 Then, we discuss the key design principles behind indexed datatypes in Nax
 (Sect.\;\ref{ssec:sorting}) and its strengths and limitations
 (Sect.\;\ref{ssec:sortingEx}).

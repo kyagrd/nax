@@ -1,7 +1,7 @@
 %include lhs2TeX.fmt
 %include includelhs2tex.lhs
 
-\section{Discussions} \label{sec:discuss}
+\section{Discussion} \label{sec:discuss}
 Indexed types (\eg, |Val| in Fig.\;\ref{fig:eval}) are
 classified by kinds (\eg, |Ty -> *|). What do valid kinds look like?
 Sorting rules define kind validity (or, well-sortedness).
