@@ -158,12 +158,12 @@ in the domain (the left-hand-side of the arrow) but not in the codomain
 (\ie, |kappa1 -> kappa2 -> kappa3| means |kappa1 -> (kappa2 -> kappa3)|),
 kinds in Nax always terminate in |*|. For example,\footnote{
 	Nax implementation allows programmers to omit curly braces in kinds
-	when it is obvious that the domain of arrow kind is a type,
-	rather than a kind. For instance, Nax understnads |Nat -> *| as
-	|{Nat} -> *| since |Nat| is obviously a (nullary) type constructor
-	because it starts with an uppercase letter.
+	when the domain of arrow kind obviously looks like a type.
+	For instance, |Nat -> *| is considered as |{Nat} -> *|
+	since |Nat| is obviously a (nullary) type constructor
+	because it starts with an uppercase.
 	In Sect.\ref{sec:example}, we omitted curly braces to help readers 
-	compare Nax with other languages (the Rosetta stone approach).
+	compare Nax with other languages.
 	From now on, we will consistently put curly braces for clarity.} \\ $~$
 \quad |* -> * -> *|, \qquad |{Nat} -> {Nat} -> *|, \qquad
 |({Nat} -> *) -> {Nat} -> *|. \\
@@ -265,7 +265,7 @@ indexed datatypes, whose terms indices are of non-indexed types
 where some term indices are themselves of term-indexed datatypes.
 Such nested term indices are often useful in dependently typed programming.
 For instance, \citet{BraHam10} used an environment datatype with nested term
-indices in the implementation of their EDSL for verified resource usage protocols.
+indices in their EDSL implementation for verified resource usage protocols.
 Figure \ref{fig:env} illustrates transcriptions of their environment datatype
 (|Env|), originally written in Idris \cite{Brady11}, into Nax and Agda.
 The datatype |Env| is indexed by a length indexed list (|Vec|), which is again
