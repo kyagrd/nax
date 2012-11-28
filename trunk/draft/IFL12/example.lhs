@@ -4,7 +4,7 @@
 \begin{table}[h]
 \vskip-4ex
 \begin{tcolorbox}[boxsep=-1mm]
-\quad The ``|deriving fixpoint T|'' clause following 
+\quad The ``|deriving fixpoint T|'' clause following
 |data F : {-"\,\overline{k}"-} -> kappa -> kappa where {-"\cdots"-}|
 automatically derives a recursive type
 synonym |T {-"\,\overline{a}"-} = Mu[kappa](F {-"\,\overline{a}"-}) : kappa|
@@ -22,16 +22,16 @@ just like Haskell's |type| keyword.
 
 \quad
 In Nax, |data| declarations cannot be recursive.
-Instead, to define recursive types one uses a fixpoint type operator
-|Mu[kappa] : (kappa -> kappa) -> kappa| over non-recursive base structures of kind
-|kappa -> kappa| (\eg, |(L a) : * -> *|).
+Instead, to define recursive types, one uses a fixpoint type operator
+|Mu[kappa] : (kappa -> kappa) -> kappa| over non-recursive base structures
+of kind |kappa -> kappa| (\eg, |(L a) : * -> *|).
 Nax provides the usual data constructor |In[kappa]| to construct
 recursive values of the type |Mu[kappa]|.
-|In[kappa]| is used to define the normal constructor functions of recursive types
-(\eg, |nil| and |cons|).
+|In[kappa]| is used to define the normal constructor functions of
+recursive types (\eg, |nil| and |cons|).
 
 \quad
-However, in Nax one cannot patten match against |In[kappa] e|. 
+However, one cannot patten match against |In[kappa] e| in Nax.
 Instead, Nax provides several well-behaved (\ie, always
 terminating) Mendler-style recursion combinators, such as {\bf mcata},
 that work naturally over $\mu$ types, even with indices. 
@@ -66,11 +66,11 @@ The features unique to Nax are summarized in Tabel\;\ref{tbl:naxfeatures}.
 
 The three examples we introduce are the following:
 \begin{itemize}\vspace*{-.5ex}
-\item A type preserving evaluator for a simple expression language
+\item A type-preserving evaluator for a simple expression language
 (Sect. \ref{ssec:eval}),
 \item A generic |Path| datatype that can be specialized to various
 list-like structures with indices (Sect. \ref{ssec:glist}), and
-\item A stack safe compiler for the same simple expression langauge,
+\item A stack-safe compiler for the same simple expression langauge,
 which uses the |Path| datatype (Sect. \ref{ssec:compile}).
 \end{itemize}
 We adopted the examples from Conor McBride's keynote talk \cite{McBride12}

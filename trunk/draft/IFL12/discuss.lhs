@@ -16,7 +16,7 @@ those supported in other languages (Sect.\;\ref{ssec:sortingEx}).
 
 The concrete syntax for kinds appears similar among Haskell, Nax, and Agda.
 For instance, in Fig.\;\ref{fig:eval}, the kind |Ty -> *| has exactly the same
-textual representation in all three of the languages. However, each language
+textual representation in all of the three languages. However, each language
 has its own universe structure, kind syntax, and sorting rules,
 as summarized in Fig.\;\ref{fig:sorting}. 
 
@@ -157,12 +157,12 @@ in the domain (the left-hand-side of the arrow) but not in the codomain
 (the right-hand-side of the arrow).  Modulo right associativity of arrows
 (\ie, |kappa1 -> kappa2 -> kappa3| means |kappa1 -> (kappa2 -> kappa3)|),
 kinds in Nax always terminate in |*|. For example,\footnote{
-	Nax implementation allows programmers to omit curly braces in kinds
+	The Nax implementation allows programmers to omit curly braces in kinds
 	when the domain of arrow kind obviously looks like a type.
 	For instance, |Nat -> *| is considered as |{Nat} -> *|
 	since |Nat| is obviously a (nullary) type constructor
 	because it starts with an uppercase.
-	In Sect.\ref{sec:example}, we omitted curly braces to help readers 
+	In Sect.\;\ref{sec:example}, we omitted curly braces to help readers 
 	compare Nax with other languages.
 	From now on, we will consistently put curly braces for clarity.} \\ $~$
 \quad |* -> * -> *|, \qquad |{Nat} -> {Nat} -> *|, \qquad

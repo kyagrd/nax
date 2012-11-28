@@ -30,7 +30,7 @@ In this section we introduce a generic |Path| datatype.\footnote{
 We will instantiate |Path| into three different types of
 lists --  plain lists, length indexed lists 
 (|List'| and |Vec| in Fig.\;\ref{fig:glist})
-and a |Code| type, in order to write a stack safe compiler
+and a |Code| type, in order to write a stack-safe compiler
 (Fig.\;\ref{fig:compile}).
 
 %% We will explain Fig.\;\ref{fig:glist} by discussing the Nax code.

@@ -15,12 +15,12 @@
 \end{landscape}
 } % end afterpage
 
-In Figure\;\ref{fig:compile}, we implement a stack safe
+In Figure\;\ref{fig:compile}, we implement a stack-safe
 compiler for the same expression language (|Expr| in Fig.\;\ref{fig:eval})
-discussed in Sect.\;\ref{ssec:eval}. In Figure \ref{fig:eval} of that section 
+discussed in Sect.\;\ref{ssec:eval}. In Fig.\;\ref{fig:eval} of that section 
 we implemented an index preserving evaluator
 |eval : Expr {t} -> Val {t}|. Here,
-the stack safe compiler |compile : Expr {t} -> Code {ts} {`cons t ts}|
+the stack-safe compiler |compile : Expr {t} -> Code {ts} {`cons t ts}|
 uses the index to enforce stack safety
 -- an expression of type |t| compiles to some code, which when run on
 a stack machine with an initial stack configuration |ts|, terminates 
@@ -30,18 +30,18 @@ A stack configuration is an abstraction of the stack
 that tracks only the types of the values stored there.
 We represent a stack configuration as
 a list of type representations (|List Ty|).\footnote{
-	The astute reader may wonder why we use |List| instead of
+	The astute reader may wonder why we use |List| instead of the
 	already defined |List'| in Fig.\;\ref{fig:glist}, which is exactly
-	the plain list we want. In Nax and Agda, it is possible have
+	the plain list we want. In Nax and Agda, it is possible to have
 	term indices of |List' Ty| instead of |List Ty|. (In Nax and Agda,
 	the |List| datatype is defined in their standard libraries.)
 	Unfortunately, it is not the case in Haskell.
 	Haskell's datatype promotion does not allow promoting datatypes
-	indexed by already promoted datatypes. Recall that |List' Ty| is
+	indexed by the already promoted datatypes. Recall that |List' Ty| is
 	a synonym of |Path (Elem Ty) () ()|, which cannot be promoted to
-	an index since it is indexed by already promoted unit term |()|.
+	an index since it is indexed by the already promoted unit term |()|.
 	In the following section, we will discuss further on how
-	the two approaches of Nax verses Haskell differ
+	the two approaches of Nax versus Haskell differ
 	in their treatment of term indexed types.}
 For instance, the configuration for the stack containing three values
 (from top to bottom) [3, True, 4] is |cons I (cons B (cons I Nil))|.

@@ -9,14 +9,14 @@
 \begin{minipage}{.31\linewidth}\input{exEvalHs}\end{minipage}
 \begin{minipage}{.35\linewidth}\input{exEvalNax}\end{minipage}
 \begin{minipage}{.33\linewidth}\input{exEvalAgda}\end{minipage}
-\caption{A type preserving evaluator (|eval|) that evaluates
+\caption{A type-preserving evaluator (|eval|) that evaluates
 	an expression (|Expr|) to a value (|Val|).}
 \label{fig:eval}
 \end{figure}
 \end{landscape}
 } % end afterpage
 
-In a language that supports term-indices, one writes a type preserving
+In a language that supports term-indices, one writes a type-preserving
 evaluator as follows: (1) define a datatype TypeUniverse which encodes
 types of the object language; (2) define a datatype Value (the range of
 object language evaluation) indexed by terms of the type TypeUniverse;
@@ -24,9 +24,9 @@ object language evaluation) indexed by terms of the type TypeUniverse;
 and (4) write the evaluator (from expressions to values) that preserves
 the term indices representing the type of the object language.
 Once the evaluator type checks, we are confident that the evaluator is
-type preserving, relying on type preservation of the host-language type system.
+type-preserving, relying on type preservation of the host-language type system.
 In Fig.\,\ref{fig:eval}, we provide a concrete example of such
-a type preserving evaluator for a very simple expression language (|Expr|).
+a type-preserving evaluator for a very simple expression language (|Expr|).
 
 Our TypeUniverse (|Ty|) for the expression language consists of numbers and
 booleans, represented by the constants |I| and |B|. We want to evaluate an

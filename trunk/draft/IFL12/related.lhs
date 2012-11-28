@@ -12,7 +12,7 @@ kind structure is much simpler than Omega's (\eg, no user defined kinds in Nax),
 yet singleton types are definable with fewer worries about code duplication
 across different universes. Singleton types are typically indexed by
 the values of their non-singleton counterparts. For example,
-in Fig\;\ref{fig:env}, singleton natural numbers (|SNat|) are indexed by
+in Fig.\;\ref{fig:env}, singleton natural numbers (|SNat|) are indexed by
 natural numbers (|Nat|).  Note that we can index datatypes by singleton types
 in Nax, while datatype promotion cannot (recall Sect.\;\ref{ssec:sortingEx}).
 For instance |Env'| indexed by |SNat| in Fig.\;\ref{fig:env} is a more
