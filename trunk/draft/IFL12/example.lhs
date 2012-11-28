@@ -31,7 +31,7 @@ recursive values of the type |Mu[kappa]|.
 recursive types (\eg, |nil| and |cons|).
 
 \quad
-However, one cannot patten match against |In[kappa] e| in Nax.
+However, one cannot pattern match against |In[kappa] e| in Nax.
 Instead, Nax provides several well-behaved (\ie, always
 terminating) Mendler-style recursion combinators, such as {\bf mcata},
 that work naturally over $\mu$ types, even with indices. 
@@ -62,7 +62,7 @@ possible, by choosing the same identifiers and syntax structure whenever
 possible, so that anyone already familiar with Haskell-like languages
 or Agda-like languages will understand our Nax programs
 just by comparing them with the programs on the left and right.
-The features unique to Nax are summarized in Tabel\;\ref{tbl:naxfeatures}.
+The features unique to Nax are summarized in Table\;\ref{tbl:naxfeatures}.
 
 The three examples we introduce are the following:
 \begin{itemize}\vspace*{-.5ex}

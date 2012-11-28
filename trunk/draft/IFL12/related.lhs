@@ -7,7 +7,7 @@
 have been used in lightweight verification to simulate dependent types
 \cite{XiPfe98,KisSha07}. \citet{SheHooLin05} demonstrated that singleton types
 can be defined just like any other datatypes in Omega \cite{SheardOmega04},
-a language equipped with GADTs and rich kinds structure. Nax's universe and
+a language equipped with GADTs and rich kind structure. Nax's universe and
 kind structure is much simpler than Omega's (\eg, no user defined kinds in Nax),
 yet singleton types are definable with fewer worries about code duplication
 across different universes. Singleton types are typically indexed by
@@ -22,7 +22,7 @@ just by referring to the |SNat| index, without extra type level computation
 on the |Vec| index.
 
 \citet{EisWei12}, in the setting of Haskell's datatype promotion,
-automatically derives a singleton type (\eg, singleton natural numbers) and
+automatically derive a singleton type (\eg, singleton natural numbers) and
 its associated functions (\eg, addition over singleton natural numbers) from
 their non-singleton counterparts (\eg, natural numbers and their addition).
 We think it would be possible to apply similar strategies to Nax, and even
@@ -61,7 +61,7 @@ polymorphic kinds (|forall calX.kappa|) quantified over kind variables
 (|calX : BOX|) since everything is already promoted to the kind level.
 
 In Nax, kind polymorphism is limited to rank-1 since it is well-known that
-higher-rank kind polymorphism leads to paradoxes
+higher-rank kind polymorphism leads to a paradox
 \cite{hurkens95simplification}.
 %%%% there are several more things to cite according to below,
 %%%% but I can't figure them out except above
@@ -70,7 +70,7 @@ In fact, type polymorphism in Nax is limited to rank-1 as well since
 the type inference is based on Hindley-Milner \cite{Miln78a}.
 
 
-\paragraph{Concoqtion}\hspace*{-.6ex}\cite{FogPasSeiTah07} is an extention of
+\paragraph{Concoqtion}\hspace*{-.6ex}\cite{FogPasSeiTah07} is an extension of
 MetaOCaml with indexed types. Concoqtion share some similar design principles --
 Hindley--Milner-style type inference and \emph{gradual typing by erasure} over
 (term) indices. Both in Nax and Concoqtion, a program using indexed types must
