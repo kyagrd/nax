@@ -15,11 +15,10 @@ the values of their non-singleton counterparts. For example,
 in Fig.\;\ref{fig:env}, singleton natural numbers (|SNat|) are indexed by
 natural numbers (|Nat|).  Note that we can index datatypes by singleton types
 in Nax, while datatype promotion cannot (recall Sect.\;\ref{ssec:sortingEx}).
-For instance |Env'| indexed by |SNat| in Fig.\;\ref{fig:env} is a more
-faithful transcription of the dependently typed version than |Env|,
-since |Env'| has a direct handle on size of the environment at type level,
-just by referring to the |SNat| index, without extra type level computation
-on the |Vec| index.
+For instance, |Env'| indexed by |SNat| in Fig.\;\ref{fig:env} can better
+simulate the dependently typed version than |Env|, since |Env'| has a direct
+handle on size of the environment at type level, just by referring to
+the |SNat| index, without extra type level computation on the |Vec| index.
 
 \citet{EisWei12}, in the setting of Haskell's datatype promotion,
 automatically derive a singleton type (\eg, singleton natural numbers) and
