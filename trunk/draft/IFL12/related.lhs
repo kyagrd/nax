@@ -6,7 +6,7 @@
 \paragraph{Singleton types{\rm ,}\!} first coined by \citet{Hayashi91},
 have been used in lightweight verification to simulate dependent types
 \cite{XiPfe98,KisSha07}. \citet{SheHooLin05} demonstrated that singleton types
-can be defined just like any other datatypes in Omega \cite{SheardOmega04},
+can be defined just like any other datatype in Omega \cite{SheardOmega04},
 a language equipped with GADTs and rich kind structure. Nax's universe and
 kind structure is much simpler than Omega's (\eg, no user defined kinds in Nax),
 yet singleton types are definable with fewer worries about code duplication

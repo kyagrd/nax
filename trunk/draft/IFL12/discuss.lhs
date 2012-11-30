@@ -158,13 +158,12 @@ in the domain (the left-hand-side of the arrow) but not in the codomain
 (\ie, |kappa1 -> kappa2 -> kappa3| means |kappa1 -> (kappa2 -> kappa3)|),
 kinds in Nax always terminate in |*|. For example,\footnote{
 	The Nax implementation allows programmers to omit curly braces in kinds
-	when the domain of arrow kind obviously looks like a type.
+	when the domain of an arrow kind obviously looks like a type.
 	For instance, |Nat -> *| is considered as |{Nat} -> *|
-	since |Nat| is obviously a (nullary) type constructor
-	because it starts with an uppercase.
+	since |Nat| is obviously a type because it starts with an uppercase.
 	In Sect.\;\ref{sec:example}, we omitted curly braces to help readers 
 	compare Nax with other languages.
-	From now on, we will consistently put curly braces for clarity.} \\ $~$
+	From now on, we will consistently put curly braces in kinds.} \\ $~$
 \quad |* -> * -> *|, \qquad |{Nat} -> {Nat} -> *|, \qquad
 |({Nat} -> *) -> {Nat} -> *|. \\
 The sorting rule (\raisebox{1pt}{\tiny\{\}}$->$) could be understood as

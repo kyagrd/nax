@@ -10,7 +10,12 @@
 \begin{minipage}{.35\linewidth}\input{exEvalNax}\end{minipage}
 \begin{minipage}{.33\linewidth}\input{exEvalAgda}\end{minipage}
 \caption{A type-preserving evaluator (|eval|) that evaluates
-	an expression (|Expr|) to a value (|Val|).}
+	an expression (|Expr|) to a value (|Val|).}\vskip1.5ex
+\hspace{33ex}\begin{minipage}{.6\linewidth}
+Curly braces in the Nax code above indicates the use of term indices in types.
+For instance, |t| appearing in |{ t }| is a term-index variable rather than
+a type variable.
+\end{minipage}
 \label{fig:eval}
 \end{figure}
 \end{landscape}
@@ -45,5 +50,5 @@ Then, we can write an evaluator (|eval|) (from expressions to values) which
 preserves the index that represents the object language type. The definition
 of |eval| is fairly straightforward, since our expression language is a very
 simple one. Note that the functions in Nax do not
-need type annotations (they appear as comments).
+need type annotations (they appear as comments in \textcolor{gray}{gray}).
 

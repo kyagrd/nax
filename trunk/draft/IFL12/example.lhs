@@ -38,7 +38,7 @@ that work naturally over $\mu$ types, even with indices.
 
 \quad 
 To support type inference, Nax requires programmers to annotate Mendler-style
-combinators with index tranformers. For instance, Nax can infer that the term
+combinators with index transformers. For instance, Nax can infer that the term
 |(\ x -> mcata { {i} {j} . T2 {j} {i} } x with {-"\,\cdots"-})| has type |T1 {i} {j} -> T2 {j} {i}|
 using the information in the index transformer
 {\tiny |{ {i} {j} . T2 {j} {i} }|}.
@@ -70,7 +70,7 @@ The three examples we introduce are the following:
 (Sect. \ref{ssec:eval}),
 \item A generic |Path| datatype that can be specialized to various
 list-like structures with indices (Sect. \ref{ssec:glist}), and
-\item A stack-safe compiler for the same simple expression langauge,
+\item A stack-safe compiler for the same simple expression language,
 which uses the |Path| datatype (Sect. \ref{ssec:compile}).
 \end{itemize}
 We adopted the examples from Conor McBride's keynote talk \cite{McBride12}
