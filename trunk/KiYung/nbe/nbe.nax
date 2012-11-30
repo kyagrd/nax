@@ -46,6 +46,10 @@ rr t = mcata {{t} . Bool' {b} -> Ret {b} {t}} t with
                                               (app e (unRetT(f a tt) [] v)) ) )
   -- reify
   f Iota'      True' = RT (\_   -> \v -> unsyn v)
-  f (Arr' a b) True' = RT (\xxs -> \v -> case ht xxs of
-                                           (x,xs) -> lam x ( (var x)) ) -- TODO
+  f (Arr' a b) True' =
+    RT (\xxs -> \v -> case ht xxs of
+                       (x,xs) ->
+                        msfcata {{`arr a b} . Tm {`arr a b}} v with
+                         _ inv (Fun v0) = lam x (var x)
+       )
 

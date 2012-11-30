@@ -27,12 +27,12 @@ data Val :: T -> * where
 vars = map (:[]) cs ++ [c:show n | c<-cs, n<-[0..]] where cs="xyz"
 
 reflect :: Ty t -> Tm t -> Val t
-reflect Iota        e = Syn e
-reflect (t1 :-> t2) e = Fun (\v -> reflect t2 (App e (reify t1 vars v)))
+reflect Iota      e = Syn e
+reflect (t1:->t2) e = Fun (\v -> reflect t2 (App e (reify t1 v vars)))
 
-reify :: Ty t -> [String] -> Val t -> Tm t
-reify Iota        _      (Syn t) = t
-reify (t1 :-> t2) (x:xs) (Fun v) = Lam x (reify t2 xs (v (reflect t1 (Var x))))
+reify :: Ty t -> Val t -> [String] -> Tm t
+reify Iota      (Syn t) _      = t
+reify (t1:->t2) (Fun v) (x:xs) = Lam x (reify t2 (v (reflect t1 (Var x))) xs)
 
 {-
 type Ctx = [(String,Val)]
