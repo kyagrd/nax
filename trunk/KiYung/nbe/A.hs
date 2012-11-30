@@ -21,18 +21,18 @@ data Tm :: T -> * where
   App :: Tm (a:>b) -> Tm a -> Tm b
 
 data Val :: T -> * where
-  LAM :: (Val a -> Val b) -> Val (a:>b)
-  SYN :: Tm I -> Val I
+  Fun :: (Val a -> Val b) -> Val (a:>b)
+  Syn :: Tm I -> Val I
 
 vars = map (:[]) cs ++ [c:show n | c<-cs, n<-[0..]] where cs="xyz"
 
 reflect :: Ty t -> Tm t -> Val t
-reflect Iota        e = SYN e
-reflect (t1 :-> t2) e = LAM (\v -> reflect t2 (App e (reify t1 v vars)))
+reflect Iota        e = Syn e
+reflect (t1 :-> t2) e = Fun (\v -> reflect t2 (App e (reify t1 vars v)))
 
-reify :: Ty t -> Val t -> [String] -> Tm t
-reify Iota        (SYN t) _      = t
-reify (t1 :-> t2) (LAM v) (x:xs) = Lam x (reify t2 (v (reflect t1 (Var x))) xs)
+reify :: Ty t -> [String] -> Val t -> Tm t
+reify Iota        _      (Syn t) = t
+reify (t1 :-> t2) (x:xs) (Fun v) = Lam x (reify t2 xs (v (reflect t1 (Var x))))
 
 {-
 type Ctx = [(String,Val)]
@@ -40,9 +40,9 @@ type Ctx = [(String,Val)]
 meaning :: Ctx -> Tm -> Val
 meaning ctx (Var x)      = case lookup x ctx of Just v -> v
                                                 Nothing -> undefined
-meaning ctx (Lam x e)    = LAM (\v -> meaning ((x,v):ctx) e)
+meaning ctx (Lam x e)    = Fun (\v -> meaning ((x,v):ctx) e)
 meaning ctx (App e1 e2)  = case meaning ctx e1 of
-                             LAM v1 -> v1 (meaning ctx e2)
+                             Fun v1 -> v1 (meaning ctx e2)
                              _ -> undefined
 
 nbe :: Ty -> Tm -> Tm

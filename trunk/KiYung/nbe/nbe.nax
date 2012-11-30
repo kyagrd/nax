@@ -1,0 +1,51 @@
+synonym String = List Char
+
+data T r = Iota | Arr r r deriving fixpoint Ty
+
+data T' : (Ty -> *) -> (Ty -> *) where
+  Iota' : T' r {iota}
+  Arr'  : r {a} -> r {b} -> T' r {`arr a b}
+   deriving fixpoint Ty'
+
+data TmF : (Ty -> *) -> (Ty -> *) where
+  Var : String -> TmF r {a}
+  Lam : String -> r {b} -> TmF r {`arr a b}
+  App : r {`arr a b} -> r {a} -> TmF r {b}
+   deriving fixpoint Tm
+
+data V : (Ty -> *) -> (Ty -> *) where
+  Fun : (r {a} -> r {b}) -> V r {`arr a b}
+  Syn : Tm {`iota} -> V r {`iota}
+   deriving fixpoint Val
+
+data Ret : Bool -> Ty -> * where
+  RF : (Tm {t} -> Val {t}) -> Ret {False} {t} 
+  RT : ([String] -> Val {t} -> Tm {t}) -> Ret {True} {t}
+
+data Bool' : Bool -> * where
+  False' : Bool' {False}
+  True' : Bool' {True}
+
+-- unfun v = mcata { {`arr a b} . Val {a} -> Val {b} } v with _ (Fun f) = f
+unsyn v = mcata { {`iota} . Tm {`iota} } v with _ (Syn t) = t
+
+ht l = mprim l with
+        _ cast Nil         = ("_",nil)
+        _ cast (Cons x xs) = (x,cast xs)
+
+unRetF (RF f) = f
+unRetT (RT f) = f
+
+tt = True'
+ff = False'
+
+rr t = mcata {{t} . Bool' {b} -> Ret {b} {t}} t with
+  -- reflect
+  f Iota'      False' = RF (\e -> syn e)
+  f (Arr' a b) False' = RF (\e -> fun(\v -> unRetF(f b ff)
+                                              (app e (unRetT(f a tt) [] v)) ) )
+  -- reify
+  f Iota'      True' = RT (\_   -> \v -> unsyn v)
+  f (Arr' a b) True' = RT (\xxs -> \v -> case ht xxs of
+                                           (x,xs) -> lam x ( (var x)) ) -- TODO
+
