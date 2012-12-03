@@ -145,12 +145,12 @@ However, most of the studies mainly focus on restricting the formation of
 recursive types to positive ones, rather than being elimination based.
 
 
-We did go through few example, but that is of course not enough to prove
+We went through few examples, but that is of course not enough to prove
 mprsi is normalizing in general. If you have seen or can think of a
 theoretical framework to justify normalization of this sort of recursion,
 it would be an interesting subject to work on. The system Fw^ in [2] is
 for positive inductive datatypes only, but we may try to make some
-variations in order to embed mprix.
+variations in order to embed mprsi.
 
    ------------------------------------------------------------------- -}
 
