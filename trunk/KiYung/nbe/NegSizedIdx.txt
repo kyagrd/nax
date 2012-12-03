@@ -19,7 +19,7 @@ the diverging term $\Omega$ (as omega), as below.
                      --  --> w (Fun w)
                      --  --> ....
 
-So, in Nax, we do now allow arbirary desruction of data constructors
+So, in Nax, we do not allow arbirary desruction of data constructors
 of recursive datatypes.  Instead, Nax provides well-behaved Mendler-
 style recursion combinators as eliminators for recursive datatypes.
 
