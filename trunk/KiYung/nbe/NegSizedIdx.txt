@@ -1,0 +1,156 @@
+{- -------------------------------------------------------------------
+It is well known that negative recursive datatype such as
+
+   data Val = Fun (Val -> Val)  -- Haskell syntax
+
+can cause problems (infinite loop, or logical inconsistency in the
+Curry-Howard view) when we allow arbitrary destruction of the data
+constuctor Fun, even when the language does not have general recursion.
+We can encode the well known self application term $\omega$ (as w) and
+the diverging term $\Omega$ (as omega), as below.
+
+   unFun v = case v of Fun f -> f
+
+   w :: Val -> Val
+   w v = (unFun v) v  -- self application
+
+   omega :: Val
+   omega = w (Fun w) --  --> (unFun (Fun w)) (Fun w)
+                     --  --> w (Fun w)
+                     --  --> ....
+
+So, in Nax, we do now allow arbirary desruction of data constructors
+of recursive datatypes.  Instead, Nax provides well-behaved Mendler-
+style recursion combinators as eliminators for recursive datatypes.
+
+When using Mendler-style recursion combinators, one can only pull out
+a function of type r -> r where r is abtract instead of Val -> Val.
+This prevents diverging terms.
+
+However, we sometimes really want to pull out a function of a concrete
+type, rather than an abstract type, from a negative recusive datatype
+(e.g., when writing NBE for STLC).
+
+Consider the indexed version of the Val, which models the semantics of
+the simply-typed lambda calculus.
+
+   ------------------------------------------------------------------- -}
+
+-- Nax code
+
+data T r = Iota | Arr r r deriving fixpoint Ty
+
+data V : (Ty -> *) -> (Ty -> *) where
+  Fun  : (r {a} -> r {b}) -> V r {`arr a b}
+   deriving fixpoint Val
+
+{- -------------------------------------------------------------------
+
+In Haskell (with datatype promotion), one would write above as
+
+    data Ty = Iota | Arr r r
+
+    data Val :: Ty -> * where
+      Fun  :: (Val a -> Val b) -> Val (Arr a b)
+
+It should be safe eliminate a value of type Val {`arr a b} above Nax
+code to pull out a function of type Val {a} -> Val {b}, and then apply
+the function to a value of type Val {a} to get a value of type Val {b}.
+The intuition why this is safe is because the size of the index always
+decreases.
+
+Assume that we have a new family of Mendler-style recursion combinator,
+when applied to a value (v : mu F {i0}), providing abstract operations:
+
+  call    : r -> ans {i}
+  cast    : r {i} -> mu F {i}
+  uncast  : mu F {i} -> r {i}   (applicable only when i < i0)
+
+Note that the side condition of uncast requires the index of
+the input value to the uncast should be strictly lesss than
+the value, which we are recursing on.
+
+Let's call this new combinator "mprsi" (Mendler-style primitive
+recursion with sized indices). We can encode the destructor unFun
+for Val as follows:
+
+unFun v = mprsi { {`arr a b} . Val {a} -> Val {b} } v with
+            call cast uncast (Fun f) = cast . f . uncast
+
+
+-- w : Val' {`arr a a} -> Val {a}
+w v = (unFun' v) v  -- self application but index size decreases
+
+We can encode something similar to the self application, but not
+exactly. The w above does not seem problematics since it is not
+likely that we can construct the $\Omega$ term with this w. Note
+that the return type is not exactly the same as the input type.
+The result type has smaller index than the input type.
+
+Talking with Nathan, he suggested another exercise to make sure that
+this new combinator works for a more non-trivial example as below,
+where some of the constructors are not index-size decreasing.
+
+   ------------------------------------------------------------------- -}
+
+data V' : (Ty -> *) -> (Ty -> *) where
+  Fun'  : (r {a} -> r {b}) -> V' r {`arr a b}
+  Fuk'  : (r {a} -> r {a}) -> V' r {a}
+   deriving fixpoint Val'
+
+{- -------------------------------------------------------------------
+
+With this datatype we can encode self application that does have
+exactly the same return type as the input type, as follows:
+
+unFun' v = mprsi { {`arr a a} . Val' {a} -> Val' {a} } v with
+             call cast uncast (Fun' f) = cast . f . uncast
+             call cast uncast (Fuk' f) = \ x  . x  -- dummy value
+
+-- w : Val' {`arr a a} -> Val {a}
+w v = (unFun' v) v  -- self application but index size decreases
+
+But we know that this is not likey to be used for constructing $Omega$
+since the input type and the return type differ.
+
+So, we can try the other alterantive
+
+-- w' : Val' {`arr a a} -> Val {`arr a a}
+w' v = (unFuk' v) v  -- self application by destructing Fuk'
+
+where unFuk' is the destructor for the Fuk' data constructor, which
+we may attempt to 
+
+unFuk' v = mprsi { {a} . Val' {a} -> Val' {a} } v with
+             call cast uncast (Fun' f) = \ x  . x  -- dummy value
+             call cast uncast (Fuk' f) = cast . f . uncast -- error
+
+However, it does not seem to possible to write unFuk' since uncast
+has the side condition such that it can only be applied when the
+index is smaller than the index of the recursive value, which mprsi
+is recursing over. In last line of the above code, v : Val' {a} and
+f : r {a} -> r {a}   where r is abstract. So, it must be the case
+that uncast : r {a} -> Val' {a}. However, the side condition requires
+that the index of value uncast is being applied (a in r {a}) should
+be strictly smaller than the index of v. However, a < a does not hold.
+So, it is a type error trying to use uncast above to define unFuk'.
+
+
+The using the size of types or indices is not a new idea. Barthe,
+Abel, and many others have studied been studies on "sized-types"
+or "type-based termination" according to
+[1] http://www-sop.inria.fr/everest/personnel/Benjamin.Gregoire/Publi/lernet08.pdf
+[2] http://www2.tcs.ifi.lmu.de/~abel/scp07.pdf
+However, most of the studies mainly focus on restricting the formation of
+recursive types to positive ones, rather than being elimination based.
+
+
+We did go through few example, but that is of course not enough to prove
+mprsi is normalizing in general. If you have seen or can think of a
+theoretical framework to justify normalization of this sort of recursion,
+it would be an interesting subject to work on. The system Fw^ in [2] is
+for positive inductive datatypes only, but we may try to make some
+variations in order to embed mprix.
+
+   ------------------------------------------------------------------- -}
+
