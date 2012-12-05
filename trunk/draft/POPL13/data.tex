@@ -354,60 +354,41 @@ This is encoded as
 
 The quantification over type-indexed kinding available in System~\Fi\
 allows the definition of \emph{Leibniz-equality type} constructors
-$\Eq_A: A\to A\to *$ on closed types~$A$, defined as follows:
+$\LEq_A: A\to A\to *$ on closed types~$A$:
 \[\begin{array}{l}
-\Eq_A \triangleq
-	\l i^A.\, \l j^A.\, 
-	\LEq_A\s i \s j \times \LEq_A\s j \s i
-\enspace,
-\\[1mm]
-\text{where } 
 \LEq_A \triangleq
 	\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
 \enspace.
-\end{array}\]
-For $F_A\in\{\Eq_A,\LEq_A\}$, 
-%\[\begin{array}{c}
-%\Delta;\cdot\vdash s=s':A\enspace\quad \Delta;\cdot\vdash t=t':A
-%\\ \hline \\[-3mm]
-%\Delta\vdash F_A \s s \s t = F_A\s{s'}\s{t'}:*
-%\end{array}\] 
-%and, as further basic properties, 
-observe that the following types are
-inhabited: 
+\end{array}\]%
+The following types are inhabited: 
 \[\!\!\!\!\begin{array}{l}
 \text{\small(Reflexive)} 
-~~\,
-\forall i^A.\,F_A\s{i}\s{i}
+~~~\,
+\forall i^A.\,\LEq_A\s{i}\s{i}
+\\[1mm]
+\text{\small(Symmetric)} 
+~\, 
+\forall i^A.\,\forall j^A.\,
+  \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
 \\[1mm]
 \text{\small(Transitive)} 
-~~
+~~~\,
 \forall i^A.\,\forall j^A.\,\forall k^A.\,
-  F_A\s{i}\s{j}\to F_A\s{j}\s{k}\to F_A\s{i}\s{k}
+\\
+~~~~~~~~~~~~~~~~~~~~~~~~\,
+\LEq_A\s{i}\s{j}\to \LEq_A\s{j}\s{k}\to \LEq_A\s{i}\s{k}
 \\[1mm]
 \text{\small(Logical)}
-\quad~\, \forall i^A.\,\forall j^A.\, 
-F_A\s{i}\s{j}\to \forall f^{A\to B}.\, F_B\s{f\,i}\s{f\,j}
+~~~~~~\, 
+\forall i^A.\,\forall j^A.\, 
+\LEq_A\s{i}\s{j}\to \forall f^{A\to B}.\, \LEq_B\s{f\,i}\s{f\,j}
 \\[1mm]
-\qquad\qquad~~~
+~~~~~~~~~~~~~~~~~~~\,
 \forall f^{A\to B}.\,\forall g^{A\to B}.\, 
 F_{A\to B}\s{f}\s{g}\to 
 \forall i^A.\, F_B\s{f\,i}\s{g\,i}
 \end{array}\]
-Hence Leibniz equality is a congruence; in that, in addition to the above
-one also has the inhabitation of the type
-\[\!\!\!\!\begin{array}{l}
-\text{\small(Symmetric)} 
-\quad
-\forall i^A.\,\forall j^A.\,
-  \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{i}
-\end{array}\qquad\qquad\qquad\qquad\qquad\]
-%This is not so for the type 
-%\begin{equation}\label{NonSymmetry}
-%\forall i^A.\,\forall j^A.\, \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
-%\enspace.
-%\end{equation}
-%(Cf.~Example~\ref{PathologicalExampleContinued} in~\S\ref{sec:theory}.)
+Hence Leibniz equality is a congruence. 
 
 In applications, the types~$\LEq_A$ are useful in constraining the
 term-indexing of datatypes. %as parameterised by coercions.  
