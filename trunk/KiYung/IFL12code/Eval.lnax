@@ -1,0 +1,31 @@
+\begin{code}
+{-"\underline{\textsc{Nax}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i_{g}}}"-}
+
+data Ty = I | B
+{-""-}
+
+data Val : Ty -> * where
+  IV  : Int -> Val {I}
+  BV  : Bool -> Val {B}
+
+{-"\hspace*{-2.5ex}"-} -- |plusV : Val {I} -> Val {I} -> Val {I}|
+plusV (IV n) (IV m) = IV (n + m)
+
+{-"\hspace*{-2.5ex}"-} -- |ifV : Val {B} -> Val {t} -> Val {t} -> Val {t}|
+ifV (BV b) v1 v2 = if b then v1 else v2
+
+{-""-} 
+data E : (Ty -> *) -> (Ty -> *) where
+  VAL   : Val {t} -> E r {t}
+  PLUS  : r {I} -> r {I} -> E r {I}
+  IF    : r {B} -> r {t} -> r {t} -> E r {t}
+    deriving fixpoint Expr
+{-"\hspace*{-2.5ex}"-} -- |eval : Expr {t} -> Val {t}|
+eval e =  mcata { {t} . Val {t} } e with
+            ev (VAL v)        = v
+            ev (PLUS e1 e2)   =
+              plusV (ev e1) (ev e2)
+            ev (IF e0 e1 e2)  =
+              ifV (ev e0) (ev e1) (ev e2)
+\end{code}

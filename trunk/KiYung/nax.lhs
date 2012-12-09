@@ -1,3 +1,9 @@
+%include lhs2TeX.fmt
+%include greek.fmt
+%include forall.fmt
+%include agda.fmt
+%include IFL12code/includelhs2tex.lhs
+
 \chapter{The Nax language}\label{ch:nax} TODO
 
 TODO
@@ -26,5 +32,7 @@ Nax supports Hindley-Milner style type inference, with a few type annotations
 for indexed types. Nax is designed to be embeddable into System \Fi.
 You can find a summary of our progress in defining Nax in Chapter \ref{sec:nax}.
 
+%include nax_examples.lhs
 
+%include nax_discuss.lhs
 
