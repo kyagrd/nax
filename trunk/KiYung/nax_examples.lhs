@@ -1,13 +1,15 @@
 \section{The trilingual Rosetta Stone}
 \label{sec:example}
 
-In this section, we introduce three examples (Figs.\;\ref{fig:eval},
-\ref{fig:glist} and \ref{fig:compile}) that use term indexed datatypes
-to enforce program invariants. Each example is written in three
-different languages -- like the Rosetta Stone
--- Haskell on the left, Nax in the center,  and Agda on the right.
-We have crafted these programs to look as similar as
-possible, by choosing the same identifiers and syntax structure whenever
+In this section, we introduce three examples
+(Figs.\;\ref{fig:eval} and \ref{fig:evalCont},
+ Figs.\;\ref{fig:glist} and \ref{fig:glistCont}, and
+ Figs.\;\ref{fig:compile} and \ref{fig:compileCont})
+that use term indexed datatypes to enforce program invariants.
+Each example is written in three different languages
+-- like the Rosetta Stone -- Haskell, Nax,  and Agda.
+We have crafted these programs to look as similar as possible,
+by choosing the same identifiers and syntax structure whenever
 possible, so that anyone already familiar with Haskell-like languages
 or Agda-like languages will understand our Nax programs
 just by comparing them with the programs on the left and right.
@@ -29,32 +31,34 @@ our prototype Nax implementation, and Agda 2.3.0.1.
 
 \subsection{Type preserving evaluator for an expression language}
 \label{ssec:eval}
-\afterpage{
-\begin{landscape}
-\begin{figure} %%% TODO size change needed unicode formatting for Agda
-~~\qquad\qquad\,\textcolor{gray}{\texttt{GADTs},}
-\\\vskip-5ex
+
+\begin{figure}
+\,\;~~\,\qquad\textcolor{gray}{\texttt{GADTs},}\\ \vskip-7ex
 \hspace*{-6ex}
-\begin{minipage}{.31\linewidth}
+\begin{minipage}{.48\linewidth}\small
 %include IFL12code/Eval.lhs
 \end{minipage}
-\begin{minipage}{.35\linewidth}
+\begin{minipage}{.48\linewidth}\small
 %include IFL12code/Eval.lnax
 \end{minipage}
-\begin{minipage}{.33\linewidth}
+\caption{A type-preserving evaluator (|eval|) that evaluates
+	an expression (|Expr|) to a value (|Val|), in Haskell and in Nax}
+\label{fig:eval}
+\end{figure}
+
+\begin{figure}
+\hspace*{-6ex}
+\begin{minipage}{.48\linewidth}\small
+%include IFL12code/Eval.lnax
+\end{minipage}
+\begin{minipage}{.6\linewidth}\small
 %include IFL12code/Eval.lagda
 \end{minipage}
 \caption{A type-preserving evaluator (|eval|) that evaluates
-	an expression (|Expr|) to a value (|Val|).}\vskip1.5ex
-\hspace{33ex}\begin{minipage}{.6\linewidth}
-Curly braces in the Nax code above indicates the use of term indices in types.
-For instance, |t| appearing in |{ t }| is a term-index variable rather than
-a type variable.
-\end{minipage}
-\label{fig:eval}
+	an expression (|Expr|) to a value (|Val|), in Nax and in Agda}
+\label{fig:evalCont}
 \end{figure}
-\end{landscape}
-} % end afterpage
+
 
 In a language that supports term-indices, one writes a type-preserving
 evaluator as follows: (1) define a datatype TypeUniverse which encodes
@@ -65,8 +69,9 @@ and (4) write the evaluator (from expressions to values) that preserves
 the term indices representing the type of the object language.
 Once the evaluator type checks, we are confident that the evaluator is
 type-preserving, relying on type preservation of the host-language type system.
-In Fig.\,\ref{fig:eval}, we provide a concrete example of such
-a type-preserving evaluator for a very simple expression language (|Expr|).
+In Figs.\;\ref{fig:eval} and \ref{fig:evalCont}, we provide a concrete example
+of such a type-preserving evaluator for a very simple expression language
+(|Expr|).
 
 Our TypeUniverse (|Ty|) for the expression language consists of numbers and
 booleans, represented by the constants |I| and |B|. We want to evaluate an
@@ -86,56 +91,76 @@ preserves the index that represents the object language type. The definition
 of |eval| is fairly straightforward, since our expression language is a very
 simple one. Note that the functions in Nax do not
 need type annotations (they appear as comments in \textcolor{gray}{gray}).
+In fact, Nax currently does not support any syntax for type annotations
+on function declarations.
 
+Curly braces in the Nax code above indicates the use of term indices in types.
+For instance, |t| appearing in |{ t }| is a term-index variable rather than
+a type variable.
 
 \subsection{Generic |Path|s parametrized by a binary relation}
 \label{ssec:glist}
-\afterpage{
-\begin{landscape}
+
 \begin{figure}
-\vskip-7.3ex
-\qquad\quad\;\textcolor{gray}{\texttt{GADTs},}
-\\\vskip-5.7ex
+\begin{singlespace}
+\qquad~\,\textcolor{gray}{\texttt{GADTs},} \\ \vskip-5ex
 \hspace*{-10ex}
-\begin{minipage}{.3\linewidth}
+\begin{minipage}{.50\linewidth}\small
+\vskip-2.6ex
 %include IFL12code/GList.lhs
-\end{minipage}
-\begin{minipage}{.355\linewidth}
+\end{minipage}~
+\begin{minipage}{.48\linewidth}\small
 %include IFL12code/GList.lnax
 \end{minipage}
-\begin{minipage}{.345\linewidth}
+\vskip-4ex ~ \\
+\hspace*{-10ex}
+\begin{minipage}{.50\linewidth}\small
+%include IFL12code/GListExample.lhs
+\end{minipage}~
+\begin{minipage}{.48\linewidth}\small
+%include IFL12code/GListExample.lnax
+\end{minipage}
+\end{singlespace}
+\caption{A generic indexed list (|Path|) parameterized by
+	a binary relation (|x|) over indices (|i,j,k|)
+	and its instantiations (|List'|, |Vec|), in Haskell and in Nax.}
+\label{fig:glist}
+\end{figure}
+
+\begin{figure}
+\begin{singlespace}
+\hspace*{-10ex}
+\begin{minipage}{.55\linewidth}\small \vskip2ex
+%include IFL12code/GList.lnax
+\end{minipage}~
+\begin{minipage}{.48\linewidth}\small
 %include IFL12code/GList.lagda
 \end{minipage}
 \vskip-4ex ~ \\
 \hspace*{-10ex}
-\begin{minipage}{.3\linewidth}
-%include IFL12code/GListExample.lhs
-\end{minipage}
-\begin{minipage}{.355\linewidth}
+\begin{minipage}{.55\linewidth}\small
 %include IFL12code/GListExample.lnax
-\end{minipage}
-\begin{minipage}{.345\linewidth}
+\end{minipage}~
+\begin{minipage}{.48\linewidth}\small
 %include IFL12code/GListExample.lagda
 \end{minipage}
-\vskip-2ex
+\end{singlespace}
 \caption{A generic indexed list (|Path|) parameterized by
 	a binary relation (|x|, |X|) over indices (|i,j,k|)
-	and its instantiations (|List'|, |Vec|).}
-\label{fig:glist}
+	and its instantiations (|List'|, |Vec|), in Nax and in Agda.}
+\label{fig:glistCont}
 \end{figure}
-\end{landscape}
-} % end afterpage
+
 
 In this section we introduce a generic |Path| datatype.\footnote{
 	There is a Haskell library package for this
 	\url{http://hackage.haskell.org/package/thrist} }
 We will instantiate |Path| into three different types of
 lists --  plain lists, length indexed lists 
-(|List'| and |Vec| in Fig.\;\ref{fig:glist})
+(|List'| and |Vec| in Figs.\;\ref{fig:glist} and \ref{fig:glistCont})
 and a |Code| type, in order to write a stack-safe compiler
-(Fig.\;\ref{fig:compile}).
+(Fig.\;\ref{fig:compile} and \ref{fig:compileCont}).
 
-%% We will explain Fig.\;\ref{fig:glist} by discussing the Nax code.
 The type constructor |Path| expects three arguments,
 that is, |Path x {i} {j} : *|.  The argument |x : {iota} -> {iota} -> *|
 is binary relation describing legal transitions (i.e. |x {i} {j}| is inhabited
@@ -203,47 +228,55 @@ since type level functions are no different from term level functions.
 
 \subsection{Stack safe compiler for the expression language}
 \label{ssec:compile}
-\afterpage{
-\begin{landscape}
+
 \begin{figure}
-\;\;~\;\;\textcolor{gray}{\texttt{KindSignatures}, \texttt{TypeOperators},}
-\\\vskip-5ex
+\textcolor{gray}{\small \texttt{KindSignatures}, \texttt{TypeOperators},}
+\\\vskip-6ex
 \hspace*{-10ex}
-\begin{minipage}{.33\linewidth}
+\begin{minipage}{.50\linewidth}\small
 %include IFL12code/Compile.lhs
 \end{minipage}
-\begin{minipage}{.40\linewidth}
+\begin{minipage}{.48\linewidth}\small
 %include IFL12code/Compile.lnax
 \end{minipage}
-\begin{minipage}{.33\linewidth}
-%include IFL12code/Compile.lagda
-\end{minipage}
-\caption{A stack-safe compiler}
+\caption{A stack-safe compiler, in Haskell and in Nax.}
 \label{fig:compile}
 \end{figure}
-\end{landscape}
-} % end afterpage
 
-In Figure\;\ref{fig:compile}, we implement a stack-safe
-compiler for the same expression language (|Expr| in Fig.\;\ref{fig:eval})
-discussed in Sect.\;\ref{ssec:eval}. In Fig.\;\ref{fig:eval} of that section 
-we implemented an index preserving evaluator
-|eval : Expr {t} -> Val {t}|. Here,
-the stack-safe compiler |compile : Expr {t} -> Code {ts} {`cons t ts}|
-uses the index to enforce stack safety
--- an expression of type |t| compiles to some code, which when run on
-a stack machine with an initial stack configuration |ts|, terminates 
-with the final stack configuration |cons t ts|.
+\begin{figure}
+\hspace*{-10ex}
+\begin{minipage}{.55\linewidth}\small
+%include IFL12code/Compile.lnax
+\end{minipage}~
+\begin{minipage}{.48\linewidth}\small
+%include IFL12code/Compile.lagda
+\end{minipage}
+\caption{A stack-safe compiler, in Nax and in Agda}
+\label{fig:compileCont}
+\end{figure}
+
+
+
+In Figs.\;\ref{fig:compile} and \ref{fig:compileCont},
+we implement a stack-safe compiler for the same expression language
+(|Expr| in Figs.\;\ref{fig:eval} and \ref{fig:evalCont}) discussed in
+Sect.\;\ref{ssec:eval}. In Fig.s\;\ref{fig:eval} and \ref{fig:evalCont} of
+that section, we implemented an index preserving evaluator
+|eval : Expr {t} -> Val {t}|. Here, the stack-safe compiler
+|compile : Expr {t} -> Code {ts} {`cons t ts}| uses the index
+to enforce stack safety -- an expression of type |t| compiles to some code,
+which when run on a stack machine with an initial stack configuration |ts|,
+terminates with the final stack configuration |cons t ts|.
 
 A stack configuration is an abstraction of the stack 
 that tracks only the types of the values stored there.
 We represent a stack configuration as
 a list of type representations (|List Ty|).\footnote{
-	The astute reader may wonder why we use |List| instead of the
-	already defined |List'| in Fig.\;\ref{fig:glist}, which is exactly
-	the plain list we want. In Nax and Agda, it is possible to have
-	term indices of |List' Ty| instead of |List Ty|. (In Nax and Agda,
-	the |List| datatype is defined in their standard libraries.)
+	The astute reader may wonder why we use |List| instead of the already
+	defined |List'| in Figs.\;\ref{fig:glist} and \ref{fig:glistCont},
+	which is exactly the plain list we want. In Nax and Agda, it is possible
+	to have term indices of |List' Ty| instead of |List Ty|. (In Nax and
+	Agda, the |List| datatype is defined in their standard libraries.)
 	Unfortunately, it is not the case in Haskell.
 	Haskell's datatype promotion does not allow promoting datatypes
 	indexed by the already promoted datatypes. Recall that |List' Ty| is
