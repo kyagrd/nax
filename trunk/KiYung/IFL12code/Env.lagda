@@ -1,5 +1,5 @@
 \textsf{Agda}$\phantom{_{g_g}}$\hrule ~
-
+\vskip-2ex
 \begin{code}
 data Vec (a : Set) : ℕ -> Set where
   VNil   : {n : ℕ} -> Vec a n

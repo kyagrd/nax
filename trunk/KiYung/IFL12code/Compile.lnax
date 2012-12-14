@@ -1,4 +1,4 @@
-%format cons = "{\text{\tiny cons}}"
+%format cons = "{\textit{\tiny cons}}"
 %format ` = "\ensuremath{_{\grave{}}}"
 \begin{code}
 {-"\underline{\textsc{Nax}_{\phantom{g}}
@@ -30,3 +30,5 @@ compile e =
                               (cmpl e2))
                       pNil)
 \end{code}
+%format ` = "\ensuremath{\,\grave{}}"
+%format cons = "{\textit{cons}}"

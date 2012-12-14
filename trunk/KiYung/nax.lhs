@@ -4,6 +4,10 @@
 %include agda.fmt
 %include IFL12code/includelhs2tex.lhs
 
+\newcommand{\Jtag}[1]{\mathop{\vdash_{\!\!\mathsf{#1}}}}
+\newcommand{\Jty}[0]{\Jtag{ty}}
+\newcommand{\Jki}[0]{\Jtag{k}}
+
 \chapter{The Nax language}\label{ch:nax} TODO
 
 TODO
