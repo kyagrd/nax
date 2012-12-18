@@ -84,7 +84,8 @@ mendler_prim.tex: mendler_prim.lhs includelhs2tex.lhs \
 	mendler/Fac.lhs mendler/FacG.lhs
 	lhs2TeX --poly -o $@ $<
 
-nax.tex: nax.lhs nax_examples.lhs nax_discuss.lhs IFL12code/includelhs2tex.lhs \
+nax.tex: nax.lhs IFL12code/includelhs2tex.lhs \
+	nax_intro.lhs nax_features.lhs nax_examples.lhs nax_discuss.lhs \
 	IFL12code/Eval.lhs IFL12code/Eval.lnax IFL12code/Eval.lagda \
 	IFL12code/GList.lhs IFL12code/GListExample.lhs \
        	IFL12code/GList.lnax IFL12code/GListExample.lnax \

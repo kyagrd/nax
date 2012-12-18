@@ -75,8 +75,17 @@
 %format synonym = "\mathbf{synonym}"
 %format with = "\,\mathbf{with}"
 %format where = "\;\mathbf{where}"
+
 %format Mu (k) = "\mu_{" k "}"
 %format In (k) = "\In_{" k "}"
-%format MIt (a) = "\mathbf{mcata}_{" a "}"
-%format mcata (a) = "\mathbf{mcata}_{" a "}"
+
+%format MsfIt (a) = "\mathbf{msfit}_{" a "}"
+%format McvIt (a) = "\mathbf{mcvit}_{" a "}"
+%format MPr (a) = "\mathbf{mpr}_{" a "}"
+%format MIt (a) = "\mathbf{mit}_{" a "}"
+%format mcata (a) = "\mathbf{mit}_{" a "}"
+
+%format casei (a) = "\mathbf{case}_{" a "}"
+
+%format (NEWFI (x)) = "{\newFi{" x "}\;}"
 
