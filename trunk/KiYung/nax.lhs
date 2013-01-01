@@ -8,7 +8,7 @@
 \newcommand{\Jty}[0]{\Jtag{ty}}
 \newcommand{\Jki}[0]{\Jtag{k}}
 
-\chapter{The Nax language}\label{ch:nax} TODO
+\chapter{Design Principles of the Nax Language}\label{ch:nax} TODO
 
 TODO
 

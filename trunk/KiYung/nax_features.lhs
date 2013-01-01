@@ -635,7 +635,7 @@ like |*|, or kinds for terms, like |Nat| or |Tag|).
 %format p_i
 %format e_i
 \begin{tabular}{l||l}
-\hskip-2em
+\hskip-5em
 \begin{minipage}[l]{.55\linewidth}
 \begin{code}
 T    : (kappa1 -> kappa2 -> *) -> (kappa1 -> kappa2 -> *)
@@ -648,7 +648,6 @@ e_i  : psi a b
 \end{minipage}
 
 &
-\hskip-1em
 \begin{minipage}[l]{.45\linewidth}
 \begin{code}
 T    : (kappa1 -> kappa2 -> kappa3 -> *) -> (kappa1 -> kappa2 -> kappa3 ->*)
@@ -830,8 +829,8 @@ facility is necessary. With syntactic support, one hardly even notices.
 \item The use of term-indexed types allows programmers to write types that
 act as logical relations, and form the basis for reasoning about programs.
 We have formalized this is the paper 
-{\em System \Fi: a higher-order polymorphic $\lambda$-calculus with erasable term indices}\cite{POPL13}
-which we have submitted to POPL.
+{\em System \Fi: a higher-order polymorphic $\lambda$-calculus with erasable term indices}\cite{TODO_cite_TLCA13}
+which we have submitted to TLCA.
 
 \item Using Mendler-style combinators is expressive, and with syntactic support
 (the |with| equations of the Mendler combinators), is easy to use. In

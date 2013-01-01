@@ -83,8 +83,8 @@ term/type/kind/sort merged into one pseudo-term syntax
    of Haskell, Nax, and Agda.
    Haskell's and Nax's kind syntax are simplified to exclude kind polymorphism.
    Agda's (|->|) rule is simplified to only allow non-dependent kind arrows.}
-\end{singlespace}
 \label{fig:sorting}
+\end{singlespace}
 \end{figure}
 
 \begin{figure}[h!]
