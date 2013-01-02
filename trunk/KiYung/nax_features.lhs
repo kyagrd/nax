@@ -1,4 +1,4 @@
-\section{Nax Features by Example}\label{sec:naxFeatures}
+\chapter{Introduction to Features of the Nax Language}\label{ch:naxFeatures}
 We introduce programming in our implementation of Nax by providing examples.
 An example usually consists of several parts.
 
@@ -17,7 +17,7 @@ manipulated. Deconstruction of recursive data can only be performed with
 Mendler-style combinators to ensure strong normalization.
 \end{itemize}
 
-\subsection{Two-level types}\label{2level}
+\section{Two-level types}\label{2level}
 Non recursive datatypes are introduced by the |data| declaration.
 The data declaration can include arguments. The kind and separation of
 arguments into parameters and a indices is inferred. For example, 
@@ -113,7 +113,7 @@ kind |kappa -> kappa|, in which case the recursive type (|Mu[k] f|) has kind
 |Mu[*] N| and |Mu[*] (L a)| have kind |*|. That is, they are both types,
 not type constructors.
 
-\subsection{Creating values}
+\section{Creating values}
 
 Values of a particular data type are created by use of constructor functions.
 For example |True| and |False| are nullary constructors (or, constants) of
@@ -130,7 +130,7 @@ recursive injections has definite benefits, but it surely makes programs rather
 annoying to write. Thus, we have provided Nax with a simple but powerful
 synonym (macro) facility.
 
-\subsection{Synonyms, constructor functions, and fixpoint derivation}
+\section{Synonyms, constructor functions, and fixpoint derivation}
 \label{macro}
 
 We may codify that some type is the fixpoint of another, once and for all,
@@ -216,7 +216,7 @@ x = cons 3 (cons 2 nil)
 \end{tabular}
 \end{singlespace}
 
-\subsection{Mendler combinators for non-indexed types}
+\section{Mendler combinators for non-indexed types}
 There are no restrictions on what kind of datatypes
 can be defined in Nax. There are also no restrictions on the creation
 of values. Values are created using constructor functions, and
@@ -469,7 +469,7 @@ also work for the actual type (|Mu[*] T|), but because it cannot assume that
 |r| has any particular structure, the user is forced to use the abstract
 operations in carefully proscribed ways.
   
-\subsection{Types with static indices}\label{sec:bg:ixty}
+\section{Types with static indices}\label{sec:bg:ixty}
 Recall that a type can have both parameters and indices, and that indices
 can be either types or terms. We define three types below each with one or more
 indices. Each example defines a non-recursive type, and then uses derivation to
@@ -555,7 +555,7 @@ It is interesting to note that sometimes the terms are of recursive types (\eg,
 |Tag|).
 
 
-\subsection{Mendler-style combinators for indexed types}
+\section{Mendler-style combinators for indexed types}
 
 Mendler-style combinators generalize naturally to indexed types. The key observation
 that makes this generalization possible is that the types of the operations
@@ -724,7 +724,7 @@ proveEvenOrOdd x =  MIt { {n} . Either (Even {n}) (Odd {n})} x with
 \end{code}
 \end{singlespace}
 
-\subsection{Recursive types of unrestricted polarity but restricted elimination}
+\section{Recursive types of unrestricted polarity but restricted elimination}
 \label{sec:bg:recty}
 In Nax, programmers can define recursive data structures with both positive and 
 negative polarity.  The classic example is a datatype
@@ -822,7 +822,7 @@ The final line of the example above illustrates applying |showTerm| to |apply|.
 Recall that |apply = abs (\ f -> abs (\ x -> app f x))|, which is the HOAS
 representation of the $\lambda$-calculus term ($\lambda f . \lambda x . f\; x$).
 
-\subsection{Lessons from Nax}
+\section{Lessons from Nax}
 
 Nax is our first attempt to build a strongly normalizing, sound and consistent
 logic, based upon Mendler-style iteration. We would like to
@@ -840,10 +840,9 @@ facility is necessary. With syntactic support, one hardly even notices.
 
 \item The use of term-indexed types allows programmers to write types that
 act as logical relations, and form the basis for reasoning about programs.
-We have formalized this is the paper 
-{\em System \Fi: a higher-order polymorphic $\lambda$-calculus with erasable term indices}\cite{TODO_cite_TLCA13}
-which we have submitted to TLCA.
-
+In Chapters \ref{ch:fi} and \ref{ch:fixi}, we have formalized lambda calculi,
+which support term indices.
+ 
 \item Using Mendler-style combinators is expressive, and with syntactic support
 (the |with| equations of the Mendler combinators), is easy to use. In
 fact Nax programs are often no more complicated than their Haskell counterparts.

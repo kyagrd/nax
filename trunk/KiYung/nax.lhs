@@ -8,6 +8,8 @@
 \newcommand{\Jty}[0]{\Jtag{ty}}
 \newcommand{\Jki}[0]{\Jtag{k}}
 
+%include nax_features.lhs
+
 \chapter{Design Principles of the Nax Language}\label{ch:nax} TODO
 
 TODO
@@ -34,13 +36,14 @@ non-recursive datatypes, a recursive type operator $\mu$, and
 Mendler-style recursion combinators as language constructs.
 Nax supports Hindley-Milner style type inference, with a few type annotations
 for indexed types. Nax is designed to be embeddable into System \Fi.
-You can find a summary of our progress in defining Nax in Chapter \ref{sec:nax}.
+You can find a summary of our progress in defining Nax in Chapter \ref{ch:nax}.
 
 %include nax_intro.lhs
-
-%include nax_features.lhs
 
 %include nax_examples.lhs
 
 %include nax_discuss.lhs
+
+\chapter{Type Inference in Nax}\label{ch:naxTyInfer}
+TODO
 
