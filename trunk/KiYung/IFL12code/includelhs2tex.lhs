@@ -82,6 +82,7 @@
 %format MsfIt (a) = "\mathbf{msfit}_{" a "}"
 %format McvIt (a) = "\mathbf{mcvit}_{" a "}"
 %format MPr (a) = "\mathbf{mpr}_{" a "}"
+%format McvPr (a) = "\mathbf{mcvpr}_{" a "}"
 %format MIt (a) = "\mathbf{mit}_{" a "}"
 %format mcata (a) = "\mathbf{mit}_{" a "}"
 

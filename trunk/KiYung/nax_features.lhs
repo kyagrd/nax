@@ -25,7 +25,7 @@ the three non-recursive data types, |Bool|, |Either|, and |Maybe|,
 familiar to many functional programmers, are introduced by declaring
 the kind of the type, and the type of each of the constructors.
 This is similar to the way {\small GADT}s are introduced in Haskell.
-
+\begin{singlespace}
 \vspace*{0.1in}\noindent
 \begin{tabular}{l||l||l}
 \begin{minipage}[t]{.25\linewidth}
@@ -39,7 +39,7 @@ data Bool : *
 
 & 
 
-\begin{minipage}[t]{.38\linewidth}
+\begin{minipage}[t]{.30\linewidth}
 \begin{code}
 data Either : * -> * -> *
   where 
@@ -60,6 +60,7 @@ data Maybe : * -> *
 \end{minipage}
 \end{tabular}
 \vspace*{0.1in}
+\end{singlespace}
 
 Note the kind information (|Bool: *|) declares |Bool| to be a type,
 (|Either: * -> * -> *|) declares |Either| to be a type constructor
@@ -71,7 +72,7 @@ that uses a parameter where the usual recursive components occur. By design,
 normal parameters of the introduced type are written first (|a| in |L| below)
 and the type argument to stand for the recursive component is written last
 (the |r| of |N|, and the |r| of |L| below).
-
+\begin{singlespace}
 \vspace*{0.1in}\noindent
 \begin{tabular}{l||l}
 \begin{minipage}[t]{.45\linewidth}
@@ -98,8 +99,9 @@ data L : * -> * -> * where
 \end{code}
 \end{minipage}
 \end{tabular}
-
 \vspace*{0.1in}
+\end{singlespace}
+
 A recursive type can be defined as the fixpoint of a (perhaps partially applied)
 non-recursive type constructor. Thus the traditional natural numbers are typed
 by |Mu[*] N| and the traditional lists with components of type |a| are typed by
@@ -161,7 +163,8 @@ the constructor functions are named by dropping the initial upper-case letter
 in the name of the non-recursive constructors to lower-case.  To illustrate,
 we provide side-by-side comparisons of Haskell and two different uses of Nax.
 
-\vspace*{0.1in}
+\begin{singlespace}
+\vspace*{0.1in}\noindent
 \begin{tabular}{l || l || l}
 {\em Haskell}  & {\em Nax with synonyms} &  {\em Nax with derivation} \\ \hline
 \hskip-2em\begin{minipage}[t]{.35\linewidth}\small
@@ -211,7 +214,7 @@ x = cons 3 (cons 2 nil)
 \end{minipage}
 
 \end{tabular}
-
+\end{singlespace}
 
 \subsection{Mendler combinators for non-indexed types}
 There are no restrictions on what kind of datatypes
@@ -231,7 +234,7 @@ give a Nax multi-clause definition
 for the |not| function over the (non-recursive) |Bool| type,
 and a function that strips off the |Just| constructor over the (non-recursive)
 |Maybe| type using a case expression.
-
+\begin{singlespace}
 \vspace*{.1in}
 \begin{tabular}{l || l}
 \begin{minipage}[l]{.32\linewidth}
@@ -251,6 +254,7 @@ unJust0 x =  casei{} x of  Just x   -> x
 \end{minipage}
 \end{tabular}
 \vspace*{.1in}
+\end{singlespace}
 
 Analysis of recursive data is performed with Mendler-style combinators. In our
 implementation we provide 5 Mendler-style combinators:
@@ -275,9 +279,11 @@ of the scrutinee |x|. In the |MIt|, each {\em equation} following the |with|,
 binds the variable $\newFi{f}$, and matches the pattern to a value related to
 the scrutinee |x|.
 
+\begin{singlespace}
 %{
 %format e1
 %format e2
+\vspace*{.1in}\noindent
 \begin{tabular}{l || l}
 \begin{minipage}[t]{.42\linewidth}
 \begin{code}
@@ -297,6 +303,7 @@ MIt{} x with  (NEWFI f) (Cons x xs)  =  e1
 \end{tabular}
 \vspace*{.1in}
 %}
+\end{singlespace}
 
 The number and type of the additional variables depends upon which family of
 Mendler combinators is used to analyze the scrutinee.  Each equation specifies
@@ -315,7 +322,7 @@ one family of Mendler combinators to another. We give descriptions of three
 families of Mendler combinators, their abstractions, and the types of
 the operators within the abstraction, below. In each description, the type
 |ans| represents the result type, when the Mendler combinator is fully applied.
-
+\begin{singlespace}
 %{
 %format p_i
 %format e_i
@@ -338,8 +345,8 @@ MIt{psi} phi (In[*] x)
 \end{code}   
 \end{minipage}
 & 
-\hskip-1em
-\begin{minipage}[t]{.40\linewidth}
+\hskip-1.5em
+\begin{minipage}[t]{.38\linewidth}
 \begin{code}
 MPr{} x with
   (NEWFI f) (NEWFI cast) p_i = e_i
@@ -356,8 +363,7 @@ MPr{psi} phi (In[*] x)
 \end{minipage}
 
 & 
-\hskip-1em
-\begin{minipage}[t]{.25\linewidth}
+\begin{minipage}[t]{.28\linewidth}
 \begin{code}
 McvIt{} x with
   (NEWFI f) (NEWFI project) p_i = e_i
@@ -377,6 +383,7 @@ McvIt{psi} phi (In[*] x)
 \end{tabular}
 \vspace*{.1in}
 %}
+\end{singlespace}
 
 A Mendler-style combinator implements a (provably terminating) recursive function
 applied to the scrutinee. The abstract type and its operations ensure
@@ -388,8 +395,7 @@ defined (|MPr| and |McvIt| respectively).  The equations at the bottom of
 each section provide an operational understanding of how the operator works.
 These can be safely ignored until after we see some examples of how
 a Mendler-style combinator works in practice.
-
-\vspace*{.1in}
+\begin{singlespace}
 \begin{code}
 length y     = MIt{} y    with  len Nil          = zero
                                 len (Cons x xs)  = (succ zero) + len xs
@@ -405,6 +411,7 @@ fibonacci x  = McvIt{} x  with  fib out Zero      =  succ zero
                                                        Zero    -> succ zero
                                                        Succ m  -> fib n + fib m 
 \end{code}
+\end{singlespace}
 
 The |length| function uses the simplest kind of recursion where
 each recursive call is an application to a direct subcomponent of the input.
@@ -473,7 +480,7 @@ understood to be parameters, and arguments appearing after |r| are understood
 to be indices. To define a recursive type with indices, it is necessary to
 give the argument, |r|, a higher-order kind. That is, |r| should take indices
 as well, since it abstracts over a recursive type which takes indices.
-\vspace*{0.1in}
+\begin{singlespace}
 \begin{code}
 data Nest: (* -> *) -> * -> * where
    Tip   : a -> Nest r a
@@ -492,7 +499,8 @@ data P: (Tag -> Nat -> *) -> Tag -> Nat -> * where
   StepO  : r {O} {i} -> P r {E} {`succ i}
   StepE  : r {E} {i} -> P r {O} {`succ i}
     deriving fixpoint Proof
-\end{code}~\\
+\end{code}
+\end{singlespace}
 Note, to distinguish type indices from term indices (and to make parsing
 unambiguous), we enclose term indices in braces (|{ ... }|). We also
 backquote (|`|) variables in terms that we expect to be bound in
@@ -527,7 +535,7 @@ a list of elements of type |a|, with length exactly equal to |n|, and
 a (|Proof {E} {n}|) witnesses that the natural number |n| is even, and
 a (|Proof {O} {m}|) witnesses that the natural number |m| is odd.
 Some example value with these types are given below.
-~\\
+
 \begin{code}
 tree1  : PowerTree Int = tip 3
 tree2  : PowerTree Int = fork (tip (2, 5))
@@ -538,7 +546,7 @@ v2 : Vector Int {succ (succ zero)} = (vcons 3 (vcons 5 vnil))
 p1  : P {O} {succ zero}         = stepE base
 p2  : P {E} {succ (succ zero)}  = stepO (stepE base)
 \end{code}
-~\\
+
 Note that in the types of the terms above, the indices in braces (|{ ... }|)
 are ordinary terms (not types).  In these example we use natural numbers (\eg,
 |succ (succ zero)|) and elements (|E| and |O|) of the two-valued type |Tag|.
@@ -563,7 +571,7 @@ a function that adds up all those integers. One wants a function of type
 (|PowerTree Int -> Int|). One strategy to writing this function is to write
 a more general function of type (|PowerTree a -> (a -> Int) -> Int|). In Nax,
 we can do this as follows:
-~\\
+\begin{singlespace}
 \begin{code}
 genericSum t =  MIt { a . (a -> Int) -> Int } t with
                   sum (Tip x)   = \ f -> f x
@@ -571,7 +579,7 @@ genericSum t =  MIt { a . (a -> Int) -> Int } t with
 
 sumTree t = genericSum t (\ x -> x)
 \end{code}
-~\\
+\end{singlespace}
 In general, the type of the result of a function over an indexed type,
 can depend upon what the index is. Thus, a Mendler-style combinator over a value
 with an indexed type, must be type-specialized to that value's index.
@@ -605,15 +613,16 @@ the abstract operations in the |MIt| Mendler abstraction.
 In the table below, we put the general case on the left, and
 terms from the |genericSum| example, that illustrate the general case,
 on the right.
-
 %{
 %format p_i
 %format e_i
 \vspace*{0.1in}\noindent
+\begin{singlespace}
 \begin{code}
 MIt{psi} x with
   f p_i = e_i
 \end{code}
+\end{singlespace}
 \begin{tabular}{l||clcl}
 |psi : kappa -> *|               & & |{a . (a -> Int) -> Int}| & : & |* -> *| \\
 |T : (kappa -> *) -> kappa -> *| & & |Nest| & : & |(* -> *) -> * -> *| \\
@@ -650,7 +659,7 @@ e_i  : psi a b
 &
 \begin{minipage}[l]{.45\linewidth}
 \begin{code}
-T    : (kappa1 -> kappa2 -> kappa3 -> *) -> (kappa1 -> kappa2 -> kappa3 ->*)
+T    : (kappa1 -> kappa2 -> kappa3 -> *) -> (kappa1 -> kappa2 -> kappa3 -> *)
 psi  : kappa1 -> kappa2 -> kappa3 -> *
 x    : (Mu[kappa1 -> kappa2 -> kappa3 -> *] T) a b c
 f    : forall (a:kappa1)(b:kappa2)(c:kappa3) . r a b c -> psi a b c
@@ -667,12 +676,12 @@ the integer length of a natural-number, length-indexed, list
 (what we called a |Vector|). Independent of the length the result
 is an integer. Such a function has type: |Vector a {n} -> Int|.
 We can write this as follows:
-~\\
+\begin{singlespace}
 \begin{code}
 vlen x =  MIt{{i} . Int} x with  len Vnil          = 0
                                  len (Vcons x xs)  = 1 + len xs
 \end{code}
-~\\
+\end{singlespace}
 
 Let's study an example with a more interesting index transformation.
 A term with type (|Proof {E} {n}|), which is synonymous with the type 
@@ -684,7 +693,7 @@ generalize this by writing a function which has both of the types below: \\
 We can capture this dependency by defining the term-level function |flip|,
 and using an |MIt| with the index transformer:
 |{{t} {i} . Proof {`flip t} {`succ i}}|.
-~\\
+\begin{singlespace}
 \begin{code}
 flip E = O
 flip O = E
@@ -694,7 +703,7 @@ flop x =  MIt {{t} {i} . Proof {`flip t} {`succ i}} x with
             f (StepO p)  = stepE(f p)
             f (StepE p)  = stepO(f p)
 \end{code}
-~\\
+\end{singlespace}
 
 For our last term-indexed example, every length-indexed list has a length,
 which is either even or odd. We can witness this fact by writing a function
@@ -702,7 +711,7 @@ with type: |Vector a {n} -> Either (Even {n}) (Odd {n})|.
 Here, |Even| and |Odd| are synonyms for particular kinds of |Proof|.
 To write this function, we need the index transformation:
 |{ {n} . Either (Even {n}) (Odd {n}) }|.
-~\\
+\begin{singlespace}
 \begin{code}    
 synonym Even  {x} = Proof {E} {x}
 synonym Odd   {x} = Proof {O} {x}
@@ -713,6 +722,7 @@ proveEvenOrOdd x =  MIt { {n} . Either (Even {n}) (Odd {n})} x with
                                                Left p   -> Right(stepE p)
                                                Right p  -> Left(stepO p)  
 \end{code}
+\end{singlespace}
 
 \subsection{Recursive types of unrestricted polarity but restricted elimination}
 \label{sec:bg:recty}
@@ -723,7 +733,7 @@ Terms in the $\lambda$-calculus are either variables, applications, or abstracti
 In a HOAS representation, one uses Nax functions to encode abstractions. We
 give a two level description for recursive $\lambda$-calculus |Term|s, by taking
 the fixpoint of the non-recursive |Lam| datatype. 
-~\\
+\begin{singlespace}
 \begin{code}    
 data Lam : * -> * where
   App  :: r -> r -> Lam r
@@ -732,7 +742,7 @@ data Lam : * -> * where
  
 apply = abs (\ f -> abs (\ x -> app f x)) 
 \end{code}
-~\\
+\end{singlespace}
 Note that we don't need to include a constructor for variables,
 as variables are represented by Nax variables, bound by Nax
 functions. For example the lambda term: ($\lambda f . \lambda x . f\; x$)
@@ -754,6 +764,7 @@ recursive types with negative occurrences. We call this combinator |MsfIt|.
 This combinator is based upon an interesting programming trick, first described
 by Sheard and Fegaras \cite{FegShe96}, hence the ``\textsf{sf}'' in the name
 |MsfIt|.  The abstraction supported by |MsfIt| is as follows:
+\begin{singlespace}
 \begin{center}
 %{
 %format p_i
@@ -778,6 +789,7 @@ e_i  : ans
 \end{tabular}
 %}
 \end{center}
+\end{singlespace}
 
 To use |MsfIt| the inverse allows one to cast an answer into an abstract value.
 To see how this works, study the function that turns a |Term| into a string.
@@ -787,7 +799,7 @@ new variable, \texttt{x}$n$ (see the function |new|), where $n$ is the current
 value of the integer variable. When we make a recursive call, we increment
 the integer. In the comments (the rest of a line after |--|), we give
 the type of a few terms, including the abstract operations |sh| and |inv|.
-~\\
+\begin{singlespace}
 \begin{code}
                           {-" "-} -- |cat           : List String -> String|
                           {-" "-} -- |new           : Int -> String|
@@ -805,7 +817,7 @@ showTerm x = showHelp x 0
 
 showTerm apply : List Char = "(fn x0 => (fn x1 => (x0 x1)))"
 \end{code}
-~\\
+\end{singlespace}
 The final line of the example above illustrates applying |showTerm| to |apply|.
 Recall that |apply = abs (\ f -> abs (\ x -> app f x))|, which is the HOAS
 representation of the $\lambda$-calculus term ($\lambda f . \lambda x . f\; x$).
