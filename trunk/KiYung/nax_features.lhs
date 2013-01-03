@@ -1,7 +1,12 @@
 \chapter{Introduction to Features of the Nax Language}\label{ch:naxFeatures}
-We introduce programming in our implementation of Nax by providing examples.
-An example usually consists of several parts.
+This chapter provides an informal introduction to the Nax programming language.
+We go through several distinct features of Nax, providing one or more examples
+for each feature. Basic understanding of these features will be neccessary
+to continue further discussions on design principles (Chapter \ref{ch:nax}) and
+type inference (Chapter \ref{ch:naxTyInfer}) in the following chapters.
 
+All the examples in this chapter run on our prototype implementation of Nax.
+An example usually consists of several parts.
 \begin{itemize}
 \item Introducing data definitions to describe the data of interest.
 Recursive data is introduced in two stages. We must be careful to separate
