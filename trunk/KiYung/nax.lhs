@@ -8,6 +8,7 @@
 \newcommand{\Jty}[0]{\Jtag{ty}}
 \newcommand{\Jki}[0]{\Jtag{k}}
 
+%% chapter
 %include nax_features.lhs
 
 \chapter{Design Principles of Nax's Type System}\label{ch:nax}
@@ -44,6 +45,6 @@
 
 %include nax_discuss.lhs
 
-\chapter{Type Inference in Nax}\label{ch:naxTyInfer}
-TODO
+%% chapter
+%include nax_tyinfer.lhs
 
