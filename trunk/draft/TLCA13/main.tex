@@ -2,16 +2,43 @@
 \usepackage{pdfpages}
 \usepackage[hang,bf]{caption}
 \usepackage{color}
-\usepackage{amsmath}
+\usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
 \usepackage{semantic}
 \usepackage{comment}
 \usepackage[numbers]{natbib}
 
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+
+\newcommand{\Fig}[1]{Figure\,\ref{fig:#1}}
+\newcommand{\Figs}[1]{Figures\,\ref{fig:#1}}
+\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
+
+\newcommand{\ie}{{i.e.}}
+\newcommand{\eg}{{e.g.}}
+\newcommand{\aka}{{a.k.a.}$\,$}
+
 \newcommand{\Fi}{\ensuremath{\mathsf{F}_i}}
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
+\newcommand{\fix}{\mathsf{fix}}
+\newcommand{\Fix}{\mathsf{Fix}}
+\newcommand{\Fixw}{\ensuremath{\Fix_{\omega}}}
+\newcommand{\Fixi}{\ensuremath{\Fix_{i}}}
+
+\renewcommand{\l}{\lambda}
+
+\newcommand{\dom}{\mathop{\mathsf{dom}}}
+\newcommand{\FV}{\mathop{\mathrm{FV}}}
+
+\newcommand{\Eq}{\mathtt{Eq}}
+\newcommand{\LEq}{\mathtt{LEq}}
+\newcommand{\Ran}{\mathtt{Ran}}
+\newcommand{\Lan}{\mathtt{Lan}}
+\newcommand{\s}[1]{\{#1\}}
 
 \title{System \Fi}
-%%%% \subtitie{NO SUBTITLE}
+\subtitle{a Higher-Order Polymorphic $\lambda$-Calculus\\
+	with Erasable Term Indices}
 \titlerunning{System \Fi}
 \author{Ki Yung Ahn\inst{1} \and Tim Sheard\inst{1} \and
 	Marcelo Fiore\inst{2} \and Andrew M. Pitts\inst{2} }
@@ -23,10 +50,6 @@
 	University of Cambridge, Cambridge, UK
 	\\ \email{\{Marcelo.Fiore,Andrew.Pitts\}@cl.cam.ac.uk}
 	}
-
-\newcommand{\ie}{{i.e.}}
-\newcommand{\eg}{{e.g.}}
-\newcommand{\aka}{{a.k.a.}$\,$}
 
 \begin{document}
 \maketitle
@@ -42,7 +65,177 @@ TODO
 \subsubsection{TODO 1.1.1}
 TODO
 \paragraph{TODO}
-TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+\begin{figure*}
+\paragraph{Syntax:}
+\begin{align*}
+\!\!\!\!\!\!\!\!&\text{Sort}
+ 	& \square
+	\\
+\!\!\!\!\!\!\!\!&\text{Term Variables}
+ 	& x,i
+\\
+\!\!\!\!\!\!\!\!&\text{Type Constructor Variables}
+ 	& X
+\\
+\!\!\!\!\!\!\!\!&\text{Kinds}
+ 	& \kappa		&~ ::= ~ *
+				\mid \kappa -> \kappa
+				\mid \newFi{A -> \kappa}
+\\
+\!\!\!\!\!\!\!\!&\text{Type Constructors}
+	& A,B,F,G		&~ ::= ~ X
+				\mid A -> B
+				\mid \lambda X^\kappa.F
+				\mid F\,G
+				\mid \forall X^\kappa . B \\
+				&&& \qquad\qquad\qquad\quad~
+				\mid \newFi{\lambda i^A.F
+				\mid F\,\{s\}
+				\mid \forall i^A . B}
+\\
+\!\!\!\!\!\!\!\!&\text{Terms}
+	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
+\\
+\!\!\!\!\!\!\!\!&\text{Typing Contexts}
+	& \Delta		&~ ::= ~ \cdot
+				\mid \Delta, X^\kappa
+				\mid \newFi{\Delta, i^A} \\
+&	& \Gamma		&~ ::= ~ \cdot
+				\mid \Gamma, x : A
+\end{align*}
+
+\paragraph{Well-formed typing contexts:}
+\[ \fbox{$|- \Delta$}
+ ~~~~ ~~~~
+   \inference{}{|- \cdot}
+ ~~~~
+   \inference{|- \Delta & |- \kappa:\square}
+             {|- \Delta,X^\kappa}
+      \big( X\notin\dom(\Delta) \big)
+ ~~~~ \newFi{
+   \inference{|- \Delta & \cdot |- A:*}
+             {|- \Delta,i^A}
+      \big( i\notin\dom(\Delta) \big) }
+\]
+\[ \fbox{$\Delta |- \Gamma$}
+ ~~~~
+   \inference{|- \Delta}{\Delta |- \cdot}
+ ~~~~
+   \inference{\Delta |- \Gamma & \Delta |- A:*}
+             {\Delta |- \Gamma,x:A}
+      \big( x\notin\dom(\Gamma) \big)
+\]
+~\\
+\paragraph{Sorting:} \fbox{$|- \kappa : \square$}
+$ \qquad
+ ~~~~
+  \inference[($A$)]{}{|- *:\square}
+ ~~~~
+   \inference[($R$)]{|- \kappa:\square & |- \kappa':\square}
+                    {|- \kappa -> \kappa' : \square}
+ ~~~~
+   \newFi{
+   \inference[($Ri$)]{\cdot |- A:* & |- \kappa:\square}
+                     {|- A -> \kappa : \square} }
+$
+~\\ ~\\
+\paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
+$ \quad
+ ~~~~
+   \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
+                       {\Delta |- X : \kappa}
+ ~~~~
+   \inference[($->$)]{\Delta |- A : * & \Delta |- B : *}
+                     {\Delta |- A -> B : * }
+$
+\[
+  \inference[($\lambda$)]{|- \kappa:\square & \Delta,X^\kappa |- F : \kappa'}
+                          {\Delta |- \lambda X^\kappa.F : \kappa -> \kappa'}
+ ~~~~
+   \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
+                    & \Delta |- G : \kappa }
+                    {\Delta |- F\,G : \kappa'}
+ ~~~~
+   \inference[($\forall$)]{|- \kappa:\square & \Delta, X^\kappa |- B : *}
+                          {\Delta |- \forall X^\kappa . B : *}
+\]
+\[ \newFi{
+  \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}
+                            {\Delta |- \lambda i^A.F : A->\kappa}
+ ~~~~
+   \inference[($@i$)]{ \Delta |- F : A -> \kappa
+                     & \Delta;\cdot |- s : A }
+                     {\Delta |- F\,\{s\} : \kappa}
+ ~~~~
+   \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}
+                            {\Delta |- \forall i^A . B : *} }
+\]
+\[ \newFi{
+   \inference[($Conv$)]{ \Delta |- A : \kappa
+                       & \Delta |- \kappa = \kappa' : \square }
+                       {\Delta |- A : \kappa'} }
+\]
+~\\
+\paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
+$ \qquad
+ ~~~~
+ \inference[($:$)]{(x:A) \in \Gamma & \Delta |- \Gamma} 
+                    {\Delta;\Gamma |- x:A}
+ ~~~~ \newFi{
+   \inference[($:i$)]{i^A \in \Delta & \Delta |- \Gamma} 
+                     {\Delta;\Gamma |- i:A} }
+$
+\[
+   \inference[($->$$I$)]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
+                        {\Delta;\Gamma |- \lambda x.t : A -> B}
+ ~~~~ ~~~~
+   \inference[($->$$E$)]{\Delta;\Gamma |- r : A -> B & \Delta;\Gamma |- s : A}
+                        {\Delta;\Gamma |- r\;s : B}
+\]
+\[ \inference[($\forall I$)]{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t : B}
+                            {\Delta;\Gamma |- t : \forall X^\kappa.B}
+			    (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
+                            & \Delta |- G:\kappa }
+                            {\Delta;\Gamma |- t : B[G/X]}
+\]
+\[ \newFi{
+   \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}
+                              {\Delta;\Gamma |- t : \forall i^A.B}
+   \left(\begin{matrix}
+		i\notin\FV(t),\\
+		i\notin\FV(\Gamma)\end{matrix}\right)
+ ~~~~
+   \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
+                              & \Delta;\cdot |- s:A}
+                              {\Delta;\Gamma |- t : B[s/i]} }
+\]
+\[ \inference[($=$)]{\Delta;\Gamma |- t : A & \Delta |- A = B : *}
+                    {\Delta;\Gamma |- t : B}
+\]
+~\\
+\paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
+$ 
+ ~~~~
+   \inference{}{(\lambda x.t)\,s \rightsquigarrow t[s/x]}
+ ~~~~
+   \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
+ ~~~~
+   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+$
+~\\ ~\\
+\caption{Syntax, Typing rules, and Reduction rules of \Fi}
+\label{fig:Fi}
+\end{figure*}
 
 
 
