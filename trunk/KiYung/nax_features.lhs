@@ -767,7 +767,7 @@ they are not expressive enough to write many interesting functions. Fortunately,
 there is a more expressive Mendler-style combinator that is safe over
 recursive types with negative occurrences. We call this combinator |MsfIt|.
 This combinator is based upon an interesting programming trick, first described
-by Sheard and Fegaras \cite{FegShe96}, hence the ``\textsf{sf}'' in the name
+by Sheard and Fegaras \cite{FegShe96}, hence the ``\textbf{sf}'' in the name
 |MsfIt|.  The abstraction supported by |MsfIt| is as follows:
 \begin{singlespace}
 \begin{center}

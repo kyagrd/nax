@@ -363,7 +363,7 @@ Hindley--Milner-style type inference and \emph{gradual typing by erasure} over
 (term) indices. Both in Nax and Concoqtion, a program using indexed types must
 still type check within the non-indexed sub-language (OCaml for Concoqtion)
 when all indices are erased from the program. However, indices in Concoqtion
-differ from term indices discussed in this paper (Nax, datatype promotion, and
+differ from term indices discussed in this chapter (Nax, datatype promotion, and
 dependently typed languages like Agda). Concoqtion indices are Coq terms rather
 than OCaml terms. Although this obviously leads to code duplication
 between the index world (Coq) and the program world (OCaml), Concoqtion enjoys

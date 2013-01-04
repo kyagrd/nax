@@ -13,7 +13,9 @@ by choosing the same identifiers and syntax structure whenever
 possible, so that anyone already familiar with Haskell-like languages
 or Agda-like languages will understand our Nax programs
 just by comparing them with the programs on the left and right.
-The features unique to Nax are summarized in Table\;\ref{tbl:naxfeatures}.
+The features unique to Nax, which are used in this Chapter,
+are summarized in Table\;\ref{tbl:naxfeatures} (review
+Chapter \ref{ch:naxFeatures} for further details on these features).
 
 The three examples we introduce are the following:
 \begin{itemize}\vspace*{-.5ex}

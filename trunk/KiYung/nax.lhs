@@ -10,33 +10,33 @@
 
 %include nax_features.lhs
 
-\chapter{Design Principles of the Nax Language}\label{ch:nax} TODO
+\chapter{Design Principles of Nax's Type System}\label{ch:nax}
 
-TODO
-
-\begin{itemize}
-\item Based on the idea of the Mendler-style appraoch.
-That is, to restrict the elimination of datatypes
-rather than to restrict the formation of datatypes.
-for consistency, or normalization.
-\item distinction between term indices used at type level
-and terms used at value level. Full dependent types are more
-expressive in the sense that they can build types depending on
-runtime values but lacks this distinction.
-\item type inference based on small kind annotation, which is
-an extension of HM. Full dependently typed languages lack
-type inference (they usually do bidirectional type checking,
-local type inference)
-\end{itemize}
-
-TODO
-
-I am also designing a surface language called Nax that supports
-non-recursive datatypes, a recursive type operator $\mu$, and
-Mendler-style recursion combinators as language constructs.
-Nax supports Hindley-Milner style type inference, with a few type annotations
-for indexed types. Nax is designed to be embeddable into System \Fi.
-You can find a summary of our progress in defining Nax in Chapter \ref{ch:nax}.
+%% TODO
+%% 
+%% \begin{itemize}
+%% \item Based on the idea of the Mendler-style appraoch.
+%% That is, to restrict the elimination of datatypes
+%% rather than to restrict the formation of datatypes.
+%% for consistency, or normalization.
+%% \item distinction between term indices used at type level
+%% and terms used at value level. Full dependent types are more
+%% expressive in the sense that they can build types depending on
+%% runtime values but lacks this distinction.
+%% \item type inference based on small kind annotation, which is
+%% an extension of HM. Full dependently typed languages lack
+%% type inference (they usually do bidirectional type checking,
+%% local type inference)
+%% \end{itemize}
+%% 
+%% TODO
+%% 
+%% I am also designing a surface language called Nax that supports
+%% non-recursive datatypes, a recursive type operator $\mu$, and
+%% Mendler-style recursion combinators as language constructs.
+%% Nax supports Hindley-Milner style type inference, with a few type annotations
+%% for indexed types. Nax is designed to be embeddable into System \Fi.
+%% You can find a summary of our progress in defining Nax in Chapter \ref{ch:nax}.
 
 %include nax_intro.lhs
 
