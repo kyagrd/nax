@@ -1,6 +1,6 @@
 \documentclass{llncs}
 \usepackage{pdfpages}
-\usepackage[hang,bf]{caption}
+%% \usepackage[hang,bf]{caption}
 \usepackage{color}
 \usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
@@ -71,7 +71,7 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
-\begin{figure*}
+\begin{figure}
 \paragraph{Syntax:}
 \begin{align*}
 \!\!\!\!\!\!\!\!&\text{Sort}
@@ -109,16 +109,50 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 &	& \Gamma		&~ ::= ~ \cdot
 				\mid \Gamma, x : A
 \end{align*}
+\paragraph{Reduction:} ~~ \fbox{$t \rightsquigarrow t'$} \\
+$
+ ~~~~
+   \inference{}{(\lambda x.t)\,s \rightsquigarrow t[s/x]}
+ ~~~~
+   \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
+ ~~~~
+   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
+ ~~~~
+   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+$
+\caption{Syntax and Reduction rules of \Fi}
+\label{fig:FiSyntax}
+\end{figure}
 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+
+\begin{figure}
 \paragraph{Well-formed typing contexts:}
 \[ \fbox{$|- \Delta$}
- ~~~~ ~~~~
-   \inference{}{|- \cdot}
  ~~~~
+   \inference{}{|- \cdot}
+ ~~~
    \inference{|- \Delta & |- \kappa:\square}
              {|- \Delta,X^\kappa}
       \big( X\notin\dom(\Delta) \big)
- ~~~~ \newFi{
+ ~~~ \newFi{
    \inference{|- \Delta & \cdot |- A:*}
              {|- \Delta,i^A}
       \big( i\notin\dom(\Delta) \big) }
@@ -126,15 +160,15 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 \[ \fbox{$\Delta |- \Gamma$}
  ~~~~
    \inference{|- \Delta}{\Delta |- \cdot}
- ~~~~
+ ~~~
    \inference{\Delta |- \Gamma & \Delta |- A:*}
              {\Delta |- \Gamma,x:A}
       \big( x\notin\dom(\Gamma) \big)
+ \qquad\qquad\qquad\qquad\qquad\qquad\qquad
 \]
 ~\\
-\paragraph{Sorting:} \fbox{$|- \kappa : \square$}
-$ \qquad
- ~~~~
+\paragraph{Sorting:} ~~ \fbox{$|- \kappa : \square$}
+\[
   \inference[($A$)]{}{|- *:\square}
  ~~~~
    \inference[($R$)]{|- \kappa:\square & |- \kappa':\square}
@@ -143,9 +177,9 @@ $ \qquad
    \newFi{
    \inference[($Ri$)]{\cdot |- A:* & |- \kappa:\square}
                      {|- A -> \kappa : \square} }
-$
-~\\ ~\\
-\paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
+\]
+~\\
+\paragraph{Kinding:} ~~ \fbox{$\Delta |- F : \kappa$}
 $ \quad
  ~~~~
    \inference[($Var$)]{X^\kappa\in\Delta & |- \Delta}
@@ -157,24 +191,29 @@ $
 \[
   \inference[($\lambda$)]{|- \kappa:\square & \Delta,X^\kappa |- F : \kappa'}
                           {\Delta |- \lambda X^\kappa.F : \kappa -> \kappa'}
- ~~~~
-   \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
+ ~~~~ \quad ~~
+ \newFi{
+  \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}
+                            {\Delta |- \lambda i^A.F : A->\kappa}
+		    }
+\]
+\[ \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
                     & \Delta |- G : \kappa }
                     {\Delta |- F\,G : \kappa'}
  ~~~~
-   \inference[($\forall$)]{|- \kappa:\square & \Delta, X^\kappa |- B : *}
-                          {\Delta |- \forall X^\kappa . B : *}
-\]
-\[ \newFi{
-  \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}
-                            {\Delta |- \lambda i^A.F : A->\kappa}
- ~~~~
+ \newFi{
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
                      & \Delta;\cdot |- s : A }
                      {\Delta |- F\,\{s\} : \kappa}
- ~~~~
+	     }
+\]
+\[ \inference[($\forall$)]{|- \kappa:\square & \Delta, X^\kappa |- B : *}
+                          {\Delta |- \forall X^\kappa . B : *}
+ ~~~~ \quad ~~~
+ \newFi{
    \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}
-                            {\Delta |- \forall i^A . B : *} }
+                            {\Delta |- \forall i^A . B : *}
+		    }
 \]
 \[ \newFi{
    \inference[($Conv$)]{ \Delta |- A : \kappa
@@ -182,8 +221,8 @@ $
                        {\Delta |- A : \kappa'} }
 \]
 ~\\
-\paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
-$ \qquad
+\paragraph{Typing:} ~~ \fbox{$\Delta;\Gamma |- t : A$}
+$ \quad
  ~~~~
  \inference[($:$)]{(x:A) \in \Gamma & \Delta |- \Gamma} 
                     {\Delta;\Gamma |- x:A}
@@ -206,13 +245,13 @@ $
                             & \Delta |- G:\kappa }
                             {\Delta;\Gamma |- t : B[G/X]}
 \]
-\[ \newFi{
+\[ \!\!\newFi{
    \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}
                               {\Delta;\Gamma |- t : \forall i^A.B}
    \left(\begin{matrix}
 		i\notin\FV(t),\\
 		i\notin\FV(\Gamma)\end{matrix}\right)
- ~~~~
+ ~~
    \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
                               & \Delta;\cdot |- s:A}
                               {\Delta;\Gamma |- t : B[s/i]} }
@@ -220,24 +259,133 @@ $
 \[ \inference[($=$)]{\Delta;\Gamma |- t : A & \Delta |- A = B : *}
                     {\Delta;\Gamma |- t : B}
 \]
-~\\
-\paragraph{Reduction:} \fbox{$t \rightsquigarrow t'$}
-$ 
- ~~~~
-   \inference{}{(\lambda x.t)\,s \rightsquigarrow t[s/x]}
- ~~~~
-   \inference{t \rightsquigarrow t'}{\lambda x.t \rightsquigarrow \lambda x.t'}
- ~~~~
-   \inference{r \rightsquigarrow r'}{r\;s \rightsquigarrow r'\;s}
- ~~~~
-   \inference{s \rightsquigarrow s'}{r\;s \rightsquigarrow r\;s'}
+\caption{Well-formedness, Sorting, Kinding, and Typing rules of \Fi}
+\label{fig:FiTyping}
+\end{figure}
+
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+\begin{figure}
+\paragraph{Kind equality:} ~~ \fbox{$|- \kappa=\kappa' : \square$}
 $
-~\\ ~\\
-\caption{Syntax, Typing rules, and Reduction rules of \Fi}
-\label{fig:Fi}
-\end{figure*}
-
-
+ ~~~~
+   \inference{}{|- * = *:\square}
+ ~~~~
+   \inference{ |- \kappa_1 = \kappa_1' : \square
+             & |- \kappa_2 = \kappa_2' : \square }
+             {|- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
+$
+\[ \newFi{
+   \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}
+             {|- A -> \kappa = A' -> \kappa' : \square} }
+ ~~~~
+   \inference{|- \kappa=\kappa':\square}
+             {|- \kappa'=\kappa:\square}
+ ~~~~
+   \inference{ |- \kappa =\kappa' :\square
+             & |- \kappa'=\kappa'':\square}
+             {|- \kappa=\kappa'':\square}
+\]
+~\\
+\paragraph{Type constructor equality:} ~~ \fbox{$\Delta |- F = F' : \kappa$}
+\[ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+             {\Delta |- (\lambda X^\kappa.F)\,G = F[G/X]:\kappa'}
+ ~~~~ \newFi{
+   \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+             {\Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
+\]
+\[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
+ ~~~~
+   \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+\]
+\[ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}
+             {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
+ ~~~~ \quad ~
+ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}
+             {\Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa}
+     }
+\]
+\[ \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
+             {\Delta |- F\,G = F'\,G' : \kappa'}
+ ~~~~ \newFi{
+ \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
+             {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
+     }
+\]
+\[
+   \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}
+             {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
+ ~~~~ \qquad
+ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}
+             {\Delta |- \forall i^A.B=\forall i^A.B':*} }
+\]
+\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+ ~~~~
+   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
+             {\Delta |- F = F'' : \kappa}
+\]
+~\\
+\paragraph{Term equality:} ~~ \fbox{$\Delta;\Gamma |- t = t' : A$}
+$ \qquad
+ ~~~~
+   \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
+             {\Delta;\Gamma |- (\lambda x.t)\,s=t[s/x] : B} $
+\[
+   \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
+ ~~~~
+   \inference{\quad~~ \Delta |- A:* \\ \Delta;\Gamma,x:A |- t=t':B}
+             {\Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
+ ~~~~
+   \inference{\Delta;\Gamma |- r=r':A-> B \\ \Delta;\Gamma |- s=s':A \qquad~}
+             {\Delta;\Gamma |- r\;s=r'\;s':B}
+\]
+\[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}
+             {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
+	     (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
+             & \Delta |- G:\kappa }
+             {\Delta;\Gamma |- t=t' : B[G/X]}
+\]
+\[ \newFi{
+   \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
+             {\Delta;\Gamma |- t=t' : \forall i^A.B}
+   \left(\begin{smallmatrix}
+		i\notin\FV(t),\\
+		i\notin\FV(t'),\\
+		i\notin\FV(\Gamma)\end{smallmatrix}\right)
+ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
+             & \Delta;\cdot |- s:A}
+             {\Delta;\Gamma |- t=t' : B[s/i]} }
+\]
+\[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
+ ~~~~
+   \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
+             {\Delta;\Gamma |- t=t'':A}
+\]
+\caption{Equality rules of \Fi}
+\label{fig:eqFi}
+\end{figure}
 
 \bibliographystyle{splncsnat}
 \bibliography{main}
