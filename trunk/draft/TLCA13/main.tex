@@ -10,8 +10,8 @@
 
 \definecolor{grey}{rgb}{0.8,0.8,0.8}
 
-\newcommand{\Fig}[1]{Figure\,\ref{fig:#1}}
-\newcommand{\Figs}[1]{Figures\,\ref{fig:#1}}
+\newcommand{\Fig}[1]{Fig.\,\ref{fig:#1}}
+\newcommand{\Figs}[1]{Figs.\,\ref{fig:#1}}
 \newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
 
 \newcommand{\ie}{{i.e.}}
@@ -35,6 +35,8 @@
 \newcommand{\Ran}{\mathtt{Ran}}
 \newcommand{\Lan}{\mathtt{Lan}}
 \newcommand{\s}[1]{\{#1\}}
+
+\renewcommand{\S}[0]{Sect.\;}
 
 \title{System \Fi}
 \subtitle{a Higher-Order Polymorphic $\lambda$-Calculus\\
@@ -60,11 +62,30 @@ TODO
 
 \section{TODO 1}
 TODO
+
+Term indices (possibly nested)
+
+Higher-order polymorphism
+
+Strong normalization and logical consistency
+
 \subsection{TODO 1.1}
 TODO
 \subsubsection{TODO 1.1.1}
 TODO
 \paragraph{TODO}
+
+\section{System \Fi} \label{sec:Fi}
+System \Fi\ is a higher-order polymorphic lambda calculus 
+designed to extend System~\Fw\ by the inclusion of term indices.
+The syntax and rules of System~\Fi\ are described in~\Figs{FiSyntax},
+\ref{fig:FiTyping} and~\ref{fig:eqFi}. 
+The extensions new to System~\Fi, which are not originally part of System~\Fw, 
+are highlighted by \newFi{\text{grey boxes}}.
+Eliding all the grey boxes from~\Figs{FiSyntax}, \ref{fig:FiTyping}
+and~\ref{fig:eqFi}, one obtains a version of System~\Fw\ 
+with Curry-style terms and the typing context separated into two parts
+(type-level context $\Delta$ and term-level context $\Gamma$).
 
 \begin{figure}
 \paragraph{Syntax:}
@@ -118,9 +139,6 @@ $
 \caption{Syntax and Reduction rules of \Fi}
 \label{fig:FiSyntax}
 \end{figure}
-
-
-
 
 \begin{figure}
 \paragraph{Well-formed typing contexts:}
@@ -243,8 +261,136 @@ $
 \end{figure}
 
 
+\subsection{System~\Fi\ compared to System~\Fw} \label{ssec:newFi}
+We assume readers to be familiar with System~\Fw\
+and focus on describing the new constructs of \Fi.
+These appear in grey boxes.
+
+\paragraph{Kinds.}
+The key extension to \Fw\ is the addition of term-indexed arrow kinds of
+the form \newFi{A -> \kappa}. This allows type constructors to have terms
+as indices. The rest of the development of \Fi\ flows naturally from
+this single extension.
+
+\paragraph{Sorting.} \label{sorting}
+The formation of indexed arrow kinds is
+governed by the sorting rule \newFi{(Ri)}. The rule $(Ri)$ specifies that
+an indexed arrow kind $A -> \kappa$ is well-sorted when $A$ has kind $*$
+under the empty type level context ($\cdot$) and $\kappa$ is well-sorted.
+
+Requiring the use of the empty context avoids dependent kinds (\ie, kinds depending on type level or value level
+bindings). The type $A$ appearing in
+the index arrow kind $A -> \kappa$ must be well-kinded under
+the empty type level context ($\cdot$).
+That is, $A$ should to be a closed type of kind $*$,
+which does not contain any free type variables or index variables.
+For example, $(\textit{List}\,X -> *)$ is not a well-sorted kind,
+while $((\forall X^{*}\!.\,\textit{List}\,X) -> *)$ is a well-sorted kind.
+
+\paragraph{Typing contexts.}
+Typing contexts are split into two parts.
+Type level contexts ($\Delta$) for type level (static) bindings,
+and term level contexts ($\Gamma$) for term level (dynamic) bindings.
+A new form of index variable binding ($i^A$) can appear in
+type level contexts in addition to the traditional type variable bindings ($X^\kappa$).
+There is only one form of term level binding ($x:A$) that appears in
+term level contexts.
+
+\paragraph{Well formed typing contexts.}
+A type level context $\Delta$ is well-formed if (1) it is either empty,
+or (2) extended by a type variable binding $X^\kappa$ whose kind $\kappa$ is
+well-sorted under $\Delta$, or (3) extended by an index binding $i^A$
+whose type $A$ is well-kinded under the empty type level context at kind $*$.
+This restriction is similar to the one that occurs in the sorting rule ($Ri$)
+for term-indexed arrow kinds (see the paragraph {\textit{Sorting}}).
+The consequence of this is that, in typing contexts and in sorts,
+$A$ must be a closed type (not a type constructor!) without free variables.
+
+A term level context $\Gamma$ is well-formed under a type level context
+$\Delta$ when it is either empty or extended by a term variable binding
+$x:A$ whose type $A$ is well-kinded under $\Delta$.
 
 
+\paragraph{Type constructors and their kinding rules.}
+We extend the type constructor syntax by three constructs,
+and extend the kinding rules accordingly for these new constructs.
+
+\newFi{\lambda i^A.F} is the type level abstraction over an index
+(or, index abstraction). Index abstractions introduce indexed arrow kinds
+by the kinding rule \newFi{(\lambda i)}. Note, the use of the new form of context
+extension, $i^A$, in the kinding rule ($\lambda i$).
+
+
+\newFi{F\,\{s\}} is the type level index application. In contrast to
+the ordinary type level application ($F\,G$) where the argument ($G$) is
+a type constructor, the argument of an index application ($F\,\{s\}$) is
+a term ($s$). We use the curly bracket notation around an index argument in a type to
+emphasize the transition from ordinary type to term, and to emphasize
+that $s$ is an index term, which is erasable. Index applications eliminate
+indexed arrow kinds by the kinding rule \newFi{(@i)}. Note, we type check
+the index term ($s$) under the current type level context paired with
+the empty term level context ($\Delta;\cdot$) since we do not want
+the index term ($s$) to depend on any term level bindings. Allowing such
+a dependency would admit true dependent types.
+
+\newFi{\forall i^A . B} is an index polymorphic type.
+The formation of indexed polymorphic types is governed by
+the kinding rule \newFi{\forall i}, which is very similar to
+the formation rule ($\forall$) for ordinary polymorphic types.
+
+In addition to the rules ($\lambda i$), ($@ i$), and ($\forall i$),
+we need a conversion rule \newFi{(Conv)} at kind level. This is because
+the new extension to the kind syntax $A -> \kappa$ involves types.
+Since kind syntax involves types, we need more than simple structural
+equality over kinds. The new equality over kinds is the usual structural equality
+extended by type constructor equality when comparing indexed arrow kinds
+(see \Fig{eqFi}).
+
+\paragraph{Terms and their typing rules}
+The term syntax is exactly the same as other Curry-style calclui.
+We write $x$ for ordinary term variables introduced by
+term level abstractions ($\lambda x.t$).
+We write $i$ for index variables introduced by
+index abstractions ($\lambda i^A.F$) and by
+index polymorphic types ($\forall i^A.B$). As discussed earlier, the distinction between
+$x$ and $i$ is for the convenience of readability.
+
+Since \Fi\ has index polymorphic types ($\forall i^A . B$),
+we need typing rules for index polymorphism:
+\newFi{(\forall I i)} for index generalization
+and \newFi{(\forall E i)} for index instantiation.
+
+The index generalization rule ($\forall I i$) is similar to
+the type generalization rule ($\forall I$), but generalizes over
+index variables ($i$) rather than type consturctor variables ($X$).
+The rule ($\forall I i$) has two side conditions
+while the rule ($\forall I$) has only one side conditions.
+The additional side condition $i\notin\FV(t)$ in the ($\forall I i$) rule
+prevents terms from accessing the type level index variables introduced by
+index polymorphism. Without this side condition, $\forall$-binder
+would no longer behave polymorphicaly, but instead would behave as
+a dependent function, which are usually denoted by the $\Pi$-binder in
+dependent type theories. The rule ($\forall I$) for ordinary
+type generalization does not need such additional side condition
+because type variables cannot appear in the syntax of terms.
+The side conditions on generalization rules for polymorphism is fairly standard
+in dependently typed languages supporting distinctions between polymorphism
+(or, erasable arguments) and dependent functions (\eg, IPTS\cite{LingerS08},
+ICC\cite{Miquel01}).
+
+The index instantiation rule ($\forall E i$) is similar to
+the type instantiation rule ($\forall E$), except that
+we type check the index term $s$ to be instantiated for $i$
+in the current type level context paired with the empty term level context
+($\Delta;\cdot$) rather than the current term level context.
+Since index terms are at type level, they should not depend on
+term level bindings.
+
+In addition to the rules ($\forall I i$) and ($\forall E i$) for
+index polymorphism, we need an additional variable rule \newFi{(:i)}
+to be able to access the index variables already in scope. Terms ($s$) used
+at type level in index applications ($F\{s\}$) should be able to access
+index variables already in scope. 
 
 
 
