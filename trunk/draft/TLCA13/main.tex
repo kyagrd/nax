@@ -358,6 +358,188 @@ $ \qquad
 \label{fig:eqFi}
 \end{figure}
 
+\section{Metatheory} \label{sec:theory}
+
+The expectation is that System \Fi\ has all the nice properties of System \Fw,
+yet is more expressive because of the addition of term-indexed types.
+
+We show some basic well-formedness properties for
+the judgments of \Fi\ in \S\ref{ssec:wf}.
+We prove erasure properties of \Fi, which captures the idea that indices are
+erasable since they are irrelevant for reduction in \S\ref{ssec:erasure}.
+We show strong normalization, logical consistence, and subject reduction for
+\Fi\ by reasoning about well-known calculi related to \Fi\ in \S\ref{ssec:sn}.
+
+\subsection{Well-formedness Properties and Substitution Lemmas} \label{ssec:wf}
+
+
+
+
+\subsection{Erasure Properties} \label{ssec:erasure}
+
+We define a meta-operation of index erasure that projects $\Fi$-types
+to $\Fw$-types.
+
+\begin{definition}[index erasure]\label{def:ierase}
+\[ \fbox{$\kappa^\circ$}
+ ~~~~ ~~
+ *^\circ =
+ *
+ ~~~~ ~~
+ (\kappa_1 -> \kappa_2)^\circ =
+ {\kappa_1}^\circ -> {\kappa_2}^\circ
+ ~~~~ ~~
+ (A -> \kappa)^\circ =
+ \kappa^\circ
+\]
+\[ \fbox{$F^\circ$}
+ ~~~~ ~~
+ X^\circ =
+ X
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~
+ (A -> B)^\circ =
+ A^\circ -> B^\circ
+\]
+\[ \qquad \qquad
+ (\lambda X^\kappa.F)^\circ =
+ \lambda X^{\kappa^\circ}.F^\circ
+ ~~~~ ~~~
+ (\lambda i^A.F)^\circ =
+ F^\circ
+\]
+\[ \qquad \qquad
+ (F\;G)^\circ =
+ F^\circ\;G^\circ
+ ~~~~ ~~~~ ~~~~ ~~
+ (F\,\{s\})^\circ =
+ F^\circ
+\]
+\[ \qquad \qquad
+ (\forall X^\kappa . B)^\circ =
+ \forall X^{\kappa^\circ} . B^\circ
+ ~~~~ ~~~
+ (\forall i^A . B)^\circ =
+ B^\circ
+\]
+\[ \fbox{$\Delta^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~
+ (\Delta,X^\kappa)^\circ = \Delta^\circ,X^{\kappa^\circ}
+ ~~~~ ~~
+ (\Delta,i^A)^\circ = \Delta^\circ
+\]
+\[ \fbox{$\Gamma^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~~~
+ (\Gamma,x:A)^\circ = \Gamma^\circ,x:A^\circ
+\]
+\end{definition}
+
+\begin{definition}[index variable selection]
+	\[ \fbox{$\Delta^\bullet$} ~~~~ ~~ \cdot^\bullet = \cdot \qquad
+	(\Delta,X^\kappa)^\bullet = \Delta^\bullet \qquad
+	(\Delta,i^A)^\bullet = \Delta^\bullet,i:A
+\]
+\end{definition}
+
+
+
+\begin{theorem}[index erasure on well-sorted kinds]
+\label{thm:ierasesorting}
+	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
+\end{theorem}
+\begin{proof}
+	By induction on the sort ($\kappa$).
+\end{proof}
+\begin{remark}
+For any well-sorted kind $\kappa$ in \Fi,
+$\kappa^\circ$ is a kind in \Fw.
+\end{remark}
+
+\begin{theorem}[index erasure on well-formed type level contexts]
+\label{thm:ierasetyctx}
+$ \inference{|- \Delta}{|- \Delta^\circ} $
+\end{theorem}
+\begin{proof}
+	By induction on the type level context ($\Delta$)
+	and using Theorem \ref{thm:ierasesorting}.
+\end{proof}
+\begin{remark}
+For any well-formed type level context $\Delta$ in \Fi,
+$\Delta^\circ$ is a well-formed type level context in \Fw.
+\end{remark}
+
+\begin{theorem}[index erasure on kind equality]\label{thm:ierasekindeq}
+$ \inference{|- \kappa=\kappa':\square}
+	{|- \kappa^\circ=\kappa'^\circ:\square}
+$
+\end{theorem}
+\begin{proof}
+	By induction on the kind equality judgement.
+\end{proof}
+\begin{remark}
+For any well-sorted kind equality $|- \kappa=\kappa':\square$ in \Fi,
+$\kappa^\circ$ and $\kappa'^\circ$ are the syntactically same \Fw\ kinds.
+Note that no variables can appear in the erased kinds by definition of
+the erasure operation on kinds.
+\end{remark}
+
+\begin{theorem}[index erasure on well-kinded type constructors]
+\label{thm:ierasekinding}
+\[ \inference{|- \Delta & \Delta |- F : \kappa}
+		{\Delta^\circ |- F^\circ : \kappa^\circ}
+\]
+\end{theorem}
+\begin{remark} TODO
+\end{remark}
+
+
+\begin{theorem}[index erasure on type constructor equality]
+\label{thm:ierasetyconeq}
+\[ \inference{\Delta |- F=F':\kappa}
+		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
+\]
+\end{theorem}
+\begin{remark} TODO
+\end{remark}
+
+\begin{theorem}[index erasure on well-formed term level contexts
+		prepended by index variable selection]
+\label{thm:ierasetmctxivs}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
+\]
+\end{theorem}
+
+\begin{theorem}[index erasure on well-typed terms]
+\label{thm:ierasetypingall}
+\[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+\]
+\end{theorem}
+
+\begin{corollary}[index erasure on index-free well-typed terms]
+\label{thm:ierasetypingifree}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
+		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+		{\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
+\]
+\end{corollary}
+
+\subsection{Strong Normalization and Logical Consistency} \label{ssec:sn}
+Strong normalization is a corollary of the erasure property since we know that
+System~\Fw\ is strongly normalizing. Logical consistency is immediate since
+System~\Fi\ is a strict subset of the \emph{restricted implicit calculus}
+\cite{Miquel00}, which is in turn a restriction of ICC~\cite{Miquel01}.
+Subject reduction is also immediate for the same reason.
+
+\section{Related Work} \label{sec:relwork}
+TODO
+
+\section{TODO}
+TODO
+
 \bibliographystyle{splncsnat}
 \bibliography{main}
 
