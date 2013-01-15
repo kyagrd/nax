@@ -5,6 +5,7 @@
 \usepackage[fleqn]{amsmath}
 \usepackage{amssymb}
 \usepackage{semantic}
+\usepackage{listings}
 \usepackage{comment}
 \usepackage[numbers]{natbib}
 
@@ -57,23 +58,215 @@
 \maketitle
 \begin{abstract}
 TODO
-\keywords{TODO, TODO}
+\keywords{term-indexed data types, generalized algebraic data types,
+higher-order polymorphism, type-constructor polymorphism, higher-kinded types,
+impredicative encoding}
 \end{abstract}
 
-\section{TODO 1}
-TODO
+\section{Introduction}
 
-Term indices - erasable, possibly nested
+%% Term indices - erasable, possibly nested
+%% 
+%% Higher-order polymorphism
+%% 
+%% Strong normalization and logical consistency
 
-Higher-order polymorphism
+Indexed types come in two flavors: type-indexed and term-indexed
+types. Type indexing includes parametric polymorphism, but it also includes
+more sophisticated typing as found in Generalized Algebraic Datatypes~(GADTs).
+An example of type indexing using GADTs is a type representation:\vspace*{-2pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+data TypeRep t where
+  Int :: TypeRep Int
+  Bool:: TypeRep Bool
+  Pair:: TypeRep a -> TypeRep b -> TypeRep(a,b)
+\end{lstlisting}\vspace*{-2pt}
+Here, a value of type {\tt (TypeRep t)} is isomorphic in ``shape" with
+the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
+with its type {\tt (Int,Bool)}.
 
-Strong normalization and logical consistency
+Term-indexed types include indices that range over data
+structures, such as Natural Numbers~(like {\tt Z}, {(\tt S
+Z})) or Lists~(like {\tt Nil} or ({\tt Cons Z Nil})). 
+The classic example of a term index is the second
+parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
+(S Z)})).
 
-\subsection{TODO 1.1}
-TODO
-\subsubsection{TODO 1.1.1}
-TODO
-\paragraph{TODO}
+In languages such as Haskell\footnote{see \S\ref{sec:relwork} for
+	a very recent GHC extension, which enable true term-indices.}
+	or ML, which support GADTs with type indexing,
+term-indices are simulated (or faked) by reflecting data at the type level
+with uninhabited type constructors
+For example,\vspace*{-2pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+data Succ n
+data Zero
+\end{lstlisting}\vspace*{-8pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+data Vector t n where
+  Cons :: a -> Vector a n -> Vector a (Succ n)
+  Nil  :: Vector a Zero
+\end{lstlisting}\vspace*{-2pt}
+This comes with a number of problems. First, there is no way to say
+that types such as {\tt (Succ Int)} are ill-formed, and second the costs
+associated with duplicating the constructor functions of data to be used
+as term-indices.
+Nevertheless, ``faked" term-indexed GADTs have become extremely
+popular as a light-weight, type-based mechanism
+to raise the confidence of users that software systems maintain important
+properties.
+
+Our approach in this direction is to design a new foundational calculus,
+System~\Fi, for functional programming languages with term-indexed
+datatypes.  In a nutshell, System~\Fi\ is obtained by minimally extending
+System~\Fw\ with type-indexed kinds.  Notably, this yields a logical
+calculus that is expressive enough to embed non-dependent
+\emph{term-indexed datatypes} and their eliminators. Our contributions in
+this development are as follows.\vspace*{-.8ex}
+\begin{itemize}
+\item 
+  Identifying the features that are needed for a higher-order polymorphic
+  $\lambda$-calculus to embed term-indexed datatypes~(\S\ref{sec:motiv}),
+  in isolation from other features normally associated with such
+  calculi~(e.g., general recursion, large elimination, dependent types).
+\item 
+  The design of the calculus, System \Fi\ (\S\ref{sec:Fi}), and its use to
+  study properties of languages with term-indexed datatypes, by embedding
+  these into the calculus~(\S\ref{sec:motiv}).  For instance, one can use
+  System~\Fi\ to prove that the Mendler-style eliminators for GADTs
+  \cite{AhnShe11} are normalizing.
+\item 
+  Showing that System~\Fi\ enjoys a simple erasure
+  property (\S\ref{ssec:erasure}) 
+  and inherits meta-theoretic
+  results~(strong normalization and logical consistency) from well-known
+  calculi~(System~\Fw\ and ICC) that enclose System~\Fi~%(\S\ref{ssec:sn}).
+(\S\ref{sec:theory}).
+\end{itemize}\vspace*{-3pt}
+
+\section{Motivation: from System~\Fw\ to System~\Fi, and back}
+\label{sec:motiv}
+It is well known that datatypes can be embedded into polymorphic lambda
+calculi by means of functional encodings~(e.g.,~\cite{AbeMatUus03}), such
+as the Church and Boehm-Berarducci encodings.
+
+In System~\textsf{F}, for instance, one can embed \emph{regular
+datatypes}~\cite{BoehmBerarducci}, like homogeneous lists:
+\[
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data List a = Cons a (List a) | Nil} \\
+\text{System \textsf{F}:}~& 
+\texttt{{List}}\:\: A\:\:\triangleq\:\:
+\forall X.
+(A\to X\to X) \to X \to X ~~\; 
+\end{array}
+\]
+In such regular datatypes, constructors have algebraic structure that
+directly translates into polymorphic operations on abstract types as
+encapsulated by universal quantification.
+
+In the more expressive System \Fw, one can encode more general
+\emph{type-indexed datatypes} that go beyond the algebraic class.
+For example, one can embed powerlists with
+heterogeneous elements in which an element of type \texttt{a} is followed by
+an element of the product type \texttt{(a,a)}:
+\[
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data Powl a = 
+	PCons a (Powl(a,a))
+	| 
+	PNil 
+} \\
+\text{System \Fw:}~& \texttt{{Powl}}\:\triangleq\:
+\lambda A^{*}.\forall X^{*\to*}. (A\to X(A\times A)\to X A) \to X A \to XA
+\end{array}
+\]
+Note the non-regular occurrence (\texttt{Powl(a,a)}) in the definition of
+(\texttt{Powl a}), and the use of universal quantification over
+higher-order kinds.
+
+What about term-indexed datatypes?  What extension to System~\Fw\ is
+needed to embed these, as well as type-indexed ones?  Our answer is
+System~\Fi.
+
+In a functional language supporting term-indexed datatypes, we envisage
+that the classic example of homogeneous length-indexed lists would be
+defined along the following lines:\vspace{-5pt}
+\begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
+ data Nat = S Nat | Z 
+ data Vec (a:*) {i:Nat} where
+   VCons : a -> Vec a {i} -> Vec a {S i}
+   VNil  : Vec a {Z}
+\end{lstlisting}~\vspace{-15pt}\\ \noindent
+Here the type constructor~{\tt Vec} is defined to admit parameterisation
+by both type and term indices.  For instance, the type 
+(\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
+vectors of lists of natural numbers.  By design, our syntax directly
+reflects the different type and term indexing by indicating the latter in
+curly brackets.  This feature has been directly transferred from
+System~\Fi, where it is used as a mechanism for guaranteeing the static
+nature of term indexing.
+
+The encoding of the vector datatype in System~\Fi\ is as follows: 
+\begin{equation*}\label{FiVecType}
+\texttt{{Vec}}
+\triangleq
+\begin{array}[t]{l}
+\lambda A^\mathtt{*}.\lambda
+i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to\mathtt{*}}.
+  (\forall j^{\texttt{{Nat}}}.A\to X\{j\}\to X\{\texttt{{S}}\; j\})
+  \to X\{\texttt{{Z}}\}
+    \to X\{i\}
+\end{array}
+\end{equation*}
+where $\texttt{{Nat}}$, $\mathtt Z$, and $\mathtt S$ respectively encode
+the Natural Numbers, zero and successor.
+Without going into the details of the formalism, which are given in the
+next section, one sees that such a calculus incorporating term-indexing
+structure needs four additional constructs (see \Fig{FiSyntax} for the
+highlighted extended syntax).
+\begin{enumerate}
+\item 
+  Type-indexed kinding~($A\to\kappa$) (as in $(\texttt{{Nat}\ensuremath{\to}*})$
+  in the example above) where the compile-time nature of term-indexing
+  will be reflected in the enforcement that $A$ be a closed
+  type~(rule~$(Ri)$ in \Fig{FiTyping}).
+
+\item 
+  Term-index abstraction~$\lambda i^A.F$~(as $\lambda
+  i^{\texttt{{Nat}}}.\cdots$ in the example above) for constructing (or
+  introducing) type-indexed kinds (rule~$(\lambda i)$ in
+  \Fig{FiTyping}).  
+
+\item 
+  Term-index application~$F\{s\}$ (as $X\{{\tt Z}\}$, $X\{j\}$, and
+  $X\{\texttt{S}\;j\}$ in the example above) for destructing (or
+  eliminating) type-indexed kinds, where the compile-time nature of
+  indexing will be reflected in the enforcement that the index be
+  statically typed% in that it does not depend on run-time parameters
+~(rule~$(@i)$ in \Fig{FiTyping}) .
+
+\item 
+  Term-index polymorphism~$\forall i^A.B$ (as $\forall
+  j^{\texttt{{Nat}}}.\cdots$ in the example above) where the compile-time
+  nature of polymorphic term-indexing will be reflected in the enforcement
+  that the variable~$i$ be static of closed type~$A$~(rule~$(\forall
+  Ii)$ in \Fig{FiTyping}).
+\end{enumerate}
+
+As exemplified above, System~\Fi\ maintains a clear-cut separation between
+higher-order kinding and term indexing.  This adds a level of abstraction
+to System~\Fw\ and yields types that in addition to structural invariants
+also keep track of indexing invariants.  Being static, all term-index
+information can be erased.  This projects System~\Fi\ into System~\Fw\
+fixing the latter.  For instance, the erasure of the \Fi-type~\texttt{Vec}
+is the \Fw-type~\texttt{List}, the erasure of which (when regarded as an
+\Fi-type that is) is in turn itself.  Since, as already mentioned, typing
+in System~\Fi\ imposes structural and indexing constraints on terms one
+expects that the structural projection from System~\Fi\ to System~\Fw\
+provided by index erasure preserves typing.  This is established in
+\S\ref{sec:theory} and used to deduce the strong normalization of
+System~\Fi.
 
 \section{System \Fi} \label{sec:Fi}
 System \Fi\ is a higher-order polymorphic lambda calculus 
@@ -260,6 +453,110 @@ $
 \label{fig:FiTyping}
 \end{figure}
 
+\begin{figure}
+\paragraph{Kind equality:} ~~ \fbox{$|- \kappa=\kappa' : \square$}
+$
+ ~~~~
+   \inference{}{|- * = *:\square}
+ ~~~~
+   \inference{ |- \kappa_1 = \kappa_1' : \square
+             & |- \kappa_2 = \kappa_2' : \square }
+             {|- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
+$
+\[ \newFi{
+   \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}
+             {|- A -> \kappa = A' -> \kappa' : \square} }
+ ~~~~
+   \inference{|- \kappa=\kappa':\square}
+             {|- \kappa'=\kappa:\square}
+ ~~~~
+   \inference{ |- \kappa =\kappa' :\square
+             & |- \kappa'=\kappa'':\square}
+             {|- \kappa=\kappa'':\square}
+\]
+~\\
+\paragraph{Type constructor equality:} ~~ \fbox{$\Delta |- F = F' : \kappa$}
+\[ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+             {\Delta |- (\lambda X^\kappa.F)\,G = F[G/X]:\kappa'}
+ ~~~~ \newFi{
+   \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+             {\Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
+\]
+\[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
+ ~~~~
+   \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+\]
+\[ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}
+             {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
+ ~~~~ \quad ~
+ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}
+             {\Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa}
+     }
+\]
+\[ \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
+             {\Delta |- F\,G = F'\,G' : \kappa'}
+ ~~~~ \newFi{
+ \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
+             {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
+     }
+\]
+\[
+   \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}
+             {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
+ ~~~~ \qquad
+ \newFi{
+   \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}
+             {\Delta |- \forall i^A.B=\forall i^A.B':*} }
+\]
+\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+ ~~~~
+   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
+             {\Delta |- F = F'' : \kappa}
+\]
+~\\
+\paragraph{Term equality:} ~~ \fbox{$\Delta;\Gamma |- t = t' : A$}
+$ \qquad
+ ~~~~
+   \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
+             {\Delta;\Gamma |- (\lambda x.t)\,s=t[s/x] : B} $
+\[
+   \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
+ ~~~~
+   \inference{\quad~~ \Delta |- A:* \\ \Delta;\Gamma,x:A |- t=t':B}
+             {\Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
+ ~~~~
+   \inference{\Delta;\Gamma |- r=r':A-> B \\ \Delta;\Gamma |- s=s':A \qquad~}
+             {\Delta;\Gamma |- r\;s=r'\;s':B}
+\]
+\[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}
+             {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
+	     (X\notin\FV(\Gamma))
+ ~~~~ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
+             & \Delta |- G:\kappa }
+             {\Delta;\Gamma |- t=t' : B[G/X]}
+\]
+\[ \newFi{
+   \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
+             {\Delta;\Gamma |- t=t' : \forall i^A.B}
+   \left(\begin{smallmatrix}
+		i\notin\FV(t),\\
+		i\notin\FV(t'),\\
+		i\notin\FV(\Gamma)\end{smallmatrix}\right)
+ ~~~~
+   \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
+             & \Delta;\cdot |- s:A}
+             {\Delta;\Gamma |- t=t' : B[s/i]} }
+\]
+\[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
+ ~~~~
+   \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
+             {\Delta;\Gamma |- t=t'':A}
+\]
+\caption{Equality rules of \Fi}
+\label{fig:eqFi}
+\end{figure}
 
 \subsection{System~\Fi\ compared to System~\Fw} \label{ssec:newFi}
 We assume readers to be familiar with System~\Fw\
@@ -392,118 +689,6 @@ to be able to access the index variables already in scope. Terms ($s$) used
 at type level in index applications ($F\{s\}$) should be able to access
 index variables already in scope. 
 
-
-
-
-
-
-
-
-\begin{figure}
-\paragraph{Kind equality:} ~~ \fbox{$|- \kappa=\kappa' : \square$}
-$
- ~~~~
-   \inference{}{|- * = *:\square}
- ~~~~
-   \inference{ |- \kappa_1 = \kappa_1' : \square
-             & |- \kappa_2 = \kappa_2' : \square }
-             {|- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
-$
-\[ \newFi{
-   \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}
-             {|- A -> \kappa = A' -> \kappa' : \square} }
- ~~~~
-   \inference{|- \kappa=\kappa':\square}
-             {|- \kappa'=\kappa:\square}
- ~~~~
-   \inference{ |- \kappa =\kappa' :\square
-             & |- \kappa'=\kappa'':\square}
-             {|- \kappa=\kappa'':\square}
-\]
-~\\
-\paragraph{Type constructor equality:} ~~ \fbox{$\Delta |- F = F' : \kappa$}
-\[ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
-             {\Delta |- (\lambda X^\kappa.F)\,G = F[G/X]:\kappa'}
- ~~~~ \newFi{
-   \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
-             {\Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
-\]
-\[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
- ~~~~
-   \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
-\]
-\[ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}
-             {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
- ~~~~ \quad ~
- \newFi{
-   \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}
-             {\Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa}
-     }
-\]
-\[ \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
-             {\Delta |- F\,G = F'\,G' : \kappa'}
- ~~~~ \newFi{
- \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
-             {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
-     }
-\]
-\[
-   \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}
-             {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
- ~~~~ \qquad
- \newFi{
-   \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}
-             {\Delta |- \forall i^A.B=\forall i^A.B':*} }
-\]
-\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
- ~~~~
-   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
-             {\Delta |- F = F'' : \kappa}
-\]
-~\\
-\paragraph{Term equality:} ~~ \fbox{$\Delta;\Gamma |- t = t' : A$}
-$ \qquad
- ~~~~
-   \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
-             {\Delta;\Gamma |- (\lambda x.t)\,s=t[s/x] : B} $
-\[
-   \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
- ~~~~
-   \inference{\quad~~ \Delta |- A:* \\ \Delta;\Gamma,x:A |- t=t':B}
-             {\Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
- ~~~~
-   \inference{\Delta;\Gamma |- r=r':A-> B \\ \Delta;\Gamma |- s=s':A \qquad~}
-             {\Delta;\Gamma |- r\;s=r'\;s':B}
-\]
-\[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}
-             {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
-	     (X\notin\FV(\Gamma))
- ~~~~ ~~~~
-   \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
-             & \Delta |- G:\kappa }
-             {\Delta;\Gamma |- t=t' : B[G/X]}
-\]
-\[ \newFi{
-   \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
-             {\Delta;\Gamma |- t=t' : \forall i^A.B}
-   \left(\begin{smallmatrix}
-		i\notin\FV(t),\\
-		i\notin\FV(t'),\\
-		i\notin\FV(\Gamma)\end{smallmatrix}\right)
- ~~~~
-   \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
-             & \Delta;\cdot |- s:A}
-             {\Delta;\Gamma |- t=t' : B[s/i]} }
-\]
-\[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
- ~~~~
-   \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
-             {\Delta;\Gamma |- t=t'':A}
-\]
-\caption{Equality rules of \Fi}
-\label{fig:eqFi}
-\end{figure}
-
 \section{Metatheory} \label{sec:theory}
 
 The expectation is that System \Fi\ has all the nice properties of System \Fw,
@@ -517,6 +702,42 @@ We show strong normalization, logical consistence, and subject reduction for
 \Fi\ by reasoning about well-known calculi related to \Fi\ in \S\ref{ssec:sn}.
 
 \subsection{Well-formedness Properties and Substitution Lemmas} \label{ssec:wf}
+
+The substitution lemma below is fairly standard,
+comparable to substitution lemmas
+in other well-known systems such as \Fw\ or ICC.
+\begin{lemma}[substitution]\mbox{}\\[-3mm]
+\label{lem:subst}
+\begin{enumerate}
+\item
+%\begin{lemma}[type substitution]
+\label{lem:tysubst}
+\mbox{\rm (type substitution)}
+$\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+	{\Delta |- F[G/X]:\kappa'} $
+%\end{lemma}
+\medskip
+
+\item
+%\begin{lemma}[index substitution]
+\label{lem:ixsubst}
+\mbox{\rm (index substitution)}
+$ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+	{\Delta |- F[s/i]:\kappa} $
+%\end{lemma}
+\medskip
+
+\item
+%\begin{lemma}[term substitution]
+\label{lem:tmsubst}
+\mbox{\rm (term substitution)}
+$ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
+	{\Delta,\Gamma |- t[s/x]:B} $
+%\end{lemma}
+\end{enumerate}
+\end{lemma}
+The substitution lemma is fairly standard, comparable to substitution lemmas
+in other well-known systems such as \Fw\ or ICC.
 
 
 
