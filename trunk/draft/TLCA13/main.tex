@@ -41,18 +41,18 @@
 
 \title{System \Fi}
 \subtitle{a Higher-Order Polymorphic $\lambda$-Calculus\\
-	with Erasable Term Indices}
+        with Erasable Term Indices}
 \titlerunning{System \Fi}
 \author{Ki Yung Ahn\inst{1} \and Tim Sheard\inst{1} \and
-	Marcelo Fiore\inst{2} \and Andrew M. Pitts\inst{2} }
+        Marcelo Fiore\inst{2} \and Andrew M. Pitts\inst{2} }
 \institute{
-	Portland State University, Portland, Oregon, USA
-	\thanks{supported by NSF grant 0910500.}
-	\\ \email{kya@cs.pdx.edu} \qquad \email{sheard@cs.pdx.edu}
-	\and
-	University of Cambridge, Cambridge, UK
-	\\ \email{\{Marcelo.Fiore,Andrew.Pitts\}@cl.cam.ac.uk}
-	}
+        Portland State University, Portland, Oregon, USA
+        \thanks{supported by NSF grant 0910500.}
+        \\ \email{kya@cs.pdx.edu} \qquad \email{sheard@cs.pdx.edu}
+        \and
+        University of Cambridge, Cambridge, UK
+        \\ \email{\{Marcelo.Fiore,Andrew.Pitts\}@cl.cam.ac.uk}
+        }
 
 \begin{document}
 \maketitle
@@ -71,10 +71,17 @@ impredicative encoding}
 %% 
 %% Strong normalization and logical consistency
 
-Indexed types come in two flavors: type-indexed and term-indexed
-types. Type indexing includes parametric polymorphism, but it also includes
+We are interested in the use of indexed types to state and
+maintain program properties. A type parameter (like {\tt Int} in {\tt (List Int)})
+tells us something about data stored in values of that type. A type index
+(like {\tt 3} in {\tt (Vector Int 3)}) states
+an inductive property of values with that type. For example, that values
+of type {\tt (Vector Int 3)} have three elements.
+
+Indexed types come in two flavors: {\it type-indexed} and {\it term-indexed}
+types. {\it Type indexing} includes parametric polymorphism, but it also includes
 more sophisticated typing as found in Generalized Algebraic Datatypes~(GADTs).
-An example of type indexing using GADTs is a type representation:\vspace*{-2pt}
+An example of type indexing using GADTs (in Haskell) is a type representation:\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data TypeRep t where
   Int :: TypeRep Int
@@ -85,7 +92,7 @@ Here, a value of type {\tt (TypeRep t)} is isomorphic in ``shape" with
 the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
 with its type {\tt (Int,Bool)}.
 
-Term-indexed types include indices that range over data
+{\it Term-indexed} types include indices that range over data
 structures, such as Natural Numbers~(like {\tt Z}, {(\tt S
 Z})) or Lists~(like {\tt Nil} or ({\tt Cons Z Nil})). 
 The classic example of a term index is the second
@@ -93,23 +100,23 @@ parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
 (S Z)})).
 
 In languages such as Haskell\footnote{see \S\ref{sec:relwork} for
-	a very recent GHC extension, which enable true term-indices.}
-	or OCaml[TODO cite], which support GADTs with type indexing,
+        a very recent GHC extension, which enable true term-indices.}
+        or OCaml[TODO cite], which support GADTs with type indexing,
 term-indices are simulated (or faked) by reflecting data at the type level
 with uninhabited type constructors
 For example,\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
-data Succ n
-data Zero
+data S n
+data Z
 \end{lstlisting}\vspace*{-8pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
-data Vector t n where
-  Cons :: a -> Vector a n -> Vector a (Succ n)
-  Nil  :: Vector a Zero
+data Vec t n where
+  Cons :: a -> Vec a n -> Vec a (S n)
+  Nil  :: Vec a Z
 \end{lstlisting}\vspace*{-2pt}
 This comes with a number of problems. First, there is no way to say
-that types such as {\tt (Succ Int)} are ill-formed, and second the costs
-associated with duplicating the constructor functions of data to be used
+that types such as {\tt (S Int)} are ill-formed, and second the costs
+associated with duplicating the constructors of data to be used
 as term-indices.
 Nevertheless, ``faked" term-indexed GADTs have become extremely
 popular as a light-weight, type-based mechanism
@@ -140,18 +147,18 @@ this development are as follows.\vspace*{-.8ex}
   property (\S\ref{ssec:erasure}) 
   and inherits meta-theoretic
   results~(strong normalization and logical consistency) from well-known
-  calculi~(System~\Fw\ and ICC) that enclose System~\Fi~%(\S\ref{ssec:sn}).
+  calculi~(System~\Fw\ and ICC) that are supersets of System~\Fi~%(\S\ref{ssec:sn}).
 (\S\ref{sec:theory}).
 \end{itemize}\vspace*{-3pt}
 
 \section{Motivation: from System~\Fw\ to System~\Fi, and back}
 \label{sec:motiv}
 It is well known that datatypes can be embedded into polymorphic lambda
-calculi by means of functional encodings~(e.g.,~\cite{AbeMatUus03}), such
-as the Church and Boehm-Berarducci encodings.
+calculi by means of functional encodings~\cite{AbeMatUus03}, such
+as the Church and Boehm-Berarducci encodings~\cite{BoehmBerarducci}.
 
 In System~\textsf{F}, for instance, one can embed \emph{regular
-datatypes}~\cite{BoehmBerarducci}, like homogeneous lists:
+datatypes}, like homogeneous lists:
 \[
 \begin{array}{ll}
 \text{Haskell:} & \texttt{data List a = Cons a (List a) | Nil} \\
@@ -163,20 +170,22 @@ datatypes}~\cite{BoehmBerarducci}, like homogeneous lists:
 \]
 In such regular datatypes, constructors have algebraic structure that
 directly translates into polymorphic operations on abstract types as
-encapsulated by universal quantification.
+encapsulated by universal quantification over types (of kind $*$).
 
-In the more expressive System \Fw, one can encode more general
-\emph{type-indexed datatypes} that go beyond the algebraic class.
-For example, one can embed powerlists with
+In the more expressive System \Fw~ (where one can abstract over type constructors
+of any kind),
+one can encode more general \emph{type-indexed datatypes} that go beyond the 
+regular datatypes. For example, one can embed powerlists with
 heterogeneous elements in which an element of type \texttt{a} is followed by
 an element of the product type \texttt{(a,a)}:
 \[
 \begin{array}{ll}
 \text{Haskell:} & \texttt{data Powl a = 
-	PCons a (Powl(a,a))
-	| 
-	PNil 
+        PCons a (Powl(a,a))
+        | 
+        PNil 
 } \\
+& \texttt{Cons 1 (Cons (2,3) (Cons ((3,4),(1,2)) Nil)) :: Powl Int}\\
 \text{System \Fw:}~& \texttt{{Powl}}\:\triangleq\:
 \lambda A^{*}.\forall X^{*\to*}. (A\to X(A\times A)\to X A) \to X A \to XA
 \end{array}
@@ -185,8 +194,8 @@ Note the non-regular occurrence (\texttt{Powl(a,a)}) in the definition of
 (\texttt{Powl a}), and the use of universal quantification over
 higher-order kinds.
 
-What about term-indexed datatypes?  What extension to System~\Fw\ is
-needed to embed these, as well as type-indexed ones?  Our answer is
+What about term-indexed datatypes?  What extensions to System~\Fw\ are
+needed to embed term indices as well as type indices?  Our answer is
 System~\Fi.
 
 In a functional language supporting term-indexed datatypes, we envisage
@@ -202,10 +211,10 @@ Here the type constructor~{\tt Vec} is defined to admit parameterisation
 by both type and term indices.  For instance, the type 
 (\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
 vectors of lists of natural numbers.  By design, our syntax directly
-reflects the different type and term indexing by indicating the latter in
-curly brackets.  This feature has been directly transferred from
-System~\Fi, where it is used as a mechanism for guaranteeing the static
-nature of term indexing.
+reflects the difference between type and term indexing by enclosing the latter in
+curly braces.  We also make this distinction in 
+System~\Fi, where it is useful within the types system
+to guarantee the static nature of term indexing.
 
 The encoding of the vector datatype in System~\Fi\ is as follows: 
 \begin{equation*}\label{FiVecType}
@@ -227,9 +236,9 @@ structure needs four additional constructs (see \Fig{FiSyntax} for the
 highlighted extended syntax).
 \begin{enumerate}
 \item 
-  Type-indexed kinding~($A\to\kappa$) (as in $(\texttt{{Nat}\ensuremath{\to}*})$
-  in the example above) where the compile-time nature of term-indexing
-  will be reflected in the enforcement that $A$ be a closed
+  Type-indexed kinding~($A\to\kappa$), as in $(\texttt{{Nat}\ensuremath{\to}*})$
+  in the example above, where the compile-time nature of term-indexing
+  will be reflected in the typing rules, enforcing that $A$ be a closed
   type~(rule~$(Ri)$ in \Fig{FiTyping}).
 
 \item 
@@ -242,29 +251,26 @@ highlighted extended syntax).
   Term-index application~$F\{s\}$ (as $X\{{\tt Z}\}$, $X\{j\}$, and
   $X\{\texttt{S}\;j\}$ in the example above) for destructing (or
   eliminating) type-indexed kinds, where the compile-time nature of
-  indexing will be reflected in the enforcement that the index be
+  indexing will be reflected in the typing rules, enforceing that the index be
   statically typed% in that it does not depend on run-time parameters
 ~(rule~$(@i)$ in \Fig{FiTyping}) .
 
 \item 
   Term-index polymorphism~$\forall i^A.B$ (as $\forall
   j^{\texttt{{Nat}}}.\cdots$ in the example above) where the compile-time
-  nature of polymorphic term-indexing will be reflected in the enforcement
+  nature of polymorphic term-indexing will be reflected in the typing rules enforcing
   that the variable~$i$ be static of closed type~$A$~(rule~$(\forall
   Ii)$ in \Fig{FiTyping}).
 \end{enumerate}
 
-As exemplified above, System~\Fi\ maintains a clear-cut separation between
-higher-order kinding and term indexing.  This adds a level of abstraction
-to System~\Fw\ and yields types that in addition to structural invariants
-also keep track of indexing invariants.  Being static, all term-index
-information can be erased.  This projects System~\Fi\ into System~\Fw\
-fixing the latter.  For instance, the erasure of the \Fi-type~\texttt{Vec}
-is the \Fw-type~\texttt{List}, the erasure of which (when regarded as an
-\Fi-type that is) is in turn itself.  Since, as already mentioned, typing
-in System~\Fi\ imposes structural and indexing constraints on terms one
-expects that the structural projection from System~\Fi\ to System~\Fw\
-provided by index erasure preserves typing.  This is established in
+As described above, System~\Fi\ maintains a clear-cut separation between
+type indexing and term indexing.  This adds a level of abstraction
+to System~\Fw\ and yields types that in addition to parametric polymorphism
+also keep track of inductive invariants using term indices. All term-index
+information can be erased, since it is only used at compile-time.  
+It is possible to project any well-typed System~\Fi\ term into a well-typed System~\Fw\ term.
+For instance, the erasure of the \Fi-type~\texttt{Vec}
+is the \Fw-type~\texttt{List}.  This is established in
 \S\ref{sec:theory} and used to deduce the strong normalization of
 System~\Fi.
 
@@ -284,39 +290,39 @@ with Curry-style terms and the typing context separated into two parts
 \paragraph{Syntax:}
 \begin{align*}
 \!\!\!\!\!\!\!\!&\text{Sort}
- 	& \square
-	\\
+        & \square
+        \\
 \!\!\!\!\!\!\!\!&\text{Term Variables}
- 	& x,i
+        & x,i
 \\
 \!\!\!\!\!\!\!\!&\text{Type Constructor Variables}
- 	& X
+        & X
 \\
 \!\!\!\!\!\!\!\!&\text{Kinds}
- 	& \kappa		&~ ::= ~ *
-				\mid \kappa -> \kappa
-				\mid \newFi{A -> \kappa}
+        & \kappa                &~ ::= ~ *
+                                \mid \kappa -> \kappa
+                                \mid \newFi{A -> \kappa}
 \\
 \!\!\!\!\!\!\!\!&\text{Type Constructors}
-	& A,B,F,G		&~ ::= ~ X
-				\mid A -> B
-				\mid \lambda X^\kappa.F
-				\mid F\,G
-				\mid \forall X^\kappa . B \\
-				&&& \qquad\qquad\qquad\quad~
-				\mid \newFi{\lambda i^A.F
-				\mid F\,\{s\}
-				\mid \forall i^A . B}
+        & A,B,F,G               &~ ::= ~ X
+                                \mid A -> B
+                                \mid \lambda X^\kappa.F
+                                \mid F\,G
+                                \mid \forall X^\kappa . B \\
+                                &&& \qquad\qquad\qquad\quad~
+                                \mid \newFi{\lambda i^A.F
+                                \mid F\,\{s\}
+                                \mid \forall i^A . B}
 \\
 \!\!\!\!\!\!\!\!&\text{Terms}
-	& r,s,t			&~ ::= ~ x \mid \lambda x.t \mid r\;s
+        & r,s,t                 &~ ::= ~ x \mid \lambda x.t \mid r\;s
 \\
 \!\!\!\!\!\!\!\!&\text{Typing Contexts}
-	& \Delta		&~ ::= ~ \cdot
-				\mid \Delta, X^\kappa
-				\mid \newFi{\Delta, i^A} \\
-&	& \Gamma		&~ ::= ~ \cdot
-				\mid \Gamma, x : A
+        & \Delta                &~ ::= ~ \cdot
+                                \mid \Delta, X^\kappa
+                                \mid \newFi{\Delta, i^A} \\
+&       & \Gamma                &~ ::= ~ \cdot
+                                \mid \Gamma, x : A
 \end{align*}
 \paragraph{Reduction:} ~~ \fbox{$t \rightsquigarrow t'$} \\
 $
@@ -385,7 +391,7 @@ $
  \newFi{
   \inference[($\lambda i$)]{\cdot |- A:* & \Delta,i^A |- F : \kappa}
                             {\Delta |- \lambda i^A.F : A->\kappa}
-		    }
+                    }
 \]
 \[ \inference[($@$)]{ \Delta |- F : \kappa -> \kappa'
                     & \Delta |- G : \kappa }
@@ -395,7 +401,7 @@ $
    \inference[($@i$)]{ \Delta |- F : A -> \kappa
                      & \Delta;\cdot |- s : A }
                      {\Delta |- F\,\{s\} : \kappa}
-	     }
+             }
 \]
 \[ \inference[($\forall$)]{|- \kappa:\square & \Delta, X^\kappa |- B : *}
                           {\Delta |- \forall X^\kappa . B : *}
@@ -403,7 +409,7 @@ $
  \newFi{
    \inference[($\forall i$)]{\cdot |- A:* & \Delta, i^A |- B : *}
                             {\Delta |- \forall i^A . B : *}
-		    }
+                    }
 \]
 \[ \newFi{
    \inference[($Conv$)]{ \Delta |- A : \kappa
@@ -429,7 +435,7 @@ $
 \]
 \[ \inference[($\forall I$)]{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t : B}
                             {\Delta;\Gamma |- t : \forall X^\kappa.B}
-			    (X\notin\FV(\Gamma))
+                            (X\notin\FV(\Gamma))
  ~~~~ ~~~~
    \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
                             & \Delta |- G:\kappa }
@@ -439,8 +445,8 @@ $
    \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}
                               {\Delta;\Gamma |- t : \forall i^A.B}
    \left(\begin{matrix}
-		i\notin\FV(t),\\
-		i\notin\FV(\Gamma)\end{matrix}\right)
+                i\notin\FV(t),\\
+                i\notin\FV(\Gamma)\end{matrix}\right)
  ~~
    \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
                               & \Delta;\cdot |- s:A}
@@ -531,7 +537,7 @@ $ \qquad
 \]
 \[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}
              {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
-	     (X\notin\FV(\Gamma))
+             (X\notin\FV(\Gamma))
  ~~~~ ~~~~
    \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
              & \Delta |- G:\kappa }
@@ -541,9 +547,9 @@ $ \qquad
    \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
              {\Delta;\Gamma |- t=t' : \forall i^A.B}
    \left(\begin{smallmatrix}
-		i\notin\FV(t),\\
-		i\notin\FV(t'),\\
-		i\notin\FV(\Gamma)\end{smallmatrix}\right)
+                i\notin\FV(t),\\
+                i\notin\FV(t'),\\
+                i\notin\FV(\Gamma)\end{smallmatrix}\right)
  ~~~~
    \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
              & \Delta;\cdot |- s:A}
@@ -714,7 +720,7 @@ in other well-known systems such as \Fw\ or ICC.
 \label{lem:tysubst}
 \mbox{\rm (type substitution)}
 $\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
-	{\Delta |- F[G/X]:\kappa'} $
+        {\Delta |- F[G/X]:\kappa'} $
 %\end{lemma}
 \medskip
 
@@ -723,7 +729,7 @@ $\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
 \label{lem:ixsubst}
 \mbox{\rm (index substitution)}
 $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
-	{\Delta |- F[s/i]:\kappa} $
+        {\Delta |- F[s/i]:\kappa} $
 %\end{lemma}
 \medskip
 
@@ -732,7 +738,7 @@ $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
 \label{lem:tmsubst}
 \mbox{\rm (term substitution)}
 $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
-	{\Delta,\Gamma |- t[s/x]:B} $
+        {\Delta,\Gamma |- t[s/x]:B} $
 %\end{lemma}
 \end{enumerate}
 \end{lemma}
@@ -805,9 +811,9 @@ to $\Fw$-types.
 \end{definition}
 
 \begin{definition}[index variable selection]
-	\[ \fbox{$\Delta^\bullet$} ~~~~ ~~ \cdot^\bullet = \cdot \qquad
-	(\Delta,X^\kappa)^\bullet = \Delta^\bullet \qquad
-	(\Delta,i^A)^\bullet = \Delta^\bullet,i:A
+        \[ \fbox{$\Delta^\bullet$} ~~~~ ~~ \cdot^\bullet = \cdot \qquad
+        (\Delta,X^\kappa)^\bullet = \Delta^\bullet \qquad
+        (\Delta,i^A)^\bullet = \Delta^\bullet,i:A
 \]
 \end{definition}
 
@@ -815,10 +821,10 @@ to $\Fw$-types.
 
 \begin{theorem}[index erasure on well-sorted kinds]
 \label{thm:ierasesorting}
-	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
+        $\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
 \end{theorem}
 \begin{proof}
-	By induction on the sort ($\kappa$).
+        By induction on the sort ($\kappa$).
 \end{proof}
 \begin{remark}
 For any well-sorted kind $\kappa$ in \Fi,
@@ -830,8 +836,8 @@ $\kappa^\circ$ is a kind in \Fw.
 $ \inference{|- \Delta}{|- \Delta^\circ} $
 \end{theorem}
 \begin{proof}
-	By induction on the type level context ($\Delta$)
-	and using Theorem \ref{thm:ierasesorting}.
+        By induction on the type level context ($\Delta$)
+        and using Theorem \ref{thm:ierasesorting}.
 \end{proof}
 \begin{remark}
 For any well-formed type level context $\Delta$ in \Fi,
@@ -840,11 +846,11 @@ $\Delta^\circ$ is a well-formed type level context in \Fw.
 
 \begin{theorem}[index erasure on kind equality]\label{thm:ierasekindeq}
 $ \inference{|- \kappa=\kappa':\square}
-	{|- \kappa^\circ=\kappa'^\circ:\square}
+        {|- \kappa^\circ=\kappa'^\circ:\square}
 $
 \end{theorem}
 \begin{proof}
-	By induction on the kind equality judgement.
+        By induction on the kind equality judgement.
 \end{proof}
 \begin{remark}
 For any well-sorted kind equality $|- \kappa=\kappa':\square$ in \Fi,
@@ -856,7 +862,7 @@ the erasure operation on kinds.
 \begin{theorem}[index erasure on well-kinded type constructors]
 \label{thm:ierasekinding}
 \[ \inference{|- \Delta & \Delta |- F : \kappa}
-		{\Delta^\circ |- F^\circ : \kappa^\circ}
+                {\Delta^\circ |- F^\circ : \kappa^\circ}
 \]
 \end{theorem}
 \begin{remark} TODO
@@ -866,14 +872,14 @@ the erasure operation on kinds.
 \begin{theorem}[index erasure on type constructor equality]
 \label{thm:ierasetyconeq}
 \[ \inference{\Delta |- F=F':\kappa}
-		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
+                {\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
 \]
 \end{theorem}
 \begin{remark} TODO
 \end{remark}
 
 \begin{theorem}[index erasure on well-formed term level contexts
-		prepended by index variable selection]
+                prepended by index variable selection]
 \label{thm:ierasetmctxivs}
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
 \]
@@ -882,15 +888,15 @@ the erasure operation on kinds.
 \begin{theorem}[index erasure on well-typed terms]
 \label{thm:ierasetypingall}
 \[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
-		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+                {\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
 \]
 \end{theorem}
 
 \begin{corollary}[index erasure on index-free well-typed terms]
 \label{thm:ierasetypingifree}
 \[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
-		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
-		{\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
+                {\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+                {\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
 \]
 \end{corollary}
 
