@@ -9,6 +9,8 @@
 \usepackage{comment}
 \usepackage[numbers]{natbib}
 
+\renewcommand{\qed}{\hfill$\blacksquare$}
+
 \definecolor{grey}{rgb}{0.8,0.8,0.8}
 
 \newcommand{\Fig}[1]{Fig.\,\ref{fig:#1}}
@@ -287,23 +289,19 @@ We assume readers to be familiar with System~\Fw\
 and focus on describing the new constructs of \Fi, which appear in grey boxes.
 
 \begin{figure}
-\paragraph{Syntax:}~\vskip-3ex
+\paragraph{Syntax:}
+\qquad~\quad Term Variables\qquad\qquad $x,i$ ~\vskip-4ex
 \begin{align*}
-\!\!\!\!\!\!\!\!&\text{Sort}
+&\text{Type Constructor Variables} & X \\
+&\text{Sort}
         & \square
         \\
-\!\!\!\!\!\!\!\!&\text{Term Variables}
-        & x,i
-\\
-\!\!\!\!\!\!\!\!&\text{Type Constructor Variables}
-        & X
-\\
-\!\!\!\!\!\!\!\!&\text{Kinds}
+&\text{Kinds}
         & \kappa                &~ ::= ~ *
                                 \mid \kappa -> \kappa
                                 \mid \newFi{A -> \kappa}
 \\
-\!\!\!\!\!\!\!\!&\text{Type Constructors}
+&\text{Type Constructors}
         & A,B,F,G               &~ ::= ~ X
                                 \mid A -> B
                                 \mid \lambda X^\kappa.F
@@ -314,10 +312,10 @@ and focus on describing the new constructs of \Fi, which appear in grey boxes.
                                 \mid F\,\{s\}
                                 \mid \forall i^A . B}
 \\
-\!\!\!\!\!\!\!\!&\text{Terms}
+&\text{Terms}
         & r,s,t                 &~ ::= ~ x \mid \lambda x.t \mid r\;s
 \\
-\!\!\!\!\!\!\!\!&\text{Typing Contexts}
+&\text{Typing Contexts}
         & \Delta                &~ ::= ~ \cdot
                                 \mid \Delta, X^\kappa
                                 \mid \newFi{\Delta, i^A} \\
@@ -710,20 +708,36 @@ We show strong normalization, logical consistence, and subject reduction for
 
 We want to show that kinding and typing derivations give
 well-formed results under well-formed contexts. That is,
-kinding derivations result in well-sorted kinds
-under well-formed type level contexts (Proposition \ref{prop:wfkind}), and
-typing derivations result in well-kinded types
-under well-formed type and term level contexts (Proposition \ref{prop:wftype}).
-\begin{proposition}
+kinding derivations ($\Delta |- F : \kappa$) result in well-sorted kinds
+($|- \kappa$) under well-formed type level contexts ($|- \Delta$)
+(Proposition \ref{prop:wfkind}), and
+typing derivations ($\Delta;\Gamma |- t : A$) result in well-kinded types
+($\Delta;\Gamma |- A:*$)
+under well-formed type and term level contexts (Proposition \ref{prop:wftype}).\\
+\begin{minipage}{.5\linewidth} \vskip1.1ex
+\begin{proposition}\hspace*{-2.5ex}
 \label{prop:wfkind}
-$ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa:\square } $
+$ \inference*{ |- \Delta & \Delta |- F : \kappa}{
+	\qquad |- \kappa:\square \quad} \!$\\
 \end{proposition}
-\begin{proposition} \label{prop:wftype}
-$ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * } $
+\end{minipage}
+\begin{minipage}{.5\linewidth} \vskip1.1ex
+\begin{proposition} \label{prop:wftype} \hspace{-2.5ex}
+$ \inference*{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{
+	\qquad \Delta |- A : * \qquad} \!\!\!$\\
 \end{proposition}
-We can prove these well-formnedness properties
-by induction over the judgment\footnote{TODO}
-and using the substitition lemma below.
+\end{minipage}
+We can prove these well-formedness properties
+by induction over the judgment\footnote{The proof for
+	Propositions \ref{prop:wfkind} and \ref{prop:wftype} are
+	mutually recursive.
+	So, we prove a combined proposition on the judgment $J$,
+	which is either a kinding judgment or a typing judgment
+	(\ie, $J ::= \Delta |- F : \kappa \mid \Delta;\Gamma |- t : A$),
+	such that
+	Proposition \ref{prop:wfkind} when $J$ is a kinding judgment, otherwise,
+	Proposition \ref{prop:wfkind} holds when $J$ is a typing judgment.}
+and using the substitution lemma below.
 
 \begin{lemma}[substitution]\mbox{}\\[-3mm]
 \label{lem:subst}
@@ -751,7 +765,7 @@ $ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
 \label{lem:tmsubst}
 \mbox{\rm (term substitution)}
 $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
-        {\Delta,\Gamma |- t[s/x]:B} $
+        {\Delta;\Gamma |- t[s/x]:B} $
 %\end{lemma}
 \end{enumerate}
 \end{lemma}
@@ -764,7 +778,6 @@ in other well-known systems such as \Fw\ or ICC.
 
 We define a meta-operation of index erasure that projects $\Fi$-types
 to $\Fw$-types.
-
 \begin{definition}[index erasure]\label{def:ierase}
 \[ \fbox{$\kappa^\circ$}
  ~~~~ ~~
@@ -817,13 +830,15 @@ to $\Fw$-types.
 \[ \fbox{$\Gamma^\circ$}
  ~~~~
  \cdot^\circ = \cdot
- ~~~~ ~~~~
+ ~~~~ ~~
  (\Gamma,x:A)^\circ = \Gamma^\circ,x:A^\circ
 \]
-\end{definition}
-
+\end{definition}~\\
+In addition, we define another meta-operation, which selects out
+all the index variable bindings from the type level context.
+We use this in Theorem \ref{thm:ierasetmctxivs}.
 \begin{definition}[index variable selection]
-        \[ \fbox{$\Delta^\bullet$} ~~~~ ~~ \cdot^\bullet = \cdot \qquad
+        \[ \fbox{$\Delta^\bullet$} ~~~~ \cdot^\bullet = \cdot \qquad
         (\Delta,X^\kappa)^\bullet = \Delta^\bullet \qquad
         (\Delta,i^A)^\bullet = \Delta^\bullet,i:A
 \]
@@ -837,6 +852,7 @@ to $\Fw$-types.
 \end{theorem}
 \begin{proof}
         By induction on the sort ($\kappa$).
+	\qed
 \end{proof}
 \begin{remark}
 For any well-sorted kind $\kappa$ in \Fi,
@@ -850,6 +866,7 @@ $ \inference{|- \Delta}{|- \Delta^\circ} $
 \begin{proof}
         By induction on the type level context ($\Delta$)
         and using Theorem \ref{thm:ierasesorting}.
+	\qed
 \end{proof}
 \begin{remark}
 For any well-formed type level context $\Delta$ in \Fi,
@@ -862,7 +879,9 @@ $ \inference{|- \kappa=\kappa':\square}
 $
 \end{theorem}
 \begin{proof}
-        By induction on the kind equality judgement.
+	By induction on the kind equality judgement
+	($|- \kappa=\kappa':\square$).
+	\qed
 \end{proof}
 \begin{remark}
 For any well-sorted kind equality $|- \kappa=\kappa':\square$ in \Fi,
