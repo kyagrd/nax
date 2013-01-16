@@ -72,39 +72,38 @@ impredicative encoding}
 %% Strong normalization and logical consistency
 
 We are interested in the use of indexed types to state and
-maintain program properties. A type parameter (like {\tt Int} in {\tt (List Int)})
-tells us something about data stored in values of that type. A type index
-(like {\tt 3} in {\tt (Vector Int 3)}) states
-an inductive property of values with that type. For example, that values
-of type {\tt (Vector Int 3)} have three elements.
+maintain program properties. A type parameter
+(like {\tt Int} in {\tt (List Int)}) usually tells us
+something about data stored in values of that type.
+A type index (like {\tt 3} in {\tt (Vector Int 3)}) states
+an inductive property of values with that type. For example,
+values of type {\tt (Vector Int 3)} have three elements.
 
-Indexed types come in two flavors: {\it type-indexed} and {\it term-indexed}
-types. {\it Type indexing} includes parametric polymorphism, but it also includes
-more sophisticated typing as found in Generalized Algebraic Datatypes~(GADTs).
-An example of type indexing using GADTs (in Haskell) is a type representation:\vspace*{-2pt}
+Indexed types come in two flavors: \emph{type-indexed} and \emph{term-indexed}
+types. {\it Type indexing} involves higher-kinded parametric polymorphism,
+but there also exists more sophisticated types such as
+Generalized Algebraic Datatypes~(GADTs). An example of type indexing
+using GADTs (in Haskell) is a type representation:\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data TypeRep t where
-  Int :: TypeRep Int
-  Bool:: TypeRep Bool
-  Pair:: TypeRep a -> TypeRep b -> TypeRep(a,b)
+  Int  :: TypeRep Int
+  Bool :: TypeRep Bool
+  Pair :: TypeRep a -> TypeRep b -> TypeRep(a,b)
 \end{lstlisting}\vspace*{-2pt}
 Here, a value of type {\tt (TypeRep t)} is isomorphic in ``shape" with
 the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
 with its type {\tt (Int,Bool)}.
 
-{\it Term-indexed} types include indices that range over data
-structures, such as Natural Numbers~(like {\tt Z}, {(\tt S
-Z})) or Lists~(like {\tt Nil} or ({\tt Cons Z Nil})). 
-The classic example of a term index is the second
-parameter to the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int
-(S Z)})).
+{\it Term-indcies} range over data structures, such as natural numbers
+(like {\tt Z}, {(\tt S Z})) or lists (like {\tt Nil} or ({\tt Cons Z Nil})). 
+A classic example of a term index is the second parameter to
+the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int (S Z)})).
 
 In languages such as Haskell\footnote{see \S\ref{sec:relwork} for
         a very recent GHC extension, which enable true term-indices.}
-        or OCaml[TODO cite], which support GADTs with type indexing,
+	or OCaml \cite{GarNor11}, which support GADTs with type indexing,
 term-indices are simulated (or faked) by reflecting data at the type level
-with uninhabited type constructors
-For example,\vspace*{-2pt}
+with uninhabited type constructors. For example,\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data S n
 data Z
@@ -118,10 +117,9 @@ This comes with a number of problems. First, there is no way to say
 that types such as {\tt (S Int)} are ill-formed, and second the costs
 associated with duplicating the constructors of data to be used
 as term-indices.
-Nevertheless, ``faked" term-indexed GADTs have become extremely
-popular as a light-weight, type-based mechanism
-to raise the confidence of users that software systems maintain important
-properties.
+Nevertheless, GADTs iwth ``faked" term indices have become extremely popular
+as a light-weight, type-based mechanism to raise the confidence of users
+that software systems maintain important properties.
 
 Our approach in this direction is to design a new foundational calculus,
 System~\Fi, for functional programming languages with term-indexed
@@ -147,8 +145,7 @@ this development are as follows.\vspace*{-.8ex}
   property (\S\ref{ssec:erasure}) 
   and inherits meta-theoretic
   results~(strong normalization and logical consistency) from well-known
-  calculi~(System~\Fw\ and ICC) that are supersets of System~\Fi~%(\S\ref{ssec:sn}).
-(\S\ref{sec:theory}).
+  calculi~(\Fw\ and ICC) that are supersets of \Fi~(\S\ref{ssec:sn}).
 \end{itemize}\vspace*{-3pt}
 
 \section{Motivation: from System~\Fw\ to System~\Fi, and back}
@@ -200,7 +197,7 @@ System~\Fi.
 
 In a functional language supporting term-indexed datatypes, we envisage
 that the classic example of homogeneous length-indexed lists would be
-defined along the following lines:\vspace{-5pt}
+defined along the following lines (in Nax [TODO cite] syntax):\vspace{-5pt}
 \begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
  data Nat = S Nat | Z 
  data Vec (a:*) {i:Nat} where
@@ -229,7 +226,7 @@ i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to\mathtt{*}}.
 \end{array}
 \end{equation*}
 where $\texttt{{Nat}}$, $\mathtt Z$, and $\mathtt S$ respectively encode
-the Natural Numbers, zero and successor.
+the natural number type and its two constructors,  zero and successor.
 Without going into the details of the formalism, which are given in the
 next section, one sees that such a calculus incorporating term-indexing
 structure needs four additional constructs (see \Fig{FiSyntax} for the
@@ -286,8 +283,11 @@ and~\ref{fig:eqFi}, one obtains a version of System~\Fw\
 with Curry-style terms and the typing context separated into two parts
 (type-level context $\Delta$ and term-level context $\Gamma$).
 
+We assume readers to be familiar with System~\Fw\
+and focus on describing the new constructs of \Fi, which appear in grey boxes.
+
 \begin{figure}
-\paragraph{Syntax:}
+\paragraph{Syntax:}~\vskip-3ex
 \begin{align*}
 \!\!\!\!\!\!\!\!&\text{Sort}
         & \square
@@ -323,7 +323,7 @@ with Curry-style terms and the typing context separated into two parts
                                 \mid \newFi{\Delta, i^A} \\
 &       & \Gamma                &~ ::= ~ \cdot
                                 \mid \Gamma, x : A
-\end{align*}
+\end{align*}\vskip-2ex
 \paragraph{Reduction:} ~~ \fbox{$t \rightsquigarrow t'$} \\
 $
  ~~~~
@@ -564,10 +564,7 @@ $ \qquad
 \label{fig:eqFi}
 \end{figure}
 
-\subsection{System~\Fi\ compared to System~\Fw} \label{ssec:newFi}
-We assume readers to be familiar with System~\Fw\
-and focus on describing the new constructs of \Fi.
-These appear in grey boxes.
+%% \subsection{System~\Fi\ compared to System~\Fw} \label{ssec:newFi}
 
 \paragraph{Kinds.}
 The key extension to \Fw\ is the addition of term-indexed arrow kinds of
@@ -581,14 +578,15 @@ governed by the sorting rule \newFi{(Ri)}. The rule $(Ri)$ specifies that
 an indexed arrow kind $A -> \kappa$ is well-sorted when $A$ has kind $*$
 under the empty type level context ($\cdot$) and $\kappa$ is well-sorted.
 
-Requiring the use of the empty context avoids dependent kinds (\ie, kinds depending on type level or value level
-bindings). The type $A$ appearing in
-the index arrow kind $A -> \kappa$ must be well-kinded under
-the empty type level context ($\cdot$).
+Requiring $A$ to be well-kinded under the empty type level context avoids
+dependent kinds (\ie, kinds depending on type level or value level bindings).
+%% The type $A$ appearing in
+%% the index arrow kind $A -> \kappa$ must be well-kinded under
+%% the empty type level context ($\cdot$).
 That is, $A$ should to be a closed type of kind $*$,
 which does not contain any free type variables or index variables.
-For example, $(\textit{List}\,X -> *)$ is not a well-sorted kind,
-while $((\forall X^{*}\!.\,\textit{List}\,X) -> *)$ is a well-sorted kind.
+For example, $(\textit{List}\,X -> *)$ is not a well-sorted kind since $X$
+appears free, while $((\forall X^{*}\!.\,\textit{List}\,X) -> *)$ is a well-sorted kind.
 
 \paragraph{Typing contexts.}
 Typing contexts are split into two parts.
@@ -616,7 +614,7 @@ $x:A$ whose type $A$ is well-kinded under $\Delta$.
 
 \paragraph{Type constructors and their kinding rules.}
 We extend the type constructor syntax by three constructs,
-and extend the kinding rules accordingly for these new constructs.
+and extend the kinding rules accordingly. %% for these new constructs.
 
 \newFi{\lambda i^A.F} is the type level abstraction over an index
 (or, index abstraction). Index abstractions introduce indexed arrow kinds
@@ -667,17 +665,18 @@ The index generalization rule ($\forall I i$) is similar to
 the type generalization rule ($\forall I$), but generalizes over
 index variables ($i$) rather than type consturctor variables ($X$).
 The rule ($\forall I i$) has two side conditions
-while the rule ($\forall I$) has only one side conditions.
+while the rule ($\forall I$) has only one.
 The additional side condition $i\notin\FV(t)$ in the ($\forall I i$) rule
 prevents terms from accessing the type level index variables introduced by
 index polymorphism. Without this side condition, $\forall$-binder
 would no longer behave polymorphicaly, but instead would behave as
-a dependent function, which are usually denoted by the $\Pi$-binder in
-dependent type theories. The rule ($\forall I$) for ordinary
-type generalization does not need such additional side condition
-because type variables cannot appear in the syntax of terms.
-The side conditions on generalization rules for polymorphism is fairly standard
-in dependently typed languages supporting distinctions between polymorphism
+a dependent function binder, which are usually denoted by $\Pi$ in
+dependent type theories.
+%% The rule ($\forall I$) for ordinary
+%% type generalization does not need such additional side condition
+%% because type variables cannot appear in the syntax of terms.
+Such side conditions on generalization rules for polymorphism is fairly standard
+in dependently typed languages that distinguish between polymorphism
 (or, erasable arguments) and dependent functions (\eg, IPTS\cite{LingerS08},
 ICC\cite{Miquel01}).
 
@@ -707,11 +706,25 @@ erasable since they are irrelevant for reduction in \S\ref{ssec:erasure}.
 We show strong normalization, logical consistence, and subject reduction for
 \Fi\ by reasoning about well-known calculi related to \Fi\ in \S\ref{ssec:sn}.
 
-\subsection{Well-formedness Properties and Substitution Lemmas} \label{ssec:wf}
+\subsection{Well-formedness and Substitution Lemmas} \label{ssec:wf}
 
-The substitution lemma below is fairly standard,
-comparable to substitution lemmas
-in other well-known systems such as \Fw\ or ICC.
+We want to show that kinding and typing derivations give
+well-formed results under well-formed contexts. That is,
+kinding derivations result in well-sorted kinds
+under well-formed type level contexts (Proposition \ref{prop:wfkind}), and
+typing derivations result in well-kinded types
+under well-formed type and term level contexts (Proposition \ref{prop:wftype}).
+\begin{proposition}
+\label{prop:wfkind}
+$ \inference{ |- \Delta & \Delta |- F : \kappa}{ |- \kappa:\square } $
+\end{proposition}
+\begin{proposition} \label{prop:wftype}
+$ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{ \Delta |- A : * } $
+\end{proposition}
+We can prove these well-formnedness properties
+by induction over the judgment\footnote{TODO}
+and using the substitition lemma below.
+
 \begin{lemma}[substitution]\mbox{}\\[-3mm]
 \label{lem:subst}
 \begin{enumerate}
@@ -742,10 +755,9 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
 %\end{lemma}
 \end{enumerate}
 \end{lemma}
-The substitution lemma is fairly standard, comparable to substitution lemmas
+These substitution lemmas are fairly standard,
+comparable to substitution lemmas
 in other well-known systems such as \Fw\ or ICC.
-
-
 
 
 \subsection{Erasure Properties} \label{ssec:erasure}
@@ -887,9 +899,9 @@ the erasure operation on kinds.
 
 \begin{theorem}[index erasure on well-typed terms]
 \label{thm:ierasetypingall}
-\[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+$ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
                 {\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
-\]
+$
 \end{theorem}
 
 \begin{corollary}[index erasure on index-free well-typed terms]
