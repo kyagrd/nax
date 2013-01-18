@@ -171,11 +171,11 @@ In such regular datatypes, constructors have algebraic structure that
 directly translates into polymorphic operations on abstract types as
 encapsulated by universal quantification over types (of kind $*$).
 
-In the more expressive System \Fw~ (where one can abstract over type constructors
-of any kind),
-one can encode more general \emph{type-indexed datatypes} that go beyond the 
-regular datatypes. For example, one can embed powerlists with
-heterogeneous elements in which an element of type \texttt{a} is followed by
+In the more expressive System \Fw\ (where one can abstract over
+type constructors of any kind), one can encode more general
+\emph{type-indexed datatypes} that go beyond the regular datatypes.
+For example, one can embed powerlists with heterogeneous elements
+in which an element of type \texttt{a} is followed by
 an element of the product type \texttt{(a,a)}:
 \[
 \begin{array}{ll}
@@ -695,7 +695,8 @@ index variables already in scope.
 \section{Metatheory} \label{sec:theory}
 
 The expectation is that System \Fi\ has all the nice properties of System \Fw,
-yet is more expressive because of the addition of term-indexed types.
+yet is more expressive (\ie, can state finer grained program properties)
+because of the addition of term-indexed types.
 
 We show some basic well-formedness properties for
 the judgments of \Fi\ in \S\ref{ssec:wf}.
@@ -712,8 +713,8 @@ kinding derivations ($\Delta |- F : \kappa$) result in well-sorted kinds
 ($|- \kappa$) under well-formed type level contexts ($|- \Delta$)
 (Proposition \ref{prop:wfkind}), and
 typing derivations ($\Delta;\Gamma |- t : A$) result in well-kinded types
-($\Delta;\Gamma |- A:*$)
-under well-formed type and term level contexts (Proposition \ref{prop:wftype}).\\
+($\Delta;\Gamma |- A:*$) under well-formed type and term level contexts
+(Proposition \ref{prop:wftype}).\\
 \begin{minipage}{.5\linewidth} \vskip1.1ex
 \begin{proposition}\hspace*{-2.5ex}
 \label{prop:wfkind}
@@ -856,7 +857,7 @@ We use this in Theorem \ref{thm:ierasetmctxivs}.
 \end{proof}
 \begin{remark}
 For any well-sorted kind $\kappa$ in \Fi,
-$\kappa^\circ$ is a kind in \Fw.
+$\kappa^\circ$ is a well-sorted kind in \Fw.
 \end{remark}
 
 \begin{theorem}[index erasure on well-formed type level contexts]
@@ -879,7 +880,7 @@ $ \inference{|- \kappa=\kappa':\square}
 $
 \end{theorem}
 \begin{proof}
-	By induction on the kind equality judgement
+	By induction on the kind equality derivation
 	($|- \kappa=\kappa':\square$).
 	\qed
 \end{proof}
@@ -896,17 +897,43 @@ the erasure operation on kinds.
                 {\Delta^\circ |- F^\circ : \kappa^\circ}
 \]
 \end{theorem}
-\begin{remark} TODO
+\begin{proof}
+	By induction on the kinding derivation ($\Delta |- F : \kappa$).
+	We use Theorem \ref{thm:ierasetyctx} in the ($Var$) case,
+	Theorem \ref{thm:ierasekindeq} in the ($Conv$) case, and
+	Theorem \ref{thm:ierasesorting} in the ($\lambda$) and ($\forall$) cases.
+	\qed
+\end{proof}
+\begin{remark} In the theorem above, $F^\circ$ is a well-kinded type constructor in \Fw.
 \end{remark}
 
-
+\noindent
+\begin{minipage}{.55\linewidth}
+\begin{lemma}\label{lem:ieraseSubstTyVar}
+$(F[G/X])^\circ = F^\circ[G^\circ/X]$
+\end{lemma}
+\end{minipage}
+\begin{minipage}{.4\linewidth}
+\begin{lemma}\label{lem:ieraseSubstIndex}
+$(F[s/i])^\circ = F^\circ$
+\end{lemma}
+\end{minipage}
 \begin{theorem}[index erasure on type constructor equality]
 \label{thm:ierasetyconeq}
 \[ \inference{\Delta |- F=F':\kappa}
                 {\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
 \]
 \end{theorem}
-\begin{remark} TODO
+\begin{proof}
+	By induction on the derivation of the type constructor equality judgment
+	($\Delta |- F=F':\kappa$). We also use Proposition \ref{prop:wfkind}
+	and Lemmas \ref{lem:ieraseSubstTyVar} and \ref{lem:ieraseSubstIndex}.
+	\qed
+\end{proof}
+\begin{remark}
+When $\Delta |- F=F':\kappa$ is a valid type constructor equality in \Fi,
+$\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ$
+is a valid type constructor equlity in \Fw.
 \end{remark}
 
 \begin{theorem}[index erasure on well-formed term level contexts
@@ -915,6 +942,16 @@ the erasure operation on kinds.
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
 \]
 \end{theorem}
+\begin{proof}
+	By induction on the term level context ($\Gamma$)
+	and using Theorem \ref{thm:ierasekinding}.
+	\qed
+\end{proof}
+\begin{remark}
+We can also show that
+$\inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ}$
+and prove Corollary \ref{cor:ierasetypingifree} directly.
+\end{remark}
 
 \begin{theorem}[index erasure on well-typed terms]
 \label{thm:ierasetypingall}
@@ -922,9 +959,23 @@ $ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
                 {\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
 $
 \end{theorem}
+\begin{proof}
+	By induction on the typing derivation ($\Delta;\Gamma |- t : A$).
+	We also make use of Theorems
+	\ref{thm:ierasesorting},
+	\ref{thm:ierasekinding},
+	\ref{thm:ierasetyconeq}, and
+	\ref{thm:ierasetmctxivs}.
+	\qed
+\end{proof}
+\begin{remark}
+	In the theorem above, $t$ is a well typed term
+	in \Fw\ as well as in \Fi.
+	TODO also say why this is useful (Nax predefeind term)
+\end{remark}
 
 \begin{corollary}[index erasure on index-free well-typed terms]
-\label{thm:ierasetypingifree}
+\label{cor:ierasetypingifree}
 \[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
                 {\Delta^\circ;\Gamma^\circ |- t : A^\circ}
                 {\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
