@@ -1,0 +1,85 @@
+\section{Introduction}
+
+%% Term indices - erasable, possibly nested
+%% 
+%% Higher-order polymorphism
+%% 
+%% Strong normalization and logical consistency
+
+We are interested in the use of indexed types to state and
+maintain program properties. A type parameter
+(like {\tt Int} in {\tt (List Int)}) usually tells us
+something about data stored in values of that type.
+A type index (like {\tt 3} in {\tt (Vector Int 3)}) states
+an inductive property of values with that type. For example,
+values of type {\tt (Vector Int 3)} have three elements.
+
+Indexed types come in two flavors: \emph{type-indexed} and \emph{term-indexed}
+types. {\it Type indexing} involves higher-kinded parametric polymorphism,
+but there also exists more sophisticated types such as
+Generalized Algebraic Datatypes~(GADTs). An example of type indexing
+using GADTs (in Haskell) is a type representation:\vspace*{-2pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+data TypeRep t where
+  Int  :: TypeRep Int
+  Bool :: TypeRep Bool
+  Pair :: TypeRep a -> TypeRep b -> TypeRep(a,b)
+\end{lstlisting}\vspace*{-2pt}
+Here, a value of type {\tt (TypeRep t)} is isomorphic in ``shape" with
+the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
+with its type {\tt (Int,Bool)}.
+
+{\it Term-indcies} range over data structures, such as natural numbers
+(like {\tt Z}, {(\tt S Z})) or lists (like {\tt Nil} or ({\tt Cons Z Nil})). 
+A classic example of a term index is the second parameter to
+the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int (S Z)})).
+
+In languages such as Haskell\footnote{see \S\ref{sec:relwork} for
+        a very recent GHC extension, which enable true term-indices.}
+	or OCaml \cite{GarNor11}, which support GADTs with type indexing,
+term-indices are simulated (or faked) by reflecting data at the type-level
+with uninhabited type constructors. For example,\vspace*{-2pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+data S n
+data Z
+\end{lstlisting}\vspace*{-8pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+data Vec t n where
+  Cons :: a -> Vec a n -> Vec a (S n)
+  Nil  :: Vec a Z
+\end{lstlisting}\vspace*{-2pt}
+This comes with a number of problems. First, there is no way to say
+that types such as {\tt (S Int)} are ill-formed, and second the costs
+associated with duplicating the constructors of data to be used
+as term-indices.
+Nevertheless, GADTs iwth ``faked" term indices have become extremely popular
+as a light-weight, type-based mechanism to raise the confidence of users
+that software systems maintain important properties.
+
+Our approach in this direction is to design a new foundational calculus,
+System~\Fi, for functional programming languages with term-indexed
+datatypes.  In a nutshell, System~\Fi\ is obtained by minimally extending
+System~\Fw\ with type-indexed kinds.  Notably, this yields a logical
+calculus that is expressive enough to embed non-dependent
+\emph{term-indexed datatypes} and their eliminators. Our contributions in
+this development are as follows.\vspace*{-.8ex}
+\begin{itemize}
+\item 
+  Identifying the features that are needed for a higher-order polymorphic
+  $\lambda$-calculus to embed term-indexed datatypes~(\S\ref{sec:motiv}),
+  in isolation from other features normally associated with such
+  calculi~(e.g., general recursion, large elimination, dependent types).
+\item 
+  The design of the calculus, System \Fi\ (\S\ref{sec:Fi}), and its use to
+  study properties of languages with term-indexed datatypes, by embedding
+  these into the calculus~(\S\ref{sec:motiv}).  For instance, one can use
+  System~\Fi\ to prove that the Mendler-style eliminators for GADTs
+  \cite{AhnShe11} are normalizing.
+\item 
+  Showing that System~\Fi\ enjoys a simple erasure
+  property (\S\ref{ssec:erasure}) 
+  and inherits meta-theoretic
+  results~(strong normalization and logical consistency) from well-known
+  calculi~(\Fw\ and ICC) that are supersets of \Fi~(\S\ref{ssec:sn}).
+\end{itemize}\vspace*{-3pt}
+

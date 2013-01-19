@@ -1,0 +1,297 @@
+\section{Metatheory} \label{sec:theory}
+
+The expectation is that System \Fi\ has all the nice properties of System \Fw,
+yet is more expressive (\ie, can state finer grained program properties)
+because of the addition of term-indexed types.
+
+We show some basic well-formedness properties for
+the judgments of \Fi\ in \S\ref{ssec:wf}.
+We prove erasure properties of \Fi, which captures the idea that indices are
+erasable since they are irrelevant for reduction in \S\ref{ssec:erasure}.
+We show strong normalization, logical consistence, and subject reduction for
+\Fi\ by reasoning about well-known calculi related to \Fi\ in \S\ref{ssec:sn}.
+
+\subsection{Well-formedness and Substitution Lemmas} \label{ssec:wf}
+
+We want to show that kinding and typing derivations give
+well-formed results under well-formed contexts. That is,
+kinding derivations ($\Delta |- F : \kappa$) result in well-sorted kinds
+($|- \kappa$) under well-formed type-level contexts ($|- \Delta$)
+(Proposition \ref{prop:wfkind}), and
+typing derivations ($\Delta;\Gamma |- t : A$) result in well-kinded types
+($\Delta;\Gamma |- A:*$) under well-formed type and term-level contexts
+(Proposition \ref{prop:wftype}).\\
+\begin{minipage}{.5\linewidth} \vskip1.1ex
+\begin{proposition}\hspace*{-2.5ex}
+\label{prop:wfkind}
+$ \inference*{ |- \Delta & \Delta |- F : \kappa}{
+	\qquad |- \kappa:\square \quad} \!$\\
+\end{proposition}
+\end{minipage}
+\begin{minipage}{.5\linewidth} \vskip1.1ex
+\begin{proposition} \label{prop:wftype} \hspace{-2.5ex}
+$ \inference*{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{
+	\qquad \Delta |- A : * \qquad} \!\!\!$\\
+\end{proposition}
+\end{minipage}
+We can prove these well-formedness properties
+by induction over the judgment\footnote{The proof for
+	Propositions \ref{prop:wfkind} and \ref{prop:wftype} are
+	mutually recursive.
+	So, we prove a combined proposition on the judgment $J$,
+	which is either a kinding judgment or a typing judgment
+	(\ie, $J ::= \Delta |- F : \kappa \mid \Delta;\Gamma |- t : A$),
+	such that
+	Proposition \ref{prop:wfkind} when $J$ is a kinding judgment, otherwise,
+	Proposition \ref{prop:wfkind} holds when $J$ is a typing judgment.}
+and using the substitution lemma below.
+
+\begin{lemma}[substitution]\mbox{}\\[-3mm]
+\label{lem:subst}
+\begin{enumerate}
+\item
+%\begin{lemma}[type substitution]
+\label{lem:tysubst}
+\mbox{\rm (type substitution)}
+$\inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
+        {\Delta |- F[G/X]:\kappa'} $
+%\end{lemma}
+\medskip
+
+\item
+%\begin{lemma}[index substitution]
+\label{lem:ixsubst}
+\mbox{\rm (index substitution)}
+$ \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
+        {\Delta |- F[s/i]:\kappa} $
+%\end{lemma}
+\medskip
+
+\item
+%\begin{lemma}[term substitution]
+\label{lem:tmsubst}
+\mbox{\rm (term substitution)}
+$ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
+        {\Delta;\Gamma |- t[s/x]:B} $
+%\end{lemma}
+\end{enumerate}
+\end{lemma}
+These substitution lemmas are fairly standard,
+comparable to substitution lemmas
+in other well-known systems such as \Fw\ or ICC.
+
+
+\subsection{Erasure Properties} \label{ssec:erasure}
+
+We define a meta-operation of index erasure that projects $\Fi$-types
+to $\Fw$-types.
+\begin{definition}[index erasure]\label{def:ierase}
+\[ \fbox{$\kappa^\circ$}
+ ~~~~ ~~
+ *^\circ =
+ *
+ ~~~~ ~~
+ (\kappa_1 -> \kappa_2)^\circ =
+ {\kappa_1}^\circ -> {\kappa_2}^\circ
+ ~~~~ ~~
+ (A -> \kappa)^\circ =
+ \kappa^\circ
+\]
+\[ \fbox{$F^\circ$}
+ ~~~~ ~~
+ X^\circ =
+ X
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~ ~~~~
+ (A -> B)^\circ =
+ A^\circ -> B^\circ
+\]
+\[ \qquad \qquad
+ (\lambda X^\kappa.F)^\circ =
+ \lambda X^{\kappa^\circ}.F^\circ
+ ~~~~ ~~~
+ (\lambda i^A.F)^\circ =
+ F^\circ
+\]
+\[ \qquad \qquad
+ (F\;G)^\circ =
+ F^\circ\;G^\circ
+ ~~~~ ~~~~ ~~~~ ~~
+ (F\,\{s\})^\circ =
+ F^\circ
+\]
+\[ \qquad \qquad
+ (\forall X^\kappa . B)^\circ =
+ \forall X^{\kappa^\circ} . B^\circ
+ ~~~~ ~~~
+ (\forall i^A . B)^\circ =
+ B^\circ
+\]
+\[ \fbox{$\Delta^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~
+ (\Delta,X^\kappa)^\circ = \Delta^\circ,X^{\kappa^\circ}
+ ~~~~ ~~
+ (\Delta,i^A)^\circ = \Delta^\circ
+\]
+\[ \fbox{$\Gamma^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~
+ (\Gamma,x:A)^\circ = \Gamma^\circ,x:A^\circ
+\]
+\end{definition}~\\
+In addition, we define another meta-operation, which selects out
+all the index variable bindings from the type-level context.
+We use this in Theorem \ref{thm:ierasetmctxivs}.
+\begin{definition}[index variable selection]
+        \[ \fbox{$\Delta^\bullet$} ~~~~ \cdot^\bullet = \cdot \qquad
+        (\Delta,X^\kappa)^\bullet = \Delta^\bullet \qquad
+        (\Delta,i^A)^\bullet = \Delta^\bullet,i:A
+\]
+\end{definition}
+
+
+
+\begin{theorem}[index erasure on well-sorted kinds]
+\label{thm:ierasesorting}
+        $\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
+\end{theorem}
+\begin{proof}
+        By induction on the sort ($\kappa$).
+	\qed
+\end{proof}
+\begin{remark}
+For any well-sorted kind $\kappa$ in \Fi,
+$\kappa^\circ$ is a well-sorted kind in \Fw.
+\end{remark}
+
+\begin{theorem}[index erasure on well-formed type-level contexts]
+\label{thm:ierasetyctx}
+$ \inference{|- \Delta}{|- \Delta^\circ} $
+\end{theorem}
+\begin{proof}
+        By induction on the type-level context ($\Delta$)
+        and using Theorem \ref{thm:ierasesorting}.
+	\qed
+\end{proof}
+\begin{remark}
+For any well-formed type-level context $\Delta$ in \Fi,
+$\Delta^\circ$ is a well-formed type-level context in \Fw.
+\end{remark}
+
+\begin{theorem}[index erasure on kind equality]\label{thm:ierasekindeq}
+$ \inference{|- \kappa=\kappa':\square}
+        {|- \kappa^\circ=\kappa'^\circ:\square}
+$
+\end{theorem}
+\begin{proof}
+	By induction on the kind equality derivation
+	($|- \kappa=\kappa':\square$).
+	\qed
+\end{proof}
+\begin{remark}
+For any well-sorted kind equality $|- \kappa=\kappa':\square$ in \Fi,
+$\kappa^\circ$ and $\kappa'^\circ$ are the syntactically same \Fw\ kinds.
+Note that no variables can appear in the erased kinds by definition of
+the erasure operation on kinds.
+\end{remark}
+
+\begin{theorem}[index erasure on well-kinded type constructors]
+\label{thm:ierasekinding}
+\[ \inference{|- \Delta & \Delta |- F : \kappa}
+                {\Delta^\circ |- F^\circ : \kappa^\circ}
+\]
+\end{theorem}
+\begin{proof}
+	By induction on the kinding derivation ($\Delta |- F : \kappa$).
+	We use Theorem \ref{thm:ierasetyctx} in the ($Var$) case,
+	Theorem \ref{thm:ierasekindeq} in the ($Conv$) case, and
+	Theorem \ref{thm:ierasesorting} in the ($\lambda$) and ($\forall$) cases.
+	\qed
+\end{proof}
+\begin{remark} In the theorem above, $F^\circ$ is a well-kinded type constructor in \Fw.
+\end{remark}
+
+\noindent
+\begin{minipage}{.55\linewidth}
+\begin{lemma}\label{lem:ieraseSubstTyVar}
+$(F[G/X])^\circ = F^\circ[G^\circ/X]$
+\end{lemma}
+\end{minipage}
+\begin{minipage}{.4\linewidth}
+\begin{lemma}\label{lem:ieraseSubstIndex}
+$(F[s/i])^\circ = F^\circ$
+\end{lemma}
+\end{minipage}
+\begin{theorem}[index erasure on type constructor equality]
+\label{thm:ierasetyconeq}
+\[ \inference{\Delta |- F=F':\kappa}
+                {\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
+\]
+\end{theorem}
+\begin{proof}
+	By induction on the derivation of the type constructor equality judgment
+	($\Delta |- F=F':\kappa$). We also use Proposition \ref{prop:wfkind}
+	and Lemmas \ref{lem:ieraseSubstTyVar} and \ref{lem:ieraseSubstIndex}.
+	\qed
+\end{proof}
+\begin{remark}
+When $\Delta |- F=F':\kappa$ is a valid type constructor equality in \Fi,
+$\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ$
+is a valid type constructor equlity in \Fw.
+\end{remark}
+
+\begin{theorem}[index erasure on well-formed term-level contexts
+                prepended by index variable selection]
+\label{thm:ierasetmctxivs}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
+\]
+\end{theorem}
+\begin{proof}
+	By induction on the term-level context ($\Gamma$)
+	and using Theorem \ref{thm:ierasekinding}.
+	\qed
+\end{proof}
+\begin{remark}
+We can also show that
+$\inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ}$
+and prove Corollary \ref{cor:ierasetypingifree} directly.
+\end{remark}
+
+\begin{theorem}[index erasure on well-typed terms]
+\label{thm:ierasetypingall}
+$ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+                {\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+$
+\end{theorem}
+\begin{proof}
+	By induction on the typing derivation ($\Delta;\Gamma |- t : A$).
+	We also make use of Theorems
+	\ref{thm:ierasesorting},
+	\ref{thm:ierasekinding},
+	\ref{thm:ierasetyconeq}, and
+	\ref{thm:ierasetmctxivs}.
+	\qed
+\end{proof}
+\begin{remark}
+	In the theorem above, $t$ is a well typed term
+	in \Fw\ as well as in \Fi.
+	TODO also say why this is useful (Nax predefeind term)
+\end{remark}
+
+\begin{corollary}[index erasure on index-free well-typed terms]
+\label{cor:ierasetypingifree}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
+                {\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+                {\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
+\]
+\end{corollary}
+
+\subsection{Strong Normalization and Logical Consistency} \label{ssec:sn}
+Strong normalization is a corollary of the erasure property since we know that
+System~\Fw\ is strongly normalizing. Logical consistency is immediate since
+System~\Fi\ is a strict subset of the \emph{restricted implicit calculus}
+\cite{Miquel00}, which is in turn a restriction of ICC~\cite{Miquel01}.
+Subject reduction is also immediate for the same reason.
+
