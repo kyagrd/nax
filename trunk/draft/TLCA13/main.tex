@@ -104,7 +104,7 @@ the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int (S Z)})).
 In languages such as Haskell\footnote{see \S\ref{sec:relwork} for
         a very recent GHC extension, which enable true term-indices.}
 	or OCaml \cite{GarNor11}, which support GADTs with type indexing,
-term-indices are simulated (or faked) by reflecting data at the type level
+term-indices are simulated (or faked) by reflecting data at the type-level
 with uninhabited type constructors. For example,\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
 data S n
@@ -562,75 +562,71 @@ $ \qquad
 \label{fig:eqFi}
 \end{figure}
 
-%% \subsection{System~\Fi\ compared to System~\Fw} \label{ssec:newFi}
-
-\paragraph{Kinds.}
+\paragraph{Kinds\!}(\Fig{FiSyntax}).\;
 The key extension to \Fw\ is the addition of term-indexed arrow kinds of
 the form \newFi{A -> \kappa}. This allows type constructors to have terms
 as indices. The rest of the development of \Fi\ flows naturally from
 this single extension.
 
-\paragraph{Sorting.} \label{sorting}
+\paragraph{Sorting\!}(\Fig{FiTyping}).\; \label{sorting}
 The formation of indexed arrow kinds is
 governed by the sorting rule \newFi{(Ri)}. The rule $(Ri)$ specifies that
 an indexed arrow kind $A -> \kappa$ is well-sorted when $A$ has kind $*$
-under the empty type level context ($\cdot$) and $\kappa$ is well-sorted.
-
-Requiring $A$ to be well-kinded under the empty type level context avoids
-dependent kinds (\ie, kinds depending on type level or value level bindings).
-%% The type $A$ appearing in
-%% the index arrow kind $A -> \kappa$ must be well-kinded under
-%% the empty type level context ($\cdot$).
+under the empty type-level context ($\cdot$) and $\kappa$ is well-sorted.
+Requiring $A$ to be well-kinded under the empty type-level context avoids
+dependent kinds (\ie, kinds depending on type-level or value level bindings).
 That is, $A$ should to be a closed type of kind $*$,
 which does not contain any free type variables or index variables.
 For example, $(\textit{List}\,X -> *)$ is not a well-sorted kind since $X$
 appears free, while $((\forall X^{*}\!.\,\textit{List}\,X) -> *)$ is a well-sorted kind.
 
-\paragraph{Typing contexts.}
+\paragraph{Typing contexts\!}(\Fig{FiSyntax}).\;
 Typing contexts are split into two parts.
-Type level contexts ($\Delta$) for type level (static) bindings,
-and term level contexts ($\Gamma$) for term level (dynamic) bindings.
-A new form of index variable binding ($i^A$) can appear in
-type level contexts in addition to the traditional type variable bindings ($X^\kappa$).
-There is only one form of term level binding ($x:A$) that appears in
-term level contexts.
+Type level contexts ($\Delta$) for type-level (static) bindings,
+and term-level contexts ($\Gamma$) for term-level (dynamic) bindings.
+A new form of index variable binding ($i^A$) can appear in type-level contexts
+in addition to the traditional type variable bindings ($X^\kappa$).
+There is only one form of term-level binding ($x:A$) that appears in
+term-level contexts. Note, both $x$ and $i$ represent the same
+syntactic category of ``Type Variables''. The distinction between
+$x$ and $i$ is only conventional, that is, for the sake of readability.
 
-\paragraph{Well formed typing contexts.}
-A type level context $\Delta$ is well-formed if (1) it is either empty,
+\paragraph{Well-formed typing contexts\!}(\Fig{FiTyping}).\;
+A type-level context $\Delta$ is well-formed if (1) it is either empty,
 or (2) extended by a type variable binding $X^\kappa$ whose kind $\kappa$ is
 well-sorted under $\Delta$, or (3) extended by an index binding $i^A$
-whose type $A$ is well-kinded under the empty type level context at kind $*$.
+whose type $A$ is well-kinded under the empty type-level context at kind $*$.
 This restriction is similar to the one that occurs in the sorting rule ($Ri$)
 for term-indexed arrow kinds (see the paragraph {\textit{Sorting}}).
 The consequence of this is that, in typing contexts and in sorts,
 $A$ must be a closed type (not a type constructor!) without free variables.
 
-A term level context $\Gamma$ is well-formed under a type level context
+A term-level context $\Gamma$ is well-formed under a type-level context
 $\Delta$ when it is either empty or extended by a term variable binding
 $x:A$ whose type $A$ is well-kinded under $\Delta$.
 
 
-\paragraph{Type constructors and their kinding rules.}
+\paragraph{Type constructors and their kinding rules\!}(\Figs{FiSyntax} and \ref{fig:FiTyping}).\;
 We extend the type constructor syntax by three constructs,
-and extend the kinding rules accordingly. %% for these new constructs.
+and extend the kinding rules accordingly.
 
-\newFi{\lambda i^A.F} is the type level abstraction over an index
+\newFi{\lambda i^A.F} is the type-level abstraction over an index
 (or, index abstraction). Index abstractions introduce indexed arrow kinds
-by the kinding rule \newFi{(\lambda i)}. Note, the use of the new form of context
-extension, $i^A$, in the kinding rule ($\lambda i$).
+by the kinding rule \newFi{(\lambda i)}. Note, the use of the new form of
+context extension, $i^A$, in the kinding rule ($\lambda i$).
 
-
-\newFi{F\,\{s\}} is the type level index application. In contrast to
-the ordinary type level application ($F\,G$) where the argument ($G$) is
+\newFi{F\,\{s\}} is the type-level index application. In contrast to
+the ordinary type-level application ($F\,G$) where the argument ($G$) is
 a type constructor, the argument of an index application ($F\,\{s\}$) is
-a term ($s$). We use the curly bracket notation around an index argument in a type to
-emphasize the transition from ordinary type to term, and to emphasize
-that $s$ is an index term, which is erasable. Index applications eliminate
-indexed arrow kinds by the kinding rule \newFi{(@i)}. Note, we type check
-the index term ($s$) under the current type level context paired with
-the empty term level context ($\Delta;\cdot$) since we do not want
-the index term ($s$) to depend on any term level bindings. Allowing such
-a dependency would admit true dependent types.
+a term ($s$). We use the curly bracket notation around an index argument
+in a type to emphasize the transition from ordinary type to term, and
+to emphasize that $s$ is an index term, which is erasable. Index applications
+eliminate indexed arrow kinds by the kinding rule \newFi{(@i)}.
+Note, we type check
+the index term ($s$) under the current type-level context paired with
+the empty term-level context ($\Delta;\cdot$) since we do not want
+the index term ($s$) to depend on any term-level bindings.
+Otherwise, we would admit value dependencies in types.
 
 \newFi{\forall i^A . B} is an index polymorphic type.
 The formation of indexed polymorphic types is governed by
@@ -641,56 +637,49 @@ In addition to the rules ($\lambda i$), ($@ i$), and ($\forall i$),
 we need a conversion rule \newFi{(Conv)} at kind level. This is because
 the new extension to the kind syntax $A -> \kappa$ involves types.
 Since kind syntax involves types, we need more than simple structural
-equality over kinds. The new equality over kinds is the usual structural equality
-extended by type constructor equality when comparing indexed arrow kinds
-(see \Fig{eqFi}).
+equality over kinds (see \Fig{eqFi}). For instance, $A -> \kappa$ and 
+are $A' -> \kappa$ equivalent kinds when $A'$ and $A$ are equivalent types.
 
-\paragraph{Terms and their typing rules}
+\paragraph{Terms and their typing rules}(\Figs{FiSyntax} and \ref{fig:FiTyping}).\;
 The term syntax is exactly the same as other Curry-style calclui.
 We write $x$ for ordinary term variables introduced by
-term level abstractions ($\lambda x.t$).
+term-level abstractions ($\lambda x.t$).
 We write $i$ for index variables introduced by
 index abstractions ($\lambda i^A.F$) and by
-index polymorphic types ($\forall i^A.B$). As discussed earlier, the distinction between
-$x$ and $i$ is for the convenience of readability.
+index polymorphic types ($\forall i^A.B$). As discussed earlier,
+the distinction between $x$ and $i$ is only for readability.
 
 Since \Fi\ has index polymorphic types ($\forall i^A . B$),
 we need typing rules for index polymorphism:
 \newFi{(\forall I i)} for index generalization
 and \newFi{(\forall E i)} for index instantiation.
+These rules are similar to the type generalization ($\forall I$)
+and the type instantiation ($\forall I$) rules, but involves
+indices, rather than types, and have additional side conditions
+compared to their counterparts.
 
-The index generalization rule ($\forall I i$) is similar to
-the type generalization rule ($\forall I$), but generalizes over
-index variables ($i$) rather than type consturctor variables ($X$).
-The rule ($\forall I i$) has two side conditions
-while the rule ($\forall I$) has only one.
 The additional side condition $i\notin\FV(t)$ in the ($\forall I i$) rule
-prevents terms from accessing the type level index variables introduced by
+prevents terms from accessing the type-level index variables introduced by
 index polymorphism. Without this side condition, $\forall$-binder
 would no longer behave polymorphicaly, but instead would behave as
 a dependent function binder, which are usually denoted by $\Pi$ in
-dependent type theories.
-%% The rule ($\forall I$) for ordinary
-%% type generalization does not need such additional side condition
-%% because type variables cannot appear in the syntax of terms.
-Such side conditions on generalization rules for polymorphism is fairly standard
-in dependently typed languages that distinguish between polymorphism
-(or, erasable arguments) and dependent functions (\eg, IPTS\cite{LingerS08},
-ICC\cite{Miquel01}).
+dependent type theories. Such side conditions on generalization rules
+for polymorphism are fairly standard in dependent type theories that
+distinguish between polymorphism (or, erasable arguments) and
+dependent functions (\eg, IPTS\cite{LingerS08}, ICC\cite{Miquel01}).
 
-The index instantiation rule ($\forall E i$) is similar to
-the type instantiation rule ($\forall E$), except that
-we type check the index term $s$ to be instantiated for $i$
-in the current type level context paired with the empty term level context
-($\Delta;\cdot$) rather than the current term level context.
-Since index terms are at type level, they should not depend on
-term level bindings.
+The index instantiation rule ($\forall E i$), we require that
+the index term $s$, which to be instantiated for $i$, to be well-typed
+in the current type-level context paired with the empty term-level context
+($\Delta;\cdot$) rather than the current term-level context,
+since we do not want indices to depend on term-level bindings.
 
 In addition to the rules ($\forall I i$) and ($\forall E i$) for
 index polymorphism, we need an additional variable rule \newFi{(:i)}
 to be able to access the index variables already in scope. Terms ($s$) used
-at type level in index applications ($F\{s\}$) should be able to access
-index variables already in scope. 
+at type-level in index applications ($F\{s\}$) should be able to access
+an index variable ($i$) already in scope (\eg, $\l i^A.F\{s\}$,
+$\forall i^A.F\{s\}$).
 
 \section{Metatheory} \label{sec:theory}
 
@@ -710,10 +699,10 @@ We show strong normalization, logical consistence, and subject reduction for
 We want to show that kinding and typing derivations give
 well-formed results under well-formed contexts. That is,
 kinding derivations ($\Delta |- F : \kappa$) result in well-sorted kinds
-($|- \kappa$) under well-formed type level contexts ($|- \Delta$)
+($|- \kappa$) under well-formed type-level contexts ($|- \Delta$)
 (Proposition \ref{prop:wfkind}), and
 typing derivations ($\Delta;\Gamma |- t : A$) result in well-kinded types
-($\Delta;\Gamma |- A:*$) under well-formed type and term level contexts
+($\Delta;\Gamma |- A:*$) under well-formed type and term-level contexts
 (Proposition \ref{prop:wftype}).\\
 \begin{minipage}{.5\linewidth} \vskip1.1ex
 \begin{proposition}\hspace*{-2.5ex}
@@ -836,7 +825,7 @@ to $\Fw$-types.
 \]
 \end{definition}~\\
 In addition, we define another meta-operation, which selects out
-all the index variable bindings from the type level context.
+all the index variable bindings from the type-level context.
 We use this in Theorem \ref{thm:ierasetmctxivs}.
 \begin{definition}[index variable selection]
         \[ \fbox{$\Delta^\bullet$} ~~~~ \cdot^\bullet = \cdot \qquad
@@ -860,18 +849,18 @@ For any well-sorted kind $\kappa$ in \Fi,
 $\kappa^\circ$ is a well-sorted kind in \Fw.
 \end{remark}
 
-\begin{theorem}[index erasure on well-formed type level contexts]
+\begin{theorem}[index erasure on well-formed type-level contexts]
 \label{thm:ierasetyctx}
 $ \inference{|- \Delta}{|- \Delta^\circ} $
 \end{theorem}
 \begin{proof}
-        By induction on the type level context ($\Delta$)
+        By induction on the type-level context ($\Delta$)
         and using Theorem \ref{thm:ierasesorting}.
 	\qed
 \end{proof}
 \begin{remark}
-For any well-formed type level context $\Delta$ in \Fi,
-$\Delta^\circ$ is a well-formed type level context in \Fw.
+For any well-formed type-level context $\Delta$ in \Fi,
+$\Delta^\circ$ is a well-formed type-level context in \Fw.
 \end{remark}
 
 \begin{theorem}[index erasure on kind equality]\label{thm:ierasekindeq}
@@ -936,14 +925,14 @@ $\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ$
 is a valid type constructor equlity in \Fw.
 \end{remark}
 
-\begin{theorem}[index erasure on well-formed term level contexts
+\begin{theorem}[index erasure on well-formed term-level contexts
                 prepended by index variable selection]
 \label{thm:ierasetmctxivs}
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
 \]
 \end{theorem}
 \begin{proof}
-	By induction on the term level context ($\Gamma$)
+	By induction on the term-level context ($\Gamma$)
 	and using Theorem \ref{thm:ierasekinding}.
 	\qed
 \end{proof}
