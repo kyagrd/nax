@@ -1,12 +1,14 @@
 \section{Encoding Term-Indexed Datatypes} \label{sec:data}
-\paragraph{Algebraic encoding using sums and products:}
 Recall that our motivation was a foundational calculus
-that can embed term-indexed datatypes. For instance, 
+that can encode term-indexed datatypes. For instance, 
 datatypes like the length indexed lists ({\small\tt Vec}) in \S\ref{sec:motiv}.
-For a more systematic encoding of GADTs in general
+
+\paragraph{Algebraic encoding using sums and products:}
+
+A systematic encoding of GADTs in general
 \cite{Sheard04equality,crary98intensional},
-we need  equality constraints and existential quantification
-over term indices as well as over type constructors.
+needs equality constraints and existential quantification
+over term indices as well as over type constructors such as products and sums.
 It is well known that Leibniz equality over type constructors
 can be defined within System \Fw. %% \ as follows:
 %% \[
