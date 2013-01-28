@@ -284,11 +284,15 @@ $ \qquad
              {\Delta;\Gamma |- t=t'':A}
 \]
 ~\\
-$\phantom{A}$ First two rules of type constructor equality rules
-and the first rule of the term equality rules
+Many typing judgments require determining if two types are equal.
+Since types occur in kinds, and terms occur in types, the rules
+for equality are quite complex.
+
+$\phantom{A}$ The first two rules of type constructor equality,
+and the first rule of the term equality,
 state the essence of $\beta$-equivalence.
-Last two rules in each set of Kind/Type/Term equality rules
-state symmetric and transitive nature of the equalities.
+The last two rules in the Kind/Type/Term equalities
+state the symmetric and transitive nature of the rules.
 The other rules are structural congruence rules, which follow
 the structure of the rules in \Fig{FiTyping}.
 \caption{Equality rules of \Fi}
@@ -322,7 +326,7 @@ in addition to the traditional type variable bindings ($X^\kappa$).
 There is only one form of term-level binding ($x:A$) that appears in
 term-level contexts. Note, both $x$ and $i$ represent the same
 syntactic category of ``Type Variables''. The distinction between
-$x$ and $i$ is only conventional, that is, for the sake of readability.
+$x$ and $i$ is only a convention for the sake of readability.
 
 \paragraph{Well-formed typing contexts\!}(\Fig{FiTyping}).\;
 A type-level context $\Delta$ is well-formed if (1) it is either empty,
@@ -348,17 +352,17 @@ and extend the kinding rules accordingly.
 by the kinding rule \newFi{(\lambda i)}. Note, the use of the new form of
 context extension, $i^A$, in the kinding rule ($\lambda i$).
 
-\newFi{F\,\{s\}} is the type-level index application. In contrast to
-the ordinary type-level application ($F\,G$) where the argument ($G$) is
-a type constructor, the argument of an index application ($F\,\{s\}$) is
+\newFi{F\,\{s\}} is the type-level term-index application. In contrast to
+the ordinary type-level type-application ($F\,G$) where the argument ($G$) is
+a type (of arbitrary kind). The argument of an term-index application ($F\,\{s\}$) is
 a term ($s$). We use the curly bracket notation around an index argument
 in a type to emphasize the transition from ordinary type to term, and
-to emphasize that $s$ is an index term, which is erasable. Index applications
+to emphasize that $s$ is a term-index, which is erasable. Index applications
 eliminate indexed arrow kinds by the kinding rule \newFi{(@i)}.
 Note, we type check
-the index term ($s$) under the current type-level context paired with
+the term-index ($s$) under the current type-level context paired with
 the empty term-level context ($\Delta;\cdot$) since we do not want
-the index term ($s$) to depend on any term-level bindings.
+the term-index ($s$) to depend on any term-level bindings.
 Otherwise, we would admit value dependencies in types.
 
 \newFi{\forall i^A . B} is an index polymorphic type.
@@ -387,30 +391,28 @@ we need typing rules for index polymorphism:
 \newFi{(\forall I i)} for index generalization
 and \newFi{(\forall E i)} for index instantiation.
 These rules are similar to the type generalization ($\forall I$)
-and the type instantiation ($\forall I$) rules, but involves
+and the type instantiation ($\forall I$) rules, but involve
 indices, rather than types, and have additional side conditions
-compared to their counterparts.
+compared to their type counterparts.
 
 The additional side condition $i\notin\FV(t)$ in the ($\forall I i$) rule
 prevents terms from accessing the type-level index variables introduced by
 index polymorphism. Without this side condition, $\forall$-binder
-would no longer behave polymorphicaly, but instead would behave as
+would no longer behave polymorphically, but instead would behave as
 a dependent function binder, which are usually denoted by $\Pi$ in
 dependent type theories. Such side conditions on generalization rules
 for polymorphism are fairly standard in dependent type theories that
 distinguish between polymorphism (or, erasable arguments) and
 dependent functions (\eg, IPTS\cite{LingerS08}, ICC\cite{Miquel01}).
 
-The index instantiation rule ($\forall E i$), we require that
-the index term $s$, which to be instantiated for $i$, to be well-typed
+The index instantiation rule ($\forall E i$) requires that
+the term-index $s$, which instantiates $i$, be well-typed
 in the current type-level context paired with the empty term-level context
 ($\Delta;\cdot$) rather than the current term-level context,
 since we do not want indices to depend on term-level bindings.
 
 In addition to the rules ($\forall I i$) and ($\forall E i$) for
 index polymorphism, we need an additional variable rule \newFi{(:i)}
-to be able to access the index variables already in scope. Terms ($s$) used
-at type-level in index applications ($F\{s\}$) should be able to access
-an index variable ($i$) already in scope (\eg, $\l i^A.F\{s\}$,
-$\forall i^A.F\{s\}$).
-
+to access index variables already in scope. In examples
+like  ($\l i^A.F\{s\}$)  and ($\forall i^A.F\{s\}$), the term
+($s$) should be able to access the index variable ($i$) already in scope.

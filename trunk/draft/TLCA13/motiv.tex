@@ -41,7 +41,7 @@ an element of the product type \texttt{(a,a)}:
 \]
 Note the non-regular occurrence (\texttt{Powl(a,a)}) in the definition of
 (\texttt{Powl a}), and the use of universal quantification over
-higher-order kinds.
+higher-order kinds ($\forall X^{*\to*}$).
 
 What about term-indexed datatypes?  What extensions to System~\Fw\ are
 needed to embed term indices as well as type indices?  Our answer is
@@ -62,7 +62,7 @@ by both type and term indices.  For instance, the type
 vectors of lists of natural numbers.  By design, our syntax directly
 reflects the difference between type and term indexing by enclosing
 the latter in curly braces.  We also make this distinction in 
-System~\Fi, where it is useful within the types system
+System~\Fi, where it is useful within the type system
 to guarantee the static nature of term indexing.
 
 The encoding of the vector datatype in System~\Fi\ is as follows:\vspace*{-5pt}

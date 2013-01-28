@@ -25,25 +25,22 @@ typing derivations ($\Delta;\Gamma |- t : A$) result in well-kinded types
 \begin{proposition}\hspace*{-2.5ex}
 \label{prop:wfkind}
 $ \inference*{ |- \Delta & \Delta |- F : \kappa}{
-	\qquad |- \kappa:\square \quad} \!$\\
+        \qquad |- \kappa:\square \quad} \!$\\
 \end{proposition}
 \end{minipage}
 \begin{minipage}{.5\linewidth} \vskip1.1ex
 \begin{proposition} \label{prop:wftype} \hspace{-2.5ex}
 $ \inference*{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{
-	\qquad \Delta |- A : * \qquad} \!\!\!$\\
+        \qquad \Delta |- A : * \qquad} \!\!\!$\\
 \end{proposition}
 \end{minipage}
 We can prove these well-formedness properties
 by induction over the judgment\footnote{The proof for
-	Propositions \ref{prop:wfkind} and \ref{prop:wftype} are
-	mutually recursive.
-	So, we prove a combined proposition on the judgment $J$,
-	which is either a kinding judgment or a typing judgment
-	(\ie, $J ::= \Delta |- F : \kappa \mid \Delta;\Gamma |- t : A$),
-	such that
-	Proposition \ref{prop:wfkind} when $J$ is a kinding judgment, otherwise,
-	Proposition \ref{prop:wfkind} holds when $J$ is a typing judgment.}
+        Propositions \ref{prop:wfkind} and \ref{prop:wftype} are
+        mutually recursive.
+        So, we prove these two propositions at the same time, using a combined judgment $J$,
+        which is either a kinding judgment or a typing judgment
+        (\ie, $J ::= \Delta |- F : \kappa \mid \Delta;\Gamma |- t : A$).}
 and using the substitution lemma below.
 
 \begin{lemma}[substitution]\mbox{}\\[-3mm]
@@ -159,7 +156,7 @@ We use this in Theorem \ref{thm:ierasetmctxivs}.
 \end{theorem}
 \begin{proof}
         By induction on the sort ($\kappa$).
-	\qed
+        \qed
 \end{proof}
 \begin{remark}
 For any well-sorted kind $\kappa$ in \Fi,
@@ -173,7 +170,7 @@ $ \inference{|- \Delta}{|- \Delta^\circ} $
 \begin{proof}
         By induction on the type-level context ($\Delta$)
         and using Theorem \ref{thm:ierasesorting}.
-	\qed
+        \qed
 \end{proof}
 \begin{remark}
 For any well-formed type-level context $\Delta$ in \Fi,
@@ -186,9 +183,9 @@ $ \inference{|- \kappa=\kappa':\square}
 $
 \end{theorem}
 \begin{proof}
-	By induction on the kind equality derivation
-	($|- \kappa=\kappa':\square$).
-	\qed
+        By induction on the kind equality derivation
+        ($|- \kappa=\kappa':\square$).
+        \qed
 \end{proof}
 \begin{remark}
 For any well-sorted kind equality $|- \kappa=\kappa':\square$ in \Fi,
@@ -204,11 +201,11 @@ the erasure operation on kinds.
 \]
 \end{theorem}
 \begin{proof}
-	By induction on the kinding derivation ($\Delta |- F : \kappa$).
-	We use Theorem \ref{thm:ierasetyctx} in the ($Var$) case,
-	Theorem \ref{thm:ierasekindeq} in the ($Conv$) case, and
-	Theorem \ref{thm:ierasesorting} in the ($\lambda$) and ($\forall$) cases.
-	\qed
+        By induction on the kinding derivation ($\Delta |- F : \kappa$).
+        We use Theorem \ref{thm:ierasetyctx} in the ($Var$) case,
+        Theorem \ref{thm:ierasekindeq} in the ($Conv$) case, and
+        Theorem \ref{thm:ierasesorting} in the ($\lambda$) and ($\forall$) cases.
+        \qed
 \end{proof}
 \begin{remark} In the theorem above, $F^\circ$ is a well-kinded type constructor in \Fw.
 \end{remark}
@@ -231,10 +228,10 @@ $(F[s/i])^\circ = F^\circ$
 \]
 \end{theorem}
 \begin{proof}
-	By induction on the derivation of the type constructor equality judgment
-	($\Delta |- F=F':\kappa$). We also use Proposition \ref{prop:wfkind}
-	and Lemmas \ref{lem:ieraseSubstTyVar} and \ref{lem:ieraseSubstIndex}.
-	\qed
+        By induction on the derivation of the type constructor equality judgment
+        ($\Delta |- F=F':\kappa$). We also use Proposition \ref{prop:wfkind}
+        and Lemmas \ref{lem:ieraseSubstTyVar} and \ref{lem:ieraseSubstIndex}.
+        \qed
 \end{proof}
 \begin{remark}
 When $\Delta |- F=F':\kappa$ is a valid type constructor equality in \Fi,
@@ -249,9 +246,9 @@ is a valid type constructor equlity in \Fw.
 \]
 \end{theorem}
 \begin{proof}
-	By induction on the term-level context ($\Gamma$)
-	and using Theorem \ref{thm:ierasekinding}.
-	\qed
+        By induction on the term-level context ($\Gamma$)
+        and using Theorem \ref{thm:ierasekinding}.
+        \qed
 \end{proof}
 \begin{remark}
 We can also show that
@@ -266,18 +263,18 @@ $ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
 $
 \end{theorem}
 \begin{proof}
-	By induction on the typing derivation ($\Delta;\Gamma |- t : A$).
-	We also make use of Theorems
-	\ref{thm:ierasesorting},
-	\ref{thm:ierasekinding},
-	\ref{thm:ierasetyconeq}, and
-	\ref{thm:ierasetmctxivs}.
-	\qed
+        By induction on the typing derivation ($\Delta;\Gamma |- t : A$).
+        We also make use of Theorems
+        \ref{thm:ierasesorting},
+        \ref{thm:ierasekinding},
+        \ref{thm:ierasetyconeq}, and
+        \ref{thm:ierasetmctxivs}.
+        \qed
 \end{proof}
 \begin{remark}
-	In the theorem above, $t$ is a well typed term
-	in \Fw\ as well as in \Fi.
-	TODO also say why this is useful (Nax predefeind term)
+        In the theorem above, $t$ is a well typed term
+        in \Fw\ as well as in \Fi.
+        % TODO also say why this is useful (Nax predefeind term)
 \end{remark}
 
 \begin{corollary}[index erasure on index-free well-typed terms]
