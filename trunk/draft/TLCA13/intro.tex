@@ -17,17 +17,18 @@ values of type {\tt (Vector Int 3)} have three elements.
 Indexed types come in two flavors: \emph{type-indexed} and \emph{term-indexed}
 types. {\it Type indexing} involves higher-kinded parametric polymorphism,
 but there also exists more sophisticated types such as
-Generalized Algebraic Datatypes~(GADTs). An example of type indexing
-using GADTs (in Haskell) is a type representation:\vspace*{-2pt}
+Generalized Algebraic Datatypes~(GADTs) \cite{Sheard04equality}.
+An example of type indexing is a definition of a \emph{representation type}
+\cite{crary98intensional} using GADTs in Haskell:\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
-data TypeRep t where
-  Int  :: TypeRep Int
-  Bool :: TypeRep Bool
-  Pair :: TypeRep a -> TypeRep b -> TypeRep(a,b)
+   data TypeRep t where
+     RepInt  :: TypeRep Int
+     RepBool :: TypeRep Bool
+     RepPair :: TypeRep a -> TypeRep b -> TypeRep (a,b)
 \end{lstlisting}\vspace*{-2pt}
-Here, a value of type {\tt (TypeRep t)} is isomorphic in ``shape" with
-the type {\tt t}. For example {\tt (Pair Int Bool)} is isomorphic in shape
-with its type {\tt (Int,Bool)}.
+Here, a value of type {\tt\small (TypeRep t)} is isomorphic in shape with
+the type index {\tt t}. For example,
+{\tt (RepPair RepInt RepBool) :: TypeRep (Int,Bool)}.
 
 {\it Term-indcies} range over data structures, such as natural numbers
 (like {\tt Z}, {(\tt S Z})) or lists (like {\tt Nil} or ({\tt Cons Z Nil})). 
@@ -40,13 +41,11 @@ In languages such as Haskell\footnote{see \S\ref{sec:relwork} for
 term-indices are simulated (or faked) by reflecting data at the type-level
 with uninhabited type constructors. For example,\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
-data S n
-data Z
-\end{lstlisting}\vspace*{-8pt}
-\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
-data Vec t n where
-  Cons :: a -> Vec a n -> Vec a (S n)
-  Nil  :: Vec a Z
+   data S n
+   data Z
+   data Vec t n where
+     Cons :: a -> Vec a n -> Vec a (S n)
+     Nil  :: Vec a Z
 \end{lstlisting}\vspace*{-2pt}
 This comes with a number of problems. First, there is no way to say
 that types such as {\tt (S Int)} are ill-formed, and second the costs
@@ -72,8 +71,9 @@ this development are as follows.\vspace*{-.8ex}
 \item 
   The design of the calculus, System \Fi\ (\S\ref{sec:Fi}), and its use to
   study properties of languages with term-indexed datatypes, by embedding
-  these into the calculus~(\S\ref{sec:motiv}).  For instance, one can use
-  System~\Fi\ to prove that the Mendler-style eliminators for GADTs
+  these into the calculus~(\S\ref{sec:motiv} and \ref{sec:data}).
+  For instance, one can use System~\Fi\ to prove that
+  the Mendler-style eliminators for GADTs
   \cite{AhnShe11} are normalizing.
 \item 
   Showing that System~\Fi\ enjoys a simple erasure

@@ -1,0 +1,109 @@
+\section{Encoding Term-Indexed Datatypes} \label{sec:data}
+\paragraph{Algebraic encoding using sums and products:}
+Recall that our motivation is to design a foundational calculus
+that can embed term-indexed datatypes. For instance, we mentioned
+an encoding for the length indexed lists ({\small\tt Vec}) in \S\ref{sec:motiv}.
+For a more systematic encoding of GADTs in general
+\cite{Sheard04equality,crary98intensional},
+we need  equality constraints and existential quantification
+over term indices as well as over type constructors.
+It is well known that Leibniz equality over type constructors
+can be defined within System \Fw. %% \ as follows:
+%% \[
+%% (\stackrel{\kappa}{=}) \triangleq \l X_1^\kappa.\,\l X_2^\kappa.\,
+%% 	\forall X^{\kappa\to*}.\, X X_1 -> X X_2
+%% \]
+Similarly, in System \Fi, we can define Leibniz equality over term indices:
+\[
+(\stackrel{A}{=}) \triangleq
+	\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
+\]
+Then, we can encode {\small\tt Vec} as sum of the types of its two constructors,
+as follows:
+\[ \mathtt{Vec} \triangleq \l A^{*}.\,\l i^\texttt{Nat}.\,
+	(\exists j^\texttt{Nat}.\,(\texttt{S}\;j\stackrel{A}{=}i)\times A \times X\{j\})
+	+
+	(\texttt{Z}\stackrel{A}{=}i)
+\]
+where $+$ and $\times$ are the usual impredicative encoding of sums
+and products. We can encode the existental quantification over indices
+($\exists$ used above) as
+$ \exists i^A.B \triangleq \forall X^{*}. (\forall i^A.B -> X) -> X $,
+which is similar to the usual encoding of existential quantification
+over types in System $\mathsf{F}$ or \Fw.
+
+\begin{example} Another well-known example of term-indexed datatype
+	is \mbox{$\lambda$-terms} indexed by its context information
+	(\texttt{C}), guaranteeing that all variables are in scope
+	(\ie, no free variables).
+\begin{verbatim}
+   data Lam ( C: Nat -> * ) { i: Nat } where
+     LVar : C {i} -> Lam C {i}
+     LApp : Lam C {i} -> Lam C {i} -> Lam C {i}
+     LAbs : Lam C {S i} -> Lam C {i}
+\end{verbatim}
+is encoded as:
+\[
+\mathtt{Lam} \triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l C^{\mathtt{Nat}\to*}
+\l i^\mathtt{Nat}.\,\forall X^{\mathtt{Nat}\to*}.
+  (\forall j^\mathtt{Nat}.\,C\s j \to X\s j)
+\\[1mm]
+\qquad\qquad\qquad\qquad\quad\,
+ \to(\forall j^\mathtt{Nat}.\,X\s j \to X\s j \to X\s j)
+\\[1mm]
+\qquad\qquad\qquad\qquad\quad\,
+\to(\forall j^\mathtt{Nat}.\,X\s{\mathtt S\, j} \to X\s j)
+\\[1mm]
+\qquad\qquad\qquad\qquad\quad\,
+  \to X\s i
+\end{array}
+\]
+For a concrete representation one can consider
+$\mathtt{Lam}\,\mathtt{Fin}$ where
+\begin{verbatim}
+   data Fin { i: Nat } where
+     FZ : Fin{S i}
+     FS : Fin{i} -> Fin{S i}
+\end{verbatim}
+This is encoded as
+\[
+\mathtt{Fin}\triangleq
+\!\!\!
+\begin{array}[t]{l}
+\l i^{\mathtt{Nat}}.\,\forall X^{\mathtt{Nat}\to*}.\,
+(\forall j^\mathtt{Nat}.\, X\s{\mathtt S\, j})
+	\to (\forall j^\mathtt{Nat}.\, X\s j\to X\s{\mathtt S\,j})
+	\to X\s i
+\end{array}
+\]
+\end{example}
+
+\paragraph{Nested term indices:}
+TODO
+
+
+%% Although it is possible to encode existential quantification over
+%% higher kinded type constructors and term indices, there is a notion
+%% called \emph{Kan extension} that can capture the above use pattern of
+%% equality and existentals \cite{AbeMatUus05,JohannGhani08}.
+%% Kan extension is a general notion for change of indices, which is like
+%% the change of variables technique to simplify in mathematical formulae.
+%% In System \Fi, we can encode a right Kan extention that changes indices
+%% of type $A$ into indicies of type $B$ as a type constructor
+%% $\Ran_{A,B}: (A\to B) \to (A\to*) \to B\to *$, defined as follows:
+%% \[
+%% \Ran_{A,B}
+%% \triangleq
+%% \l f^{A\to B}.\,
+%%   \l X^{A\to*}.\,
+%%     \l j^B.
+%%       \forall i^A.\,
+%%       (\s j \stackrel{B}{=} \s{f\,i})
+%% 	  \to X\s i
+%% \]
+%% Using this right Kan extension type constructor, we can encode {\small\tt{Vec}}
+%% as follows:
+

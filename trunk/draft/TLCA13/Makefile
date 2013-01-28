@@ -3,7 +3,7 @@
 ### LHSSRC=main.lhs \
 ###        example.lhs
 
-TEXSRC=main.tex intro.tex motiv.tex fi.tex theory.tex
+TEXSRC=main.tex intro.tex motiv.tex fi.tex theory.tex data.tex relwork.tex concl.tex
 
 all: pdf
 

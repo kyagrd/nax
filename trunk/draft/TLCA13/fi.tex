@@ -15,9 +15,9 @@ and focus on describing the new constructs of \Fi, which appear in grey boxes.
 
 \begin{figure}
 \paragraph{Syntax:}
-\qquad~\quad Term Variables\qquad\qquad $x,i$ ~\vskip-4ex
+\qquad~\quad Term Variables \quad $x,y,z,\ldots,i,j,k,\ldots$ ~\vskip-4ex
 \begin{align*}
-&\text{Type Constructor Variables} & X \\
+&\text{Type Constructor Variables} & X,Y,Z,\ldots \\
 &\text{Sort}
         & \square
         \\
@@ -283,6 +283,14 @@ $ \qquad
    \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
              {\Delta;\Gamma |- t=t'':A}
 \]
+~\\
+$\phantom{A}$ First two rules of type constructor equality rules
+and the first rule of the term equality rules
+state the essence of $\beta$-equivalence.
+Last two rules in each set of Kind/Type/Term equality rules
+state symmetric and transitive nature of the equalities.
+The other rules are structural congruence rules, which follow
+the structure of the rules in \Fig{FiTyping}.
 \caption{Equality rules of \Fi}
 \label{fig:eqFi}
 \end{figure}

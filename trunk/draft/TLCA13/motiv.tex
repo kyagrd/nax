@@ -1,11 +1,12 @@
 \section{Motivation: from System~\Fw\ to System~\Fi, and back}
 \label{sec:motiv}
 It is well known that datatypes can be embedded into polymorphic lambda
-calculi by means of functional encodings~\cite{AbeMatUus03}, such
-as the Church and Boehm-Berarducci encodings~\cite{BoehmBerarducci}.
+calculi by means of functional encodings
+%% such as the Church and Boehm-Berarducci encodings~
+\cite{BoehmBerarducci}.
 
-In System~\textsf{F}, for instance, one can embed \emph{regular
-datatypes}, like homogeneous lists:
+In System~\textsf{F}, one can embed \emph{regular datatypes},
+like homogeneous lists:\vspace*{-5pt}
 \[
 \begin{array}{ll}
 \text{Haskell:} & \texttt{data List a = Cons a (List a) | Nil} \\
@@ -32,7 +33,8 @@ an element of the product type \texttt{(a,a)}:
         | 
         PNil 
 } \\
-& \texttt{Cons 1 (Cons (2,3) (Cons ((3,4),(1,2)) Nil)) :: Powl Int}\\
+& \!\!\!\!\!\!\!\!\!
+  \textcolor{gray}{\small\texttt{-- PCons 1 (PCons (2,3) (PCons ((3,4),(1,2)) PNil)) :: Powl Int}}\\
 \text{System \Fw:}~& \texttt{{Powl}}\:\triangleq\:
 \lambda A^{*}.\forall X^{*\to*}. (A\to X(A\times A)\to X A) \to X A \to XA
 \end{array}
@@ -49,27 +51,27 @@ In a functional language supporting term-indexed datatypes, we envisage
 that the classic example of homogeneous length-indexed lists would be
 defined along the following lines (in Nax [TODO cite] syntax):\vspace{-5pt}
 \begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
- data Nat = S Nat | Z 
- data Vec (a:*) {i:Nat} where
-   VCons : a -> Vec a {i} -> Vec a {S i}
-   VNil  : Vec a {Z}
+   data Nat = S Nat | Z 
+   data Vec (a:*) {i:Nat} where
+     VCons : a -> Vec a {i} -> Vec a {S i}
+     VNil  : Vec a {Z}
 \end{lstlisting}~\vspace{-15pt}\\ \noindent
 Here the type constructor~{\tt Vec} is defined to admit parameterisation
 by both type and term indices.  For instance, the type 
 (\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
 vectors of lists of natural numbers.  By design, our syntax directly
-reflects the difference between type and term indexing by enclosing the latter in
-curly braces.  We also make this distinction in 
+reflects the difference between type and term indexing by enclosing
+the latter in curly braces.  We also make this distinction in 
 System~\Fi, where it is useful within the types system
 to guarantee the static nature of term indexing.
 
-The encoding of the vector datatype in System~\Fi\ is as follows: 
+The encoding of the vector datatype in System~\Fi\ is as follows:\vspace*{-5pt}
 \begin{equation*}\label{FiVecType}
 \texttt{{Vec}}
 \triangleq
 \begin{array}[t]{l}
-\lambda A^\mathtt{*}.\lambda
-i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to\mathtt{*}}.
+\lambda A^{*}.\lambda
+i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to *}.
   (\forall j^{\texttt{{Nat}}}.A\to X\{j\}\to X\{\texttt{{S}}\; j\})
   \to X\{\texttt{{Z}}\}
     \to X\{i\}
@@ -120,5 +122,4 @@ For instance, the erasure of the \Fi-type~\texttt{Vec}
 is the \Fw-type~\texttt{List}.  This is established in
 \S\ref{sec:theory} and used to deduce the strong normalization of
 System~\Fi.
-
 
