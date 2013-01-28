@@ -1,4 +1,27 @@
 \section{Related Work} \label{sec:relwork}
+System~\Fi\ is most closely related to
+Curry-style System~\Fw \cite{AbeMatUus03,AbeMatUus05,GHR93}
+and the Implicit Calculus of Constructions (ICC) \cite{Miquel01}.
+All terms typable in a Curry-style System \Fw\ are typable (with the same type) in System \Fi\ 
+and all terms typable in \Fi\ are typable (with the same type\footnote{The $*$ kind in \Fw\ and \Fi\ corresponds
+	to \textsf{Set} in ICC}) in ICC.
+
+We can derive strong normalization, logical consistency,
+and subject reduction of System~\Fi, from both System~\Fw\ and a subset of ICC.
+In fact, ICC is more than just an extension of System~\Fi
+with dependent types and stratified universes. ICC includes
+$\eta$-reduction
+and the extensionality typing rule. We do not foresee any problems adding
+$\eta$-reduction and the extensionality typing rule to System~\Fi. Although
+System~\Fi\ accepts fewer terms than ICC, it enjoys simpler
+erasure properties (Theorem \ref{thm:ierasetypingifree} and
+Theorem \ref{thm:ierasetypingall}), which ICC cannot enjoy
+due to its support for full dependent types. In System \Fi, index terms
+appearing in types (\eg,~$s$ in $F\{s\}$) are always erasable.
+\citet{LingerS08} generalized the ICC framework to one which describes
+erasure on arbitrary Church-style calculi~(EPTS) and Curry-style
+calculi~(IPTS), but they only consider $\beta$-equivalence for type conversion.
+
 
 In the practical setting of programming language implementations,
 \citet{YorgeyWCJVM12}, inspired by \citet{SHE}, designed an extension
