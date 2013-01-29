@@ -6,36 +6,40 @@ All terms typable in a Curry-style System \Fw\ are typable (with the same type) 
 and all terms typable in \Fi\ are typable (with the same type\footnote{The $*$ kind in \Fw\ and \Fi\ corresponds
 	to \textsf{Set} in ICC}) in ICC.
 
-We can derive strong normalization, logical consistency,
-and subject reduction of System~\Fi, from both System~\Fw\ and a subset of ICC.
-In fact, ICC is more than just an extension of System~\Fi
-with dependent types and stratified universes. ICC includes
-$\eta$-reduction
-and the extensionality typing rule. We do not foresee any problems adding
-$\eta$-reduction and the extensionality typing rule to System~\Fi. Although
+As mentioned in \label{ssec:sn}, we can derive strong normalization of \Fi\ 
+from System~\Fw, and derive logical consistency and subject reduction of \Fi\ 
+from a subset of ICC \cite{Miquel00}.  In fact, ICC is more than just
+an extension of System~\Fi\ with dependent types and stratified universes,
+since ICC includes $\eta$-reduction and the extensionality typing rule.
+%% We do not foresee any problems adding
+%% $\eta$-reduction and the extensionality typing rule to System~\Fi.
+Although
 System~\Fi\ accepts fewer terms than ICC, it enjoys simpler
-erasure properties (Theorem \ref{thm:ierasetypingifree} and
-Theorem \ref{thm:ierasetypingall}), which ICC cannot enjoy
-due to its support for full dependent types. In System \Fi, index terms
+erasure properties (Theorem \ref{thm:ierasetypingall} and
+Corollary \ref{cor:ierasetypingifree}) by just looking at the syntax,
+which ICC cannot enjoy due to its support for full dependent types.
+In System \Fi, term indices
 appearing in types (\eg,~$s$ in $F\{s\}$) are always erasable.
 \citet{LingerS08} generalized the ICC framework to one which describes
 erasure on arbitrary Church-style calculi~(EPTS) and Curry-style
-calculi~(IPTS), but they only consider $\beta$-equivalence for type conversion.
+calculi~(IPTS), but only consider $\beta$-equivalence for type conversion.
 
 
-In the practical setting of programming language implementations,
-\citet{YorgeyWCJVM12}, inspired by \citet{SHE}, designed an extension
-to Haskell, allowing datatypes to be used as kinds. For instance, \texttt{Bool}
-is promoted to a kind (\ie, $\texttt{Bool}:\square$) and its data constructors
-\texttt{True} and \texttt{False} are promoted to types. To support this,
-they extended System $F_{\!C}$ (The Glasgow Haskell Compiler's (GHC) intermediate core language), 
-naming the extension System $F_{\!C}^\uparrow$.
-The key difference between $F_{\!C}^\uparrow$ and \Fi\ is the kind syntax, as illustrated below: \vspace*{-2pt}
+In the practical setting of programming language implementation,
+\citet{YorgeyWCJVM12}, inspired by \citet{SHE}, recently designed an extension
+to Haskell's GADTs by allowing datatypes to be used as kinds. For instance,
+\texttt{Bool} is promoted to a kind (\ie, $\texttt{Bool}:\square$) and its
+data constructors \texttt{True} and \texttt{False} are promoted to types.
+They extended System $F_{\!C}$ (The Glasgow Haskell Compiler's
+(GHC) intermediate core language) to support \emph{datatype promotion}
+and named it System $F_{\!C}^\uparrow$. The key difference between
+$F_{\!C}^\uparrow$ and \Fi\ is the kind syntax: %%, as illustrated below:
+\vspace*{-2pt}
 \[\qquad\quad
 \begin{array}{ll}
-F_{\!C}^\uparrow\,\textbf{kinds}: &
+F_{\!C}^\uparrow\,\textbf{kinds}\quad &
 \kappa ::= * \mid \kappa -> \kappa \mid F \vec{\kappa} \mid \mathcal{X} \mid \forall \mathcal{X}.\kappa \mid \cdots \\
-\,\Fi\,\,\textbf{kinds}: &
+\,\Fi\,\,\textbf{kinds}\quad &
 \kappa ::= * \mid \kappa -> \kappa \mid A -> \kappa \phantom{A^{A^A}}
 \end{array}  
 \] ~\vspace*{-6pt}\\

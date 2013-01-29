@@ -9,14 +9,13 @@ large class of term-indexed datatypes, even including nested term
 indices.
 
 One limitation of System \Fi\ is that it cannot express type level
-data structures such as lists that contain type elements (\eg,
-$[\textit{Bool}, \textit{Int}, \textit{Int} -> \textit{Bool}]$).
+data structures such as lists that contain type elements.
 We envision to overcome this limitation by designing an extension of \Fi\
 with first-class datatype descriptions \cite{DagMcb12}, which reflects
 the structure of types at term level.
 
 We are designing and implementing the Nax programming language
-\cite{TODO cite Nax}, which is based on System \Fi.
+\cite{AhnSheFioPit12}, which is based on System \Fi.
 Nax is given semantics in terms of System~\Fi.
 That is, all the primitive language constructs of Nax
 that are not present in \Fi\ have translations into System \Fi.
