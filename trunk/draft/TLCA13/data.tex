@@ -38,12 +38,12 @@ over types in System $\mathsf{F}$ or \Fw.
         is \mbox{$\lambda$-terms} indexed by its context information
         (\texttt{C}), guaranteeing that all variables are in scope
         (\ie, no free variables).
-\begin{verbatim}
+\begin{lstlisting}[basicstyle={\ttfamily},language=Haskell]
    data Lam ( C: Nat -> * ) { i: Nat } where
      LVar : C {i} -> Lam C {i}
      LApp : Lam C {i} -> Lam C {i} -> Lam C {i}
      LAbs : Lam C {S i} -> Lam C {i}
-\end{verbatim}
+\end{lstlisting}
 is encoded as:
 \[
 \mathtt{Lam} \triangleq

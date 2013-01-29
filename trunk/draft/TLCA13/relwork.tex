@@ -46,9 +46,10 @@ F_{\!C}^\uparrow\,\textbf{kinds}\quad &
 In $F_{\!C}^\uparrow$, all type constructors ($F$) are promotable to the 
 kind level and become kinds when fully applied to other kinds
 ($F\vec\kappa$). On the other hand, in \Fi,  a type can only appear
-as the domain of an index arrow kind ($A-> \kappa$). This seemingly small
-difference allows $F_{\!C}^\uparrow$ to be a much
-more expressive language than \Fi. The promotion of
+as the domain of an index arrow kind ($A-> \kappa$).
+The ramifications of this difference is that $F_{\!C}^\uparrow$ can
+express type level data structues but not nested term indices,
+while \Fi\ is the other way around. The promotion of
 a type constructor, for instance, $\texttt{List}:* -> *$ to a kind constructor
 $\texttt{List}:\square-> \square$ enables type-level data structures
 such as $\mathtt{[Nat,Bool,Nat-> Bool]:List\,*}$. Type-level
