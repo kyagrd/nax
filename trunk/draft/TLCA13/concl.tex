@@ -10,18 +10,33 @@ indices.
 
 One limitation of System \Fi\ is that it cannot express type level
 data structures such as lists that contain type elements.
-We envision to overcome this limitation by designing an extension of \Fi\
+We envision to overcome this limitation by extending System \Fi\ 
 with first-class datatype descriptions \cite{DagMcb12}, which reflects
 the structure of types at term level.
 
-We are designing and implementing the Nax programming language
-\cite{AhnSheFioPit12}, which is based on System \Fi.
-Nax is given semantics in terms of System~\Fi.
-That is, all the primitive language constructs of Nax
-that are not present in \Fi\ have translations into System \Fi.
-Such constructs include Mendler-style recursion combinators,
-recursive type operator, pattern matching and case expressions.
+Our goal is to to build a unified programming and reasoning system,
+which supports
+(1) wide class of datatypes including nested term-indexed datatypes
+and negative datatypes,
+(2) logically consistent reasoning about program properties, and
+(3) Hindley--Milner-style type inference.
+For this, we are designing and implementing Nax \cite{AhnSheFioPit12},
+which is based on System \Fi. Nax is given semantics in terms of System~\Fi.
+That is, all the primitive language constructs of Nax that are not present
+in \Fi\ have translations into System \Fi. Such constructs include
+Mendler-style recursion combinators, recursive type operator, and
+pattern matching.
 
-talk about need of more recursion schemes and extension of Fi such as Fixi
-TODO
+Some language features we want to include in Nax seem to go beyond \Fi.
+For instance, reduction preserving embedding of Mendler-style primitive
+recursion is possible in \Fixw, which extends \Fw\ with equi-recursive
+types and polarized kinds. We can similarly extend \Fi\ with equi-recursive
+types and polarized kinds -- we call this system \Fixi, which is to be
+described in Ahn's dissertation. Another such feature is a recursion
+scheme that guarantee normalization due to certain use of indices in datatypes,
+for example, when the value of an term-index decreases in every recursive call).
+We cannot express such computations in System \Fi\ since term-indices are
+erasable, and we can only accept terms that are already type correct in \Fw.
+We plan to explore an extension to \Fi\ that can express such patterns of
+computations.
 
