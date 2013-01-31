@@ -1,6 +1,6 @@
 \section{Introduction}
 
-%% Term indices - erasable, possibly nested
+%% Term-indices - erasable, possibly nested
 %% 
 %% Higher-order polymorphism
 %% 
@@ -10,18 +10,18 @@ We are interested in the use of indexed types to state and
 maintain program properties. A type parameter
 (like {\tt Int} in {\tt (List Int)}) usually tells us
 something about data stored in values of that type.
-A type index (like {\tt 3} in {\tt (Vector Int 3)}) states
+A type-index (like {\tt 3} in {\tt (Vector Int 3)}) states
 an inductive property of values with that type. For example,
 values of type {\tt (Vector Int 3)} have three elements.
 
 Indexed types come in two flavors: \emph{type-indexed} and \emph{term-indexed}
 types. 
 
-%{\it Type indexing} involves higher-kinded parametric polymorphism,
+%{\it Type-indexing} involves higher-kinded parametric polymorphism,
 %but there also exists more sophisticated types such as
 %Generalized Algebraic Datatypes~(GADTs) \cite{Sheard04equality}.
 
-An example of type indexing is a definition of a \emph{representation type}
+An example of type-indexing is a definition of a \emph{representation type}
 \cite{Crary98} using GADTs in Haskell:\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
    data TypeRep t where
@@ -30,19 +30,19 @@ An example of type indexing is a definition of a \emph{representation type}
      RepPair :: TypeRep a -> TypeRep b -> TypeRep (a,b)
 \end{lstlisting}\vspace*{-2pt}
 Here, a value of type {\tt\small (TypeRep t)} is isomorphic in shape with
-the type index {\tt t}. For example,
+the type-index {\tt t}. For example,
 {\tt (RepPair RepInt RepBool) :: TypeRep (Int,Bool)}.
 
 
 An example of {\it Term-indices} are datatypes with
 indices ranging over data structures, such as natural numbers
 (like {\tt Z}, {(\tt S Z})) or lists (like {\tt Nil} or ({\tt Cons Z Nil})). 
-A classic example of a term index is the second parameter to
+A classic example of a term-index is the second parameter to
 the length-indexed list type {\tt Vec}~(as in ({\tt Vec Int (S Z)})).
 
 In languages such as Haskell\footnote{see \S\ref{sec:relwork} for
         a very recent GHC extension, which enable true term-indices.}
-        or OCaml \cite{GarNor11}, which support GADTs with only type indexing,
+        or OCaml \cite{GarNor11}, which support GADTs with only type-indexing,
 term-indices are simulated (or faked) by reflecting data at the type-level
 with uninhabited type constructors. For example,\vspace*{-2pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
@@ -56,7 +56,7 @@ This simulation comes with a number of problems. First, there is no way to say
 that types such as {\tt (S Int)} are ill-formed, and second the costs
 associated with duplicating the constructors of data to be used
 as term-indices.
-Nevertheless, GADTs with ``faked" term indices have become extremely popular
+Nevertheless, GADTs with ``faked" term-indices have become extremely popular
 as a light-weight, type-based mechanism to raise the confidence of users
 that software systems maintain important properties.
 

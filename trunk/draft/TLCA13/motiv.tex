@@ -6,16 +6,20 @@ calculi by means of functional encodings
 \cite{BoehmBerarducci}.
 
 In System~\textsf{F}, one can embed \emph{regular datatypes},
-like homogeneous lists:\vspace*{-5pt}
+like homogeneous lists:\vspace*{-3pt}
 \[
 \begin{array}{ll}
 \text{Haskell:} & \texttt{data List a = Cons a (List a) | Nil} \\
 \text{System \textsf{F}:}~& 
 \texttt{{List}}\:\: A\:\:\triangleq\:\:
 \forall X.
-(A\to X\to X) \to X \to X ~~\; 
+(A\to X\to X) \to X \to X ~~\; \\
+&
+\quad~~
+\texttt{Cons} \triangleq \l w.\l x.\l y.\l z.\,y\;w\,(x\;y\;z),~
+\texttt{Nil} \triangleq \l y.\l z.z
 \end{array}
-\]
+\]\vskip-1ex\noindent
 In such regular datatypes, constructors have algebraic structure that
 directly translates into polymorphic operations on abstract types as
 encapsulated by universal quantification over types (of kind $*$).
@@ -25,7 +29,7 @@ type constructors of any kind), one can encode more general
 \emph{type-indexed datatypes} that go beyond the regular datatypes.
 For example, one can embed powerlists with heterogeneous elements
 in which an element of type \texttt{a} is followed by
-an element of the product type \texttt{(a,a)}:
+an element of the product type \texttt{(a,a)}:\vspace*{-3pt}
 \[
 \begin{array}{ll}
 \text{Haskell:} & \texttt{data Powl a = 
@@ -38,35 +42,38 @@ an element of the product type \texttt{(a,a)}:
 \text{System \Fw:}~& \texttt{{Powl}}\:\triangleq\:
 \lambda A^{*}.\forall X^{*\to*}. (A\to X(A\times A)\to X A) \to X A \to XA
 \end{array}
-\]
+\]\vskip-1ex\noindent
 Note the non-regular occurrence (\texttt{Powl(a,a)}) in the definition of
 (\texttt{Powl a}), and the use of universal quantification over
 higher-order kinds ($\forall X^{*\to*}$).
+The term encodings for {\small\tt PCons} and {\small\tt PNil} are exactly
+the same as the term encodings for {\small\tt Cons} and {\small\tt Nil},
+but have different types.
 
 What about term-indexed datatypes?  What extensions to System~\Fw\ are
-needed to embed term indices as well as type indices?  Our answer is
+needed to embed term-indices as well as type-indices?  Our answer is
 System~\Fi.
 
 In a functional language supporting term-indexed datatypes, we envisage
 that the classic example of homogeneous length-indexed lists would be
-defined along the following lines (in Nax\cite{AhnSheFioPit12} syntax):
-\vspace{-5pt}
+defined along the following lines (in Nax\cite{AhnSheFioPit12}-like syntax):
+\vspace{-3pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell]
    data Nat = S Nat | Z 
-   data Vec (a:*) {i:Nat} where
+   data Vec : * -> Nat -> * where
      VCons : a -> Vec a {i} -> Vec a {S i}
      VNil  : Vec a {Z}
-\end{lstlisting}~\vspace{-15pt}\\ \noindent
+\end{lstlisting}\vskip-1ex\noindent
 Here the type constructor~{\tt Vec} is defined to admit parameterisation
-by both type and term indices.  For instance, the type 
+by both type and term-indices.  For instance, the type 
 (\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
 vectors of lists of natural numbers.  By design, our syntax directly
-reflects the difference between type and term indexing by enclosing
+reflects the difference between type and term-indexing by enclosing
 the latter in curly braces.  We also make this distinction in 
 System~\Fi, where it is useful within the type system
-to guarantee the static nature of term indexing.
+to guarantee the static nature of term-indexing.
 
-The encoding of the vector datatype in System~\Fi\ is as follows:\vspace*{-5pt}
+The encoding of the vector datatype in System~\Fi\ is as follows:\vspace*{-3pt}
 \begin{equation*}\label{FiVecType}
 \texttt{{Vec}}
 \triangleq
@@ -77,9 +84,13 @@ i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to *}.
   \to X\{\texttt{{Z}}\}
     \to X\{i\}
 \end{array}
-\end{equation*}
+\end{equation*}\vskip-1ex\noindent
 where $\texttt{{Nat}}$, $\mathtt Z$, and $\mathtt S$ respectively encode
 the natural number type and its two constructors,  zero and successor.
+Again, the term encodings for {\small\tt VCons} and {\small\tt VNil} are exactly
+the same as the encodings for {\small\tt Cons} and {\small\tt Nil},
+but have different types.
+
 Without going into the details of the formalism, which are given in the
 next section, one sees that such a calculus incorporating term-indexing
 structure needs four additional constructs (see \Fig{FiSyntax} for the
@@ -114,9 +125,9 @@ highlighted extended syntax).
 \end{enumerate}
 
 As described above, System~\Fi\ maintains a clear-cut separation between
-type indexing and term indexing.  This adds a level of abstraction
+type-indexing and term-indexing.  This adds a level of abstraction
 to System~\Fw\ and yields types that in addition to parametric polymorphism
-also keep track of inductive invariants using term indices. All term-index
+also keep track of inductive invariants using term-indices. All term-index
 information can be erased, since it is only used at compile-time.  
 It is possible to project any well-typed System~\Fi\ term into a well-typed System~\Fw\ term.
 For instance, the erasure of the \Fi-type~\texttt{Vec}

@@ -28,15 +28,12 @@ Mendler-style recursion combinators, recursive type operator, and
 pattern matching.
 
 Some language features we want to include in Nax seem to go beyond \Fi.
-For instance, reduction preserving embedding of Mendler-style primitive
-recursion is possible in \Fixw, which extends \Fw\ with equi-recursive
-types and polarized kinds. We can similarly extend \Fi\ with equi-recursive
-types and polarized kinds -- we call this system \Fixi, which is to be
-described in Ahn's dissertation. Another such feature is a recursion
-scheme that guarantee normalization due to certain use of indices in datatypes,
-for example, when the value of an term-index decreases in every recursive call).
-We cannot express such computations in System \Fi\ since term-indices are
-erasable, and we can only accept terms that are already type correct in \Fw.
-We plan to explore an extension to \Fi\ that can express such patterns of
-computations.
+There are recursion schemes that guarantee normalization due to certain use
+of indices in datatypes. For instance, some recursive computations may always
+makes a natrual number term-index decrease by every recursive call.
+Although we know that such computations obviously terminate, we cannot express
+them in System \Fi, since term-indices in \Fi\ are erasable -- \Fi\ only
+accepts terms that are already type-correct in \Fw.
+We plan to explore extensions to \Fi\ that enable such computations
+while maintailing logical consistency.
 

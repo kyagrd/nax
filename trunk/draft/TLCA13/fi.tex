@@ -1,6 +1,6 @@
 \section{System \Fi} \label{sec:Fi}
 System \Fi\ is a higher-order polymorphic lambda calculus 
-designed to extend System~\Fw\ by the inclusion of term indices.
+designed to extend System~\Fw\ by the inclusion of term-indices.
 The syntax and rules of System~\Fi\ are described in~\Figs{FiSyntax},
 \ref{fig:FiTyping} and~\ref{fig:eqFi}. 
 The extensions new to System~\Fi, which are not originally part of System~\Fw, 
@@ -284,11 +284,13 @@ $ \qquad
              {\Delta;\Gamma |- t=t'':A}
 \]
 ~\\
-Many typing judgments require determining if two types are equal.
+$\phantom{A}$ 
+Some of the rules in \Fig{FiTyping} require determining if two types are equal.
 Since types occur in kinds, and terms occur in types, the rules
-for equality are quite complex.
+for equality are more elaborate than the equality rules of System \Fw.
 
-$\phantom{A}$ The first two rules of type constructor equality,
+$\phantom{A}$
+The first two rules of type constructor equality,
 and the first rule of the term equality,
 state the essence of $\beta$-equivalence.
 The last two rules in the Kind/Type/Term equalities
@@ -304,6 +306,7 @@ The key extension to \Fw\ is the addition of term-indexed arrow kinds of
 the form \newFi{A -> \kappa}. This allows type constructors to have terms
 as indices. The rest of the development of \Fi\ flows naturally from
 this single extension.
+\vskip-1ex
 
 \paragraph{Sorting\!}(\Fig{FiTyping}).\; \label{sorting}
 The formation of indexed arrow kinds is
@@ -341,7 +344,6 @@ $A$ must be a closed type (not a type constructor!) without free variables.
 A term-level context $\Gamma$ is well-formed under a type-level context
 $\Delta$ when it is either empty or extended by a term variable binding
 $x:A$ whose type $A$ is well-kinded under $\Delta$.
-
 
 \paragraph{Type constructors and their kinding rules\!}(\Figs{FiSyntax} and \ref{fig:FiTyping}).\;
 We extend the type constructor syntax by three constructs,

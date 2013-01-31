@@ -18,7 +18,7 @@ Although System~\Fi\ accepts fewer terms than ICC, it enjoys simpler
 erasure properties (Theorem \ref{thm:ierasetypingall} and
 Corollary \ref{cor:ierasetypingifree}) just by looking at the syntax
 of kinds and type type, which ICC cannot enjoy due to its support for
-full dependent types.  In System \Fi, term indices appearing in types
+full dependent types.  In System \Fi, term-indices appearing in types
 (\eg,~$s$ in $F\{s\}$) are always erasable.  \citet{LingerS08} generalized the ICC framework to one which describes
 erasure on arbitrary Church-style calculi~(EPTS) and Curry-style
 calculi~(IPTS), but only consider $\beta$-equivalence for type conversion.
@@ -33,7 +33,7 @@ They extended System $F_{\!C}$ (the Glasgow Haskell Compiler's
 intermediate core language) to support \emph{datatype promotion}
 and named it System~$F_{\!C}^\uparrow$. The key difference between
 $F_{\!C}^\uparrow$ and \Fi\ is in their kind syntax: %%, as illustrated below:
-\vspace*{-2pt}
+\vspace*{-5pt}
 \[\qquad\quad
 \begin{array}{ll}
 F_{\!C}^\uparrow\,\textbf{kinds}\quad &
@@ -41,24 +41,25 @@ F_{\!C}^\uparrow\,\textbf{kinds}\quad &
 \,\Fi\,\,\textbf{kinds}\quad &
 \kappa ::= * \mid \kappa -> \kappa \mid A -> \kappa \phantom{A^{A^A}}
 \end{array}  
-\] ~\vspace*{-6pt}\\
+\] \vskip-1.5ex\noindent
 In $F_{\!C}^\uparrow$, all type constructors ($F$) are promotable to the 
 kind level and become kinds when fully applied to other kinds
 ($F\vec\kappa$). On the other hand, in \Fi,  a type can only appear
 as the domain of an index arrow kind ($A-> \kappa$).
 The ramifications of this difference is that $F_{\!C}^\uparrow$ can
-express type level data structues but not nested term indices,
-while \Fi\ is the other way around. The promotion of
-a type constructor, for instance, $\texttt{List}:* -> *$ to a kind constructor
-$\texttt{List}:\square-> \square$ enables type-level data structures
+express type level data structues but not nested term-indices,
+while \Fi\ is the other way around. Intuitively,
+a type constructor like $\texttt{List}:* -> *$ is promoted to a kind constructor
+$\texttt{List}:\square-> \square$, which enables type-level data structures
 such as $\mathtt{[Nat,Bool,Nat-> Bool]:List\,*}$. Type-level
 data structures motivate type-level computations over promoted data.
 This is made possible by type families\footnote{
 	A GHC extension to define type-level functions in Haskell.}.
 The promotion of polymorphic types naturally motivates
-kind polymorphism ($\forall \mathcal{X}.\kappa$), which is known to
+kind polymorphism ($\forall \mathcal{X}.\kappa$).
+Kind polymorphism of arbitrary rank is known to
 break strong normalization and cause logical inconsistency \cite{Girard72}.
-In a functional {\em programming language}, inconsistency is not an issue.
+In a {\em programming language}, inconsistency is not an issue.
 However, when studying logically consistent systems, we need
-a more conservative approach, as in System \Fi.
+a more conservative approach, as in \Fi.
 
