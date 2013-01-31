@@ -1,20 +1,19 @@
 \section{Encodings of Term-Indexed Datatypes} \label{sec:data}
 Recall that our motivation was a foundational calculus
 that can encode term-indexed datatypes. In \S\ref{sec:motiv},
-we showed that there exist Church encodings of
+we gave Church encodings of
 {\small\tt List} (a regular datatype),
 {\small\tt Powl} (a type-indexed datatype), and
 {\small\tt Vec} (a term-indexed datatype).
-In this section, we discuss briefly about a more complicated example
-of a datatype with nested term-indices, and, encoding schemes that
-better relates to practical implementations --
-encoding indexed datatypes using equality constraints
-and the Mendler-style encoding.
+In this section, we discuss more complicated examples,
+one with nested term-indices, and several encoding schemes that
+we have seen used in practice --
+first, encoding indexed datatypes using equality constraints
+and second, encoding datatypes in the Mendler-style\cite{}.
 
-\paragraph{Nested term-indices\,$:$} One great merit of System \Fi\ is
+\paragraph{Nested term-indices\,$:$} System \Fi\ has
 the ability to express datatypes with nested term-indices. That is,
-types of term-indices in indexed datatypes themselves can be yet
-another indexed datatype. For instance, consider the resource-state
+term-indices, which are themselves term-indexed datatypes. For instance, consider the resource-state
 tracking environment \cite{BraHam10} below (in Nax-like syntax):
 \vspace*{-3pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell]
@@ -24,15 +23,16 @@ tracking environment \cite{BraHam10} below (in Nax-like syntax):
 \end{lstlisting}
 \vskip-.7ex\noindent
 Note that {\small\tt Env} has a term-index of type {\small\tt Vec},
-which is again indexed by {\small\tt n}.
+which is again indexed by {\small\tt Nat}.
 For simplicity,\footnote{Nax \cite{AhnSheFioPit12} supports
-	rank-1 kind-level polymorphism. %% over kinds, types, and term-indices.
-	It would be virtually useless if nested term-indices % like {\texttt{n}}
-	were only limited to constants rather than polymorphic variables.}
-assume that {\small\tt n} is some fixed constant (\eg, {\small\tt S(S(S Z))})
-and that {\small\tt st} is some fixed resource-state type (\eg, read--write
-access modes on files). Provided that {\small\tt st} is expressible in \Fi,
-we can encode {\small\tt Env} as follows:
+        rank-1 kind-level polymorphism. %% over kinds, types, and term-indices.
+        It would be virtually useless if nested term-indices % like {\texttt{n}}
+        were only limited to constants rather than polymorphic variables.}        
+assume that {\small\tt n} is some fixed constant (\eg, {\small\tt S(S(S Z)), i.e. 3}),
+then an {\small\tt Env} tracks 3 independant resources, each which could be
+in a different state. For example 3 files, one open for reading, the next open for writing,
+and the third closed. Where {\small\tt st} is the type of these resources states (\eg, OpenRead, OpenWrite, Closed).
+We can encode {\small\tt Env} as follows:
 \vspace*{-5pt}
 \begin{multline*}
 \texttt{Env} \triangleq
@@ -41,7 +41,7 @@ we can encode {\small\tt Env} as follows:
 ( \forall j^\texttt{st}\!.\,
   \forall k^{(\texttt{Vec}\;\texttt{st}\;\texttt{n})}\!.\,
   Y\!\{j\} -> X\!\{k\} ->
-				X\!\{\!\texttt{\small VCons}\;j\,k\!\} )
+                                X\!\{\!\texttt{\small VCons}\;j\,k\!\} )
 -> X \{\texttt{\!\small VNil\!}\} -> X\!\{i\}
 \end{multline*}
 \vskip-1ex\noindent
@@ -71,9 +71,9 @@ in System \Fi.
 Then, we can encode {\small\tt Vec} as sum of its two data constructor types:
 \vspace*{-5pt}
 \[ \mathtt{Vec} \triangleq \l A^{*}.\,\l i^\texttt{Nat}.\,\forall X^{\texttt{Nat} -> *}.\,
-	(\exists j^\texttt{Nat}.\,(\texttt{S}\;j\stackrel{\texttt{Nat}}{=}i)\times A \times X\{j\})
+        (\exists j^\texttt{Nat}.\,(\texttt{S}\;j\stackrel{\texttt{Nat}}{=}i)\times A \times X\{j\})
         +
-	(\texttt{Z}\stackrel{\texttt{Nat}}{=}i)
+        (\texttt{Z}\stackrel{\texttt{Nat}}{=}i)
 \] \vskip-.7ex\noindent
 where $+$ and $\times$ are the usual impredicative encoding of sums and
 products. We can encode the existental quantification over indices 
@@ -86,7 +86,7 @@ Compared to the simple Church encoded versions in \S\ref{sec:motiv},
 the encodings using equality constraints work particularly well when
 defining functions that constrain their domain types by restricting
 their indices, such as the function $\texttt{safeTail} :
-	\texttt{Vec}\;a\;\{\texttt{S}\;n\} -> \texttt{Vec}\;a\;\{n\}$,
+        \texttt{Vec}\;a\;\{\texttt{S}\;n\} -> \texttt{Vec}\;a\;\{n\}$,
 which can only be applied to non-empty length indexed lists due
 the index of the domain type ($\texttt{S}\;n$).
 

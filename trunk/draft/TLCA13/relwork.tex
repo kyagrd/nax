@@ -4,7 +4,7 @@ Curry-style System~\Fw \cite{AbeMatUus05,GHR93}
 and the Implicit Calculus of Constructions (ICC) \cite{Miquel01}.
 All terms typable in a Curry-style System \Fw\ are typable (with the same type) in System \Fi\ 
 and all terms typable in \Fi\ are typable (with the same type\footnote{The $*$ kind in \Fw\ and \Fi\ corresponds
-	to \textsf{Set} in ICC}) in ICC.
+        to \textsf{Set} in ICC}) in ICC.
 
 As mentioned in \S\ref{ssec:sn}, we can derive strong normalization of \Fi\ 
 from System~\Fw, and derive logical consistency of \Fi\ from certain
@@ -17,7 +17,7 @@ $\eta$-reduction and $\eta$-equivalence to System~\Fi.
 Although System~\Fi\ accepts fewer terms than ICC, it enjoys simpler
 erasure properties (Theorem \ref{thm:ierasetypingall} and
 Corollary \ref{cor:ierasetypingifree}) just by looking at the syntax
-of kinds and type type, which ICC cannot enjoy due to its support for
+of kinds and types, which ICC cannot enjoy due to its support for
 full dependent types.  In System \Fi, term-indices appearing in types
 (\eg,~$s$ in $F\{s\}$) are always erasable.  \citet{LingerS08} generalized the ICC framework to one which describes
 erasure on arbitrary Church-style calculi~(EPTS) and Curry-style
@@ -48,13 +48,13 @@ kind level and become kinds when fully applied to other kinds
 as the domain of an index arrow kind ($A-> \kappa$).
 The ramifications of this difference is that $F_{\!C}^\uparrow$ can
 express type level data structues but not nested term-indices,
-while \Fi\ is the other way around. Intuitively,
+while \Fi\ supports the converse. Intuitively,
 a type constructor like $\texttt{List}:* -> *$ is promoted to a kind constructor
 $\texttt{List}:\square-> \square$, which enables type-level data structures
 such as $\mathtt{[Nat,Bool,Nat-> Bool]:List\,*}$. Type-level
 data structures motivate type-level computations over promoted data.
 This is made possible by type families\footnote{
-	A GHC extension to define type-level functions in Haskell.}.
+        A GHC extension to define type-level functions in Haskell.}.
 The promotion of polymorphic types naturally motivates
 kind polymorphism ($\forall \mathcal{X}.\kappa$).
 Kind polymorphism of arbitrary rank is known to
