@@ -5,8 +5,8 @@ we gave Church encodings of
 {\small\tt List} (a regular datatype),
 {\small\tt Powl} (a type-indexed datatype), and
 {\small\tt Vec} (a term-indexed datatype).
-In this section, we discuss a more complicated datatype using
-nested term-indices \cite{BraHam10}, and several encoding schemes
+In this section, we discuss a more complicated datatype \cite{BraHam10}
+involving nested term-indices, and several encoding schemes
 that we have seen used in practice --
 first, encoding indexed datatypes using equality constraints
 \cite{Sheard04equality,Crary98} and second, encoding datatypes
@@ -87,9 +87,9 @@ which is similar to the usual encoding of the existential quantification
 over types in System $\mathsf{F}$ or \Fw.
 
 Compared to the simple Church encoded versions in \S\ref{sec:motiv},
-the encodings using equality constraints work particularly well when
-defining functions that constrain their domain types by restricting
-their indices, such as the function $\texttt{safeTail} :
+the encodings using equality constraints work particularly well with
+encodings of functions that constrain their domain types by restricting
+their indices. For instance, the function $\texttt{safeTail} :
         \texttt{Vec}\;a\;\{\texttt{S}\;n\} -> \texttt{Vec}\;a\;\{n\}$,
 which can only be applied to non-empty length indexed lists due
 the index of the domain type ($\texttt{S}\;n$).
