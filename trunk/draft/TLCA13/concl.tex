@@ -5,15 +5,15 @@ definition of datatypes indexed by both terms and types.
 In terms of expressivity, System~\Fi\ sits between System~\Fw\ and ICC.
 We designed System~\Fi\ as a tool to reason about programming
 languages with term-indexed datatypes. System \Fi\ can express
-a large class of term-indexed datatypes, including datatypes with nested term
-indices.
+a large class of term-indexed datatypes, including datatypes
+with nested term-indices.
 
-One limitation of System \Fi\ is that it cannot express type level
+One limitation of System \Fi\ is that it cannot express type-level
 data structures such as lists that contain type elements.
 We hope to overcome this limitation by extending System \Fi\ 
 with first-class type representations \cite{DagMcb12}, which reflect
-types as term level data (a sort of fully reflective version of
-{\small\tt TypeRep} from Section \ref{intro}).
+types as term-level data (a sort of a fully reflective version of
+{\small\tt TypeRep} from \S\ref{intro}).
 
 Our goal is to to build a unified programming and reasoning system,
 which supports
@@ -21,20 +21,21 @@ which supports
 and negative datatypes,
 (2) logically consistent reasoning about program properties, and
 (3) Hindley--Milner-style type inference.
-Towards this goal, we are developing the programming language Nax \cite{AhnSheFioPit12},
-which is based on System \Fi. Nax is given semantics in terms of System~\Fi.
+Towards this goal, we are developing the programming language
+Nax \cite{AhnSheFioPit12} based on System \Fi.
+Nax is given semantics in terms of System~\Fi.
 That is, all the primitive language constructs of Nax that are not present
 in \Fi\ have translations into System \Fi. Such constructs include
-Mendler-style recursion combinators, recursive type operator, and
+Mendler-style eliminators, recursive type operators, and
 pattern matching.
 
 Some language features we want to include in Nax go beyond \Fi.
-There are recursion schemes that guarantee normalization due to paradigmatic use
-of indices in datatypes. For instance, some recursive computations always
-reduce a natural number term-index in every recursive call.
-Although we know that such computations obviously terminate, we cannot express
-them in System \Fi, since term-indices in \Fi\ are erasable -- \Fi\ only
-accepts terms that are already type-correct in \Fw.
-We plan to explore extensions to \Fi\ that enable such computations
+One of them is a recursion scheme that guarantee normalization
+due to paradigmatic use of indices in datatypes. For instance,
+some recursive computations always reduce a natural number term-index
+in every recursive call. Although such computations obviously terminate,
+we cannot express them in System \Fi, since term-indices in are erasable
+-- \Fi\ only accepts terms that are already type-correct in \Fw.
+We plan to explore extensions to System \Fi\ that enable such computations
 while maintailing logical consistency.
 

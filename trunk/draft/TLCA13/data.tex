@@ -5,16 +5,17 @@ we gave Church encodings of
 {\small\tt List} (a regular datatype),
 {\small\tt Powl} (a type-indexed datatype), and
 {\small\tt Vec} (a term-indexed datatype).
-In this section, we discuss more complicated examples,
-one with nested term-indices, and several encoding schemes that
-we have seen used in practice --
+In this section, we discuss a more complicated datatype using
+nested term-indices \cite{BraHam10}, and several encoding schemes
+that we have seen used in practice --
 first, encoding indexed datatypes using equality constraints
-and second, encoding datatypes in the Mendler-style\cite{}.
-
-\paragraph{Nested term-indices\,$:$} System \Fi\ has
-the ability to express datatypes with nested term-indices. That is,
-term-indices, which are themselves term-indexed datatypes. For instance, consider the resource-state
-tracking environment \cite{BraHam10} below (in Nax-like syntax):
+\cite{Sheard04equality,Crary98} and second, encoding datatypes
+in the Mendler-style \cite{AbeMatUus05,AhnShe11}.
+\vspace*{-1ex}
+\paragraph{Nested term-indices\,$:$} System \Fi\ is able to express
+datatypes with nested term-indices. That is, term-indices, which are
+themselves term-indexed datatypes. Consider the resource-state
+tracking environment \cite{BraHam10} in Nax-like syntax below:
 \vspace*{-3pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell]
    data Env : ({st} -> *) -> {Vec st {n}} -> * where
@@ -27,12 +28,15 @@ which is again indexed by {\small\tt Nat}.
 For simplicity,\footnote{Nax \cite{AhnSheFioPit12} supports
         rank-1 kind-level polymorphism. %% over kinds, types, and term-indices.
         It would be virtually useless if nested term-indices % like {\texttt{n}}
-        were only limited to constants rather than polymorphic variables.}        
-assume that {\small\tt n} is some fixed constant (\eg, {\small\tt S(S(S Z)), i.e. 3}),
-then an {\small\tt Env} tracks 3 independant resources, each which could be
-in a different state. For example 3 files, one open for reading, the next open for writing,
-and the third closed. Where {\small\tt st} is the type of these resources states (\eg, OpenRead, OpenWrite, Closed).
-We can encode {\small\tt Env} as follows:
+        were only limited to constants rather than polymorphic variables.}
+assume that {\small\tt n} is some fixed constant (\eg, {\small\tt S(S(S Z))},
+\ie, 3). Then, an {\small\tt Env} tracks 3 independant resources
+({\small\tt res}), each which could be in a different state ({\small\tt st}).
+For example, 3 files in different states -- one open for reading,
+the next open for writing, and the third closed.
+%% Where {\small\tt st}
+%% is the type of these resources states (\eg, OpenRead, OpenWrite, Closed).
+We can encode {\small\tt Env} in \Fi\ as follows:
 \vspace*{-5pt}
 \begin{multline*}
 \texttt{Env} \triangleq
@@ -48,7 +52,7 @@ We can encode {\small\tt Env} as follows:
 The term encodings for {\small\tt Extend} and {\small\tt Empty} are
 exactly the same as the term encodings for {\small\tt Cons} and {\small\tt Nil}
 of the {\small\tt List} datatype in \S\ref{sec:motiv}.
-
+\vspace*{-1ex}
 \paragraph{Encoding indexed datatypes using equality constraints\,$:$}
 Systematic encodings of GADTs \cite{Sheard04equality,Crary98}, which are
 used in practical implementations, typically involve equality constraints
@@ -79,7 +83,7 @@ where $+$ and $\times$ are the usual impredicative encoding of sums and
 products. We can encode the existental quantification over indices 
 ($\exists$ used in the encoding of {\small\tt Vec} above) as
 $ \exists i^A.B \triangleq \forall X^{*}. (\forall i^A.B -> X) -> X $,
-which is similar to the usual encoding of existential quantification
+which is similar to the usual encoding of the existential quantification
 over types in System $\mathsf{F}$ or \Fw.
 
 Compared to the simple Church encoded versions in \S\ref{sec:motiv},
@@ -89,7 +93,7 @@ their indices, such as the function $\texttt{safeTail} :
         \texttt{Vec}\;a\;\{\texttt{S}\;n\} -> \texttt{Vec}\;a\;\{n\}$,
 which can only be applied to non-empty length indexed lists due
 the index of the domain type ($\texttt{S}\;n$).
-
+\vspace*{-1ex}
 \paragraph{The Mendler-style encoding\,$:$}
 TODO things to say
 
@@ -105,5 +109,6 @@ strong normalization while supporting negative datatypes
 \noindent
 CHECKING SPACE 1\\
 CHECKING SPACE 2\\
-CHECKING SPACE 3
-
+CHECKING SPACE 3\\
+CHECKING SPACE 4\\
+CHECKING SPACE 5
