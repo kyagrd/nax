@@ -95,21 +95,30 @@ which can only be applied to non-empty length indexed lists due
 the index of the domain type ($\texttt{S}\;n$).
 \vspace*{-1ex}
 \paragraph{The Mendler-style encoding\,$:$}
-TODO things to say
+Recursive type theories that extends higher-order polymorphic lambda calclui
+typically comes with a built-in recursive type operator
+$\mu_\kappa : (\kappa -> \kappa) -> \kappa$ for each kind $\kappa$,
+which yields recursive types ($\mu_\kappa\,F : \kappa$) when applied to
+type constructors of appropriate kind ($F : \kappa -> \kappa$).
+For instance,
+$\texttt{List} \triangleq \l Y^{*}\!.\,\mu_{*}(\l X^{*}.Y\times X+ \mathbbm{1})$
+where $\mathbbm{1}$ is the unit type. One benefit of factoring out
+the recursion at type-level (\eg, $\mu_{*}$) from
+the base structure (\eg,$\l X^{*}.Y\times X+ \mathbbm{1})$) of
+recursive types is that such factorized (or, two-level) representations
+are more amenable to express generic recursion schemes (\eg, catamorphism)
+that work over different recursive datatypes.
+Interestingly, there exists an encoding scheme, namely the Mendler style,
+which can embed $\mu_{\kappa}$ within Systems like \Fw\ or \Fi.
+The Mendler-style encoding can keep the theoretical basis small,
+while enjoying the benefits of factoring out the recursion at type-level.
 
-can encode 
+% exploiting impredicative polymorphism.
+%% Thus, in the Mendler style encoding,
+%% $\mu_\kappa$ no more needs to be primtiive,
+%% and encoding scheme of eliminators for recursive types become uniform 
+%% -- in a logical view, inductive reasoning become better mondularized
+%% 
+%% strong normalization while supporting negative datatypes
+%% (\eg, higher-order abstract syntax, semantic domains of lambda calculi)
 
-recursion at type-level is factorized by recursive type operator,
-and encodings of eliminators for recursive types become uniform 
--- in a logical view, inductive reasoning become better mondularized
-
-strong normalization while supporting negative datatypes
-(\eg, higher-order abstract syntax, semantic domains of lambda calculi)
-
-\noindent
-CHECKING SPACE 1\\
-CHECKING SPACE 2\\
-CHECKING SPACE 3\\
-CHECKING SPACE 4\\
-CHECKING SPACE 5\\
-CHECKING SPACE 6
