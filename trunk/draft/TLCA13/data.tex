@@ -30,7 +30,7 @@ For simplicity,\footnote{Nax \cite{AhnSheFioPit12} supports
         It would be virtually useless if nested term-indices % like {\texttt{n}}
         were only limited to constants rather than polymorphic variables.}
 assume that {\small\tt n} is some fixed constant (\eg, {\small\tt S(S(S Z))},
-\ie, 3). Then, an {\small\tt Env} tracks 3 independant resources
+\ie, 3). Then, an {\small\tt Env} tracks 3 independent resources
 ({\small\tt res}), each which could be in a different state ({\small\tt st}).
 For example, 3 files in different states -- one open for reading,
 the next open for writing, and the third closed.
@@ -80,7 +80,7 @@ Then, we can encode {\small\tt Vec} as sum of its two data constructor types:
         (\texttt{Z}\stackrel{\texttt{Nat}}{=}i)
 \] \vskip-.7ex\noindent
 where $+$ and $\times$ are the usual impredicative encoding of sums and
-products. We can encode the existental quantification over indices 
+products. We can encode the existential quantification over indices 
 ($\exists$ used in the encoding of {\small\tt Vec} above) as
 $ \exists i^A.B \triangleq \forall X^{*}. (\forall i^A.B -> X) -> X $,
 which is similar to the usual encoding of the existential quantification
@@ -95,7 +95,7 @@ which can only be applied to non-empty length indexed lists due
 the index of the domain type ($\texttt{S}\;n$).
 \vspace*{-1ex}
 \paragraph{The Mendler-style encoding\,$:$}
-Recursive type theories that extends higher-order polymorphic lambda calclui
+Recursive type theories that extends higher-order polymorphic lambda calculi
 typically comes with a built-in recursive type operator
 $\mu_\kappa : (\kappa -> \kappa) -> \kappa$ for each kind $\kappa$,
 which yields recursive types ($\mu_\kappa\,F : \kappa$) when applied to
