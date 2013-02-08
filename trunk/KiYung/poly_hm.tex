@@ -624,11 +624,11 @@ as $(S_2\circ S_1)A = S_2(S_1(A))$.
 \]
 %% double check the composition order
 \[ \inference[\sc App$_W$]
-	{W(\Gamma,s) ~> (S_1,A_1) \\
-	 W(S_1 \Gamma,t) ~> (S_2,A_2) \\
+	{W(\Gamma,t) ~> (S_1,A_1) \\
+	 W(S_1 \Gamma,s) ~> (S_2,A_2) \\
 	 X~\text{fresh} \\
 	 \unify(S_2 A_1,A_2 -> X) ~> S_3 }
-	{W(\Gamma,s\;t) ~> (S_3\circ S_2\circ S_1,S_3 X)}
+	{W(\Gamma,t\;s) ~> (S_3\circ S_2\circ S_1,S_3 X)}
 \]
 
 \[ \inference[\sc Let$_W$]
@@ -669,26 +669,26 @@ By induction on the syntax of the term $t$.
 	By \rulename{Abs$_s$} rule, we have
 	$S_1\Gamma |-s \l x.t : S_1 X -> A$.
 
-\item[case]($s\;t$)
-	We need to show that $(S_3\circ S_2 \circ S_1)\Gamma |-s s\,t : S_3 X$.
+\item[case]($t\;s$)
+	We need to show that $(S_3\circ S_2 \circ S_1)\Gamma |-s t\,s : S_3 X$.
 
 	By induction, we know that
-	$S_1\Gamma |-s s : A_1$ and 
-	$S_2(S_1\Gamma) |-s t : A_2$.
+	$S_1\Gamma |-s t : A_1$ and 
+	$S_2(S_1\Gamma) |-s s : A_2$.
 	By Proposition~\ref{prop:substvdashs},
-	$S_3(S_2(S_1\Gamma)) |-s s : S_3(S_2(A_1))$ and 
-	$S_3(S_2(S_1\Gamma)) |-s t : S_3 A_2$.
+	$S_3(S_2(S_1\Gamma)) |-s t : S_3(S_2(A_1))$ and 
+	$S_3(S_2(S_1\Gamma)) |-s s : S_3 A_2$.
 
 	Due to the property of unification, $S_2 A_1 =  A_2 -> X$.
 
-	Thus, $S_3(S_2(S_1\Gamma)) |-s s : S_3(A_2 -> X)$ and 
-	$S_3(S_2(S_1\Gamma)) |-s t : S_3 A_2$.
+	Thus, $S_3(S_2(S_1\Gamma)) |-s t : S_3(A_2 -> X)$ and 
+	$S_3(S_2(S_1\Gamma)) |-s s : S_3 A_2$.
 
-	That is, $(S_3\circ S_2 \circ S_1)\Gamma |-s s : S_3 A_2 -> S_3 X$ and 
-	$(S_3\circ S_2 \circ S_1)\Gamma |-s t : S_3 A_2$.
+	That is, $(S_3\circ S_2 \circ S_1)\Gamma |-s t : S_3 A_2 -> S_3 X$ and 
+	$(S_3\circ S_2 \circ S_1)\Gamma |-s s : S_3 A_2$.
 
 	By \rulename{App$_s$} rule, we have 
-	$(S_3\circ S_2 \circ S_1)\Gamma |-s s\,t : S_3 X$.
+	$(S_3\circ S_2 \circ S_1)\Gamma |-s t\,s : S_3 X$.
 
 \item[case]($\<let> x=s \<in> t$)
 	We need to show that $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
@@ -709,7 +709,7 @@ By induction on the syntax of the term $t$.
 \end{itemize}
 \end{proof}
 
-\begin{comment}
+
 \begin{proposition}[\rulename{Abs$_s$} inverse] \label{prop:Abssrev}
 $ \inference{\Gamma |-s \l x   .t : A -> B}{\Gamma,x:A |-s t:B} $
 \end{proposition}
@@ -818,11 +818,11 @@ By induction on the syntax of the term $t$.
 	The latter is true since $ R(\overline{S\Gamma}(B_W)) 
 	\sqsubseteq R(\overline{S(\Gamma,x:X)}(B_W)) \sqsubseteq B$.
 
-\item[case]($s\;t$)
+\item[case]($t\;s$)
 	We want to show that \vspace*{-2em}
 	\begin{singlespace}
-	\[\inference{S'\Gamma |-s s\;t : B}{
-	\begin{matrix} W(\Gamma,s\;t) ~\qquad~ \\
+	\[\inference{S'\Gamma |-s t\;s : B}{
+	\begin{matrix} W(\Gamma,t\;s) ~\qquad~ \\
 		~> (S_3\circ S_2\circ S_1,S_3 X) \end{matrix}
 	~\land~
 	\exists R.
@@ -842,8 +842,8 @@ By induction on the syntax of the term $t$.
 	without loss of generality. Then, what we want to show is
 	\vspace*{-2em}
 	\begin{singlespace}
-	\[\inference{S''((S_3\circ S_2\circ S_1)\Gamma) |-s s\;t : B'}{
-	\begin{matrix} W(\Gamma,s\;t) ~\qquad~ \\
+	\[\inference{S''((S_3\circ S_2\circ S_1)\Gamma) |-s t\;s : B'}{
+	\begin{matrix} W(\Gamma,t\;s) ~\qquad~ \\
 		~> (S_3\circ S_2\circ S_1,S_3 X) \end{matrix}
 	~\land~
 	\exists R.
@@ -858,8 +858,8 @@ By induction on the syntax of the term $t$.
 	\begin{singlespace}
 	\begin{align}
 	\label{WcompleteAppsCase1}
-	\inference{S_1'\Gamma |-s s : A' -> B'}{
-	\begin{matrix} W(\Gamma,s) \\ ~> (S_1,A_1) \end{matrix}
+	\inference{S_1'\Gamma |-s t : A' -> B'}{
+	\begin{matrix} W(\Gamma,t) \\ ~> (S_1,A_1) \end{matrix}
 	~\land~ 
 	\exists R_1.
 		\left(\begin{matrix}
@@ -869,8 +869,8 @@ By induction on the syntax of the term $t$.
 		\end{matrix}\right) }
 	\\
 	\label{WcompleteAppsCase2}
-	\inference{S_2'(S_1\Gamma) |-s t : A'}{
-	\begin{matrix} W(S_1\Gamma,t) \\ ~> (S_2,A_2) \end{matrix}
+	\inference{S_2'(S_1\Gamma) |-s s : A'}{
+	\begin{matrix} W(S_1\Gamma,s) \\ ~> (S_2,A_2) \end{matrix}
 	~\land~
 	\exists R_2.
 		\left(\begin{matrix}
@@ -887,8 +887,8 @@ By induction on the syntax of the term $t$.
 	without loss of generality, as follows: \vspace*{-2em}
 	\begin{singlespace}
 	\begin{align*}
-	\inference{S_2'(S_1\Gamma) |-s s : A' -> B'}{
-	\begin{matrix} W(\Gamma,s)  \\~> (S_1,A_1) \end{matrix}
+	\inference{S_2'(S_1\Gamma) |-s t : A' -> B'}{
+	\begin{matrix} W(\Gamma,t)  \\~> (S_1,A_1) \end{matrix}
 	~\land~ \exists R_1.
 	\left(\begin{matrix}
 		S_2'(S_1\Gamma)=R_1(S_1\Gamma) ~~\land\\
@@ -904,8 +904,8 @@ By induction on the syntax of the term $t$.
 	\vspace*{-2em}
 	\begin{singlespace}
 	\begin{align*}
-	\inference{S_2'(S_1\Gamma) |-s s : A' -> B'}{
-	\begin{matrix} W(\Gamma,s)  \\~> (S_1,A_1) \end{matrix}
+	\inference{S_2'(S_1\Gamma) |-s t : A' -> B'}{
+	\begin{matrix} W(\Gamma,t)  \\~> (S_1,A_1) \end{matrix}
 	~\land~
 	\left(\begin{matrix}
 		S_2'(S_1\Gamma)=S_2'(S_1\Gamma) ~~\land\\
@@ -917,13 +917,19 @@ By induction on the syntax of the term $t$.
 	Removing the trivial equation $S_2'(S_1\Gamma)=S_2'(S_1\Gamma)$
 	from above, we have
 	\[
-	\inference{ S_2'(S_1\Gamma) |-s s : A' -> B' }{
-	W(\Gamma,s) ~> (S_1,A_1) ~\land~
+	\inference{ S_2'(S_1\Gamma) |-s t : A' -> B' }{
+	W(\Gamma,t) ~> (S_1,A_1) ~\land~
 	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A' -> B' }
 	\]
 
-	TODO
-
+	Similarly, from (\ref{WcompleteAppsCase1}), we know that
+	\[
+	\inference{ S_3'(S_2(S_1\Gamma)) |-s s : A'}{
+		W(S_1\Gamma,s) ~> (S_2,A_2) \land
+		S_3'(\overline{S_2(S_1\Gamma)})A_2))\sqsubseteq A'
+	}
+	\]
+TODO
 
 \item[case]($\<let> x=s \<in> t$)
 	We want to show that \vspace*{-2em}
@@ -1094,420 +1100,5 @@ By induction on the syntax of the term $t$.
 	when $\FV(\Gamma) = \emptyset$.
 \end{proof}
 
-There exists a unification algorithm such that
+TODO cite some unification algorithm papers
 
-
-\subsection{Unification}
-A single substitution
-
-\begin{figure}
-\begin{singlespace}
-\textbf{Unification}
-\[ \unify(A_1,A_2) = U(\{A_1 =?= A_2\}) \]
-\begin{align*}
-U(\{A -> B =?= \iota\}\uplus Q) & ~> \text{fail} \\
-U(\{\iota =?= A -> B\}\uplus Q) & ~> \text{fail} \\
-U(\{\iota =?= \iota\}\uplus Q) & ~> U(Q) \\
-U(\{x =?= x\}\uplus Q) & ~> U(Q) \\
-U(\{A_1 -> B_1 =?= A_2 -> B_2\}\uplus Q)
-	& ~> U(\{A_1 =?= A_2, B_1 =?= B_2\}\uplus Q) \\
-U(\{x =?= y\}\uplus Q) & ~> U(\{y =?= x\}\uplus Q) \<when> x>y \\
-U(\{A =?= y\}\uplus Q) & ~> U(\{y =?= A\}\uplus Q) \\
-                            & \<when> A ~\text{is not a variable} \\
-U(\{x =?= A\}\uplus Q) & ~> \text{fail}~ \<when> x\notin\FV(A) \\
-U(\{x =?= A\}\uplus Q) & ~> U(\{x =?= A\}\uplus Q[A/x]) \\
-			    & \<when> x\in\FV(Q) \\
-U(\{x_1 =?= A_1,\dots,x_n =?= A_n\})
-	& ~> \{x_1\mapsto A_1,\dots,x_n\mapsto A_n\} \\
-	& \<when> x_1,\dots,x_n ~\text{are distinct, and,} \\
-	& \qquad\quad x_i\notin\FV(A_j) ~\text{for all $i$ and $j$} \\
-\end{align*}
-
-\textbf{Unifier composition}
-\begin{quote}
-Let $S_1$ and $S_2$ be unifiers. That is,\\
-for any $x\in \dom(S_1)$, $x$ does not occur in range of $S_2$, and,\\
-for any $x\in \dom(S_1)$, $x$ does not occur in range of $S_2$.
-
-Then, the composition of two unifiers $S_1$ and $S_2$ is defined as follows:
-\end{quote}
-\[ S_1 \circ S_2 = U(\{ x =?= A \mid x\mapsto A \in S_1 \cup S_2 \}) \]
-
-\end{singlespace}
-\caption{The unification algorithm and the composition of unifiers}
-\label{fig:algU}
-\end{figure}
-
-\cite{Robinson65} TODO
-
-\begin{proposition}[unification of identical types] $U(A,A)=\emptyset$
-\label{prop:unifyidentical}
-\end{proposition}
-\begin{proof}
-	%% TODO Easy by induction on the structure of type $A$.
-\end{proof}
-Note, that unification of identical types always suceeds.
-
-\begin{lemma}[substitution composition is idempotent] \label{lem:compident}
-	~\\ \indent
-	$S\circ S = S$ \quad (when $\circ$ succeeds)
-\end{lemma}
-\begin{proof}
-We prove by induction on the size of the substitution $S$.
-The size of $S$ is defined as the size of its domain (\ie, $|S| = |\dom(S)|$).
-
-When $S$ is empty, then it is trivial since
-$\emptyset \circ \emptyset = \emptyset$
-by the first equation of the substitution composition in Figure \ref{fig:algU}.
-
-When $S$ is non-empty, we should apply the third equation
-since the domains of the left- and right-hand side of the composition
-obviously share the same variables. Recall the third equation of
-the substitution composition in Figure \ref{fig:algU}:
-\begin{align*}
-(\{x\mapsto A_1\}\uplus S_1)\circ
-(\{x\mapsto A_2\}\uplus S_2)
-	&= (S_1\circ S_2) \circ (\{x\mapsto S A_1\}\uplus S) \\
-	&\<where> S=U(A_1,A_2)
-\end{align*}
-Note that $\{x\mapsto A_1\}\uplus S_1 = \{x\mapsto A_2\}\uplus S_2$ in our case.
-So, is easy to see that $A_1=A_2$ and $S_1=S_2$ Let us give a new name $S'$
-for the substitutions $S_1$ and $S_2$ (\ie, $S'=S_1=S_2$) and a new name $A$
-for the two types $A_1$ and $A_2$ (\ie, $A=A_1=A_2$).
-By Proposition \ref{prop:unifyidentical}, we know that $S=\emptyset$
-and $A=A_1=A_2$ in the above equation.  And, by induction,
-we know that $S'\circ S' = S'$ (when composition succeeds).
-Using what we know, we can simplify the above equation as follows:
-\begin{align*}
-(\{x\mapsto A\}\uplus S')\circ
-(\{x\mapsto A\}\uplus S') &= S'\circ S' \circ \{x\mapsto A\} \\
-			  &= S' \circ \{x\mapsto A\} \\
-			  &= S' \uplus \{x\mapsto A\} \\
-			  &= \{x\mapsto A\} \uplus S'
-\end{align*}
-The last two steps of the above simplification rely on the fact that
-$x\notin\dom(S')$ (thus, using the second equation of $\circ$)
-and $\uplus$ is commutative.
-
-Therefore, $S\circ S = S$ (when composition succeeds).
-\end{proof}
-
-\begin{proposition}[composition of identical well-formed substitutions succeds]
-	\label{prop:compident}
-\begin{quote} $S \circ S$ suceeds when $S$ is well-formed \end{quote}
-\end{proposition}
-\begin{proof}
-As discussed in the proof of the previous lemma,
-the computation of $S \circ S$ will only involve
-the first and thrid equations of the defintion of $\circ$.
-The only source of possible failure is in the third equation calling on $U$.
-However, we know that $U$ always suceeds when unifying identical types
-(Proposition \ref{prop:unifyidentical}).
-\end{proof}
-
-From now on, $S_1 \circ S_2 = S$ means that the composition succeeds and
-returns $S$. Similarly, $U(A_1,A_2)=S$ means that the unification succeeds
-and returns $S$.
-
-\begin{theorem}[substitution composition is idempotent] ~
-	\begin{quote} $S\circ S = S$ for any well-formed $S$ \end{quote}
-\end{theorem}
-\begin{proof}
-	By Lemma \ref{lem:compident} and Proposition \ref{prop:compident}.
-\end{proof}
-
-\begin{theorem}[unification is commutative] $ U(A_1,A_2) = U(A_2,A_1) $
-	\label{thm:commU}
-\end{theorem}
-\begin{proof} Easy by induction on the structure of $A_1$ and $A_2$.
-
-The base cases (\ie, $U(\iota,\iota)$, $U(x,x)$, $U(x_1,x_2)$,
-			$U(x_1,A_2)$, $U(A_1,x_2)$) are trivial.
-
-In the inductive case $U(A_1 -> B_1, A_2 -> B_2)$, we know that
-$U(A_1,A_2) = U(A_2,A_1)$ and $U(B_1,A_2) = U(B_2,B_1)$ by induction.
-Therefore,
-\begin{align*}
-U(A_1 -> B_1, A_2 -> B_2)
-	&= U(A_1,A_2) \circ U(B_1,B_2) \\
-	&= U(A_2,A_1) \circ U(B_2,B_1) = U(A_2 -> B_2, A_1 -> B_1)
-\end{align*}
-\end{proof}
-TODO have we proved that both sides fail at the same time in the inductive case?
-
-
-
-A substitution is well-formed when no variables of its domain
-occurs in its range (\ie, $\dom(S)\cap\FV(\ran(S))=\emptyset$).
-
-\begin{proposition}[substitution composition preserves well-formedness] ~
-\begin{quote}
-	Let $S_1$ and $S_2$ be well-formed substitutions.\\
-	If $S_1\circ S_2=S$ then $S$ is also well-formed.
-\end{quote}
-\end{proposition}
-\begin{proof}
-	TODO
-\end{proof}
-
-\begin{proposition}[$U$ produces well-formed substitutions] ~
-\begin{quote}
-	If $U(A_1,A_2)=S$ then $S$ is well-formed.
-\end{quote}
-\end{proposition}
-\begin{proof}
-	TODO
-\end{proof}
-
-\begin{lemma}
-Let $S$, $\{x\mapsto A'\}$, and $\{x\mapsto A\}$ be well-formed substitutions.
-	\[ (S \circ \{x\mapsto A'\}) \circ \{x\mapsto A\} =
-	S \circ (\{x\mapsto A'\} \circ \{x\mapsto A\}) \]
-\end{lemma}
-\begin{proof}
-TODO
-\end{proof}
-
-\begin{lemma} \label{lem:assocsinglesubst}
-Let $S_1$, $S_2$, and $\{x\mapsto A\}$ be well-formed substitutions.
-\[ (S_1\circ S_2) \circ \{x\mapsto A\} = S_1 \circ (S_2 \circ \{x\mapsto A\}) \]
-\end{lemma}
-\begin{proof}
-By induction on the size of $S_2$.
-
-When $S_2=\emptyset$, trivial.
-
-When $S_2$ is non-empty.
-
-If $x\notin \dom(S_2)$, let $S_2=\{x'\mapsto A'\}\uplus S_2'$.
-\begin{align*}
- &~ (S_1\circ S_2) \circ \{x\mapsto A\} \\
-=&~ (S_1\circ(\{x'\mapsto A'\}\uplus S_2')) \circ \{x\mapsto A\} \\
-=&~ (S_1\circ(S_2'\uplus\{x'\mapsto A'\})) \circ \{x\mapsto A\} \\
-=&~ (S_1\circ(S_2'\circ\{x'\mapsto A'\})) \circ \{x\mapsto A\} \\
-=&~ ((S_1\circ S_2')\circ\{x'\mapsto A'\}) \circ \{x\mapsto A\}
-	& \text{by induction} \\
-=&~ (S_1\circ S_2')\circ(\{x'\mapsto A'\} \circ \{x\mapsto A\})
-	& \text{by Lemma TODO} \\
-=&~ TODO \\
-=&~ S_1 \circ (S_2'\circ (\{x'\mapsto A'\} \circ \{x\mapsto A\})) \\
-=&~ S_1 \circ ((S_2'\circ \{x'\mapsto A'\}) \circ \{x\mapsto A\}) \\
-=&~ S_1 \circ ((S_2'\uplus \{x'\mapsto A'\}) \circ \{x\mapsto A\}) \\
-=&~ S_1 \circ ((\{x'\mapsto A'\}\uplus S_2') \circ \{x\mapsto A\}) \\
-=&~ S_1 \circ (S_2 \circ \{x\mapsto A\})
-\end{align*}
-
-
-If $x\in \dom(S_2)$, let $S_2=\{x\mapsto A'\}\uplus S_2'$.
-\begin{align*}
- &~ (S_1\circ S_2) \circ \{x\mapsto A\} \\
-=&~ (S_1\circ(\{x\mapsto A'\}\uplus S_2')) \circ \{x\mapsto A\} \\
-=&~ (S_1\circ(S_2'\uplus\{x\mapsto A'\})) \circ \{x\mapsto A\} \\
-=&~ (S_1\circ(S_2'\circ\{x\mapsto A'\})) \circ \{x\mapsto A\} \\
-=&~ ((S_1\circ S_2')\circ\{x\mapsto A'\}) \circ \{x\mapsto A\}
-	& \text{by induction} \\
-=&~ (S_1\circ S_2')\circ(\{x\mapsto A'\} \circ \{x\mapsto A\})
-	& \text{by Lemma \ref{TODO}} \\
-=&~ (S_1\circ S_2')\circ \{x\mapsto A''\} \\
-=&~ S_1 \circ (S_2'\circ \{x\mapsto A''\} )
-	& \text{by induction} \\
-=&~ S_1 \circ (S_2'\circ (\{x\mapsto A'\} \circ \{x\mapsto A\})) \\
-=&~ S_1 \circ ((S_2'\circ \{x\mapsto A'\}) \circ \{x\mapsto A\})
-	& \text{by Lemma \ref{TODO}} \\
-=&~ S_1 \circ ((S_2'\uplus \{x\mapsto A'\}) \circ \{x\mapsto A\}) \\
-=&~ S_1 \circ ((\{x\mapsto A'\}\uplus S_2') \circ \{x\mapsto A\}) \\
-=&~ S_1 \circ (S_2 \circ \{x\mapsto A\})
-\end{align*}
-
-
-\end{proof}
-
-\begin{theorem}[substitution composition is associative]
-	\[(S_1\circ S_2) \circ S_3 = S_1 \circ (S_2 \circ S_3)
-	\qquad\text{($S_1, S_2, S_3$ are well-formed)}
-	\]
-\end{theorem}
-\begin{proof}
-By induction on the size of $S_3$.
-
-When $S_3=\emptyset$, trivial.
-
-When $S_3$ is non-empty, let $S_3=\{x\mapsto A\}\uplus S_3'$.
-\begin{align*}
-(S_1\circ S_2) \circ S_3
-	&= (S_1\circ S_2) \circ (\{x\mapsto A\}\uplus S_3') \\
-	&= (S_1\circ S_2) \circ (\{x\mapsto A\} \circ S_3') \\
-	&= ((S_1\circ S_2) \circ \{x\mapsto A\}) \circ S_3'
-	& \text{by induction} \\
-	&= (S_1\circ(S_2 \circ \{x\mapsto A\})) \circ S_3'
-	& \text{by Lemma \ref{lem:assocsinglesubst}} \\
-	&= S_1\circ((S_2 \circ \{x\mapsto A\}) \circ S_3')
-	& \text{by induction} \\
-	&= S_1\circ(S_2 \circ(\{x\mapsto A\} \circ S_3'))
-	& \text{by induction} \\
-	&= S_1 \circ (S_2 \circ S_3)
-\end{align*}
-\end{proof}
-
-
-\begin{lemma}\label{lem:commsinglesinglesubst}
-$ \{x\mapsto A\}\circ\{x'\mapsto A'\} = \{x'\mapsto A'\}\circ\{x\mapsto A\} $
-\end{lemma}
-\begin{proof}
-When either $\{x\mapsto A\}$ or $\{x'\mapsto A'\}$ is not well-formed,
-\ie, either $x$ occurs in $A$ or $x'$ occurs in $A'$,
-both sides of the equation above fail. The failure will rise from
-the occurs check on a single substitution on types (Figure \ref{fig:algU}).
-It is easy to check this proceeding by the second equation of $\circ$
-for each side. We leave this as an exercise to the reader.
-
-When $x$ occurs in $A'$ and $x'$ occurs $A$ at the same time,
-both sides of the equation above fail as well. The failure will rise from
-the occurs check on a single substitution on types (Figure \ref{fig:algU}).
-It is easy to check this proceeding by the second equation of $\circ$.
-We leave this as an exercise to the reader.
-
-When neither $x$ nor $x'$ occur in $A$ and $A'$, it is easy to see
-that this lemma holds, by using the second equation of $\circ$.
-\begin{align*}
-\{x\mapsto A\}\circ\{x'\mapsto A'\}
-&= \{x\mapsto A[\{x\mapsto A\} A'/x']\}\uplus\{x'\mapsto\{x\mapsto A\} A'\} \\
-&= \{x\mapsto A\}\uplus\{x'\mapsto A'\} \\
-&= \{x\mapsto A'\}\uplus\{x\mapsto A\} \\
-&= \{x'\mapsto A'[\{x'\mapsto A'\}A/x]\}\uplus\{x\mapsto\{x'\mapsto A'\}A\} \\
-&= \{x'\mapsto A'\}\circ\{x\mapsto A\}
-\end{align*}
-
-The other two cases to consider are:
-\begin{itemize}
-\item[(1)] $x$ occurs in $A'$ but $x'$ does not occur in $A$
-\begin{align*}
-\{x\mapsto A\}\circ\{x'\mapsto A'\}
-&= \{x\mapsto A[\{x\mapsto A\} A'/x']\}\uplus\{x'\mapsto\{x\mapsto A\} A'\} \\
-&= \{x\mapsto A\}\uplus\{x'\mapsto A'[A/x]\} \\
-&= \{x'\mapsto A'[A/x]\}\uplus\{x\mapsto A\} \\
-&= \{x'\mapsto A'[\{x'\mapsto A'\}A/x]\}\uplus\{x\mapsto\{x'\mapsto A'\}A\} \\
-&= \{x'\mapsto A'\}\circ\{x\mapsto A\}
-\end{align*}
-\item[(2)] $x'$ occurs in $A$ but $x$ does not occur in $A'$
-\begin{align*}
-\{x\mapsto A\}\circ\{x'\mapsto A'\}
-&= \{x\mapsto A[\{x\mapsto A\} A'/x']\}\uplus\{x'\mapsto\{x\mapsto A\} A'\} \\
-&= \{x\mapsto A[A'/x']\}\uplus\{x'\mapsto A'\} \\
-&= \{x'\mapsto A'\}\uplus\{x\mapsto A[A'/x']\} \\
-&= \{x'\mapsto A'[\{x'\mapsto A'\}A/x]\}\uplus\{x\mapsto\{x'\mapsto A'\}A\} \\
-&= \{x'\mapsto A'\}\circ\{x\mapsto A\}
-\end{align*}
-\end{itemize}
-\end{proof}
-
-\begin{lemma}\label{lem:commsingletonsubst}
-	$S \circ \{x\mapsto A\} = \{x\mapsto A\} \circ S
-	\quad (x \notin \dom(S))$
-\end{lemma}
-\begin{proof} By induction on the size of $S$.
-
-When $S=\emptyset$ it holds trivially.
-
-When $S$ is non-empty, that is, let $S=\{x'\mapsto A'\}\uplus S'$,
-\begin{align*}
-S\circ\{x\mapsto A\}
-&= (\{x'\mapsto A'\}\uplus S') \circ \{x\mapsto A\} \\
-&= (\{x'\mapsto A'\}\circ S') \circ \{x\mapsto A\} \\
-&= \{x'\mapsto A'\} \circ (S' \circ \{x\mapsto A\})
-& \text{by associativity of $\circ$} \\
-&= \{x'\mapsto A'\} \circ (\{x\mapsto A\} \circ S')
-& \text{by induction} \\
-&= (\{x'\mapsto A'\} \circ \{x\mapsto A\}) \circ S'
-& \text{by associativity of $\circ$} \\
-&= (\{x\mapsto A\} \circ \{x'\mapsto A\}') \circ S'
-& \text{by Lemma \ref{lem:commsinglesinglesubst}} \\
-&= \{x\mapsto A\} \circ (\{x'\mapsto A\}' \circ S')
-& \text{by associativity of $\circ$} \\
-&= \{x\mapsto A\} \circ S
-\end{align*}
-\end{proof}
-
-\begin{theorem}[substitution composition is commutative]
-\[ S_1\circ S_2 = S_2\circ S_1 \qquad\text{($S_1$ and $S_2$ are well-formed)} \]
-\end{theorem}
-\begin{proof}
-By induction on the size of $S_2$.
-
-When $S_2=\emptyset$ it holds trivially.
-
-When $S_2$ is non-empty, let $S_2=\{x\mapsto A_2\}\uplus S_2'$,
-\begin{align*}
-S_1 \circ S_2
-	&= S_1 \circ (\{x\mapsto A_2\}\uplus S_2') \\
-	&= S_1 \circ (\{x\mapsto A_2\}\circ S_2') \\
-	&= (S_1 \circ \{x\mapsto A_2\}) \circ S_2'
-	& \text{by associativity of $\circ$} \\
-	&= (\{x\mapsto A_2\}\circ S_1) \circ S_2'
-	& \text{by Lemma \ref{lem:commsingletonsubst}} \\
-	&= \{x\mapsto A_2\}\circ (S_1 \circ S_2')
-	& \text{by associativity of $\circ$} \\
-	&= \{x\mapsto A_2\}\circ (S_2' \circ S_1)
-	& \text{by induction} \\
-	&= (\{x\mapsto A_2\}\circ S_2') \circ S_1
-	& \text{by associativity of $\circ$} \\
-	&= (\{x\mapsto A_2\}\uplus S_2') \circ S_1 \\
-	&= S_2 \circ S_1
-\end{align*}
-\end{proof}
-
-\begin{lemma} $(S \circ S') A = (S \circ S')(S' A)$
-	\label{lem:dupsubstR}
-\end{lemma}
-\begin{proof}
-	TODO
-\end{proof}
-
-\begin{lemma} $(S \circ S') A = (S \circ S')(S A)$
-	\label{lem:dupsubstL}
-\end{lemma}
-\begin{proof}
-	TODO
-\end{proof}
-
-
-\begin{theorem}[$U$ is sound] \label{prop:soundU}
-$ \inference{U(A_1,A_2)=S}{S A_1 = S A_2} $
-\end{theorem}
-\begin{proof}
-By induction on the structure of $A_1$ and $A_2$.
-%% By induction on the computation of $U$.
-%% Since we assume $U(A_1,A_2)=S$, that is, $U$ succeeds and returns $S$,
-%% we know that the computation of $U(A_1,A_2)$ is finite.
-%% Therefore, we can induct on the computation of $U$.
-
-The base cases (\ie, $U(\iota,\iota)$, $U(x,x)$, $U(x_1,x_2)$,
-			$U(x_1,A_2)$, $U(A_1,x_2)$) are trivial.
-
-In the inductive case $U(A_1 -> B_1, A_2 -> B_2)$, we know that
-\[ \inference{U(A_1,A_2)=S' }{S'  A_1 = S'  A_2} ~\text{and}~
-   \inference{U(B_1,B_2)=S''}{S'' B_1 = S'' B_2} ~\text{by induction.}
-\]
-Then, $U(A_1 -> B_1, A_2 -> B_2)=S'\circ S''$ by definition.
-\begin{align*}
- &~(S'\circ S'')(A_1 -> B_1) \\
-=&~ (S'\circ S'') A_1 -> (S'\circ S'') B_1 \\
-=&~ (S'\circ S'')(S' A_1) -> (S'\circ S'')(S'' B_1)
- & \text{by Lemma \ref{lem:dupsubstR} and Lemma \ref{lem:dupsubstL}} \\
-=&~ (S'\circ S'')(S' A_2) -> (S'\circ S'')(S'' B_2)
- & \text{by what we know from induction} \\
-=&~ (S'\circ S'') A_2 -> (S'\circ S'') B_2
- & \text{by Lemma \ref{lem:dupsubstR} and Lemma \ref{lem:dupsubstL}} \\
-=&~ (S'\circ S'')(A_2 -> B_2)
-\end{align*}
-Therefore, $U(A_1 -> B_1, A_2 -> B_2)=S'\circ S''$ is a unifier.
-\end{proof}
-
-\begin{theorem}[$U$ is complete] \label{prop:completeU}
-$ \inference{S A_1 = S A_2}{\exists S'.\, U(A_1,A_2)\circ S' = S} $
-\end{theorem}
-\begin{proof}
-	TODO
-\end{proof}
-
-\end{comment}
