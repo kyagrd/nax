@@ -899,7 +899,6 @@ By induction on the syntax of the term $t$.
 	\end{singlespace}
 	From $S_2'(S_1\Gamma)=R_1(S_1\Gamma)$, $R_1$ must be a substitution
 	equivalent to $S_2'$ for all free type variables of $S_1\Gamma$.
-	By definition, $\FV(\overline{S_1\Gamma}(A_1))\subseteq\FV(S_1\Gamma)$.
 	So, we can choose $R_1=S_2'$ without loss of generality, as follows:
 	\vspace*{-2em}
 	\begin{singlespace}
@@ -916,20 +915,30 @@ By induction on the syntax of the term $t$.
 	\end{singlespace}
 	Removing the trivial equation $S_2'(S_1\Gamma)=S_2'(S_1\Gamma)$
 	from above, we have
-	\[
+	\begin{equation}
 	\inference{ S_2'(S_1\Gamma) |-s t : A' -> B' }{
 	W(\Gamma,t) ~> (S_1,A_1) ~\land~
 	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A' -> B' }
-	\]
+	\label{WcompleteAppsCase1'}
+	\end{equation}
 
 	Similarly, from (\ref{WcompleteAppsCase1}), we know that
-	\[
+	\begin{equation}
 	\inference{ S_3'(S_2(S_1\Gamma)) |-s s : A'}{
 		W(S_1\Gamma,s) ~> (S_2,A_2) \land
-		S_3'(\overline{S_2(S_1\Gamma)})A_2))\sqsubseteq A'
-	}
-	\]
-TODO
+		S_3'(\overline{S_2(S_1\Gamma)})A_2))\sqsubseteq A' }
+	\label{WcompleteAppsCase2'}
+	\end{equation}
+
+	Choose $S_3'=S'''\circ S_3$, $S_2' = S'''\circ S_3 \circ S_2$, and TODO
+
+%%	Using Propositions \ref{prop:substvdashs} and \ref{prop:substclosure}
+%%	on \ref{WcompleteAppsCase1'},
+%%	\[
+%%		\inference{ S_2(S_1\Gamma) |-s t : S_2 A' -> S_2 B' }{
+%%	W(\Gamma,t) ~> (S_1,A_1) ~\land~
+%%	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq S_2 A' -> S_2 B' }
+%%	\]
 
 \item[case]($\<let> x=s \<in> t$)
 	We want to show that \vspace*{-2em}
@@ -990,7 +999,6 @@ TODO
 
 	From $S_2'(S_1\Gamma)=R_1(S_1\Gamma)$, $R_1$ must be a substitution
 	equivalent to $S_2'$ for all free type variables of $S_1\Gamma$.
-	By definition, $\FV(\overline{S_1\Gamma}(A_1))\subseteq\FV(S_1\Gamma)$.
 	So, we can choose $R_1=S_2'$ without loss of generality, as follows:
 	\vspace*{-2em}
 	\begin{singlespace}
