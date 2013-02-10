@@ -126,7 +126,7 @@ is a shorthand for $\forall X_1.\forall X_2.\forall X_3.A$.
 Two type schemes $\sigma$ and $\sigma'$ are equivalent
 when $\sigma \sqsubseteq \sigma'$ and $\sigma' \sqsubseteq \sigma$.
 This coincides with $\alpha$-equivalence (\eg, $\forall X.X -> X$ is
-equivalent to $\forall X'. X' -> X$). In fact, we can derive
+equivalent to $\forall X'. X' -> X'$). In fact, we can derive
 $\alpha$-equivalence as a special case of the type scheme ordering rule,
 where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
 
@@ -728,7 +728,8 @@ $ \inference{\Gamma |-s \<let> x=s \<in> t : B}{
 
 
 \begin{theorem}[Completeness of $W$] \label{thm:completeW}
-~\\ $~$ $~$ For any $\Gamma$ and $t$, there exist $S'$ and $A'$ such that
+~\\ $~$ $~$ For any $\Gamma$ and $t$,
+there exist $S'$, where $\dom(S')\subseteq\FV(\Gamma)$, and $A'$ such that
 \[ \inference{ S'\Gamma |-s t : A' }{
 	W(\Gamma,t) ~> (S,A_W) ~\land~
 	\exists R . \left(
@@ -899,6 +900,9 @@ By induction on the syntax of the term $t$.
 	\end{singlespace}
 	From $S_2'(S_1\Gamma)=R_1(S_1\Gamma)$, $R_1$ must be a substitution
 	equivalent to $S_2'$ for all free type variables of $S_1\Gamma$.
+	That is, $\dom(S_2')\subseteq\dom(R_1)$ and $S_2'X = R_1 X$ for
+	any $X\in\dom(S_2')$. Note that $S_2'(\overline{S_1\Gamma}(A_1))
+	\sqsubseteq R_1(\overline{S_1\Gamma}(A_1))$.
 	So, we can choose $R_1=S_2'$ without loss of generality, as follows:
 	\vspace*{-2em}
 	\begin{singlespace}
@@ -931,6 +935,17 @@ By induction on the syntax of the term $t$.
 	\end{equation}
 
 	Choose $S_3'=S'''\circ S_3$, $S_2' = S'''\circ S_3 \circ S_2$, and TODO
+
+	$(S'''\circ S_3\circ S_2)(\overline{S_1\Gamma}(A_1)) \sqsubseteq A' -> B'$
+
+	$S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3(S_2 A_1))) \sqsubseteq A' -> B'$
+	by Proposition \ref{prop:substclosure}
+
+	$(S'''\circ S_3)(\overline{S_2(S_1\Gamma)}(A_2)) \sqsubseteq A'$
+
+	$S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2))) \sqsubseteq A'$
+	by Proposition \ref{prop:substclosure}
+
 
 %%	Using Propositions \ref{prop:substvdashs} and \ref{prop:substclosure}
 %%	on \ref{WcompleteAppsCase1'},
@@ -999,6 +1014,9 @@ By induction on the syntax of the term $t$.
 
 	From $S_2'(S_1\Gamma)=R_1(S_1\Gamma)$, $R_1$ must be a substitution
 	equivalent to $S_2'$ for all free type variables of $S_1\Gamma$.
+	That is, $\dom(S_2')\subseteq\dom(R_1)$ and $S_2'X = R_1 X$ for
+	any $X\in\dom(S_2')$. Note that $S_2'(\overline{S_1\Gamma}(A_1))
+	\sqsubseteq R_1(\overline{S_1\Gamma}(A_1))$.
 	So, we can choose $R_1=S_2'$ without loss of generality, as follows:
 	\vspace*{-2em}
 	\begin{singlespace}
