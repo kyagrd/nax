@@ -610,6 +610,8 @@ there exists a substitution $R$ such that $S' = R\circ S$ and
 $\dom(R)\subseteq\dom(S)$. The composition of substitution is defined
 as $(S_2\circ S_1)A = S_2(S_1(A))$.
 
+TODO cite some unification algorithm papers
+
 \begin{figure}
 \begin{singlespace}
 \[ \inference[\sc Var$_W$]
@@ -738,7 +740,7 @@ there exist $S'$, where $\dom(S')\subseteq\FV(\Gamma)$, and $A'$ such that
 \]
 \end{theorem}
 \begin{proof}
-By induction on the syntax of the term $t$.
+By induction on recursive call step of the algorithm $W$.
 \begin{itemize}
 \item[case]($x$)
 	From the \rulename{Var$_s$} rule, we know that
@@ -843,7 +845,8 @@ By induction on the syntax of the term $t$.
 	without loss of generality. Then, what we want to show is
 	\vspace*{-2em}
 	\begin{singlespace}
-	\[\inference{S''((S_3\circ S_2\circ S_1)\Gamma) |-s t\;s : B'}{
+	\begin{equation}
+	\inference{S''((S_3\circ S_2\circ S_1)\Gamma) |-s t\;s : B'}{
 	\begin{matrix} W(\Gamma,t\;s) ~\qquad~ \\
 		~> (S_3\circ S_2\circ S_1,S_3 X) \end{matrix}
 	~\land~
@@ -852,32 +855,34 @@ By induction on the syntax of the term $t$.
 		S''((S_3\circ S_2\circ S_1)\Gamma)=R((S_3\circ S_2\circ S_1)\Gamma)
 		\\ \land ~~
 		R(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X)) \sqsubseteq B'
-	\end{matrix}\right) } \]
+	\end{matrix}\right) }
+	\label{WcompleteWhatWeWantToShow}
+	\end{equation}
 	\end{singlespace}
 
-	By induction, we know that \vspace*{-2em}
+	By induction and (\rulename{App$_s$}), we know that \vspace*{-2em}
 	\begin{singlespace}
 	\begin{align}
 	\label{WcompleteAppsCase1}
-	\inference{S_1'\Gamma |-s t : A' -> B'}{
+	\inference{S_1'\Gamma |-s t : A_t}{
 	\begin{matrix} W(\Gamma,t) \\ ~> (S_1,A_1) \end{matrix}
 	~\land~ 
 	\exists R_1.
 		\left(\begin{matrix}
 			S_1'\Gamma=R_1(S_1\Gamma) ~~\land\\
 			R_1(\overline{S_1\Gamma}(A_1))
-			\sqsubseteq A' -> B'
+			\sqsubseteq A_t
 		\end{matrix}\right) }
 	\\
 	\label{WcompleteAppsCase2}
-	\inference{S_2'(S_1\Gamma) |-s s : A'}{
+	\inference{S_2'(S_1\Gamma) |-s s : A_s}{
 	\begin{matrix} W(S_1\Gamma,s) \\ ~> (S_2,A_2) \end{matrix}
 	~\land~
 	\exists R_2.
 		\left(\begin{matrix}
 			S_2'(S_1\Gamma)=R_2(S_2(S_1\Gamma)) ~~\land\\
 			R_2(\overline{S_2(S_1\Gamma)}(A_2))
-			\sqsubseteq A'
+			\sqsubseteq A_s
 		\end{matrix}\right) }
 	\end{align}
 	\end{singlespace}
@@ -888,13 +893,13 @@ By induction on the syntax of the term $t$.
 	without loss of generality, as follows: \vspace*{-2em}
 	\begin{singlespace}
 	\begin{align*}
-	\inference{S_2'(S_1\Gamma) |-s t : A' -> B'}{
+	\inference{S_2'(S_1\Gamma) |-s t : A_t}{
 	\begin{matrix} W(\Gamma,t)  \\~> (S_1,A_1) \end{matrix}
 	~\land~ \exists R_1.
 	\left(\begin{matrix}
 		S_2'(S_1\Gamma)=R_1(S_1\Gamma) ~~\land\\
 		R_1(\overline{S_1\Gamma}(A_1))
-		\sqsubseteq A' -> B'
+		\sqsubseteq A_t
 	\end{matrix}\right) }
 	\end{align*}
 	\end{singlespace}
@@ -907,53 +912,105 @@ By induction on the syntax of the term $t$.
 	\vspace*{-2em}
 	\begin{singlespace}
 	\begin{align*}
-	\inference{S_2'(S_1\Gamma) |-s t : A' -> B'}{
+	\inference{S_2'(S_1\Gamma) |-s t : A_t}{
 	\begin{matrix} W(\Gamma,t)  \\~> (S_1,A_1) \end{matrix}
 	~\land~
 	\left(\begin{matrix}
 		S_2'(S_1\Gamma)=S_2'(S_1\Gamma) ~~\land\\
 		S_2'(\overline{S_1\Gamma}(A_1))
-		\sqsubseteq A' -> B'
+		\sqsubseteq A_t
 	\end{matrix}\right) }
 	\end{align*}
 	\end{singlespace}
 	Removing the trivial equation $S_2'(S_1\Gamma)=S_2'(S_1\Gamma)$
 	from above, we have
 	\begin{equation}
-	\inference{ S_2'(S_1\Gamma) |-s t : A' -> B' }{
+	\inference{ S_2'(S_1\Gamma) |-s t : A_t }{
 	W(\Gamma,t) ~> (S_1,A_1) ~\land~
-	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A' -> B' }
+	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_t }
 	\label{WcompleteAppsCase1'}
 	\end{equation}
 
 	Similarly, from (\ref{WcompleteAppsCase1}), we know that
 	\begin{equation}
-	\inference{ S_3'(S_2(S_1\Gamma)) |-s s : A'}{
+	\inference{ S_3'(S_2(S_1\Gamma)) |-s s : A_s}{
 		W(S_1\Gamma,s) ~> (S_2,A_2) \land
-		S_3'(\overline{S_2(S_1\Gamma)})A_2))\sqsubseteq A' }
+		S_3'(\overline{S_2(S_1\Gamma)})A_2))\sqsubseteq A_s }
 	\label{WcompleteAppsCase2'}
 	\end{equation}
 
-	Choose $S_3'=S'''\circ S_3$, $S_2' = S'''\circ S_3 \circ S_2$, and TODO
+	Choose $S_3'=S'''\circ S_3$, $S_2' = S'''\circ S_3 \circ S_2$.
+	Then, by the syntax drived typing rule (\rulename{App$_s$}),
+	$A_t = A_s -> B'$. Thus, the premises of (\ref{WcompleteAppsCase1'})
+	and (\ref{WcompleteAppsCase2'}) are sufficient to assume the premise
+	of what we want to prove, by Proposition \ref{prop:Appsrev}.
+	Note that left-hand sides of the logical conjuctions in the conclusions,
+	$W(\Gamma,t) ~> (S_1,A_1)$ and $W(S_1\Gamma,s) ~> (S_2,A_2)$, cocincides
+	with the recursive call in the $W$ algorithm (\rulename{App$_W$}),
+	since we are proving by induction on the recursive call step of
+	the algorithm $W$. All we need to check is that the right-hand sides
+	of ($\land$) in the conclusions of (\ref{WcompleteAppsCase1'}) and
+	(\ref{WcompleteAppsCase2'}) are neccessary conditions for
+	the right-hand side of ($\land$) in the conclusion of
+	what we want to prove.
 
-	$(S'''\circ S_3\circ S_2)(\overline{S_1\Gamma}(A_1)) \sqsubseteq A' -> B'$
+	Consider the right-hand side of $(\land$) in
+	the conclusion of (\ref{WcompleteAppsCase1'}), replacing $S_2'$ with
+	our choice of $S_2' = S'''\circ S_3\circ S_2$:
+	\[ (S'''\circ S_3\circ S_2)(\overline{S_1\Gamma}(A_1))
+	\sqsubseteq A_s -> B' \]
+	We can replace $A_1$ in terms of $A_2$ and $X$ as follows:
+	\begin{align*}
+	  & (S'''\circ S_3\circ S_2)(\overline{S_1\Gamma}(A_1))
+		\\
+	=~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3(S_2 A_1)))
+	&\quad& \text{by Proposition \ref{prop:substclosure}}
+	\\
+	=~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2 -> S_3 X))
+	&\quad& \text{by the unification used in (\rulename{App$_W$})}
+	\\
+	=~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2 -> S_3 X)) \\
+	=~& S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2 -> S_3 X))
+	&\quad& \quad\sqsubseteq\quad A_s -> B'
+	\end{align*}
+	Since closure operation and substitutions distribute over ($->$),
+	we have
+	\begin{equation}
+		S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2)) \sqsubseteq A_s
+		\;\land\;
+		S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 X) \sqsubseteq B'
+		\label{WcompleteAppsAlmostWhatWeWant}
+	\end{equation}
 
-	$S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3(S_2 A_1))) \sqsubseteq A' -> B'$
-	by Proposition \ref{prop:substclosure}
+	Consider the right-hand side of $(\land$) in
+	the conclusion of (\ref{WcompleteAppsCase2'}):
+	\begin{align*}
+	  & (S'''\circ S_3)(\overline{S_2(S_1\Gamma)}(A_2))
+		\\
+	=~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2)))
+	&& \text{by Proposition \ref{prop:substclosure}}
+		\\
+	=~& S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2))
+		&& \quad\sqsubseteq\quad A_s
+	\end{align*}
+	Note that above is exaclty the same as the left-hand side of ($\land$)
+	in \ref{WcompleteAppsAlmostWhatWeWant}, which is expected due to
+	the nature the unification.
 
-	$(S'''\circ S_3)(\overline{S_2(S_1\Gamma)}(A_2)) \sqsubseteq A'$
-
-	$S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2))) \sqsubseteq A'$
-	by Proposition \ref{prop:substclosure}
-
-
-%%	Using Propositions \ref{prop:substvdashs} and \ref{prop:substclosure}
-%%	on \ref{WcompleteAppsCase1'},
-%%	\[
-%%		\inference{ S_2(S_1\Gamma) |-s t : S_2 A' -> S_2 B' }{
-%%	W(\Gamma,t) ~> (S_1,A_1) ~\land~
-%%	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq S_2 A' -> S_2 B' }
-%%	\]
+	We are done by choosing $S''=S'''$ and $R=S'''$
+	in what we want to show (\ref{WcompleteWhatWeWantToShow}).
+	Consider the right-hand side of $(\land)$ in the conclusion,
+	replacing both $S''$ and $R$ with $S'''$:
+	\[
+	\left(\begin{matrix}
+		S'''((S_3\circ S_2\circ S_1)\Gamma)=S'''((S_3\circ S_2\circ S_1)\Gamma)
+		\\ \land ~~
+		S'''(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X)) \sqsubseteq B'
+	\end{matrix}\right)
+	\]
+	Note that left-hand side of ($\land$) is trivially true and
+	the right-hand side exactly matches the right-hand side of
+	(\ref{WcompleteAppsAlmostWhatWeWant}).
 
 \item[case]($\<let> x=s \<in> t$)
 	We want to show that \vspace*{-2em}
@@ -1125,6 +1182,4 @@ By induction on the syntax of the term $t$.
 	$S'\Gamma = \Gamma$ for any $S'$
 	when $\FV(\Gamma) = \emptyset$.
 \end{proof}
-
-TODO cite some unification algorithm papers
 
