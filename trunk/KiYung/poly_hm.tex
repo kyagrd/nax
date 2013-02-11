@@ -1,21 +1,22 @@
 \section{The Hindley-Milner type system} \label{sec:hm}
 
-\citet{Hindley69} demonstrated that there exists a unique principal type scheme
+\citet{Hindley69} demonstrated the existence of a unique principal type scheme
 for every object in a combinatory logic. \citet{Milner78} rediscovered this fact
 in the setting of a polymorphic lambda calculus. He was devising
 an algorithm, called algorithm $W$, which infers a most general
 type scheme (\aka\ principal type scheme) for a Curry-style lambda term.
-\citet{Damas85} published detailed theories about Milner's polymorphic
+\citet{Damas85} (a student of Milner) published detailed theories about Milner's polymorphic
 lambda calculus and the type inference algorithm $W$. This type system
 for Milner's polymorphic lambda calculus \cite{Milner78,DamMil82,Damas85}
 is also known as the Hindley-Milner type system (HM),
 the Damas-Hindley-Milner type system (DHM), or let-polymorphism.
 
-The syntax of Milner's polymorphic lambda calculus and its the typing rules
-are illustrated in Figure \ref{fig:hm}, and the type inference algorithm $W$
-is illustrated in Figure \ref{fig:algW}. We describe the syntax of polymorphic lambda calculus in
-\S\ref{sec:hm:syntax}, its typing rules in \S\ref{sec:hm:dectyrule} and
-\S\ref{sec:hm:syntyrule}, and its type inference algorithm in \S\ref{sec:hm:W}.
+The syntax of Milner's polymorphic lambda calculus and its typing rules
+are illustrated in Figure \ref{fig:hm}. The type inference algorithm $W$
+is illustrated in Figure \ref{fig:algW}. We discuss each of these
+figures separately -- the syntax in
+\S\ref{sec:hm:syntax}, the typing rules in \S\ref{sec:hm:dectyrule} and
+\S\ref{sec:hm:syntyrule}, and the inference algorithm in \S\ref{sec:hm:W}.
 We provide two equivalent sets of typing rules (we prove this in \S\ref{sec:hm:syntyrule}).
 The declarative typing rules (\S\ref{sec:hm:dectyrule}) are suited for
 reasoning about the soundness of typing.
@@ -47,44 +48,44 @@ A,B&~::= ~ A -> B
        ~  | ~ \Gamma, x:\sigma \quad (x\notin \dom(\Gamma))
 \end{align*}
 \[ \textbf{Type scheme ordering (or, generic instantiation)} \quad \framebox{$\sigma \sqsubseteq \sigma'$}\]
-\[ \qquad \inference{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
+\[ \qquad \inference[GenInst]{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
              {\forall X_1\dots X_n.A \;\sqsubseteq\;
-	      \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} \]
+              \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} \]
 $\!\!\!\!\!\!\!\!\!\!$
 \begin{align*}
 &\textbf{Delcarative typing rules}&\quad
 &\textbf{Syntax-directed typing rules}
-	\\
+        \\
 & \qquad\framebox{$\Gamma |- t : \sigma$}
 &
 &~\qquad\framebox{$\Gamma |-s t : A$}
-	\\
+        \\
 & \inference[\sc Var]{x:\sigma \in \Gamma}{\Gamma |- x:\sigma} &
 & \inference[\sc Var$_s$]{x:\sigma \in \Gamma & \sigma \sqsubseteq A}
- 	                 {\Gamma |-s x:A} \\
+                         {\Gamma |-s x:A} \\
 & \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} &
 & \inference[\sc Abs$_s$]{\Gamma,x:A |-s t:B}{\Gamma |-s \l x   .t : A -> B} \\
 & \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}
-		     {\Gamma |- t~s : B} &
+                     {\Gamma |- t~s : B} &
 & \inference[\sc App$_s$]{\Gamma |-s t : A -> B & \Gamma |-s s : A}
-		         {\Gamma |-s t~s : B} \\
+                         {\Gamma |-s t~s : B} \\
 & \inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
-		     {\Gamma |- \<let> x=s \<in> t : B} &
+                     {\Gamma |- \<let> x=s \<in> t : B} &
 & \inference[\sc Let$_s$]
             {\Gamma |-s s : A & \Gamma,x:\overline{\Gamma}(A) |-s t : B}
-	    {\Gamma |-s \<let> x=s \<in> t : B} \\
+            {\Gamma |-s \<let> x=s \<in> t : B} \\
 & \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
-		      {\Gamma |- t : \sigma'} &
+                      {\Gamma |- t : \sigma'} &
 &\quad\qquad \begin{smallmatrix}\overline{\Gamma}(A)=\forall\vec{X}.A&
-			 ~\text{where}~\vec{X}=\FV(A)\setminus\FV(\Gamma)
-		 \end{smallmatrix}
-		 \\
+                         ~\text{where}~\vec{X}=\FV(A)\setminus\FV(\Gamma)
+                 \end{smallmatrix}
+                 \\
 & \inference[\sc Gen]{\Gamma |- t : \sigma}
-		     {\Gamma |- t : \forall X.\sigma} ~ (X \notin\FV(\Gamma))
+                     {\Gamma |- t : \forall X.\sigma} ~ (X \notin\FV(\Gamma))
 \end{align*}
 \end{singlespace}
 \caption{Milner's polymorphic lambda calculus}
-\label{fig:hm}5
+\label{fig:hm}
 \end{figure}
 
 \subsection{Syntax}\label{sec:hm:syntax}
@@ -93,14 +94,14 @@ The syntax of terms include the usual Curry-style terms
 A let term, $\<let> x=s \<in> t$, is semantically equivalent to
 $(\l x.t)\,s$. That is, $\<let> x=s \<in> t$ is a syntactic sugar
 for $(\l x.t)\,s$ when we think about reduction\footnote{The reduction rules for
-	for the terms of HM are exactly the same as the reduction rules for
-	Curry-style terms in the previous sections, once we desugar
-	all the let terms.}.
+        for the terms of HM are exactly the same as the reduction rules for
+        Curry-style terms in the previous sections, once we desugar
+        all the let terms.}.
 However, a let-term ($\<let> x=s \<in> t$) is assigned
 a significantly different type than its sematic equivalent ($(\l x.t)\,s$).
 The typing rules support the introduction of
 a polymorphic type scheme for $x$ into the typing context when typing the let-term's
-body $s$. We will discuss many
+body $t$. We will discuss many
 further details of typing let-terms (the \rulename{Let} rule) when
 we explain the typing rules.
 
@@ -116,7 +117,7 @@ its associated type scheme ($x:\sigma$).
 The ordering between two type schemes $\sigma \sqsubseteq \sigma'$,
 defined in Figure \ref{fig:hm}, means that $\sigma$ is more general
 than or equivalent to $\sigma'$. The ordering relation $\sqsubseteq$
-comes from \citet{DamMil82}, and is also known as generic instantiation:
+comes from \citet{DamMil82}, and is also known as generic instantiation --
 $\sigma'$ is called a generic instance of $\sigma$
 when $\sigma \sqsubseteq \sigma'$. The shorthand notation
 $\forall X_1\dots X_n.A$ stands for consecutive universal quantification
@@ -127,15 +128,12 @@ Two type schemes $\sigma$ and $\sigma'$ are equivalent
 when $\sigma \sqsubseteq \sigma'$ and $\sigma' \sqsubseteq \sigma$.
 This coincides with $\alpha$-equivalence (\eg, $\forall X.X -> X$ is
 equivalent to $\forall X'. X' -> X'$). In fact, we can derive
-$\alpha$-equivalence as a special case of the type scheme ordering rule,
+$\alpha$-equivalence as a special case of the type scheme ordering rule \rulename{GenInst} (Figure \ref{fig:hm}),
 where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
 
 The usual \empty{instantiation} (\ie, substitution of quantified variables
-with types) also falls under the type scheme ordering rule. In other words,
-instantiation is a special case of generic instantiation when only
-substitution of quantified variables
-with concrete types is applied. For example,
-consider an instantiation of $\forall X_1\,X_2.X_1 -> X_2$ below:
+with mono-types) is a special case of generic instantiation. For example,
+consider the instantiations of $\forall X_1\,X_2.X_1 -> X_2$ below:
 \[ (\forall X_1\,X_2.X_1 -> X_2) \sqsubseteq
    (\forall X_2.\iota -> X_2) \sqsubseteq (\iota -> \iota)
 \] 
@@ -144,7 +142,7 @@ and then, instantiate the quantified $X_2$ with $\iota$.
 In such cases of $\sigma\sqsubseteq\sigma'$, we can call $\sigma'$ an instance
 (as well as a generic instance) of $\sigma$. For example, (1) $\iota\to\iota$ is
 an instance of $\forall X_2.\iota\to X_2$ and an instance of $\forall X_1\,X_2.X->X_2$; and (2)
-$\iota\to\iota$ and $\forall X_2.\iota\to X_2$ are instances of
+both $\iota\to\iota$ and $\forall X_2.\iota\to X_2$ are instances of
 $\forall X_1\,X_2.X_1->X_2$.
 
 The relation $\sqsubseteq$
@@ -170,10 +168,10 @@ can only be applied to functions of the same type in one program, but
 a function of the polymorphic type scheme $\forall X'.(X'-> X')-> (X'-> X')$
 can be applied to functions of many different types in one program.
 For example, consider a typing context $\Gamma$ with four term-variables such that\footnote{
-	For an intuitive explanation, we assume \texttt{int} and \texttt{string}
-	to be existing ground types although our formal definition of HM
-	in Figure \ref{fig:hm} only has the void type $\iota$ as
-	the ground type for simplicity.} \vspace*{-1em}\\ 
+        For an intuitive explanation, we assume \texttt{int} and \texttt{string}
+        to be existing ground types although our formal definition of HM
+        in Figure \ref{fig:hm} only has the void type $\iota$ as
+        the ground type for simplicity.} \vspace*{-1em}\\ 
 \begin{minipage}{.3\linewidth}
 \begin{align*}
 \!\!\!\!\!\!\!\!\!\!
@@ -192,21 +190,21 @@ The four function names, with the types assigned as above,
 are available in the context. Under this typing context $\Gamma$,
 it is possible to apply $\textit{Id}_{->}^{\,\textit{mon}}$,
 the monomorphic identity function over endofunctions,
-to both \textit{square} and \textit{revstr} as below,
+to either \textit{square} or \textit{revstr} (as we do below),
 as long as we do not try to apply $\textit{Id}_{->}^{\,\textit{mon}}$ to both
 of them in the same program.\footnote{A program is just a term, but it sounds
 like a more practical example.} For example, note the different types
 for each application, and consider the different type that $\textit{Id}_{->}^{\,\textit{mon}}$
 must have inside each term.
 \[ \Gamma |-
-	(\textit{Id}_{->}^{\,\textit{mon}}\;\textit{square}) :
-	\texttt{int} -> \texttt{int}
+        (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{square}) :
+        \texttt{int} -> \texttt{int}
 \]
 \[ \Gamma |-
-	(\textit{Id}_{->}^{\,\textit{mon}}\;\textit{revstr}) :
-	\texttt{string} -> \texttt{string}
+        (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{revstr}) :
+        \texttt{string} -> \texttt{string}
 \]
-It is impossible to derive a type for a program which which applies
+It is impossible to derive a type for a program which applies
 $\textit{Id}_{->}^{\,\textit{mon}}$ to both \textit{square} and \textit{revstr} 
 in one program, since there is no solution for the inconsistent equations
 $X'=\mathtt{int}$ and $X'=\mathtt{string}$.
@@ -222,12 +220,12 @@ the polymorphic identity function over endofunctions, to both
 the universally quantified type variable $X'$ can be instantiated
 to many different types including \texttt{int} and \texttt{string}.
 \[ \Gamma |-
-	(\textit{Id}_{->}^{\,\textit{poly}}\;\textit{square}) :
-	\texttt{int} -> \texttt{int}
+        (\textit{Id}_{->}^{\,\textit{poly}}\;\textit{square}) :
+        \texttt{int} -> \texttt{int}
 \]
 \[ \Gamma |-
-	(\textit{Id}_{->}^{\,\textit{poly}}\;\textit{revstr}) :
-	\texttt{string} -> \texttt{string}
+        (\textit{Id}_{->}^{\,\textit{poly}}\;\textit{revstr}) :
+        \texttt{string} -> \texttt{string}
 \]
 \begin{align*}
 \Gamma |-\;
@@ -245,25 +243,26 @@ a typing context ($\Gamma |- t : \sigma$). The type scheme ($\sigma$)
 deduced for the given term ($t$) under the typing context ($\Gamma$) may not
 be unique. For example,
 \begin{align*}
-	&\cdot |- \l x.x: \iota -> \iota \\
-	&\cdot |- \l x.x: X -> X \\
-	&\cdot |- \l x.x: (X -> X) -> (X -> X) \\
-	&\cdot |- \l x.x: \forall X.X -> X \\
-	&\cdot |- \l x.x: \forall X.(X -> X) -> (X -> X) \\
-	&\cdot |- \l x.x: \forall X_1 X_2.(X_1 -> X_2) -> (X_1 -> X_2) \\
-	&\quad \vdots
+        &\cdot |- \l x.x: \iota -> \iota \\
+        &\cdot |- \l x.x: X -> X \\
+        &\cdot |- \l x.x: (X -> X) -> (X -> X) \\
+        &\cdot |- \l x.x: \forall X.X -> X \\
+        &\cdot |- \l x.x: \forall X.(X -> X) -> (X -> X) \\
+        &\cdot |- \l x.x: \forall X_1 X_2.(X_1 -> X_2) -> (X_1 -> X_2) \\
+        &\quad \vdots
 \end{align*}
 This is expected since terms of HM are Curry style. Recall that
 the uniqueness of typing does not hold for lambda calculi with
 Curry-style terms.
 
-The first three rules \rulename{Var}, \rulename{Abs}, and \rulename{App} are
+The first three delarative rules in Figure \ref{fig:hm}:
+\rulename{Var}, \rulename{Abs}, and \rulename{App} are
 fairly standard. The \rulename{Var} rule deduces the type scheme of
 a variable according to the type scheme binding of the variable in
 the typing context. Note that the type schemes deduced by the rules
 \rulename{Abs} and \rulename{App} are restricted to the form of
 (mono)types\footnote{Recall that (mono)types are subset of type schemes.}
-since the domain and range of functions types are restricted to (mono)types.
+since the domain and range of function ($\rightarrow$) types are restricted to (mono)types.
 
 The \rulename{Let} rule can introduce polymorphic type schemes into
 the typing context (more about this later). The most interesting rules
@@ -278,17 +277,18 @@ is essential when variables with polymorphic type schemes appear in
 the rules \rulename{Abs} and \rulename{App}. For instance,
 when $t$ is a variable with a polymorphic type scheme in $\Gamma$,
 we need to instantiate the type scheme into a type since \rulename{Abs}
-and \rulename{App} is restricted to deduce (mono)types. A typical usage of
+and \rulename{App} are restricted to deduce (mono)types. A typical usage
+(where $\Gamma = x':\forall X'.X' -> X'$) of
 the \rulename{Inst} rule is illustrated below:
 \[
 \inference[\sc Abs]
   {\inference[Inst]
-	{\inference[Var]
-		{x':\forall X'.X' -> X' \in x':\forall X'.X' -> X',x:X}
-		{x':\forall X'.X' -> X',x:X|- x':\forall X'.X'-> X'}
-	}
-  	{x':\forall X'.X' -> X',x:X |- x':X'' -> X''}}
-  {x':\forall X'.X' -> X' |- \l x.x' : X -> (X'' -> X'')}
+        {\inference[Var]
+                {x':\forall X'.X' -> X' \in \Gamma,x:X}
+                {\Gamma,x:X|- x':\forall X'.X'-> X'}
+        }
+        {\Gamma,x:X |- x':X'' -> X''}}
+  {\Gamma |- \l x.x' : X -> (X'' -> X'')}
 \]
 
 \item {\bf The \rulename{Gen} rule} deduces a generalization (\ie,
@@ -307,8 +307,8 @@ the typing context $\Gamma$, as below:
 \[
 \inference[\sc Let]
   { \inference[\sc Gen]
-	  {\inference[\sc Abs]{\vdots}{\Gamma|- \l x'.x' : X -> X}}
-	  {\Gamma|- \l x'.x':\forall X.X-> X}
+          {\inference[\sc Abs]{\vdots}{\Gamma|- \l x'.x' : X -> X}}
+          {\Gamma|- \l x'.x':\forall X.X-> X}
   & \Gamma,x:\forall X.X-> X |- t : B}
   {\Gamma |- \<let> x = \l x'.x' \<in> t : B}
 \]
@@ -323,13 +323,13 @@ if we consider the let-term as a syntactic sugar. Both types (or, monotypes)
 and type schemes (or, polytypes) in HM are restrictions of types in System \F.
 The declarative typing rules (of Figure \ref{fig:hm}) are also a restriction of the typing rules
 in System \F. The rules \rulename{Var}, \rulename{Abs}, \rulename{App},
-and \rulename{Gen} in HM are virtually same as their counterparts
+and \rulename{Gen} in HM are virtually the same as their counterparts
 in System \F.\footnote{The names of corresponding rules
-	in HM and System \F\ are the same (\rulename{Var}, \rulename{Abs},
-	\rulename{App}), except for the \rulename{Gen} rule.
-	The \rulename{Gen} rule in HM corresponds to
-	the \rulename{TyAbs} rule in System \F.}
-Thus, all we need to make sure is that the \rulename{Let} rule and
+        in HM and System \F\ are the same (\rulename{Var}, \rulename{Abs},
+        \rulename{App}), except for the \rulename{Gen} rule.
+        The \rulename{Gen} rule in HM corresponds to
+        the \rulename{TyAbs} rule in System \F.}
+Thus, we only need ensure that the \rulename{Let} rule and
 the \rulename{Inst} rule in HM are admissible in System \F.
 
 A single derivation step of \rulename{Let} in HM corresponds to
@@ -338,7 +338,7 @@ involving the \rulename{App} and \rulename{Abs} rules.
 Let us start from the \rulename{Let} rule in HM, quoted verbatim from
 Figure \ref{fig:hm}:
 \[\inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
-		     {\Gamma |- \<let> x=s \<in> t : B} 
+                     {\Gamma |- \<let> x=s \<in> t : B} 
 \]
 Recall that a let-term, $\<let> x=s \<in> t$ is semantically equivalent to
 $(\l x.t)\;s$. We first desugar the let-term into an application of
@@ -346,12 +346,12 @@ an abstraction $(\l x.t)$ to the body of the local definition ($s$).
 Then, we can simply apply the \rulename{App} rule and the \rulename{Abs} rule
 in System \F, as below:
 \[\inference[\sc App]
-	{ \inference[\sc Abs]
-		{ \Delta |- \sigma
-		& \Delta;\Gamma,x:\sigma |- t : B}
-		{\Delta;\Gamma |- \l x.t : A -> B}
-	& \Delta;\Gamma |- s : \sigma }
-	{\Delta;\Gamma |- (\l x.t)\;s}
+        { \inference[\sc Abs]
+                { \Delta |- \sigma
+                & \Delta;\Gamma,x:\sigma |- t : B}
+                {\Delta;\Gamma |- \l x.t : A -> B}
+        & \Delta;\Gamma |- s : \sigma }
+        {\Delta;\Gamma |- (\l x.t)\;s}
 \]
 
 
@@ -364,57 +364,57 @@ must match the left- and right-hand sides of $\sqsubseteq$
 in the generic instantiation rule, as below:
 \begin{multline*}
   \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
-		      {\Gamma |- t : \sigma'}
-	\quad\text{where}~
-	\begin{array}{rl}
-		\sigma =& \forall X_1\dots X_n.A ~~~~~~~~~~~~~~~~~~~~~~ \\
-	       \sigma' =& \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]
-	\end{array}
+                      {\Gamma |- t : \sigma'}
+        \quad\text{where}~
+        \begin{array}{rl}
+                \sigma =& \forall X_1\dots X_n.A ~~~~~~~~~~~~~~~~~~~~~~ \\
+               \sigma' =& \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]
+        \end{array}
  \\ \text{such that}~
    \inference{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
              {\forall X_1\dots X_n.A \;\sqsubseteq\;
-	      \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
+              \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
 \end{multline*}
 The generic instantiation from $\sigma$ to $\sigma'$
-by the \rulename{Inst} rule above can be understood as two parts:
+in the \rulename{Inst} rule above can be understood as having two phases:
 instantiation from $\sigma$ to $A[B_1/X_1]\cdots[B_n/X_n]$ and
-generalization from $A[B_1/X_1]\cdots[B_n/X_n]$ to $\sigma$.
-The instantiation from $\forall.X_1\dots X_n.A$ to $A[B_1/X_1]\cdots[B_n/X_n]$
-can be broken down to $n$ small steps of instantiation,
-instantiating each of the quantified variables ($X_1\dots X_n$).
-The generalization from $A[B_1/X_1]\cdots[B_n/X_n]$ to
-$X_1'\dots X_m'.A[B_1/X_1]\cdots[B_n/X_n]$ can be broken down to
-$m$ small steps of generalization, universally quantifying
-the newly introduced variables during instantiation ($X_1'\dots X_m$).
-The Curry-style System \F\ has rules, which coorespond exactly to these 
+generalization from $A[B_1/X_1]\cdots[B_n/X_n]$ to $\sigma'$.
+The instantiation phase, from $\forall.X_1\dots X_n.A$ to $A[B_1/X_1]\cdots[B_n/X_n]$,
+can be broken down to $n$ small steps of instantiation --
+each step instantiates one of the quantified variables ($X_1\dots X_n$).
+The generalization phase, from $A[B_1/X_1]\cdots[B_n/X_n]$ to
+$\forall X_1'\dots X_m'.A[B_1/X_1]\cdots[B_n/X_n]$, can be broken down into
+$m$ small steps of generalization -- each step universally quantifies one
+of the newly introduced variables ($X_1'\dots X_m$) from the instantiation phase.
+The Curry-style System \F\ has rules, which correspond exactly to these 
 small steps (see Figure \ref{fig:f} in \S\ref{sec:f}).
-The \rulename{TyApp} rule captures the small steps in the instantiation part.
-The \rulename{TyAbs} rule captures the small steps in the generalization part.
+The \rulename{TyApp} rule captures the small steps in the instantiation phase.
+The \rulename{TyAbs} rule captures the small steps in the generalization phase.
 Therefore, we can translate the \rulename{Inst} rule in HM into
 consecutive applications of the \rulename{TyApp} rule followed by
 consecutive applications of the \rulename{TyAbs} rule in System \F, as below:
 {\small
 \begin{align*}
 & \inference[\sc TyApp]
-	{\Delta;\Gamma |- t : \forall X_1\dots X_n.A & \Delta |- \forall X_1\dots X_n.A}
-	{\Delta;\Gamma |- t : \forall X_2\dots X_n.A[B_1/X_1]
-	\qquad\qquad\quad~~} \\
+        {\Delta;\Gamma |- t : \forall X_1\dots X_n.A & \Delta |- \forall X_1\dots X_n.A}
+        {\Delta;\Gamma |- t : \forall X_2\dots X_n.A[B_1/X_1]
+        \qquad\qquad\quad~~} \\
 & \inference[\sc TyApp]
-	{ \qquad\qquad \vdots \qquad\qquad\qquad\qquad\qquad \quad
-	& \Delta |- \forall X_n.A[B_1/X_1]\cdots[B_{n-1}/X_{n-1}]
-	}
-	{ \Delta;\Gamma |- t : A[B_1/X_1]\cdots[B_n/X_n] \qquad \qquad
-	 \qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
- 	} \\
+        { \qquad\qquad \vdots \qquad\qquad\qquad\qquad\qquad \quad
+        & \Delta |- \forall X_n.A[B_1/X_1]\cdots[B_{n-1}/X_{n-1}]
+        }
+        { \Delta;\Gamma |- t : A[B_1/X_1]\cdots[B_n/X_n] \qquad \qquad
+         \qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
+        } \\
 & \inference[\sc TyAbs]
-	{}
-	{\Delta;\Gamma |- t : \forall X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
-	(X_m'\notin\FV(A[B_1/X_1]\cdots[B_n/X_n])) \\
+        {}
+        {\Delta;\Gamma |- t : \forall X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
+        (X_m'\notin\FV(A[B_1/X_1]\cdots[B_n/X_n])) \\
 & \qquad\qquad\qquad\qquad\qquad \vdots \\
 & \inference[\sc TyAbs]
-	{\Delta;\Gamma |- t : \forall X_2'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
-	{\Delta;\Gamma |- t : \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
-	(X_1'\notin\FV\left(\begin{smallmatrix}\forall X_2'\dots X_m'.\\A[B_1/X_1]\cdots[B_n/X_n]\end{smallmatrix}\right))
+        {\Delta;\Gamma |- t : \forall X_2'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
+        {\Delta;\Gamma |- t : \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
+        (X_1'\notin\FV\left(\begin{smallmatrix}\forall X_2'\dots X_m'.\\A[B_1/X_1]\cdots[B_n/X_n]\end{smallmatrix}\right))
 \end{align*}
 } %end \small
 
@@ -441,7 +441,7 @@ The notation $\overline{\Gamma}(A)$ appearing in the rule \rulename{Let$_s$} is
 the generalization closure of the type $A$ with respect to $\Gamma$. 
 That is, $\overline{\Gamma}(A)$
 generalizes $A$ over all the free type variables occurring in $A$, except the free types
-variables occurring in $\Gamma$. The free type variables of $\Gamma$ are defined as:
+variables occurring in $\Gamma$. The free type variables of $\Gamma$ are defined as
 $\FV(\Gamma) = \bigcup_{x:\sigma\in \Gamma} \FV(\sigma)$.
 
 \paragraph{}
@@ -479,7 +479,7 @@ in the \rulename{Gen} rule holds.
 \end{proof}
 
 The completeness of $|-s$ is stated below.
-Note that the completeness of $|-s$ must be stated in terms of gneralization closure and
+Note that the completeness of $|-s$ must be stated in terms of generalization closure and
 the type scheme ordering relation ($\overline{\Gamma}(A)\sqsubseteq\sigma$),
 since the syntax directed rules can only deduce types, not type schemes.
 The syntax directed rule $|-s$ is complete in the sense that for any given term
@@ -487,12 +487,12 @@ we can always deduce a type $A$ such that the closure of $A$ is more general
 than the type scheme $\sigma$ deduced from the declarative typing rules.
 \begin{theorem}[$|-s$ is complete with respect to $|-$]
 $ \inference
-	{\Gamma |- t : \sigma}
-	{\exists A.\;\Gamma |-s t : A ~\land~ \overline{\Gamma}(A)\sqsubseteq\sigma} $
+        {\Gamma |- t : \sigma}
+        {\exists A.\;\Gamma |-s t : A ~\land~ \overline{\Gamma}(A)\sqsubseteq\sigma} $
 \label{thm:sdHMcomplete}
 \end{theorem}
 \begin{proof}
-We proof this by induction on the derivation of $\Gamma |- t : \sigma$.
+We prove this by induction on the derivation of $\Gamma |- t : \sigma$.
 Let us consider the cases by the last rule applied (\ie, root of the derivation).
 
 When the last rule is \rulename{Var}, we know that $x:\sigma \in \Gamma$.
@@ -514,16 +514,16 @@ When the last rule is \rulename{Abs}, it is straightforward by induction.
 
 When the last rule is \rulename{App}, it is straightforward by induction.
 
-When the last rule is \rulename{Let}, we know by induction that there exists
+When the last rule is \rulename{Let} ($\<let> x = s \<in> t$), we know by induction that there exists
 $A'$ and $B'$ such that
 $\Gamma |-s s : A' \land \overline{\Gamma}(A') \sqsubseteq \sigma$ and
 $\Gamma,x:\sigma |-s t : B' \land
-	\overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
+        \overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
 We would be done with the case for \rulename{Let} if we could show that
 $\Gamma,x:\overline{\Gamma}(A') |-s t : B' \land
-	\overline{\Gamma,x:\overline{\Gamma}(A')}(B') \sqsubseteq B$.
+        \overline{\Gamma,x:\overline{\Gamma}(A')}(B') \sqsubseteq B$.
 Instead we can only show $\Gamma,x:\sigma |-s t : B' \land
-	\overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
+        \overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
 We use Lemma \ref{lem:generalizeGamma} to prove
 $\Gamma,x:\overline{\Gamma}(A') |-s t : B'$ from $\Gamma,x:\sigma |-s t : B'$,
 and we use Lemma \ref{lem:closureMoreGen} to prove
@@ -550,7 +550,7 @@ of $\sqsubseteq$.
 
 \begin{lemma}[generalizing typing context is safe] \label{lem:genGamma}
 $ \inference{\Gamma |-s t : A & \Gamma' \sqsubseteq \Gamma}
-	    {\Gamma' |-s t : A} $ where
+            {\Gamma' |-s t : A} $ where
 \begin{quote}
 $\Gamma' \sqsubseteq \Gamma$ when for any $x:\sigma\in \Gamma$,
 there exists $x:\sigma'\in\Gamma'$ such that $\sigma'\sqsubseteq\sigma$.
@@ -577,15 +577,21 @@ Therefore, $\Gamma' |-s x : A$.
 \begin{lemma}[closure of a more general typing context is more general]
 \begin{quote}
 $ \inference{\Gamma' \sqsubseteq \Gamma}
-	    {\overline{\Gamma'}(A) \sqsubseteq \overline{\Gamma}(A)} $
+            {\overline{\Gamma'}(A) \sqsubseteq \overline{\Gamma}(A)} $
 for any $A$.
 \end{quote}
 \label{lem:closureMoreGen}
 \end{lemma}
 \begin{proof}
 It is obvious once we observe that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
-It is easy to see that $\FV(\sigma') \subseteq \FV(\sigma)$
-when $\sigma' \sqsubseteq \sigma$. Since the defintion of $\sqsubseteq$
+To show this, we only need to show that ($\subseteq$) relation
+holds pointwise on the type schemes in the context.
+
+the one need to observe that the free variables of a context
+arise only from the type-schemes in the context. Since $\FV(\sigma') \subseteq \FV(\sigma)$
+when $\sigma' \sqsubseteq \sigma$, ... TODO .
+
+Since the defintion of $\sqsubseteq$
 over typing contexts only depends on $\sqsubseteq$ over type schemes,
 it is clear that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
 \end{proof}
@@ -593,11 +599,11 @@ it is clear that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
 \subsection{The type inference algorithm $W$}\label{sec:hm:W}
 \citet{DamMil82} presented the type inference algorithm $W$
 (Figure \ref{fig:algW}) and proved its soundness and completeness
-with respect to the declarative typing rules. Here, we show
-soundness and completeness of the type inference algorithm $W$
+with respect to the declarative typing rules. Here, we show the
+soundness and completeness of the type inference algorithm, $W$ (Figure \ref{fig:algW}),
 with respect to the syntax directed typing rules.
-Each rule of the type inference algorithm $W$ in Figure \ref{fig:algW}
-has a similar structure to its corresponding syntax directed rule.
+Each rule of the type inference algorithm $W$
+has a similar structure to the corresponding syntax directed rule.
 The type inference algorithm has additional details of explicitly
 managing fresh type variable introduction and substitution.
 
@@ -615,28 +621,28 @@ TODO cite some unification algorithm papers
 \begin{figure}
 \begin{singlespace}
 \[ \inference[\sc Var$_W$]
-	{x:\forall X_1\dots X_n.A\in\Gamma \\
-	 X_1',\dots,X_n'~\text{fresh}}
+        {x:\forall X_1\dots X_n.A\in\Gamma \\
+         X_1',\dots,X_n'~\text{fresh}}
         {W(\Gamma,x) ~> (\emptyset,A[X_1'/X_1]\cdots[X_n'/X_n])}
 \]
 \[ \inference[\sc Abs$_W$]
-	{X~\text{fresh} \\
-	 W((\Gamma,x:X),t) ~> (S_1,A)}
-	{W(\Gamma,\l x.t) ~> (S_1,S_1 X -> A)}
+        {X~\text{fresh} \\
+         W((\Gamma,x:X),t) ~> (S_1,A)}
+        {W(\Gamma,\l x.t) ~> (S_1,S_1 X -> A)}
 \]
 %% double check the composition order
 \[ \inference[\sc App$_W$]
-	{W(\Gamma,t) ~> (S_1,A_1) \\
-	 W(S_1 \Gamma,s) ~> (S_2,A_2) \\
-	 X~\text{fresh} \\
-	 \unify(S_2 A_1,A_2 -> X) ~> S_3 }
-	{W(\Gamma,t\;s) ~> (S_3\circ S_2\circ S_1,S_3 X)}
+        {W(\Gamma,t) ~> (S_1,A_1) \\
+         W(S_1 \Gamma,s) ~> (S_2,A_2) \\
+         X~\text{fresh} \\
+         \unify(S_2 A_1,A_2 -> X) ~> S_3 }
+        {W(\Gamma,t\;s) ~> (S_3\circ S_2\circ S_1,S_3 X)}
 \]
 
 \[ \inference[\sc Let$_W$]
-	{W(\Gamma,s) ~> (S_1,A_1) \\
-	 W((S_1\Gamma,x:\overline{S_1\Gamma}(A_1)),t) ~> (S_2,A_2) }
-	{W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)}
+        {W(\Gamma,s) ~> (S_1,A_1) \\
+         W((S_1\Gamma,x:\overline{S_1\Gamma}(A_1)),t) ~> (S_2,A_2) }
+        {W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)}
 \]
 \end{singlespace}
 \caption{The type inference algorithm $W$}
@@ -644,10 +650,10 @@ TODO cite some unification algorithm papers
 \end{figure}
 
 \begin{proposition} \label{prop:substvdashs}
-	$\inference{\Gamma |-s t : A}{S\Gamma |-s t : SA}$
+        $\inference{\Gamma |-s t : A}{S\Gamma |-s t : SA}$
 \end{proposition}
 \begin{proposition} \label{prop:substclosure}
-	$ S(\overline{\Gamma}(A)) = \overline{S\Gamma}(SA) $
+        $ S(\overline{\Gamma}(A)) = \overline{S\Gamma}(SA) $
 \end{proposition}
 
 \begin{theorem}[Soundness of $W$] \label{thm:soundW}
@@ -657,56 +663,56 @@ $ \inference{ W(\Gamma,t) ~> (S,A) }{ S\Gamma |-s t : A } $
 By induction on the syntax of the term $t$.
 \begin{itemize}
 \item[case]($x$)
-	Obvious, by definition of $\sqsubseteq$.
+        Obvious, by definition of $\sqsubseteq$.
 
 \item[case]($\l x.t$)
-	We need to show that
-	$S_1\Gamma |-s \l x.t : S_1 X -> A$.
+        We need to show that
+        $S_1\Gamma |-s \l x.t : S_1 X -> A$.
 
-	By induction, we know that $S_1(\Gamma,x:X) |-s t : A$.
+        By induction, we know that $S_1(\Gamma,x:X) |-s t : A$.
 
-	We know that $S_1\Gamma,x:S_1X |-s t : A$,
-	since $S_1(\Gamma,x:X) = S_1\Gamma,x:S_1 X$.
+        We know that $S_1\Gamma,x:S_1X |-s t : A$,
+        since $S_1(\Gamma,x:X) = S_1\Gamma,x:S_1 X$.
 
-	By \rulename{Abs$_s$} rule, we have
-	$S_1\Gamma |-s \l x.t : S_1 X -> A$.
+        By \rulename{Abs$_s$} rule, we have
+        $S_1\Gamma |-s \l x.t : S_1 X -> A$.
 
 \item[case]($t\;s$)
-	We need to show that $(S_3\circ S_2 \circ S_1)\Gamma |-s t\,s : S_3 X$.
+        We need to show that $(S_3\circ S_2 \circ S_1)\Gamma |-s t\,s : S_3 X$.
 
-	By induction, we know that
-	$S_1\Gamma |-s t : A_1$ and 
-	$S_2(S_1\Gamma) |-s s : A_2$.
-	By Proposition~\ref{prop:substvdashs},
-	$S_3(S_2(S_1\Gamma)) |-s t : S_3(S_2(A_1))$ and 
-	$S_3(S_2(S_1\Gamma)) |-s s : S_3 A_2$.
+        By induction, we know that
+        $S_1\Gamma |-s t : A_1$ and 
+        $S_2(S_1\Gamma) |-s s : A_2$.
+        By Proposition~\ref{prop:substvdashs},
+        $S_3(S_2(S_1\Gamma)) |-s t : S_3(S_2(A_1))$ and 
+        $S_3(S_2(S_1\Gamma)) |-s s : S_3 A_2$.
 
-	Due to the property of unification, $S_2 A_1 =  A_2 -> X$.
+        Due to the property of unification, $S_2 A_1 =  A_2 -> X$.
 
-	Thus, $S_3(S_2(S_1\Gamma)) |-s t : S_3(A_2 -> X)$ and 
-	$S_3(S_2(S_1\Gamma)) |-s s : S_3 A_2$.
+        Thus, $S_3(S_2(S_1\Gamma)) |-s t : S_3(A_2 -> X)$ and 
+        $S_3(S_2(S_1\Gamma)) |-s s : S_3 A_2$.
 
-	That is, $(S_3\circ S_2 \circ S_1)\Gamma |-s t : S_3 A_2 -> S_3 X$ and 
-	$(S_3\circ S_2 \circ S_1)\Gamma |-s s : S_3 A_2$.
+        That is, $(S_3\circ S_2 \circ S_1)\Gamma |-s t : S_3 A_2 -> S_3 X$ and 
+        $(S_3\circ S_2 \circ S_1)\Gamma |-s s : S_3 A_2$.
 
-	By \rulename{App$_s$} rule, we have 
-	$(S_3\circ S_2 \circ S_1)\Gamma |-s t\,s : S_3 X$.
+        By \rulename{App$_s$} rule, we have 
+        $(S_3\circ S_2 \circ S_1)\Gamma |-s t\,s : S_3 X$.
 
 \item[case]($\<let> x=s \<in> t$)
-	We need to show that $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
+        We need to show that $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
 
-	By induction, we have $S_1\Gamma |-s s:A_1$ and
-	$S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1)) |-s t:A_2$.
+        By induction, we have $S_1\Gamma |-s s:A_1$ and
+        $S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1)) |-s t:A_2$.
 
-	By Proposition~\ref{prop:substvdashs}, we have $S_2(S_1\Gamma) |-s s:S_2 A_1$.
+        By Proposition~\ref{prop:substvdashs}, we have $S_2(S_1\Gamma) |-s s:S_2 A_1$.
 
-	By Proposition~\ref{prop:substclosure}, we have
-	$S_2(S_1\Gamma),x:\overline{S_2(S_1\Gamma)}(S_2 A_1) |-s t: A_2$.
+        By Proposition~\ref{prop:substclosure}, we have
+        $S_2(S_1\Gamma),x:\overline{S_2(S_1\Gamma)}(S_2 A_1) |-s t: A_2$.
 
-	By \rulename{Let$_s$}, we have
-	$S_2(S_1\Gamma) |-s \<let> x=s \<in> t:A_2$.
-	Since $S_2(S_1\Gamma)=(S_2\circ S_1)\Gamma$ by definition,
-	we have $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
+        By \rulename{Let$_s$}, we have
+        $S_2(S_1\Gamma) |-s \<let> x=s \<in> t:A_2$.
+        Since $S_2(S_1\Gamma)=(S_2\circ S_1)\Gamma$ by definition,
+        we have $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
 \vspace*{-2em}
 \end{itemize}
 \end{proof}
@@ -719,13 +725,13 @@ $ \inference{\Gamma |-s \l x   .t : A -> B}{\Gamma,x:A |-s t:B} $
 \begin{proposition}[\rulename{App$_s$} inverse] \label{prop:Appsrev}
 $
   \inference{\Gamma |-s t~s : B}{
-	\exists A.\left(\Gamma |-s t : A -> B ~\land~ \Gamma |-s s : A\right) } $
+        \exists A.\left(\Gamma |-s t : A -> B ~\land~ \Gamma |-s s : A\right) } $
 \end{proposition}
 
 \begin{proposition}[\rulename{Let$_s$} inverse] \label{prop:Letsrev}
 $ \inference{\Gamma |-s \<let> x=s \<in> t : B}{
-	\exists A.\left( \Gamma |-s s : A ~\land~
-			\Gamma,x:\overline{\Gamma}(A) |-s t : B \right)} $
+        \exists A.\left( \Gamma |-s s : A ~\land~
+                        \Gamma,x:\overline{\Gamma}(A) |-s t : B \right)} $
 \end{proposition}
 
 
@@ -733,438 +739,438 @@ $ \inference{\Gamma |-s \<let> x=s \<in> t : B}{
 ~\\ $~$ $~$ For any $\Gamma$ and $t$,
 there exist $S'$, where $\dom(S')\subseteq\FV(\Gamma)$, and $A'$ such that
 \[ \inference{ S'\Gamma |-s t : A' }{
-	W(\Gamma,t) ~> (S,A_W) ~\land~
-	\exists R . \left(
-		S'\Gamma = R(S\Gamma) \,\land\,
-		R(\overline{S\Gamma}(A_W))\sqsubseteq A' \right) }
+        W(\Gamma,t) ~> (S,A_W) ~\land~
+        \exists R . \left(
+                S'\Gamma = R(S\Gamma) \,\land\,
+                R(\overline{S\Gamma}(A_W))\sqsubseteq A' \right) }
 \]
 \end{theorem}
 \begin{proof}
 By induction on recursive call step of the algorithm $W$.
 \begin{itemize}
 \item[case]($x$)
-	From the \rulename{Var$_s$} rule, we know that
-	$S'\sigma \in S'\Gamma$, where $\sigma\in\Gamma$,
-	and $S'\sigma\sqsubseteq A'$.
-	By definition of $\sqsubseteq$, $A'$ has the form
-	$S'A[B_1/X_1]\cdots[B_n/X_n]$ where $\sigma = \forall X_1\dots X_n.A$.
+        From the \rulename{Var$_s$} rule, we know that
+        $S'\sigma \in S'\Gamma$, where $\sigma\in\Gamma$,
+        and $S'\sigma\sqsubseteq A'$.
+        By definition of $\sqsubseteq$, $A'$ has the form
+        $S'A[B_1/X_1]\cdots[B_n/X_n]$ where $\sigma = \forall X_1\dots X_n.A$.
 
-	From \rulename{Var$_W$} rule, we know that
-	$S = \emptyset $ and $A_W = A[X_1'/X_1]\cdots[X_n'/X_n]$
-	where $X_1',\dots,X_n'$ are fresh.
+        From \rulename{Var$_W$} rule, we know that
+        $S = \emptyset $ and $A_W = A[X_1'/X_1]\cdots[X_n'/X_n]$
+        where $X_1',\dots,X_n'$ are fresh.
 
-	Let $R=S'$, then, we are done.
+        Let $R=S'$, then, we are done.
 
 \item[case]($\l x.t$)
-	We want to show that \vspace*{-2em}
-	\begin{singlespace}
-	\[\inference{S'\Gamma |-s \l x.t : A -> B}{
-	\begin{matrix} W(\Gamma,\l x.t) \\ ~> (S,S X -> B_W) \end{matrix}
-	~\land~
-	\exists R.
-		\left(\begin{matrix}
-			S'\Gamma=R(S\Gamma) ~~ \land \\
-			R(\overline{S\Gamma}(SX -> B_W))\sqsubseteq A -> B
-		\end{matrix}\right) } \]
-	\end{singlespace}
+        We want to show that \vspace*{-2em}
+        \begin{singlespace}
+        \[\inference{S'\Gamma |-s \l x.t : A -> B}{
+        \begin{matrix} W(\Gamma,\l x.t) \\ ~> (S,S X -> B_W) \end{matrix}
+        ~\land~
+        \exists R.
+                \left(\begin{matrix}
+                        S'\Gamma=R(S\Gamma) ~~ \land \\
+                        R(\overline{S\Gamma}(SX -> B_W))\sqsubseteq A -> B
+                \end{matrix}\right) } \]
+        \end{singlespace}
 
-	Without loss of generality, we can choose $A = X$,
-	since we can choose $S'$ accordingly such that $S'X = A$.
-	Then, we have \vspace*{-2em}
-	\begin{singlespace}
-	\[\inference{S'\Gamma |-s \l x.t : S'X -> B}{
-	\begin{matrix} W(\Gamma,\l x.t) \\ ~> (S,S X -> B_W) \end{matrix}
-	~\land~
-	\exists R.
-		\left(\begin{matrix}
-			S'\Gamma=R(S\Gamma) ~~ \land \\
-			R(\overline{S\Gamma}(SX -> B_W))\sqsubseteq S'X -> B
-		\end{matrix}\right) } \]
-	\end{singlespace}
+        Without loss of generality, we can choose $A = X$,
+        since we can choose $S'$ accordingly such that $S'X = A$.
+        Then, we have \vspace*{-2em}
+        \begin{singlespace}
+        \[\inference{S'\Gamma |-s \l x.t : S'X -> B}{
+        \begin{matrix} W(\Gamma,\l x.t) \\ ~> (S,S X -> B_W) \end{matrix}
+        ~\land~
+        \exists R.
+                \left(\begin{matrix}
+                        S'\Gamma=R(S\Gamma) ~~ \land \\
+                        R(\overline{S\Gamma}(SX -> B_W))\sqsubseteq S'X -> B
+                \end{matrix}\right) } \]
+        \end{singlespace}
 
-	By induction, we know that  \vspace*{-2em}
-	\begin{singlespace}
-	\[\inference{S'(\Gamma,x:X) |-s t : B}{
-	W((\Gamma, x:X),t) ~> (S,B_W) ~\land~
-	\exists R.
-		\left(\begin{matrix}
-			S'(\Gamma,x:X)=R(S(\Gamma,x:X)) \\ \land~\;
-			R(\overline{S(\Gamma,x:X)}(B_W))\sqsubseteq B
-		\end{matrix}\right) } \]
-	\end{singlespace}
+        By induction, we know that  \vspace*{-2em}
+        \begin{singlespace}
+        \[\inference{S'(\Gamma,x:X) |-s t : B}{
+        W((\Gamma, x:X),t) ~> (S,B_W) ~\land~
+        \exists R.
+                \left(\begin{matrix}
+                        S'(\Gamma,x:X)=R(S(\Gamma,x:X)) \\ \land~\;
+                        R(\overline{S(\Gamma,x:X)}(B_W))\sqsubseteq B
+                \end{matrix}\right) } \]
+        \end{singlespace}
 
-	By Proposition \ref{prop:Abssrev},
-	$S'\Gamma |- \l x.t : S'X -> B$ is sufficient to assume that
-	$S'(\Gamma,x:X) |-s t:B$.
+        By Proposition \ref{prop:Abssrev},
+        $S'\Gamma |- \l x.t : S'X -> B$ is sufficient to assume that
+        $S'(\Gamma,x:X) |-s t:B$.
 
-	By applying \rulename{Abs$_W$} rule to
-	$W((\Gamma, x:X),t) ~> (S,B_W)$ where $X$ fresh,
-	we have $W(\Gamma,\l x.t) ~> (S,S X -> B_W)$.
+        By applying \rulename{Abs$_W$} rule to
+        $W((\Gamma, x:X),t) ~> (S,B_W)$ where $X$ fresh,
+        we have $W(\Gamma,\l x.t) ~> (S,S X -> B_W)$.
 
-	From $S'(\Gamma,x:X)=R(S(\Gamma,x:X))$, we know that
-	$S'\Gamma = R(S\Gamma)$ and $S'X = R(S X)$.
+        From $S'(\Gamma,x:X)=R(S(\Gamma,x:X))$, we know that
+        $S'\Gamma = R(S\Gamma)$ and $S'X = R(S X)$.
 
-	If we can show that
-	$R(\overline{S\Gamma}(S X -> B_W)) \sqsubseteq S'X -> B$,
-	we are done. Since
-	$R(\overline{S\Gamma}(S X -> B_W)) =
-	R(\overline{S\Gamma}(S X)) -> R(\overline{S\Gamma}(B_W))$,
-	what we need to show are
-	$R(\overline{S\Gamma}(S X))\sqsubseteq S'X$ and
-	$R(\overline{S\Gamma}(B_W)) \sqsubseteq B$.
-	The former is true by Proposition \ref{prop:substclosure} and
-	the facts that $S'X = R(S X)$ and
-	$X\notin \dom(\Gamma)$ since $X$ is fresh:
-	$R(\overline{S\Gamma}(S X)) =
-	R(S(\overline{\Gamma}(X))) = R(S(X)) = S'X
-	\sqsubseteq S' X$.
-	The latter is true since $ R(\overline{S\Gamma}(B_W)) 
-	\sqsubseteq R(\overline{S(\Gamma,x:X)}(B_W)) \sqsubseteq B$.
+        If we can show that
+        $R(\overline{S\Gamma}(S X -> B_W)) \sqsubseteq S'X -> B$,
+        we are done. Since
+        $R(\overline{S\Gamma}(S X -> B_W)) =
+        R(\overline{S\Gamma}(S X)) -> R(\overline{S\Gamma}(B_W))$,
+        what we need to show are
+        $R(\overline{S\Gamma}(S X))\sqsubseteq S'X$ and
+        $R(\overline{S\Gamma}(B_W)) \sqsubseteq B$.
+        The former is true by Proposition \ref{prop:substclosure} and
+        the facts that $S'X = R(S X)$ and
+        $X\notin \dom(\Gamma)$ since $X$ is fresh:
+        $R(\overline{S\Gamma}(S X)) =
+        R(S(\overline{\Gamma}(X))) = R(S(X)) = S'X
+        \sqsubseteq S' X$.
+        The latter is true since $ R(\overline{S\Gamma}(B_W)) 
+        \sqsubseteq R(\overline{S(\Gamma,x:X)}(B_W)) \sqsubseteq B$.
 
 \item[case]($t\;s$)
-	We want to show that \vspace*{-2em}
-	\begin{singlespace}
-	\[\inference{S'\Gamma |-s t\;s : B}{
-	\begin{matrix} W(\Gamma,t\;s) ~\qquad~ \\
-		~> (S_3\circ S_2\circ S_1,S_3 X) \end{matrix}
-	~\land~
-	\exists R.
-		\left(\begin{matrix}
-			S'\Gamma=R((S_3\circ S_2\circ S_1)\Gamma) ~~ \land \\
-			R(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X))
-			\sqsubseteq B
-		\end{matrix}\right) } \]
-	\end{singlespace}
-	Note that we can use $S_3 X$ instead of $(S_3\circ S_2\circ S_1) X$
-	since $X\notin\dom(S_2)\cup\dom(S_1)$ because
-	$X$ has been picked fresh after $S_2$ and $S_1$ has been computed
-	in \rulename{App$_W$} rule. So, $(S_3\circ S_2\circ S_1) X = S_3 X$.
-	
-	Since $S'\Gamma=R((S_3\circ S_2\circ S_1)\Gamma)$,
-	we can replace $S'\Gamma$ with $S''((S_3\circ S_2\circ S_1)\Gamma)$
-	without loss of generality. Then, what we want to show is
-	\vspace*{-2em}
-	\begin{singlespace}
-	\begin{equation}
-	\inference{S''((S_3\circ S_2\circ S_1)\Gamma) |-s t\;s : B'}{
-	\begin{matrix} W(\Gamma,t\;s) ~\qquad~ \\
-		~> (S_3\circ S_2\circ S_1,S_3 X) \end{matrix}
-	~\land~
-	\exists R.
-	\left(\begin{matrix}
-		S''((S_3\circ S_2\circ S_1)\Gamma)=R((S_3\circ S_2\circ S_1)\Gamma)
-		\\ \land ~~
-		R(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X)) \sqsubseteq B'
-	\end{matrix}\right) }
-	\label{WcompleteWhatWeWantToShow}
-	\end{equation}
-	\end{singlespace}
+        We want to show that \vspace*{-2em}
+        \begin{singlespace}
+        \[\inference{S'\Gamma |-s t\;s : B}{
+        \begin{matrix} W(\Gamma,t\;s) ~\qquad~ \\
+                ~> (S_3\circ S_2\circ S_1,S_3 X) \end{matrix}
+        ~\land~
+        \exists R.
+                \left(\begin{matrix}
+                        S'\Gamma=R((S_3\circ S_2\circ S_1)\Gamma) ~~ \land \\
+                        R(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X))
+                        \sqsubseteq B
+                \end{matrix}\right) } \]
+        \end{singlespace}
+        Note that we can use $S_3 X$ instead of $(S_3\circ S_2\circ S_1) X$
+        since $X\notin\dom(S_2)\cup\dom(S_1)$ because
+        $X$ has been picked fresh after $S_2$ and $S_1$ has been computed
+        in \rulename{App$_W$} rule. So, $(S_3\circ S_2\circ S_1) X = S_3 X$.
+        
+        Since $S'\Gamma=R((S_3\circ S_2\circ S_1)\Gamma)$,
+        we can replace $S'\Gamma$ with $S''((S_3\circ S_2\circ S_1)\Gamma)$
+        without loss of generality. Then, what we want to show is
+        \vspace*{-2em}
+        \begin{singlespace}
+        \begin{equation}
+        \inference{S''((S_3\circ S_2\circ S_1)\Gamma) |-s t\;s : B'}{
+        \begin{matrix} W(\Gamma,t\;s) ~\qquad~ \\
+                ~> (S_3\circ S_2\circ S_1,S_3 X) \end{matrix}
+        ~\land~
+        \exists R.
+        \left(\begin{matrix}
+                S''((S_3\circ S_2\circ S_1)\Gamma)=R((S_3\circ S_2\circ S_1)\Gamma)
+                \\ \land ~~
+                R(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X)) \sqsubseteq B'
+        \end{matrix}\right) }
+        \label{WcompleteWhatWeWantToShow}
+        \end{equation}
+        \end{singlespace}
 
-	By induction and (\rulename{App$_s$}), we know that \vspace*{-2em}
-	\begin{singlespace}
-	\begin{align}
-	\label{WcompleteAppsCase1}
-	\inference{S_1'\Gamma |-s t : A_t}{
-	\begin{matrix} W(\Gamma,t) \\ ~> (S_1,A_1) \end{matrix}
-	~\land~ 
-	\exists R_1.
-		\left(\begin{matrix}
-			S_1'\Gamma=R_1(S_1\Gamma) ~~\land\\
-			R_1(\overline{S_1\Gamma}(A_1))
-			\sqsubseteq A_t
-		\end{matrix}\right) }
-	\\
-	\label{WcompleteAppsCase2}
-	\inference{S_2'(S_1\Gamma) |-s s : A_s}{
-	\begin{matrix} W(S_1\Gamma,s) \\ ~> (S_2,A_2) \end{matrix}
-	~\land~
-	\exists R_2.
-		\left(\begin{matrix}
-			S_2'(S_1\Gamma)=R_2(S_2(S_1\Gamma)) ~~\land\\
-			R_2(\overline{S_2(S_1\Gamma)}(A_2))
-			\sqsubseteq A_s
-		\end{matrix}\right) }
-	\end{align}
-	\end{singlespace}
+        By induction and (\rulename{App$_s$}), we know that \vspace*{-2em}
+        \begin{singlespace}
+        \begin{align}
+        \label{WcompleteAppsCase1}
+        \inference{S_1'\Gamma |-s t : A_t}{
+        \begin{matrix} W(\Gamma,t) \\ ~> (S_1,A_1) \end{matrix}
+        ~\land~ 
+        \exists R_1.
+                \left(\begin{matrix}
+                        S_1'\Gamma=R_1(S_1\Gamma) ~~\land\\
+                        R_1(\overline{S_1\Gamma}(A_1))
+                        \sqsubseteq A_t
+                \end{matrix}\right) }
+        \\
+        \label{WcompleteAppsCase2}
+        \inference{S_2'(S_1\Gamma) |-s s : A_s}{
+        \begin{matrix} W(S_1\Gamma,s) \\ ~> (S_2,A_2) \end{matrix}
+        ~\land~
+        \exists R_2.
+                \left(\begin{matrix}
+                        S_2'(S_1\Gamma)=R_2(S_2(S_1\Gamma)) ~~\land\\
+                        R_2(\overline{S_2(S_1\Gamma)}(A_2))
+                        \sqsubseteq A_s
+                \end{matrix}\right) }
+        \end{align}
+        \end{singlespace}
 
-	From $S_1'\Gamma = R_1(S_1\Gamma)$ in the conclusion of 
-	(\ref{WcompleteAppsCase1}), we can replace $S_1'\Gamma$
-	with $S_2'(S_1\Gamma)$ in (\ref{WcompleteAppsCase1})
-	without loss of generality, as follows: \vspace*{-2em}
-	\begin{singlespace}
-	\begin{align*}
-	\inference{S_2'(S_1\Gamma) |-s t : A_t}{
-	\begin{matrix} W(\Gamma,t)  \\~> (S_1,A_1) \end{matrix}
-	~\land~ \exists R_1.
-	\left(\begin{matrix}
-		S_2'(S_1\Gamma)=R_1(S_1\Gamma) ~~\land\\
-		R_1(\overline{S_1\Gamma}(A_1))
-		\sqsubseteq A_t
-	\end{matrix}\right) }
-	\end{align*}
-	\end{singlespace}
-	From $S_2'(S_1\Gamma)=R_1(S_1\Gamma)$, $R_1$ must be a substitution
-	equivalent to $S_2'$ for all free type variables of $S_1\Gamma$.
-	That is, $\dom(S_2')\subseteq\dom(R_1)$ and $S_2'X = R_1 X$ for
-	any $X\in\dom(S_2')$. Note that $S_2'(\overline{S_1\Gamma}(A_1))
-	\sqsubseteq R_1(\overline{S_1\Gamma}(A_1))$.
-	So, we can choose $R_1=S_2'$ without loss of generality, as follows:
-	\vspace*{-2em}
-	\begin{singlespace}
-	\begin{align*}
-	\inference{S_2'(S_1\Gamma) |-s t : A_t}{
-	\begin{matrix} W(\Gamma,t)  \\~> (S_1,A_1) \end{matrix}
-	~\land~
-	\left(\begin{matrix}
-		S_2'(S_1\Gamma)=S_2'(S_1\Gamma) ~~\land\\
-		S_2'(\overline{S_1\Gamma}(A_1))
-		\sqsubseteq A_t
-	\end{matrix}\right) }
-	\end{align*}
-	\end{singlespace}
-	Removing the trivial equation $S_2'(S_1\Gamma)=S_2'(S_1\Gamma)$
-	from above, we have
-	\begin{equation}
-	\inference{ S_2'(S_1\Gamma) |-s t : A_t }{
-	W(\Gamma,t) ~> (S_1,A_1) ~\land~
-	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_t }
-	\label{WcompleteAppsCase1'}
-	\end{equation}
+        From $S_1'\Gamma = R_1(S_1\Gamma)$ in the conclusion of 
+        (\ref{WcompleteAppsCase1}), we can replace $S_1'\Gamma$
+        with $S_2'(S_1\Gamma)$ in (\ref{WcompleteAppsCase1})
+        without loss of generality, as follows: \vspace*{-2em}
+        \begin{singlespace}
+        \begin{align*}
+        \inference{S_2'(S_1\Gamma) |-s t : A_t}{
+        \begin{matrix} W(\Gamma,t)  \\~> (S_1,A_1) \end{matrix}
+        ~\land~ \exists R_1.
+        \left(\begin{matrix}
+                S_2'(S_1\Gamma)=R_1(S_1\Gamma) ~~\land\\
+                R_1(\overline{S_1\Gamma}(A_1))
+                \sqsubseteq A_t
+        \end{matrix}\right) }
+        \end{align*}
+        \end{singlespace}
+        From $S_2'(S_1\Gamma)=R_1(S_1\Gamma)$, $R_1$ must be a substitution
+        equivalent to $S_2'$ for all free type variables of $S_1\Gamma$.
+        That is, $\dom(S_2')\subseteq\dom(R_1)$ and $S_2'X = R_1 X$ for
+        any $X\in\dom(S_2')$. Note that $S_2'(\overline{S_1\Gamma}(A_1))
+        \sqsubseteq R_1(\overline{S_1\Gamma}(A_1))$.
+        So, we can choose $R_1=S_2'$ without loss of generality, as follows:
+        \vspace*{-2em}
+        \begin{singlespace}
+        \begin{align*}
+        \inference{S_2'(S_1\Gamma) |-s t : A_t}{
+        \begin{matrix} W(\Gamma,t)  \\~> (S_1,A_1) \end{matrix}
+        ~\land~
+        \left(\begin{matrix}
+                S_2'(S_1\Gamma)=S_2'(S_1\Gamma) ~~\land\\
+                S_2'(\overline{S_1\Gamma}(A_1))
+                \sqsubseteq A_t
+        \end{matrix}\right) }
+        \end{align*}
+        \end{singlespace}
+        Removing the trivial equation $S_2'(S_1\Gamma)=S_2'(S_1\Gamma)$
+        from above, we have
+        \begin{equation}
+        \inference{ S_2'(S_1\Gamma) |-s t : A_t }{
+        W(\Gamma,t) ~> (S_1,A_1) ~\land~
+        S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_t }
+        \label{WcompleteAppsCase1'}
+        \end{equation}
 
-	Similarly, from (\ref{WcompleteAppsCase1}), we know that
-	\begin{equation}
-	\inference{ S_3'(S_2(S_1\Gamma)) |-s s : A_s}{
-		W(S_1\Gamma,s) ~> (S_2,A_2) \land
-		S_3'(\overline{S_2(S_1\Gamma)})A_2))\sqsubseteq A_s }
-	\label{WcompleteAppsCase2'}
-	\end{equation}
+        Similarly, from (\ref{WcompleteAppsCase1}), we know that
+        \begin{equation}
+        \inference{ S_3'(S_2(S_1\Gamma)) |-s s : A_s}{
+                W(S_1\Gamma,s) ~> (S_2,A_2) \land
+                S_3'(\overline{S_2(S_1\Gamma)})A_2))\sqsubseteq A_s }
+        \label{WcompleteAppsCase2'}
+        \end{equation}
 
-	Choose $S_3'=S'''\circ S_3$, $S_2' = S'''\circ S_3 \circ S_2$.
-	Then, by the syntax drived typing rule (\rulename{App$_s$}),
-	$A_t = A_s -> B'$. Thus, the premises of (\ref{WcompleteAppsCase1'})
-	and (\ref{WcompleteAppsCase2'}) are sufficient to assume the premise
-	of what we want to prove, by Proposition \ref{prop:Appsrev}.
-	Note that left-hand sides of the logical conjuctions in the conclusions,
-	$W(\Gamma,t) ~> (S_1,A_1)$ and $W(S_1\Gamma,s) ~> (S_2,A_2)$, cocincides
-	with the recursive call in the $W$ algorithm (\rulename{App$_W$}),
-	since we are proving by induction on the recursive call step of
-	the algorithm $W$. All we need to check is that the right-hand sides
-	of ($\land$) in the conclusions of (\ref{WcompleteAppsCase1'}) and
-	(\ref{WcompleteAppsCase2'}) are neccessary conditions for
-	the right-hand side of ($\land$) in the conclusion of
-	what we want to prove.
+        Choose $S_3'=S'''\circ S_3$, $S_2' = S'''\circ S_3 \circ S_2$.
+        Then, by the syntax drived typing rule (\rulename{App$_s$}),
+        $A_t = A_s -> B'$. Thus, the premises of (\ref{WcompleteAppsCase1'})
+        and (\ref{WcompleteAppsCase2'}) are sufficient to assume the premise
+        of what we want to prove, by Proposition \ref{prop:Appsrev}.
+        Note that left-hand sides of the logical conjuctions in the conclusions,
+        $W(\Gamma,t) ~> (S_1,A_1)$ and $W(S_1\Gamma,s) ~> (S_2,A_2)$, cocincides
+        with the recursive call in the $W$ algorithm (\rulename{App$_W$}),
+        since we are proving by induction on the recursive call step of
+        the algorithm $W$. All we need to check is that the right-hand sides
+        of ($\land$) in the conclusions of (\ref{WcompleteAppsCase1'}) and
+        (\ref{WcompleteAppsCase2'}) are neccessary conditions for
+        the right-hand side of ($\land$) in the conclusion of
+        what we want to prove.
 
-	Consider the right-hand side of $(\land$) in
-	the conclusion of (\ref{WcompleteAppsCase1'}), replacing $S_2'$ with
-	our choice of $S_2' = S'''\circ S_3\circ S_2$:
-	\[ (S'''\circ S_3\circ S_2)(\overline{S_1\Gamma}(A_1))
-	\sqsubseteq A_s -> B' \]
-	We can replace $A_1$ in terms of $A_2$ and $X$ as follows:
-	\begin{align*}
-	  & (S'''\circ S_3\circ S_2)(\overline{S_1\Gamma}(A_1))
-		\\
-	=~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3(S_2 A_1)))
-	&\quad& \text{by Proposition \ref{prop:substclosure}}
-	\\
-	=~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2 -> S_3 X))
-	&\quad& \text{by the unification used in (\rulename{App$_W$})}
-	\\
-	=~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2 -> S_3 X)) \\
-	=~& S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2 -> S_3 X))
-	&\quad& \quad\sqsubseteq\quad A_s -> B'
-	\end{align*}
-	Since closure operation and substitutions distribute over ($->$),
-	we have
-	\begin{equation}
-		S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2)) \sqsubseteq A_s
-		\;\land\;
-		S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 X) \sqsubseteq B'
-		\label{WcompleteAppsAlmostWhatWeWant}
-	\end{equation}
+        Consider the right-hand side of $(\land$) in
+        the conclusion of (\ref{WcompleteAppsCase1'}), replacing $S_2'$ with
+        our choice of $S_2' = S'''\circ S_3\circ S_2$:
+        \[ (S'''\circ S_3\circ S_2)(\overline{S_1\Gamma}(A_1))
+        \sqsubseteq A_s -> B' \]
+        We can replace $A_1$ in terms of $A_2$ and $X$ as follows:
+        \begin{align*}
+          & (S'''\circ S_3\circ S_2)(\overline{S_1\Gamma}(A_1))
+                \\
+        =~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3(S_2 A_1)))
+        &\quad& \text{by Proposition \ref{prop:substclosure}}
+        \\
+        =~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2 -> S_3 X))
+        &\quad& \text{by the unification used in (\rulename{App$_W$})}
+        \\
+        =~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2 -> S_3 X)) \\
+        =~& S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2 -> S_3 X))
+        &\quad& \quad\sqsubseteq\quad A_s -> B'
+        \end{align*}
+        Since closure operation and substitutions distribute over ($->$),
+        we have
+        \begin{equation}
+                S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2)) \sqsubseteq A_s
+                \;\land\;
+                S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 X) \sqsubseteq B'
+                \label{WcompleteAppsAlmostWhatWeWant}
+        \end{equation}
 
-	Consider the right-hand side of $(\land$) in
-	the conclusion of (\ref{WcompleteAppsCase2'}):
-	\begin{align*}
-	  & (S'''\circ S_3)(\overline{S_2(S_1\Gamma)}(A_2))
-		\\
-	=~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2)))
-	&& \text{by Proposition \ref{prop:substclosure}}
-		\\
-	=~& S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2))
-		&& \quad\sqsubseteq\quad A_s
-	\end{align*}
-	Note that above is exaclty the same as the left-hand side of ($\land$)
-	in \ref{WcompleteAppsAlmostWhatWeWant}, which is expected due to
-	the nature the unification.
+        Consider the right-hand side of $(\land$) in
+        the conclusion of (\ref{WcompleteAppsCase2'}):
+        \begin{align*}
+          & (S'''\circ S_3)(\overline{S_2(S_1\Gamma)}(A_2))
+                \\
+        =~& S'''(\overline{S_3(S_2(S_1\Gamma))}(S_3 A_2)))
+        && \text{by Proposition \ref{prop:substclosure}}
+                \\
+        =~& S'''(\overline{(S_3\circ S_2 \circ S_1)\Gamma}(S_3 A_2))
+                && \quad\sqsubseteq\quad A_s
+        \end{align*}
+        Note that above is exaclty the same as the left-hand side of ($\land$)
+        in \ref{WcompleteAppsAlmostWhatWeWant}, which is expected due to
+        the nature the unification.
 
-	We are done by choosing $S''=S'''$ and $R=S'''$
-	in what we want to show (\ref{WcompleteWhatWeWantToShow}).
-	Consider the right-hand side of $(\land)$ in the conclusion,
-	replacing both $S''$ and $R$ with $S'''$:
-	\[
-	\left(\begin{matrix}
-		S'''((S_3\circ S_2\circ S_1)\Gamma)=S'''((S_3\circ S_2\circ S_1)\Gamma)
-		\\ \land ~~
-		S'''(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X)) \sqsubseteq B'
-	\end{matrix}\right)
-	\]
-	Note that left-hand side of ($\land$) is trivially true and
-	the right-hand side exactly matches the right-hand side of
-	(\ref{WcompleteAppsAlmostWhatWeWant}).
+        We are done by choosing $S''=S'''$ and $R=S'''$
+        in what we want to show (\ref{WcompleteWhatWeWantToShow}).
+        Consider the right-hand side of $(\land)$ in the conclusion,
+        replacing both $S''$ and $R$ with $S'''$:
+        \[
+        \left(\begin{matrix}
+                S'''((S_3\circ S_2\circ S_1)\Gamma)=S'''((S_3\circ S_2\circ S_1)\Gamma)
+                \\ \land ~~
+                S'''(\overline{(S_3\circ S_2\circ S_1)\Gamma}(S_3 X)) \sqsubseteq B'
+        \end{matrix}\right)
+        \]
+        Note that left-hand side of ($\land$) is trivially true and
+        the right-hand side exactly matches the right-hand side of
+        (\ref{WcompleteAppsAlmostWhatWeWant}).
 
 \item[case]($\<let> x=s \<in> t$)
-	We want to show that \vspace*{-2em}
-	\begin{singlespace}
-	\[\inference{S'\Gamma |-s \<let> x=s \<in> t : A_2'}{
-	\begin{matrix} W(\Gamma,\<let> x=s \<in> t) \\
-		~> (S_2\circ S_1,A_2)
-	\end{matrix}
-	~\land~
-	\exists R.
-		\left(\begin{matrix}
-			S'\Gamma=R((S_2\circ S_1)\Gamma) ~~ \land \\
-			R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2'
-		\end{matrix}\right) } \]
-	\end{singlespace}
+        We want to show that \vspace*{-2em}
+        \begin{singlespace}
+        \[\inference{S'\Gamma |-s \<let> x=s \<in> t : A_2'}{
+        \begin{matrix} W(\Gamma,\<let> x=s \<in> t) \\
+                ~> (S_2\circ S_1,A_2)
+        \end{matrix}
+        ~\land~
+        \exists R.
+                \left(\begin{matrix}
+                        S'\Gamma=R((S_2\circ S_1)\Gamma) ~~ \land \\
+                        R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2'
+                \end{matrix}\right) } \]
+        \end{singlespace}
 
-	By induction, we know that \vspace*{-2em}
-	\begin{singlespace}
-	\begin{align}
-	\label{WcompleteLetsCase1}
-	\inference{S_1'\Gamma |-s s : A_1'}{
-	W(\Gamma,s) ~> (S_1,A_1)
-	~\land~
-	\exists R_1.
-		\left( S_1'\Gamma=R_1(S_1\Gamma) \;\land\;
-			R_1(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'
-		\right) }
-	\\
-	\label{WcompleteLetsCase2}
-	\inference{S_2'(S_1\Gamma,x:\overline{S_1\Gamma}(A_1)) |-s t : A_2'}{
-	\begin{smallmatrix} W((S_1\Gamma,x:\overline{S_1\Gamma}(A_1)),t) \\
-		~> (S_2,A_2)
-	\end{smallmatrix}
-	~\land~
-	\exists R_2.
-		\left(\begin{smallmatrix}
-			S_2'(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))=R_2(S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))) \\ \land ~~
-			R_2(\overline{S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))}(A_2))
-			\sqsubseteq A_2'
-		\end{smallmatrix}\right) }
-	\end{align}
-	\end{singlespace}
+        By induction, we know that \vspace*{-2em}
+        \begin{singlespace}
+        \begin{align}
+        \label{WcompleteLetsCase1}
+        \inference{S_1'\Gamma |-s s : A_1'}{
+        W(\Gamma,s) ~> (S_1,A_1)
+        ~\land~
+        \exists R_1.
+                \left( S_1'\Gamma=R_1(S_1\Gamma) \;\land\;
+                        R_1(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'
+                \right) }
+        \\
+        \label{WcompleteLetsCase2}
+        \inference{S_2'(S_1\Gamma,x:\overline{S_1\Gamma}(A_1)) |-s t : A_2'}{
+        \begin{smallmatrix} W((S_1\Gamma,x:\overline{S_1\Gamma}(A_1)),t) \\
+                ~> (S_2,A_2)
+        \end{smallmatrix}
+        ~\land~
+        \exists R_2.
+                \left(\begin{smallmatrix}
+                        S_2'(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))=R_2(S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))) \\ \land ~~
+                        R_2(\overline{S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))}(A_2))
+                        \sqsubseteq A_2'
+                \end{smallmatrix}\right) }
+        \end{align}
+        \end{singlespace}
 
-	From $S_1'\Gamma = R_1(S_1\Gamma)$ in the conclusion of 
-	(\ref{WcompleteLetsCase1}), we can replace $S_1'\Gamma$
-	with $S_2'(S_1\Gamma)$ in (\ref{WcompleteLetsCase1})
-	without loss of generality, as follows: \vspace*{-2em}
-	\begin{singlespace}
-	\[
-	\inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
-	W(\Gamma,s) ~> (S_1,A_1)
-	~\land~ \exists R_1.
-		\left( S_2'(S_1\Gamma)=R_1(S_1\Gamma) \;\land\;
-			R_1(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'
-		\right) }
-	\]
-	\end{singlespace}
+        From $S_1'\Gamma = R_1(S_1\Gamma)$ in the conclusion of 
+        (\ref{WcompleteLetsCase1}), we can replace $S_1'\Gamma$
+        with $S_2'(S_1\Gamma)$ in (\ref{WcompleteLetsCase1})
+        without loss of generality, as follows: \vspace*{-2em}
+        \begin{singlespace}
+        \[
+        \inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
+        W(\Gamma,s) ~> (S_1,A_1)
+        ~\land~ \exists R_1.
+                \left( S_2'(S_1\Gamma)=R_1(S_1\Gamma) \;\land\;
+                        R_1(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'
+                \right) }
+        \]
+        \end{singlespace}
 
-	From $S_2'(S_1\Gamma)=R_1(S_1\Gamma)$, $R_1$ must be a substitution
-	equivalent to $S_2'$ for all free type variables of $S_1\Gamma$.
-	That is, $\dom(S_2')\subseteq\dom(R_1)$ and $S_2'X = R_1 X$ for
-	any $X\in\dom(S_2')$. Note that $S_2'(\overline{S_1\Gamma}(A_1))
-	\sqsubseteq R_1(\overline{S_1\Gamma}(A_1))$.
-	So, we can choose $R_1=S_2'$ without loss of generality, as follows:
-	\vspace*{-2em}
-	\begin{singlespace}
-	\[
-	\inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
-	W(\Gamma,s) ~> (S_1,A_1)
-	~\land~
-		\left( S_2'(S_1\Gamma)=S_2'(S_1\Gamma) \;\land\;
-			S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'
-		\right) }
-	\]
-	\end{singlespace}
-	Removing the trivial equation $S_2'(S_1\Gamma)=S_2'(S_1\Gamma)$
-	from above, we have \vspace*{-2em}
-	\begin{singlespace}
-	\[
-	\inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
-	W(\Gamma,s) ~> (S_1,A_1) ~\land~
-	S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1' }
-	\]
-	\end{singlespace}
-	Using above and Lemma \ref{lem:genGamma}, we have
-	\[
-	\inference{ S_2'(S_1\Gamma),x:A_1' |-s t : A_2' &
-	   \inference{
-		\inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
-		S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'} }{
-			S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1))
-			\sqsubseteq
-			S_2'(S_1\Gamma),x:A_1' } }{
-	   S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
-	\]
-	which can be summarized as
-	\[
-	\inference{ S_2'(S_1\Gamma),x:A_1' |-s t : A_2' &
-		    S_2'(S_1\Gamma) |-s s : A_1' }{
-	   S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
-	\]
-	By Proposition \ref{prop:Letsrev}, we have
-	\begin{align} \label{usingLetsrev1}
-	\inference{
-	   \inference{ S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2' }{
-		   \exists A_1'.\left(
-		S_2'(S_1\Gamma),x:A_1' |-s t : A_2' ~\land~
-		S_2'(S_1\Gamma) |-s s : A_1' \right) } }{
-	   S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
-	\end{align}
-	Note that the assumption of (\ref{usingLetsrev1}),
-	$S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'$,
-	implies both the assumption of (\ref{WcompleteLetsCase1})
-	instantiated by $S_1'=S_2'\circ S_1$
-	and the assumption (\ref{WcompleteLetsCase2}).
-	So, we can merge the conclusion of (\ref{WcompleteLetsCase1}) and
-	the conclusion of (\ref{WcompleteLetsCase2})
-	instantiated by $S_1'=S_2'\circ S_1$
-	in order to synthesize what we want to prove.
+        From $S_2'(S_1\Gamma)=R_1(S_1\Gamma)$, $R_1$ must be a substitution
+        equivalent to $S_2'$ for all free type variables of $S_1\Gamma$.
+        That is, $\dom(S_2')\subseteq\dom(R_1)$ and $S_2'X = R_1 X$ for
+        any $X\in\dom(S_2')$. Note that $S_2'(\overline{S_1\Gamma}(A_1))
+        \sqsubseteq R_1(\overline{S_1\Gamma}(A_1))$.
+        So, we can choose $R_1=S_2'$ without loss of generality, as follows:
+        \vspace*{-2em}
+        \begin{singlespace}
+        \[
+        \inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
+        W(\Gamma,s) ~> (S_1,A_1)
+        ~\land~
+                \left( S_2'(S_1\Gamma)=S_2'(S_1\Gamma) \;\land\;
+                        S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'
+                \right) }
+        \]
+        \end{singlespace}
+        Removing the trivial equation $S_2'(S_1\Gamma)=S_2'(S_1\Gamma)$
+        from above, we have \vspace*{-2em}
+        \begin{singlespace}
+        \[
+        \inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
+        W(\Gamma,s) ~> (S_1,A_1) ~\land~
+        S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1' }
+        \]
+        \end{singlespace}
+        Using above and Lemma \ref{lem:genGamma}, we have
+        \[
+        \inference{ S_2'(S_1\Gamma),x:A_1' |-s t : A_2' &
+           \inference{
+                \inference{ S_2'(S_1\Gamma) |-s s : A_1' }{
+                S_2'(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'} }{
+                        S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1))
+                        \sqsubseteq
+                        S_2'(S_1\Gamma),x:A_1' } }{
+           S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
+        \]
+        which can be summarized as
+        \[
+        \inference{ S_2'(S_1\Gamma),x:A_1' |-s t : A_2' &
+                    S_2'(S_1\Gamma) |-s s : A_1' }{
+           S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
+        \]
+        By Proposition \ref{prop:Letsrev}, we have
+        \begin{align} \label{usingLetsrev1}
+        \inference{
+           \inference{ S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2' }{
+                   \exists A_1'.\left(
+                S_2'(S_1\Gamma),x:A_1' |-s t : A_2' ~\land~
+                S_2'(S_1\Gamma) |-s s : A_1' \right) } }{
+           S_2'(S_1\Gamma),x:S_2'(\overline{S_1\Gamma}(A_1)) |-s t : A_2' }
+        \end{align}
+        Note that the assumption of (\ref{usingLetsrev1}),
+        $S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'$,
+        implies both the assumption of (\ref{WcompleteLetsCase1})
+        instantiated by $S_1'=S_2'\circ S_1$
+        and the assumption (\ref{WcompleteLetsCase2}).
+        So, we can merge the conclusion of (\ref{WcompleteLetsCase1}) and
+        the conclusion of (\ref{WcompleteLetsCase2})
+        instantiated by $S_1'=S_2'\circ S_1$
+        in order to synthesize what we want to prove.
 
-	Applying \rulename{Let$_W$} rule to left-hand arguments of $\land$
-	in the conclusions of (\ref{WcompleteLetsCase1}) and
-	(\ref{WcompleteLetsCase2}), we get
-	$W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)$.
+        Applying \rulename{Let$_W$} rule to left-hand arguments of $\land$
+        in the conclusions of (\ref{WcompleteLetsCase1}) and
+        (\ref{WcompleteLetsCase2}), we get
+        $W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)$.
 
-	Let $R_2=R$ in the right-hand side in the conclusion of
-	(\ref{WcompleteLetsCase2}). Then, we get
-	$\exists R.\left(  S_2'(S_1\Gamma)=R((S_2\circ S_1)\Gamma) ~\land~
-	R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2' \right)$
-	by similar steps we took for the case (\rulename{Abs$_s$}).
+        Let $R_2=R$ in the right-hand side in the conclusion of
+        (\ref{WcompleteLetsCase2}). Then, we get
+        $\exists R.\left(  S_2'(S_1\Gamma)=R((S_2\circ S_1)\Gamma) ~\land~
+        R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2' \right)$
+        by similar steps we took for the case (\rulename{Abs$_s$}).
 
-	In summary, we get \vspace*{-2em}
-	\begin{singlespace}
-	\[\inference{S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'}{
-	\begin{matrix} W(\Gamma,\<let> x=s \<in> t) \\
-		~> (S_2\circ S_1,A_2)
-	\end{matrix}
-	~\land~
-	\exists R.
-		\left(\begin{matrix}
-			S_2'(S_1\Gamma)=R((S_2\circ S_1)\Gamma) ~~ \land \\
-			R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2'
-		\end{matrix}\right) } \]
-	\end{singlespace}
-	which is almost exactly what we want to prove,
-	except that $S_2'(S_1\Gamma)$ is used in place of $S'\Gamma$.
+        In summary, we get \vspace*{-2em}
+        \begin{singlespace}
+        \[\inference{S_2'(S_1\Gamma) |-s \<let> x=s \<in> t : A_2'}{
+        \begin{matrix} W(\Gamma,\<let> x=s \<in> t) \\
+                ~> (S_2\circ S_1,A_2)
+        \end{matrix}
+        ~\land~
+        \exists R.
+                \left(\begin{matrix}
+                        S_2'(S_1\Gamma)=R((S_2\circ S_1)\Gamma) ~~ \land \\
+                        R(\overline{(S_2\circ S_1)\Gamma}(A_2)) \sqsubseteq A_2'
+                \end{matrix}\right) } \]
+        \end{singlespace}
+        which is almost exactly what we want to prove,
+        except that $S_2'(S_1\Gamma)$ is used in place of $S'\Gamma$.
 
-	Without loss of generality, we can use $S_2'(S_1\Gamma)$
-	instead of $S'\Gamma$. By Proposition \ref{prop:Letsrev},
-	$S'\Gamma |-s \<let> x=s \<in> t : A_2'$ implies
-	$S'\Gamma |-s s : A_1'$ for some $A_1'$.
-	Applying (\ref{WcompleteLetsCase1}) to 
-	$S'\Gamma |-s s : A_1'$ with $S_1'=S'$,
-	we have $S'\Gamma = R_1(S_1\Gamma)$ for some $R_1$.
+        Without loss of generality, we can use $S_2'(S_1\Gamma)$
+        instead of $S'\Gamma$. By Proposition \ref{prop:Letsrev},
+        $S'\Gamma |-s \<let> x=s \<in> t : A_2'$ implies
+        $S'\Gamma |-s s : A_1'$ for some $A_1'$.
+        Applying (\ref{WcompleteLetsCase1}) to 
+        $S'\Gamma |-s s : A_1'$ with $S_1'=S'$,
+        we have $S'\Gamma = R_1(S_1\Gamma)$ for some $R_1$.
 
 \vspace*{-2em}
 \end{itemize}
@@ -1174,12 +1180,12 @@ By induction on recursive call step of the algorithm $W$.
 %% ~\\ For any $\Gamma$ and $t$, there exist $S'$ and $A'$ such that
 \[
 \inference{ \Gamma |-s t : A' & \FV(\Gamma)=\emptyset }{
-	W(\Gamma,t) ~> (S,A) ~\land~
-	\exists R.R(\overline{\Gamma}(A))\sqsubseteq A' }
+        W(\Gamma,t) ~> (S,A) ~\land~
+        \exists R.R(\overline{\Gamma}(A))\sqsubseteq A' }
 \]
 \end{corollary}
 \begin{proof} By Theorem \ref{thm:completeW} and the fact that
-	$S'\Gamma = \Gamma$ for any $S'$
-	when $\FV(\Gamma) = \emptyset$.
+        $S'\Gamma = \Gamma$ for any $S'$
+        when $\FV(\Gamma) = \emptyset$.
 \end{proof}
 
