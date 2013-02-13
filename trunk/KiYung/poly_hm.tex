@@ -48,7 +48,7 @@ A,B&~::= ~ A -> B
        ~  | ~ \Gamma, x:\sigma \quad (x\notin \dom(\Gamma))
 \end{align*}
 \[ \textbf{Type scheme ordering (or, generic instantiation)} \quad \framebox{$\sigma \sqsubseteq \sigma'$}\]
-\[ \qquad \inference[GenInst]{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
+\[ \qquad \inference[\sc GenInst]{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
              {\forall X_1\dots X_n.A \;\sqsubseteq\;
               \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} \]
 $\!\!\!\!\!\!\!\!\!\!$
@@ -344,7 +344,7 @@ Recall that a let-term, $\<let> x=s \<in> t$ is semantically equivalent to
 $(\l x.t)\;s$. We first desugar the let-term into an application of
 an abstraction $(\l x.t)$ to the body of the local definition ($s$).
 Then, we can simply apply the \rulename{App} rule and the \rulename{Abs} rule
-in System \F, as below:
+in System~\F, as below:
 \[\inference[\sc App]
         { \inference[\sc Abs]
                 { \Delta |- \sigma
@@ -362,6 +362,7 @@ Since the \rulename{Inst} rule refers to the generic instantiation relation
 $\sqsubseteq$, the shape of $\sigma$ and $\sigma'$ in the \rulename{Inst} rule
 must match the left- and right-hand sides of $\sqsubseteq$
 in the generic instantiation rule, as below:
+\begin{singlespace}
 \begin{multline*}
   \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
                       {\Gamma |- t : \sigma'}
@@ -370,11 +371,12 @@ in the generic instantiation rule, as below:
                 \sigma =& \forall X_1\dots X_n.A ~~~~~~~~~~~~~~~~~~~~~~ \\
                \sigma' =& \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]
         \end{array}
- \\ \text{such that}~
+	\\ \text{such that} ~ \phantom{\frac{\frac{A}{\frac{A}{A}}}{A}}
    \inference{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
              {\forall X_1\dots X_n.A \;\sqsubseteq\;
               \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
 \end{multline*}
+\end{singlespace}
 The generic instantiation from $\sigma$ to $\sigma'$
 in the \rulename{Inst} rule above can be understood as having two phases:
 instantiation from $\sigma$ to $A[B_1/X_1]\cdots[B_n/X_n]$ and
@@ -585,10 +587,11 @@ for any $A$.
 \begin{proof}
 It is obvious once we observe that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
 To show this, we only need to show that ($\subseteq$) relation
-holds pointwise on the type schemes in the context.
+holds pointwise on the type schemes in the context,
+since the free variables of a context are collections
+of the free variables of the type-schemes in the context.
 
-the one need to observe that the free variables of a context
-arise only from the type-schemes in the context. Since $\FV(\sigma') \subseteq \FV(\sigma)$
+Since $\FV(\sigma') \subseteq \FV(\sigma)$
 when $\sigma' \sqsubseteq \sigma$, ... TODO .
 
 Since the defintion of $\sqsubseteq$
@@ -945,7 +948,20 @@ By induction on recursive call step of the algorithm $W$.
         \label{WcompleteAppsCase2'}
         \end{equation}
 
-        Choose $S_3'=S'''\circ S_3$, $S_2' = S'''\circ S_3 \circ S_2$.
+        We can choose $S_3'=S'''\circ S_3$ and $S_2' = S'''\circ S_3 \circ S_2$.
+	Here, we rely on the fact that $S_3$ is a most general unifier.
+	Recall that $\unify$ succeeds when the two types are unifiable
+	and the resulting subsitutiion is a most general unifier for those
+	two types. If $S_3$ were not a most general unifier, it might make
+	the closures of $A_1$ and $A_2$ too specific so that $\sqsubseteq$
+	relations in \ref{WcompleteAppsCase1'} and \ref{WcompleteAppsCase2'}
+	no longer hold. So our choice $S_3'=S'''\circ S_3$ for
+	\ref{WcompleteAppsCase2'} is a most probable candidate
+	-- that is, nothing else could work if this choice doesn't work. 
+	The choice $S_2' = S'''\circ S_3 \circ S_2$ for
+	\ref{WcompleteAppsCase1'} is made accordingly
+	to match $S_3'=S'''\circ S_3$.
+
         Then, by the syntax drived typing rule (\rulename{App$_s$}),
         $A_t = A_s -> B'$. Thus, the premises of (\ref{WcompleteAppsCase1'})
         and (\ref{WcompleteAppsCase2'}) are sufficient to assume the premise
