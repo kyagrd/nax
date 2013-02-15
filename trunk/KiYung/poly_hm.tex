@@ -132,7 +132,7 @@ $\alpha$-equivalence as a special case of the type scheme ordering rule \rulenam
 where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
 
 The usual \empty{instantiation} (\ie, substitution of quantified variables
-with mono-types) is a special case of generic instantiation. For example,
+with monotypes) is a special case of generic instantiation. For example,
 consider the instantiations of $\forall X_1\,X_2.X_1 -> X_2$ below:
 \[ (\forall X_1\,X_2.X_1 -> X_2) \sqsubseteq
    (\forall X_2.\iota -> X_2) \sqsubseteq (\iota -> \iota)
@@ -542,10 +542,10 @@ that $X \notin\FV(\overline{\Gamma}(A))$ by the definition of generalization clo
 This step follows from a proof by contradiction argument.
 If it were the case that $X\in\overline{\Gamma}(A)$, then it should be the case that
 $X\in\FV(\Gamma)$
-by the defintion of generalization closure. This contradicts the side condition of
+by the definition of generalization closure. This contradicts the side condition of
 the \rulename{Gen} rule: $X\notin\FV(\Gamma)$.
-Recall that generic instantiation allows quantifiying type variables
-that do not apper free in the original type scheme. Thus,
+Recall that generic instantiation allows quantifying type variables
+that do not appear free in the original type scheme. Thus,
 $\overline{\Gamma}(A) \sqsubseteq \forall X.\sigma$ by definition
 of $\sqsubseteq$.
 \end{proof}
@@ -586,17 +586,17 @@ for any $A$.
 \end{lemma}
 \begin{proof}
 It is obvious once we observe that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
-To show this, we only need to show that ($\subseteq$) relation
-holds pointwise on the type schemes in the context,
-since the free variables of a context are collections
-of the free variables of the type-schemes in the context.
-
-Since $\FV(\sigma') \subseteq \FV(\sigma)$
-when $\sigma' \sqsubseteq \sigma$, ... TODO .
-
-Since the defintion of $\sqsubseteq$
-over typing contexts only depends on $\sqsubseteq$ over type schemes,
-it is clear that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
+To show that this, it suffices to show that ($\subseteq$) relation holds
+pointwise on the type schemes in the context That is,
+$\FV(\sigma')\sqsubseteq\FV(\sigma)$ when $x:\sigma' \in \Gamma'$
+and $x:\sigma \in \Gamma$. Note that $\dom(\Gamma')=\dom(\Gamma)$
+by definition of $\sqsubseteq$ over contexts.
+From the assumption $\Gamma' \sqsubseteq \Gamma$, we know that
+$\sigma'\sqsubseteq\sigma$ when $x:\sigma' \in \Gamma'$
+and $x:\sigma \in \Gamma$. Thus, we only need to show that
+$\sigma' \sqsubseteq \sigma$ implies $\FV(\sigma') \subseteq \FV(\sigma)$,
+which is not difficult to observe by definition of $\sqsubseteq$ over
+type shemes (\rulename{GenInst} in Figure \ref{fig:hm}).
 \end{proof}
 
 \subsection{The type inference algorithm $W$}\label{sec:hm:W}
@@ -610,16 +610,16 @@ has a similar structure to the corresponding syntax directed rule.
 The type inference algorithm has additional details of explicitly
 managing fresh type variable introduction and substitution.
 
-$\unify(A_1,A_2)$ succeeds when there exists a substitution $S$ such that
-$S A_1 = S A_2$. When the unification succeeds, we write $\unify(A_1,A_2) ~> S$.
-Furthermore, the result of the unification $S$ is a most general unifier whose
-domain is a subset of $\FV(A_1) \cup \FV(A_2)$. That is, for any unifier $S'$
-such that $S' A_1 = S' A_2$ and $\dom(S') \subseteq \FV(A_1) \cup \FV(A_2)$,
+The unification of $A_1 and A_2$ succeeds when there exists a substitution $S$
+such that $S A_1 = S A_2$.  When the unification succeeds,
+we write $\unify(A_1,A_2) ~> S$, where the resulting substitution $S$ is
+a unifier of $A_1$ and $A_2$.  Furthermore, $S$ is a most general unifier
+\cite{Herbrand30,Robinson65} whose domain is a subset of $\FV(A_1)\cup\FV(A_2)$.
+That is, for any unifier $S'$ such that $S' A_1 = S' A_2$ and
+$\dom(S') \subseteq \FV(A_1) \cup \FV(A_2)$,
 there exists a substitution $R$ such that $S' = R\circ S$ and
-$\dom(R)\subseteq\dom(S)$. The composition of substitution is defined
-as $(S_2\circ S_1)A = S_2(S_1(A))$.
-
-TODO cite some unification algorithm papers
+$\dom(R)\subseteq\dom(S)$. The composition of two substitutions
+is defined as $(S_2\circ S_1)A = S_2(S_1(A))$.
 
 \begin{figure}
 \begin{singlespace}

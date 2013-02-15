@@ -1,35 +1,140 @@
-\chapter{System \Fi}\label{ch:fi} TODO
+\chapter{System \Fi}\label{ch:fi}
 
 \newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
 
-I am developing a typed lambda calculus called System \Fi\, which is an
-extension of System \Fw\ with term indexed types. Term indexed types
-naturally support the Curry-Howard isomorphism, as a type constructor can be
-seen as a relation between one or more terms.  This kind of expressiveness is
-available in dependently typed languages (where there is no distinction between
-types and terms), and is also encodable using GADTs in functional languages
-such as Haskell.  GADTs in Haskell are often indexed by uninhabited types
-which are isomorphic to terms. The type indices used in GADTs in Haskell are
-often really intended to be values at term level, but are just simulations of
-such terms at type level.  For example one might introduce uninhabited type
-constructors \verb+Zero+ and \verb+Succ+ in order to simulate natural numbers
-when defining length indexed lists, as follows:
-\begin{verbatim}
-data Zero
-data Succ x
+It is well known that datatypes can be embedded into polymorphic lambda
+calculi by means of functional encodings,
+such as the Church and Boehm-Berarducci encodings~\cite{BoehmBerarducci}.
 
-data Vector a n where
-  Nil:: Vector a Zero
-  Cons:: a -> Vector a n -> Vector a (Succ n)
-\end{verbatim}  
+In System~\textsf{F}, one can embed \emph{regular datatypes},
+like homogeneous lists:
+\[
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data List a = Cons a (List a) | Nil} \\
+\text{System \textsf{F}:}~& 
+\texttt{{List}}\:\: A\:\:\triangleq\:\:
+\forall X.
+(A\to X\to X) \to X \to X ~~\; \\
+&
+\quad~~
+\texttt{Cons} \triangleq \l w.\l x.\l y.\l z.\,y\;w\,(x\;y\;z),~
+\texttt{Nil} \triangleq \l y.\l z.z
+\end{array}
+\]
+In such regular datatypes, constructors have algebraic structure that
+directly translates into polymorphic operations on abstract types as
+encapsulated by universal quantification over types (of kind $*$).
 
-Within System \Fi, we can rigorously define types indexed by terms,
-while keeping the term level and the type level cleanly separated.
-We can also argue about the properties of the Mendler-style combinators
-over indexed types.  You can find a summary of \Fi\ in \S\ref{ch:fi}.
+In the more expressive System \Fw\ (where one can abstract over
+type constructors of any kind), one can encode more general
+\emph{type-indexed datatypes} that go beyond the regular datatypes.
+For example, one can embed powerlists with heterogeneous elements
+in which an element of type \texttt{a} is followed by
+an element of the product type \texttt{(a,a)}:
+\[
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data Powl a = 
+        PCons a (Powl(a,a))
+        | 
+        PNil 
+} \\
+& \!\!\!\!\!\!\!\!\!
+  \textcolor{gray}{\small\texttt{-- PCons 1 (PCons (2,3) (PCons ((3,4),(1,2)) PNil)) :: Powl Int}}\\
+\text{System \Fw:}~& \texttt{{Powl}}\:\triangleq\:
+\lambda A^{*}.\forall X^{*\to*}. (A\to X(A\times A)\to X A) \to X A \to XA
+\end{array}
+\]
+Note the non-regular occurrence (\texttt{Powl(a,a)}) in the definition of
+(\texttt{Powl a}), and the use of universal quantification over
+higher-order kinds ($\forall X^{*\to*}$).
+The term encodings for {\small\tt PCons} and {\small\tt PNil} are exactly
+the same as the term encodings for {\small\tt Cons} and {\small\tt Nil},
+but have different types.
 
-TODO
-\section{TODO intro or motivation}
+What about term-indexed datatypes?  What extensions to System~\Fw\ are
+needed to embed term-indices as well as type-indices?  Our answer is
+System~\Fi.
+
+In a functional language supporting term-indexed datatypes, we envisage
+that the classic example of homogeneous length-indexed lists would be
+defined along the following lines (in Nax-like syntax):\begin{singlespace}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell]
+   data Nat = S Nat | Z 
+   data Vec : * -> Nat -> * where
+     VCons : a -> Vec a {i} -> Vec a {S i}
+     VNil  : Vec a {Z}
+\end{lstlisting}\end{singlespace}
+Here the type constructor~{\tt Vec} is defined to admit parameterisation
+by both type and term-indices.  For instance, the type 
+(\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
+vectors of lists of natural numbers.  By design, our syntax directly
+reflects the difference between type and term-indexing by enclosing
+the latter in curly braces.  We also make this distinction in 
+System~\Fi, where it is useful within the type system
+to guarantee the static nature of term-indexing.
+
+The encoding of the vector datatype in System~\Fi\ is as follows:\vspace*{-3pt}
+\begin{equation*}\label{FiVecType}
+\texttt{{Vec}}
+\triangleq
+\begin{array}[t]{l}
+\lambda A^{*}.\lambda
+i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to *}.
+  (\forall j^{\texttt{{Nat}}}.A\to X\{j\}\to X\{\texttt{{S}}\; j\})
+  \to X\{\texttt{{Z}}\}
+    \to X\{i\}
+\end{array}
+\end{equation*}\vskip-1ex\noindent
+where $\texttt{{Nat}}$, $\mathtt Z$, and $\mathtt S$ respectively encode
+the natural number type and its two constructors,  zero and successor.
+Again, the term encodings for {\small\tt VCons} and {\small\tt VNil} are exactly
+the same as the encodings for {\small\tt Cons} and {\small\tt Nil},
+but have different types.
+
+Without going into the details of the formalism, which are given in the
+next section, one sees that such a calculus incorporating term-indexing
+structure needs four additional constructs (see \Fig{Fi} for the
+highlighted extended syntax).
+\begin{enumerate}
+\item 
+  Type-indexed kinding~($A\to\kappa$), as in $(\texttt{{Nat}\ensuremath{\to}*})$
+  in the example above, where the compile-time nature of term-indexing
+  will be reflected in the typing rules, enforcing that $A$ be a closed
+  type~(rule~$(Ri)$ in \Fig{Fi2}).
+
+\item 
+  Term-index abstraction~$\lambda i^A.F$~(as $\lambda
+  i^{\texttt{{Nat}}}.\cdots$ in the example above) for constructing (or
+  introducing) term-indexed kinds (rule~$(\lambda i)$ in
+  \Fig{Fi2}).  
+
+\item 
+  Term-index application~$F\{s\}$ (as $X\{{\tt Z}\}$, $X\{j\}$, and
+  $X\{\texttt{S}\;j\}$ in the example above) for destructing (or
+  eliminating) term-indexed kinds, where the compile-time nature of
+  indexing will be reflected in the typing rules, enforceing that the index be
+  statically typed% in that it does not depend on run-time parameters
+~(rule~$(@i)$ in \Fig{Fi2}) .
+
+\item 
+  Term-index polymorphism~$\forall i^A.B$ (as $\forall
+  j^{\texttt{{Nat}}}.\cdots$ in the example above) where the compile-time
+  nature of polymorphic term-indexing will be reflected in the typing rules enforcing
+  that the variable~$i$ be static of closed type~$A$~(rule~$(\forall
+  Ii)$ in \Fig{Fi2}).
+\end{enumerate}
+
+As described above, System~\Fi\ maintains a clear-cut separation between
+type-indexing and term-indexing.  This adds a level of abstraction
+to System~\Fw\ and yields types that in addition to parametric polymorphism
+also keep track of inductive invariants using term-indices. All term-index
+information can be erased, since it is only used at compile-time.  
+It is possible to project any well-typed System~\Fi\ term into
+a well-typed System~\Fw\ term.
+For instance, the erasure of the \Fi-type~\texttt{Vec}
+is the \Fw-type~\texttt{List}.  This is established in
+\S\ref{sec:fi:theory} and used to deduce the strong normalization of
+System~\Fi.
 
 \input{fi_fi} %% description of fi
 

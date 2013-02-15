@@ -90,7 +90,7 @@ the |out| operation to the |mprim| family, as is shown in Figure \ref{fig:mprim}
 just as the |mhist| family can be defined by adding the |out| operation
 to |mcata|. The |mcvpr| family is only guaranteed to terminate for
 positive datatypes, for the same reason that the |mhist| family is
-only guaranteed to terminate for positive datatypes (recall Figure \ref{} ).
+only guaranteed to terminate for positive datatypes (recall Figure \ref{fig:LoopHisto}).
 
 A simple variation of the Fibonacci function, shown  in Figure \ref{fig:lucas},
 is an example of a course-of-values primitive recursion.
@@ -130,7 +130,10 @@ It is strongly believed that the primitive recursion family cannot be
 embedded in \Fw\ in a reduction preserving manner, since it is known that
 induction is not derivable from second-order dependent calculi \cite{Geuvers01}.
 As we mentioned in \S\ref{mendler_history}, the termination properties of
-Mendler-style primitive recursion are shown by embedding |mprim| into \Fixw\ 
-\cite{AbeMat04}. We will explain the details of the embedding of |mprim|
-into \Fixw\ in Chapter \ref{ch:fixi}. %%% TODO update reference to a section
+Mendler-style primitive recursion can be shown by embedding |mprim| into
+\Fixw\ \cite{AbeMat04} (also described in Section \ref{ch:fixi:data}.
+Additionally, we discovered how to embed |mcvpr| within \Fixw.
+However, our embedding of |mcvpr| into \Fixw\ (or, \Fixi) is not
+reduction preserving. We will explain the details of the embedding
+of |mprim| into \Fixw\ in Section \ref{ch:fixi:cv}.
 

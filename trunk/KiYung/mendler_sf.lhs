@@ -451,7 +451,7 @@ In Figure \ref{fig:HOASshowFw}, we define both an recursive datatype
 for HOAS (|Exp|), and the string formatting function (|showExp|), 
 with these $F_\omega$ encodings, just as we did in \S\ref{ssec:showHOASmsfcata}.
 We can define simple expressions using the shorthand constructors and print out
-those expressions using |showExp|.  For example, \\
+those expressions using |showExp|.  For example,
 \begin{quote}\noindent
 $>$ |putStrLn (showExp (lam(\x->lam(\y->x))))|\\
 \verb|(\a->(\b->a))|
@@ -481,3 +481,4 @@ ill-behaved |phi| functions that extract embedded functions, and
 then apply them to parts of the tree which contain those functions.
 Yet, they may be nevertheless useful functions. 
 
+TODO open iteration
