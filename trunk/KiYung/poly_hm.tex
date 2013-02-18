@@ -950,16 +950,15 @@ By induction on recursive call step of the algorithm $W$.
 
         We can choose $S_3'=S'''\circ S_3$ and $S_2' = S'''\circ S_3 \circ S_2$.
 	Here, we rely on the fact that $S_3$ is a most general unifier.
-	Recall that $\unify$ succeeds when the two types are unifiable
-	and the resulting subsitutiion is a most general unifier for those
-	two types. If $S_3$ were not a most general unifier, it might make
-	the closures of $A_1$ and $A_2$ too specific so that $\sqsubseteq$
-	relations in \ref{WcompleteAppsCase1'} and \ref{WcompleteAppsCase2'}
-	no longer hold. So our choice $S_3'=S'''\circ S_3$ for
-	\ref{WcompleteAppsCase2'} is a most probable candidate
-	-- that is, nothing else could work if this choice doesn't work. 
-	The choice $S_2' = S'''\circ S_3 \circ S_2$ for
-	\ref{WcompleteAppsCase1'} is made accordingly
+	Recall that $\unify(A,B)$ succeeds when the two types $A$ and $B$
+	are unifiable and the resulting subsitutiion is a most general unifier
+	for those two types. If $S_3$ were not a most general unifier, it might
+	make the closures of $A_1$ and $A_2$ too specific so that $\sqsubseteq$
+	relations \ref{WcompleteAppsCase2'} no longer hold.
+	So our choice $S_3'=S'''\circ S_3$ for \ref{WcompleteAppsCase2'} is
+	a most probable candidate -- that is, nothing else could work if
+	this choice doesn't work. The choice $S_2' = S'''\circ S_3 \circ S_2$
+	for \ref{WcompleteAppsCase1'} is made accordingly
 	to match $S_3'=S'''\circ S_3$.
 
         Then, by the syntax drived typing rule (\rulename{App$_s$}),
