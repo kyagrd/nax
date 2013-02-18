@@ -481,4 +481,26 @@ ill-behaved |phi| functions that extract embedded functions, and
 then apply them to parts of the tree which contain those functions.
 Yet, they may be nevertheless useful functions. 
 
-TODO open iteration
+\begin{figure}
+%{
+%format e1
+%format e2
+%include mendler/OpenIt.lhs
+%}
+\caption{The Mender-style open-iteration |mopenit0|,
+	which allows one free variable,
+	and the |freevarused| function defined using |mopenit0|.}
+\label{fig:openiter}
+\end{figure}
+The Mendler-style open-iteration (|mopenit0|) is yet another variation to
+the |msfcata0|, allowing a free variable. The free variable is introduced
+as a host-language binding, in spirit of HOAS.
+We write |mopenit0 (\x->e) v| for the open-iteration over an expression |e|
+with a free |x|, which is to be substituted by value |v|, For instance,
+the function |freevarused| defined using |mopenit0| in Figure \ref{fig:openiter}
+checks whether the free variable is used in the expression we iterate over.
+Just like other families of Mendler-style combinators, there there is an
+open-iteration combinator at each kind (\eg, |mopenit1|).
+\citet{bgb} have studied more general versions of open-iteration, although
+not in Mendler style, that allow more than one free variable.
+

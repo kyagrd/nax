@@ -131,9 +131,9 @@ embedded in \Fw\ in a reduction preserving manner, since it is known that
 induction is not derivable from second-order dependent calculi \cite{Geuvers01}.
 As we mentioned in \S\ref{mendler_history}, the termination properties of
 Mendler-style primitive recursion can be shown by embedding |mprim| into
-\Fixw\ \cite{AbeMat04} (also described in Section \ref{ch:fixi:data}.
+\Fixw\ \cite{AbeMat04} (also described in Section \ref{sec:fixi:data}.
 Additionally, we discovered how to embed |mcvpr| within \Fixw.
 However, our embedding of |mcvpr| into \Fixw\ (or, \Fixi) is not
 reduction preserving. We will explain the details of the embedding
-of |mprim| into \Fixw\ in Section \ref{ch:fixi:cv}.
+of |mprim| into \Fixw\ in Section \ref{sec:fixi:cv}.
 
