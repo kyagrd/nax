@@ -118,9 +118,8 @@ both |out| and |cast| operations for accessing deep recursive components and
 casting from an abstract value to a concrete recursive value.
 
 \begin{figure}
-$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
-\begin{minipage}{.6\linewidth}\small \ExLucasG \end{minipage}
-\begin{minipage}{.6\linewidth}\small \ExLucas \end{minipage}
+\begin{minipage}{.5\linewidth}\small \ExLucasG \end{minipage}
+\begin{minipage}{.5\linewidth}\small \ExLucas \end{minipage}
 \caption{Lucas number {\small (\url{http://oeis.org/A066982})} example
          illustrating the use of the |mcvpr0| family.}
 \label{fig:lucas}

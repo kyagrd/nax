@@ -83,9 +83,9 @@ tail = mprim0 phi where
 lucas = mcvpr0 phi where
   phi out cast luc Z      =   zero
   phi out cast luc (S n)  =
-              case out n of
-                    Z     ->  succ zero
-                    S n'  ->  plus  (plus (luc n) (luc n'))
-                                    (cast n')
+    case out n of
+      Z     ->  succ zero
+      S n'  ->  plus  (plus (luc n) (luc n'))
+                      (cast n')
 \end{code}
 }
