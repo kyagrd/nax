@@ -150,10 +150,47 @@ the index variable bindings from the type level context.
 \subsection{Conditions for well-behaved course-of-values recursion}
 \label{ssec:fixi:theory:cv}
 \begin{proposition}\label{prop:fixi:fmap}
-For any $F : +* -> *$, there exists
-
+For any $F : +* -> *$, assuming that $F$ is in in normal form and that
+all free variables of $F$ are introduced by universal quantification,
+there exists \quad
 $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
 \end{proposition}
+\begin{proof}
+	We can derive $\textit{fmap}_F$ from the structure of $F$.
+\begin{itemize}
+\item[case]($F \triangleq \l Z^{+*}. Z$)
+	Since $F\;X = X$ and $F\;X = Y$,
+	we can return the function $z:X -> Y$ itself.
+	That is, $ \textit{fmap}_{(\l Z^{+*}. Z)} = \l z . z $.
+
+\item[case]($F \triangleq \l Z^{+*}. X_1$)
+	We assume that $X_1$ is different from $Z$. Since $F\;X = F\;Y = X_1$,
+	we can just return the identity function on $X_1$,
+	ignoring the function passed to $z$.
+	That is, $ \textit{fmap}_{(\l Z^{+*}. X_1)} = \l z . \l x. x $.
+
+\item[case]($F \triangleq \l Z^{+*}.X_1\,G$).
+	Same as the case ($F \triangleq \l Z^{+*}. X_1$),
+	considering $X_1\,G$ as yet another fresh free variable $X_1'$.
+	That is,
+	$\textit{fmap}_{(\l Z^{+*}.X_1\;G)}=\textit{fmap}_{(\l Z^{+*}.X_1')}$.
+
+\item[case]($F \triangleq \l Z^{+*}.X_1\{s\}$).
+	Same as the case ($F \triangleq \l Z^{+*}. X_1$),
+	considering $X_1\{s\}$ as yet another fresh free variable $X_1'$.
+	That is,
+	$\textit{fmap}_{(\l Z^{+*}.X_1\{s\})}=\textit{fmap}_{(\l Z^{+*}.X_1')}$.
+
+\item[case]($F \triangleq \l Z^{+*}. A -> B$)
+	TODO $\textit{fmap}_{(\l Z^{+*}.B)}$
+
+	TODO three subcases on A: variable like (easy), forall (fresh), arrow (inductive)
+
+\item[case]($F \triangleq \l Z^{+*}. \forall X_2^\kappa .B_1$)
+	Same as the case ($F \triangleq \l Z^{+*}. B$),
+	considering $X_2$ as a fresh free variable.
+\end{itemize}
+\end{proof}
 
 \begin{proposition}\label{prop:fixi:fmapFree}
 If $\textit{fmap}_F:\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
@@ -163,7 +200,27 @@ exists, then
 \textit{fmap}_F~\textit{f} \;\circ\; \textit{fmap}_F~\textit{g}
 &~=~ \textit{fmap}_F~(f\circ g)
 \end{align*}
+\end{proposition}\noindent
+This is a well-known parametricity theorem on maps any instance of the type
+$\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$ satisfies
+the two equations above. However, for the purpose of defining $\McvPr_{*}$,
+we only need to know that there exists one such $\textit{fmap}_F$. That is,
+\begin{proposition}\label{prop:fixi:fmapHom}
+For any $F : +* -> *$, there exists
+
+$\textit{fmap}_F:\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+such that
+\begin{align*}
+\textit{fmap}_F~\textit{id} &~=~ \textit{id} \\
+\textit{fmap}_F~\textit{f} \;\circ\; \textit{fmap}_F~\textit{g}
+&~=~ \textit{fmap}_F~(f\circ g)
+\end{align*}
 \end{proposition}
+\begin{proof}
+	You can check that each case
+	in the proof of Proposition \ref{prop:fixi:fmap}
+	satisfies the two equations above.
+\end{proof}
 
 \begin{proposition} For any $F : +* -> *$, there exists
 $\unIn_F : \mu^{+}{*} F -> F(\mu^{+}{*} F)$ such that
