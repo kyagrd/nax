@@ -186,6 +186,16 @@ $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
 
 	TODO three subcases on A: variable like (easy), forall (fresh), arrow (inductive)
 
+	We have a problem here with the forall. When $A$ is forall, then it is
+	a universal quantification at negative position, which is existential.
+	I don't know what to do about this.
+	Maybe this is why there isn't such a system yet.
+	As long as there arn't universal quantification at negative positions
+	there is a good way to derive fmap. So, in Haskell without
+	RankNTypes, deriving Fucntor should work, but what if there are
+	RankNTypes?
+	Wondering whether people have aready studied about this.
+
 \item[case]($F \triangleq \l Z^{+*}. \forall X_2^\kappa .B_1$)
 	Same as the case ($F \triangleq \l Z^{+*}. B$),
 	considering $X_2$ as a fresh free variable.
