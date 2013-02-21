@@ -58,10 +58,10 @@ Recall that by convention we place the parameter |p| before
 the type argument |r| for recursion points, followed by the index |i|.
 We can express the |copy| function that traverses a given vector and
 reconstructs that vector with the same elements, in the Mendler style,
-using Mendler-style iteration combinator |mcata1| for kind $* -> *$.
+using Mendler-style iteration combinator |mcata1| at kind $* -> *$.
 We can express the |switch2| function that switches every two elements of
 the given vector, in the Mendler style, using the course-of-values iteration
-combinator |mhist1| for kind $* -> *$.
+combinator |mhist1| at kind $* -> *$.
 The definitions for |mcata1| and |mhist1| are exactly the same as
 the definitions for |mcata0| and |mhist0|, except that |mcata1| and |mhist1|
 have richer type signatures

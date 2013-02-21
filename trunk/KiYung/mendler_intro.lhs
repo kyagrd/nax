@@ -265,7 +265,7 @@ to orient the reader to navigate the following sections.
 
 First, we introduce the Mendler-style iteration (|mcata|. \aka\ catamorphism)
 (\S\ref{ssec:tourCata0}) and course-of-values iteration
-(|mhist|. \aka\ histomorpism) (\S\ref{ssec:tourHist0}) combinators for kind $*$,
+(|mhist|. \aka\ histomorpism) (\S\ref{ssec:tourHist0}) combinators at kind $*$,
 that is, for (non-mutually recursive) regular datatypes
 (\S\ref{ssec:tourRegular}). We also give
 an intuitive explanation why these Mendler-style recursion combinators
@@ -307,7 +307,7 @@ in \S\ref{sec:proof}. %% and extrapolate on other possible recursion combinators
 \begin{figure}
 \DataFix
 \caption{Standard (|Mu|) and inverse augmented (|Rec|) datatype fixpoints
- for kind $*$ and kind $* -> *$}
+at kind $*$ and kind $* -> *$}
 \label{fig:datafix}
 \end{figure}
 

@@ -214,7 +214,7 @@ the Mendler style, found on the right-hand side in Figure \ref{fig:bsum}.
 First, we give Mendler style datatype definitions for bushes.  As usual,
 we define the datatype |Bush| as a fixpoint of the base |BushF|.
 However, an important difference that readers should notice is the use of
-fixpoint |Mu1| for kind $* -> *$ bases, instead of |Mu0|, for the kind $*$ bases
+fixpoint |Mu1| at kind $* -> *$ bases, instead of |Mu0|, for the kind $*$ bases
 inducing regular datatypes.
 
 That the type argument |i| in |Powl i| and |Bush i| is a type index that
@@ -229,7 +229,7 @@ type parameters and type indices in a datype (|Vec p i|).
 
 Getting back to the right-hand side of Figure \ref{fig:bsum},
 since we used |Mu1| to define the recursive datatypes, we use |mcata1|,
-the Mendler style iteration combinator for kind $* -> *$, to define
+the Mendler style iteration combinator at kind $* -> *$, to define
 the functions. The beauty of the Mendler style approach is that
 the implementation of the recursion combinators for higher-ranks
 (or, higher-kinds) are \emph{exactly the same} as their kind $*$ counterparts.

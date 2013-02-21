@@ -460,7 +460,7 @@ $>$ |putStrLn (showExp (lam(\x->lam(\y->x))))|\\
 
 
 
-\subsection{Additional Mendler style combinators}
+\subsection{Additional Mendler-style combinators}
 The combinator |msfhist0| generalizes |mhist0| by the addition of an
 abstract inverse to a combinator that already has an abstract unroller.
 The combining function |phi| becomes a function of 4 arguments:
@@ -470,20 +470,19 @@ a recursive placeholder, and a base structure.
 The combinators |msfcata1| and |msfhist1| (at kind $* -> *$) generalize
 the combinators |msfcata0| and |msfhist0| (at kind $*$) to combinators 
 on types with a type index. The pattern of generalization is quite evident
-in Figures \ref{fig:rcombty} (page ?), and \ref{fig:rcombdef} (page ?), and the reader is
+in Figures \ref{fig:rcombty} (p\pageref{fig:rcombty}),
+and \ref{fig:rcombdef} (p\pageref{fig:rcombdef}), and the reader is
 encouraged to study those Figures for a complete understanding of
 the results of this chapter.
 
-TODO refer to page number for each fugure.
-
-We believe |msfcata1| would be useful for writing functions over
+We believe |msfcata1| might be useful for writing functions over
 negative datatypes with type indices.  The combinator, |msfhist1|,
 like its kind $*$ counterpart |msfhist0|, may not terminate given
 ill-behaved |phi| functions. Such functions
 use the unroller to {\it reach down inside a tree} to extract an 
 embedded function, and then applies that function to an ancestor that
 contains that function. Yet, they may be nevertheless useful 
-for well behaved |phi| functions. 
+for well-behaved |phi| functions. 
 
 \begin{figure}
 %{
@@ -496,20 +495,19 @@ for well behaved |phi| functions.
         and the |freevarused| function defined using |mopenit0|.}
 \label{fig:openiter}
 \end{figure}
-In a HOAS, a meta-level function from Exp to Exp, represents
-an Exp with a single free variable. For example
+\paragraph{}
+In a HOAS, a meta-level function from expressions to expressions, represents
+an expression with a single free variable. For example,
 |\ x -> app (lam (\ f -> app f x))| represents |\ f -> f x|, where
-|x| is free. The Mendler-style open-iterator (|mopenit0|)
-supports computation over terms with one free variable represented in this
-fashion.
-
+|x| is free. The Mendler-style open-iterator (|mopenit0|) supports
+computation over terms with one free variable represented in this fashion.
 We write |mopenit0 (\x->e) v| for the open-iteration over an expression |e|
-with a free variable |x|, the iteration should compute |v|, when the computation reaches |x|.
-For instance, the function |freevarused| defined using |mopenit0| in Figure \ref{fig:openiter}
+with a free variable |x|, the iteration should compute |v|,
+when the computation reaches |x|.  For instance, the function
+|freevarused| defined using |mopenit0| in Figure \ref{fig:openiter}
 checks whether |x| appears in |e|, or is simply never mentioned.
-
-There there is an
-open-iteration combinator at each kind (\eg, |mopenit1|).
+There there is an open-iteration combinator at each kind (\eg, |mopenit1|
+at kind |* -> *|), just like other combinators.
 \citet{bgb} have studied open-iterations that support
 more than one free variable, although not in Mendler style.
 

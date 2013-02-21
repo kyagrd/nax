@@ -41,6 +41,10 @@ between those combinators (Figure \ref{fig:cataviahisto})
 We give a termination proof for the Mendler-style iteration
 (at kind $*$) in Figure \ref{fig:proof}. The proof takes the form
 of an embedding into $F_\omega$ which is known to be strongly normalizing.
+The proof in Figure \ref{fig:proof} is adapted from work by \citet{AbeMatUus05}.
+They prove termination of Mendler-style iteration at arbitrary kinds.
+A proof similar to Figure \ref{fig:proof} is also given by \citet{vene00phd}.
+
 The definitions given in Figure \ref{fig:proof}, are $F_\omega$ terms,
 but are also legal Haskell terms that execute in GHC. Try the following code
 with the definitions of |Mu0| and |mcata0| from in Figure \ref{fig:proof}.
@@ -48,11 +52,6 @@ They run and return the expected results!\vspace*{-3ex}
 \begin{center}
 \ProofCataEx
 \end{center}\vskip1ex
-
-The proof in Figure \ref{fig:proof} is adapted from work by
-\citet{AbeMatUus05}. They prove termination of Mendler-style iteration
-at arbitrary kinds.
-A proof similar to Figure \ref{fig:proof} is also given by \citet{vene00phd}.
 
 \citet{AbeMat04} proved termination of Mendler-style primitive recursion
 (|mprim|) by a reduction preserving embedding of |mprim| into \Fixw.
@@ -62,7 +61,7 @@ does not terminate for negative datatypes since |mhist| does not terminate
 for negative datatypes. Any computation that can be defined by |mcata|
 can also be defined by |mcvpr| (where it may be more efficient).
 We show that |mcvpr0| terminates for regular positive datatypes
-in \S\ref{sec:fixi:cvpr}, and we conjecture that |mcvpr|
+in \S\ref{sec:fixi:cv}, and we conjecture that |mcvpr|
 terminates for positive datatypes at higher-kinds as well.
 
 \citet{vene00phd} states that we can deduce the termination of
@@ -70,8 +69,8 @@ the Mendler-style course-of-values iteration for positive datatypes from its
 relation to conventional course-of-values iteration, but he does not clearly
 discuss whether the termination property holds for negative datatypes.
 In our work, we demonstrated that |mhist0| may not terminate
-for negative datatypes by exhibiting the counter-example (Figure \ref{fig:LoopHisto})
-in \S\ref{ssec:tourNegative}.
+for negative datatypes by exhibiting the counter-example
+(Figure \ref{fig:LoopHisto}) in \S\ref{ssec:tourNegative}.
 
 \begin{figure}
 \CataViaHisto

@@ -9,7 +9,7 @@ $\!\!\!\!\!\!\!\!\!$\mprimDef
          course-of-values primitive recursion]
          {The Mendler-style primitive recursion (|mprim|) and
           the Mendler-style course-of-values primitive recursion (|mcvpr|)
-          for kinds $*$ and $* -> *$, in comparison with |mcata| and |mhist|.}
+          at kinds $*$ and $* -> *$, in comparison with |mcata| and |mhist|.}
 \label{fig:mprim}
 \end{figure}
 \end{landscape}
