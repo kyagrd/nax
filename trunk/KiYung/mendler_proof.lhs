@@ -7,9 +7,10 @@
 \label{sec:proof}
 We close this chapter by summarizing the termination properties
 of the Mendler-style recursion combinators
-(Table \ref{tbl:mendlerCombinatorSummary}) and the relation
+(Table \ref{tbl:mendlerCombinatorSummary}) and the relationships
 between those combinators (Figure \ref{fig:cataviahisto})
-we discussed so far.
+(i.e. which combinators can be defined in terms of others).
+
 
 \begin{table}\centering
 \begin{tabular}{llll}
@@ -37,37 +38,39 @@ we discussed so far.
 \label{fig:proof}
 \end{figure}
 
-We illustrate the termination proof for the Mendler-style iteration
-for kind $*$ in Figure \ref{fig:proof}.  This embedding of |Mu0| and |mcata0|
-into $F_\omega$ amounts to a proof of termination provided that $F_\omega$
-extended with non-recursive datatypes is normalizing.
-These definitions actually run in GHC. Try the following code
-with the definitions of |Mu0| and |mcata0| in Figure \ref{fig:proof}.
-It will run!\vspace*{-3ex}
+We give a termination proof for the Mendler-style iteration
+(at kind $*$) in Figure \ref{fig:proof}. The proof takes the form
+of an embedding into $F_\omega$ which is known to be strongly normalizing.
+The definitions given in Figure \ref{fig:proof}, are $F_\omega$ terms,
+but are also legal Haskell terms that execute in GHC. Try the following code
+with the definitions of |Mu0| and |mcata0| from in Figure \ref{fig:proof}.
+They run and return the expected results!\vspace*{-3ex}
 \begin{center}
 \ProofCataEx
 \end{center}\vskip1ex
-We translated the proof in Figure \ref{fig:proof} from the work by
-\citet{AbeMatUus05}, which discuss more generally on arbitrary ranks.
+
+The proof in Figure \ref{fig:proof} is adapted from work by
+\citet{AbeMatUus05}. They prove termination of Mendler-style iteration
+at arbitrary kinds.
 A proof similar to Figure \ref{fig:proof} is also given by \citet{vene00phd}.
 
-\citet{AbeMar04} proved termination of the Mendler-style primitive recursion
+\citet{AbeMat04} proved termination of Mendler-style primitive recursion
 (|mprim|) by a reduction preserving embedding of |mprim| into \Fixw.
 We discuss the details of this embedding in \S\ref{sec:fixi:data}.
 We know that the Mendler-style course-of-values primitive recursion (|mcvpr|)
-does not terminate for negative datatypes since |mcvit| does not terminate
-for negative datatypes. Any computation that can be defined by |mcvit|
-can also be defined by |mcvpr|, often more efficiently.
+does not terminate for negative datatypes since |mhist| does not terminate
+for negative datatypes. Any computation that can be defined by |mcata|
+can also be defined by |mcvpr| (where it may be more efficient).
 We show that |mcvpr0| terminates for regular positive datatypes
-in \S\ref{sec:fixi:cvpr}, and we conjecture that the Mendler-style
-terminates for positive datatypes of higher-kinds as well.
+in \S\ref{sec:fixi:cvpr}, and we conjecture that |mcvpr|
+terminates for positive datatypes at higher-kinds as well.
 
-\citet{vene00phd} also give discussions that we can deduce the termination of
+\citet{vene00phd} states that we can deduce the termination of
 the Mendler-style course-of-values iteration for positive datatypes from its
 relation to conventional course-of-values iteration, but he does not clearly
 discuss whether the termination property holds for negative datatypes.
-In our work, we disproved the termination of |mhist0| for negative datatypes
-by showing the counter-example (Figure \ref{fig:LoopHisto})
+In our work, we demonstrated that |mhist0| may not terminate
+for negative datatypes by exhibiting the counter-example (Figure \ref{fig:LoopHisto})
 in \S\ref{ssec:tourNegative}.
 
 \begin{figure}
