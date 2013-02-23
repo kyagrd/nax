@@ -157,7 +157,9 @@ For any $F : +* -> *$, there exists
 
 start with a more easy one
 \begin{proposition}
-Consider $F : +* -> *$ such that
+There exists
+$\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+for any $F : +* -> *$ such that
 \begin{itemize}
 	\item all free variables of $F$, including $X$ and $Y$,
 		are introduced by universal quantification
@@ -168,8 +170,6 @@ Consider $F : +* -> *$ such that
 	\item $F : +* -> *$ is in normal form, that is, $F$ can neither be
 		an application ($F'\,G$) nor index application ($F'\{s\}$).
 \end{itemize}
-For any such $F$, there exists 
-$\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$.
 \end{proposition}
 \begin{proof}
 	We can derive $\textit{fmap}_F$ from the structure of $F$.
@@ -177,7 +177,7 @@ $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$.
 	it must be a in the form of $\l Z^{+*}.B$.
 \begin{itemize}
 \item[case]($Z\notin \FV(B)$)
-	$ \textit{fmap}_{(\l Z^{+*}. X_1)} = \l \_ . \l x. x $
+	$ \textit{fmap}_{(\l Z^{+*}. B)} = \l \_ . \l x. x $
 
 	Since $F\;X = F\;Y = B$, we just return the identity function on $B$.
 
@@ -202,7 +202,12 @@ $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$.
 	= \textit{fmap}_{(\l Z^{+*}.A_1 -> B_1)}$
 
 	\begin{singlespace}
-	When $A \triangleq A_1 -> \cdots -> A_n -> B_2$,
+	When $A \triangleq A_1 -> \cdots -> A_n -> \forall X_2^{*}.B_2'$,
+	\vspace{-1.5ex}
+	\[\textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> \forall X_2^{*}.B_2') -> B_1)}
+	= \textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> B_2') -> B_1)} \]
+
+	When $A \triangleq A_1 -> \cdots -> A_n -> B_2$,\vspace{-1.5ex}
 	\begin{align*}
 	  & \textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> B_2) -> B_1)} \\
 	=~& \l z.\l y. \l x.\;
@@ -217,6 +222,10 @@ $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$.
 
 \end{itemize}
 \end{proof}
+
+TODO to give an idea that the derived fmaps are type correct in the above
+proof give a example in Haskell accepted by GHC for each case
+(already have it almost done put it in the repository)
 
 What if there are type constructor variables?
 Should still work, let's write down the rules
