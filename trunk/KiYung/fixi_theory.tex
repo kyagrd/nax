@@ -232,6 +232,18 @@ proof give a example in Haskell accepted by GHC for each case
 What if there are type constructor variables?
 Should still work, let's write down the rules
 
+
+Assume that either $*$ or $p* -> *$.
+think about valuations of such variables
+
+Having $A -> *$ won't make difference
+
+would generalzied to arbitrary rank-1 kinded tycon variables
+
+
+What about even higher kinded tycon variables?
+
+
 \begin{proposition}\label{prop:fixi:fmapFree}
 If $\textit{fmap}_F:\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
 exists, then
