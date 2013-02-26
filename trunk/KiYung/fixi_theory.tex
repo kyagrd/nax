@@ -161,20 +161,21 @@ There exists
 $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
 for any $F : +* -> *$ such that
 \begin{itemize}
-	\item all free variables of $F$, including $X$ and $Y$,
-		are introduced by universal quantification
-		and those variabels are of kind $*$,
+	\item $F$ is a value, that is, $F$ is
+		in normal form (\ie, has no redex) and
+		closed (\ie, $F$ has no free variables),
 	\item all the bound variabels within $F$ are
 		introduced by universal quantification
-		and those variables are of kind $*$, and
-	\item $F : +* -> *$ is in normal form, that is, $F$ can neither be
-		an application ($F'\,G$) nor index application ($F'\{s\}$).
+		and those variables are of kind $*$.
 \end{itemize}
 \end{proposition}
 \begin{proof}
 	We can derive $\textit{fmap}_F$ from the structure of $F$.
-	Due to the kind of $F$ and the fact that $F$ is in normal form
-	it must be a in the form of $\l Z^{+*}.B$.
+	Since $F$ is a value, it must be in the form of $\l Z^{+*}.B$.
+	Since $F$ is in normal form, $F$ can neither be
+	an application ($F'\,G$) nor an index application ($F'\{s\}$),
+	unless $F'$ is a variable. However, $F$ cannot have a free varaible
+	since $F$ is a value.
 \begin{itemize}
 \item[case]($Z\notin \FV(B)$)
 	$ \textit{fmap}_{(\l Z^{+*}. B)} = \l \_ . \l x. x $
@@ -190,6 +191,14 @@ for any $F : +* -> *$ such that
 \item[case]($F \triangleq \l Z^{+*}. \forall X_1^{*} .B_1$)
 	$\textit{fmap}_{(\l Z^{+*}. \forall X_1^{*} .B_1)}
 	= \textit{fmap}_{(\l Z^{+*}.B_1)}$
+
+	Here, what we are really doing is finding an \textit{fmap}
+	that works for for arbitrary valuation of $X_1$.
+	That is, an \textit{fmap} that works for $\l Z^{+*}. B_1[v/X]$
+	for arbitrary selection of value $v$. Since values are closed
+	it cannot contain any free variable including $Z$. Since $v$
+	is completely independent of $Z$, selection of value $v$ makes
+	no difference deriving the \textit{fmap}.
 
 \item[case]($F \triangleq \l Z^{+*}. A -> B_1$)
 

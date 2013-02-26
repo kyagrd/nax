@@ -376,21 +376,32 @@ This idea of inverting polarities in the context is captured by $-\Delta$
 operation in the kinding rule ($->$). More generally, the well-kindedness $F$
 expected to be used as $p$-polarity can be determined by the judgement
 $p\Delta |- F : \kappa$, where $p\Delta$ operation is defined as:
-\[
-\begin{array}{lcl}
-p~\cdot &=& \cdot \\
-p(\Delta,X^{p'\kappa}) &=& p\Delta,X^{(pp')\kappa} \\
-p(\Delta,i^A) &=& p\Delta,i^A
-\end{array}
-\quad\text{where $pp'$ is the usual sign product}~~
-\begin{smallmatrix}
-+ p' & = & p' \\
-- +  & = & -  \\
-- -  & = & +  \\
-- 0  & = & 0  \\
-0 p' & = & 0
-\end{smallmatrix}
-\]
+\begin{itemize}
+	\item when $p$ is either $+$ or $-$,\vspace*{-2ex}
+		\[
+		\begin{array}{lcl}
+		p~\cdot &=& \cdot \\
+		p(\Delta,X^{p'\kappa}) &=& p\Delta,X^{(pp')\kappa} \\
+		p(\Delta,i^A) &=& p\Delta,i^A
+		\end{array}
+		\quad\left(\text{$pp'$ is the usual sign product}~~
+		\begin{smallmatrix}
+		+ p' & = & p' \\
+		- +  & = & -  \\
+		- -  & = & +  \\
+		- 0  & = & 0
+		\end{smallmatrix}\right)
+	\]
+	\item when $p=0$,\vspace*{-2ex}
+		\[
+		\begin{array}{lcl}
+		0~\cdot &=& \cdot \\
+		0(\Delta,X^{0\kappa}) &=& 0\Delta,X^{0\kappa} \\
+		0(\Delta,X^{p\kappa}) &=& 0\Delta \qquad(p\neq 0)\\
+		0(\Delta,i^A) &=& 0\Delta,i^A
+		\end{array}
+		\]
+\end{itemize}
 Note the use of $p\Delta$ operation in the kinding rule ($@$) in order to
 determine the well-kindedness of $G$ expected to be used as $p$-polarity
 by the type constructor $F : p\kappa -> \kappa'$ being applied to $G$.
