@@ -156,7 +156,7 @@ For any $F : +* -> *$, there exists
 \end{proposition}
 
 start with a more easy one
-\begin{proposition}
+\begin{proposition}\label{prop:fixi:fmapTyVarStarOnly}
 There exists
 $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
 for any $F : +* -> *$ such that
@@ -234,18 +234,101 @@ for any $F : +* -> *$ such that
 \end{itemize}
 \end{proof}
 
-TODO to give an idea that the derived fmaps are type correct in the above
-proof give a example in Haskell accepted by GHC for each case
-(already have it almost done put it in the repository)
+To illustrate that the \textit{fmap}s derived in the proof above are indeed
+type correct, we provide some examples in Haskell accepted by GHC in
+Figure~\ref{fig:deriveFunctor}.
+\begin{figure}
+\begin{singlespace}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+{-# LANGUAGE RankNTypes #-}
 
-What if there are type constructor variables?
-Should still work, let's write down the rules
+data F1 x = C1 (Int -> Bool)
+
+instance Functor F1 where
+  fmap f (C1 z) = C1 z
+
+data F2 x = C2 x
+
+instance Functor F2 where
+  fmap f (C2 z) = C2 (f z)
+
+data F3 x = C3 (([x] -> Bool) -> Maybe x)
+
+instance Functor F3 where
+  fmap z (C3 y) = C3 (\x -> fmap z (y (\x1-> x (fmap z x1))))
+
+data F4 x = C4 ((forall y . [x] -> y) -> Maybe x)
+
+instance Functor F4 where
+  fmap z (C4 y) = C4 (\x -> fmap z (y (\x1-> x (fmap z x1))))
+
+data F5 x = C5 (forall y . ([x] -> y) -> Maybe x)
+
+instance Functor F5 where
+  fmap z (C5 y) = C5 (\x -> fmap z (y (\x1-> x (fmap z x1))))
+
+data F6 x = C6 (([x] -> ([x] -> Bool)) -> Maybe x)
+
+instance Functor F6 where
+  fmap z (C6 y) =
+    C6 (\x -> fmap z (y (\x1 x2 -> x (fmap z x1) (fmap z x2))))
+\end{lstlisting}
+\end{singlespace}
+\caption{Haskell code example to illustrate well-typedness of \textit{fmap}s
+	derived in the proof of Proposition \ref{prop:fixi:fmapTyVarStarOnly}}
+\label{fig:deriveFunctor}
+\end{figure}
+
+Let us extend the proof by allowing type constructor vaiables of
+kind $p* -> *$ as well as type variables of kind $*$. There are three
+possiblilities for $X:p* -> *$. Note that the variable
+$X$ would be used as an application $X\,G$ within the type $B$.
+\begin{itemize}
+\item[case]($X : +* -> *$)
+	By induciton\footnote{
+		we need to make sure that this is a well-founded induction},
+	there exist a map for any valuation of $X$.
+	So, we denote that map as $\textit{fmap}_{X}$.
+	Then the map for $\l Z^{+*}.X\,G$ is
+	\[ \textit{fmap}_{(\l Z^{+*}.X\,G)} =
+		\textit{fmap}_{X} \circ\, \textit{fmap}_{(\l Z^{+*}.G)} \]
+	Note that $\textit{fmap}_{X}$ is not fixed untill it gets
+	instantiated, but we know for sure that it exists for any
+	valuation.
+
+\item[case]($X : -* -> *$)
+	According to the ($@$) rule, $G$ should be well-kinded under $-\Delta$.
+	Note that $Z^{-*}\in\Delta$ since $Z^{+*}\in \Delta$.
+	So, $Z$ cannot appear in positive positions in $G$ but only in
+	negative positions (\eg, $G \triangleq Z -> G'$).
+	Any valuation of $X$ will have the form of $\l X_1^{-*}.B_1$
+	where $X_1$ appears in negative positions.
+	Then, $(\l X_1^{-*}.B_1)G = B_1[G/X_1]$. Note that $B_1[G/X_1]$
+	is in normal form since $G:*$ -- substition of $X_1$ with $G$
+	does not introduce any new redex. Since $G$ is substituted into
+	negative posistinos, $Z$ occuring in negative position in $G$
+	becomes a positive position, since it is negative of negative
+	position. Thus, $\l Z^{+*}.B_1[G/X_1] : +* ->*$.
+	So, by induction\footnote{
+		we need to make sure that this is a well-founded induction},
+	there exists a map for any valuation of $X$,
+	since we can derive $\textit{fmap}_{(\l Z^{+*}.B_1[G/X_1])}$.
+
+\item[case]($X : 0* -> *$)
+	Note that $G$ cannot have $Z$ in it because $Z$ has $+$ polarity
+	in the context. Recall that, $0\Delta$ ignores the variables
+	with ether $+$ or $-$ polarity. According to the ($@$) rule
+	in Figure \ref{fig:Fixi2}, $G$ should be well-kinded under $0\Delta$.
+	Since $Z\notin\FV(X\,G)$, we simply return the identity function
+	as the map for $\l Z^{+*}.X\,G$.
+\end{itemize}
+In addition, having $X : A -> *$ won't make a difference since $X\{s\}$
+cannot have $Z$ either. Once we know that we can derive maps in the presence
+of type constructor variables with single argument, it is easy to generalize
+this to arbitrary rank-1 kinded type constructor variables
+(\eg, $+* -> A_1 -> -* -> A_2 -> 0* -> *$).
 
 
-Assume that either $*$ or $p* -> *$.
-think about valuations of such variables
-
-Having $A -> *$ won't make difference
 
 would generalzied to arbitrary rank-1 kinded tycon variables
 
