@@ -150,13 +150,13 @@ the index variable bindings from the type level context.
 \subsection{Conditions for well-behaved course-of-values recursion}
 \label{ssec:fixi:theory:cv}
 
-\begin{proposition}\label{prop:fixi:fmap}
+\begin{theorem}\label{prop:fixi:fmap}
 For any $F : +* -> *$, there exists
 \[ \textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y \]
-\end{proposition}
+\end{theorem}
 
 start with a more easy one
-\begin{proposition}\label{prop:fixi:fmapTyVarStarOnly}
+\begin{proposition}\label{prop:fixi:fmapBaseCase}
 There exists
 $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
 for any $F : +* -> *$ such that
@@ -275,7 +275,7 @@ instance Functor F6 where
 \end{lstlisting}
 \end{singlespace}
 \caption{Haskell code example to illustrate well-typedness of \textit{fmap}s
-	derived in the proof of Proposition \ref{prop:fixi:fmapTyVarStarOnly}}
+	derived in the proof of Proposition \ref{prop:fixi:fmapBaseCase}}
 \label{fig:deriveFunctor}
 \end{figure}
 
@@ -362,7 +362,7 @@ such that
 \end{proposition}
 \begin{proof}
 	You can check that each case
-	in the proof of Proposition \ref{prop:fixi:fmap}
+	in the proof of Theorem \ref{thm:fixi:fmap} (TODO maybe refer to lemmas)
 	satisfies the two equations above.
 \end{proof}
 
@@ -371,7 +371,7 @@ $\unIn_F : \mu^{+}{*} F -> F(\mu^{+}{*} F)$ such that
 $\unIn_F (\In_F\;t) -->+ t$.
 \end{proposition}
 \begin{proof}
-Since we know that $\textit{fmap}_F$ exists by Proposition~\ref{prop:fixi:fmap},
+Since we know that $\textit{fmap}_F$ exists by Theorem~\ref{thm:fixi:fmap},
 we can define
 \[ \unIn_F = \McvPr_{*}\;
             (\l\_.\l\textit{cast}.\l\_.\l x.\textit{fmap}_F\;\textit{cast}\;x)
