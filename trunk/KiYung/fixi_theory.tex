@@ -77,7 +77,7 @@ to $\Fixw$ types.
 
 \begin{theorem}[index erasure on well-sorted kinds]
 \label{thm:Fixierasesorting}
-	$\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
+        $\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
 \end{theorem}
 
 \begin{theorem}[index erasure on well-formed type level contexts]
@@ -87,19 +87,19 @@ to $\Fixw$ types.
 
 \begin{theorem}[index erasure on kind equality]\label{thm:Fixierasekindeq}
 $ \inference{|- \kappa=\kappa':\square}
-	{|- \kappa^\circ=\kappa'^\circ:\square}
+        {|- \kappa^\circ=\kappa'^\circ:\square}
 $
 \end{theorem}
 
 \begin{theorem}[index erasure on well-kinded type constructors]
 \label{thm:Fixierasekinding}
 \[ \inference{|- \Delta & \Delta |- F : \kappa}
-		{\Delta^\circ |- F^\circ : \kappa^\circ}
+                {\Delta^\circ |- F^\circ : \kappa^\circ}
 \]
 \end{theorem}
 \begin{theorem}[index erasure on type constructor equality]
 \[ \inference{\Delta |- F=F':\kappa}
-		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
+                {\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
 \]
 \label{thm:Fixierasetyconeq}
 \end{theorem}
@@ -112,8 +112,8 @@ $
 \begin{theorem}[index erasure on index-free well-typed terms]
 \label{thm:Fixierasetypingifree}
 \[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
-		{\Delta^\circ;\Gamma^\circ |- t : A^\circ}
-		{\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
+                {\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+                {\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
 \]
 \end{theorem}
 
@@ -122,13 +122,13 @@ We introduce an index variable selection meta-operation that selects all
 the index variable bindings from the type level context.
 \begin{definition}[index variable selection]
 \[ \cdot^\bullet = \cdot \qquad
-	(\Delta,X^{p\kappa})^\bullet = \Delta^\bullet \qquad
-	(\Delta,i^A)^\bullet = \Delta^\bullet,i:A
+        (\Delta,X^{p\kappa})^\bullet = \Delta^\bullet \qquad
+        (\Delta,i^A)^\bullet = \Delta^\bullet,i:A
 \]
 \end{definition}
 
 \begin{theorem}[index erasure on well-formed term level contexts
-		prepended by index variable selection]
+                prepended by index variable selection]
 \label{thm:Fixierasetmctxivs}
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
 \]
@@ -137,13 +137,13 @@ the index variable bindings from the type level context.
 \begin{theorem}[index erasure on well-typed terms]
 \label{thm:Fixierasetypingall}
 \[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
-		{\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+                {\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
 \]
 \end{theorem}
 
 
 \KYA{TODO has there been any studies on the logical consistencies of
-	implicit calculus + equi-recursive type?}
+        implicit calculus + equi-recursive type?}
 
 
 
@@ -161,75 +161,86 @@ There exists
 $\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
 for any $F : +* -> *$ such that
 \begin{itemize}
-	\item $F$ is a value, that is, $F$ is
-		in normal form (\ie, has no redex) and
-		closed (\ie, $F$ has no free variables),
-	\item all the bound variabels within $F$ are
-		introduced by universal quantification
-		and those variables are of kind $*$.
+        \item $F$ is a value, that is, $F$ is
+                in normal form (\ie, has no redex) and
+                closed (\ie, $F$ has no free variables),
+        \item all the bound variabels within $F$ are
+                introduced by universal quantification
+                and those variables are of kind $*$.
 \end{itemize}
 \end{proposition}
 \begin{proof}
-	We can derive $\textit{fmap}_F$ from the structure of $F$.
-	Since $F$ is a value, it must be in the form of $\l Z^{+*}.B$.
-	Since $F$ is in normal form, $F$ can neither be
-	an application ($F'\,G$) nor an index application ($F'\{s\}$),
-	unless $F'$ is a variable. However, $F$ cannot have a free varaible
-	since $F$ is a value.
+        We can derive $\textit{fmap}_F$ from the structure of $F$.
+        Since $F$ has kind $+* -> *$, it must be a lambda abstraction
+        ($\l Z^{+*}.B$) or an some kind of application 
+        (a normal application, $F'\,G$, or an index application $F'\{s\}$),
+        or a variable of kind $+* -> *$.
+        No other way of forming $F$ can have kind $+* -> *$.
+        
+        We also assume that $F$ is in normal form, so if $F$ were an application
+        then $F'$ must be a variable with an arrow kind. But we have assumed that
+        all variables have kind $*$. $F$ cannot be a varaible since we have
+        assumed that $F$ is a value with no free variables, thus $F$ must have the form $\l Z^{+*}.B$. We
+        proceed by analyzing the structure of $B$.
+ 
 \begin{itemize}
-\item[case]($Z\notin \FV(B)$)
-	$ \textit{fmap}_{(\l Z^{+*}. B)} = \l \_ . \l x. x $
+\item[case]($Z\notin \FV(B)$, i.e. $F$ is a constant function.)
+        $ \textit{fmap}_{(\l Z^{+*}. B)} = \l \_ . \l x. x $
 
-	Since $F\;X = F\;Y = B$, we just return the identity function on $B$.
+        Since $F\;X = F\;Y = B$, we just return the identity function on $B$.
 
-\item[case]($F \triangleq \l Z^{+*}. Z$)
-	$ \textit{fmap}_{(\l Z^{+*}. Z)} = \l z . z $
+\item[case]($F \triangleq \l Z^{+*}. Z$. i.e. $F$ is the identity.)
+        $ \textit{fmap}_{(\l Z^{+*}. Z)} = \l z . z $
 
-	Since $F\;X = X$ and $F\;X = Y$,
-	we return the function $z:X -> Y$ itself.
+        Since $F\;X = X$ and $F\;X = Y$,
+        we return the function $z:X -> Y$ itself.
 
-\item[case]($F \triangleq \l Z^{+*}. \forall X_1^{*} .B_1$)
-	$\textit{fmap}_{(\l Z^{+*}. \forall X_1^{*} .B_1)}
-	= \textit{fmap}_{(\l Z^{+*}.B_1)}$
+\item[case]($F \triangleq \l Z^{+*}. \forall X_1^{*} .B_1$, $B$ is a universal quantification.)
+        $\textit{fmap}_{(\l Z^{+*}. \forall X_1^{*} .B_1)}
+        = \textit{fmap}_{(\l Z^{+*}.B_1)}$
 
-	Here, what we are really doing is finding an \textit{fmap}
-	that works for for arbitrary valuation of $X_1$.
-	That is, an \textit{fmap} that works for $\l Z^{+*}. B_1[v/X]$
-	for arbitrary selection of value $v$. Since values are closed
-	it cannot contain any free variable including $Z$. Since $v$
-	is completely independent of $Z$, selection of value $v$ makes
-	no difference deriving the \textit{fmap}.
+        Here, we need to find an \textit{fmap}
+        that works for any valuation of $X_1$.
+        That is, an \textit{fmap} that works for $\l Z^{+*}. B_1[v/X_1]$
+        for an arbitrary value $v$. Since values are closed, $v$
+        cannot contain free variables, including $Z$. Since $v$
+        is completely independent of $Z$, the value $v$ cannot make any
+        difference to the derived \textit{fmap}. So we simply ignore $X_1$.
 
-\item[case]($F \triangleq \l Z^{+*}. A -> B_1$)
+\item[case]($F \triangleq \l Z^{+*}. A -> B_1$, i.e. $B$ is a function.)
 
-	When $Z\notin\FV(A)$,
-	$\textit{fmap}_{(\l Z^{+*}.A -> B_1)}
-	= \l z.\l y. \l x. \textit{fmap}_{(\l Z^{+*}.B_1)} \; z \; (y \; x)$
+        When $Z\notin\FV(A)$,
+        $\textit{fmap}_{(\l Z^{+*}.A -> B_1)}
+        = \l z.\l y. \l x. \textit{fmap}_{(\l Z^{+*}.B_1)} \; z \; (y \; x)$
 
-	When $A \triangleq \forall X_1^{*}.A_1$,
-	$\textit{fmap}_{(\l Z^{+*}.(\forall X_1^{*}.A_1) -> B_1)}
-	= \textit{fmap}_{(\l Z^{+*}.A_1 -> B_1)}$
+        When $A \triangleq \forall X_1^{*}.A_1$,
+        $\textit{fmap}_{(\l Z^{+*}.(\forall X_1^{*}.A_1) -> B_1)}
+        = \textit{fmap}_{(\l Z^{+*}.A_1 -> B_1)}$
+        
+        When $B_1 \triangleq \forall X_1^{*}.B_2$,
+        $\textit{fmap}_{(\l Z^{+*}.A -> \forall X_1^{*}.B_2)}
+        = \textit{fmap}_{(\l Z^{+*}.A -> B_2)}$        
 
-	\begin{singlespace}
-	When $A \triangleq A_1 -> \cdots -> A_n -> \forall X_2^{*}.B_2'$,
-	\vspace{-1.5ex}
-	\[\textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> \forall X_2^{*}.B_2') -> B_1)}
-	= \textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> B_2') -> B_1)} \]
+        \begin{singlespace}
+        When $A \triangleq A_1 -> \cdots -> A_n -> \forall X_2^{*}.B_2'$,
+        \vspace{-1.5ex}
+        \[\textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> \forall X_2^{*}.B_2') -> B_1)}
+        = \textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> B_2') -> B_1)} \]
 
-	When $A \triangleq A_1 -> \cdots -> A_n -> B_2$,
-	where $B_2$ is not an arrow type
-	\vspace{-1.5ex}
-	\begin{align*}
-	  & \textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> B_2) -> B_1)} \\
-	=~& \l z.\l y. \l x.\;
-	\textit{fmap}_{(\l Z^{+*}.B_1)} \; z \;
-		(y \; (\l x_1.\ldots\l x_n. ~
-		   x  &\!\!\!\!(\textit{fmap}_{(\l Z^{+*}.A_1)} ~ z ~ x_1)& \\
-		     &&\!\!\!\!\vdots \qquad\qquad& \\
-		     &&\!\!\!\!(\textit{fmap}_{(\l Z^{+*}.A_n)} ~ z ~ x_n)&
-		\,) \,)
-	\end{align*}
-	\end{singlespace}
+        When $A \triangleq A_1 -> \cdots -> A_n -> B_2$,
+        where $B_2$ is not an arrow type
+        \vspace{-1.5ex}
+        \begin{align*}
+          & \textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> B_2) -> B_1)} \\
+        =~& \l z.\l y. \l x.\;
+        \textit{fmap}_{(\l Z^{+*}.B_1)} \; z \;
+                (y \; (\l x_1.\ldots\l x_n. ~
+                   x  &\!\!\!\!(\textit{fmap}_{(\l Z^{+*}.A_1)} ~ z ~ x_1)& \\
+                     &&\!\!\!\!\vdots \qquad\qquad& \\
+                     &&\!\!\!\!(\textit{fmap}_{(\l Z^{+*}.A_n)} ~ z ~ x_n)&
+                \,) \,)
+        \end{align*}
+        \end{singlespace}
 
 \end{itemize}
 \end{proof}
@@ -275,52 +286,54 @@ instance Functor F6 where
 \end{lstlisting}
 \end{singlespace}
 \caption{Haskell code example to illustrate well-typedness of \textit{fmap}s
-	derived in the proof of Proposition \ref{prop:fixi:fmapBaseCase}}
+        derived in the proof of Proposition \ref{prop:fixi:fmapBaseCase}}
 \label{fig:deriveFunctor}
 \end{figure}
 
-Let us extend the proof by allowing type constructor vaiables of
+Recall we are proving a simplified version of the statement we want with
+several simplifying assumptions: $F$ is a closed value, and bound variables introduced
+in $F$ have kind $*$. Let us now generalize the second restriction
+by allowing type constructor variables of
 kind $p* -> *$ as well as type variables of kind $*$. There are three
-possiblilities for $X:p* -> *$. Note that the variable
-$X$ would be used as an application $X\,G$ within the type $B$.
+possibilities for $X:p* -> *$. Note that the variable
+$X$ would be used as the function part of an application, like $X\,G$, within the type $B$.
 \begin{itemize}
 \item[case]($X : +* -> *$)
-	By induciton\footnote{
-		we need to make sure that this is a well-founded induction},
-	there exist a map for any valuation of $X$.
-	So, we denote that map as $\textit{fmap}_{X}$.
-	Then the map for $\l Z^{+*}.X\,G$ is
-	\[ \textit{fmap}_{(\l Z^{+*}.X\,G)} =
-		\textit{fmap}_{X} \circ\, \textit{fmap}_{(\l Z^{+*}.G)} \]
-	Note that $\textit{fmap}_{X}$ is not fixed untill it gets
-	instantiated, but we know for sure that it exists for any
-	valuation.
+        By induction\footnote{
+                we need to make sure that this is a well-founded induction},
+        there exist a map for any valuation of $X$.
+        So, we denote that map as $\textit{fmap}_{X}$.
+        Then the map for $\l Z^{+*}.X\,G$ is
+        \[ \textit{fmap}_{(\l Z^{+*}.X\,G)} =
+                \textit{fmap}_{X} \circ\, \textit{fmap}_{(\l Z^{+*}.G)} \]
+        Note that $\textit{fmap}_{X}$ is not fixed untill it gets
+        instantiated, but we know for sure that it exists for any
+        valuation.
 
 \item[case]($X : -* -> *$)
-	According to the ($@$) rule, $G$ should be well-kinded under $-\Delta$.
-	Note that $Z^{-*}\in\Delta$ since $Z^{+*}\in \Delta$.
-	So, $Z$ cannot appear in positive positions in $G$ but only in
-	negative positions (\eg, $G \triangleq Z -> G'$).
-	Any valuation of $X$ will have the form of $\l X_1^{-*}.B_1$
-	where $X_1$ appears in negative positions.
-	Then, $(\l X_1^{-*}.B_1)G = B_1[G/X_1]$. Note that $B_1[G/X_1]$
-	is in normal form since $G:*$ -- substition of $X_1$ with $G$
-	does not introduce any new redex. Since $G$ is substituted into
-	negative posistinos, $Z$ occuring in negative position in $G$
-	becomes a positive position, since it is negative of negative
-	position. Thus, $\l Z^{+*}.B_1[G/X_1] : +* ->*$.
-	So, by induction\footnote{
-		we need to make sure that this is a well-founded induction},
-	there exists a map for any valuation of $X$,
-	since we can derive $\textit{fmap}_{(\l Z^{+*}.B_1[G/X_1])}$.
+        According to the ($@$) rule applied to $X\;G$, the argument $G$ should be well-kinded under $-\Delta$.
+        Note that $Z^{-*}\in-\Delta$ since $Z^{+*}\in \Delta$.
+        So, $Z$ cannot appear in positive positions in $G$ but only in
+        negative positions (\eg, $G \triangleq Z -> G'$).
+        Any valuation of $X$ will have the form of $\l X_1^{-*}.B_1$
+        where $X_1$ appears in negative positions.
+        Then, $(\l X_1^{-*}.B_1)G = B_1[G/X_1]$. Note that $B_1[G/X_1]$
+        must be in normal form. Since $G$ has kind $*$ (it cannot be a lambda), substitution of $X_1$ with $G$
+        cannot introduce a new redex. Since $G$ is substituted only into
+        negative positions, any $Z$ occurring in negative position in $G$
+        become positive positions in the substituted type. Thus, $\l Z^{+*}.B_1[G/X_1] : +* -> *$.
+        So, by induction\footnote{
+                we need to make sure that this is a well-founded induction},
+        there exists a map for any valuation of $X$,
+        since we can derive $\textit{fmap}_{(\l Z^{+*}.B_1[G/X_1])}$.
 
 \item[case]($X : 0* -> *$)
-	Note that $G$ cannot have $Z$ in it because $Z$ has $+$ polarity
-	in the context. Recall that, $0\Delta$ ignores the variables
-	with ether $+$ or $-$ polarity. According to the ($@$) rule
-	in Figure \ref{fig:Fixi2}, $G$ should be well-kinded under $0\Delta$.
-	Since $Z\notin\FV(X\,G)$, we simply return the identity function
-	as the map for $\l Z^{+*}.X\,G$.
+        Note that $G$ cannot have $Z$ in it because $Z$ has $+$ polarity
+        in the context. Recall that, $0\Delta$ ignores the variables
+        with either $+$ or $-$ polarity. According to the ($@$) rule
+        in Figure \ref{fig:Fixi2}, $G$ should be well-kinded under $0\Delta$.
+        Since $Z\notin\FV(X\,G)$, we simply return the identity function
+        as the map for $\l Z^{+*}.X\,G$.
 \end{itemize}
 In addition, having $X : A -> *$ won't make a difference since $X\{s\}$
 cannot have $Z$ either. Once we know that we can derive maps in the presence
@@ -330,7 +343,7 @@ this to arbitrary rank-1 kinded type constructor variables
 
 
 
-would generalzied to arbitrary rank-1 kinded tycon variables
+would generalized to arbitrary rank-1 kinded tycon variables
 
 
 What about even higher kinded tycon variables?
@@ -361,9 +374,9 @@ such that
 \end{align*}
 \end{proposition}
 \begin{proof}
-	You can check that each case
-	in the proof of Theorem \ref{thm:fixi:fmap} (TODO maybe refer to lemmas)
-	satisfies the two equations above.
+        You can check that each case
+        in the proof of Theorem \ref{thm:fixi:fmap} (TODO maybe refer to lemmas)
+        satisfies the two equations above.
 \end{proof}
 
 \begin{proposition} For any $F : +* -> *$, there exists
@@ -386,10 +399,10 @@ Thus,
 \begin{align*}
 A \rrarrow_{*} B &~\triangleq~ A -> B \\
 F \rrarrow^{p\kappa -> \kappa'} G &~\triangleq~
-	\forall X^\kappa.\forall Y^\kappa.
-		(X \rrarrow_\kappa Y) -> F X \rrarrow_\kappa F Y \\
+        \forall X^\kappa.\forall Y^\kappa.
+                (X \rrarrow_\kappa Y) -> F X \rrarrow_\kappa F Y \\
 F \rrarrow^{A -> \kappa} G &~\triangleq~
-	\forall i^A.\forall f^{A->A}. F\{i\} \rrarrow_\kappa F\{f\;i\}
+        \forall i^A.\forall f^{A->A}. F\{i\} \rrarrow_\kappa F\{f\;i\}
 \end{align*}
 
 \[
