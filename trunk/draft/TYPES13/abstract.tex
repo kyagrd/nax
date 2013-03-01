@@ -112,7 +112,7 @@ Consider yet another HOAS datatype below for the Simply-Typed Lambda-Calculus (S
 defined in Nax-like syntax,\footnote{curly braces emphasize
   term-indices used in types (\texttt{Exp\{t1\}}),
   and types used in kinds (\texttt{\{Ty\}\;->\;*}).}
-where HOAS expressions (\texttt{Exp}) are
+where HOAS expressions (\texttt{Expr}) are
 statically indexed by the terms that represent STLC-types (\texttt{Ty}).
 \begin{verbatim}
     data Ty : * where    Iota : Ty
@@ -121,7 +121,29 @@ statically indexed by the terms that represent STLC-types (\texttt{Ty}).
     data Exp : {Ty} -> * where   Abs : (Exp{t1} -> Exp{t2}) -> Exp{Arr t1 t2}
                                  App : Exp{Arr t1 t2} -> Exp{t1} -> Exp{t2}
 \end{verbatim}
-TODO here just give very short intuition
+Unlike the HOAS datatype for untyped lambda calculus, evaluating
+these term-indexed HOAS expressions will always terminate,
+provided that functions contained in \texttt{Abs} are well-behaved,
+since the STLC is strongly normalizing.
+The intuitive principle behind the termination behavior of \texttt{Exp}
+comes from the paradigmatic use of term-indices at negative recursive occurrences.  
+In the type of \texttt{Abs}, the term index \texttt{t1}
+at negative recursive occurrence is ``smaller'' than the index
+\texttt{Arr t1 t2} of the result type. In the type of \texttt{App},
+the two term-indices \texttt{Arr t1 t2} and \texttt{t1} at positive recursive
+occurrences are larger than and unrelated to the index \texttt{t2} of the result type.
+Thus, we conjecture that our new Mendler-style recursion scheme, namely \textsf{MPrIx},
+which enables us to write an evaluator for  \verb|Exp : {Ty} -> *|, 
+is well-defined when every index at negative recursive occurrence is
+smaller than the index of the result type.
+In our work, we will \vspace*{-1ex}
+\begin{itemize}
+ \item formulate the type signature and the reduction rule of \textsf{MPrIx},
+ \vspace*{-1ex}
+ \item clearly specify what ``smaller'' means, and
+ \vspace*{-1ex}
+ \item prove that \textsf{MPrIx} terminates whenever it is well defined.
+\end{itemize}
 
 \paragraph{Impacts} TODO
 
