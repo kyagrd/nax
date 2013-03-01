@@ -48,57 +48,57 @@ The context of our work is the Nax programming language project.
 We are developing a unified programming and reasoning system,
 called Nax, with the following design goals:\vspace*{-1ex}
 \begin{enumerate}[(1)]
- \item supports major constructs of modern functional programming languages,
+ \item Nax supports the major constructs of modern functional programming languages,
  such as parametric polymorphism, recursive datatypes, and type inference,
  \vspace*{-1.2ex}
- \item can specify fine-grained program properties as types and
- prove them by writing a program (Curry--Howard correspondence),
+ \item Nax can specify fine-grained program properties as types and
+ witness proofs of such properties by writing a program (The Curry--Howard correspondence),
  \vspace*{-1.2ex}
- \item is based on a minimal foundational calculus
- that is expressible enough to embed all the language constructs in (1)
- and also logically consistent to avoid paradoxical proofs in (2),
+ \item Nax is based on a minimal foundational calculus
+ that is expressive enough to embed all the language constructs in (1)
+ and is also logically consistent to avoid paradoxical proofs in (2),
  \vspace*{-1.2ex}
- \item a simple implementation infrastructure that keeps the trusted base small.
+ \item Nax has a simple implementation infrastructure that keeps the trusted base small.
 \end{enumerate}
-Our approach towards these goals is to put together
+Our approach towards these goals is to 
+design an appropriate foundational calculus supporting
 \emph{Mendler-style recursion schemes}
-and \emph{term-indexed datatypes},
-while finding an appropriate foundational calculus.
-Term-indexed datatypes are necessary to support (2), for insance,
-statically specifying size of a list by a natural number index.
+and \emph{term-indexed datatypes}.
+
+Term-indexed datatypes support (2), for instance,
+statically specifying the size of a list using a natural number index in the list type.
 Mendler-style recursion schemes support (1) since they are based
-on parametric polymorphism and well-defined over wide range of datatypes,
-and also support (4) since their termination is type-based --
+on parametric polymorphism and well-defined over wide range of datatypes.
+They also support (4) since their termination is type-based --
 no other termination checking infrastructure is necessary.
 
-In this abstract, we first overview advantages of adopting Mendler-style,
-and then, introduce a new interesting Mendler-style recursion scheme
-motivated from the term-indices that govern the termination
-behavior of their datatypes.
-\vspace*{-.5ex}
-\paragraph{Advantages of adopting Mendler-style\!\!\!}
-is that it allows formation of
-any recursive datatype, while providing rich set of
-principled eliminators that ensure well-behaved use.
-Certain concepts, such as Higher-Order Abstract Syntax
-(HOAS) are most succinctly defined as mixed-variant datatypes.
-However, most existing reasoning systems based on
-Curry--Howard correspondence, unfortunately, restrict
-formation of those recursive datatypes, even though ill-behaved
-use were never attempted. As a result, one is forced to devise
-certain tricks to encode concepts like HOAS within the restricted
-forms of datatypes in such systems.
+In this abstract, we outline a paper
+that will discuss the advantages of adopting the Mendler-style,
+and then introduce a new Mendler-style operator.
 
-We believe it is worthwhile to allow formation of all the recursive datatypes
+\vspace*{-.5ex}
+\paragraph{Advantages of adopting the Mendler-style\!\!\!}
+include the definition of
+any recursive datatype, while still providing rich set of
+principled eliminators that ensure their well-behaved use.
+Certain concepts, such as Higher-Order Abstract Syntax
+(HOAS), are most succinctly defined as mixed-variant datatypes.
+However, most existing reasoning systems, based on the
+Curry--Howard correspondence, unfortunately, restrict
+definition of mixed-variant recursive datatypes. As a result, one is forced to devise
+tricks to encode concepts like HOAS within the restrictive datatypes allowed in such systems.
+
+
+We believe it is worthwhile to allow definition of all recursive datatypes
 (\eg, non-strictly positive, mixed-variant, nested)
-usually available in functional languages. For instance,
+usually available in functional languages, but outlawed in reasoning systems. For instance,
 in Haskell, we can define a HOAS for the untyped lambda-calculus
 as follows.
 \begin{verbatim}
     data Exp = Abs (Exp -> Exp) | App Exp Exp
 \end{verbatim}
-Even if we assume all functions contained in \texttt{Abs} are non-recursive,
-trying to evaluate these HOAS expressions may still cause problems in logical reasoning,
+Even if we assume all functions embedded in \texttt{Abs} are non-recursive,
+evaluating HOAS expressions may still cause problems when reasoning logically,
 since the untyped lambda calculus has diverging terms. However, there are
 many well-behaved computations on \texttt{Exp}. For instance, examining whether
 an HOAS expression is \texttt{Abs} or \texttt{App}, and, converting an HOAS expression
@@ -106,7 +106,12 @@ to first-order syntax are examples of terminating computation on \texttt{Exp}.
 Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme
 that captures these well-behaved computations.
 
-\paragraph{Term-indices that govern termination behavir of their datatypes\!\!}
+If the datatype \texttt{Exp} used term-indexes to express invariants of well
+formed expressions, we could rely on these invariants to write even more expressive
+programs, such as a well-typed evaluator. Discussion of this idea
+will constitute the second part of the paper.
+
+\paragraph{Term-indices that govern termination behavior over datatypes\!\!\!}
 motivate a new Mendler-style recursion scheme.
 Consider yet another HOAS datatype below for the Simply-Typed Lambda-Calculus (STLC)
 defined in Nax-like syntax,\footnote{curly braces emphasize
@@ -123,33 +128,32 @@ statically indexed by the terms that represent STLC-types (\texttt{Ty}).
 \end{verbatim}
 Unlike the HOAS datatype for untyped lambda calculus, evaluating
 these term-indexed HOAS expressions will always terminate,
-provided that functions contained in \texttt{Abs} are well-behaved,
 since the STLC is strongly normalizing.
 The intuitive principle behind the termination behavior of \texttt{Exp\,:\,\{Ty\}\,->\,*}
 comes from the paradigmatic use of term-indices at negative recursive occurrences.  
 In the type of \texttt{Abs}, the term index \texttt{t1}
 at negative recursive occurrence is ``smaller'' than the index
-\texttt{Arr t1 t2} of the result type. In the type of \texttt{App},
-the two term-indices \texttt{Arr t1 t2} and \texttt{t1} at positive recursive
+(\texttt{Arr t1 t2}) of the result type. In the type of \texttt{App},
+the two term-indices (\texttt{Arr t1 t2}) and \texttt{t1} at positive recursive
 occurrences are larger than and unrelated to the index \texttt{t2} of the result type.
 Thus, we conjecture that our new Mendler-style recursion scheme, namely \textsf{MPrIx},
 which enables us to write an evaluator for  \texttt{Exp\,:\,\{Ty\}\,->\,*}, 
-is well-defined when every index at negative recursive occurrence is
+is well-defined when every index at a negative recursive occurrence is
 smaller than the index of the result type.
-In our work, we will \vspace*{-1ex}
+In the paper, we will \vspace*{-1ex}
 \begin{itemize}
- \item formulate the type signature and the reduction rule of \textsf{MPrIx},
+ \item Formulate the type signature and the reduction rule of \textsf{MPrIx},
  \vspace*{-1ex}
- \item clearly specify what ``smaller'' means, and
+ \item Clearly specify what ``smaller'' means, and
  \vspace*{-1ex}
- \item prove that \textsf{MPrIx} terminates whenever it is well defined.
+ \item Prove that \textsf{MPrIx} terminates whenever it is well defined.
 \end{itemize}
 
-\paragraph{Impacts\!\!} of our work are not limited to
-systems like Nax that adopts Mendler-style or type-based termination.
+\paragraph{The impact\!\!} of our work is not limited to
+systems like Nax that adopt Mendler-style or type-based termination.
 We hope to inspire other existing Curry--Howard based reasoning systems
 to support datatypes like \texttt{Exp\,:\,\{Ty\}\,->\,*}.
-For instance, the positivity checker in Agda may be extended to accept
+For instance, perhaps the positivity checker in Agda may be extended to accept
 not only positive datatypes but also certain term-indexed negative datatypes
 whose negative occurrences are guarded by our ``smaller'' condition.
 
