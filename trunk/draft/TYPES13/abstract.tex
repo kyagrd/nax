@@ -125,7 +125,7 @@ Unlike the HOAS datatype for untyped lambda calculus, evaluating
 these term-indexed HOAS expressions will always terminate,
 provided that functions contained in \texttt{Abs} are well-behaved,
 since the STLC is strongly normalizing.
-The intuitive principle behind the termination behavior of \texttt{Exp}
+The intuitive principle behind the termination behavior of \texttt{Exp\,:\,\{Ty\}\,->\,*}
 comes from the paradigmatic use of term-indices at negative recursive occurrences.  
 In the type of \texttt{Abs}, the term index \texttt{t1}
 at negative recursive occurrence is ``smaller'' than the index
@@ -133,7 +133,7 @@ at negative recursive occurrence is ``smaller'' than the index
 the two term-indices \texttt{Arr t1 t2} and \texttt{t1} at positive recursive
 occurrences are larger than and unrelated to the index \texttt{t2} of the result type.
 Thus, we conjecture that our new Mendler-style recursion scheme, namely \textsf{MPrIx},
-which enables us to write an evaluator for  \verb|Exp : {Ty} -> *|, 
+which enables us to write an evaluator for  \texttt{Exp\,:\,\{Ty\}\,->\,*}, 
 is well-defined when every index at negative recursive occurrence is
 smaller than the index of the result type.
 In our work, we will \vspace*{-1ex}
@@ -148,7 +148,7 @@ In our work, we will \vspace*{-1ex}
 \paragraph{Impacts\!\!} of our work is not limited to
 systems like Nax that adopts Mendler-style or type-based termination.
 We hope to inspire other existing Curry--Howard based reasoning systems
-to support datatypes like \verb|Exp : {Ty} -> *|.
+to support datatypes like \texttt{Exp\,:\,\{Ty\}\,->\,*}.
 For instance, the positivity checker in Agda may be extended to accept
 not only positive datatypes but also certain term-indexed negative datatypes
 whose negative occurrences are guarded by our ``smaller'' condition.
