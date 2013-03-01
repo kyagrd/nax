@@ -60,7 +60,7 @@ called Nax, with the following design goals:\vspace*{-1ex}
  \vspace*{-1.2ex}
  \item a simple implementation infrastructure that keeps the trusted base small.
 \end{enumerate}
-Our approach twoards these goals is to put together
+Our approach towards these goals is to put together
 \emph{Mendler-style recursion schemes}
 and \emph{term-indexed datatypes},
 while finding an appropriate foundational calculus.
@@ -73,7 +73,7 @@ no other termination checking infrastructure is necessary.
 
 In this abstract, we first overview advantages of adopting Mendler-style,
 and then, introduce a new interesting Mendler-style recursion scheme
-motivated from the term-indeices that goven the termination
+motivated from the term-indices that govern the termination
 behavior of their datatypes.
 \vspace*{-.5ex}
 \paragraph{Advantages of adopting Mendler-style\!\!\!}
@@ -81,35 +81,35 @@ is that it allows formation of
 any recursive datatype, while providing rich set of
 principled eliminators that ensure well-behaved use.
 Certain concepts, such as Higher-Order Abstract Syntax
-(HOAS) are most succintly defined as mixed-variant datatypes.
+(HOAS) are most succinctly defined as mixed-variant datatypes.
 However, most existing reasoning systems based on
-Curry--Howard correspondence, unfortunatly, restrict
+Curry--Howard correspondence, unfortunately, restrict
 formation of those recursive datatypes, even though ill-behaved
 use were never attempted. As a result, one is forced to devise
 certain tricks to encode concepts like HOAS within the restricted
 forms of datatypes in such systems.
 
-We believe it is worthwile to allow formation of all the recursive datatypes
+We believe it is worthwhile to allow formation of all the recursive datatypes
 (\eg, non-strictly positive, mixed-variant, nested)
 usually available in functional languages. For instance,
 in Haskell, we can define a HOAS for the untyped lambda-calculus
-as folows.
+as follows.
 \begin{verbatim}
     data Exp = Abs (Exp -> Exp) | App Exp Exp
 \end{verbatim}
 Even if we assume all functions contained in \texttt{Abs} are non-recursive,
-trying to evaluate these HOAS expressions may still cause problems in logial reasoning,
+trying to evaluate these HOAS expressions may still cause problems in logical reasoning,
 since the untyped lambda calculus has diverging terms. However, there are
 many well-behaved computations on \texttt{Exp}. For instance, examining whether
 an HOAS expression is \texttt{Abs} or \texttt{App}, and, converting an HOAS expression
-to first-order synax are examples of terminating computation on \texttt{Exp}.
+to first-order syntax are examples of terminating computation on \texttt{Exp}.
 Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme
 that captures these well-behaved computations.
 
 \paragraph{Term-indices that govern termination behavir of their datatypes\!\!}
 motivate a new Mendler-style recursion scheme.
 Consider yet another HOAS datatype below for the Simply-Typed Lambda-Calculus (STLC)
-defiend in Nax-like syntax,\footnote{curly braces emphasize
+defined in Nax-like syntax,\footnote{curly braces emphasize
   term-indices used in types (\texttt{Exp\{t1\}}),
   and types used in kinds (\texttt{\{Ty\}\;->\;*}).}
 where HOAS expressions (\texttt{Exp}) are
@@ -121,7 +121,7 @@ statically indexed by the terms that represent STLC-types (\texttt{Ty}).
     data Exp : {Ty} -> * where   Abs : (Exp{t1} -> Exp{t2}) -> Exp{Arr t1 t2}
                                  App : Exp{Arr t1 t2} -> Exp{t1} -> Exp{t2}
 \end{verbatim}
-TODO here just give very short intiution
+TODO here just give very short intuition
 
 \paragraph{Impacts} TODO
 
