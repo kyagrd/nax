@@ -145,9 +145,13 @@ In our work, we will \vspace*{-1ex}
  \item prove that \textsf{MPrIx} terminates whenever it is well defined.
 \end{itemize}
 
-\paragraph{Impacts} TODO
-
-TODO in consideration to submit to TYPES 2013
+\paragraph{Impacts\!\!} of our work is not limited to
+systems like Nax that adopts Mendler-style or type-based termination.
+We hope to inspire other existing Curry--Howard based reasoning systems
+to support datatypes like \verb|Exp : {Ty} -> *|.
+For instance, the positivity checker in Agda may be extended to accept
+not only positive datatypes but also certain term-indexed negative datatypes
+whose negative occurrences are guarded by our ``smaller'' condition.
 
 % create the bibliography
 \bibliography{main}   % refers to main.bib
