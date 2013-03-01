@@ -103,9 +103,9 @@ since the untyped lambda calculus has diverging terms. However, there are
 many well-behaved computations on \texttt{Exp}. For instance, examining whether
 an HOAS expression is \texttt{Abs} or \texttt{App}, and, converting an HOAS expression
 to first-order synax are examples of terminating computation on \texttt{Exp}.
-In order to capture these well-behaved computations, Ahn and Sheard \cite{AhnShe11}
-formalized a new Mendler-style recursion scheme.
-\vspace*{-1ex}
+Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme
+that captures these well-behaved computations.
+
 \paragraph{Term-indices that govern termination behavir of their datatypes\!\!}
 motivate a new Mendler-style recursion scheme.
 Consider yet another HOAS datatype below for the Simply-Typed Lambda-Calculus (STLC)
@@ -121,6 +121,9 @@ statically indexed by the terms that represent STLC-types (\texttt{Ty}).
     data Exp : {Ty} -> * where   Abs : (Exp{t1} -> Exp{t2}) -> Exp{Arr t1 t2}
                                  App : Exp{Arr t1 t2} -> Exp{t1} -> Exp{t2}
 \end{verbatim}
+TODO here just give very short intiution
+
+\paragraph{Impacts} TODO
 
 TODO in consideration to submit to TYPES 2013
 
