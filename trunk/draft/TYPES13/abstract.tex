@@ -1,0 +1,129 @@
+\documentclass[a4paper]{easychair} % A4 is needed for the abstract book
+
+%\documentclass[a4paper, debug]{easychair} 
+% can be used to better see overfull boxes
+
+\usepackage{enumerate}
+
+\bibliographystyle{plain}
+
+%\newtheorem{thm}{Theorem}   % no such environments are predefined
+
+\title{Type-Based Termination of\\ Term-Indexed Types}
+\titlerunning{Type-Based Termination of Term-Indexed Types}
+\author{
+Ki Yung Ahn\inst{1}
+\and
+Tim Sheard\inst{1}
+ \and
+TODO\inst{2}
+ \and
+TODO\inst{2}
+}
+\institute{
+  Portland State University,\thanks{Funded by XXX project.} \\
+  Portland, OR, USA
+\and
+  University of Cambridge, \\
+  Cambridge, UK
+}
+\authorrunning{Author1 and Author2}
+
+\newcommand{\cf}[0]{{cf.}}
+\newcommand{\eg}[0]{{e.g.}}
+\newcommand{\ie}[0]{{i.e.}}
+\newcommand{\aka}[0]{{a.k.a.}}
+
+\newcommand{\F}[0]{{\ensuremath{\mathsf{\uppercase{F}}}}}
+\newcommand{\Fw}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\!\omega}}}}
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%\end{abstract}
+% abstracts of abstracts are not compulsory
+
+The context of our work is the Nax programming language project.
+We are developing a unified programming and reasoning system,
+called Nax, with the following design goals:\vspace*{-1ex}
+\begin{enumerate}[(1)]
+ \item supports major constructs of modern functional programming languages,
+ such as parametric polymorphism, recursive datatypes, and type inference,
+ \vspace*{-1.2ex}
+ \item can specify fine-grained program properties as types and
+ prove them by writing a program (Curry--Howard correspondence),
+ \vspace*{-1.2ex}
+ \item is based on a minimal foundational calculus
+ that is expressible enough to embed all the language constructs in (1)
+ and also logically consistent to avoid paradoxical proofs in (2),
+ \vspace*{-1.2ex}
+ \item a simple implementation infrastructure that keeps the trusted base small.
+\end{enumerate}
+Our approach twoards these goals is to put together
+\emph{Mendler-style recursion schemes}
+and \emph{term-indexed datatypes},
+while finding an appropriate foundational calculus.
+Term-indexed datatypes are necessary to support (2), for insance,
+statically specifying size of a list by a natural number index.
+Mendler-style recursion schemes support (1) since they are based
+on parametric polymorphism and well-defined over wide range of datatypes,
+and also support (4) since their termination is type-based --
+no other termination checking infrastructure is necessary.
+
+In this abstract, we first overview advantages of adopting Mendler-style,
+and then, introduce a new interesting Mendler-style recursion scheme
+motivated from the term-indeices that goven the termination
+behavior of their datatypes.
+\vspace*{-.5ex}
+\paragraph{Advantages of adopting Mendler-style\!\!\!}
+is that it allows formation of
+any recursive datatype, while providing rich set of
+principled eliminators that ensure well-behaved use.
+Certain concepts, such as Higher-Order Abstract Syntax
+(HOAS) are most succintly defined as mixed-variant datatypes.
+However, most existing reasoning systems based on
+Curry--Howard correspondence, unfortunatly, restrict
+formation of those recursive datatypes, even though ill-behaved
+use were never attempted. As a result, one is forced to devise
+certain tricks to encode concepts like HOAS within the restricted
+forms of datatypes in such systems.
+
+We believe it is worthwile to allow formation of all the recursive datatypes
+(\eg, non-strictly positive, mixed-variant, nested)
+usually available in functional languages. For instance,
+in Haskell, we can define a HOAS for the untyped lambda-calculus
+as folows.
+\begin{verbatim}
+    data Exp = Abs (Exp -> Exp) | App Exp Exp
+\end{verbatim}
+Even if we assume all functions contained in \texttt{Abs} are non-recursive,
+trying to evaluate these HOAS expressions may still cause problems in logial reasoning,
+since the untyped lambda calculus has diverging terms. However, there are
+many well-behaved computations on \texttt{Exp}. For instance, examining whether
+an HOAS expression is \texttt{Abs} or \texttt{App}, and, converting an HOAS expression
+to first-order synax are examples of terminating computation on \texttt{Exp}.
+In order to capture these well-behaved computations, Ahn and Sheard \cite{AhnShe11}
+formalized a new Mendler-style recursion scheme.
+\vspace*{-1ex}
+\paragraph{Term-indices that govern termination behavir of their datatypes\!\!}
+motivate a new Mendler-style recursion scheme.
+Consider yet another HOAS datatype below for the Simply-Typed Lambda-Calculus (STLC)
+defiend in Nax-like syntax,\footnote{curly braces emphasize
+  term-indices used in types (\texttt{Exp\{t1\}}),
+  and types used in kinds (\texttt{\{Ty\}\;->\;*}).}
+where HOAS expressions (\texttt{Exp}) are
+statically indexed by the terms that represent STLC-types (\texttt{Ty}).
+\begin{verbatim}
+    data Ty : * where    Iota : Ty
+                         Arr  : Ty -> Ty -> Ty
+
+    data Exp : {Ty} -> * where   Abs : (Exp{t1} -> Exp{t2}) -> Exp{Arr t1 t2}
+                                 App : Exp{Arr t1 t2} -> Exp{t1} -> Exp{t2}
+\end{verbatim}
+
+TODO in consideration to submit to TYPES 2013
+
+% create the bibliography
+\bibliography{main}   % refers to main.bib
+\end{document}

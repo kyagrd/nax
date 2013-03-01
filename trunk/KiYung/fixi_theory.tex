@@ -184,30 +184,30 @@ for any $F : +* -> *$ such that
         proceed by analyzing the structure of $B$.
  
 \begin{itemize}
-\item[case]($Z\notin \FV(B)$, i.e. $F$ is a constant function.)
+\item[case]($Z\notin \FV(B)$, \ie, $F$ is a constant function.)
         $ \textit{fmap}_{(\l Z^{+*}. B)} = \l \_ . \l x. x $
 
         Since $F\;X = F\;Y = B$, we just return the identity function on $B$.
 
-\item[case]($F \triangleq \l Z^{+*}. Z$. i.e. $F$ is the identity.)
+\item[case]($F \triangleq \l Z^{+*}. Z$. \ie, $F$ is the identity.)
         $ \textit{fmap}_{(\l Z^{+*}. Z)} = \l z . z $
 
         Since $F\;X = X$ and $F\;X = Y$,
         we return the function $z:X -> Y$ itself.
 
 \item[case]($F \triangleq \l Z^{+*}. \forall X_1^{*} .B_1$, $B$ is a universal quantification.)
-        $\textit{fmap}_{(\l Z^{+*}. \forall X_1^{*} .B_1)}
-        = \textit{fmap}_{(\l Z^{+*}.B_1)}$
-
+	\vspace*{-2ex}
+	\[ \textit{fmap}_{(\l Z^{+*}. \forall X_1^{*} .B_1)}
+	= \textit{fmap}_{(\l Z^{+*}.B_1)} \]\vskip-2ex
         Here, we need to find an \textit{fmap}
         that works for any valuation of $X_1$.
-        That is, an \textit{fmap} that works for $\l Z^{+*}. B_1[v/X_1]$
-        for an arbitrary value $v$. Since values are closed, $v$
+        That is, an \textit{fmap} that works for $\l Z^{+*}. B_1[V/X_1]$
+        for an arbitrary value $V$. Since values are closed, $v$
         cannot contain free variables, including $Z$. Since $v$
-        is completely independent of $Z$, the value $v$ cannot make any
+        is completely independent of $Z$, the value $V$ cannot make any
         difference to the derived \textit{fmap}. So we simply ignore $X_1$.
 
-\item[case]($F \triangleq \l Z^{+*}. A -> B_1$, i.e. $B$ is a function.)
+\item[case]($F \triangleq \l Z^{+*}. A -> B_1$, \ie, $B$ is a function.)
 
         When $Z\notin\FV(A)$,
         $\textit{fmap}_{(\l Z^{+*}.A -> B_1)}
@@ -240,14 +240,18 @@ for any $F : +* -> *$ such that
                      &&\!\!\!\!(\textit{fmap}_{(\l Z^{+*}.A_n)} ~ z ~ x_n)&
                 \,) \,)
         \end{align*}
-        \end{singlespace}
-
+	\end{singlespace}\vspace*{-4ex}
 \end{itemize}
 \end{proof}
 
 To illustrate that the \textit{fmap}s derived in the proof above are indeed
 type correct, we provide some examples in Haskell accepted by GHC in
-Figure~\ref{fig:deriveFunctor}.
+Figure~\ref{fig:deriveFunctor}. In fact, all the \texttt{\small Functor}
+instances in Figure~\ref{fig:deriveFunctor} are automatically derivable
+using the \texttt{\small DeriveFunctor} extensino in GHC version 7.4.
+However, GHC does not derive functor instances when there are
+type constuctor variables other than $*$, since the kind system in GHC
+does not keep track of polarity as in \Fixw\ or \Fixi.
 \begin{figure}
 \begin{singlespace}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
@@ -291,16 +295,17 @@ instance Functor F6 where
 \end{figure}
 
 Recall we are proving a simplified version of the statement we want with
-several simplifying assumptions: $F$ is a closed value, and bound variables introduced
-in $F$ have kind $*$. Let us now generalize the second restriction
-by allowing type constructor variables of
-kind $p* -> *$ as well as type variables of kind $*$. There are three
-possibilities for $X:p* -> *$. Note that the variable
-$X$ would be used as the function part of an application, like $X\,G$, within the type $B$.
+several simplifying assumptions: $F$ is a closed value, and
+bound variables introduced in $F$ have kind $*$. Let us now generalize
+the second restriction by allowing type constructor variables of kind $p* -> *$
+as well as type variables of kind $*$. There are three possibilities for
+$X:p* -> *$. Note that the variable $X$ would be used as the function part of
+an application, like $X\,G$, within the type $B$.
 \begin{itemize}
 \item[case]($X : +* -> *$)
         By induction\footnote{
-                we need to make sure that this is a well-founded induction},
+                We need to make sure that this is a well-founded induction.
+		It may be a coinductive proof.},
         there exist a map for any valuation of $X$.
         So, we denote that map as $\textit{fmap}_{X}$.
         Then the map for $\l Z^{+*}.X\,G$ is
@@ -323,7 +328,8 @@ $X$ would be used as the function part of an application, like $X\,G$, within th
         negative positions, any $Z$ occurring in negative position in $G$
         become positive positions in the substituted type. Thus, $\l Z^{+*}.B_1[G/X_1] : +* -> *$.
         So, by induction\footnote{
-                we need to make sure that this is a well-founded induction},
+                We need to make sure that this is a well-founded induction.
+		It may be a codinductive proof.},
         there exists a map for any valuation of $X$,
         since we can derive $\textit{fmap}_{(\l Z^{+*}.B_1[G/X_1])}$.
 
@@ -341,13 +347,43 @@ of type constructor variables with single argument, it is easy to generalize
 this to arbitrary rank-1 kinded type constructor variables
 (\eg, $+* -> A_1 -> -* -> A_2 -> 0* -> *$).
 
+TODO what about $fix\,F$ ???
 
+TODO To generalize this even further allowing type constructor variables
+of any kind, we prove by induction on the rank of the kind of
+the type constructor variables. That is, assuming that it holds for any
+value $F$ with up to rank-$n$ kinded type constructor variables, we should
+show that it holds when we also allow rank-$(n+1)$ kinded type constructor
+variables. What we have proved so far is the baes case $n=0$ and the case $n=1$.
 
-would generalized to arbitrary rank-1 kinded tycon variables
+For simplicity let us consider type constructor variables
+that expect only one arguemnt to become a type. That is,
+$X : p\kappa -> *$ and $\kappa$ itself is in the form of $\kappa' -> *$.
+\begin{itemize}
+	\item[case]($X : 0\kappa -> * $)
+	Since $G$ in $X\,G$ cannot have $Z$,
+	we simply return the identiy function as the map for $\l Z^{+*}.X\,G$.
 
+	\item[case]($X : +\kappa -> * $)
+	Valuation of $X$ must have the form of $\l X_1^{+\kappa}. B_1$.
+	The argument $G$ in $X\,G$ must either be lambda or an application.
+	When $G$ is an application $X_1$
+	we already know how to handle this no problem --
+reduction won't make any new redex either so it is still a value.
+When G is a lambda it will make new redex ...
+When G is a lambda it will make new redex ...
+$X_1 G_1$ will be $G\,G_1$ since $G_1$.
+We know that $G\,G_1$ will reduce to a normal form.
 
-What about even higher kinded tycon variables?
-
+	\item[case]($X : -\kappa -> * $)
+\[ \l X_1^{+\kappa}. B_1 : +\kappa -> * \]
+G must either be lambda or an application.
+When G is an application we already know how to handle this no problem --
+reduction won't make any new redex either so it is still a value.
+When G is a lambda it will make new redex ...
+$X_1 G_1$ will be $G\,G_1$ since $G_1$.
+We know that $G\,G_1$ will reduce to a normal form.
+\end{itemize}
 
 \begin{proposition}\label{prop:fixi:fmapFree}
 If $\textit{fmap}_F:\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
