@@ -6,9 +6,9 @@
 \begin{figure}
 $\!\!\!\!\!\!\!\!\!$\mprimDef
 \caption[The Mendler-style primitive recursion and
-         course-of-values primitive recursion]
+         course-of-values recursion]
          {The Mendler-style primitive recursion (|mprim|) and
-          the Mendler-style course-of-values primitive recursion (|mcvpr|)
+          the Mendler-style course-of-values recursion (|mcvpr|)
           at kinds $*$ and $* -> *$, in comparison with |mcata| and |mhist|.}
 \label{fig:mprim}
 \end{figure}
@@ -21,7 +21,7 @@ defining equation for a several families of Mendler-style recursion combinators.
 We give two versions for each family, one at kind $*$ and one at kind $* -> *$.
 The families of combinators increase in complexity from iteration (|mcata|),
 through primitive recursion (|mprim|) and course-of-values iteration (|mhist|),
-to course of values primitive recursion (|mcvpr|).
+to course-of-values recursion (|mcvpr|).
 We saw |mcata| and |mhist| in the previous sections.
 
 The Mendler-style primitive recursion family (|mprim|), when
@@ -31,7 +31,7 @@ The |cast| operation explicitly converts a value of the abstract recursive type
 (|r|) into a value of the concrete recursive type (|Mu0 t|). 
 
 Similarly,
-the Mendler-style course-of-values primitive recursion family (|mcvpr|),
+the Mendler-style course-of-values recursion family (|mcvpr|),
 when compared to the |mhist| family, also has
 an additional |cast| operation.
 
@@ -85,7 +85,7 @@ will be linear in the size of the input rather than being constant.
 \label{fig:consttail}
 \end{figure}
 
-The course-of-values primitive recursion family can be defined by adding
+The course-of-values recursion family can be defined by adding
 the |out| operation to the |mprim| family, as is shown in Figure \ref{fig:mprim},
 just as the |mhist| family can be defined by adding the |out| operation
 to |mcata|. The |mcvpr| family is only guaranteed to terminate for
@@ -93,7 +93,7 @@ positive datatypes, for the same reason that the |mhist| family is
 only guaranteed to terminate for positive datatypes (recall Figure \ref{fig:LoopHisto}).
 
 A simple variation of the Fibonacci function, shown  in Figure \ref{fig:lucas},
-is an example of a course-of-values primitive recursion.
+is an example of a course-of-values recursion.
 The Fibonacci function |fib| and the Lucas function |luc| satisfy
 the following recurrence relations:\footnote{
 The |luc| function in Figure \ref{fig:lucas} is slightly

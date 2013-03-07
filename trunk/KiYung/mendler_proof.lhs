@@ -21,14 +21,14 @@ between those combinators (Figure \ref{fig:cataviahisto})
 |msfcata0| & {proof} \S\ref{App:Fomega} & {proof} \S\ref{App:Fomega} & {|showExp|} {Fig.} \ref{fig:HOASshow} \\
 |msfhist0| & {argument}\S\ref{ssec:tourHist0} & {no} & |loopFoo| {Fig.} \ref{fig:LoopHisto} \\
 |mprim0| & proof \cite{AbeMat04} & proof \cite{AbeMat04} & |factorial| Fig. \ref{fig:fac} \\
-|mcvpr0| & \S\ref{sec:fixi:cv} & no &  |lucas| Fig. \ref{fig:lucas} \\
+|mcvpr0| & conjecture \S\ref{sec:fixi:cv} & no &  |lucas| Fig. \ref{fig:lucas} \\
 |mcata1| & {proof} \cite{AbeMatUus05} & {proof} \cite{AbeMatUus05} & |bsum| {Fig.} \ref{fig:bsum} \\
          & & & |extev| {Fig.} \ref{fig:mutrec} \\
-|mhist1| & ? & {no} & |switch2| {Fig.} \ref{fig:vec} \\
+|mhist1| & same as |mcvpr1| & {no} & |switch2| {Fig.} \ref{fig:vec} \\
 |msfcata1| &  {similar} \S\ref{App:Fomega}  & {similar} \S\ref{App:Fomega} & \\
 |msfhist1| & ? &  {no} &  
 \end{tabular}
-\caption{Termination properties if the Mendler-style recursion combinators}
+\caption{Termination properties of the Mendler-style recursion combinators}
 \label{tbl:mendlerCombinatorSummary}
 \end{table}
 
@@ -56,11 +56,11 @@ They run and return the expected results!\vspace*{-3ex}
 \citet{AbeMat04} proved termination of Mendler-style primitive recursion
 (|mprim|) by a reduction preserving embedding of |mprim| into \Fixw.
 We discuss the details of this embedding in \S\ref{sec:fixi:data}.
-We know that the Mendler-style course-of-values primitive recursion (|mcvpr|)
+We know that the Mendler-style course-of-values recursion (|mcvpr|)
 does not terminate for negative datatypes since |mhist| does not terminate
 for negative datatypes. Any computation that can be defined by |mcata|
 can also be defined by |mcvpr| (where it may be more efficient).
-We show that |mcvpr0| terminates for regular positive datatypes
+We show a partial proof that |mcvpr0| terminates for regular positive datatypes
 in \S\ref{sec:fixi:cv}, and we conjecture that |mcvpr|
 terminates for positive datatypes at higher-kinds as well.
 

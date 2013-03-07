@@ -265,8 +265,8 @@ Analysis of recursive data is performed with Mendler-style combinators. In our
 implementation we provide 5 Mendler-style combinators:
  |MIt| (fold or catamorphism or iteration),
  |MPr| (primitive recursion),
- |McvIt| (courses of values iteration), and
- |McvPr| (courses of values primitive recursion), and
+ |McvIt| (courses-of-values iteration), and
+ |McvPr| (courses-of-values recursion), and
  |MsfIt| (fold or catamorphism or iteration for recursive types with negative occurrences).
 
 A Mendler-style combinator is written in a manner similar to a case expression.

@@ -1,4 +1,4 @@
-\section{Embedding course-of-values primitive recursion}
+\section{Embedding course-of-values recursion}
 \label{sec:fixi:cv}
 
 \lstset{language=Haskell,
@@ -59,7 +59,7 @@ embeddings of unrollers ($\unIn_F$) for
 some well-known positive base structures ($F$).}
 \]
 \caption{Embedding of the recursive type operators ($\mu^{+}_\kappa$),
-	the Mendler-style course-of-values primitive recursors
+	the Mendler-style course-of-values recursors
 	($\McvPr_\kappa$), and the roller ($\In_F$) in \Fixi,
         provided that the embedding of $\unIn_F$ exists}
 \label{fig:embedMcvPr}
@@ -130,7 +130,7 @@ $\mathtt{Eq_{A}} : \forall i^A.\forall j^A.(i=j)$ are
 the data constructors of the existential type and the equality type.
 \[\text{
 See Figure \ref{fig:embedMcvPr} for the embedding of the Mendler-style
-course-of-values primitive recursor ($\McvPr_\kappa$)}
+course-of-values recursor ($\McvPr_\kappa$)}
 \]
 \caption{Embeddings of unroller ($\unIn_F$)
 	for some well-known positive base structures ($F$).}
@@ -163,7 +163,7 @@ the equations and embedding are carefully designed
 	the Mendler-style combinator $\MPr_\kappa$).
 \end{itemize}
 
-To embed Mendler-style course of values recursion, we can follow the steps above
+To embed Mendler-style course-of-values recursion, we can follow the steps above
 just ad we did for Mendler-style primitive recursion. In addition, we need
 to embed an unroller $\unIn_F$, which is the key operation to support
 course-of-values recursion. Recall the use of \textit{out} in the Fibonacci
@@ -173,7 +173,7 @@ number example (Figure~\ref{fig:fib}) and the Lucas number example
 \subsection{The general form for the embedding of course-of-values recursion}
 Figure~\ref{fig:embedMcvPr} and illustrates the embedding of
 a new iso-recursive type operator ($\mu^{+}_\kappa$),
-the Mendler-style course-of-values primitive recursor ($\McvPr_\kappa$),
+the Mendler-style course-of-values recursor ($\McvPr_\kappa$),
 and the roller $\In_F$ in \Fixi. Since the embedding of $\In_F$ uses $\unIn_F$,
 we also need embed unroller $\unIn_F$ in order to complete the embedding of
 the roller $\In_F$. Embeddings of $\unIn_F$ are possible for a fairly large

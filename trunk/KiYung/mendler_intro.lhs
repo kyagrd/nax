@@ -100,7 +100,7 @@ an infinite series of datatype fixpoint operators for each different kind
 (\eg, |Mu0|, |Mu1|). In this chapter, we illustrate the Mendler-style
 recursion comnbinators only at the two simplest kinds $*$ and $* -> *$.
 
-\subsection{Background - Termination and Negativity}\label{sec:motiv}
+\subsection{Background - Termination and Negativity}\label{sec:mendler:motiv}
 \citet{Mendler87} showed that diverging computations can be expressed using
 recursive datatypes with negative occurrences of the datatype being defined. 
 No explicit recursion at the value level is required to elicit non-termination.
@@ -287,7 +287,7 @@ show how to encode mutually recursive datatypes using indexed datatypes
 (\S\ref{ssec:tourMutRec}).
 
 In \S\ref{sec:mpr}, we introduce the Mendler-style primitive recursion (|mprim|)
-and course-of-values primitive recursion (|mcvpr|). |mprim| and |mcvpr| are
+and course-of-values recursion (|mcvpr|). |mprim| and |mcvpr| are
 equivalent to |mcata| and |mhist|, respectively, in terms of computability,
 but often lead to more efficient implementations.
 

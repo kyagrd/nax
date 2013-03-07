@@ -130,7 +130,9 @@ The only possible computation is to call
  |fib :: r -> Int| on |n| and |n'|,  as we do in |fib n + fib n'|.
 It is a type error to call |fib :: r -> Int| on either |(S n) :: N r|
 or |(S n') :: N r|. This is why the termination property of |mhist0|
-continues to hold for positive datatypes.
+continues to hold for positive datatypes. In \S\ref{sec:fixi:cv}
+We discuss further on when Mendler-style course-of-values recursion is
+guaranteed to terminate.
 
 For negative datatypes, however, we have additional functions with domain |r|.
 Inside the |phi| function passed to |mhist0|, the embedded functions with
@@ -146,7 +148,7 @@ including negative datatypes.
 \label{ssec:tourNegative}
 
 Let us revisit the negative inductive datatype |T|
-(from \S\ref{sec:motiv}) from which we constructed a diverging computation.
+(from \S\ref{sec:mendler:motiv}) from which we constructed a diverging computation.
 %format T_m = T"_{\!m}"
 %format C_m = C"_{\!m}"
 %format p_m = p"_{\!m}"
@@ -158,7 +160,7 @@ type T_m = Mu0 TBase
 \end{code}
 If we can write two functions |p_m :: T_m -> (T_m -> ())|, 
 and |w_m :: T_m -> ()|, corresponding to |p| and |w| from
-\S\ref{sec:motiv}, we can reconstruct the same diverging computation.
+\S\ref{sec:mendler:motiv}, we can reconstruct the same diverging computation.
 The function
 \begin{code}
 w_m x = (p_m x) x
