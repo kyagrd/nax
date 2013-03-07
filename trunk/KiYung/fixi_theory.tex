@@ -1,5 +1,7 @@
 \section{Metatheory} \label{sec:fixi:theory}
-
+In this section, we show strong normalization, logical consistency, and
+partion proof on syntactic conditions for well-behaved course-of-values
+recursion.
 \subsection{Strong normalization and logical consistency}
 \label{ssec:fixi:theory:sn}
 We can prove strong normalization of \Fixi\ by erasing term-indices in \Fixi\ 
@@ -147,13 +149,27 @@ $
                 {\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
 \]
 \end{theorem}
+Strong normalization is a direct consequence of the eruasure theorem above.
 
-
-\KYA{TODO find and cite the work on logical consistencies of
-        implicit calculus + equi-recursive types. I believe
-	it is enough to point to the interpretation of types in Fixw paper
-	and mention that the void type $\forall X^{+*}.X$ is uninhabited
-	in that interpretation.}
+\paragraph{Logical consistency:}
+We show logical consistency of \Fixi\ by showing that the void type
+$\forall X^{*}.X$ is uninhabited. By index erasure, we know that
+there are no more terms that inhabit a \Fixi-type than
+the terms that inhabits the corresponding \Fixw-type.
+Thus, showing that $\forall X^{*}.X$ is uninhabited in \Fixw\ implies
+$\forall X^{*}.X$ is uninhabited in \Fixi. \citet{AbeMat04} gives
+a satruated set interpertation for the type constructors in \Fixw,
+which is similar to the interpertation in \S\ref{sec:fw:srsn} for
+\Fw\ type constructors. The void type $\forall X^{*}.X$ is obviously
+uninhabited according to this interpretation. That is, no strongly
+normalizing term inhabits $\forall X^{*}.X$.
+\begin{align*}
+	[| \forall X^{*}.X |]_\xi &\in \SAT_{*} -> \SAT_{*} \\
+	[| \forall X^{*}.X |]_\xi &
+	= \bigcap_{\mathcal{A}\in[| * |]} [| X |]_{\xi[X\to\mathcal{A}]}
+	= \bigcap_{\mathcal{A}\in[| * |]} \mathcal{A} = \emptyset
+	\qquad(\because ~ \emptyset\in[| * |])
+\end{align*}
 
 
 \subsection{Syntactic conditions for well-behaved course-of-values recursion}
@@ -414,11 +430,11 @@ We hope to complete the proof in the future.
 
 Once we have completed the proof of Conjecture \ref{conj:fixi:fmap},
 the next step is prove a similar conjecture for higher kinds.
-For example, recall \texttt{fmap1} in \S\ref{sec:fixi:cv:unInExamples}.
+(recall \texttt{fmap1} in \S\ref{sec:fixi:cv:unInExamples}).
 For instance, we conjecture that maps exist for type constructors
 of kind $+(+* -> *) -> (+* -> *)$.
 
-\KYA{TODO introduce a general form of a conjecture}
+\KYA{TODO introduce a general form of a conjecture??}
 
 \begin{comment}
 TODO To generalize this even further allowing type constructor variables

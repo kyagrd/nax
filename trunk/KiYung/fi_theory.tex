@@ -668,11 +668,20 @@ Theorem~\ref{thm:ierasetypingifree} without the side condition therein.
 \subsection{Strong normalization and logical consistency}
 \label{ssec:fi:sn}
 Strong normalization is a corollary of the erasure property since we know that
-System~\Fw\ is strongly normalizing. Logical consistency is immediate since
+System~\Fw\ is strongly normalizing.
+
+Logical consistency is immediate since
 System~\Fi\ is a strict subset of the \emph{restricted implicit calculus}
 \cite{Miquel00}, which is in turn a restriction of ICC~\cite{Miquel01}.
 Subject reduction is also immediate for the same reason.
 %% \marginpar{\framebox{\bf\em State these results formally in a theorem?}}
+
+We can also give a more direct proof of logical consistency by shoing that
+the void type $\forall X^{*}.X$ is uninhabited in \Fi. By type erasure
+no more terms inhabit \Fi-types than the corresponding \Fw-types.
+Since we already know that the void type $\forall X^{*}.X$
+is uninhabited in \Fw, it must be the case that the void type
+is uninhabited in \Fi.
 
 \begin{comment}
 \subsection{No \texttt{Void} type instantiation from dynamic values}
