@@ -1,23 +1,32 @@
-\section{Metatheory} \label{sec:fixi:theory}
-In this section, we show strong normalization, logical consistency, and
-partion proof on syntactic conditions for well-behaved course-of-values
+\section{Metatheory of \Fixi} \label{sec:fixi:theory}
+Recall we extended \Fixw\ to \Fixi\ to support primitive recursion and
+course of values recursion.
+In this section, we show strong normalization, and logical consistency
+of \Fixi.  We also give a
+partial proof of the syntactic conditions necessary for well-behaved course-of-values
 recursion.
+
 \subsection{Strong normalization and logical consistency}
 \label{ssec:fixi:theory:sn}
-We can prove strong normalization of \Fixi\ by erasing term-indices in \Fixi\ 
-types into \Fixw\ types. Since \Fixw\ is strongly normalizing \cite{AbeMat04},
-the existence of a index erasure that maps a valid typing judgment on a term
-in \Fixi\ to a valid typing judgment on the same term in \Fixw\ implies
+We can prove strong normalization of \Fixi\ by the following strategy.
+\begin{itemize}
+\item Define a notion of index-erasure that transforms \Fixi\ types to \Fixw\ types.
+\item Define the meaning of a \Fixi\ term to be the meaning of its erasure.
+\item Show that every well-typed \Fixi term erases to a well-typed \Fixw term.
+\item Since \Fixw\ is strongly normalizing \cite{AbeMat04}, and
+that index-erasure maps a valid typing judgment on a term
+in \Fixi\ to a valid typing judgment on the same term in \Fixw\ implies the
 strong normalization of \Fixi.
+\end{itemize}
 
-The definition of the index erasure operation and the proofs for
+The definition of the index erasure operation for \Fixi, and the proofs of
 the related theorems are virtually the same as their counterparts
 in System \Fi\ (see \S\ref{sec:fi:theory}). So, we simply illustrate
-the definition and theorems, but omit the proofs of the theorems.
+the definition and the theorems, but omit their proofs.
 
 We define a meta-operation of index erasure ($\circ$) that
 projects $\Fixi$ types to $\Fixw$ types and another meta-operation ($\bullet$)
-that selects all the index variable bindings from the type level context.
+that selects only the index variable bindings ($i^A$) from the type level context.
 \begin{definition}[index erasure]\label{def:Fixierase}
 \[ \fbox{$\kappa^\circ$}
  ~~~~ ~~
@@ -84,14 +93,16 @@ that selects all the index variable bindings from the type level context.
         (\Delta,i^A)^\bullet = \Delta^\bullet,i:A
 \]
 \end{definition}
-These two definitions are exactly the same as the definition of
-$\circ$ and $\bullet$ in \Fi\ defined in \S\ref{ssec:fi:sn},
-except the new constructs of \Fixi: polariteis in kinds and
-the equi recursive type operator $\fix$.
+These two definitions are exactly the same as the definitions of
+$\circ$ and $\bullet$ in \Fi\ (defined in \S\ref{ssec:fi:sn}),
+except for the new constructs of \Fixi: (1) polarities in kinds and (2)
+the equi-recursive type operator $\fix$.
+
 Once $\circ$ and $\bullet$ are defined, the proof of strong normalization
-for \Fixi\ by index erasrure is virtually the same as the strong normalization
-proof for \Fi\ in \S\ref{ssec:fi:sn}. Here, we only list the theorems
-since the proofs can be trivially reconstruced consulting the proof
+by index erasure,
+for \Fixi,  is virtually the same as the strong normalization
+proof for \Fi\ (in \S\ref{ssec:fi:sn}). Here, we list only the theorems
+since their proofs can be trivially reconstruced by consulting the proofs
 of the corresponding theorems in \S\ref{ssec:fi:sn}.
 
 \begin{theorem}[index erasure on well-sorted kinds]
@@ -143,32 +154,34 @@ $
 \]
 \end{theorem}
 
+
 \begin{theorem}[index erasure on well-typed terms]
 \label{thm:Fixierasetypingall}
 \[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
                 {\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
 \]
 \end{theorem}
-Strong normalization is a direct consequence of the eruasure theorem above.
+As stated in the introduction to this section, strong normalization is a direct
+consequence of the erasure theorems above.
 
 \paragraph{Logical consistency:}
 We show logical consistency of \Fixi\ by showing that the void type
 $\forall X^{*}.X$ is uninhabited. By index erasure, we know that
-there are no more terms that inhabit a \Fixi-type than
-the terms that inhabits the corresponding \Fixw-type.
-Thus, showing that $\forall X^{*}.X$ is uninhabited in \Fixw\ implies
+that the set of terms that inhabit a \Fixi-type is a subset of
+the set of terms that inhabit the corresponding (erased) \Fixw-type.
+Thus, if $\forall X^{*}.X$ is uninhabited in \Fixw\ then 
 $\forall X^{*}.X$ is uninhabited in \Fixi. \citet{AbeMat04} gives
-a satruated set interpertation for the type constructors in \Fixw,
-which is similar to the interpertation in \S\ref{sec:fw:srsn} for
+a saturated set interpretation for the type constructors in \Fixw,
+which is similar to the interpretation given in \S\ref{sec:fw:srsn} for
 \Fw\ type constructors. The void type $\forall X^{*}.X$ is obviously
-uninhabited according to this interpretation. That is, no strongly
-normalizing term inhabits $\forall X^{*}.X$.
+uninhabited (by any closed term) according to this interpretation. That is, no 
+strongly-normalizing, closed term inhabits $\forall X^{*}.X$.
 \begin{align*}
-	[| \forall X^{*}.X |]_\xi &\in \SAT_{*} -> \SAT_{*} \\
-	[| \forall X^{*}.X |]_\xi &
-	= \bigcap_{\mathcal{A}\in[| * |]} [| X |]_{\xi[X\to\mathcal{A}]}
-	= \bigcap_{\mathcal{A}\in[| * |]} \mathcal{A} = \emptyset
-	\qquad(\because ~ \emptyset\in[| * |])
+        [| \forall X^{*}.X |]_\xi &\in \SAT_{*} -> \SAT_{*} \\
+        [| \forall X^{*}.X |]_\xi &
+        = \bigcap_{\mathcal{A}\in[| * |]} [| X |]_{\xi[X\to\mathcal{A}]}
+        = \bigcap_{\mathcal{A}\in[| * |]} \mathcal{A} = \emptyset
+        \qquad(\because ~ \emptyset\in[| * |])
 \end{align*}
 
 
@@ -177,28 +190,27 @@ normalizing term inhabits $\forall X^{*}.X$.
 In \S\ref{sec:fixi:cv}, we embedded Mendler-style course-of-values
 primitive recursion (\McvPr) in \Fixi\ for the base structures ($F$)
 that have maps ($\textit{fmap}_F$), which are also known as
-\emph{monotonicity witnesses} [TODO cite]. The theoretical development on
-the termination of \McvPr\ assuming the existence of maps is elegant, since
-it does not requiring ad-hoc syntactic restrictions on the formation of types.
-Hoover, in a language implementation, it is not desirable to require users to
+\emph{monotonicity witnesses} [TODO cite]. The theoretical development of
+the termination of \McvPr\ by assuming the existence of maps is elegant, since
+it does not require ad-hoc syntactic restrictions on the formation of types.
+However, in a language implementation, it is not desirable to require users to
 manually witness $\textit{fmap}_F$ every time they need to convince
 the type system that \McvPr\ is well-defined over $F$.
 
-It would very convenient if we can categorize type constructors of \Fixi\ that
-have maps based on their polarized kinds. Then, for any type constructor $F$
-whose kinds meet certain criterion, users can immediately assume the existence
+It would be very convenient if we can categorize type constructors of \Fixi\ that
+have maps by analyzing their polarized kinds. Then, for any type constructor $F$
+whose kind meets certain criteria, users can immediately assume the existence
 of $\textit{fmap}_F$ and that \McvPr\ always terminates for $F$.
 
 For instance, we conjecture that any $F: +* -> *$ should have a map, as in
-Conjecture \ref{conj:fixi:fmap} below. We only have showed
-that this conjecture holds for simple cases
-(Proposition \ref{prop:fixi:fmapBaseCase}), and
-the complete proof is left for future work.
+Conjecture \ref{conj:fixi:fmap} below. In this thesis, we only show
+that this conjecture holds for simple cases (Proposition \ref{prop:fixi:fmapBaseCase}), but still encompassing a broad range of types.
+The complete proof is left for future work.
 
 \begin{conjecture}\label{conj:fixi:fmap}
 For any $F : +* -> *$, there exists\\ \vspace*{-1ex}
 $\phantom{A}\qquad
-	\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+        \textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
 \quad such that
 \begin{align*}
 \textit{fmap}_F~\textit{id} &~=~ \textit{id} \\
@@ -214,7 +226,7 @@ $\unIn_F : \mu^{+}{*} F -> F(\mu^{+}{*} F)$ such that
 $\unIn_F (\In_F\;t) -->+ t$.
 \end{conjecture}
 \begin{proof}
-Since we know that $\textit{fmap}_F$ exists by Theorem~\ref{conj:fixi:fmap},
+Since we know that $\textit{fmap}_F$ exists by Conjecture~\ref{conj:fixi:fmap},
 we can define
 \[ \unIn_F = \McvPr_{*}\;
             (\l\_.\l\textit{cast}.\l\_.\l x.\textit{fmap}_F\;\textit{cast}\;x)
@@ -223,8 +235,8 @@ Since we know that $\textit{fmap}_F\;\textit{id}\;x -->+ x$,
 we can show that the unroller $\unIn_F$ has the desired property
 $\quad \unIn_F (\In_F\;t) -->+ \textit{fmap}_F\;\textit{id}\;t -->+ t $.
 \end{proof}
-We believe that the above conjectures are true, but only have proved
-a small fragment as the proposition below, which is a special case
+We believe that the above conjectures are true, but we prove only
+a small fragment (outlined below), which is a special case
 of Conjecture \ref{conj:fixi:fmap}.
 \begin{proposition}\label{prop:fixi:fmapBaseCase}
 There exists
@@ -235,7 +247,7 @@ for any $F : +* -> *$ such that
         \item $F$ is a value, that is, $F$ is
                 in normal form (\ie, has no redex) and
                 closed (\ie, $F$ has no free variables),
-        \item all the bound variabels within $F$ are
+        \item All the bound variabels within $F$ are
                 introduced by universal quantification
                 and those variables are of kind $*$.
 \end{itemize}
@@ -267,9 +279,9 @@ for any $F : +* -> *$ such that
         we return the function $z:X -> Y$ itself.
 
 \item[case]($F \triangleq \l Z^{+*}. \forall X_1^{*} .B_1$, $B$ is a universal quantification.)
-	\vspace*{-2ex}
-	\[ \textit{fmap}_{(\l Z^{+*}. \forall X_1^{*} .B_1)}
-	= \textit{fmap}_{(\l Z^{+*}.B_1)} \]\vskip-2ex
+        \vspace*{-2ex}
+        \[ \textit{fmap}_{(\l Z^{+*}. \forall X_1^{*} .B_1)}
+        = \textit{fmap}_{(\l Z^{+*}.B_1)} \]\vskip-2ex
         Here, we need to find an \textit{fmap}
         that works for any valuation of $X_1$.
         That is, an \textit{fmap} that works for $\l Z^{+*}. B_1[V/X_1]$
@@ -311,7 +323,7 @@ for any $F : +* -> *$ such that
                      &&\!\!\!\!(\textit{fmap}_{(\l Z^{+*}.A_n)} ~ z ~ x_n)&
                 \,) \,)
         \end{align*}
-	\end{singlespace}\vspace*{-4ex}
+        \end{singlespace}\vspace*{-4ex}
 \end{itemize}
 \end{proof}
 
@@ -376,7 +388,7 @@ an application, like $X\,G$, within the type $B$.
 \item[case]($X : +* -> *$)
         By induction\footnote{
                 We need to make sure that this is a well-founded induction.
-		It may be a coinductive proof.},
+                It may be a coinductive proof.},
         there exist a map for any valuation of $X$.
         So, we denote that map as $\textit{fmap}_{X}$.
         Then the map for $\l Z^{+*}.X\,G$ is
@@ -394,15 +406,15 @@ an application, like $X\,G$, within the type $B$.
         Any valuation of $X$ will have the form of $\l X_1^{-*}.B_1$
         where $X_1$ appears in negative positions.
         Then, $(\l X_1^{-*}.B_1)G = B_1[G/X_1]$ by a single step reduction.
-	Note that $B_1[G/X_1]$ must be in normal form. Since $G$ has kind $*$
-	(it cannot be a lambda), substitution of $X_1$ with $G$ cannot
-	introduce a new redex. Since $G$ is substituted only into
+        Note that $B_1[G/X_1]$ must be in normal form. Since $G$ has kind $*$
+        (it cannot be a lambda), substitution of $X_1$ with $G$ cannot
+        introduce a new redex. Since $G$ is substituted only into
         negative positions, any $Z$ occurring in negative position in $G$
         become positive positions in the substituted type.
-	Thus, $\l Z^{+*}.B_1[G/X_1] : +* -> *$.
+        Thus, $\l Z^{+*}.B_1[G/X_1] : +* -> *$.
         So, by induction\footnote{
                 We need to make sure that this is a well-founded induction.
-		It may be a codinductive proof.},
+                It may be a codinductive proof.},
         there exists a map for any valuation of $X$,
         since we can derive $\textit{fmap}_{(\l Z^{+*}.B_1[G/X_1])}$.
 
@@ -448,23 +460,23 @@ For simplicity let us consider type constructor variables
 that expect only one arguemnt to become a type. That is,
 $X : p\kappa -> *$ and $\kappa$ itself is in the form of $\kappa' -> *$.
 \begin{itemize}
-	\item[case]($X : 0\kappa -> * $)
-	Since $G$ in $X\,G$ cannot have $Z$,
-	we simply return the identiy function as the map for $\l Z^{+*}.X\,G$.
+        \item[case]($X : 0\kappa -> * $)
+        Since $G$ in $X\,G$ cannot have $Z$,
+        we simply return the identiy function as the map for $\l Z^{+*}.X\,G$.
 
-	\item[case]($X : +\kappa -> * $)
-	Valuation of $X$ must have the form of $\l X_1^{+\kappa}. B_1$.
-	The argument $G$ in $X\,G$ must either be lambda or an application.
-	When $G$ is an application of the form $X_2 G_2$, after reducting
-	$(\l X_1^{+\kappa}. B_1)(X_2 G_2)$ to $B_1[X_2G_2/X_1]$, there are
-	no new redex introduced by this reduction. Thus, this is just an
-	inductive case.
-	When $G$ is a lambda abstraction of the form $\l X_2^{p\kappa_2}.B_2$ it will make new redex ...
+        \item[case]($X : +\kappa -> * $)
+        Valuation of $X$ must have the form of $\l X_1^{+\kappa}. B_1$.
+        The argument $G$ in $X\,G$ must either be lambda or an application.
+        When $G$ is an application of the form $X_2 G_2$, after reducting
+        $(\l X_1^{+\kappa}. B_1)(X_2 G_2)$ to $B_1[X_2G_2/X_1]$, there are
+        no new redex introduced by this reduction. Thus, this is just an
+        inductive case.
+        When $G$ is a lambda abstraction of the form $\l X_2^{p\kappa_2}.B_2$ it will make new redex ...
 When G is a lambda it will make new redex ...
 $X_1 G_1$ will be $G\,G_1$ since $G_1$.
 We know that $G\,G_1$ will reduce to a normal form.
 
-	\item[case]($X : -\kappa -> * $)
+        \item[case]($X : -\kappa -> * $)
 \[ \l X_1^{+\kappa}. B_1 : +\kappa -> * \]
 G must either be lambda or an application.
 When G is an application we already know how to handle this no problem --
