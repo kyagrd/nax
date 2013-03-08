@@ -1,22 +1,19 @@
 \section{Metatheory of \Fixi} \label{sec:fixi:theory}
 Recall we extended \Fixw\ to \Fixi\ to support primitive recursion and
-course of values recursion.
-In this section, we show strong normalization, and logical consistency
-of \Fixi.  We also give a
-partial proof of the syntactic conditions necessary for well-behaved course-of-values
-recursion.
+course-of-values recursion. In this section, we show strong normalization and
+logical consistency of \Fixi. We also give a partial proof of
+the syntactic conditions necessary for well-behaved course-of-values recursion.
 
 \subsection{Strong normalization and logical consistency}
 \label{ssec:fixi:theory:sn}
 We can prove strong normalization of \Fixi\ by the following strategy.
 \begin{itemize}
-\item Define a notion of index-erasure that transforms \Fixi\ types to \Fixw\ types.
-\item Define the meaning of a \Fixi\ term to be the meaning of its erasure.
-\item Show that every well-typed \Fixi term erases to a well-typed \Fixw term.
-\item Since \Fixw\ is strongly normalizing \cite{AbeMat04}, and
-that index-erasure maps a valid typing judgment on a term
-in \Fixi\ to a valid typing judgment on the same term in \Fixw\ implies the
-strong normalization of \Fixi.
+\item Define a notion of index erasure that
+	projects \Fixi\ types to \Fixw\ types.
+\item Show that every well-typed \Fixi term a well-typed \Fixw term
+	by index erasure.
+\item Since \Fixw\ is strongly normalizing \cite{AbeMat04}, the
+	\Fixi\ is strongly normalizing of \Fixi.
 \end{itemize}
 
 The definition of the index erasure operation for \Fixi, and the proofs of
@@ -26,7 +23,8 @@ the definition and the theorems, but omit their proofs.
 
 We define a meta-operation of index erasure ($\circ$) that
 projects $\Fixi$ types to $\Fixw$ types and another meta-operation ($\bullet$)
-that selects only the index variable bindings ($i^A$) from the type level context.
+that selects only the index variable bindings ($i^A$) from
+the type level context.
 \begin{definition}[index erasure]\label{def:Fixierase}
 \[ \fbox{$\kappa^\circ$}
  ~~~~ ~~
@@ -94,16 +92,15 @@ that selects only the index variable bindings ($i^A$) from the type level contex
 \]
 \end{definition}
 These two definitions are exactly the same as the definitions of
-$\circ$ and $\bullet$ in \Fi\ (defined in \S\ref{ssec:fi:sn}),
+$^\circ$ and $^\bullet$ in \Fi\ (defined in \S\ref{ssec:fi:sn}),
 except for the new constructs of \Fixi: (1) polarities in kinds and (2)
 the equi-recursive type operator $\fix$.
 
-Once $\circ$ and $\bullet$ are defined, the proof of strong normalization
-by index erasure,
-for \Fixi,  is virtually the same as the strong normalization
-proof for \Fi\ (in \S\ref{ssec:fi:sn}). Here, we list only the theorems
-since their proofs can be trivially reconstruced by consulting the proofs
-of the corresponding theorems in \S\ref{ssec:fi:sn}.
+Once $^\circ$ and $^\bullet$ are defined, the proof of strong normalization
+of \Fixi, by index erasure, is virtually the same as the proof of
+strong normalization of \Fi\ (\S\ref{ssec:fi:sn}). Here, we list only
+the theorems since their proofs can be trivially reconstructed by consulting
+the proofs of the corresponding theorems in \S\ref{ssec:fi:sn}.
 
 \begin{theorem}[index erasure on well-sorted kinds]
 \label{thm:Fixierasesorting}
@@ -188,7 +185,7 @@ strongly-normalizing, closed term inhabits $\forall X^{*}.X$.
 \subsection{Syntactic conditions for well-behaved course-of-values recursion}
 \label{ssec:fixi:theory:cv}
 In \S\ref{sec:fixi:cv}, we embedded Mendler-style course-of-values
-primitive recursion (\McvPr) in \Fixi\ for the base structures ($F$)
+recursion (\McvPr) in \Fixi\ for the base structures ($F$)
 that have maps ($\textit{fmap}_F$), which are also known as
 \emph{monotonicity witnesses} [TODO cite]. The theoretical development of
 the termination of \McvPr\ by assuming the existence of maps is elegant, since
@@ -203,8 +200,9 @@ whose kind meets certain criteria, users can immediately assume the existence
 of $\textit{fmap}_F$ and that \McvPr\ always terminates for $F$.
 
 For instance, we conjecture that any $F: +* -> *$ should have a map, as in
-Conjecture \ref{conj:fixi:fmap} below. In this thesis, we only show
-that this conjecture holds for simple cases (Proposition \ref{prop:fixi:fmapBaseCase}), but still encompassing a broad range of types.
+Conjecture \ref{conj:fixi:fmap} below. In this thesis, we only show that this
+conjecture holds for simple cases (Proposition \ref{prop:fixi:fmapBaseCase}),
+but still encompassing a broad range of types.
 The complete proof is left for future work.
 
 \begin{conjecture}\label{conj:fixi:fmap}
@@ -333,7 +331,7 @@ Figure~\ref{fig:deriveFunctor}. In fact, all the \texttt{\small Functor}
 instances in Figure~\ref{fig:deriveFunctor} are automatically derivable
 using the \texttt{\small DeriveFunctor} extensino in GHC version 7.4.
 However, GHC does not derive functor instances when there are
-type constuctor variables other than $*$, since the kind system in GHC
+type constructor variables other than $*$, since the kind system in GHC
 does not keep track of polarity as in \Fixw\ or \Fixi.
 \begin{figure}
 \begin{singlespace}
@@ -457,7 +455,7 @@ show that it holds when we also allow rank-$(n+1)$ kinded type constructor
 variables. What we have proved so far is the baes case $n=0$ and the case $n=1$.
 
 For simplicity let us consider type constructor variables
-that expect only one arguemnt to become a type. That is,
+that expect only one argument to become a type. That is,
 $X : p\kappa -> *$ and $\kappa$ itself is in the form of $\kappa' -> *$.
 \begin{itemize}
         \item[case]($X : 0\kappa -> * $)
