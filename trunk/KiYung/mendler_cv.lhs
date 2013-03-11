@@ -50,7 +50,7 @@ We arrange for the combining function to take additional arguments
         embedded inside the data constructor |In0| by accessing
         the projection function |out0| given in the definition.
         As in |mcata0|,
-        the next argument represents a recursive placeholder, and
+        the next argument represents a recursive caller, and
         the last argument represents the base structure
         that must be combined into an answer.
 
@@ -58,7 +58,7 @@ We arrange for the combining function to take additional arguments
 
   \item Again we use higher-rank polymorphism to insist that 
         the abstract unrolling function, with type (|r -> f r|),
-        the recursive placeholder function, with type (|r -> a|), and
+        the recursive caller function, with type (|r -> a|), and
 %%%%%%% the recursion points, with type (|r|), in
         the base structure, with type (|f r|), only work
         over an abstract type, denoted by (|r|).
@@ -97,7 +97,7 @@ mhist0 phi (In0 x) =  phi  out0            (mhist0 phi)         {-"~~"-}x
                             Z     -> 1
                             S n'  -> fib n + fib n'
 \end{code}      
-The abstract unrolling function |out| and the recursive placeholder |fib|
+The abstract unrolling function |out| and the recursive caller |fib|
 stand for the actual arguments |out0| and |(mhist0 phi)|, but the higher-rank
 type of the combining function |phi| ensures that they are only used in a safe
 manner.  The abstract unrolling function |out| enables us to discharge |In0|
@@ -112,7 +112,7 @@ through the abstract unrolling function |out|. The higher-rank types limit
 the use of this abstract unrolling function |out| to values of type |r|.
 
 In a positive recursive datatype, the only functions with domain |r|
-are the abstract unroller, and the recursive placeholder.
+are the abstract unroller, and the recursive caller.
 The programmer can only
 {\em whittle down} the |r| values inside the base structure,
 of type (|f r|), into smaller structures, of type (|f r|). The programmer can
@@ -120,7 +120,7 @@ then decompose these into even smaller |r| values by pattern matching against
 the data constructors of the base |f|. However, there is no way to combine
 any of these decomposed |r| values to build up larger |r| values.
 The only possible use of the decomposed |r| values is to call
-the recursive placeholder, with type (|r -> a|).
+the recursive caller, with type (|r -> a|).
 
 For example, in Figure \ref{fig:fib}, we pattern match over (|out n|),
 discharging the hidden |In0| constructor of |n|.  Note the types inside
@@ -179,7 +179,7 @@ p_m =  mcata0 phi where
 We write the explicit type signature for the combining function |phi|
 (even though the type can be inferred from the type of |mcata0|),
 to make it clear why this attempt fails to type check. The combining
-function |phi| take two arguments. The recursive placeholder (for which we
+function |phi| take two arguments. The recursive caller (for which we
 have used the pattern |_|, since we don't intend to call it) and the
 base structure |(Cm f)|, from which we can extract the function |f :: r -> ()|.
 Note that |r| is an abstract type (since it is universally quantified
@@ -193,7 +193,7 @@ pconst :: T_m -> (T_m -> ())
 pconst = mcata0 phi where phi g (C f) = const ()
 \end{code}
 Not surprisingly, given the abstract pieces composed of
-the recursive placeholder |g :: r -> ()|, the base structure |(C f) :: TBase r|,
+the recursive caller |g :: r -> ()|, the base structure |(C f) :: TBase r|,
 and the function we can extract from the base structure |f :: r -> ()|,
 the only function that returns a unit value (modulo extensional
 equivalence) is, in fact, the constant function returning the unit value.
@@ -245,7 +245,7 @@ are named |f| and |f'|, respectively.  Note, |f'| is an element embedded
 inside the tail |xs|.  Thus, |(f' xs)| is dangerous since it applies |f'|
 to a larger value |xs|, which contains |f'|.
 The abstract type of the unrolling function (|out::r->f r|),
-prevents the recursive placeholder from being applied to a larger value, but it
+prevents the recursive caller from being applied to a larger value, but it
 does not preclude the risk of embedded functions, with negative domains,
 being applied to larger values which contain the embedded function itself.
 

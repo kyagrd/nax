@@ -296,7 +296,7 @@ arbitrary type |t| into values of |Exp' t|.  For example,
 |Inverse0 True :: Exp' Bool|. This value is junk, since it does 
 not coorespond to any lambda term. By design, we wish to hide |Inverse0|
 behind an abstraction boundary. We should never allow the user to construct
-expressions such as |Inverse0 True|, except for using them as placeholders
+expressions such as |Inverse0 True|, except for using them as callers
 for intermediate results during computation.
 
 
@@ -322,7 +322,7 @@ this time an abstract inverse.
 \begin{itemize}
   \item The combining function |phi| becomes a function of 3 arguments.
         An abstract inverse, an 
-        recursive placeholder, and a base structure.
+        recursive caller, and a base structure.
 \begin{code}
   msfcata phi (Roll0 x)          = phi Inverse0           (msfcata phi)  x
   msfcata phi (Inverse0 z)       = z
@@ -330,7 +330,7 @@ this time an abstract inverse.
   \item For inverse values, return the value inside |Inverse0| as it is.
   \item We use higher-rank polymorphism to insist that 
         the abstract inverse function, with type (|a -> r a|),
-        the recursive placeholder function, with type (|r a -> a|), and
+        the recursive caller function, with type (|r a -> a|), and
         the base structure, with type (|f (r a)|), only work
         over an abstract type constructor, denoted by (|r|).
 \begin{code}
@@ -465,7 +465,7 @@ The combinator |msfhist0| generalizes |mhist0| by the addition of an
 abstract inverse to a combinator that already has an abstract unroller.
 The combining function |phi| becomes a function of 4 arguments:
 an abstract inverse, an abstract unroller,
-a recursive placeholder, and a base structure.
+a recursive caller, and a base structure.
 
 The combinators |msfcata1| and |msfhist1| (at kind $* -> *$) generalize
 the combinators |msfcata0| and |msfhist0| (at kind $*$) to combinators 

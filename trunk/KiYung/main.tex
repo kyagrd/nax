@@ -77,13 +77,15 @@
 \newcommand{\SN}[0]{\mathsf{SN}}
 \newcommand{\SAT}[0]{\mathsf{SAT}}
 
-\newcommand{\unIn}{\ensuremath{\mathsf{unIn}}}
+\newcommand{\unIn}{\ensuremath{\mathbf{unIn}}}
 \newcommand{\In}{\ensuremath{\mathsf{In}}}
-\newcommand{\MIt}{\ensuremath{\mathsf{MIt}}}
-\newcommand{\MPr}{\ensuremath{\mathsf{MPr}}}
-\newcommand{\MsfIt}{\ensuremath{\mathsf{MsfIt}}}
-\newcommand{\McvIt}{\ensuremath{\mathsf{McvIt}}}
-\newcommand{\McvPr}{\ensuremath{\mathsf{McvPr}}}
+\newcommand{\MIt}{\ensuremath{\mathbf{mit}}}
+\newcommand{\MPr}{\ensuremath{\mathbf{mpr}}}
+\newcommand{\MsfIt}{\ensuremath{\mathbf{msfit}}}
+\newcommand{\McvIt}{\ensuremath{\mathbf{mcvit}}}
+\newcommand{\MsfcvIt}{\ensuremath{\mathbf{msfcvit}}}
+\newcommand{\McvPr}{\ensuremath{\mathbf{mcvpr}}}
+\newcommand{\McfvPr}{\ensuremath{\mathbf{msfcvpr}}}
 
 \newcommand{\rulename}[1]{{\small\sc #1}}
 
@@ -161,20 +163,20 @@
 \afterpreface
 \body
 
-\part{Prelude}
+\part{Prelude}\label{part:Prelude}
 \include{intro}   %% Introduction                          {ch:intro}
 \include{poly}    %% Polymorphic type systems              {ch:poly}
 \include{mendler} %% Mendler-style recursion schemes       {ch:mendler}
 
-\part{Lambda Calculi for Term-Indexed Types}
+\part{Lambda Calculi for Term-Indexed Types}\label{part:Calculi}
 \include{fi}      %% System Fi                             {ch:fi}
 \include{fixi}    %% System Fixi                           {ch:fixi}
 
-\part{The Nax Programming Language}
+\part{The Nax Programming Language}\label{part:Nax}
 \include{nax}     %% The Nax language                      {ch:nax}
 \include{casestd} %% Case studies                          {ch:casestd}
 
-\part{Postlude}
+\part{Postlude}\label{part:Postlude}
 \include{relwork} %% Related work                          {ch:relwork}
 \include{futwork} %% Future work                           {ch:futwork}
 \include{concl}   %% Conclusion                            {ch:concl}

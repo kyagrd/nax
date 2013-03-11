@@ -3,22 +3,68 @@
 \section{TOOD}\label{sec:intro:TODO}
 
 \section{Contributions}\label{sec:intro:contrib}
-
+The contributions of this dissertation has three aspects:
 \begin{itemize}
-	\item
-	Organized a heirarchy of recursion schemes
-		by the abstract operations they support
-	\item
-	Expanded the realm of Mendler-style recursion schemes
-	\begin{itemize}
-		\item discovered new faimlies of recursion scheme
-			by adding new abstract operations
+\item[1.]
+Organizing and expanding the realm of \emph{Mendler-style recursion schemes}
+(Chapter \ref{ch:mendler}), %% TODO maybe another chapter?
 
-		\item term-index types
-	\end{itemize}
-	\item aaaaaa
-	\item aaaaaa
+\item[2.] Establishing \emph{theories of term-indexed types}
+	(Part~\ref{part:Calculi}), and
+
+\item[3.] Designing \emph{a language system in the sweet spot}
+	between programming and logical reasoning (Part~\ref{part:Nax}).
 \end{itemize}
+
+\subsection{Mendler-style recursion schemes}
+We organized a hierarchy of Mendler-style recursion schemes
+by the abstract operations they support. For instance,
+the Mendler-style iteration (\MIt) supports single abstract operation
+of recursive call. All the other Mendler-style recursion schemes commonly
+support the recursive call and each recursion scheme additionally supports its
+own characteristic set of abstract operations. Each recursion scheme is a
+family of recursion combinators uniformly defined, sharing the same
+term definition, but with different type signatures at each kind.
+
+We expanded the realm of Mendler-style recursion schemes in several dimensions.
+First, we discovered new recursion schemes including $\MsfIt$, which is useful
+for negative datatypes, and studied their termination behavior. Some recursion
+schemes (\eg, \MIt, \MsfIt) always terminate for any recursive type, while
+others (\eg, \McvPr) only terminate for certain class of recursive types.
+Second, we extended all Mendler-style recursion schemes over term-indexed types.
+Mendler style has been studied in the context of \Fw\ and its mild extensions,
+which can express type-indexed types. To extend Mendler-style recursion schemes
+over term-indexed types, we establised theories of term-indexed types, which is
+another major aspect of our contribution.
+
+In addition, we developed better understanding of some existing Mendler-style
+recursion schemes. For instance, the existence of Mendler-style couse-of-values
+recursion has been known, but it has not been studied into which calculi
+\McvPr\ can be embed. We embedded Mendler-style course-of-values recursion
+(\McvPr) into the lambda calculi, which can embed Mendler-style prmitive
+recursion (\MPr).
+
+%% A recursion scheme that supports more abstract operations is more expressive
+%% than a recursion schemes that supports less. That is, a recursion scheme that
+%% only support a subset of abstract operations can be defined in terms of
+%% a recursion scheme that supports its superset. However, the additional
+%% expressiveness gained by an additional abstract operation may cause
+%% non-termination if we do not put restrictions on its use. For instance,
+%% the unrolling operation in the Mendler-style course-of-values recursion
+%% (\McvPr) can cause non-termination when used over negative datatypes.
+%% When restircted to its use over positive (or, monontone) datatypes only,
+%% \McvPr\ always terminates. Thus, discovering a new Mendler-style recursion
+%% scheme amounts to finding a useful set of abstract operations and
+%% the restrictions that may ensure its termination property.
+%% 
+%% We 
+%% course-of-values recursion
+
+\subsection{Theories of Term-Indexed Types}
+TODO
+
+\subsection{The Nax Language Design}
+TODO
 
 \section{Organization of the Chapters}\label{sec:intro:org}
 TODO
@@ -172,8 +218,8 @@ in Chapter \ref{ch:futwork}.
 \section{TODO}
 discussion of the role of type systems
 ( logics and reasoning systems
-, typed programming lanaguages
-, the curry howard correspondence
+, typed programming languages
+, the Curry--Howard correspondence
 )
 
 \end{comment}

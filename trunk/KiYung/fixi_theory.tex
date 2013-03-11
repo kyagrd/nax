@@ -177,10 +177,11 @@ strongly-normalizing, closed term inhabits $\forall X^{*}.X$.
         [| \forall X^{*}.X |]_\xi &\in \SAT_{*} -> \SAT_{*} \\
         [| \forall X^{*}.X |]_\xi &
         = \bigcap_{\mathcal{A}\in[| * |]} [| X |]_{\xi[X\to\mathcal{A}]}
-        = \bigcap_{\mathcal{A}\in[| * |]} \mathcal{A} = \emptyset
-        \qquad(\because ~ \emptyset\in[| * |])
+        = \bigcap_{\mathcal{A}\in[| * |]} \mathcal{A} = \bot
 \end{align*}
-
+The minimal saturated set $\bot$ of $\SAT$, which is saturated from
+the empty set, does not have any closed term. See \S\ref{sec:stlc:srsn}
+for the definition of saturated sets.
 
 \subsection{Syntactic conditions for well-behaved course-of-values recursion}
 \label{ssec:fixi:theory:cv}

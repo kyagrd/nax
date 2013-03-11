@@ -130,8 +130,8 @@ base type be a functor, but still maintains the strict termination behavior of
 \begin{itemize}
   \item The combining function |phi| becomes a function of 2 arguments
         rather than 1. The first argument is a function that represents a
-        recursive placeholder, and the second is the base structure
-        that must be combined into an answer. The recursive placeholder
+        recursive caller, and the second is the base structure
+        that must be combined into an answer. The recursive caller 
         allows the programmer to direct where recursive calls must be made.
         The Functor class requirement is lifted, because no call to |fmap|
         is required in the definition of |mcata0|:
@@ -139,7 +139,7 @@ base type be a functor, but still maintains the strict termination behavior of
 mcata0 phi (In0 x) = phi (mcata0 phi) x
 \end{code}
   \item The second device is the use of higher-rank polymorphism to insist
-        that the recursive placeholder, with type (|r -> a|), and
+        that the recursive caller, with type (|r -> a|), and
         the base structure, with type (|f r|),
         work over an abstract type, denoted by (|r|). 
 \begin{code}
@@ -169,7 +169,7 @@ The intuitive reasoning behind the termination property of |mcata0| for
 all positive recursive datatypes is that (1) |mcata0| strips off one |In0|
 constructor each time it is called, and (2) |mcata0| only recurses on the
 direct subcomponents (e.g., tail of a list) of its argument (because the type
-of the recursive placeholder won't allow it to be applied to anything else).
+of the recursive caller won't allow it to be applied to anything else).
 Once we observe these two properties, it is obvious that |mcata0| always
 terminates since those properties imply that every recursive call to |mcata0|
 decreases the number of |In0| constructors in its argument.\footnote{We assume
@@ -187,7 +187,7 @@ the |mcata0| combinator as shown in Figure \ref{fig:rcombty},
 %format lenm = len"_{\!m}"
 In Figure \ref{fig:len}, we redefine the length function (|lenm| on the right),
 this time, using a Mendler-style iteration.  In the definition of |lenm|,
-we name the first argument of |phi|, the recursive placeholder, to be |len|.
+we name the first argument of |phi|, the recursive caller, to be |len|.
 We use this |len| exactly where we would recursively call the recursive function
 in the general recursion style (|len| on the left).
 
@@ -203,7 +203,7 @@ while |(C x xs) :: L p r| has more specific type than |r|.
 The parametricity enforces weak structural induction.
 
 The scheme of having the combining function |phi| abstract over the
-recursive placeholder |len| is a powerful one.  We will reuse
+recursive caller |len| is a powerful one.  We will reuse
 this strategy, generalizing |phi| to abstract over
 additional arguments, in order to generalize |mcata0| to become more expressive.
 
