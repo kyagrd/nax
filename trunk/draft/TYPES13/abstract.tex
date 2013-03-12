@@ -106,7 +106,7 @@ many well-behaved computations on \texttt{Exp}: examining whether
 an HOAS expression is \texttt{Abs} or \texttt{App}, and, converting an HOAS expression
 to first-order syntax are examples of terminating computation on \texttt{Exp}.
 Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme
-(\msfit, \aka\ \textit{msfit}) that captures these well-behaved computations.
+(\msfit, \aka\ \textit{msfcata}) that captures these well-behaved computations.
 
 If the datatype \texttt{Exp} had indexes to assert invariants of
 well-formed expressions, we could rely on these invariants to write
@@ -165,7 +165,7 @@ via the value domain \texttt{Val\;:\;*\,->\,*\,} below.
 \begin{verbatim}
   data V : (* -> *) -> * -> * where      -- the "deriving fixpoint Val" defines
     Fun : (r a -> r b) -> V r (a -> b)   -- fun f = In [* -> *] (Fun f)
-      deriving fixpoint Val              -- synonym Val t = Mu[* -> *] E t
+      deriving fixpoint Val              -- synonym Val t = Mu[* -> *] V t
 
   veval e = msfit { t . V t } e with
               call inv (App f x) = unfun (call f) (call x)  -- how do we deinfe unfun?
@@ -182,7 +182,7 @@ a new recursion scheme \mprsi, which extends the Mendler-style primitive recursi
 {\small
 \begin{verbatim}
   mprsi : (   (forall r i. r i -> ans i)                      -- call
-           -> (forall r i. (i < j) => r i -> mu[* -> *] f i)  -- cast   
+           -> (forall r i. (i < j) => r i -> Mu[* -> *] f i)  -- cast   
            -> (forall r i. (i < j) => Mu[* -> *] f i -> r i)  -- uncast 
            -> (forall r i. f r i -> ans i) ) -> Mu[* -> *] f j -> ans j
 
