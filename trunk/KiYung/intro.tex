@@ -68,14 +68,18 @@ Mendler-style primitive recursion (\MPr) into \Fixw.
 \Fw\ and \Fixw\ supports type-indexed types.
 
 To extend the realm of Mendelr-style recursion schemes to include
-term-indexed types, we extended \Fw\ and \Fixw\ to support term-indexed types.
-In Part \ref{TODO}, we present our new calculi
-\Fi, which extends \Fw\ with term indices, and
-\Fixi, which extends \Fixw\ with term indices.
-
-TODO strong normalization
-erasure property
-logical consistency
+term-indexed types, we extended \Fw\ and \Fixw\ to support term indices.
+In Part \ref{part:Calculi}, we present our new calculi
+\Fi\ (Chapter \ref{ch:fi}), which extends \Fw\ with term indices, and
+\Fixi (Chapter \ref{ch:fixi}), which extends \Fixw\ with term indices.
+These calculi have erasure property such that well-typed terms
+in each calculus are well typed terms in the calculus it was
+extended from. For instance, any well typed term in \Fi\ is also
+a well-typed term in \Fw, and there are no additional well-typed terms
+in \Fi, which are not well-typed in \Fw.
+We show strong normalization and logical consistency of \Fi\ and \Fixi\ using
+the erasure property. That is, strong nomrlaization and logical consistency
+of \Fi\ and \Fixi\ are inhereited from \Fw\ and \Fixw.
 
 \subsection{The Nax Language Design}
 TODO
