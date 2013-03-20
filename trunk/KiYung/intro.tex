@@ -62,12 +62,12 @@ recursion (\MPr).
 
 \subsection{Theories of Term-Indexed Types}
 Mendler-style recursion schemes have been studies in the context of
-polymorphic lambda calculi. For instnace, {TODO cittet} embedded 
+polymorphic lambda calculi. For instance, {TODO cittet} embedded 
 Mendler-style iteration (\MIt) into \Fw\ and {TODO cittet} embedded
 Mendler-style primitive recursion (\MPr) into \Fixw.
 \Fw\ and \Fixw\ supports type-indexed types.
 
-To extend the realm of Mendelr-style recursion schemes to include
+To extend the realm of Mendler-style recursion schemes to include
 term-indexed types, we extended \Fw\ and \Fixw\ to support term indices.
 In Part \ref{part:Calculi}, we present our new calculi
 \Fi\ (Chapter \ref{ch:fi}), which extends \Fw\ with term indices, and
@@ -77,9 +77,13 @@ in each calculus are well typed terms in the calculus it was
 extended from. For instance, any well typed term in \Fi\ is also
 a well-typed term in \Fw, and there are no additional well-typed terms
 in \Fi, which are not well-typed in \Fw.
+
 We show strong normalization and logical consistency of \Fi\ and \Fixi\ using
-the erasure property. That is, strong nomrlaization and logical consistency
-of \Fi\ and \Fixi\ are inhereited from \Fw\ and \Fixw.
+the erasure property. That is, strong normalization and logical consistency
+of \Fi\ and \Fixi\ are inherited from \Fw\ and \Fixw.
+Due to these properties, strong normalization and logical consistency,
+the Mendler-style recursion schemes that can be embedded into these calculi
+are adequate for logical reasoning as well as programming.
 
 \subsection{The Nax Language Design}
 TODO
