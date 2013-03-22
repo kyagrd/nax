@@ -64,8 +64,8 @@ the lambda calculi, which can embed Mendler-style primitive recursion (\MPr).
 
 \subsection{Theories of Term-Indexed Types}
 Mendler-style recursion schemes have been studies in the context of
-polymorphic lambda calculi. For instance, {TODO cittet} embedded 
-Mendler-style iteration (\MIt) into \Fw\ and {TODO cittet} embedded
+polymorphic lambda calculi. For instance, \citet{AbeMatUus03} embedded 
+Mendler-style iteration (\MIt) into \Fw\ and \citet{AbeMat04} embedded
 Mendler-style primitive recursion (\MPr) into \Fixw.
 \Fw\ and \Fixw\ supports type-indexed types.
 
@@ -84,7 +84,7 @@ Our new calculi, \Fi\ and \Fixi, are strongly normalizing and
 logically consistent. We show strong normalization and logical consistency
 using the erasure properties. That is, strong normalization and
 logical consistency of \Fi\ and \Fixi\ are inherited from \Fw\ and \Fixw.
-Since \Fi\ and \Fixi\ are strong normalization and logically  consistent,
+Since \Fi\ and \Fixi\ are strong normalizing and logically  consistent,
 the Mendler-style recursion schemes that can be embedded into these calculi
 are adequate for logical reasoning as well as programming.
 
@@ -97,14 +97,17 @@ of both programming oriented systems and logic oriented systems,
 Nax supports both term- and type-indexed datatypes,
 rich families of Mendler-style recursion combinators,
 and conservative extension of Hindley--Milner type inference.
-TODO simple implementation and theory
+We also have in mind that the foundational theory and
+implementation framework for Nax should be kept simple.
 
 Term- and type-indexed datatypes can express fine grained program properties
 via Curry--Howard correspondence, as in logic oriented systems. Although
 not as flexible as full-fledged dependent types, indexed datatypes can
 still express program invariants, such as type preserving compilation
 and size invariants on data structures, and also simulate most of what
-dependent types can do using singleton types. TODO make theory simple
+dependent types can do using singleton types. Since we only have erasable
+indices, the foundational theory can be kept simple and easier to support
+features that have the merits of programming oriented systems.
 
 Adopting Mendler style provides merits of both programming oriented systems
 and logic oriented systems. Since Mendler style is elimination based, one can
@@ -116,8 +119,9 @@ Since Nax supports only the well-behaved (\ie, strongly normalizing)
 Mendler-style recursion combinators, it is safe to construct proofs using them.
 In addition, Mendler-style recursion combinators are naturally well-defined
 over indexed datatypes, which are essential to express fine-grained program
-properties.
-TODO makes implementation simple typed based termination
+properties. Mendler style provides type based termination, that is, termination
+is a by-product of type checking. Thus, it makes the implementation framework
+simple since we do not need extra termination checking theories or algorithm.
 
 Hindley--Milner-style type inference provides a familiar programming experience
 to the programmers who are already familiar to functional programming languages.
@@ -130,6 +134,12 @@ and eliminators of recursive datatypes are Mendler-style recursion combinators.
 
 \subsection{Open problems}
 TODO identified open problems
+
+syntactic conditions form \McvPr
+
+some recursion schemes does not mix well -- sf and pr
+
+
 
 \section{Organization of the Chapters}\label{sec:intro:org}
 TODO
