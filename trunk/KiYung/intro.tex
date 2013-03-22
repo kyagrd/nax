@@ -10,10 +10,12 @@ Organizing and expanding the realm of \emph{Mendler-style recursion schemes}
 (Chapter \ref{ch:mendler}), %% TODO maybe another chapter?
 
 \item[2.] Establishing \emph{theories of term-indexed types}
-	(Part~\ref{part:Calculi}), and
+	(Part~\ref{part:Calculi}),
 
 \item[3.] Designing \emph{a language system in the sweet spot}
-	between programming and logical reasoning (Part~\ref{part:Nax}).
+	between programming and logical reasoning (Part~\ref{part:Nax}), and
+
+\item[4.] Identified interesting open problems TODO.
 \end{itemize}
 
 \subsection{Mendler-style recursion schemes}
@@ -37,12 +39,12 @@ which can express type-indexed types. To extend Mendler-style recursion schemes
 over term-indexed types, we established theories of term-indexed types, which is
 another major aspect of our contribution.
 
-In addition, we developed better understanding of some existing Mendler-style
-recursion schemes. For instance, the existence of Mendler-style course-of-values
-recursion has been known, but it has not been studied into which calculi
-\McvPr\ can be embed. We embedded Mendler-style course-of-values recursion
-(\McvPr) into the lambda calculi, which can embed Mendler-style primitive
-recursion (\MPr).
+In addition, we developed better understanding of some of the existing
+Mendler-style recursion schemes. For instance, the existence of
+Mendler-style course-of-values recursion has been known, but it
+has not been studied into which calculi \McvPr\ can be embed.
+We embedded Mendler-style course-of-values recursion (\McvPr) into
+the lambda calculi, which can embed Mendler-style primitive recursion (\MPr).
 
 %% A recursion scheme that supports more abstract operations is more expressive
 %% than a recursion schemes that supports less. That is, a recursion scheme that
@@ -76,17 +78,58 @@ These calculi have erasure property such that well-typed terms
 in each calculus are well typed terms in the calculus it was
 extended from. For instance, any well typed term in \Fi\ is also
 a well-typed term in \Fw, and there are no additional well-typed terms
-in \Fi, which are not well-typed in \Fw.
+in \Fi\ that are not well-typed in \Fw.
 
-We show strong normalization and logical consistency of \Fi\ and \Fixi\ using
-the erasure property. That is, strong normalization and logical consistency
-of \Fi\ and \Fixi\ are inherited from \Fw\ and \Fixw.
-Due to these properties, strong normalization and logical consistency,
+Our new calculi, \Fi\ and \Fixi, are strongly normalizing and
+logically consistent. We show strong normalization and logical consistency
+using the erasure properties. That is, strong normalization and
+logical consistency of \Fi\ and \Fixi\ are inherited from \Fw\ and \Fixw.
+Since \Fi\ and \Fixi\ are strong normalization and logically  consistent,
 the Mendler-style recursion schemes that can be embedded into these calculi
 are adequate for logical reasoning as well as programming.
 
 \subsection{The Nax Language Design}
-TODO
+We designed and implemented a prototypical language Nax
+in order to explore the sweet spot between
+programming oriented systems and logic oriented systems.
+Language features supported in Nax provide the merits
+of both programming oriented systems and logic oriented systems,
+Nax supports both term- and type-indexed datatypes,
+rich families of Mendler-style recursion combinators,
+and conservative extension of Hindley--Milner type inference.
+TODO simple implementation and theory
+
+Term- and type-indexed datatypes can express fine grained program properties
+via Curry--Howard correspondence, as in logic oriented systems. Although
+not as flexible as full-fledged dependent types, indexed datatypes can
+still express program invariants, such as type preserving compilation
+and size invariants on data structures, and also simulate most of what
+dependent types can do using singleton types. TODO make theory simple
+
+Adopting Mendler style provides merits of both programming oriented systems
+and logic oriented systems. Since Mendler style is elimination based, one can
+define all recursive datatypes usually supported in functional programming
+languages. In addition, the programs written using Mendler-style recursion
+combinators look more similar to the programs written using general recursion
+than programs written in Squiggol style.
+Since Nax supports only the well-behaved (\ie, strongly normalizing)
+Mendler-style recursion combinators, it is safe to construct proofs using them.
+In addition, Mendler-style recursion combinators are naturally well-defined
+over indexed datatypes, which are essential to express fine-grained program
+properties.
+TODO makes implementation simple typed based termination
+
+Hindley--Milner-style type inference provides a familiar programming experience
+to the programmers who are already familiar to functional programming languages.
+Nax can infer types for all the programs that involve only regular datatypes,
+which are already inferable in Hindley--Milner, without any type annotation.
+Nax requires programs involving indexed datatypes to annotate their eliminators
+by index transformers, which annotate the relation between the input type index
+and the result type. Eliminators of non-recursive datatypes are case expressions
+and eliminators of recursive datatypes are Mendler-style recursion combinators.
+
+\subsection{Open problems}
+TODO identified open problems
 
 \section{Organization of the Chapters}\label{sec:intro:org}
 TODO
@@ -100,7 +143,6 @@ I will introduce the motivation for pursuing such a system
 in \S\ref{sec:motiv},
 and I will also discuss foundational work upon which
 the approach developed in my thesis is based.
-
 
 \section{Motivation} \label{sec:motiv}
 
