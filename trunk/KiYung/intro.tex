@@ -2,70 +2,61 @@
 
 \section{TOOD}\label{sec:intro:TODO}
 
+the Curry-Howard correspondence
+Mendler-style recursion schemes and term-indexed types
+
+\section{TOOD}\label{sec:intro:TODO}
+
+\section{TOOD}\label{sec:intro:TODO}
+
 \section{Contributions}\label{sec:intro:contrib}
-This dissertation makes contributions in four related areas.
+This dissertation makes contributions in several areas.
 \begin{itemize}
 \item[1.]
 It organizes and expands the realm of \emph{Mendler-style recursion schemes}
 (Chapter \ref{ch:mendler}), %% TODO maybe another chapter?
 
-\item[2.] It establishes a meta-theory for  \emph{term-indexed types}
+\item[2.] It establishes a meta-theories for \emph{term-indexed types}
         (Part~\ref{part:Calculi}),
 
-\item[3.] It designs a practical language (with an implementation) \emph{in the sweet spot}
-        between programming and logical reasoning (Part~\ref{part:Nax}), and
+\item[3.] It designs a practical language (with an implementation)
+	\emph{in the sweet spot} between programming and logical reasoning
+	(Part~\ref{part:Nax}), and
 
-\item[4.] It identifies several interesting open problems. TODO.
+\item[4.] It identifies several interesting open problems related to above.
 \end{itemize}
 
-\subsection{Contributions related to the Mendler-style}
-We organize a hierarchy of Mendler-style recursion schemes
-in two dimensions. The first dimension is the abstract operations they support. For instance,
+\subsection{Contributions related to the Mendler style}
+We organize a hierarchy of Mendler-style recursion schemes in two dimensions.
+The first dimension is the abstract operations they support. For instance,
 the Mendler-style iteration (\MIt) supports a single abstract operation
 the recursive call. All the other Mendler-style recursion schemes
 support the recursive call and an additional set of abstract operations. 
 The second dimension is over the kind of the datatypes they operate over.
-For example \texttt{Nat} has kind \texttt{*}, while \texttt{List}
-has kind \texttt{* -> *}. Each recursion scheme is actually a
-family of recursion combinators (uniformly defined) sharing the same
-term definition, but with different type signatures at each kind.
+For example, \texttt{Nat} has kind $*$, while \texttt{Vec}
+has kind $* -> \mathtt{Nat} -> *$. Each recursion scheme is actually a
+family of recursion combinators sharing the same term definition
+(\ie, uniformly defined) but with different type signatures at each kind.
 
 We expand the realm of Mendler-style recursion schemes in several ways.
 First, we report on a new recursion scheme $\MsfIt$, which is useful
-for negative datatypes.  Second, we study the termination behavior
-of Mendler-style recursion schemes. Some recursion
-schemes (\eg, \MIt, \MsfIt) always terminate for any recursive type, while
-others (\eg, \McvPr) only terminate for certain classes of recursive types.
-Third, we extended all Mendler-style recursion schemes to be
-expressive over term-indexed types. The
-Mendler style has been studied in the context of \Fw\ (and several extensions)
-which can express type-indexed types. To extend Mendler-style recursion schemes
-to be expressive over term-indexed types, we report on several theories for
-calculi (\Fi\ and \Fixi)  supporting term-indexing. This is an
-important new contribution.
+for negative datatypes.  Second, we study the termination behaviors
+of Mendler-style recursion schemes. Some recursion schemes (\eg, \MIt, \MsfIt)
+always terminate for any recursive type, while others (\eg, \McvPr) only
+terminate for certain classes of recursive types. Third, we extend
+all Mendler-style recursion schemes to be expressive over term-indexed types.
+The Mendler style has been studied in the context of \Fw\ (and several
+extensions) which can express type-indexed types. To extend Mendler-style
+recursion schemes to be expressive over term-indexed types, we report on
+several theories for calculi (\Fi\ and \Fixi) that support term indices.
+This is another important area of our contribution.
 
 In addition, we develop a better understanding of some existing
 Mendler-style recursion schemes. For instance, the existence of
-Mendler-style course-of-values recursion (\McvPr) is reported in the literature,
-but the calculus that can embed \McvPr\ was unknown.
-We embed Mendler-style course-of-values recursion into
-the lambda calculus \Fixi.
-
-%% A recursion scheme that supports more abstract operations is more expressive
-%% than a recursion schemes that supports less. That is, a recursion scheme that
-%% only support a subset of abstract operations can be defined in terms of
-%% a recursion scheme that supports its superset. However, the additional
-%% expressiveness gained by an additional abstract operation may cause
-%% non-termination if we do not put restrictions on its use. For instance,
-%% the unrolling operation in the Mendler-style course-of-values recursion
-%% (\McvPr) can cause non-termination when used over negative datatypes.
-%% When restricted to its use over positive (or, monotone) datatypes only,
-%% \McvPr\ always terminates. Thus, discovering a new Mendler-style recursion
-%% scheme amounts to finding a useful set of abstract operations and
-%% the restrictions that may ensure its termination property.
-%% 
-%% We 
-%% course-of-values recursion
+Mendler-style course-of-values recursion (\McvPr) is reported
+in the literature, but the calculus that can embed \McvPr\ was unknown.
+We embed Mendler-style course-of-values recursion into \Fixi
+(or into \Fixw, when we do not consider term-indices).
 
 \subsection{Contributions to the theory of Term-Indexed Types}
 Mendler-style recursion schemes have been studies in the context of
@@ -93,10 +84,9 @@ Since \Fi\ and \Fixi\ are strong normalizing and logically  consistent,
 the Mendler-style recursion schemes that can be embedded into these calculi
 are adequate for logical reasoning as well as programming.
 
-\subsection{Contributions in the design of the Nax Language}
+\subsection{Contributions in the design of the Nax language}
 We design and implement a prototypical language Nax that explores
-the sweet spot between
-programming oriented systems and logic oriented systems.
+the sweet spot between programming oriented systems and logic oriented systems.
 The language features supported by Nax provide the advantages
 of both programming oriented systems and logic oriented systems.
 Nax supports both term- and type-indexed datatypes,
@@ -113,7 +103,7 @@ and size invariants on data structures. Index types can simulate much of what
 dependent types can do using singleton types. Since Nax has only erasable
 indices, the foundational theory can be kept simple, and it supports
 features that have the advantages of programming oriented systems 
-(type inference, arbitrary datatypes).
+(\eg, type inference, arbitrary recursive datatypes).
 
 Adopting Mendler style provides merits of both programming oriented systems
 and logic oriented systems. Since Mendler style is elimination based, one can
@@ -138,7 +128,7 @@ by index transformers, which annotate the relation between the input type index
 and the result type. Eliminators of non-recursive datatypes are case expressions
 and eliminators of recursive datatypes are Mendler-style recursion combinators.
 
-\subsection{Open problems}
+\subsection{Contributions of identifying open problems}
 TODO identified open problems
 
 syntactic conditions form \McvPr
@@ -292,15 +282,6 @@ non-logical fragments but will make Nax more convenient to program in (\eg,
 polymorphism at the kind level, as well as the type level, and exceptions).
 I will discuss such possible further extensions to Nax
 in Chapter \ref{ch:futwork}.
-
-
-
-\section{TODO}
-discussion of the role of type systems
-( logics and reasoning systems
-, typed programming languages
-, the Curry--Howard correspondence
-)
 
 \end{comment}
 
