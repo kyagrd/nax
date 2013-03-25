@@ -12,7 +12,7 @@ newtype  Mu0   (f :: *         -> *         )        = In0    { out0     :: f (M
 newtype  Mu1   (f :: (* -> *)  -> (* -> *)  )     i  = In1    { out1     :: f (Mu1 f)     i  }
 
 data     Rec0  (f :: *         -> *         )  a     = Roll0  { unRoll0  :: f (Rec0 f a)     }  | Inverse0 a
-data     Rec1  (f :: (* -> *)  -> (* -> *)  )  a  i  = Roll1  { unRoll1  :: f (Rec1 f a)  i  }  | Inverse1 a
+data     Rec1  (f :: (* -> *)  -> (* -> *)  )  a  i  = Roll1  { unRoll1  :: f (Rec1 f a)  i  }  | Inverse1 (a i)
 \end{code}
 }
 
@@ -25,17 +25,17 @@ data     Rec1  (f :: (* -> *)  -> (* -> *)  )  a  i  = Roll1  { unRoll1  :: f (R
 
 \newcommand{\TypesOfRecursiveCombinators}{
 \begin{code}
-                                        {-"\tti"-}                             {-"\ttii"-}                        {-"\ttiii"-}                         {-"\ttiiii"-}                  {-"\ttm"-}                         {-"\tta"-}
-cata      :: Functor f => (                                                                                                                            (f a            -> a    )) ->               Mu0 f             ->  a
+                          {-"\tti"-}                         {-"\ttii"-}                              {-"\ttiii"-}                     {-"\ttiiii"-}              {-"\ttm"-}                     {-"\tta"-}
+cata      :: Functor f => (                                                                                                            (f a        -> a    )) ->              Mu0 f          ->  a
 
-mcata0    :: (forall r .    {-""-}                               {-""-}                                           (           r          -> a    ) ->  (f r            -> a    )) ->               Mu0 f             ->  a
-mcata1    :: (forall r i.                                                                                         (forall i.  r i        -> a i  ) ->  (f r i          -> a i  )) ->              Mu1 f i            ->  a i
-mhist0    :: (forall r .                                         (             r          -> f r            ) ->  (           r          -> a    ) ->  (f r            -> a    )) ->               Mu0 f             ->  a
-mhist1    :: (forall r i.                                        (forall i.    r i        -> f r i          ) ->  (forall i.  r i        -> a i  ) ->  (f r i          -> a i  )) ->              Mu1 f i            ->  a i
-msfcata0  :: (forall r .    (           a    -> r a        ) ->  {-""-}                                           (           r a        -> a    ) ->  (f (r a)        -> a    )) ->  (forall a .  Rec0 f a       )  ->  a
-msfcata1  :: (forall r i.   (forall i.  a i  -> r (a i) i  ) ->  {-""-}                                           (forall i.  r (a i) i  -> a i  ) ->  (f (r (a i)) i  -> a i  )) ->  (forall a.  Rec1 f (a i) i  )  ->  a i
-msfhist0  :: (forall r .    (           a    -> r a        ) ->  (forall a .   r a        -> f (r a)        ) ->  (           r a        -> a    ) ->  (f (r a)        -> a    )) ->  (forall a .  Rec0 f a       )  ->  a
-msfhist1  :: (forall r i.   (forall i.  a i  -> r (a i) i  ) ->  (forall a i.  r (a i) i  -> f (r (a i)) i  ) ->  (forall i.  r (a i) i  -> a i  ) ->  (f (r (a i)) i  -> a i  )) ->  (forall a.  Rec1 f (a i) i  )  ->  a i
+mcata0    :: (forall r .  {-""-}                             {-""-}                                   (           r      -> a    ) ->  (f r        -> a    )) ->              Mu0 f          ->  a
+mcata1    :: (forall r i.                                                                             (forall i.  r i    -> a i  ) ->  (f r i      -> a i  )) ->              Mu1 f i        ->  a i
+mhist0    :: (forall r .                                     (             r      -> f r        ) ->  (           r      -> a    ) ->  (f r        -> a    )) ->              Mu0 f          ->  a
+mhist1    :: (forall r i.                                    (forall i.    r i    -> f r i      ) ->  (forall i.  r i    -> a i  ) ->  (f r i      -> a i  )) ->              Mu1 f i        ->  a i
+msfcata0  :: (forall r .    (           a    -> r a    ) ->  {-""-}                                   (           r a    -> a    ) ->  (f (r a)    -> a    )) ->  (forall a.  Rec0 f a    )  ->  a
+msfcata1  :: (forall r i.   (forall i.  a i  -> r a i  ) ->  {-""-}                                   (forall i.  r a i  -> a i  ) ->  (f (r a) i  -> a i  )) ->  (forall a.  Rec1 f a i  )  ->  a i
+msfhist0  :: (forall r .    (           a    -> r a    ) ->  (forall a .   r a    -> f (r a)    ) ->  (           r a    -> a    ) ->  (f (r a)    -> a    )) ->  (forall a.  Rec0 f a    )  ->  a
+msfhist1  :: (forall r i.   (forall i.  a i  -> r a i  ) ->  (forall a i.  r a i  -> f (r a) i  ) ->  (forall i.  r a i  -> a i  ) ->  (f (r a) i  -> a i  )) ->  (forall a.  Rec1 f a i  )  ->  a i
 \end{code}
 }
 
@@ -56,9 +56,9 @@ msfcata0  phi r = msfcata phi r where
   msfcata phi (Inverse0 z)       = z
 
 msfcata1  phi r = msfcata phi r  where
-  msfcata  :: (forall  r i.  (forall i. a i -> r (a i) i)
-                       ->    (forall i. r (a i) i -> a i)   
-                       ->    (f (r (a i)) i -> a i)        ) ->  Rec1 f (a i) i  -> a i
+  msfcata  :: (forall  r i.  (forall i. a i -> r a i)
+                       ->    (forall i. r a i -> a i)   
+                       ->    (f (r a) i -> a i)        ) -> Rec1 f a i -> a i
   msfcata phi    (Roll1 x)       = phi Inverse1           (msfcata phi)  x
   msfcata phi    (Inverse1 z)    = z
 \end{code}
@@ -67,17 +67,17 @@ msfcata1  phi r = msfcata phi r  where
 \begin{code}
 msfhist0  phi r = msfhist phi r  where
   msfhist  :: (forall r.  (a -> r a)
-                      ->  (forall a . r a -> f (r a))                  {-""-}
-                      ->  (r a -> a)                                   
-                      ->  (f (r a) -> a)                               ) ->  Rec0 f a        -> a
+                      ->  (forall a . r a -> f (r a))  {-""-}
+                      ->  (r a -> a)
+                      ->  (f (r a) -> a)               ) ->  Rec0 f a        -> a
   msfhist phi    (Roll0 x)       = phi Inverse0  unRoll0  (msfhist phi)  x
   msfhist phi    (Inverse0 z)    = z
 
 msfhist1  phi r = msfhist phi r  where
-  msfhist  :: (forall  r i.  (forall i. a i -> r (a i) i)
-                       ->    (forall a i. r (a i) i -> f (r (a i)) i)  {-""-}
-                       ->    (forall i. r (a i) i -> a i)
-                       ->    (f (r (a i)) i -> a i)                    ) ->  Rec1 f (a i) i  -> a i
+  msfhist  :: (forall  r i.  (forall i. a i -> r a i)
+                       ->    (forall a i. r a i -> f (r a) i)  {-""-}
+                       ->    (forall i. r a i -> a i)
+                       ->    (f (r a) i -> a i)                ) ->  Rec1 f a i  -> a i
   msfhist phi    (Roll1 x)       = phi Inverse1  unRoll1  (msfhist phi)  x
   msfhist phi    (Inverse1 z)    = z
 \end{code}
