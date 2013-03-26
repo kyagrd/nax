@@ -60,7 +60,8 @@ mendler_cv.tex: mendler_cv.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 mendler_sf.tex: mendler_sf.lhs includelhs2tex.lhs \
-	mendler/HOASshow.lhs mendler/Graph.lhs
+	mendler/HOASshow.lhs mendler/Graph.lhs \
+	mendler/HOASeval.lhs mendler/Proof2.lhs
 	lhs2TeX --poly -o $@ $<
 
 mendler_nonreg.tex: mendler_nonreg.lhs includelhs2tex.lhs \

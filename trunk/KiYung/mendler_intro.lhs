@@ -34,11 +34,16 @@ This chapter extends that work by \vspace*{-.5em}
 
 \item[$\bigstar\!\!$] Illustrating that the Mendler-style approach applies 
 to useful examples of negative datatypes,
-through the case study of the HOAS formatting function (\S\ref{sec:showHOAS}).
+through the case studies on the HOAS
+(\S\ref{sec:showHOAS} and \S\ref{sec:evalHOAS}).
 \vspace*{-.2em}
-\item[$\bigstar\!\!$] Extending the Mendler-style iteration (|msfcata|) by using
-the inverse trick first described by \citet{FegShe96},
-and later refined by \citet{bgb} (\S\ref{sec:showHOAS}).
+\item[$\bigstar\!\!$] Extending the Mendler-style iteration by using
+the inverse trick (|msfcata|) (\S\ref{sec:showHOAS}),
+which was first described by \citet{FegShe96}
+and later refined by \citet{bgb} in conventional style.
+\item[$\bigstar\!\!$] Using |msfcata| over an indexed datatype
+to evaluate a simply-typed HOAS (\S\ref{sec:evalHOAS}), which clearly
+exemplifies the advantages of Mendler style over conventional style,
 \vspace*{-.2em}
 \item Providing an intuitive explanation of why the Mendler-style iteration
 ensures termination (\S\ref{ssec:tourCata0})

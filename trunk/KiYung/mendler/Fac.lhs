@@ -20,7 +20,7 @@ times = mcata0 phi where
 
 \newcommand{\mprimDef}{
 \begin{code}
-                        {-"~~~~~~~\textsf{out}"-}          {-"~~~~~~\textit{cast}"-}          {-"~~~\begin{smallmatrix}\text{abstract}\\\text{recursive call}\end{smallmatrix}"-}
+                        {-"~~~~~~~\textrm{out}"-}          {-"~~~~~~\textrm{cast}"-}          {-"~~~\begin{smallmatrix}\text{abstract}\\\text{recursive call}\end{smallmatrix}"-}
 mcata0  :: (forall r    .                                                                     (           r    -> a    ) -> (f r    -> a    )) -> (Mu0 f    -> a    )
 mcata1  :: (forall r i  .                                                                     (forall i.  r i  -> a i  ) -> (f r i  -> a i  )) -> (Mu1 f i  -> a i  )
 mprim0  :: (forall r    .                                  (           r    -> Mu0 f    ) ->  (           r    -> a    ) -> (f r    -> a    )) -> (Mu0 f    -> a    )

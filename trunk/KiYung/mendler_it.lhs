@@ -86,29 +86,37 @@ turned into a value of answer type (|a|) and combines the overall result.
 
 %format lenc = len"_{\!c}"
 A typical example of iteration is the list length function.  We can define
-the list length function |lenc| in conventional style, which corresponds to
+the list length function |lenc| in conventional style, as
+ in Figure \ref{fig:lenc}, which corresponds to
 the list length function |len| in the general recursion style
-in the left-hand side of Figure \ref{fig:len}, as follows:
-\vspace*{.5em}
+in the left-hand side of Figure \ref{fig:len}.
+\begin{figure}
+\begin{minipage}{.45\linewidth}
 \begin{code}
 lenc :: List p -> Int
 lenc = cata phi where  
    phi N            = 0
    phi (C x xslen)  = 1 + xslen
-\end{code}\vspace*{-.5em}\\
-We need the functor instance for the base |L p|,
-which properly defines |fmap|, to complete the definition:
-\vspace*{.5em}
+\end{code}
+\end{minipage}
+\begin{minipage}{.5\linewidth}
 \begin{code}
 instance Functor (L p) where
    fmap f N         = N
    fmap f (C x xs)  = C x (f xs)
 \end{code}
+\end{minipage}
+\caption{|cata| example: list length function}
+\label{fig:lenc}
+\end{figure}
+Of course, we need the functor instance for the base |L p|,
+which properly defines |fmap|, to complete the definition.
+
 The conventional iteration is widely known, especially on the list type,
 as |foldr|. The conventional iteration is more often used than
 the Mendler-style iteration, but it does not generalize easily to more
-exotic datatypes such as nested datatypes and GADTs
-
+exotic datatypes such as nested datatypes and GADTs.
+%format lenm = len"_{\!m}"
 \begin{figure}
 \begin{minipage}{.49\linewidth}
 %include mendler/LenG.lhs
@@ -121,6 +129,8 @@ exotic datatypes such as nested datatypes and GADTs
 \end{figure}
 
 
+
+
 \section{Mendler-style iteration (|mcata|) for regular datatypes}
 \label{ssec:tourCata0}
 The Mendler-style iteration combinator |mcata0| lifts the restriction that the
@@ -128,13 +138,13 @@ base type be a functor, but still maintains the strict termination behavior of
 |cata|. This restriction is lifted by using two devices.
 \vspace*{-.5em}
 \begin{itemize}
-  \item The combining function |phi| becomes a function of 2 arguments
-        rather than 1. The first argument is a function that represents a
+  \item The combining function |phi| becomes a function of two arguments
+        rather than one. The first argument is a function that represents a
         recursive caller, and the second is the base structure
         that must be combined into an answer. The recursive caller 
         allows the programmer to direct where recursive calls must be made.
-        The Functor class requirement is lifted, because no call to |fmap|
-        is required in the definition of |mcata0|:
+        The Functor class requirement is lifted, because the definition of
+	|mcata0| does not rely on |fmap|:
 \begin{code}
 mcata0 phi (In0 x) = phi (mcata0 phi) x
 \end{code}
@@ -184,7 +194,6 @@ the second argument with |(In0 x)|.  The second property is enforced
 by the parametricity in the type of the combining function |phi| of
 the |mcata0| combinator as shown in Figure \ref{fig:rcombty},
 
-%format lenm = len"_{\!m}"
 In Figure \ref{fig:len}, we redefine the length function (|lenm| on the right),
 this time, using a Mendler-style iteration.  In the definition of |lenm|,
 we name the first argument of |phi|, the recursive caller, to be |len|.

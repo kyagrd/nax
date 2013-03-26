@@ -15,9 +15,9 @@ type Rec0 f r a = (r a) :+: (((r a -> a) -> f (r a) -> a) -> a)
 
 newtype Id x = Id { unId :: x }
 
-msfcata  ::  (forall r . (a -> r a) -> (r a -> a) -> f (r a) -> a)
-         ->  (forall a . Rec0 f Id a) -> a
-msfcata phi x = caseSum x unId (\ f -> f (phi Id))
+msfcata0  ::  (forall r . (a -> r a) -> (r a -> a) -> f (r a) -> a)
+          ->  (forall a . Rec0 f Id a) -> a
+msfcata0 phi x = caseSum x unId (\ f -> f (phi Id))
 
 lift :: ((Id a -> a) -> f (Id a) -> a) -> Rec0 f Id a -> Id a
 lift h x = caseSum x id (\ x -> Id(x h))
@@ -47,7 +47,7 @@ lam :: (Exp' a -> Exp' a) -> Exp' a
 lam f = inR (\h -> h unId (Lam (\x -> lift h(f(inL x))) ))
 
 showExp:: Exp -> String
-showExp e = msfcata phi e vars where 
+showExp e = msfcata0 phi e vars where 
   phi inv show' (App x y)  = \vs      ->
                 "("++ show' x vs ++" "++ show' y vs ++")"
   phi inv show' (Lam z)    = \(v:vs)  ->
@@ -71,7 +71,7 @@ succ:: Nat' a -> Nat' a
 succ x = inR (\h -> h unId (S (lift h x)))
 
 n2i :: Nat -> Int
-n2i = msfcata phi
+n2i = msfcata0 phi
   where phi _ n2i' Z      = 0
         phi _ n2i' (S n)  = 1 + n2i' n
 \end{code}

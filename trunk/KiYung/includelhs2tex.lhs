@@ -25,6 +25,7 @@
 %format Inverse0 = Inverse "_{*}"
 %format Inverse1 = Inverse "_{* -> *}"
 
+%format cata = "\mathbf{cata}"
 %format mcata = "\MIt"
 %format mcata0 = mcata "_{*}"
 %format mcata1 = mcata "_{* -> *}"

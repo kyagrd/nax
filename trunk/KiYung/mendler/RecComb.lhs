@@ -8,11 +8,11 @@ module RecComb where
 
 \newcommand{\DataFix}{
 \begin{code}
-newtype  Mu0   (f :: *         -> *         )                    = In0    { out0     :: f (Mu0 f)        }
-newtype  Mu1   (f :: (* -> *)  -> (* -> *)  )                 i  = In1    { out1     :: f (Mu1 f)     i  }
+newtype  Mu0   (f :: *         -> *         )                    {-"~"-} = {-"~"-} In0    { out0     :: f (Mu0 f)        }
+newtype  Mu1   (f :: (* -> *)  -> (* -> *)  )                 i  {-"~"-} = {-"~"-} In1    { out1     :: f (Mu1 f)     i  }
                                                               
-data     Rec0  (f :: *         -> *         )  (a :: *)          = Roll0  { unRoll0  :: f (Rec0 f a)     }  | Inverse0 a
-data     Rec1  (f :: (* -> *)  -> (* -> *)  )  (a :: * -> *)  i  = Roll1  { unRoll1  :: f (Rec1 f a)  i  }  | Inverse1 (a i)
+data     Rec0  (f :: *         -> *         )  (a :: *)          {-"~"-} = {-"~"-} Roll0  { unRoll0  :: f (Rec0 f a)     }  | Inverse0 a
+data     Rec1  (f :: (* -> *)  -> (* -> *)  )  (a :: * -> *)  i  {-"~"-} = {-"~"-} Roll1  { unRoll1  :: f (Rec1 f a)  i  }  | Inverse1 (a i)
 \end{code}
 }
 
