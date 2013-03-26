@@ -7,10 +7,11 @@ Mendler-style recursion schemes and term-indexed types
 
 \section{TOOD}\label{sec:intro:TODO}
 
-\section{TOOD}\label{sec:intro:TODO}
+\section{Preliminary concepts}\label{sec:intro:concepts}
+TODO section leading paragraph
 
 \subsection{The Curry-Howard correspondence and Normalization}
-\label{sec:intro:prelim} %%% TODO fix the label
+\label{sec:intro:concepts:CH} %%% TODO fix the label
 One promising approach to designing a system that unifies
 logical reasoning and programming is \emph{the Curry-Howard correspondence}.
 Howard \cite{Howard69} observed that a typed model of computation
@@ -94,13 +95,13 @@ types to ensure normalization in the following two subsections.
 
 
 \subsection{Restriction on recursive types for normalization}
-\label{sec:relwork:other} %% TODO fix label
+\label{sec:intro:concpets:recursive} %% TODO fix label
 We have argued that normalization is essential for logical reasoning systems
 based on the Curry-Howard correspondence. One challenge to the successful
 design of such systems is how to restrict recursion at the type level
 so that normalization of terms is preserved. 
 There are two different
-design choices illustrated in Figure \ref{fig:approaches}. 
+design choices illustrated in Figure~\ref{fig:approaches}. 
 The conventional approach restricts the formation
 of recursive types (\ie, the restriction is in datatype definition), and
 the Mendler-style approach restricts the elimination
@@ -230,7 +231,7 @@ iteration (\aka\ catamorphism). The typing rules for the conventional iteration
 rule {\small(\It)} and the reduction rule {\small(\It-\In)} for \It\,
 in addition to the rules for the recursive type operator $\mu$.
 
-\paragraph{Recursive types in the Mendler-style approach to consistent logic.}
+\paragraph{Recursive types in the Mendler style approach to consistent logic.}
 In the Mendler-style approach, we allow arbitrary formation
 (\ie, datatype definition) of recursive types, but we restrict
 the elimination (\ie, pattern matching) over the values of recursive types. 
@@ -252,6 +253,7 @@ You can think of the rule {\small(\MIt)} as replacing both the elimination rule
 {\small(\It)}, but in a safe way that guarantees normalization.
 
 \subsection{Justification of the Mendler-style as a design choice.}
+\label{sec:intro:concepts:mendler}
 We choose to base my approach to the design of a seamless synthesis of both
 logic and programming on the Mendler-style. It restricts the elimination (\ie,
 pattern matching) over values of recursive types, rather restricting the
@@ -270,11 +272,13 @@ datatype definition. Such datatypes are called negative recursive datatypes
 since the recursive occurrence $T$ appears in a negative position.
 We say that $T$ is in a negative position, since $(T -> A)$ is analogous to
 $(\neg T \land A)$ when we think of $->$ as a logical implication. There exist
-both interesting and useful examples in functional programs. I will
-introduce several such examples, and discuss them, in my dissertation.
-%% TODO
-TODO fix around here
-%% TODO
+both interesting and useful examples in functional programming involving
+negative datatypes. In \S\ref{sec:msf}, we illustrate that
+the Mendler-style recursion scheme, which we have discovered,
+can express such examples.
+
+%%%% TODO %%%%
+TODO rewrite this paragraph
 Recall that the goal of my dissertation (quoting again from \S\ref{sec:intro})
 is to contribute to answering the question of {\em how does one build a
 seamless system where programmers can both write (functional) programs and
@@ -316,13 +320,20 @@ There exist other families of Mendler-style recursion combinators,
 which are even more useful than \MIt\ for negative recursive types,
 some of which we have discovered in during the thesis research. Throughout
 this dissertation, we show that the Mendler-style recursion combinators are
-indeed useful and well-behaved induction principles. You can find brief
-summary of the Mendler-style recursive schemes in this mid-course document
-in \S\ref{sec:mendler}. %%% TODO fix this
+indeed useful and well-behaved induction principles. You can find
+further details on Mendler-style recursive schemes in Chapter \ref{ch:mendler}.
 
+\subsection{Indexed types and type inference}
+\label{sec:intro:indexed}
+TODO some description of indexed types
+why we are not going to dependent types
 
+refer to Part \ref{part:Calculi}
+TODO
 
-
+a note on type inference
+Hindely--Milner
+bidirectional and other things
 
 \section{Contributions}\label{sec:intro:contrib}
 This dissertation makes contributions in several areas.
