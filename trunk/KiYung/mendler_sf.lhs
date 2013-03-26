@@ -466,14 +466,23 @@ $>$ |putStrLn (showExp (lam(\x->lam(\y->x))))|\\
 \label{fig:HOASeval}
 \end{figure}
 Surprisingly, we can write an evaluator for a simply-typed HOAS
-in a surprisingly simple manner, as in Figure \ref{fig:HOASeval}.
+in a surprisingly simple manner. In Figure \ref{fig:HOASeval}
+is a Haskell program illustrating the technique.
+
 We first define the simply-typed HOAS as a recursive indexed datatype
-|Exp :: * -> *|, by taking the fixpoint with an inverse (|Rec1|) over
+|Exp :: * -> *|. We take the fixpoint using |Rec1| (the fixpoint 
+operation that supports a syntactic inverse). This fixpoint is taken over
 a non recursive base structure (|ExpF :: (* -> *) -> (* -> *)|).
-We also require that |Exp| should be parametric of its answer type
+Note that |ExpF| is an indexed type. So expressions will be
+indexed by their type. Using |Rec1| the fixpoint of any structure is
+also parameterized by the type of the answer.
+
+The use of the |msfcata| requires
+that |Exp| should be parametric in this answer type
 (by defining |type Exp t = forall a. Exp' a|) just as we did in the
 untyped HOAS formatting example in Figure \ref{fig:HOASshow}.
-In general recursion style, one would have defined
+
+Using general recursion, one would have defined
 the datatype |Exp_g :: * -> *| that corresponds to |Exp|
 as follows, using Haskell's native recursive datatype definition.
 \begin{code}
@@ -481,46 +490,58 @@ data Exp_g t where
   Lam_g :: (Exp_g a -> Exp_g b) -> Exp_g (a -> b)
   App_g :: Exp_g (a -> b) -> Exp_g a -> Exp_g b
 \end{code}
+
 The definition of |evalHOAS| specifies how to evaluate an HOAS expression
-to a host-language value wrapped by the identity newtype (|Id|).
-Ignoring the wrapping (|MkId|) and unwrapping (unId) of |Id|
-(to be less verbose), the definition is simply what you would expect.
+to a host-language value (i.e. Haskell or Nax) wrapped by the identity newtype (|Id|).
+In the description below, we ignore the wrapping (|MkId|) and unwrapping (unId) of |Id|
+by completely dropping them from the description. See the Figure \ref{fig:HOASeval}
+(where they are not omitted) if you care about these details. We discuss the
+evaluation for each of the constructors of |Exp|,
+
+
 \begin{itemize}
-\item An HOAS abstraction |(Lam f)| evaluates to a host-language function value
-|(\v -> ev (f(inv v)))|. In the body of the function value,
-the inverse of (host-language) argument value $v$ is passed to
-the embedded function $f$, and then, the resulting HOAS expression
-|(f(inv v))| is evaluated by the recursive caller (|ev|).
-\item An HOAS application |(App f x)| evaluates to a host-language application
-	|((ev f) (ev x))|, simply applying the result of evaluations of the
-	subexpressions |f| and |x|. Note that the host-language application
-	is type correct since |ev f :: Id (a -> b)| and |ev x :: Id a|,
-	thus the resulting value has type |Id b|.
+\item Evaluating an HOAS abstraction |(Lam f)| lifts an object-language function
+(|f|) over |Exp| into a host-language function over values:
+|(\v -> ev (f(inv v)))|. In the body of this host-language lambda abstraction
+the inverse of the (host-language) argument value $v$ is passed to
+the object-language function $f$. The resulting HOAS expression
+|(f(inv v))| is evaluated by the recursive caller (|ev|) to obtain a host-language value.
+
+\item Evaluating an HOAS application |(App f x)| lifts the function
+  |f| and argument |x| to host-language values:
+        |((ev f) (ev x))|, and uses host-language application
+        to compute the resulting value. Note that the host-language application
+        is type correct since |ev f :: (a -> b)| and |ev x ::  a|,
+        thus the resulting value has type |b|.
 \end{itemize}
 We can be confident that this evaluator indeed terminates
-since |Rec1| and |msfcata1| can be embedded into \Fw\ in a similar fashion
-to how we embedded |Rec0| and |msfcata0| in Figure \ref{fig:proofsf}.
+since |Rec1| and |msfcata1| can be embedded into \Fw\ in manner  
+similar to the embedding of |Rec0| and |msfcata0| into \Fw\ in Figure \ref{fig:proofsf}.
 
-Figure \ref{fig:HOASeval} highlights the two advantages aspects
+Figure \ref{fig:HOASeval} highlights two advantages 
 of the Mendler style over conventional style in one example.
 This example shows that the Mendler-style Sheard--Fegaras iteration is
-useful for \textit{negative} and \textit{indexed} datatypes.
-Note that |Exp| in Figure \ref{fig:HOASeval} has negative recursive occurrences
-and also has type indices.
+useful for both \textit{negative} and \textit{indexed} datatypes.
+|Exp| in Figure \ref{fig:HOASeval} has both negative recursive occurrences
+and type indices.
 
 The |showHOAS| example in Figure \ref{fig:HOASshow}, which we discussed
-in the previous subsection, had been previously reported in conventional style.
-So, with the |showHOAS| example, we have only shown that the Mendler style is
-as expressive as the conventional style, although syntactically more pleasant
-than the conventional style. However, it is not obvious how one could extend
+in the previous subsection, has appeared in other work\cite{TODO}, written
+in conventional style.
+So the |showHOAS| example, only shows that the Mendler style is
+as expressive as the conventional style (although it is
+perhaps syntactically more pleasant than the conventional style).
+However, it is not obvious how one extends
 the conventional-style Sheard--Fegaras iteration over indexed datatypes.
 
 In contrast, the Mendler-style Sheard--Fegaras iteration is naturally
-defined over indexed datatypes of arbitrary kinds. For instance,
-the |msfcata1|, used in the |evalHOAS|, has exactly the same definition
-as |msfcata0|, used in the |showHOAS|, but only differ in its type signature
-involving indices (recall Figures \ref{fig:rcombty} and \ref{fig:rcombdef}
-in pages \pageref{fig:rcombty}-\pageref{fig:rcombdef}).
+defined over indexed datatypes of arbitrary kinds. In fact, both the
+the |msfcata1|, used in the |evalHOAS|, 
+and |msfcata0|, used in the |showHOAS|,
+have exactly the same syntatctic definition. They differ only
+in their type signatures. This is illustrated
+in Figures \ref{fig:rcombty} and \ref{fig:rcombdef}
+on pages \pageref{fig:rcombty}-\pageref{fig:rcombdef}.
 
 \subsection{Additional Mendler-style combinators}
 The combinator |msfhist0| generalizes |mhist0| by the addition of an
