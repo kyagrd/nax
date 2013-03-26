@@ -298,7 +298,8 @@ but often lead to more efficient implementations.
 
 In \S\ref{sec:msf}, we introduce a new Mendler-style family (|msfcata|),
 which we discovered, and illustrate its expressiveness over negative datatypes
-by presenting the case study on formatting HOAS (\S\ref{sec:showHOAS}).
+by presenting the case study on formatting HOAS (\S\ref{sec:showHOAS})
+and evaluating simply-typed HOAS (\S\ref{sec:evalHOAS})
 
 Finally, we summarize the properties of the Mendler-style recursion combinators
 in \S\ref{sec:proof}. %% and extrapolate on other possible recursion combinators.

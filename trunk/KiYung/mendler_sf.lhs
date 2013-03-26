@@ -508,13 +508,14 @@ the object-language function $f$. The resulting HOAS expression
 |(f(inv v))| is evaluated by the recursive caller (|ev|) to obtain a host-language value.
 
 \item Evaluating an HOAS application |(App f x)| lifts the function
-  |f| and argument |x| to host-language values:
-        |((ev f) (ev x))|, and uses host-language application
+  |f| and argument |x| to host-language values
+        |(ev f)| and |(ev x)|, and uses host-language application
         to compute the resulting value. Note that the host-language application
-        is type correct since |ev f :: (a -> b)| and |ev x ::  a|,
-        thus the resulting value has type |b|.
+        |((ev f) (ev x))| is type correct since
+	|ev f :: a -> b| and |ev x ::  a|,
+	thus the resulting value has type |b|.
 \end{itemize}
-We can be confident that this evaluator indeed terminates
+We can be confident that |evalHOAS| indeed terminates
 since |Rec1| and |msfcata1| can be embedded into \Fw\ in manner  
 similar to the embedding of |Rec0| and |msfcata0| into \Fw\ in Figure \ref{fig:proofsf}.
 
@@ -526,8 +527,8 @@ useful for both \textit{negative} and \textit{indexed} datatypes.
 and type indices.
 
 The |showHOAS| example in Figure \ref{fig:HOASshow}, which we discussed
-in the previous subsection, has appeared in other work\cite{TODO}, written
-in conventional style.
+in the previous subsection, has appeared in other work \cite{FegShe96},
+written in conventional style.
 So the |showHOAS| example, only shows that the Mendler style is
 as expressive as the conventional style (although it is
 perhaps syntactically more pleasant than the conventional style).
