@@ -2,19 +2,54 @@
 
 \section{Programming and Formal Reasoning}\label{sec:intro:motiv}
 
-the Curry-Howard correspondence
-Mendler-style recursion schemes and term-indexed types
+In this dissertation, we contribute to answering the question of
+``how does one build a seamless system where programmers can both
+write (functional) programs and formally reason about those programs''.
+
+
+
+\begin{enumerate}[(1)]
+ \item Nax supports the major constructs of modern
+	 functional programming languages, such as
+	 parametric polymorphism, recursive datatypes, and type inference,
+ \item Nax can specify fine-grained program properties as types and
+	 witness proofs of such properties by writing a program
+	 (The Curry--Howard correspondence),
+ \item Nax is based on a minimal foundational calculus
+ that is expressive enough to embed all language constructs in (1)
+ and is also logically consistent to avoid paradoxical proofs in (2),
+ \item Nax has a simple implementation infrastructure
+	 that keeps the trusted base small.
+\end{enumerate}
+
 
 \section{Thesis}\label{sec:intro:thesis}
 TODO write a thesis section
 
+the Curry--Howard correspondence
+Mendler-style recursion schemes and term-indexed types
+
+Mix things below
+
+\begin{quote}
+A language equipped with \emph{term indexed types} and
+\emph{Mendler-style recursion combinators} can be 
+(1) a basis for \emph{sound and consistent logic}
+suitable for reasoning about properties of (functional) programs
+and also
+(2) a basis for a \emph{simple and expressive programming language}
+suitable for writing the (functional) programs to be reasoned about.
+\end{quote}
+
+
+
 \section{Preliminary concepts}\label{sec:intro:concepts}
 TODO section leading paragraph
 
-\subsection{The Curry-Howard correspondence and Normalization}
-\label{sec:intro:concepts:CH} %%% TODO fix the label
+\subsection{The Curry--Howard correspondence and Normalization}
+\label{sec:intro:concepts:CH}
 One promising approach to designing a system that unifies
-logical reasoning and programming is \emph{the Curry-Howard correspondence}.
+logical reasoning and programming is \emph{the Curry--Howard correspondence}.
 Howard \cite{Howard69} observed that a typed model of computation
 (\ie, a typed lambda calculus) gives an interpretation to a (natural deduction)
 proof system (for an intuitionistic logic). More specifically, one can interpret
@@ -34,7 +69,7 @@ More generally, we may expect that programming (\ie, building larger terms)
 corresponds to constructing larger proofs only when the typed lambda calculi
 meets certain standards -- \emph{type soundness} and \emph{normalization}.
 
-The Curry-Howard correspondence is a promising approach to designing a
+The Curry--Howard correspondence is a promising approach to designing a
 unified system for both logical reasoning and programming. Only one language
 system is needed for both the logic and the programming language. An
 alternate approach is to use an external logical language to talk about
@@ -42,11 +77,11 @@ programs as the objects that the logic reasons about. In this approach, one
 has the obligation to argue that the soundness of the logic, with respect to
 the programming language semantics, holds.
 
-Under the Curry-Howard correspondence, the logic is internally related to the
+Under the Curry--Howard correspondence, the logic is internally related to the
 semantics of program -- there is no need to argue for the soundness of the
 logic,  externally outside of the programming language system. The soundness
 of the logic follows directly from the type soundness of the language under
-the Curry-Howard correspondence.
+the Curry--Howard correspondence.
 
 Let us consider a proposition to be true
 (or, valid) when it has a canonical (\ie, cut-free) proof.
@@ -66,7 +101,7 @@ propositions are valid (\ie, the logic is sound) when the language is
 For the lambda calculus to be interpreted as a \emph{consistent} logic,
 there must be no diverging terms. A diverging term (\ie, a term that does
 not have a normal form) may inhabit any arbitrary type. Thus, a diverging term
-can be a proof for any proposition under the Curry-Howard correspondence.
+can be a proof for any proposition under the Curry--Howard correspondence.
 General purpose functional programming languages (\eg, Haskell and ML), that
 support unrestricted general recursion, cannot be interpreted as a consistent
 logic, since they allow diverging terms (non-terminating programs).
@@ -77,7 +112,7 @@ $\textit{loop}\mathrel{::}\textit{Int} -> \textit{Bool}$,
 and even $\textit{loop}\mathrel{::}\forall a. a$, which is a proof of false.
 
 
-Therefore, useful logical reasoning systems based on the Curry-Howard
+Therefore, useful logical reasoning systems based on the Curry--Howard
 correspondence (\eg, Coq, Agda) never support language features that can
 lead to diverging terms. For example, in both Coq and Agda,
 unrestricted general recursion (at term level) is not supported. 
@@ -88,7 +123,7 @@ guaranteed to normalize.
 Recursive types (\ie, recursion at type level)
 can also lead to diverging terms when they are not restricted carefully.
 Many of the conventional logical reasoning systems, based on
-Curry-Howard correspondence, restrict recursive types in a way,
+Curry--Howard correspondence, restrict recursive types in a way,
 which is not an ideal design choice, if one's goal is a unified system for
 logic and programming. My approach explores another design space not yet
 completely explored. We introduce both approaches to restricting recursive
@@ -96,9 +131,9 @@ types to ensure normalization in the following two subsections.
 
 
 \subsection{Restriction on recursive types for normalization}
-\label{sec:intro:concpets:recursive} %% TODO fix label
+\label{sec:intro:concpets:recursive}
 We have argued that normalization is essential for logical reasoning systems
-based on the Curry-Howard correspondence. One challenge to the successful
+based on the Curry--Howard correspondence. One challenge to the successful
 design of such systems is how to restrict recursion at the type level
 so that normalization of terms is preserved. 
 There are two different
@@ -255,7 +290,7 @@ You can think of the rule {\small(\MIt)} as replacing both the elimination rule
 
 \subsection{Justification of the Mendler-style as a design choice.}
 \label{sec:intro:concepts:mendler}
-We choose to base my approach to the design of a seamless synthesis of both
+We choose to base our approach to the design of a seamless synthesis of both
 logic and programming on the Mendler-style. It restricts the elimination (\ie,
 pattern matching) over values of recursive types, rather restricting the
 formation (\ie, datatype definition) of recursive types (a more conventional
@@ -278,12 +313,11 @@ negative datatypes. In \S\ref{sec:msf}, we illustrate that
 the Mendler-style recursion scheme, which we have discovered,
 can express such examples.
 
-%%%% TODO %%%%
-TODO rewrite this paragraph
-Recall that the goal of my dissertation (quoting again from \S\ref{sec:intro})
+Recall that the goal of this dissertation research
+(quoting again from \S\ref{sec:intro:motiv})
 is to contribute to answering the question of {\em how does one build a
 seamless system where programmers can both write (functional) programs and
-formally reason about those programs}. Under the Curry-Howard correspondence,
+formally reason about those programs}. Under the Curry--Howard correspondence,
 to formally reason about a program, the logic needs to refer to the type of
 the program, since the type, interpreted as a proposition, describes its
 properties. Since the Mendler-style approach does not restrict recursive
@@ -293,7 +327,7 @@ negative recursive types.
 The Mendler-style is a promising approach to building a unified system because
 all the recursive types, both positive and negative, are definable in the
 logic. Although the conventional approach is widely followed in the design of
-formal reasoning systems based on the Curry-Howard correspondence (\eg, Coq,
+formal reasoning systems based on the Curry--Howard correspondence (\eg, Coq,
 Agda), it cannot directly refer to programs that use non-positive recursive
 types. One may object that it is possible to indirectly model negative
 recursive types in the conventional style, via alternative equivalent
@@ -478,14 +512,14 @@ In my dissertation, I will contribute to answering the question
 can both write (functional) programs
 and formally reason about those programs.''
 I will introduce the motivation for pursuing such a system
-in \S\ref{sec:motiv},
+in \S\ref{sec:intro:motiv},
 and I will also discuss foundational work upon which
 the approach developed in my thesis is based.
 
 \section{Motivation} \label{sec:motiv}
 
 \section{Thesis}
-In my dissertation, I will contribute to answering the question
+In this dissertation, we contribute to answering the question of
 ``how does one build a seamless system where programmers
 can both write (functional) programs
 and formally reason about those programs.'' In Chapter \ref{ch:relwork},
@@ -556,7 +590,7 @@ extension from logic to programming language. Some programming language features
 will never be found in a sound logic, and the increase in complexity is designed
 to cleanly separate the boundary between the logic and programming language.
 
-The approach I will use is two layered. I will develop an underlying calculus,
+Our approach is two layered. we develop an underlying calculus,
 and a surface language, which are closely related to each other. I call the
 underlying typed lambda calculus System \Fi. It captures the essence of a sound
 and consistent logic in the presence of term indexed types. At the same time,
@@ -567,7 +601,7 @@ than the underlying \Fi\ calculus.
 
 By ``\emph{sound}'', I mean the type soundness of typed lambda calculi
 in the usual sense. By ``\emph{consistent}'', I mean not all types are
-inhabited by a term. Using the Curry-Howard correspondence, types are
+inhabited by a term. Using the Curry--Howard correspondence, types are
 interpreted as propositions, and terms of those types, are interpreted as
 proofs of those propositions. Thus, it is in fact the usual sense of
 logical consistency -- not all propositions are provable. Since consistency
