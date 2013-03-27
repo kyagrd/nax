@@ -63,8 +63,8 @@ The context of our work is the Nax project.
 %  \item Nax has a simple implementation infrastructure that keeps the trusted base small.
 % \end{enumerate}
 % \vspace*{-.5ex}
-Our goal is to develop a language system, called Nax, which supports both merits of
-functional programming language and formal reasoning systems based on
+Our goal is to develop a language system, called Nax, which supports the merits of both
+functional programming languages and formal reasoning systems based on
 the Curry--Howard correspondence. Our approach towards these goals is to 
 design an appropriate foundational calculus \cite{AhnSheFioPit13}
 that extends \Fw \cite{Girard72} (or \Fixw \cite{AbeMat04} similarly) to support
@@ -82,20 +82,21 @@ that will
 \textcircled{2} report that we can define an evaluator for the simply-typed HOAS
 using Mendler-style iteration with syntactic inverses (\msfit), and
 \textcircled{3}~propose a new recursion scheme (work in progress) whose
-termination rely on the invariants specified by size measures on indices.
+termination relies on the invariants specified by size measures on indices.
 \vspace*{-2ex}
 \paragraph{Advantages of the Mendler style\!\!\!}
 include allowing arbitrary definition of recursive datatypes, while still 
-ensuring well-behaved use by providing rich set of principled eliminators.
+ensuring well-behaved use by providing a rich set of principled eliminators.
 Certain concepts, such as HOAS, are most succinctly defined as
 mixed-variant datatypes, which are unfortunately, outlawed in
 many existing reasoning systems (\eg, Coq, Agda).
-One is forced to devise clever encodings \cite{PHOAS}.
-To use concepts like HOAS within such systems,
+One is forced to devise clever encodings \cite{PHOAS},
+to use concepts like HOAS within such systems.
 
-We believe it is worthwhile to allow defining all recursive datatypes
+We believe it is worthwhile to allow the definition all recursive datatypes
 available in functional \emph{programming} languages, including those outlawed
-in many reasoning systems. For instance, a HOAS for the untyped $\lambda$-calculus
+in many reasoning systems. For example, the untyped $\lambda$-calculus
+can be defined in HOAS as
 {\small\texttt{\,data Exp~=~Abs\;(Exp\;->\;Exp)~|~App\;Exp\;Exp\,}} in Haskell.
 Even if we assume all functions embedded in \texttt{Abs} are non-recursive,
 evaluating HOAS may still cause problems for logical reasoning,
@@ -111,8 +112,7 @@ even more expressive programs, such as a terminating well-typed evaluator.
 Discussion around this idea will constitute the latter parts of the paper.
 \vspace*{-2ex}
 \paragraph{A simply-typed HOAS evaluator\!\!\!} can be defined
-using \msfit\ at kind \texttt{*\,->\,*}. We recently discovered this
-while preparing to write this abstract. Since \msfit\ terminates
+using \msfit\ at kind \texttt{*\,->\,*}.  Since \msfit\ terminates
 for any datatype, we are also proving that the evaluation of
 the simply-typed $\lambda$-calculus always terminates
 just by defining \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} in Nax.
@@ -140,9 +140,9 @@ Note the types of \texttt{msfit}'s two abstract operations
 \texttt{call} and \texttt{inv}.\vspace*{-.5ex}
 {\small
 \begin{verbatim}
-  msfit : (   (forall r i . r i -> ans i) -- call
-           -> (forall r i . ans i -> r i) -- inv
-           -> (forall r i . f r i -> ans i)      ) -> Mu[* -> *] f j -> ans j
+  msfit : (forall r . (forall i . r i -> ans i) -- call
+                   -> (forall i . ans i -> r i) -- inv
+                   -> (forall i . f r i -> ans i)      ) -> Mu[* -> *] f j -> ans j
 \end{verbatim} }
 \vspace*{-2.5ex}
 \paragraph{Evaluation via user-defined value domain\!\!\!\!\!}, instead of
@@ -158,7 +158,7 @@ via the value domain \texttt{Val\;:\;*\,->\,*\,}.\vspace*{-1ex}
     Fun : (r a -> r b) -> V r (a -> b)   -- fun f = In [* -> *] (Fun f)
       deriving fixpoint Val              -- synonym Val t = Mu[* -> *] V t
   veval e = msfit { t . V t } e with
-              call inv (App f x) = unfun (call f) (call x)  -- how do we deinfe unfun?
+              call inv (App f x) = unfun (call f) (call x)  -- how do we define unfun?
               call inv (Abs f) = fun (\v -> (call (f (inv v))))
 \end{verbatim} }
 \noindent
@@ -171,10 +171,10 @@ a new recursion scheme \mprsi, which extends the Mendler-style primitive recursi
 (\texttt{mpr}) with the uncasting operation.\vspace*{-.5ex}
 {\small
 \begin{verbatim}
-  mprsi : (   (forall r i. r i -> ans i)                      -- call
-           -> (forall r i. (i < j) => r i -> Mu[* -> *] f i)  -- cast   
-           -> (forall r i. (i < j) => Mu[* -> *] f i -> r i)  -- uncast 
-           -> (forall r i. f r i -> ans i) ) -> Mu[* -> *] f j -> ans j
+  mprsi : (forall r . (forall i. r i -> ans i)                      -- call
+                   -> (forall i. (i < j) => r i -> Mu[* -> *] f i)  -- cast   
+                   -> (forall i. (i < j) => Mu[* -> *] f i -> r i)  -- uncast 
+                   -> (forall i. f r i -> ans i) ) -> Mu[* -> *] f j -> ans j
 
   unfun v = mprsi { (a -> b) . V a -> V b } v with
               call cast (Fun f) = cast . f . uncast   -- dot (.) is function composition
