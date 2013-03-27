@@ -168,7 +168,7 @@ this would be admitted in Nax.
 However, it is not likely that \texttt{unfun} can be defined using
 recursion schemes currently available in Nax. Thereby, we propose
 a new recursion scheme \mprsi, which extends the Mendler-style primitive recursion
-(\texttt{mpr}) with the uncasting operation. 
+(\texttt{mpr}) with the uncasting operation.\vspace*{-.5ex}
 {\small
 \begin{verbatim}
   mprsi : (   (forall r i. r i -> ans i)                      -- call
@@ -178,7 +178,7 @@ a new recursion scheme \mprsi, which extends the Mendler-style primitive recursi
 
   unfun v = mprsi { (a -> b) . V a -> V b } v with
               call cast (Fun f) = cast . f . uncast   -- dot (.) is function composition
-\end{verbatim} }
+\end{verbatim} }\vspace*{-.5ex}
 \noindent
 Note the size constraints \texttt{(i\;<\;j)} on both \texttt{cast} and \texttt{uncast} operations
 (FYI, \texttt{mpr}'s \texttt{cast} does not have size constraints).
@@ -190,10 +190,12 @@ that have constructors like below, which may cause non-termination.\vspace*{-.5e
  app2 : (Exp2 a -> Exp2 (a->b)) -> Exp2 (a->b)  -- prevented by constraint on cast
 \end{verbatim} }\vspace*{-.5ex}
 \noindent
+Our examples in this abstract only involve type indices, but similar
+formulation is possible for term indices as well.
 This is still a fresh proposal awaiting proof of termination.
-We hope to discuss this in the TYPES 2013 workshop and welcome
+We hope to discuss this in TYPES 2013 and welcome
 enlightening feedback from the TYPES community.
-
+\vspace*{-1ex}
 \begin{comment}
 \paragraph{Term-indices that govern termination behavior over datatypes\!\!\!}
 motivate a new Mendler-style recursion scheme.
