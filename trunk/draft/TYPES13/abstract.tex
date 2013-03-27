@@ -47,64 +47,61 @@ Marcelo Fiore\inst{2}
 %\end{abstract}
 % abstracts of abstracts are not compulsory
 
-The context of our work is the Nax programming language project.
-We are developing a unified programming and reasoning system,
-called Nax, with the following design goals:\vspace*{-1ex}
-\begin{enumerate}[(1)]
- \item Nax supports the major constructs of modern functional programming languages,
- such as parametric polymorphism, recursive datatypes, and type inference,
- \vspace*{-1.2ex}
- \item Nax can specify fine-grained program properties as types and
- witness proofs of such properties by writing a program (The Curry--Howard correspondence),
- \vspace*{-1.2ex}
- \item Nax is based on a minimal foundational calculus
- that is expressive enough to embed all language constructs in (1)
- and is also logically consistent to avoid paradoxical proofs in (2),\vspace*{-1.2ex}
- \item Nax has a simple implementation infrastructure that keeps the trusted base small.
-\end{enumerate}
-\vspace*{-.5ex}
-Our approach towards these goals is to 
-design an appropriate foundational calculus
-that extends \Fw \cite{Girard72} or \Fixw \cite{AbeMat04} to support
+The context of our work is the Nax project.
+% We are developing a unified programming and reasoning system,
+% called Nax, with the following design goals:\vspace*{-1ex}
+% \begin{enumerate}[(1)]
+%  \item Nax supports the major constructs of modern functional programming languages,
+%  such as parametric polymorphism, recursive datatypes, and type inference,
+%  \vspace*{-1.2ex}
+%  \item Nax can specify fine-grained program properties as types and
+%  witness proofs of such properties by writing a program (the Curry--Howard correspondence),
+%  \vspace*{-1.2ex}
+%  \item Nax is based on a minimal foundational calculus
+%  that is expressive enough to embed all language constructs in (1)
+%  and is also logically consistent to avoid paradoxical proofs in (2),\vspace*{-1.2ex}
+%  \item Nax has a simple implementation infrastructure that keeps the trusted base small.
+% \end{enumerate}
+% \vspace*{-.5ex}
+Our goal is to develop a language system, called Nax, which supports both merits of
+functional programming language and formal reasoning systems based on
+the Curry--Howard correspondence. Our approach towards these goals is to 
+design an appropriate foundational calculus \cite{AhnSheFioPit13}
+that extends \Fw \cite{Girard72} (or \Fixw \cite{AbeMat04} similarly) to support
 \emph{Mendler-style recursion schemes} \cite{Mendler87} with \emph{term-indexed datatypes}.
-Mendler-style recursion schemes support (1) since they are based
-on parametric polymorphism and well-defined over wide range of datatypes.
-They also support (4) since their termination is type-based --
-no other termination checking is necessary.
-Term-indexed datatypes support (2), for instance,
-statically specifying the size of a list using a natural number index in the list type.
+% Mendler-style recursion schemes support (1) since they are based
+% on parametric polymorphism and well-defined over wide range of datatypes.
+% They also support (4) since their termination is type-based --
+% no other termination checking is necessary.
+% Term-indexed datatypes support (2), for instance,
+% statically tracking the size of a list using a natural number.
 
 In this abstract, we outline a paper
 that will
-\textcircled{1} discuss the advantages of adopting the Mendler style,
-\textcircled{2} report that we can define an evaluator for the simply-typed
-Higher-Order Abstract Syntax (HOAS) using Mendler-style iteration
-with syntactic inverses (\msfit), and
+\textcircled{1} discuss the advantages of the Mendler style,
+\textcircled{2} report that we can define an evaluator for the simply-typed HOAS
+using Mendler-style iteration with syntactic inverses (\msfit), and
 \textcircled{3}~propose a new recursion scheme (work in progress) whose
 termination rely on the invariants specified by size measures on indices.
-\vspace*{-1ex}
-\paragraph{Advantages of adopting the Mendler style\!\!\!}
+\vspace*{-2ex}
+\paragraph{Advantages of the Mendler style\!\!\!}
 include allowing arbitrary definition of recursive datatypes, while still 
 ensuring well-behaved use by providing rich set of principled eliminators.
 Certain concepts, such as HOAS, are most succinctly defined as
-mixed-variant datatypes. However, most existing reasoning systems
-(\eg, Coq, Agda), based on the Curry--Howard correspondence, unfortunately,
-restrict definitions of
-mixed-variant recursive datatypes.
+mixed-variant datatypes, which are unfortunately, outlawed in
+many existing reasoning systems (\eg, Coq, Agda).
+One is forced to devise clever encodings \cite{PHOAS}.
 To use concepts like HOAS within such systems,
-one is forced to devise clever encodings \cite{PHOAS}.
 
 We believe it is worthwhile to allow defining all recursive datatypes
 available in functional \emph{programming} languages, including those outlawed
-in many reasoning systems. For instance, a HOAS datatype for
-the untyped $\lambda$-calculus
+in many reasoning systems. For instance, a HOAS for the untyped $\lambda$-calculus
 {\small\texttt{\,data Exp~=~Abs\;(Exp\;->\;Exp)~|~App\;Exp\;Exp\,}} in Haskell.
 Even if we assume all functions embedded in \texttt{Abs} are non-recursive,
 evaluating HOAS may still cause problems for logical reasoning,
 since the untyped $\lambda$-calculus has diverging terms. However, there are
-many well-behaved computations on \texttt{Exp}: examining whether
-an HOAS expression is \texttt{Abs} or \texttt{App}, and, converting an HOAS expression
-to first-order syntax are examples of terminating computation on \texttt{Exp}.
+many well-behaved (\ie, terminating) computations on \texttt{Exp}, such as
+converting an HOAS expression to first-order syntax.
 Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme
 (\msfit, \aka\ \textit{msfcata}) that captures these well-behaved computations.
 
@@ -112,7 +109,7 @@ If the datatype \texttt{Exp} had indexes to assert invariants of
 well-formed expressions, we could rely on these invariants to write
 even more expressive programs, such as a terminating well-typed evaluator.
 Discussion around this idea will constitute the latter parts of the paper.
-\vspace*{-1ex}
+\vspace*{-2ex}
 \paragraph{A simply-typed HOAS evaluator\!\!\!} can be defined
 using \msfit\ at kind \texttt{*\,->\,*}. We recently discovered this
 while preparing to write this abstract. Since \msfit\ terminates
@@ -120,21 +117,15 @@ for any datatype, we are also proving that the evaluation of
 the simply-typed $\lambda$-calculus always terminates
 just by defining \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} in Nax.
 The entire Nax code is laid out below.
-\vspace*{-.5ex}
+\vspace*{-1ex}
 {\small
 \begin{verbatim}
   data E : (* -> *) -> (* -> *) where      -- the "deriving fixpoint Exp" defines
     Abs : (r a -> r b) -> E r (a -> b)     --   abs f   = In[* -> *] (Abs f)
     App : E r (a -> b) -> E r a -> E r b   --   app f e = In[* -> *] (App f e)
       deriving fixpoint Exp                --   synonym Exp t = Mu[* -> *] E t
-\end{verbatim}
-\vspace*{-2ex}
-\begin{verbatim}
   data Id a = MkId a -- the identity type
   unId (MkId x) = x  -- destructor of Id
-\end{verbatim}
-\vspace*{-2ex}
-\begin{verbatim}
   eval e = msfit { t . Id t } e with
              call inv (App f x) = MkId (unId(call f) (unId(call x)))
              call inv (Abs f) = MkId (\v -> unId(call (f (inv (MkId v)))))
@@ -146,27 +137,26 @@ The type of \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} is inferred from
 to the input type's index.
 Conceptually, \texttt{msfit} at kind \texttt{*\,->\,*} has the following type.
 Note the types of \texttt{msfit}'s two abstract operations
-\texttt{call} and \texttt{inv}.
+\texttt{call} and \texttt{inv}.\vspace*{-.5ex}
 {\small
 \begin{verbatim}
   msfit : (   (forall r i . r i -> ans i) -- call
            -> (forall r i . ans i -> r i) -- inv
            -> (forall r i . f r i -> ans i)      ) -> Mu[* -> *] f j -> ans j
 \end{verbatim} }
-\vspace*{-3ex}
+\vspace*{-2.5ex}
 \paragraph{Evaluation via user-defined value domain\!\!\!\!\!}, instead of
-the native value space of Nax, motivates a new Mendler-style recursion scheme,
+the native value space of Nax, motivates a new recursion scheme,
 \mprsi, standing for Mendler-style primitive recursion with sized index.
-A user-defined value domain is particularly useful for evaluating expressions
-of first-order syntax. Here, we stick to HOAS to avoid introducing a new datatype.
+%% A user-defined value domain is particularly useful for evaluating expressions
+%% of first-order syntax. Here, we stick to HOAS to avoid introducing a new datatype.
 Consider writing an evaluator \texttt{\,veval\;:\;Exp\;t\,->\,Val\;t\,}
-via the value domain \texttt{Val\;:\;*\,->\,*\,} below.
+via the value domain \texttt{Val\;:\;*\,->\,*\,}.\vspace*{-1ex}
 {\small
 \begin{verbatim}
   data V : (* -> *) -> * -> * where      -- the "deriving fixpoint Val" defines
     Fun : (r a -> r b) -> V r (a -> b)   -- fun f = In [* -> *] (Fun f)
       deriving fixpoint Val              -- synonym Val t = Mu[* -> *] V t
-
   veval e = msfit { t . V t } e with
               call inv (App f x) = unfun (call f) (call x)  -- how do we deinfe unfun?
               call inv (Abs f) = fun (\v -> (call (f (inv v))))
@@ -193,12 +183,12 @@ a new recursion scheme \mprsi, which extends the Mendler-style primitive recursi
 Note the size constraints \texttt{(i\;<\;j)} on both \texttt{cast} and \texttt{uncast} operations
 (FYI, \texttt{mpr}'s \texttt{cast} does not have size constraints).
 These constraints prevent writing evaluator-like functions on strange expressions
-that have constructors like below, which may cause non-termination.
+that have constructors like below, which may cause non-termination.\vspace*{-.5ex}
 {\small
 \begin{verbatim}
  app1 : (Exp1 (a->b) -> Exp1 b) -> Exp1 (a->b)  -- prevented by constraint on uncast
  app2 : (Exp2 a -> Exp2 (a->b)) -> Exp2 (a->b)  -- prevented by constraint on cast
-\end{verbatim} }
+\end{verbatim} }\vspace*{-.5ex}
 \noindent
 This is still a fresh proposal awaiting proof of termination.
 We hope to discuss this in the TYPES 2013 workshop and welcome
