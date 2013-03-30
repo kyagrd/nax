@@ -1,47 +1,49 @@
 \chapter{Introduction}\label{ch:intro}
 
 \section{Programming and Formal Reasoning}\label{sec:intro:motiv}
-In this dissertation, we contribute to answering the question of
+In this dissertation, we contribute to answering the question:
 ``how does one build a seamless system where programmers can both
 write (functional) programs and formally reason about those programs''.
-In late 1960s, \citet{Howard69} ovserved that natrual deduction, which is
+In late 1960s, \citet{Howard69} observed that natural deduction, which is
 a proof system of a formal logic, and a typed lambda calculus, which is
 a model of computation, are directly related --
-a proof of a proposition corresponds to a program of a type.
+a proof of a proposition corresponds to a program and its type.
 Since this observation, known as the Curry--Howard correspondence,
-logicians and programming language researchers had an idea that
-it would be possible build a system that can both write programs
+logicians and programming language researchers 
+have  dreamed of
+building a system in which one can both write programs
 (\ie, model computation) and formally reason about (\ie, construct proofs of)
 the properties (\ie, types) of those programs.
 
 However, building a practical system that unifies programming and
-formal reasoning based on the Curry--Howard correspondence is still
-an open research question, due to the gap between the conflicting
+formal reasoning, based on the Curry--Howard correspondence, is still
+an open research problem. The gap between the conflicting
 design goals of typed functional programming languages, such as ML and Haskell,
-and formal reasoning systems, such as Coq and Agda.
+and formal reasoning systems, such as Coq and Agda, is still wide.
 
 Programming languages are typically designed to achieve
-computational expressiveness, while they may sacrifice logical consistency.
-That is, programmers should
+computational expressiveness. They often sacrifice logical consistency
+to achieve this goal. Programmers should be able to
 conveniently express all possible computations, regardless of whether those
-computations have logical interpretation or not.
+computations have a logical interpretation or not.
 
-Formal reasoning systems are typically designed to achieve logical consistency,
-while they may sacrifice computational expressiveness. That is, users
-should be assured that they can only prove true propositions and never
-allowed to prove falsity, but it may be difficult or even impossible to
-express certain computations within the reasoning system.
+Formal reasoning systems are typically designed to achieve logical consistency.
+They often sacrifice computational expressiveness to achieve that goal.
+Users expect that it is only possible to prove true propositions,
+and it is impossible to prove falsity. They are willing
+live with the difficultly (or even impossibility) to
+express certain computations within the reasoning system, to achieve logical consistency.
 
-As a result, recursion schemes supported in their term language
-are quite different between programming languages and formal reasoning systems.
-Programming languages provide unrestricted general recursion
+As a result, the recursion schemes of programming languages and formal reasoning systems
+differ considerably.
+Programming languages provide unrestricted general recursion,
 to conveniently express computations
 that may or may not terminate.
 Formal reasoning systems provide induction principles for sound reasoning,
 or, in the computational view, principled recursion schemes
 that can only express terminating computation.
 
-The two different design goals also resulted in a significan difference
+The two different design goals also lead to significant differences
 in their type language as well.
 TODO
 Programming languages -- recursive types paradigm
@@ -67,16 +69,16 @@ specifi design goals of our language Nax
 TODO mention more specific goals of Nax here or maybe in the next section
 \begin{enumerate}[(1)]
  \item Nax supports the major constructs of modern
-	 functional programming languages, such as
-	 parametric polymorphism, recursive datatypes, and type inference,
+         functional programming languages, such as
+         parametric polymorphism, recursive datatypes, and type inference,
  \item Nax can specify fine-grained program properties as types and
-	 witness proofs of such properties by writing a program
-	 (The Curry--Howard correspondence),
+         witness proofs of such properties by writing a program
+         (The Curry--Howard correspondence),
  \item Nax is based on a minimal foundational calculus
  that is expressive enough to embed all language constructs in (1)
  and is also logically consistent to avoid paradoxical proofs in (2),
  \item Nax has a simple implementation infrastructure
-	 that keeps the trusted base small.
+         that keeps the trusted base small.
 \end{enumerate}
 
 
@@ -115,7 +117,7 @@ a term of that type, as a proof for that formula. For instance,
 the typing rule for function applications (APP) in a typed lambda calculus
 corresponds to Modus Ponens (MP) in a logic:
 \[ \inference[(APP)]{\Gamma |- t_1 : A -> B & \Gamma |- t_2 : A}{
-	\Gamma |- t_1~t_2 : B}
+        \Gamma |- t_1~t_2 : B}
  ~~~~~~~~
    \inference[(MP)]{A -> B & A}{B}
 \]
@@ -445,8 +447,8 @@ It organizes and expands the realm of \emph{Mendler-style recursion schemes}
         (Part~\ref{part:Calculi}),
 
 \item[3.] It designs a practical language (with an implementation)
-	\emph{in the sweet spot} between programming and logical reasoning
-	(Part~\ref{part:Nax}), and
+        \emph{in the sweet spot} between programming and logical reasoning
+        (Part~\ref{part:Nax}), and
 
 \item[4.] It identifies several interesting open problems related to above.
 \end{itemize}
