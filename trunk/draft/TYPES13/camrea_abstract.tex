@@ -67,8 +67,8 @@ Our goal is to develop a language system, called Nax, which supports the merits 
 functional programming languages and formal reasoning systems based on
 the Curry--Howard correspondence. Our approach towards these goals is to 
 design an appropriate foundational calculus \cite{AhnSheFioPit13}
-that extends \Fw \cite{Girard72} (or \Fixw \cite{AbeMat04} similarly) to support
-\emph{Mendler-style recursion schemes} \cite{Mendler87} with \emph{term-indexed datatypes}.
+that extends \Fw \cite{Girard72} (or \Fixw \cite{AbeMat04} similarly) to justify
+the theory of \emph{Mendler-style recursion schemes} \cite{Mendler87} with \emph{term-indexed datatypes}.
 % Mendler-style recursion schemes support (1) since they are based
 % on parametric polymorphism and well-defined over wide range of datatypes.
 % They also support (4) since their termination is type-based --
@@ -93,11 +93,12 @@ many existing reasoning systems (\eg, Coq, Agda).
 One is forced to devise clever encodings \cite{PHOAS},
 to use concepts like HOAS within such systems.
 
-We believe it is worthwhile to allow the definition all recursive datatypes
-available in functional \emph{programming} languages, including those outlawed
-in many reasoning systems. For example, the untyped $\lambda$-calculus
-can be defined in HOAS as
-{\small\texttt{\,data Exp~=~Abs\;(Exp\;->\;Exp)~|~App\;Exp\;Exp\,}} in Haskell.
+% We believe it is worthwhile to allow the definition all recursive datatypes
+% available in functional \emph{programming} languages, including those outlawed
+% in many reasoning systems.
+In functional \emph{programming} languages, for instance, in Haskell,
+a HOAS for the untyped $\lambda$-calculus can be defined as
+{\small\texttt{\,data Exp~=~Abs\;(Exp\;->\;Exp)~|~App\;Exp\;Exp\,}}.
 Even if we assume all functions embedded in \texttt{Abs} are non-recursive,
 evaluating HOAS may still cause problems for logical reasoning,
 since the untyped $\lambda$-calculus has diverging terms. However, there are
@@ -115,8 +116,9 @@ Discussion around this idea will constitute the latter parts of the paper.
 using \msfit\ at kind \texttt{*\,->\,*}.  Since \msfit\ terminates
 for any datatype, we are also proving that the evaluation of
 the simply-typed $\lambda$-calculus always terminates
-just by defining \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} in Nax.
-The entire Nax code is laid out below. \cite{BerSch91}
+just by defining \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} in Nax, as below.
+We wonder \texttt{eval} has similarities to other normalization strategies
+like NbE \cite{BerSch91}.
 \vspace*{-1ex}
 {\small
 \begin{verbatim}
@@ -124,20 +126,21 @@ The entire Nax code is laid out below. \cite{BerSch91}
     Abs : (r a -> r b) -> E r (a -> b)     --   abs f   = In[* -> *] (Abs f)
     App : E r (a -> b) -> E r a -> E r b   --   app f e = In[* -> *] (App f e)
       deriving fixpoint Exp                --   synonym Exp t = Mu[* -> *] E t
+
   data Id a = MkId a -- the identity type
   unId (MkId x) = x  -- destructor of Id
+  
   eval e = msfit { t . Id t } e with
              call inv (App f x) = MkId (unId(call f) (unId(call x)))
              call inv (Abs f) = MkId (\v -> unId(call (f (inv (MkId v)))))
 \end{verbatim} }
-\vspace*{-.5ex}
-\noindent
+\vspace*{-.5ex}\noindent
 The type of \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} is inferred from
 \texttt{\{\,t\,.\;Id t\,\}}, which specifies the answer type in relation
 to the input type's index.
-Conceptually, \texttt{msfit} at kind \texttt{*\,->\,*} has the following type.
-Note the types of \texttt{msfit}'s two abstract operations
-\texttt{call} and \texttt{inv}.\vspace*{-.5ex}
+Conceptually, \texttt{msfit} at kind \texttt{*\,->\,*} has the following type.\vspace*{-.5ex}
+% Note the types of \texttt{msfit}'s two abstract operations
+% \texttt{call} and \texttt{inv}.
 {\small
 \begin{verbatim}
   msfit : (forall r . (forall i . r i -> ans i) -- call
@@ -151,12 +154,14 @@ the native value space of Nax, motivates a new recursion scheme,
 %% A user-defined value domain is particularly useful for evaluating expressions
 %% of first-order syntax. Here, we stick to HOAS to avoid introducing a new datatype.
 Consider writing an evaluator \texttt{\,veval\;:\;Exp\;t\,->\,Val\;t\,}
-via the value domain \texttt{Val\;:\;*\,->\,*\,}.\vspace*{-1ex}
+via the value domain \texttt{Val\;:\;*\,->\,*\,}.\vspace*{-.5ex}
 {\small
 \begin{verbatim}
   data V : (* -> *) -> * -> * where      -- the "deriving fixpoint Val" defines
     Fun : (r a -> r b) -> V r (a -> b)   -- fun f = In [* -> *] (Fun f)
       deriving fixpoint Val              -- synonym Val t = Mu[* -> *] V t
+\end{verbatim}\vspace*{-1.5ex}
+\begin{verbatim}
   veval e = msfit { t . V t } e with
               call inv (App f x) = unfun (call f) (call x)  -- how do we define unfun?
               call inv (Abs f) = fun (\v -> (call (f (inv v))))
@@ -175,7 +180,8 @@ a new recursion scheme \mprsi, which extends the Mendler-style primitive recursi
                    -> (forall i. (i < j) => r i -> Mu[* -> *] f i)  -- cast   
                    -> (forall i. (i < j) => Mu[* -> *] f i -> r i)  -- uncast 
                    -> (forall i. f r i -> ans i) ) -> Mu[* -> *] f j -> ans j
-
+\end{verbatim}\vspace*{-1.5ex}
+\begin{verbatim}
   unfun v = mprsi { (a -> b) . V a -> V b } v with
               call cast (Fun f) = cast . f . uncast   -- dot (.) is function composition
 \end{verbatim} }\vspace*{-.5ex}
@@ -191,11 +197,10 @@ that have constructors like below, which may cause non-termination.\vspace*{-.5e
 \end{verbatim} }\vspace*{-.5ex}
 \noindent
 Our examples in this abstract only involve type indices, but similar
-formulation is possible for term indices as well.
+formulation is possible for term indices as well.\vspace*{-1.5ex}
 This is still a fresh proposal awaiting proof of termination.
-We hope to discuss this in TYPES 2013 and welcome
-enlightening feedback from the TYPES community.
-\vspace*{-1ex}
+% We hope to discuss this in TYPES 2013 and welcome
+% enlightening feedback from the TYPES community.
 \begin{comment}
 \paragraph{Term-indices that govern termination behavior over datatypes\!\!\!}
 motivate a new Mendler-style recursion scheme.
@@ -246,5 +251,52 @@ In the paper, we will \vspace*{-.5ex}
 % whose negative occurrences are guarded by our ``smaller'' condition.
 % \vspace{-1ex}
 \end{comment}
-\bibliography{main}   % refers to main.bib
+
+%%% \bibliography{main}   % refers to main.bib
+\begin{thebibliography}{1}
+\vspace*{-1ex}
+\bibitem{AbeMat04}
+Andreas Abel and Ralph Matthes.
+\newblock Fixed points of type constructors and primitive recursion.
+\newblock In {\em CSL}, volume 3210 of {\em LNCS}, pages 190--204. Springer,
+  2004.
+
+\bibitem{AhnShe11}
+Ki~Yung Ahn and Tim Sheard.
+\newblock A hierarchy of {M}endler-style recursion combinators: {T}aming
+  inductive datatypes with negative occurrences.
+\newblock In {\em ICFP '11}, pages 234--246. ACM, 2011.
+
+\bibitem{AhnSheFioPit13}
+Ki~Yung Ahn, Tim Sheard, Marcelo Fiore, and Andrew~M. Pitts.
+\newblock System {F}i: a higher-order polymorphic lambda calculus with erasable
+  term indices.
+\newblock In {\em TYPES}, LICS, 2013.
+\newblock (to appear).
+
+\bibitem{PHOAS}
+Adam Chlipala.
+\newblock Parametric higher-order abstract syntax for mechanized semantics.
+\newblock In {\em ICFP '08}, pages 143--156. ACM, 2008.
+
+\bibitem{Girard72}
+{Girard, J.-Y.}
+\newblock {\em Interpr\'{e}tation Fonctionnelle et \'{E}limination des Coupures
+  de l'Arith\-m\'{e}tique d'Ordre Sup\'{e}rieur}.
+\newblock Th\`{e}se de doctorat d'\'{e}tat, Universit\'{e} Paris VII, June
+  1972.
+
+\bibitem{Mendler87}
+N.~P. Mendler.
+\newblock Recursive types and type constraints in second-order lambda calculus.
+\newblock In {\em LICS}, pages 30--36, 1987.
+
+
+\bibitem{BerSch91}
+Ulrich Berger and Helmut Schwichtenberg.
+\newblock An inverse of the evaluation functional for typed $\lambda$-calculus.
+\newblock In {\em {IEEE} Symposium on Logic in Computer Science ({LICS})},
+  pages 203--211, 1991.
+\end{thebibliography}
+
 \end{document}
