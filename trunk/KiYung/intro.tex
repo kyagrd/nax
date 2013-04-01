@@ -32,10 +32,11 @@ They often sacrifice computational expressiveness to achieve that goal.
 Users expect that it is only possible to prove true propositions,
 and it is impossible to prove falsity. They are willing
 live with the difficultly (or even impossibility) to
-express certain computations within the reasoning system, to achieve logical consistency.
+express certain computations within the reasoning system,
+to achieve logical consistency.
 
-As a result, the recursion schemes of programming languages and formal reasoning systems
-differ considerably.
+As a result, the recursion schemes of programming languages and
+formal reasoning systems differ considerably.
 Programming languages provide unrestricted general recursion,
 to conveniently express computations
 that may or may not terminate.
@@ -44,29 +45,21 @@ or, in the computational view, principled recursion schemes
 that can only express terminating computation.
 
 The two different design goals also lead to significant differences
-in their type language as well.
-TODO
-Programming languages -- recursive types paradigm
-Reasoning systems -- inductive types paradigm
-do not go into too much details but refer to later sections and chapters
-we will put the details of this in related work
-(move and revise from proposal and mid-course)
+in their type system as well.
+Programming languages are based on the \emph{recursive types} paradigm,
+which accepts as much type definition as possible written by the type syntax
+so that programmers can express computations over a wide veriety types.
+Reasoning systems are usually based on the \emph{inductive types} paradigm,
+which only accepts type defintions that are amenable to
+conventional induction principles but rejects all the other definitions.
 
-TODO
-we explore a design space in the sweet spot between 
-programming languages and formal reasoning systems.
+This dissertation explores a design space for the sweet spot between 
+programming languages and formal reasoning systems. We do this by
+allowing as much type definition as possible, as in programming languages,
+but provide a rich set of non-conventional recursion schemes
+(or, indcution principles) that always terminate, as in reasoning systems.
+TODO other design principles too
 
-- recursive type paradigm in the type language (prog lang)
-
-- principled recursions schemes in the term language (reasoning sys)
-
-recursive types is not the only feature
-advantages of prog lang
-there are more
-specifi design goals of our language Nax
-
-
-TODO mention more specific goals of Nax here or maybe in the next section
 \begin{enumerate}[(1)]
  \item Nax supports the major constructs of modern
          functional programming languages, such as
