@@ -25,7 +25,7 @@ tracking environment \cite{BraHam10} in Nax-like syntax below:
 \vskip-.7ex\noindent
 Note that {\small\tt Env} has a term-index of type {\small\tt Vec},
 which is again indexed by {\small\tt Nat}.
-For simplicity,\footnote{Nax \cite{AhnSheFioPit12} supports
+For simplicity,\footnote{Nax supports
         rank-1 kind-level polymorphism. %% over kinds, types, and term-indices.
         It would be virtually useless if nested term-indices % like {\texttt{n}}
         were only limited to constants rather than polymorphic variables.}
@@ -95,7 +95,7 @@ which can only be applied to non-empty length indexed lists due
 the index of the domain type ($\texttt{S}\;n$).
 \vspace*{-1ex}
 \paragraph{The Mendler-style encoding\,$:$}
-Recursive type theories that extends higher-order polymorphic lambda calculi
+Recursive type theories that extend higher-order polymorphic lambda calculi
 typically comes with a built-in recursive type operator
 $\mu_\kappa : (\kappa -> \kappa) -> \kappa$ for each kind $\kappa$,
 which yields recursive types ($\mu_\kappa\,F : \kappa$) when applied to
@@ -115,9 +115,9 @@ while enjoying the benefits of factoring out the recursion at type-level.
 
 % exploiting impredicative polymorphism.
 %% Thus, in the Mendler style encoding,
-%% $\mu_\kappa$ no more needs to be primtiive,
+%% $\mu_\kappa$ no more needs to be primitive,
 %% and encoding scheme of eliminators for recursive types become uniform 
-%% -- in a logical view, inductive reasoning become better mondularized
+%% -- in a logical view, inductive reasoning become better modularized
 %% 
 %% strong normalization while supporting negative datatypes
 %% (\eg, higher-order abstract syntax, semantic domains of lambda calculi)

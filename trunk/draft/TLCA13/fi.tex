@@ -226,10 +226,10 @@ $
 %% \]
 %% \[ \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
 %%              {\Delta |- F\,G = F'\,G' : \kappa'}
-%%  ~~~~ \newFi{
-%%  \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
-%%              {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
-%%      }
+  ~~~~ \newFi{
+  \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
+              {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
+      }
 %% \]
 %% \[
 %%    \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}
@@ -244,7 +244,7 @@ $
 %%    \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
 %%              {\Delta |- F = F'' : \kappa}
 %% \]
-%% ~\\
+~\\~\\
 \paragraph{Term equality:} ~~ \fbox{$\Delta;\Gamma |- t = t' : A$}
 $
 %% \qquad
@@ -379,6 +379,9 @@ the new extension to the kind syntax $A -> \kappa$ involves types.
 Since kind syntax involves types, we need more than simple structural
 equality over kinds (see \Fig{eqFi}). For instance, $A -> \kappa$ and 
 are $A' -> \kappa$ equivalent kinds when $A'$ and $A$ are equivalent types.
+Only the key equality rules are shown in \Fig{eqFi}, and the other
+structural rules (one for each sorting/kinding/typing rule) and
+the congruence rules (symmetry, transitivity) are omitted.
 
 \paragraph{Terms and their typing rules}(\Figs{FiSyntax} and \ref{fig:FiTyping}).\;
 The term syntax is exactly the same as other Curry-style calclui.

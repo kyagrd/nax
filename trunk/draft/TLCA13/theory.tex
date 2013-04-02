@@ -236,7 +236,7 @@ $(F[s/i])^\circ = F^\circ$
 \begin{remark}
 When $\Delta |- F=F':\kappa$ is a valid type constructor equality in \Fi,
 $\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ$
-is a valid type constructor equlity in \Fw.
+is a valid type constructor equality in \Fw.
 \end{remark}
 
 \begin{theorem}[index erasure on well-formed term-level contexts
@@ -286,10 +286,18 @@ $
 \end{corollary}
 
 \subsection{Strong Normalization and Logical Consistency} \label{ssec:sn}
-Strong normalization is a corollary of the erasure property since we know that
-System~\Fw\ is strongly normalizing. Logical consistency is immediate since
+Strong normalization is a corollary of the erasure property
+since we know that System~\Fw\ is strongly normalizing.
+Index erasure also implies logical consistency. By index erausre,
+we know that any well-typed term in \Fi\ is a well-typed term in \Fw\ with
+its erased type. That is, there are no extra well-typed terms in \Fi\ that
+are not well-typed in \Fw. By the saturted sets model (as in \cite{AbeMat04}),
+we know that the void type ($\forall X^{*}.X$) in \Fw\ is uninhabited in \Fw.
+Therefore, The void type ($\forall X^{*}.X$) in \Fi\ is uninhabited since
+the it erases to same the void type in \Fw.
+Alternatively, logical consistency of \Fi\ can be drawn from ICC.
 System~\Fi\ is a restriction of \emph{restricted implicit calculus}
 \cite{Miquel00} or $\text{ICC}^{-}$ \cite{BarrasB08}, which are
 restrictions of ICC~\cite{Miquel01} known to be logically consistent.
-Subject reduction is also immediate for the same reason.
+%% Subject reduction is also immediate for the same reason.
 
