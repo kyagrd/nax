@@ -64,20 +64,21 @@ We introduce a foundational lambda calculus,
 System~\Fi, for studying programming languages with
 term-indexed datatypes -- higher-kinded datatypes whose indices range
 over data such as natural numbers or lists.
-System~\Fi\ is a minimal extension of System~\Fw\ that 
+System~\Fi\ is an extension of System~\Fw\ that 
 introduces the minimal features needed to support term-indexing.
 We show that System~\Fi\ provides a theory for analysing programs
 with term-indexed types and also argue that it constitutes a basis
 for the design of logically-sound light-weight dependent programming languages.
-In terms of expressivity, System~\Fi\ sits in between System~\Fw\ and the
-Implicit Calculus of Constructions (ICC). Indeed, we relate System~\Fi\ to
-System~\Fw\ and ICC as follows.  We establish erasure properties of
+%% In terms of expressivity, System~\Fi\ sits in between System~\Fw\ and the
+%% Implicit Calculus of Constructions (ICC). Indeed, we relate System~\Fi\ to
+%% System~\Fw\ and ICC as follows.
+We establish erasure properties of
 \Fi-types that capture the idea that term-indices are discardable in
 that they are irrelevant for computation.  Index erasure projects typing
 in System~\Fi\ to typing in System~\Fw; so System~\Fi\ inherits the
-strong-normalisation property from System~\Fw.  The logical consistency of
-System~\Fi\ is established by embedding it into a subset of ICC.
-
+strong-normalization and logical consistency from System~\Fw.
+%% The logical consistency of
+%% System~\Fi\ is established by embedding it into a subset of ICC.
 \keywords{term-indexed data types, generalized algebraic data types,
 higher-order polymorphism, type-constructor polymorphism, higher-kinded types,
 impredicative encoding, strong normalization, logical consistency}

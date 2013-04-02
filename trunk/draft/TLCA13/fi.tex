@@ -184,26 +184,27 @@ $
 
 \begin{figure}
 \paragraph{Kind equality:} ~~ \fbox{$|- \kappa=\kappa' : \square$}
-$
- ~~~~
-   \inference{}{|- * = *:\square}
- ~~~~
-   \inference{ |- \kappa_1 = \kappa_1' : \square
-             & |- \kappa_2 = \kappa_2' : \square }
-             {|- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
-$
-\[ \newFi{
+%% $
+%%  ~~~~
+%%    \inference{}{|- * = *:\square}
+%%  ~~~~
+%%    \inference{ |- \kappa_1 = \kappa_1' : \square
+%%              & |- \kappa_2 = \kappa_2' : \square }
+%%              {|- \kappa_1 -> \kappa_2 = \kappa_1' -> \kappa_2' : \square}
+%% $
+%%\[
+ \qquad\newFi{
    \inference{\cdot |- A=A':* & |- \kappa=\kappa':\square}
              {|- A -> \kappa = A' -> \kappa' : \square} }
- ~~~~
-   \inference{|- \kappa=\kappa':\square}
-             {|- \kappa'=\kappa:\square}
- ~~~~
-   \inference{ |- \kappa =\kappa' :\square
-             & |- \kappa'=\kappa'':\square}
-             {|- \kappa=\kappa'':\square}
-\]
-~\\
+%%  ~~~~
+%%    \inference{|- \kappa=\kappa':\square}
+%%              {|- \kappa'=\kappa:\square}
+%%  ~~~~
+%%    \inference{ |- \kappa =\kappa' :\square
+%%              & |- \kappa'=\kappa'':\square}
+%%              {|- \kappa=\kappa'':\square}
+%% \]
+~\\~\\
 \paragraph{Type constructor equality:} ~~ \fbox{$\Delta |- F = F' : \kappa$}
 \[ \inference{\Delta,X^\kappa |- F:\kappa' & \Delta |- G:\kappa}
              {\Delta |- (\lambda X^\kappa.F)\,G = F[G/X]:\kappa'}
@@ -211,93 +212,94 @@ $
    \inference{\Delta,i^A |- F:\kappa & \Delta;\cdot |- s:A}
              {\Delta |- (\lambda i^A.F)\,\{s\} = F[s/i]:\kappa} }
 \]
-\[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
- ~~~~
-   \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
-\]
-\[ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}
-             {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
- ~~~~ \quad ~
- \newFi{
-   \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}
-             {\Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa}
-     }
-\]
-\[ \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
-             {\Delta |- F\,G = F'\,G' : \kappa'}
- ~~~~ \newFi{
- \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
-             {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
-     }
-\]
-\[
-   \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}
-             {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
- ~~~~ \qquad
- \newFi{
-   \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}
-             {\Delta |- \forall i^A.B=\forall i^A.B':*} }
-\]
-\[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
- ~~~~
-   \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
-             {\Delta |- F = F'' : \kappa}
-\]
-~\\
+%% \[ \inference{\Delta |- X:\kappa }{\Delta |- X=X:\kappa}
+%%  ~~~~
+%%    \inference{\Delta |- A=A':* & \Delta |- B=B':*}{\Delta |- A-> B=A'-> B':*}
+%% \]
+%% \[ \inference{|- \kappa:\square & \Delta,X^\kappa |- F=F' : \kappa'}
+%%              {\Delta |- \lambda X^\kappa.F=\lambda X^\kappa.F':\kappa-> \kappa'}
+%%  ~~~~ \quad ~
+%%  \newFi{
+%%    \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}
+%%              {\Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa}
+%%      }
+%% \]
+%% \[ \inference{\Delta |- F=F':\kappa->\kappa' & \Delta |- G=G':\kappa}
+%%              {\Delta |- F\,G = F'\,G' : \kappa'}
+%%  ~~~~ \newFi{
+%%  \inference{\Delta |- F=F':A->\kappa & \Delta;\cdot |- s=s':A}
+%%              {\Delta |- F\,\{s\} = F'\,\{s'\} : \kappa}
+%%      }
+%% \]
+%% \[
+%%    \inference{|- \kappa:\square & \Delta,X^\kappa |- B=B':*}
+%%              {\Delta |- \forall X^\kappa.B=\forall X^\kappa.B':*}
+%%  ~~~~ \qquad
+%%  \newFi{
+%%    \inference{\cdot |- A:* & \Delta,i^A |- B=B':*}
+%%              {\Delta |- \forall i^A.B=\forall i^A.B':*} }
+%% \]
+%% \[ \inference{\Delta |- F = F' : \kappa}{\Delta |- F' = F : \kappa}
+%%  ~~~~
+%%    \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}
+%%              {\Delta |- F = F'' : \kappa}
+%% \]
+%% ~\\
 \paragraph{Term equality:} ~~ \fbox{$\Delta;\Gamma |- t = t' : A$}
-$ \qquad
+$
+%% \qquad
  ~~~~
    \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
              {\Delta;\Gamma |- (\lambda x.t)\,s=t[s/x] : B} $
-\[
-   \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
- ~~~~
-   \inference{\quad~~ \Delta |- A:* \\ \Delta;\Gamma,x:A |- t=t':B}
-             {\Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
- ~~~~
-   \inference{\Delta;\Gamma |- r=r':A-> B \\ \Delta;\Gamma |- s=s':A \qquad~}
-             {\Delta;\Gamma |- r\;s=r'\;s':B}
-\]
-\[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}
-             {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
-             (X\notin\FV(\Gamma))
- ~~~~ ~~~~
-   \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
-             & \Delta |- G:\kappa }
-             {\Delta;\Gamma |- t=t' : B[G/X]}
-\]
-\[ \newFi{
-   \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
-             {\Delta;\Gamma |- t=t' : \forall i^A.B}
-   \left(\begin{smallmatrix}
-                i\notin\FV(t),\\
-                i\notin\FV(t'),\\
-                i\notin\FV(\Gamma)\end{smallmatrix}\right)
- ~~~~
-   \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
-             & \Delta;\cdot |- s:A}
-             {\Delta;\Gamma |- t=t' : B[s/i]} }
-\]
-\[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
- ~~~~
-   \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
-             {\Delta;\Gamma |- t=t'':A}
-\]
-~\\
-$\phantom{A}$ 
-Some of the rules in \Fig{FiTyping} require determining if two types are equal.
-Since types occur in kinds, and terms occur in types, the rules
-for equality are more elaborate than the equality rules of System \Fw.
-
-$\phantom{A}$
-The first two rules of type constructor equality,
-and the first rule of the term equality,
-state the essence of $\beta$-equivalence.
-The last two rules in the Kind/Type/Term equalities
-state the symmetric and transitive nature of the rules.
-The other rules are structural congruence rules, which follow
-the structure of the rules in \Fig{FiTyping}.
-\caption{Equality rules of \Fi}
+%% \[
+%%    \inference{\Delta;\Gamma |- x:A}{\Delta;\Gamma |- x=x:A}
+%%  ~~~~
+%%    \inference{\quad~~ \Delta |- A:* \\ \Delta;\Gamma,x:A |- t=t':B}
+%%              {\Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
+%%  ~~~~
+%%    \inference{\Delta;\Gamma |- r=r':A-> B \\ \Delta;\Gamma |- s=s':A \qquad~}
+%%              {\Delta;\Gamma |- r\;s=r'\;s':B}
+%% \]
+%% \[ \inference{|- \kappa:\square & \Delta, X^\kappa;\Gamma |- t=t' : B}
+%%              {\Delta;\Gamma |- t=t' : \forall X^\kappa.B}
+%%              (X\notin\FV(\Gamma))
+%%  ~~~~ ~~~~
+%%    \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
+%%              & \Delta |- G:\kappa }
+%%              {\Delta;\Gamma |- t=t' : B[G/X]}
+%% \]
+%% \[ \newFi{
+%%    \inference{\cdot |- A:* & \Delta, i^A;\Gamma |- t=t' : B}
+%%              {\Delta;\Gamma |- t=t' : \forall i^A.B}
+%%    \left(\begin{smallmatrix}
+%%                 i\notin\FV(t),\\
+%%                 i\notin\FV(t'),\\
+%%                 i\notin\FV(\Gamma)\end{smallmatrix}\right)
+%%  ~~~~
+%%    \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
+%%              & \Delta;\cdot |- s:A}
+%%              {\Delta;\Gamma |- t=t' : B[s/i]} }
+%% \]
+%% \[ \inference{\Delta;\Gamma |- t=t':A}{\Delta;\Gamma |- t'=t:A}
+%%  ~~~~
+%%    \inference{\Delta;\Gamma |- t=t':A & \Delta;\Gamma |- t'=t'':A}
+%%              {\Delta;\Gamma |- t=t'':A}
+%% \]
+%% ~\\
+%% $\phantom{A}$ 
+%% Some of the rules in \Fig{FiTyping} require determining if two types are equal.
+%% Since types occur in kinds, and terms occur in types, the rules
+%% for equality are more elaborate than the equality rules of System \Fw.
+%% 
+%% $\phantom{A}$
+%% The first two rules of type constructor equality,
+%% and the first rule of the term equality,
+%% state the essence of $\beta$-equivalence.
+%% The last two rules in the Kind/Type/Term equalities
+%% state the symmetric and transitive nature of the rules.
+%% The other rules are structural congruence rules, which follow
+%% the structure of the rules in \Fig{FiTyping}.
+\caption{Equality rules of \Fi\ (only the key rules are shown)}
 \label{fig:eqFi}
 \end{figure}
 
