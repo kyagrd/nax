@@ -48,17 +48,30 @@ The two different design goals also lead to significant differences
 in their type system as well.
 Programming languages are based on the \emph{recursive types} paradigm,
 which accepts as much type definition as possible written by the type syntax
-so that programmers can express computations over a wide veriety types.
+so that programmers can express computations over a wide variety types.
+In addition, most (statically typed) functional programing languages have
+clear distinction between terms and types (\ie, terms do not appear in types).
 Reasoning systems are usually based on the \emph{inductive types} paradigm,
-which only accepts type defintions that are amenable to
+which only accepts type definitions that are amenable to
 conventional induction principles but rejects all the other definitions.
+In addition, most reasoning systems based on Curry--Howard correspondence
+allow types to depend on terms (\ie, terms can appear in types) to specify
+fine grained properties.
 
-This dissertation explores a design space for the sweet spot between 
-programming languages and formal reasoning systems. We do this by
-allowing as much type definition as possible, as in programming languages,
-but provide a rich set of non-conventional recursion schemes
-(or, indcution principles) that always terminate, as in reasoning systems.
-TODO other design principles too
+This dissertation explores a sweet spot where one can benefit from
+the advantages of both programming languages and formal reasoning systems.
+That is, we design a unified language system, called Nax, which is
+logically consistent while being able to conveniently express
+many useful computations. We do this by allowing as much type definition
+as possible, as in programming languages, but provide a rich set of
+non-conventional recursion schemes (or, induction principles) that
+always terminate. These non-conventional recursion schemes are known as
+\emph{the Mendler style}. There are several other design choices we made
+in Nax that sits in the middle of the typical features of programming languages
+and reasoning systems, such as \emph{indexed types}, which allow only
+erasable terms to appear in types.
+
+\section{Thesis}\label{sec:intro:thesis}
 
 \begin{enumerate}[(1)]
  \item Nax supports the major constructs of modern
@@ -75,7 +88,6 @@ TODO other design principles too
 \end{enumerate}
 
 
-\section{Thesis}\label{sec:intro:thesis}
 TODO write a thesis section
 
 the Curry--Howard correspondence
@@ -376,7 +388,7 @@ properties. Since the Mendler-style approach does not restrict recursive
 datatype definitions, we can directly refer to the types of programs that use
 negative recursive types.
 
-The Mendler-style is a promising approach to building a unified system because
+The Mendler style is a promising approach to building a unified system because
 all the recursive types, both positive and negative, are definable in the
 logic. Although the conventional approach is widely followed in the design of
 formal reasoning systems based on the Curry--Howard correspondence (\eg, Coq,
@@ -394,7 +406,7 @@ In Chapter 3, we show a number of examples that the programs written in
 the Mendler style look a lot alike the programs written in general recursion
 than the programs written in the conventional style.
 
-Another benefit of the Mendler-style, is that there exist recursion schemes
+Another benefit of the Mendler style is that there exist recursion schemes
 that are both useful and well-behaved (\ie, guaranteed to normalize) for
 arbitrary recursive types. A Mendler-style recursion scheme is
 an induction principle for logical reasoning as well as
@@ -414,8 +426,10 @@ There exist other families of Mendler-style recursion combinators,
 which are even more useful than \MIt\ for negative recursive types,
 some of which we have discovered in during the thesis research. Throughout
 this dissertation, we show that the Mendler-style recursion combinators are
-indeed useful and well-behaved induction principles. You can find
-further details on Mendler-style recursive schemes in Chapter \ref{ch:mendler}.
+indeed useful and well-behaved induction principles.
+
+%% Further details on
+%% Mendler-style recursive schemes are provided in Chapter \ref{ch:mendler}.
 
 \subsection{Indexed types and type inference}
 \label{sec:intro:indexed}
