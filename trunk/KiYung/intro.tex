@@ -433,6 +433,35 @@ indeed useful and well-behaved induction principles.
 
 \subsection{Indexed types and type inference}
 \label{sec:intro:indexed}
+One of the most frequently asked questions on the design choices of Nax
+is "why not dependent types?".
+
+But more importantly, datatypes are not self-contained in
+dependent type theories. That is, datatypes must be supported as
+primitive constructs, rather than as encodings in pure lambda calculi,
+in order to enjoy full ramifications recursive dependent datatypes.
+%% For instance, in Calculus of Constructions (CC) [TODO cite CC],
+%% induction principles are not deriviable
+%% Church-encodings
+%% Due to the [cite H. Geuvers 2001]
+
+On the contrary, in polymorphic type theories, all imaginalbe datatypes can
+have functional encodings (\eg, Church encodings). For instance, \Fw\ does not
+need to introduce datatypes as primitive constructs, since it can embed all
+imaginable datatypes within the thoery, including non-regular recursive
+datatypes with type indices. 
+TODO small theory
+
+We do know know how to extend Mendler-style recursion schemes
+that can express dependently typed recursive functions over
+negative datatypes.
+There exists ideas (although not published anywere yet)\footnote{
+	Tarmo Uustalu wrote this on a whiteboard
+	when I met him during my Cambridge visit on 2011.}
+on Mendler-style recursion schemes over dependently-typed functions
+over positive datatypes (\ie, datatypes that have map).
+
+aaa
 TODO some description of indexed types
 why we are not going to dependent types
 
