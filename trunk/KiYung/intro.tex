@@ -66,49 +66,73 @@ many useful computations. We do this by allowing as much type definition
 as possible, as in programming languages, but provide a rich set of
 non-conventional recursion schemes (or, induction principles) that
 always terminate. These non-conventional recursion schemes are known as
-\emph{the Mendler style}. There are several other design choices we made
-in Nax that sits in the middle of the typical features of programming languages
-and reasoning systems, such as \emph{indexed types}, which allow only
-erasable terms to appear in types.
+\emph{the Mendler style}. Another major design choice in Nax is
+supporting \emph{term indices} in types, which sits between
+polymorphic types and dependent types.
+
+In the following section, we clarify our design goals of Nax,
+that is, what we mean by the sweet spot between programming languages
+and reasoning systems, and claim our thesis that our design choices
+for Nax are reasonable to achieve those goals.
 
 \section{Thesis}\label{sec:intro:thesis}
-
+We characterise four key features desirable for a system in the sweet spot
+that unifies programming and reasoning, as follows:
 \begin{enumerate}[(1)]
- \item Nax supports the major constructs of modern
-         functional programming languages, such as
-         parametric polymorphism, recursive datatypes, and type inference,
- \item Nax can specify fine-grained program properties as types and
-         witness proofs of such properties by writing a program
-         (The Curry--Howard correspondence),
- \item Nax is based on a minimal foundational calculus
- that is expressive enough to embed all language constructs in (1)
- and is also logically consistent to avoid paradoxical proofs in (2),
- \item Nax has a simple implementation infrastructure
+ \item \textbf{Convenient programming}
+	 by supporting major constructs of
+	 modern functional programming languages, such as
+         parametric polymorphism, recursive datatypes,
+	 recursive functions, and type inference,
+ \item \textbf{Expressive logic}
+	 that can specify fine-grained program properties as types and
+         witness proofs of those properties by writing a program
+         (the Curry--Howard correspondence),
+ \item \textbf{Small theory} based on a minimal foundational calculus that is
+	 expressive enough to embed all the constructs above
+	 (for both programming and logic) and is also logically consistent
+	 to avoid paradoxical proofs in the logic, and
+ \item \textbf{Simple implementation}
          that keeps the trusted base small.
 \end{enumerate}
+We claim that a language design based on \emph{Mendler-style recursion schemes}
+and \emph{term-indexed types} can lead to a system that supports these four
+desirable features.
 
+\paragraph{}
+In a bird's-eye view, our thesis is backed up as follows.
+Mendler-style recursion schemes support (1) since they are based on
+parametric polymorphism and well-defined over wide range of datatypes.
+Term-indexed types support (2), for instance, one can statically track
+the size of data structures by using a natural number terms in their types.
+To support (3), we design appropriate foundational calculi, which extends
+from polymorphic lambda calculi with term-indexed types while maintaining
+the desired properties. Mendler-style recursion schemes also also support (4)
+since their termination is type-based -- no need for an auxiliary termination
+checker.
 
-TODO write a thesis section
+%% Our goal is to develop a language system, called Nax, which supports the merits of both
+%% functional programming languages and formal reasoning systems based on
+%% the Curry--Howard correspondence. Our approach towards these goals is to 
+%% design an appropriate foundational calculus \cite{AhnSheFioPit13}
+%% that extends \Fw \cite{Girard72} (or \Fixw \cite{AbeMat04} similarly) to support
+%% \emph{Mendler-style recursion schemes} \cite{Mendler87} with \emph{term-indexed datatypes}.
 
-the Curry--Howard correspondence
-Mendler-style recursion schemes and term-indexed types
-
-Mix things below
-
-\begin{quote}
-A language equipped with \emph{term indexed types} and
-\emph{Mendler-style recursion combinators} can be 
-(1) a basis for \emph{sound and consistent logic}
-suitable for reasoning about properties of (functional) programs
-and also
-(2) a basis for a \emph{simple and expressive programming language}
-suitable for writing the (functional) programs to be reasoned about.
-\end{quote}
-
-
+In the next section, we give summaries of the preliminary concepts,
+which in the thesis description such as Curry--Howard corresponds,
+Mendler-style recursion schemes, and term-indexed types.
 
 \section{Preliminary concepts}\label{sec:intro:concepts}
 TODO section leading paragraph
+TODO say that this is a short summary and point to later chapters
+related to each of the subsections
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 
 \subsection{The Curry--Howard correspondence and Normalization}
 \label{sec:intro:concepts:CH}
@@ -331,7 +355,7 @@ iteration (\aka\ catamorphism). The typing rules for the conventional iteration
 rule {\small(\It)} and the reduction rule {\small(\It-\In)} for \It\,
 in addition to the rules for the recursive type operator $\mu$.
 
-\paragraph{Recursive types in the Mendler style approach to consistent logic.}
+\paragraph{Recursive types in the Mendler-style approach to consistent logic.}
 In the Mendler-style approach, we allow arbitrary formation
 (\ie, datatype definition) of recursive types, but we restrict
 the elimination (\ie, pattern matching) over the values of recursive types. 
@@ -431,46 +455,62 @@ indeed useful and well-behaved induction principles.
 %% Further details on
 %% Mendler-style recursive schemes are provided in Chapter \ref{ch:mendler}.
 
-\subsection{Indexed types and type inference}
+\subsection{Term-indexed types, type inference, and datatypes}
 \label{sec:intro:indexed}
 One of the most frequently asked questions on the design choices of Nax
-is "why not dependent types?".
+regarding term-indexed types is "why not dependent types?". Our answer
+is that moderate extensions to the polymorphic calculi is a better candidate
+than dependently typed calculi for the basis of a practical programming system.
+Recall that we aim for a unified system for programming as well as reasoning.
+Language design based on indexed types can benefit from
+existing compiler technology and type inference algorithms for
+functional programming languages. In addition, theories for datatypes become
+much more simple than full-fledged dependent types, since datatypes can be
+encoded as functions in moderate extensions of polymorphic lambda calculi.
 
-But more importantly, datatypes are not self-contained in
-dependent type theories. That is, datatypes must be supported as
-primitive constructs, rather than as encodings in pure lambda calculi,
-in order to enjoy full ramifications recursive dependent datatypes.
-%% For instance, in Calculus of Constructions (CC) [TODO cite CC],
-%% induction principles are not deriviable
-%% Church-encodings
-%% Due to the [cite H. Geuvers 2001]
+Functional programming language implementation technology based on
+polymorphic calculi have already grown mature. There exist industrial
+strength implementations such as the Glasgow Haskell Compiler (GHC),
+whose intermediate core language is an extension of \Fw.
+Our term-indexed calculi in Part \ref{part:Calculi} are closely
+related to \Fw\ by the index erasure property.
 
-On the contrary, in polymorphic type theories, all imaginalbe datatypes can
-have functional encodings (\eg, Church encodings). For instance, \Fw\ does not
-need to introduce datatypes as primitive constructs, since it can embed all
-imaginable datatypes within the thoery, including non-regular recursive
-datatypes with type indices. 
-TODO small theory
+Type inference algorithms in functional programming languages are usually
+based on certain restrictions on Curry-style polymorphic lambda calculi
+that are designed to avoid higher-order unification during type inference.
+We are able develop a conservative extension of Hindley--Milner type inference
+for Nax (Chapter \ref{ch:naxTyInfer}), since it is based on our calculi, which
+extends higher-order polymorphic lambda calculi with erasable term indices
+(Part \ref{part:Calculi}). On the other hand, dependently typed languages are
+usually based on bidirectional type checking, which requires annotations on
+top level definitions, rather than Hindley--Milner-style type inference.
 
-We do know know how to extend Mendler-style recursion schemes
-that can express dependently typed recursive functions over
-negative datatypes.
-There exists ideas (although not published anywere yet)\footnote{
-	Tarmo Uustalu wrote this on a whiteboard
-	when I met him during my Cambridge visit on 2011.}
-on Mendler-style recursion schemes over dependently-typed functions
-over positive datatypes (\ie, datatypes that have map).
+In dependent type theories, datatypes are not self-contained in
+the pure lambda calculi. That is, datatypes must be supported as
+primitive constructs, rather than functional encodings, in order to
+enjoy full ramifications of dependent datatypes. When one tries to
+give functional encodings (\eg, Church encodings) for datatypes, one
+soon realizes that the induction principles (or, dependent eliminators)
+for those datatypes representations cannot be derived within
+the pure dependent calculi [TODO cite H. Geuvers 2001].
+So, dependently typed reasoning systems support datatypes as primitives.
+For instance, Coq is based on CIC [TODO cite CIC], which extends
+CC [TODO cite CC] with dependent datatypes and their induction principles.
 
-aaa
-TODO some description of indexed types
-why we are not going to dependent types
+On the contrary, in polymorphic type theories, all imaginable datatypes
+within the calculi can have functional encodings (\eg, Church encodings).
+For instance, \Fw\ need not introduce datatypes as primitive constructs,
+since \Fw\ can embed all imaginable datatypes, including non-regular
+recursive datatypes with type indices. 
 
-refer to Part \ref{part:Calculi}
-TODO
-
-a note on type inference
-Hindely--Milner
-bidirectional and other things
+%% We do know know how to extend Mendler-style recursion schemes
+%% that can express dependently typed recursive functions over
+%% negative datatypes.
+%% There exists ideas (although not published anywere yet)\footnote{
+%% 	Tarmo Uustalu wrote this on a whiteboard
+%% 	when I met him during my Cambridge visit on 2011.}
+%% on Mendler-style recursion schemes over dependently-typed functions
+%% over positive datatypes (\ie, datatypes that have map).
 
 \section{Contributions}\label{sec:intro:contrib}
 This dissertation makes contributions in several areas.
