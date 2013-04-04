@@ -21,12 +21,16 @@ an open research problem. The gap between the conflicting
 design goals of typed functional programming languages, such as ML and Haskell,
 and formal reasoning systems, such as Coq and Agda, is still wide.
 
+\begin{itemize}
+
+\item
 Programming languages are typically designed to achieve
 computational expressiveness. They often sacrifice logical consistency
 to achieve this goal. Programmers should be able to
 conveniently express all possible computations, regardless of whether those
 computations have a logical interpretation or not.
 
+\item
 Formal reasoning systems are typically designed to achieve logical consistency.
 They often sacrifice computational expressiveness to achieve that goal.
 Users expect that it is only possible to prove true propositions,
@@ -34,6 +38,8 @@ and it is impossible to prove falsity. They are willing
 live with the difficultly (or even impossibility) to
 express certain computations within the reasoning system,
 to achieve logical consistency.
+
+\end{itemize}
 
 As a result, the recursion schemes of programming languages and
 formal reasoning systems differ considerably.
@@ -46,15 +52,15 @@ that can only express terminating computation.
 
 The two different design goals also lead to significant differences
 in their type system as well.
-Programming languages are based on the \emph{recursive types} paradigm,
-which accepts as much type definition as possible written by the type syntax
-so that programmers can express computations over a wide variety types.
+Programming languages are based on \emph{recursive types},
+which which place only syntactic restrictions on the definition of new types.
+Programmers can express computations over a wide variety types.
 In addition, most (statically typed) functional programing languages have
 clear distinction between terms and types (\ie, terms do not appear in types).
-Reasoning systems are usually based on the \emph{inductive types} paradigm,
-which only accepts type definitions that are amenable to
-conventional induction principles but rejects all the other definitions.
-In addition, most reasoning systems based on Curry--Howard correspondence
+Reasoning systems are usually based on \emph{inductive types},
+which place semantic restrictions, accepting only type definitions that support
+conventional induction principles.
+In addition, most reasoning systems, based on the Curry--Howard correspondence,
 allow types to depend on terms (\ie, terms can appear in types) to specify
 fine grained properties.
 
@@ -62,53 +68,52 @@ This dissertation explores a sweet spot where one can benefit from
 the advantages of both programming languages and formal reasoning systems.
 That is, we design a unified language system, called Nax, which is
 logically consistent while being able to conveniently express
-many useful computations. We do this by allowing as much type definition
-as possible, as in programming languages, but provide a rich set of
+many useful computations. We do this by placing few restriction on type definitions,
+as is done in programming languages, but also provide a rich set of
 non-conventional recursion schemes (or, induction principles) that
 always terminate. These non-conventional recursion schemes are known as
 \emph{the Mendler style}. Another major design choice in Nax is
-supporting \emph{term indices} in types, which sits between
+supporting \emph{term indices} in types, a middle ground, which sits between
 polymorphic types and dependent types.
 
-In the following section, we clarify our design goals of Nax,
-that is, what we mean by the sweet spot between programming languages
-and reasoning systems, and claim our thesis that our design choices
-for Nax are reasonable to achieve those goals.
+In the following section, we explain what we mean by the sweet spot between programming languages
+and reasoning systems. Our thesis is that the design choices we explain below
+are reasonable for achieving the goal of combining programming and resoning systems.
 
 \section{Thesis}\label{sec:intro:thesis}
-We characterise four key features desirable for a system in the sweet spot
-that unifies programming and reasoning, as follows:
+Whatever design choices we make, the sweet spot should have the following features.
+
 \begin{enumerate}[(1)]
- \item \textbf{Convenient programming}
-	 by supporting major constructs of
-	 modern functional programming languages, such as
+ \item \textbf{A convenient programming} style
+         supported by the major constructs of
+         modern functional programming languages: 
          parametric polymorphism, recursive datatypes,
-	 recursive functions, and type inference,
- \item \textbf{Expressive logic}
-	 that can specify fine-grained program properties as types and
-         witness proofs of those properties by writing a program
+         recursive functions, and type inference,
+ \item \textbf{An expressive logic}
+         that can specify fine-grained program properties using types, and terms that
+         witness proofs of these properties 
          (the Curry--Howard correspondence),
- \item \textbf{Small theory} based on a minimal foundational calculus that is
-	 expressive enough to embed all the constructs above
-	 (for both programming and logic) and is also logically consistent
-	 to avoid paradoxical proofs in the logic, and
- \item \textbf{Simple implementation}
-         that keeps the trusted base small.
+ \item \textbf{A small theory} based upon a minimal foundational calculus that is
+         expressive enough to support the programming features, expressive
+         enough to embed propostions and proofs about
+         programs, and logically consistent
+         to avoid paradoxical proofs in the logic, and
+ \item \textbf{A simple implementation} that keeps the trusted base small.
 \end{enumerate}
 We claim that a language design based on \emph{Mendler-style recursion schemes}
 and \emph{term-indexed types} can lead to a system that supports these four
-desirable features.
+features.
 
 \paragraph{}
-In a bird's-eye view, our thesis is backed up as follows.
-Mendler-style recursion schemes support (1) since they are based on
-parametric polymorphism and well-defined over wide range of datatypes.
-Term-indexed types support (2), for instance, one can statically track
-the size of data structures by using a natural number terms in their types.
-To support (3), we design appropriate foundational calculi, which extends
-from polymorphic lambda calculi with term-indexed types while maintaining
-the desired properties. Mendler-style recursion schemes also also support (4)
-since their termination is type-based -- no need for an auxiliary termination
+From a bird's-eye view, the following chapters back up these claims up as follows:
+Mendler-style recursion schemes support (1) because they are based on
+parametric polymorphism and well-defined over a wide range of datatypes.
+Term-indexed types support (2), because they can statically track program properties. For instance
+the size of data structures can be tracked by using a natural number term in their types.
+To support (3), we design several foundational calculi, each which extends
+a well known polymorphic lambda calculus with term-indexed types. 
+Mendler-style recursion schemes also also support (4)
+because their termination is type-based -- no need for an auxiliary termination
 checker.
 
 %% Our goal is to develop a language system, called Nax, which supports the merits of both
@@ -123,9 +128,8 @@ which in the thesis description such as Curry--Howard corresponds,
 Mendler-style recursion schemes, and term-indexed types.
 
 \section{Preliminary concepts}\label{sec:intro:concepts}
-TODO section leading paragraph
-TODO say that this is a short summary and point to later chapters
-related to each of the subsections
+In this section we summarize important ideas that for the foundation
+for the new material we develop in the following chapters.
 
 TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
@@ -154,7 +158,7 @@ As you can see above, combining terms ($t_1$ and $t_2$) to build a new term
 ($t_1~t_2$) can be interpreted as combining proofs for formulae
 ($A -> B$ and $A$), to construct a proof for a new formula ($B$).
 More generally, we may expect that programming (\ie, building larger terms)
-corresponds to constructing larger proofs only when the typed lambda calculi
+corresponds to constructing larger proofs, but only when the typed lambda calculi
 meets certain standards -- \emph{type soundness} and \emph{normalization}.
 
 The Curry--Howard correspondence is a promising approach to designing a
@@ -457,48 +461,46 @@ indeed useful and well-behaved induction principles.
 
 \subsection{Term-indexed types, type inference, and datatypes}
 \label{sec:intro:indexed}
-One of the most frequently asked questions on the design choices of Nax
-regarding term-indexed types is "why not dependent types?". Our answer
-is that moderate extensions to the polymorphic calculi is a better candidate
-than dependently typed calculi for the basis of a practical programming system.
-Recall that we aim for a unified system for programming as well as reasoning.
-Language design based on indexed types can benefit from
+One of the most frequently asked questions about our design choices for Nax,
+regarding term-indexed types, is ``why not dependent types?". Our answer
+is that a moderate extension to the polymorphic calculus is a better candidate
+than a dependently typed calculus as the basis for a practical programming system.
+Recall, that we hope to design a unified system for programming as well as reasoning.
+Language designs based on indexed types can benefit from
 existing compiler technology and type inference algorithms for
-functional programming languages. In addition, theories for datatypes become
-much more simple than full-fledged dependent types, since datatypes can be
-encoded as functions in moderate extensions of polymorphic lambda calculi.
+functional programming languages. In addition, theories for term-indexd datatypes 
+are simpler than theories for full-fledged dependent datatypes, because term-indexd 
+datatypes can be encoded as functions (using Church-like encodings).
 
-Functional programming language implementation technology based on
-polymorphic calculi have already grown mature. There exist industrial
-strength implementations such as the Glasgow Haskell Compiler (GHC),
+The implementation technology for functional programming languages based on
+polymorphic calculi are quite mature. There exist industrial
+strength implementations, such as the Glasgow Haskell Compiler (GHC),
 whose intermediate core language is an extension of \Fw.
-Our term-indexed calculi in Part \ref{part:Calculi} are closely
-related to \Fw\ by the index erasure property.
+Our term-indexed calculi described in Part \ref{part:Calculi} are closely
+related to \Fw\ by an index-erasure property. The hope is that our implementation
+can benefit from these technologies.
 
-Type inference algorithms in functional programming languages are usually
-based on certain restrictions on Curry-style polymorphic lambda calculi
-that are designed to avoid higher-order unification during type inference.
-We are able develop a conservative extension of Hindley--Milner type inference
-for Nax (Chapter \ref{ch:naxTyInfer}), since it is based on our calculi, which
-extends higher-order polymorphic lambda calculi with erasable term indices
-(Part \ref{part:Calculi}). On the other hand, dependently typed languages are
-usually based on bidirectional type checking, which requires annotations on
+Type inference algorithms for functional programming languages are often
+based on certain restrictions of the Curry-style polymorphic lambda calculi.
+These restrictions are designed to avoid higher-order unification during type inference.
+We develop a conservative extension of Hindley--Milner type inference
+for Nax (Chapter \ref{ch:naxTyInfer}). This is possuble because Nax is based on our
+term-indexed calculi (Part \ref{part:Calculi}). Dependently typed languages,
+on the other hand, are often based on bidirectional type checking, which requires annotations on
 top level definitions, rather than Hindley--Milner-style type inference.
 
-In dependent type theories, datatypes are not self-contained in
-the pure lambda calculi. That is, datatypes must be supported as
-primitive constructs, rather than functional encodings, in order to
-enjoy full ramifications of dependent datatypes. When one tries to
-give functional encodings (\eg, Church encodings) for datatypes, one
+In dependent type theories, datatypes are usually supported as
+primitive constructs, rather than as (Church-like) functional encodings. 
+One can give functional encodings for datatypes in a dependent type theory, but one
 soon realizes that the induction principles (or, dependent eliminators)
-for those datatypes representations cannot be derived within
+for those datatypes cannot be derived within
 the pure dependent calculi [TODO cite H. Geuvers 2001].
 So, dependently typed reasoning systems support datatypes as primitives.
 For instance, Coq is based on CIC [TODO cite CIC], which extends
 CC [TODO cite CC] with dependent datatypes and their induction principles.
 
-On the contrary, in polymorphic type theories, all imaginable datatypes
-within the calculi can have functional encodings (\eg, Church encodings).
+In contrast, in polymorphic type theories, all imaginable datatypes
+within the calculi have functional encodings (\eg, Church encodings).
 For instance, \Fw\ need not introduce datatypes as primitive constructs,
 since \Fw\ can embed all imaginable datatypes, including non-regular
 recursive datatypes with type indices. 
@@ -507,8 +509,8 @@ recursive datatypes with type indices.
 %% that can express dependently typed recursive functions over
 %% negative datatypes.
 %% There exists ideas (although not published anywere yet)\footnote{
-%% 	Tarmo Uustalu wrote this on a whiteboard
-%% 	when I met him during my Cambridge visit on 2011.}
+%%      Tarmo Uustalu wrote this on a whiteboard
+%%      when I met him during my Cambridge visit on 2011.}
 %% on Mendler-style recursion schemes over dependently-typed functions
 %% over positive datatypes (\ie, datatypes that have map).
 
