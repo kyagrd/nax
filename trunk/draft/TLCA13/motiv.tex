@@ -67,7 +67,7 @@ defined along the following lines (in Nax-like syntax):
 Here the type constructor~{\tt Vec} is defined to admit parameterisation
 by both type and term-indices.  For instance, the type 
 (\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
-vectors of lists of natural numbers.  By design, our syntax directly
+vectors of natural numbers.  By design, our syntax directly
 reflects the difference between type and term-indexing by enclosing
 the latter in curly braces.  We also make this distinction in 
 System~\Fi, where it is useful within the type system
@@ -137,8 +137,8 @@ System~\Fi.
 
 
 \section{Why not Dependent Types?}
-A moderate extension to the polymorphic calculus is a better candidate
-than a dependently typed calculus as the basis for
+We claim that a moderate extension to the polymorphic calculus is a better candidate
+than a dependently typed calculus for the basis of
 a practical programming system. We hope to design
 a unified system for programming as well as reasoning.
 Language designs based on indexed types can benefit from
@@ -149,24 +149,27 @@ dependent datatypes, because term-indexd datatypes can be encoded
 as functions (using Church-like encodings).
 
 The implementation technology for functional programming languages based on
-polymorphic calculi are quite mature. There exist industrial strength
-implementations, such as the Glasgow Haskell Compiler (GHC),
-whose intermediate core language is an extension of \Fw.
-Our term-indexed calculi described in Part \ref{part:Calculi} are closely
+polymorphic calculi is quite mature. The industrial strength
+Glasgow Haskell Compiler (GHC),
+whose intermediate core language is an extension of \Fw, is used by thousands
+every day.
+Our term-indexed calculus \Fi\ is closely
 related to \Fw\ by an index-erasure property. The hope is that
-the languge implementation based on \Fi\ can benefit from these technologies.
+a language implementation based on \Fi\ can benefit from these technologies.
+We have built an implementation of these ideas we call Nax.
 
 Type inference algorithms for functional programming languages are often
 based on certain restrictions of the Curry-style polymorphic lambda calculi.
 These restrictions are designed to avoid higher-order unification during type
-inference. We developed a conservative extension of Hindley--Milner
-type inference for Nax. This was possuble because Nax is based on \Fi.
+inference. We have developed a conservative extension of Hindley--Milner
+type inference for Nax. This was possible because Nax is based on a
+restricted \Fi.
 Dependently typed languages, on the other hand, are often based on
 bidirectional type checking, which requires annotations on
 top level definitions, rather than Hindley--Milner-style type inference.
 
-In dependent type theories, datatypes are usually supported as
-primitive constructs, rather than as (Church-like) functional encodings. 
+In dependent type theories, datatypes are usually introduced as
+primitive constructs (with axioms), rather than as (Church-like) functional encodings. 
 One can give functional encodings for datatypes in a dependent type theory,
 but one soon realizes that the induction principles (or, dependent eliminators)
 for those datatypes cannot be derived within the pure dependent calculi
@@ -181,16 +184,16 @@ For instance, \Fw\ need not introduce datatypes as primitive constructs,
 since \Fw\ can embed all imaginable datatypes, including non-regular
 recursive datatypes with type indices.
 
-Another reason is that we want to extend the realm of 
-Mendler-style recursion schemes, which is well-understood
+Another reason to use \Fi\ is to extend the application of 
+Mendler-style recursion schemes, which are well-understood
 in the context of polymorphic lambda calculi like \Fw.
-There exists ideas (although not published anywhere yet)\footnote{
-     Tarmo Uustalu wrote this on a whiteboard
-     when I met him during my Cambridge visit on 2011.}
-on Mendler-style primitive recursion over dependently-typed functions
-over positive datatypes (\ie, datatypes that have map), but not for
+Researchers have thought about (though not published)\footnote{
+     Tarmo Uustalu described this on a whiteboard
+     when we met with him at the University of Cambridge in 2011.}
+Mendler-style primitive recursion over dependently-typed functions
+over positive datatypes (\ie, datatypes that have a map), but not for
 negative (or, mixed-variant) datatypes.
-In a moderate extension of \Fw\ like \Fi, we can embed the Mendler-style
-recursion schemes in almost same way as in \Fw, which is also well-defined
-for negative datatypes.
+In the moderate extension of \Fw, \Fi, we can embed Mendler-style
+recursion schemes (just as we embedded them in \Fw), but which 
+are also well-defined for negative datatypes.
 
