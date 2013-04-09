@@ -464,40 +464,43 @@ indeed useful and well-behaved induction principles.
 One of the most frequently asked questions about our design choices for Nax,
 regarding term-indexed types, is ``why not dependent types?". Our answer
 is that a moderate extension to the polymorphic calculus is a better candidate
-than a dependently typed calculus as the basis for a practical programming system.
-Recall, that we hope to design a unified system for programming as well as reasoning.
-Language designs based on indexed types can benefit from
-existing compiler technology and type inference algorithms for
-functional programming languages. In addition, theories for term-indexd datatypes 
-are simpler than theories for full-fledged dependent datatypes, because term-indexd 
-datatypes can be encoded as functions (using Church-like encodings).
+than a dependently typed calculus as the basis for a practical programming
+system. Recall, that we hope to design a unified system for programming
+as well as reasoning. Language designs based on indexed types can
+benefit from existing compiler technology and type inference algorithms
+for functional programming languages. In addition, theories for
+term-indexd datatypes are simpler than theories for full-fledged
+dependent datatypes, because term-indexd datatypes can be encoded as
+functions (using Church-like encodings).
 
 The implementation technology for functional programming languages based on
-polymorphic calculi are quite mature. There exist industrial
+polymorphic calculi is quite mature. There exist industrial
 strength implementations, such as the Glasgow Haskell Compiler (GHC),
 whose intermediate core language is an extension of \Fw.
 Our term-indexed calculi described in Part \ref{part:Calculi} are closely
-related to \Fw\ by an index-erasure property. The hope is that our implementation
-can benefit from these technologies.
+related to \Fw\ by an index-erasure property. The hope is that
+our implementation can benefit from these technologies.
 
 Type inference algorithms for functional programming languages are often
 based on certain restrictions of the Curry-style polymorphic lambda calculi.
-These restrictions are designed to avoid higher-order unification during type inference.
-We develop a conservative extension of Hindley--Milner type inference
-for Nax (Chapter \ref{ch:naxTyInfer}). This is possuble because Nax is based on our
+These restrictions are designed to avoid higher-order unification during
+type inference.
+We develop a conservative extension of Hindley--Milner type inference for
+Nax (Chapter \ref{ch:naxTyInfer}). This is possuble because Nax is based on our
 term-indexed calculi (Part \ref{part:Calculi}). Dependently typed languages,
-on the other hand, are often based on bidirectional type checking, which requires annotations on
-top level definitions, rather than Hindley--Milner-style type inference.
+on the other hand, are often based on bidirectional type checking, which
+requires annotations on top level definitions, rather than
+Hindley--Milner-style type inference.
 
-In dependent type theories, datatypes are usually supported as
-primitive constructs, rather than as (Church-like) functional encodings. 
-One can give functional encodings for datatypes in a dependent type theory, but one
-soon realizes that the induction principles (or, dependent eliminators)
-for those datatypes cannot be derived within
-the pure dependent calculi [TODO cite H. Geuvers 2001].
+In dependent type theories, datatypes are usually supported as primitive
+constructs with axioms, rather than as functional encodings
+(\eg, Church encodings). One can give functional encodings for datatypes
+in a dependent type theory, but one soon realizes that the induction principles
+(or, dependent eliminators) for those datatypes cannot be derived within
+the pure dependent calculi \cite{Geuvers01}.
 So, dependently typed reasoning systems support datatypes as primitives.
 For instance, Coq is based on CIC [TODO cite CIC], which extends
-CC [TODO cite CC] with dependent datatypes and their induction principles.
+CC \cite{CoqHue86} with dependent datatypes and their induction principles.
 
 In contrast, in polymorphic type theories, all imaginable datatypes
 within the calculi have functional encodings (\eg, Church encodings).
@@ -505,14 +508,18 @@ For instance, \Fw\ need not introduce datatypes as primitive constructs,
 since \Fw\ can embed all imaginable datatypes, including non-regular
 recursive datatypes with type indices. 
 
-%% We do know know how to extend Mendler-style recursion schemes
-%% that can express dependently typed recursive functions over
-%% negative datatypes.
-%% There exists ideas (although not published anywere yet)\footnote{
-%%      Tarmo Uustalu wrote this on a whiteboard
-%%      when I met him during my Cambridge visit on 2011.}
-%% on Mendler-style recursion schemes over dependently-typed functions
-%% over positive datatypes (\ie, datatypes that have map).
+Another reason to use \Fi, rather than dependen type theories, is to extend
+the application of Mendler-style recursion schemes, which are well-understood
+in the context of polymorphic lambda calculi like \Fw.
+Researchers have thought about (though not published)\footnote{
+     Tarmo Uustalu described this on a whiteboard
+     when we met with him at the University of Cambridge in 2011.
+     We discuss this in Chapter \ref{ch:relwork}.}
+Mendler-style primitive recursion over dependently-typed functions
+over positive datatypes (\ie, datatypes that have a map), but not for
+negative (or, mixed-variant) datatypes. In \Fi, we can embed
+Mendler-style recursion schemes (just as we embedded them in \Fw)
+that are also well-defined for negative datatypes.
 
 \section{Contributions}\label{sec:intro:contrib}
 This dissertation makes contributions in several areas.
@@ -556,14 +563,17 @@ recursion schemes to be expressive over term-indexed types, we report on
 several theories for calculi (\Fi\ and \Fixi) that support term indices.
 This is another important area of our contribution.
 
+We provide examples that illustrate when each recursion scheme is useful
+in Chapter \ref{ch:mendler}. The most interesting example among them is
+the type-preserving evaluator for a simply typed HOAS (\S\ref{sec:evalHOAS}),
+which involves negative datatypes with indices.
+
 In addition, we develop a better understanding of some existing
 Mendler-style recursion schemes. For instance, the existence of
 Mendler-style course-of-values recursion (\McvPr) is reported
 in the literature, but the calculus that can embed \McvPr\ was unknown.
 We embed Mendler-style course-of-values recursion into \Fixi
 (or into \Fixw, when we do not consider term-indices).
-
-%% TODO HOAS eval
 
 \subsection{Contributions to the theory of Term-Indexed Types}
 Mendler-style recursion schemes have been studies in the context of

@@ -156,27 +156,27 @@ every day.
 Our term-indexed calculus \Fi\ is closely
 related to \Fw\ by an index-erasure property. The hope is that
 a language implementation based on \Fi\ can benefit from these technologies.
-We have built an implementation of these ideas we call Nax.
+We have built a language implementation of these ideas, which we call Nax.
 
 Type inference algorithms for functional programming languages are often
 based on certain restrictions of the Curry-style polymorphic lambda calculi.
 These restrictions are designed to avoid higher-order unification during type
 inference. We have developed a conservative extension of Hindley--Milner
 type inference for Nax. This was possible because Nax is based on a
-restricted \Fi.
-Dependently typed languages, on the other hand, are often based on
-bidirectional type checking, which requires annotations on
+restricted \Fi. Dependently typed languages, on the other hand, are
+often based on bidirectional type checking, which requires annotations on
 top level definitions, rather than Hindley--Milner-style type inference.
 
 In dependent type theories, datatypes are usually introduced as
-primitive constructs (with axioms), rather than as (Church-like) functional encodings. 
+primitive constructs (with axioms), rather than as
+functional encodings  (\eg, Church encodings). 
 One can give functional encodings for datatypes in a dependent type theory,
 but one soon realizes that the induction principles (or, dependent eliminators)
 for those datatypes cannot be derived within the pure dependent calculi
-[TODO cite H. Geuvers 2001].
+\cite{Geuvers01}
 So, dependently typed reasoning systems support datatypes as primitives.
 For instance, Coq is based on CIC [TODO cite CIC], which extends
-CC [TODO cite CC] with dependent datatypes and their induction principles.
+CC \cite{CoqHue86} with dependent datatypes and their induction principles.
 
 In contrast, in polymorphic type theories, all imaginable datatypes
 within the calculi have functional encodings (\eg, Church encodings).
@@ -194,6 +194,6 @@ Mendler-style primitive recursion over dependently-typed functions
 over positive datatypes (\ie, datatypes that have a map), but not for
 negative (or, mixed-variant) datatypes.
 In the moderate extension of \Fw, \Fi, we can embed Mendler-style
-recursion schemes (just as we embedded them in \Fw), but which 
+recursion schemes (just as we embedded them in \Fw) that
 are also well-defined for negative datatypes.
 
