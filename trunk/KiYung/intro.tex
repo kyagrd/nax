@@ -124,19 +124,19 @@ checker.
 %% \emph{Mendler-style recursion schemes} \cite{Mendler87} with \emph{term-indexed datatypes}.
 
 In the next section, we give summaries of the preliminary concepts,
-which in the thesis description such as Curry--Howard corresponds,
-Mendler-style recursion schemes, and term-indexed types.
+such as Curry--Howard corresponds, Mendler-style recursion schemes,
+and term-indexed types.
 
 \section{Preliminary concepts}\label{sec:intro:concepts}
 In this section we summarize important ideas that for the foundation
 for the new material we develop in the following chapters.
-
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+%% 
+%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 
 \subsection{The Curry--Howard correspondence and Normalization}
 \label{sec:intro:concepts:CH}
@@ -452,8 +452,8 @@ negative recursive types.
 
 There exist other families of Mendler-style recursion combinators,
 which are even more useful than \MIt\ for negative recursive types,
-some of which we have discovered in during the thesis research. Throughout
-this dissertation, we show that the Mendler-style recursion combinators are
+some of which we have discovered. Throughout this dissertation,
+we show that the Mendler-style recursion combinators are
 indeed useful and well-behaved induction principles.
 
 %% Further details on
@@ -499,8 +499,9 @@ in a dependent type theory, but one soon realizes that the induction principles
 (or, dependent eliminators) for those datatypes cannot be derived within
 the pure dependent calculi \cite{Geuvers01}.
 So, dependently typed reasoning systems support datatypes as primitives.
-For instance, Coq is based on CIC [TODO cite CIC], which extends
-CC \cite{CoqHue86} with dependent datatypes and their induction principles.
+For instance, Coq is based on Calculus of Inductive Constructions, which
+extends Calculus of Constructions \cite{CoqHue86} with dependent datatypes
+and their induction principles.
 
 In contrast, in polymorphic type theories, all imaginable datatypes
 within the calculi have functional encodings (\eg, Church encodings).
@@ -508,7 +509,7 @@ For instance, \Fw\ need not introduce datatypes as primitive constructs,
 since \Fw\ can embed all imaginable datatypes, including non-regular
 recursive datatypes with type indices. 
 
-Another reason to use \Fi, rather than dependen type theories, is to extend
+Another reason to use \Fi, rather than dependent type theories, is to extend
 the application of Mendler-style recursion schemes, which are well-understood
 in the context of polymorphic lambda calculi like \Fw.
 Researchers have thought about (though not published)\footnote{
@@ -646,16 +647,57 @@ and the result type. Eliminators of non-recursive datatypes are case expressions
 and eliminators of recursive datatypes are Mendler-style recursion combinators.
 
 \subsection{Contributions of identifying open problems}
-TODO identified open problems
+We identified some open problems. We introduce two of them here:
+handling different interpretations of $\mu$ and deriving positivity
+(or monotonicity) from polarized kinds.
 
-syntactic conditions form \McvPr
+\paragraph{Handling different interpretations of $\mu$ in one language system:}
+Nax provides several different induction principles, or recursion schemes,
+that can express useful patterns of computations. This gives convenience to
+programmers since these patterns of computations were motivated by examples. 
+However, there is a theoretical difficulty of handling different semantics of
+$\mu$ in one system.
 
+Recall that we embed datatypes as functional encodings into
+our indexed type theory. Recursive datatypes and recursion schemes of Nax
+are embedded into indexed type theory using Mendler-style encoding.
+In Mendler style, one encodes the recursive type operator $\mu$
+and its eliminator, which is is one of the Mendler-style recursion schemes.
+So there are different encodings of $\mu$, one for each recursion scheme.
+Some recursion scheme subsumes another
+(\ie, more expressive so that it can simulate another), but
+there exists no known Mendler-style recursion scheme that can subsume
+all the other recursion schemes supported in Nax.
+For instance, iteration (\MIt) can be subsumed by either 
+iteration with a syntactic inverse (\MsfIt) or primitive recursion (\MPr),
+but there are no known recursion scheme that can subsume both \MsfIt\ and \MPr.
 
-some recursion schemes does not mix well -- sf and pr
+However, we strongly believe that it is okay to use apply \MsfIt\ to
+the result of \MPr\ (when \MPr produces a recursive value) and vice versa,
+since the different interpretations of $\mu$ only matters during
+the computation of recursion schemes but their result can considered as same.
+The theoretical justification for this is still ongoing work.
 
-is there a useful example for sfcvit
+\paragraph{Deriving positivity (or monotonicity) from polarized kinds:}
+One can extend the kind syntax of arrow kinds in \Fw\ with polarity
+($p\kappa_1 -> \kappa_2$ where the polarity $p$ is either $+$, $-$, or $0$)
+to keep track of whether a type constructor argument is used in
+covariant (positive), contra-variant (negative), or
+mixed-variant (both positive and negative) positions.
+It is yet an open problem whether it is possible to derive monotonicity
+(\ie, existence of a map) of a type constructor just from the polarized kind,
+without examining the type constructor definition.
 
-is there a useful example for msfit positive datatypes?
+We identified a useful application of this open problem in the context
+of Mendler style encoding.
+We discovered an embedding of Mendler-style course-of-values recursion in
+a polarized system for positive (or monotone) type constructors that have maps.
+That is, once you can show the existence of a map for a datatype,
+it is guaranteed that course-of-values recursion terminates for that datatype.
+However, in a practical language system, it is not desirable to burden users
+to manually derive a map for every datatype they want to perform
+course-of-values recursion. If the type system can automatically
+categorize datatypes that have maps from their polarized kinds.
 
 
 \section{Methodology and Overview}\label{sec:intro:overview}
