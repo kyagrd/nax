@@ -315,7 +315,7 @@ governed by the sorting rule \newFi{(Ri)}. The rule $(Ri)$ specifies that
 an indexed arrow kind $A -> \kappa$ is well-sorted when $A$ has kind $*$
 under the empty type-level context ($\cdot$) and $\kappa$ is well-sorted.
 Requiring $A$ to be well-kinded under the empty type-level context avoids
-dependent kinds (\ie, kinds depending on type-level or value level bindings).
+dependent kinds (\ie, kinds depending on type-level or value-level bindings).
 That is, $A$ should to be a closed type of kind $*$,
 which does not contain any free type variables or index variables.
 For example, $(\textit{List}\,X -> *)$ is not a well-sorted kind since $X$
@@ -378,7 +378,7 @@ we need a conversion rule \newFi{(Conv)} at kind level. This is because
 the new extension to the kind syntax $A -> \kappa$ involves types.
 Since kind syntax involves types, we need more than simple structural
 equality over kinds (see \Fig{eqFi}). For instance, $A -> \kappa$ and 
-are $A' -> \kappa$ equivalent kinds when $A'$ and $A$ are equivalent types.
+$A' -> \kappa$ equivalent kinds when $A'$ and $A$ are equivalent types.
 Only the key equality rules are shown in \Fig{eqFi}, and the other
 structural rules (one for each sorting/kinding/typing rule) and
 the congruence rules (symmetry, transitivity) are omitted.

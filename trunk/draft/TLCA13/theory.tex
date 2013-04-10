@@ -6,7 +6,7 @@ because of the addition of term-indexed types.
 
 We show some basic well-formedness properties for
 the judgments of \Fi\ in \S\ref{ssec:wf}.
-We prove erasure properties of \Fi, which captures the idea that indices are
+We prove erasure properties of \Fi, which capture the idea that indices are
 erasable since they are irrelevant for reduction in \S\ref{ssec:erasure}.
 We show strong normalization, logical consistence, and subject reduction for
 \Fi\ by reasoning about well-known calculi related to \Fi\ in \S\ref{ssec:sn}.
@@ -37,7 +37,7 @@ $ \inference*{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{
 We can prove these well-formedness properties
 by induction over the judgment\footnote{The proof for
         Propositions \ref{prop:wfkind} and \ref{prop:wftype} are
-        mutually recursive.
+        mutually inductive.
         So, we prove these two propositions at the same time, using a combined judgment $J$,
         which is either a kinding judgment or a typing judgment
         (\ie, $J ::= \Delta |- F : \kappa \mid \Delta;\Gamma |- t : A$).}
@@ -288,15 +288,15 @@ $
 \subsection{Strong Normalization and Logical Consistency} \label{ssec:sn}
 Strong normalization is a corollary of the erasure property
 since we know that System~\Fw\ is strongly normalizing.
-Index erasure also implies logical consistency. By index erausre,
+Index erasure also implies logical consistency. By index erasure,
 we know that any well-typed term in \Fi\ is a well-typed term in \Fw\ with
 its erased type. That is, there are no extra well-typed terms in \Fi\ that
-are not well-typed in \Fw. By the saturted sets model (as in \cite{AbeMat04}),
-we know that the void type ($\forall X^{*}.X$) in \Fw\ is uninhabited in \Fw.
-Therefore, The void type ($\forall X^{*}.X$) in \Fi\ is uninhabited since
-the it erases to same the void type in \Fw.
+are not well-typed in \Fw. By the saturated sets model (as in \cite{AbeMat04}),
+we know that the void type ($\forall X^{*}.X$) in \Fw\ is uninhabited.
+Therefore, the void type ($\forall X^{*}.X$) in \Fi\ is uninhabited since
+it erases to the same void type in \Fw.
 Alternatively, logical consistency of \Fi\ can be drawn from ICC.
-System~\Fi\ is a restriction of \emph{restricted implicit calculus}
+System~\Fi\ is a restriction of the \emph{restricted implicit calculus}
 \cite{Miquel00} or $\text{ICC}^{-}$ \cite{BarrasB08}, which are
 restrictions of ICC~\cite{Miquel01} known to be logically consistent.
 %% Subject reduction is also immediate for the same reason.

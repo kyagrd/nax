@@ -56,7 +56,8 @@ System~\Fi.
 
 In a functional language supporting term-indexed datatypes, we envisage
 that the classic example of homogeneous length-indexed lists would be
-defined along the following lines (in Nax-like syntax):
+defined along the following lines (in Nax\footnote{We are developing
+a language called Nax whose theory is based on System \Fi.}-like syntax):
 \vspace{-3pt}
 \begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell]
    data Nat = S Nat | Z 
@@ -136,9 +137,9 @@ is the \Fw-type~\texttt{List}.  This is established in
 System~\Fi.
 
 
-\section{Why not Dependent Types?}
-We claim that a moderate extension to the polymorphic calculus is a better candidate
-than a dependently typed calculus for the basis of
+\section{Why Term-Indexed Calculi? (rather than dependent types)}
+We claim that a moderate extension to the polymorphic calculus (\Fw)
+is a better candidate than a dependently typed calculus for the basis of
 a practical programming system. We hope to design
 a unified system for programming as well as reasoning.
 Language designs based on indexed types can benefit from
@@ -173,7 +174,7 @@ functional encodings  (\eg, Church encodings).
 One can give functional encodings for datatypes in a dependent type theory,
 but one soon realizes that the induction principles (or, dependent eliminators)
 for those datatypes cannot be derived within the pure dependent calculi
-\cite{Geuvers01}
+\cite{Geuvers01}.
 So, dependently typed reasoning systems support datatypes as primitives.
 For instance, Coq is based on Calculus of Inductive Constructions, which
 extends Calculus of Constructions \cite{CoqHue86} with dependent datatypes
@@ -182,7 +183,7 @@ and their induction principles.
 In contrast, in polymorphic type theories, all imaginable datatypes
 within the calculi have functional encodings (\eg, Church encodings).
 For instance, \Fw\ need not introduce datatypes as primitive constructs,
-since \Fw\ can embed all imaginable datatypes, including non-regular
+since \Fw\ can embed all these datatypes, including non-regular
 recursive datatypes with type indices.
 
 Another reason to use \Fi\ is to extend the application of 
@@ -194,7 +195,6 @@ Researchers have thought about (though not published)\footnote{
 Mendler-style primitive recursion over dependently-typed functions
 over positive datatypes (\ie, datatypes that have a map), but not for
 negative (or, mixed-variant) datatypes.
-In the moderate extension of \Fw, \Fi, we can embed Mendler-style
-recursion schemes (just as we embedded them in \Fw) that
-are also well-defined for negative datatypes.
+In System \Fi, we can embed Mendler-style recursion schemes, (just as we
+embedded them in \Fw) that are also well-defined for negative datatypes.
 
