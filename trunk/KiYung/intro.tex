@@ -424,12 +424,12 @@ encodings which map negative recursive types into positive ones. But, such
 encodings do not align with our motivation towards a seamless unified
 system for both programming and reasoning. It is undesirable to require
 programmers to significantly change their programs just to reason about them.
-If the change is unavoidable, it should kept small. That is,
-the changed program syntactically resemble the original program,
-which the programmer would usually write in functional programming languages.
-In Chapter 3, we show a number of examples that the programs written in
-the Mendler style look a lot alike the programs written in general recursion
-than the programs written in the conventional style.
+If the change is unavoidable, it should be kept small. That is,
+the changed program should syntactically resemble the original program,
+which the programmer would usually write in a functional programming language.
+In Chapter 3, we show a number of examples of programs written in
+the Mendler style that look alot like the programs written using general recursion
+in the conventional style.
 
 Another benefit of the Mendler style is that there exist recursion schemes
 that are both useful and well-behaved (\ie, guaranteed to normalize) for
@@ -556,8 +556,8 @@ always terminate for any recursive type, while others (\eg, \McvPr) only
 terminate for certain classes of recursive types. Third, we extend
 all Mendler-style recursion schemes to be expressive over term-indexed types.
 The Mendler style has been studied in the context of \Fw\ (and several
-extensions) which can express type-indexed types. To extend Mendler-style
-recursion schemes to be expressive over term-indexed types, we report on
+extensions) which can express {\bf type}-indexed types. To extend Mendler-style
+recursion schemes to be expressive over {\bf term}-indexed types, we report on
 several theories for calculi (\Fi\ and \Fixi) that support term indices.
 This is another important area of our contribution.
 
