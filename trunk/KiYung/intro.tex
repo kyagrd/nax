@@ -634,69 +634,69 @@ properties. Mendler style provides type based termination, that is, termination
 is a by-product of type checking. Thus, it makes the implementation framework
 simple since we do not need extra termination checking theories or algorithm.
 
-Hindley--Milner-style type inference provides a familiar programming experience
-to the programmers who are already familiar to functional programming languages.
-Nax can infer types for all the programs that involve only regular datatypes,
+Hindley--Milner-style type inference is familiar 
+to functional programmers.
+Nax can infer types for all programs that involve only regular datatypes,
 which are already inferable in Hindley--Milner, without any type annotation.
 Nax requires programs involving indexed datatypes to annotate their eliminators
-by index transformers, which annotate the relation between the input type index
+by index transformers, which specify the relation between the input type index
 and the result type. Eliminators of non-recursive datatypes are case expressions
 and eliminators of recursive datatypes are Mendler-style recursion combinators.
 
-\subsection{Contributions of identifying open problems}
-We identified some open problems. We introduce two of them here:
-handling different interpretations of $\mu$ and deriving positivity
-(or monotonicity) from polarized kinds.
+\subsection{Contributions identifying open problems}
+We identify several open problems. We introduce two of them here. We
+discuss both of them in greater detail later in the thesis.
 
 \paragraph{Handling different interpretations of $\mu$ in one language system:}
-Nax provides several different induction principles, or recursion schemes,
-that can express useful patterns of computations. This gives convenience to
-programmers since these patterns of computations were motivated by examples. 
-However, there is a theoretical difficulty of handling different semantics of
+Nax provides several mechanisms to describe recursive data, and for
+each mechanism an induction principle (or recursion scheme)
+used to describe recursive computations over such data. These schemes are all
+motivated by concrete examples, which explains the need for multiple schemes.
+However, there is theoretical difficulty describing multiple interpretations of
 $\mu$ in one system.
 
-Recall that we embed datatypes as functional encodings into
-our indexed type theory. Recursive datatypes and recursion schemes of Nax
-are embedded into indexed type theory using Mendler-style encoding.
+Recall that we can embed datatypes as functional encodings in
+our indexed type theory. Recursive datatypes and their recursion schemes in Nax
+are embedded using Mendler-style encodings.
 In Mendler style, one encodes the recursive type operator $\mu$
-and its eliminator, which is is one of the Mendler-style recursion schemes.
-So there are different encodings of $\mu$, one for each recursion scheme.
-Some recursion scheme subsumes another
-(\ie, more expressive so that it can simulate another), but
-there exists no known Mendler-style recursion scheme that can subsume
-all the other recursion schemes supported in Nax.
+and its eliminator (the recursion scheme) as a pair.
+There are different encodings of $\mu$, one for each recursion scheme.
+Some recursion schemes subsume others
+(\ie, the more expressive one can simulate the other).
+We know of no Mendler-style recursion scheme that subsumes
+all the recursion schemes supported in Nax.
 For instance, iteration (\MIt) can be subsumed by either 
-iteration with a syntactic inverse (\MsfIt) or primitive recursion (\MPr),
-but there are no known recursion scheme that can subsume both \MsfIt\ and \MPr.
+iteration with a syntactic inverse (\MsfIt) or primitive recursion (\MPr).
+But there is no known recursion scheme that can subsume both \MsfIt\ and \MPr.
 
-However, we strongly believe that it is okay to use apply \MsfIt\ to
-the result of \MPr\ (when \MPr produces a recursive value) and vice versa,
-since the different interpretations of $\mu$ only matters during
-the computation of recursion schemes. That is, one may consider
+However, we strongly believe that it is okay to apply \MsfIt\ to
+the result of \MPr\ (when \MPr\ produces a recursive value) and vice versa.
+Intuitively, the different interpretations of $\mu$ only matter during
+the internal computation of the recursion scheme. That is, one may consider
 that (recursive) values resulting from different recursion schemes
-sahre the same meaning of $\mu$. The theoretical justification for
-this is still ongoing work.
+share a common abstract representation of $\mu$.
+The theoretical justification for this is still ongoing work.
 
 \paragraph{Deriving positivity (or monotonicity) from polarized kinds:}
 One can extend the kind syntax of arrow kinds in \Fw\ with polarity
 ($p\kappa_1 -> \kappa_2$ where the polarity $p$ is either $+$, $-$, or $0$)
-to keep track of whether a type constructor argument is used in
+to track whether a type constructor argument is used in
 covariant (positive), contra-variant (negative), or
 mixed-variant (both positive and negative) positions.
-It is yet an open problem whether it is possible to derive monotonicity
-(\ie, existence of a map) of a type constructor just from the polarized kind,
+It is still an open problem whether it is possible to derive monotonicity
+(\ie, the  existence of a map) for a type constructor from just its polarized kind,
 without examining the type constructor definition.
 
-We identified a useful application of this open problem in the context
-of Mendler style encoding.
+We identified a useful application for a solution to this open problem.
 We discovered an embedding of Mendler-style course-of-values recursion in
-a polarized system for positive (or monotone) type constructors that have maps.
+a polarized system for positive (or monotone) type constructors.
 That is, once you can show the existence of a map for a datatype,
-it is guaranteed that course-of-values recursion terminates for that datatype.
+course-of-values recursion always terminates.
 However, in a practical language system, it is not desirable to burden users
-to manually derive a map for every datatype they want to perform
+with the manual derivation for every datatype on which they might want to perform
 course-of-values recursion. If the type system can automatically
-categorize datatypes that have maps from their polarized kinds.
+categorize datatypes that have maps from their polarized kinds this burden
+can be alleviated.
 
 
 \section{Methodology and Overview}\label{sec:intro:overview}
