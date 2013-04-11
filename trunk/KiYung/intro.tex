@@ -672,8 +672,10 @@ but there are no known recursion scheme that can subsume both \MsfIt\ and \MPr.
 However, we strongly believe that it is okay to use apply \MsfIt\ to
 the result of \MPr\ (when \MPr produces a recursive value) and vice versa,
 since the different interpretations of $\mu$ only matters during
-the computation of recursion schemes but their result can considered as same.
-The theoretical justification for this is still ongoing work.
+the computation of recursion schemes. That is, one may consider
+that (recursive) values resulting from different recursion schemes
+sahre the same meaning of $\mu$. The theoretical justification for
+this is still ongoing work.
 
 \paragraph{Deriving positivity (or monotonicity) from polarized kinds:}
 One can extend the kind syntax of arrow kinds in \Fw\ with polarity
@@ -698,7 +700,28 @@ categorize datatypes that have maps from their polarized kinds.
 
 
 \section{Methodology and Overview}\label{sec:intro:overview}
-TODO forward pointers to chapters
-chpater organization and why those chapters are there
 
+
+
+four parts
+
+Prelude (Part \ref{part:Prelude}) \\
+  introduction (Chapter \ref{ch:intro}) \\
+  polymorphic type systems (Chapter \ref{ch:poly}) \\
+
+The Mendler style (Part \ref{part:Mendler}) \\
+  Mendler-style recursion schemes (Chapter \ref{ch:mendler})
+
+Lambda calculi (Part \ref{part:Calculi}) \\
+  System \Fi\ (Chapter \ref{ch:fi}) \\
+  System \Fixi\ (Chapter \ref{ch:fixi}) \\
+
+The Nax programming language (Part \ref{part:Nax}) \\
+  Introduction to Features of the Nax Language (Chapter \ref{ch:naxFeatures}) \\
+  Design Principles of Nax's Type System (Chapter \ref{ch:nax}) \\
+
+Postlude (Part \ref{part:Postlude}) \\
+  Related work (Chapter \ref{ch:relwork}) \\
+  Future work (Chapter \ref{ch:futwork}) \\
+  Conclusions (Chapter \ref{ch:concl}) \\
 
