@@ -316,7 +316,7 @@ an indexed arrow kind $A -> \kappa$ is well-sorted when $A$ has kind $*$
 under the empty type-level context ($\cdot$) and $\kappa$ is well-sorted.
 Requiring $A$ to be well-kinded under the empty type-level context avoids
 dependent kinds (\ie, kinds depending on type-level or value-level bindings).
-That is, $A$ should to be a closed type of kind $*$,
+That is, $A$ should be a closed type of kind $*$,
 which does not contain any free type variables or index variables.
 For example, $(\textit{List}\,X -> *)$ is not a well-sorted kind since $X$
 appears free, while $((\forall X^{*}\!.\,\textit{List}\,X) -> *)$ is a well-sorted kind.
