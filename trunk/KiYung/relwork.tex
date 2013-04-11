@@ -1,1 +1,58 @@
 \chapter{Related work}\label{ch:relwork} TODO
+
+\subsection{A Summary of Studies on the Mendler style}
+\label{sec:relwork:mendler}
+
+\citet{Mendler87} discovered an interesting way of formalizing
+primitive recursion, which was later dubbed ``the Mendler-style'',
+while he was formalizing a logic that extended System \textsf{F} with
+primitive recursion. Interestingly, Mendler did not seem to notice
+(or maybe, just did not bother to mention) that his style of formalizing
+primitive recursion also guaranteed normalization for non-positive recursive
+types -- Mendler required recursive types to be positive in his extension of
+System \textsf{F}. A decade later, \citet{matthes98phd} and \citet{uustalu98phd}
+noticed that Mendler never used the positivity condition in his proof of
+strong normalization.
+
+\citet{AbeMat04} generalized Mendler's primitive recursion combinator
+\cite{Mendler87} into a family of combinators that are uniformly defined for
+type constructors of arbitrary kinds. This was necessary for
+handling nested datatypes. Their system extends System \Fw\ 
+(\citet{Mendler87} extends System \textsf{F}). The notion
+of a kind indexed family of Mendler combinators has now become the norm.
+
+\citet{AbeMat04} prove strong normalization of their language \textsf{MRec},
+which extends System \Fw by adding a family of kind-indexed Mendler-style
+primitive recursion combinators. They show that \textsf{MRec} has
+a reduction preserving embedding into a calculus they call \Fixw.
+Then, they show that \Fixw\ is strongly normalizing.
+
+Abel, Matthes, and Uustalu \cite{AbeMatUus03,AbeMatUus05} studied
+a kind-indexed family of iteration combinators, along with examples
+involving nested datatypes that make use of those combinators.
+Iteration (\aka\ catamorphism) is a recursion scheme, which has the same
+computational power as primitive recursion (\ie, both can be defined
+in terms of each other), but has different algorithmic complexity. 
+
+It is strongly believed that primitive recursion is more efficient than
+iteration. For instance, it is trivial to define a constant time predecessor
+for natural numbers with primitive recursion, but it is believed impossible
+to define the constant time predecessor with iteration. The Mendler-style
+iteration family can be embedded into \Fw\ in a reduction preserving manner.
+That is, we can encode the family of Mendler-style iteration combinators
+into \Fw\ in such a way that the number of reduction steps of the original
+and the embedding differ only by a constant number of steps. The primitive
+recursion family, in contrast, is not believed to have a reduction preserving
+embedding into \Fw. \citet{AbeMat04} needed a more involved embedding of
+\textsf{MRec} into \Fixw, which has a richer structure than \Fw.
+
+Although Matthes, Uustalu, and others, were well aware of the fact that
+the Mendler-style iteration family and the primitive-recursion family both
+normalize for negative recursive types, they did not explore or document actual
+examples. They postponed ``the search for exciting examples of negative
+recursive types" until another time. They stated that the normalization
+of negative types ``may have a theoretical value
+only''\cite{UusVen99}. So, until recently, the study on Mendler-style recursion
+combinators focused on examples of positive recursive types with type (rather than term) based indexing.
+
+

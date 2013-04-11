@@ -123,20 +123,17 @@ checker.
 %% that extends \Fw \cite{Girard72} (or \Fixw \cite{AbeMat04} similarly) to support
 %% \emph{Mendler-style recursion schemes} \cite{Mendler87} with \emph{term-indexed datatypes}.
 
-In the next section, we give summaries of the preliminary concepts,
-such as Curry--Howard corresponds, Mendler-style recursion schemes,
-and term-indexed types.
+In next section, we summarize important ideas mentioned in our thesis
+discussed above.
 
 \section{Preliminary concepts}\label{sec:intro:concepts}
-In this section we summarize important ideas that for the foundation
-for the new material we develop in the following chapters.
-%% 
-%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+We give summaries of the following preliminary concepts:
+Curry--Howard correspondence (\S\ref{sec:intro:concepts:CH}),
+Mendler-style recursion schemes
+(\S\ref{sec:intro:concepts:CH}, \S\ref{sec:intro:concepts:mendler}),
+and term-indexed types (\S\ref{sec:intro:concepts:indexed}).
+We will develop each of these ideas in full detail in the following chapters.
+(see \S\ref{sec:sec:intro:overview} for the overview of chapter organization).
 
 \subsection{The Curry--Howard correspondence and Normalization}
 \label{sec:intro:concepts:CH}
@@ -460,7 +457,7 @@ indeed useful and well-behaved induction principles.
 %% Mendler-style recursive schemes are provided in Chapter \ref{ch:mendler}.
 
 \subsection{Term-indexed types, type inference, and datatypes}
-\label{sec:intro:indexed}
+\label{sec:intro:concepts:indexed}
 One of the most frequently asked questions about our design choices for Nax,
 regarding term-indexed types, is ``why not dependent types?". Our answer
 is that a moderate extension to the polymorphic calculus is a better candidate
