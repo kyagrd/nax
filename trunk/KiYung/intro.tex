@@ -105,26 +105,18 @@ and \emph{term-indexed types} can lead to a system that supports these four
 features.
 
 \paragraph{}
-From a bird's-eye view, the following chapters back up these claims up as follows:
+From a bird's-eye view, the following chapters back up our claim as follows:
 Mendler-style recursion schemes support (1) because they are based on
 parametric polymorphism and well-defined over a wide range of datatypes.
-Term-indexed types support (2), because they can statically track program properties. For instance
-the size of data structures can be tracked by using a natural number term in their types.
+Term-indexed types support (2), because they can statically track program
+properties. For instance the size of data structures can be tracked by using
+a natural number term in their types.
 To support (3), we design several foundational calculi, each which extends
-a well known polymorphic lambda calculus with term-indexed types. 
-Mendler-style recursion schemes also also support (4)
-because their termination is type-based -- no need for an auxiliary termination
-checker.
+a well known polymorphic lambda calculus with term-indexed types.
+Mendler-style recursion schemes also also support (4) because their
+termination is type-based -- no need for an auxiliary termination checker.
 
-%% Our goal is to develop a language system, called Nax, which supports the merits of both
-%% functional programming languages and formal reasoning systems based on
-%% the Curry--Howard correspondence. Our approach towards these goals is to 
-%% design an appropriate foundational calculus \cite{AhnSheFioPit13}
-%% that extends \Fw \cite{Girard72} (or \Fixw \cite{AbeMat04} similarly) to support
-%% \emph{Mendler-style recursion schemes} \cite{Mendler87} with \emph{term-indexed datatypes}.
-
-In next section, we summarize important ideas mentioned in our thesis
-discussed above.
+In next section, we summarize important ideas mentioned in our thesis above.
 
 \section{Preliminary concepts}\label{sec:intro:concepts}
 We give summaries of the following preliminary concepts:
@@ -132,8 +124,9 @@ Curry--Howard correspondence (\S\ref{sec:intro:concepts:CH}),
 Mendler-style recursion schemes
 (\S\ref{sec:intro:concepts:CH}, \S\ref{sec:intro:concepts:mendler}),
 and term-indexed types (\S\ref{sec:intro:concepts:indexed}).
-We will develop each of these ideas in full detail in the following chapters.
-(see \S\ref{sec:sec:intro:overview} for the overview of chapter organization).
+Further details and historical backgrounds on each of these concepts
+will appear in the following chapters (see \S\ref{sec:intro:overview}
+for the overview of chapter organization).
 
 \subsection{The Curry--Howard correspondence and Normalization}
 \label{sec:intro:concepts:CH}
@@ -193,7 +186,7 @@ not have a normal form) may inhabit any arbitrary type. Thus, a diverging term
 can be a proof for any proposition under the Curry--Howard correspondence.
 General purpose functional programming languages (\eg, Haskell and ML), that
 support unrestricted general recursion, cannot be interpreted as a consistent
-logic, since they allow diverging terms (non-terminating programs).
+logic, since they allow diverging terms (\ie, non-terminating programs).
 For example, a diverging Haskell definition $\textit{loop} = \textit{loop}$
 can be given an arbitrary type such as
 $\textit{loop}\mathrel{::}\textit{Bool}$,
@@ -214,7 +207,7 @@ can also lead to diverging terms when they are not restricted carefully.
 Many of the conventional logical reasoning systems, based on
 Curry--Howard correspondence, restrict recursive types in a way,
 which is not an ideal design choice, if one's goal is a unified system for
-logic and programming. My approach explores another design space not yet
+logic and programming. Our approach explores another design space not yet
 completely explored. We introduce both approaches to restricting recursive
 types to ensure normalization in the following two subsections.
 
@@ -399,7 +392,7 @@ We say that $T$ is in a negative position, since $(T -> A)$ is analogous to
 $(\neg T \land A)$ when we think of $->$ as a logical implication. There exist
 both interesting and useful examples in functional programming involving
 negative datatypes. In \S\ref{sec:msf}, we illustrate that
-the Mendler-style recursion scheme, which we discovered, can express
+the Mendler-style recursion scheme we discovered can express
 interesting examples involving negative datatypes.
 
 Recall that the motivation of this dissertation research
@@ -414,13 +407,19 @@ datatype definitions, we can directly refer to the types of programs that use
 negative recursive types.
 
 The Mendler style is a promising approach to building a unified system because
-all the recursive types, both positive and negative, are definable in the
-logic. Although the conventional approach is widely followed in the design of
-formal reasoning systems based on the Curry--Howard correspondence (\eg, Coq,
-Agda), it cannot directly refer to programs that use non-positive recursive
-types. One may object that it is possible to indirectly model negative
-recursive types in the conventional style, via alternative equivalent
-encodings which map negative recursive types into positive ones. But, such
+all the recursive types (both positive and negative) are definable and
+the recursion schemes over those types are normalizing.
+%% As we mentioned previously, the Mendler-style iteration
+%% (\MIt) always terminate for both positive and negative recursive types.
+%% There exist other families of Mendler-style recursion combinators,
+%% which also guarantee for negative recursive types, and more useful
+%% than \MIt\ over negative datatypes.
+Although the conventional approach is widely followed
+in the design of formal reasoning systems (\eg, Coq, Agda), it cannot directly
+refer to programs that use non-positive recursive types.One may object that
+it is possible to indirectly model negative recursive types
+in the conventional style, via alternative equivalent encodings
+which map negative recursive types into positive ones. But, such
 encodings do not align with our motivation towards a seamless unified
 system for both programming and reasoning. It is undesirable to require
 programmers to significantly change their programs just to reason about them.
@@ -428,33 +427,12 @@ If the change is unavoidable, it should be kept small. That is,
 the changed program should syntactically resemble the original program,
 which the programmer would usually write in a functional programming language.
 In Chapter 3, we show a number of examples of programs written in
-the Mendler style that look alot like the programs written using general recursion
-in the conventional style.
+the Mendler style that look more close to the programs written using
+general recursion than the programs written in the conventional style.
 
-Another benefit of the Mendler style is that there exist recursion schemes
-that are both useful and well-behaved (\ie, guaranteed to normalize) for
-arbitrary recursive types. A Mendler-style recursion scheme is
-an induction principle for logical reasoning as well as
-a principled recursion scheme for describing computation (\ie, programming).
-It would not be meaningful to have arbitrary recursive types
-in the logic unless we have useful and well-behaved induction principles
-to reason about the programs using those recursive types.
-This is especially true for the negative recursive types.
-
-The Mendler-style iteration, \MIt, is a well-behaved for both positive and
-negative recursive types. For positive recursive types, \MIt\ is as expressive
-as the conventional style iteration \It\ (\ie, both can be defined in terms of
-each other). Furthermore, \MIt\ behaves well (\ie, always normalizes), even for
-negative recursive types.
-
-There exist other families of Mendler-style recursion combinators,
-which are even more useful than \MIt\ for negative recursive types,
-some of which we have discovered. Throughout this dissertation,
-we show that the Mendler-style recursion combinators are
-indeed useful and well-behaved induction principles.
-
-%% Further details on
-%% Mendler-style recursive schemes are provided in Chapter \ref{ch:mendler}.
+%% Throughout this dissertation,
+%% we show that the Mendler-style recursion schemes are
+%% indeed useful and well-behaved induction principles.
 
 \subsection{Term-indexed types, type inference, and datatypes}
 \label{sec:intro:concepts:indexed}
@@ -644,30 +622,38 @@ and the result type. Eliminators of non-recursive datatypes are case expressions
 and eliminators of recursive datatypes are Mendler-style recursion combinators.
 
 \subsection{Contributions identifying open problems}
-We identify several open problems. We introduce two of them here. We
-discuss both of them in greater detail later in the thesis.
+We identify several open problems alongside the contributions mentioned
+in previews subsections. We will discuss the details of these open problems
+in the future work chapter (Chapter \ref{ch:futwork}).
+Here, we briefly introduce two of them.
 
 \paragraph{Handling different interpretations of $\mu$ in one language system:}
-Nax provides several mechanisms to describe recursive data, and for
-each mechanism an induction principle (or recursion scheme)
-used to describe recursive computations over such data. These schemes are all
-motivated by concrete examples, which explains the need for multiple schemes.
-However, there is theoretical difficulty describing multiple interpretations of
-$\mu$ in one system.
+Nax provides multiple recursion schemes (or, induction principles) used
+to describe different kinds of recursive computations over recursive datatypes.
+These recursion schemes are all motivated by concrete examples, which explains
+the need for multiple schemes. It is more convenient to express various kinds of
+recursive computations in Nax, by choosing a recursion scheme that fits
+the structure of the computation, than in those systems that provide
+only one induction scheme. However, there is theoretical difficulty
+handling multiple interpretations of the recursive type operator $\mu$
+in one language system.
 
 Recall that we can embed datatypes as functional encodings in
 our indexed type theory. Recursive datatypes and their recursion schemes in Nax
 are embedded using Mendler-style encodings.
 In Mendler style, one encodes the recursive type operator $\mu$
 and its eliminator (the recursion scheme) as a pair.
-There are different encodings of $\mu$, one for each recursion scheme.
-Some recursion schemes subsume others
+So, there are several different encodings of $\mu$,
+one for each recursion scheme. Some recursion schemes subsume others
 (\ie, the more expressive one can simulate the other).
-We know of no Mendler-style recursion scheme that subsumes
-all the recursion schemes supported in Nax.
-For instance, iteration (\MIt) can be subsumed by either 
+
+It would have been easy to describe the theory for Nax if we had
+one most powerful recursion scheme that subsumes all the others,
+which leads to a single interpretation of $\mu$. Unfortunately, we know of
+no Mendler-style recursion scheme that subsumes all the other recursion schemes
+in Nax. For instance, iteration (\MIt) can be subsumed by either 
 iteration with a syntactic inverse (\MsfIt) or primitive recursion (\MPr).
-But there is no known recursion scheme that can subsume both \MsfIt\ and \MPr.
+But, there is no known recursion scheme that can subsume both \MsfIt\ and \MPr.
 
 However, we strongly believe that it is okay to apply \MsfIt\ to
 the result of \MPr\ (when \MPr\ produces a recursive value) and vice versa.
@@ -678,13 +664,13 @@ share a common abstract representation of $\mu$.
 The theoretical justification for this is still ongoing work.
 
 \paragraph{Deriving positivity (or monotonicity) from polarized kinds:}
-One can extend the kind syntax of arrow kinds in \Fw\ with polarity
+One can extend the kind syntax of arrow kinds in \Fw\ with polarities
 ($p\kappa_1 -> \kappa_2$ where the polarity $p$ is either $+$, $-$, or $0$)
 to track whether a type constructor argument is used in
 covariant (positive), contra-variant (negative), or
 mixed-variant (both positive and negative) positions.
 It is still an open problem whether it is possible to derive monotonicity
-(\ie, the  existence of a map) for a type constructor from just its polarized kind,
+(\ie, the  existence of a map) for a type constructor from its polarized kind,
 without examining the type constructor definition.
 
 We identified a useful application for a solution to this open problem.
@@ -693,10 +679,10 @@ a polarized system for positive (or monotone) type constructors.
 That is, once you can show the existence of a map for a datatype,
 course-of-values recursion always terminates.
 However, in a practical language system, it is not desirable to burden users
-with the manual derivation for every datatype on which they might want to perform
-course-of-values recursion. If the type system can automatically
-categorize datatypes that have maps from their polarized kinds this burden
-can be alleviated.
+with the manual derivation for every datatype on which they might want to
+perform course-of-values recursion. If the type system can automatically
+categorize datatypes that have maps from their polarized kinds,
+this burden can be alleviated.
 
 
 \section{Methodology and Overview}\label{sec:intro:overview}
