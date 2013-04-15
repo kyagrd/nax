@@ -484,17 +484,17 @@ For instance, \Fw\ need not introduce datatypes as primitive constructs,
 since \Fw\ can embed all imaginable datatypes, including non-regular
 recursive datatypes with type indices. 
 
-Another reason to use \Fi, rather than dependent type theories, is to extend
-the application of Mendler-style recursion schemes, which are well-understood
-in the context of polymorphic lambda calculi like \Fw.
+Another reason to use term-indexed calculi, rather than dependent type theories,
+is to extend the application of Mendler-style recursion schemes,
+which are well-understood in the context of \Fw.
 Researchers have thought about (though not published)\footnote{
      Tarmo Uustalu described this on a whiteboard
      when we met with him at the University of Cambridge in 2011.
      We discuss this in Chapter \ref{ch:relwork}.}
 Mendler-style primitive recursion over dependently-typed functions
 over positive datatypes (\ie, datatypes that have a map), but not for
-negative (or, mixed-variant) datatypes. In \Fi, we can embed
-Mendler-style recursion schemes (just as we embedded them in \Fw)
+negative (or, mixed-variant) datatypes. In our term-indexed calculi,
+we can embed Mendler-style recursion schemes (just as we embedded them in \Fw)
 that are also well-defined for negative datatypes.
 
 \section{Contributions}\label{sec:intro:contrib}
@@ -541,15 +541,18 @@ This is another important area of our contribution.
 
 We provide examples that illustrate when each recursion scheme is useful
 in Chapter \ref{ch:mendler}. The most interesting example among them is
-the type-preserving evaluator for a simply typed HOAS (\S\ref{sec:evalHOAS}),
+the type-preserving evaluator for a simply-typed HOAS (\S\ref{sec:evalHOAS}),
 which involves negative datatypes with indices.
+This example is our novel discovery, which implies that
+a type-preserving evaluator for a simply-typed HOAS
+can be expressed within \Fw.
 
 In addition, we develop a better understanding of some existing
 Mendler-style recursion schemes. For instance, the existence of
 Mendler-style course-of-values recursion (\McvPr) is reported
 in the literature, but the calculus that can embed \McvPr\ was unknown.
-We embed Mendler-style course-of-values recursion into \Fixi
-(or into \Fixw, when we do not consider term-indices).
+We embed Mendler-style course-of-values recursion into \Fixi\ 
+(or into \Fixw\ \cite{AbeMat04}, when we do not consider term-indices).
 
 \subsection{Contributions to the theory of Term-Indexed Types}
 Mendler-style recursion schemes have been studies in the context of
@@ -562,7 +565,7 @@ To extend the realm of Mendler-style recursion schemes to include
 term-indexed types, we extended \Fw\ and \Fixw\ to support term indices.
 In Part \ref{part:Calculi}, we present our new calculi
 \Fi\ (Chapter \ref{ch:fi}), which extends \Fw\ with term indices, and
-\Fixi (Chapter \ref{ch:fixi}), which extends \Fixw\ with term indices.
+\Fixi\ (Chapter \ref{ch:fixi}), which extends \Fixw\ with term indices.
 These calculi have an erasure property that states that well-typed terms
 in each calculus are also well typed terms (when erased) in the 
 underlying calculus. For instance, any well typed term in \Fi\ is also
@@ -591,8 +594,9 @@ implementation framework could be kept simple.
 Term- and type-indexed datatypes can express fine grained program properties
 via the Curry--Howard correspondence, as in logic oriented systems. Although
 not as flexible as full-fledged dependent types, indexed datatypes can
-still express program invariants, such as type preserving compilation,
-and size invariants on data structures. Index types can simulate much of what
+still express program invariants, such as type preserving compilation
+(\S\ref{sec:example}), and size invariants on data structures.
+Index types can simulate much of what
 dependent types can do using singleton types. Since Nax has only erasable
 indices, the foundational theory can be kept simple, and it supports
 features that have the advantages of programming oriented systems 
@@ -689,25 +693,118 @@ this burden can be alleviated.
 
 
 
-four parts
+This dissertation consist of five parts:
+Part \ref{part:Prelude} (Prelude),
+Part \ref{part:Mendler} (The Mendler style),
+Part \ref{part:Calculi} (Term-indexed lambda calculi),
+Part \ref{part:Nax} (The Nax language), and
+Part \ref{part:Postlude} (Postlude).
 
-Prelude (Part \ref{part:Prelude}) \\
-  introduction (Chapter \ref{ch:intro}) \\
-  polymorphic type systems (Chapter \ref{ch:poly}) \\
+\paragraph{Part \ref{part:Prelude} (Prelude)}\hspace{-1em} opens
+the dissertation by giving an introduction (Chapter \ref{ch:intro}),
+which you are currently reading, followed by
+reviews on several well-known typed lambda calculi (Chapter \ref{ch:poly}).
+In Chapter \ref{ch:poly}, we review
+the simply-typed lambda calculus (STLC) (\S\ref{sec:stlc}),
+System \F\ (\S\ref{sec:f}),
+System \Fw\ (\S\ref{sec:fw}), and
+the Hindley--Milner type system (\S\ref{sec:hm}).
 
-The Mendler style (Part \ref{part:Mendler}) \\
-  Mendler-style recursion schemes (Chapter \ref{ch:mendler})
+From \S\ref{sec:stlc} to \ref{sec:fw}, we prove strong normalization using
+saturated sets for each of the three calculi:
+STLC (no polymorphism), System \F\ (polymorphism over types), and
+System \Fw\ (polymorphism over type constructors).
+The normalization proof on later sections extends upon
+the normalization proof of the previous section,
+as the calculus extends its feature of polymorphism.
+We use the strong normalization of System \Fw\ to show that
+our term-indexed lambda calculi in Part \ref{part:Calculi} are
+strongly normalizing. Readers familiar with strong normalization proofs
+on these calculi may skip or quickly skim over these sections.
+It is worth noticing two stylistic choices in our formalization of
+System \F\ and \Fw: (1) terms are in Curry style and
+(2) typing contexts in System \F\ and \Fw\ are divided into two parts
+    (one for type variables and the other for term variables).
+This prepares readers for our formalization of the term-indexed calculi
+in Part \ref{part:Calculi}, which have Curry-style terms and
+typing contexts divided into two parts.
 
-Lambda calculi (Part \ref{part:Calculi}) \\
-  System \Fi\ (Chapter \ref{ch:fi}) \\
-  System \Fixi\ (Chapter \ref{ch:fixi}) \\
+In \S\ref{sec:hm}, we review the type inference algorithm for
+the Hindley--Milner type system (\S\ref{sec:hm}).
+The Hindley--Milner type system (HM) is a restriction of System~\F,
+which makes it possible to infer types without any type annotation on terms.
+Later in Part~\ref{part:Nax} Chapter \ref{ch:naxTyInfer},
+we formulate a conservative extension of HM, which restricts
+the term-indexed calculus System \Fi\ (Chapter \ref{ch:fi}) in a similar manner.
 
-The Nax programming language (Part \ref{part:Nax}) \\
-  Introduction to Features of the Nax Language (Chapter \ref{ch:naxFeatures}) \\
-  Design Principles of Nax's Type System (Chapter \ref{ch:nax}) \\
+\paragraph{Part \ref{part:Mendler} (the Mendler style)}\hspace{-1em} introduces
+the concept of Mendler-style recursion schemes (Chapter \ref{ch:mendler})
+using examples written in Haskell (with some GHC extensions). So, the readers
+of Chapter \ref{ch:mendler} need no background knowledge on typed lambda calculi
+but only some familiarity to functional programming. We explain the concepts of
+a number of Mendler-style recursion schemes, their termination properties, and
+how one recursion scheme is related to another, in an intuitive manner by using
+examples written in Haskell. We also provide semi-formal proofs of termination
+for some of the recursion schemes (\MIt\ and \MsfIt) by embedding the those
+recursion schemes into \Fw\ fragment of Haskell. More formal and general
+proof by embedding into our term-indexed lambda calculi comes later in
+Part \ref{part:Calculi}.
 
-Postlude (Part \ref{part:Postlude}) \\
-  Related work (Chapter \ref{ch:relwork}) \\
-  Future work (Chapter \ref{ch:futwork}) \\
-  Conclusions (Chapter \ref{ch:concl}) \\
+The Mendler-style recursion schemes discussed in Chapter \ref{ch:mendler}
+include iteration (\MIt), iteration with syntactic inverse (\MsfIt),
+primitive recursion (\MPr), course-of-values iteration (\McvIt),
+and course-of-values recursion (\McvPr). Among them, \MsfIt\ is a
+Mendler-style recursion scheme we discovered.
+There are even more Mendler-style recursion schemes, which are not
+discussed in Chapter \ref{ch:mendler} -- we give pointers to them later in
+the related work chapter (Chapter \ref{ch:relwork} in Part \ref{part:Postlude}).
+
+\paragraph{Part \ref{part:Calculi} (term-indexed lambda calculi)}\hspace{-1em}
+establishes theories for term-indexed types.
+We formalized two term-indexed lambda calculi,
+System \Fi\ (Chapter \ref{ch:fi}) and System \Fixi\ (Chapter \ref{ch:fixi}),
+which are extensions of polymorphic calculi with term indices.
+System \Fi\ extends System \Fw\ with term indices and
+System \Fixi\ extends System \Fixw\ \cite{AbeMat04} with term indices.
+
+We prove both strong normalization and logical consistency of
+these term-indexed calculi using their index erasure property.
+The index erasure property of a term-indexed calculus
+projects a typing in the term-index calculi into
+the polymorphic calculus it was extended from.
+That is, all well-typed terms in \Fi\ and \Fixi\ are
+also well-typed typed terms in \Fw\ and \Fixw.
+That is, our term-indexed calculi, \Fi\ and \Fixi,
+inherits strong normalization and logical consistency
+from the polymorphic calculi, \Fw\ and \Fixw.
+
+By embedding those recursion schemes into our term-indexed lambda calculi,
+we prove that Mendler-style recursion schemes are well-defined and
+terminates over term-indexed datatypes  For instance,
+\MIt\ and \MsfIt\ can be embedded into System \Fi,
+and, \MPr\ and \McvPr\ can be embedded into System \Fixi.
+
+\paragraph{Part \ref{part:Nax} (the Nax language)}\hspace{-1em} consist of
+three chapters.
+First, we introduce the features of Nax (Chapter \ref{ch:naxFeatures})
+in a tutorial format using small Nax code snippet examples.
+Next, we discuss the design principles of the type system (Chapter \ref{ch:nax})
+in comparison to two other systems: Haskell's datatype promotion and Agda.
+We develop the discussion In Chapter \ref{ch:nax} along
+a larger and more practical example Nax programs:
+a type preserving interpreter and a stack safe compiler.
+Lastly, we discuss type inference in Nax (Chapter \ref{ch:naxTyInfer}),
+which is a conservative extension of Hindley--Milner type system (HM).
+That is, any program, whose type can be inferred in HM, can also be
+inferred its type in Nax without any annotation. Programs involving
+term- or type-indexed datatypes, which are not supported in HM, needs
+some annotation to infer their types in Nax. Annotations are only
+required on three syntactic entities (datatype declarations, case expressions,
+and Mendler-style recursion combinators) and nowhere else.
+
+\paragraph{Part \ref{part:Postlude} (Postlude)}\hspace{-1em} closes
+the dissertation by summarizing
+  related work (Chapter~\ref{ch:relwork}),
+  future work (Chapter~\ref{ch:futwork}), and
+  conclusions (Chapter~\ref{ch:concl}).
 
