@@ -96,7 +96,7 @@ exactly the same as the term syntax of System \F.
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
-	\begin{center}Church-Church-style\end{center}\vspace*{-1em}
+        \begin{center}Church-Church-style\end{center}\vspace*{-1em}
 \def\baselinestretch{0}
 \small
 \begin{align*}
@@ -121,30 +121,30 @@ F,G,A,B ::= &~ X                  & \text{variable type} \\
 & \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}
-		      {\Delta |- \forall X^\kappa.B:*} \\
+                      {\Delta |- \forall X^\kappa.B:*} \\
 & \inference[\sc TLam]{\Delta,X^\kappa |- F:\kappa'}
-		      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
+                      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
-		      {\Delta |- F ~ G : \kappa'} \\
+                      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
 \[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
 \vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
-		     {\Delta;\Gamma |- \l(x:A).t : A -> B} \\
+                     {\Delta;\Gamma |- \l(x:A).t : A -> B} \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
-		     {\Delta;\Gamma |- t~s : B} \\
+                     {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
-		       {\Delta;\Gamma |- \L X^\kappa.t : \forall X^\kappa.B} \\
+                       {\Delta;\Gamma |- \L X^\kappa.t : \forall X^\kappa.B} \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X^\kappa.B & \Delta |- G:\kappa}
-		       {\Delta;\Gamma |- t[G] : B[G/X]} \\
+                       {\Delta;\Gamma |- t[G] : B[G/X]} \\
 & \inference[\sc Conv]{\Delta;\Gamma |- t : A & \Delta |- A = A' : *}
-		      {\Delta;\Gamma |- t : A'}
+                      {\Delta;\Gamma |- t : A'}
 \end{align*}
 \end{minipage}
 \begin{minipage}{.46\textwidth}
-	\begin{center}Curry-Church-style\end{center}\vspace*{-1em}
+        \begin{center}Curry-Church-style\end{center}\vspace*{-1em}
 \def\baselinestretch{0}
 \small
 \begin{align*}
@@ -170,24 +170,24 @@ F,G,A,B ::= &~ X                  \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X^\kappa.B:*} \\
 & \inference[\sc TLam]{\Delta,X^\kappa |- F:\kappa'}
-		      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
+                      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
-		      {\Delta |- F ~ G : \kappa'} \\
+                      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
 \[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
 \vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
-		     {\Delta;\Gamma |- \l x   .t : A -> B} \\
+                     {\Delta;\Gamma |- \l x   .t : A -> B} \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
-		     {\Delta;\Gamma |- t~s : B} \\
+                     {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
-		       {\Delta;\Gamma |- t : \forall X^\kappa.B} \\
+                       {\Delta;\Gamma |- t : \forall X^\kappa.B} \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X^\kappa.B & \Delta |- G:\kappa}
-		       {\Delta;\Gamma |- t : B[G/X]} \\
+                       {\Delta;\Gamma |- t : B[G/X]} \\
 & \inference[\sc Conv]{\Delta;\Gamma |- t : A & \Delta |- A = A' : *}
-		      {\Delta;\Gamma |- t : A'}
+                      {\Delta;\Gamma |- t : A'}
 \end{align*}
 \end{minipage}
 ~\\
@@ -199,7 +199,7 @@ F,G,A,B ::= &~ X                  \\
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
-	\begin{center}Curry-Church-style\end{center}
+        \begin{center}Curry-Church-style\end{center}
 \def\baselinestretch{0}
 \small
 \begin{align*}
@@ -223,28 +223,28 @@ F,G,A,B ::= &~ X                  & \text{variable type}    \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X^\kappa.B:*} \\
 & \inference[\sc TLam]{\Delta,X^\kappa |- F:\kappa'}
-		      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
+                      {\Delta |- \l X^\kappa.F:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
-		      {\Delta |- F ~ G : \kappa'} \\
+                      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
 \[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
 \vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
-		     {\Delta;\Gamma |- \l x   .t : A -> B} \\
+                     {\Delta;\Gamma |- \l x   .t : A -> B} \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
-		     {\Delta;\Gamma |- t~s : B} \\
+                     {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
-		       {\Delta;\Gamma |- t : \forall X^\kappa.B} \\
+                       {\Delta;\Gamma |- t : \forall X^\kappa.B} \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X^\kappa.B & \Delta |- G:\kappa}
-		       {\Delta;\Gamma |- t : B[G/X]} \\
+                       {\Delta;\Gamma |- t : B[G/X]} \\
 & \inference[\sc Conv]{\Delta;\Gamma |- t : A & \Delta |- A = A' : *}
-		      {\Delta;\Gamma |- t : A'}
+                      {\Delta;\Gamma |- t : A'}
 \end{align*}
 \end{minipage}
 \begin{minipage}{.46\textwidth}
-	\begin{center}Curry-Curry-style\end{center}
+        \begin{center}Curry-Curry-style\end{center}
 \def\baselinestretch{0}
 \small
 \begin{align*}
@@ -268,24 +268,24 @@ F,G,A,B ::= &~ X                  \\
 & \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
 & \inference[\sc TAll]{\Delta,X^\kappa |- B:*}{\Delta |- \forall X.B:*} \\
 & \inference[\sc TLam]{\Delta,X^\kappa |- F:\kappa'}
-		      {\Delta |- \l X.F:\kappa -> \kappa'} \\
+                      {\Delta |- \l X.F:\kappa -> \kappa'} \\
 & \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & |- G : \kappa}
-		      {\Delta |- F ~ G : \kappa'} \\
+                      {\Delta |- F ~ G : \kappa'} \\
 \end{align*}
 \[ \textbf{typing rules} \quad \framebox{$ \Delta;\Gamma |- t : A $ } \]
 \vspace*{-1em}
 \begin{align*}
 & \inference[\sc Var]{x:A \in \Gamma}{\Delta;\Gamma |- x:A} \\
 & \inference[\sc Abs]{\Delta |- A:* & \Delta;\Gamma,x:A |- t : B}
-		     {\Delta;\Gamma |- \l x   .t : A -> B} \\
+                     {\Delta;\Gamma |- \l x   .t : A -> B} \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
-		     {\Delta;\Gamma |- t~s : B} \\
+                     {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
-		       {\Delta;\Gamma |- t : \forall X.B} \\
+                       {\Delta;\Gamma |- t : \forall X.B} \\
 & \inference[\sc TyApp]{\Delta,X^\kappa;\Gamma |- t : B & \Delta |- G:\kappa}
-		       {\Delta;\Gamma |- t : B[G/X]} \\
+                       {\Delta;\Gamma |- t : B[G/X]} \\
 & \inference[\sc Conv]{\Delta;\Gamma |- t : A & \Delta |- A = A' : *}
-		      {\Delta;\Gamma |- t : A'}
+                      {\Delta;\Gamma |- t : A'}
 \end{align*}
 \end{minipage}
 ~\\
@@ -319,21 +319,21 @@ F,G,A,B ::= &~ X                  \\
 \begin{figure}
 \begin{align*}
 & \inference[\sc EqTBeta]
-	{\Delta,X^\kappa |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
-	{\Delta |- (\l X^\kappa.F)\;G = F[G/X] : \kappa'} \\
+        {\Delta,X^\kappa |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
+        {\Delta |- (\l X^\kappa.F)\;G = F[G/X] : \kappa'} \\
 & \inference[\sc EqTVar]{X^\kappa \in \Delta}{\Delta |- X = X : \kappa} \\
 & \inference[\sc EqTArr]{\Delta |- A=A':* & \Delta |- B=B':*}
-			{\Delta |- A -> B=A' -> B':*} \\
+                        {\Delta |- A -> B=A' -> B':*} \\
 & \inference[\sc EqTAll]{\Delta,X^\kappa |- B=B':*}
-			{\Delta |- \forall X^\kappa.B=B':*} \\
+                        {\Delta |- \forall X^\kappa.B=B':*} \\
 & \inference[\sc EqTLam]
-	{\Delta,X^\kappa |- F=F':\kappa'}
+        {\Delta,X^\kappa |- F=F':\kappa'}
         {\Delta |- \l X^\kappa.F=\l X^\kappa.F':\kappa -> \kappa'} \\
 & \inference[\sc EqTApp]
-	{\Delta |- F=F' : \kappa -> \kappa' & \Delta |- G=G' : \kappa}
+        {\Delta |- F=F' : \kappa -> \kappa' & \Delta |- G=G' : \kappa}
         {\Delta |- F ~ G = F' ~ G' : \kappa'} \\
 & \inference[\sc EqTTrans]
-	{\Delta |- F=F' : \kappa & \Delta |- F'=F'' : \kappa}
+        {\Delta |- F=F' : \kappa & \Delta |- F'=F'' : \kappa}
         {\Delta |- F=F'' : \kappa'}
 \end{align*}
 \caption{Type constructor equality rules for $*$-Church-style System \Fw}
@@ -367,9 +367,9 @@ the kind annotations (just as we did for the kinding rules) to
 the changes below:
 \begin{align*}
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
-		       {\Delta;\Gamma |- t : \forall X.B}
+                       {\Delta;\Gamma |- t : \forall X.B}
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X.B & \Delta |- G:\kappa}
-		       {\Delta;\Gamma |- t : B[G/X]}
+                       {\Delta;\Gamma |- t : B[G/X]}
 \end{align*}
 The \rulename{TyAbs} rule above is fine. However, the \rulename{TyApp} rule
 above is problematic because it fails to require that both $X$ and
@@ -379,7 +379,7 @@ adjust the \rulename{TyApp} rule as follows:
 & \phantom{ \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
                                  {\Delta;\Gamma |- t : \forall X.B} }
 & \inference[\sc TyApp]{\Delta,X^\kappa;\Gamma |- t : B & \Delta |- G:\kappa}
-			{\Delta;\Gamma |- t : B[G/X]}
+                        {\Delta;\Gamma |- t : B[G/X]}
 \end{align*}
 Note, the first premise ($\Delta,X^\kappa;\Gamma |- t : B$) of
 the \rulename{TyApp} rule is exactly the same as the premise of
@@ -437,10 +437,10 @@ other types as arguments to produce a datatype. We can encode these
 type constructors in System \Fw. For example, the shorthand notations
 (or, type synonyms) in \S\ref{sec:f:data}, such as $(\times)$ for pair types
 and $(+)$ for sum types, can be encoded as as follows:\footnote{Here,
-	I used a Haskell-ish notation of turning a infix binary operator
-	into a prefix binary operator by surrounding the operator in parenthesis
-	(\eg, $(+)\;X_1\,X_2 = X_1 + X_2$). I also annotated the kinds of
-	the type constructors after the colon (:).}
+        I used a Haskell-ish notation of turning a infix binary operator
+        into a prefix binary operator by surrounding the operator in parenthesis
+        (\eg, $(+)\;X_1\,X_2 = X_1 + X_2$). I also annotated the kinds of
+        the type constructors after the colon (:).}
 \begin{align*}
 (\times) &= \l X_1^{*}.\l X_2^{*}.(X_1 -> X_2 -> X) -> X &:~ * -> * -> * \\
      (+) &= \l X_1^{*}.\l X_2^{*}.(X_1 -> X) -> (X_2 -> X) -> X &:~ * -> * -> *
@@ -449,8 +449,8 @@ Type constructors for polymorphic recursive datatypes are encodable as well.
 For instance, we can encode the constructor \textit{List}
 for the polymorphic list datatype:
 \begin{align*}
-	\textit{List} &= \l X_a^{*}.\forall X^{*}.(X_a -> X -> X) -> X -> X
-	&:~ * -> *
+        \textit{List} &= \l X_a^{*}.\forall X^{*}.(X_a -> X -> X) -> X -> X
+        &:~ * -> *
 \end{align*}
 In System \F, type constructors, such as $(\times)$, $(+)$, and
 \textit{List} are meta-level concepts (or, shorthand notations, macros)
@@ -467,9 +467,9 @@ and \textit{Comp}, which composes two unary type constructors
 (\ie, $(\textit{Comp}\;F_1\,F_2)\,A = F_1\,(F_2\,A)$), as follows:
 \begin{align*}
 \textit{Flip} &= \l X_{\!f}^{*-> *-> *}.\l X_1^{*}.\l X_2^{*}.X_{\!f}\,X_2\;X_1
-		     &:\;& (* -> * -> *) -> * -> * -> * \\
+                     &:\;& (* -> * -> *) -> * -> * -> * \\
 \textit{Compose} &= \l X_{\!f}^{*-> *}.\l X_g^{*-> *}.\l X^{*}.X_{\!f}\,(X_g\,X)
-		     &:\;& (* -> *) -> (* -> *) -> * -> *
+                     &:\;& (* -> *) -> (* -> *) -> * -> *
 \end{align*}
 
 \paragraph{Higher-kinded polymorphism} is the ability universally quantify
@@ -507,9 +507,9 @@ higher-kinded polymorphism of System \Fw, as follows
 (\cf\ encoding of \textit{List}):
 \begin{align*}
 \textit{Powl} &= \l X_a^{*}.\forall X^{* -> *}&.&
-	(X_a -> X(X_a\times X_a) & -> & X\,X_a) & -> & X\,X_a & -> & X\,X_a \\
+        (X_a -> X(X_a\times X_a) & -> & X\,X_a) & -> & X\,X_a & -> & X\,X_a \\
 \textit{List} &= \l X_a^{*}.\forall X^{*}&.&
-	(X_a -> X & -> & X) & -> & X & -> & X
+        (X_a -> X & -> & X) & -> & X & -> & X
 \end{align*}
 Unlike the encoding of \textit{List}, where $X$ is polymorphic over types
 of kind $*$, the universally quantified variable $X$ in the encoding of
@@ -564,14 +564,14 @@ Let us intuitively derive above the encoding of $\mu$ starting from
 the impredicative encoding of natural numbers:
 \begin{align*}
 \textit{Nat}
-	&= \forall X^{*} . (X -> X) -> X -> X \\
-	&\cong \forall X^{*} . (X -> X) -> (\textit{Unit} -> X) -> X 
-		&(\because \textit{Unit} -> X \cong X) \\
-	&\cong \mu(\l X_r^{*}.\,X_r + \textit{Unit})
-		& (\text{to show})
+        &= \forall X^{*} . (X -> X) -> X -> X \\
+        &\cong \forall X^{*} . (X -> X) -> (\textit{Unit} -> X) -> X 
+                &(\because \textit{Unit} -> X \cong X) \\
+        &\cong \mu(\l X_r^{*}.\,X_r + \textit{Unit})
+                & (\text{to show})
 \end{align*}
 We want to show that the impredicative encoding of natural numbers is
-equivalent to the natural number type defined using $\mu$. We need turn
+equivalent to the natural number type defined using $\mu$. We need to turn
 the impredicative encoding of natural numbers into a non-recursive
 base structure by abstract away the recursive component, which is
 the underlined part below. That is, we replace the underlined $X$
@@ -598,7 +598,7 @@ the base structure $((X_r + \textit{Unit}) -> X')$.
 However, this is not yet complete because we do not know how to eliminate $X_r$.
 So, we require that we should also know how to eliminate $X_r$, as follows:
 \[ \forall X'^{*}.
-	(\forall X_r^{*}.(X_r -> X') -> (X_r + \textit{Unit}) -> X') -> X' \]
+        (\forall X_r^{*}.(X_r -> X') -> (X_r + \textit{Unit}) -> X') -> X' \]
 We can derive the encoding for $\mu$ (repeated below)
 so that $\mu(\l X_r^{*}.X_r + \textit{Unit})$ is equivalent to above.
 \[
@@ -613,7 +613,7 @@ locally.
 See Chapter \ref{ch:mendler} %% TODO update the fwd ref to a section later
 for an intuitive explanation for why $X_r$ should be universally quantified.
 
-The (data) constructor for the reucrisve type operator $\mu$ is called $\In$
+The (data) constructor for the recurisve type operator $\mu$ is called $\In$
 and the eliminator is called $\MIt$. The encodings of $\In$ and $\MIt$ as
 Curry-style terms are as follows:
 \[ \In = \l x_r. \l x_\varphi.x_\varphi\,(\MIt~x_\varphi)\,x_r
@@ -639,7 +639,7 @@ recursive typer operator $\mu_{* -> *} : ((*-> *) -> (*-> *)) -> (*-> *) $
 as follows (\cf\ \textit{List}).
 \begin{align*}
 \textit{Powl} &= \mu_{* -> *}(\l X^{* -> *}.\l X_a^{*}.
-			(X_a\times X(X_a\times X_a)) + \textit{Unit}) \\
+                        (X_a\times X(X_a\times X_a)) + \textit{Unit}) \\
 \textit{List} &= \l X_a^{*}.\mu_{*}(\l X^{*}.(X_a\times X) + \textit{Unit})
 \end{align*}
 Note the difference where $X_a$ is bound in the defintions of \textit{Powl}
@@ -652,8 +652,8 @@ are shown below:
 \mu_{* -> *} &=
  \l X_{\!f}^{(*-> *) -> (*-> *)}.\l X_a^{*}.\\&\qquad\quad \forall X'^{*-> *}.
  \big(\forall X_r^{*-> *}.
- 	(\forall X_a^{*}.X_r\,X_a -> X'\,X_a) -> \\&\qquad\qquad\qquad\qquad\qquad~
-	(\forall X_a^{*}.X_{\!f}\,X_r\,X_a -> X'\,X_a)\big) -> X'\,X_a
+        (\forall X_a^{*}.X_r\,X_a -> X'\,X_a) -> \\&\qquad\qquad\qquad\qquad\qquad~
+        (\forall X_a^{*}.X_{\!f}\,X_r\,X_a -> X'\,X_a)\big) -> X'\,X_a
 \end{align*}
 The genreal form for the encoding of $\mu_\kappa$
 is as follows:
@@ -670,8 +670,8 @@ is as follows:
 where $\vec{X}$ denotes a sequence of $n$ variables
 such that $n=0$ when $\kappa = *$, otherwise, $n = |\vec{\kappa}|$ when
 $\kappa = \vec{\kappa} -> * = \kappa_1 -> \cdots -> \kappa_n -> *$.\footnote{
-	$\kappa$ always end up with $*$ when it is an arrow kind
-	since $->$ is right associative by convention.}
+        $\kappa$ always end up with $*$ when it is an arrow kind
+        since $->$ is right associative by convention.}
 That is, we can simply erase all the $\l \vec{X}^{\vec{\kappa}}$,
 $\forall \vec{X}^{\vec{\kappa}}$, and $\vec{X}$ from above when
 $\kappa = *$, otherwise, $\l \vec{X}^{\vec{\kappa}}$ stands for
@@ -681,7 +681,7 @@ $\forall X_1^{\kappa_1}.\cdots.\forall X_n^{\kappa_n}$,
 and $F\,\vec{X}$ stands for $F\,X_1\cdots X_n$
 when $\kappa = \vec{\kappa} -> * = \kappa_1 -> \cdots -> \kappa_n -> *$.
 
-The (data) constructor for the reucrisve type operator $\mu_\kappa$ is
+The (data) constructor for the recurisve type operator $\mu_\kappa$ is
 called $\In_\kappa$ and the eliminator is called $\MIt_\kappa$.
 The encodings of $\In_\kappa$ and $\MIt_\kappa$ as Curry-style terms are
 exactly the same as for $\In$ and $\MIt$ for the star kind:
@@ -709,34 +709,34 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \begin{singlespace}
 \begin{description}
 \item[Interpretation of kinds] as pointwise generalization of $\SAT$
-	\[ [| \kappa |] = \SAT_\kappa \]
+        \[ [| \kappa |] = \SAT_\kappa \]
 \item[Interpretation of type constructors]
-	as function spaces over saturated sets of normalizing terms
-	whose free type variables are substituted according to
-	the given type constructor valuation ($\xi$):
+        as function spaces over saturated sets of normalizing terms
+        whose free type variables are substituted according to
+        the given type constructor valuation ($\xi$):
 \begin{align*}
 [| X |]_\xi      &= \xi(X) \\ 
 [| A -> B |]_\xi &= [|A|]_\xi -> [|B|]_\xi \\
 [| \forall X^\kappa . B |]_\xi
-	&= \bigcap_{\mathcal{F}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{F}]}
-		\qquad\qquad\qquad (X\notin\dom(\xi)) \\
+        &= \bigcap_{\mathcal{F}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{F}]}
+                \qquad\qquad\qquad (X\notin\dom(\xi)) \\
 [| \l X^\kappa . F |]_\xi
-	&= \bbl(\mathcal{G} \in [|\kappa|]) . [|F|]_{\xi[X\mapsto\mathcal{G}]}
-		\qquad\quad~ (X\notin\dom(\xi)) \\
+        &= \bbl(\mathcal{G} \in [|\kappa|]) . [|F|]_{\xi[X\mapsto\mathcal{G}]}
+                \qquad\quad~ (X\notin\dom(\xi)) \\
 [| F \; G |]_\xi &= [|F|]_\xi ( [|G|]_\xi )
 \end{align*}
 \item[Interpretation of kinding and typing contexts]
-	as sets of type constructor valuations and term valuations
-	($\xi$ and $\rho$):
+        as sets of type constructor valuations and term valuations
+        ($\xi$ and $\rho$):
 \begin{align*}
 [| \Delta        |] &= \{ \xi \in \dom(\Delta) -> \bigcup_{\kappa} [|\kappa|] \mid \xi(x)\in[|\Delta(x)|] ~\text{for all}~x\in\dom(\Delta) \} \\
 [| \Delta;\Gamma |] &= \{ \xi;\rho \mid \xi\in[|\Delta|], \rho\in[|\Gamma|]_\xi \} \\
 [| \Gamma        |]_\xi\ &= \{ \rho \in \dom(\Gamma) -> \SN \mid \rho(x)=[|\Gamma(x)|]_\xi ~\text{for all}~x\in\dom(\Gamma) \}
 \end{align*}
 \item[Interpretation of terms]
-	as terms themselves whose free variables are substituted according to
-	the given pair of type constructor and term valuations
-	($\xi$;$\rho$):
+        as terms themselves whose free variables are substituted according to
+        the given pair of type constructor and term valuations
+        ($\xi$;$\rho$):
 \begin{align*}
 [| x      |]_{\xi;\rho} &= \rho(x) \\
 [| \l x.t |]_{\xi;\rho} &= \l x . [|t|]_{\xi;\rho} \qquad (x\notin\dom(\rho)) \\
@@ -744,8 +744,8 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{align*}
 \end{description}
 \caption[Interpretation of System \Fw\ for proving strong normalization]
-	{Interpretation of type constructors, kinding and typing contexts,
-		and terms of System \Fw\ for the proof of strong normalization}
+        {Interpretation of type constructors, kinding and typing contexts,
+                and terms of System \Fw\ for the proof of strong normalization}
 \label{fig:interpFw}
 \end{singlespace}
 \end{figure}
@@ -761,18 +761,18 @@ as follows:
 \begin{itemize}
 \item The set $\SAT_\kappa$ is a generalization of $\SAT$ such that
 \begin{align*}
-	\SAT_{*} &= \SAT \\
-	\SAT_{\kappa -> \kappa'} &= \SAT_\kappa -> \SAT_{\kappa'}
-	\qquad \text{(\ie, functions from $\SAT_\kappa$ to $\SAT_\kappa'$)}.
+        \SAT_{*} &= \SAT \\
+        \SAT_{\kappa -> \kappa'} &= \SAT_\kappa -> \SAT_{\kappa'}
+        \qquad \text{(\ie, functions from $\SAT_\kappa$ to $\SAT_\kappa'$)}.
 \end{align*}
 
 \item The relation $\sqsubseteq_\kappa$ is
-	a pointwise generalization of $\subseteq$ such that
+        a pointwise generalization of $\subseteq$ such that
 \begin{align*}
 \mathcal{A} \sqsubseteq_{*} \mathcal{A'} &= \mathcal{A} \subseteq \mathcal{A'}\\
 \mathcal{F} \sqsubseteq_{\kappa -> \kappa'} \mathcal{F'} &=
-	\mathcal{F}(\mathcal{G}) \sqsubseteq_{\kappa'} \mathcal{F'}(\mathcal{G})
-	~\text{for all}~\mathcal{G}\in\SAT_\kappa
+        \mathcal{F}(\mathcal{G}) \sqsubseteq_{\kappa'} \mathcal{F'}(\mathcal{G})
+        ~\text{for all}~\mathcal{G}\in\SAT_\kappa
 \end{align*}
 \end{itemize}
 It is easy to see that $(\SAT_\kappa,\sqsubseteq_\kappa)$ forms
@@ -787,10 +787,10 @@ It is easy to see that for every two element $\mathcal{F}_1, \mathcal{F}_2
 \begin{align*}
 (\mathcal{F}_1 \wedge \mathcal{F}_2)(\mathcal{G}) &=
    \mathcal{F}_1(\mathcal{G}) \wedge \mathcal{F}_2(\mathcal{G})
-	~\text{for all}~\mathcal{G}\in\SAT_\kappa \\
+        ~\text{for all}~\mathcal{G}\in\SAT_\kappa \\
 (\mathcal{F}_1 \vee \mathcal{F}_2)(\mathcal{G}) &=
    \mathcal{F}_1(\mathcal{G}) \vee \mathcal{F}_2(\mathcal{G})
-	~\text{for all}~\mathcal{G}\in\SAT_\kappa
+        ~\text{for all}~\mathcal{G}\in\SAT_\kappa
 \end{align*}
 The top and bottom elements at an arrow kind $\bot_{\kappa -> \kappa'}$
 are also defined pointwisely. Let $\bot_{\kappa -> \kappa'}$ be
@@ -818,7 +818,7 @@ in forall types and lambda types (\ie, for $X^\kappa$ choose from $[|\kappa|]$).
 The proof of strong normalization amounts to proving the following theorem:
 \begin{theorem}[soundness of typing]
 $ \inference{\Delta;\Gamma|- t:A & \xi;\rho \in [|\Delta;\Gamma|]}
-	    {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
+            {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
 \end{theorem}
 \begin{proof}
 We prove by induction on the typing derivation ($\Delta;\Gamma |- t:A$).
@@ -835,56 +835,56 @@ Let us elaboreate on the three cases of
 \paragraph{Case (\rulename{TyAbs})}
 We need to show that
 $ \inference{\Delta;\Gamma |- t : \forall X.B & \xi;\rho\in[|\Delta;\Gamma|]}
-	{[|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_\xi} $
+        {[|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_\xi} $
 
 By induction, we know that
 \[ \inference{\Delta,X^\kappa;\Gamma |- t:B & \xi';\rho'\in[|\Delta,X;\Gamma|]}
-	{[|t|]_{\xi';\rho'} \in [|B|]_{\xi'}} ~
-	(X\notin\FV(\Gamma))
+        {[|t|]_{\xi';\rho'} \in [|B|]_{\xi'}} ~
+        (X\notin\FV(\Gamma))
 \]
 Since this holds for all $\xi';\rho' \in [|\Delta,X^\kappa;\Gamma|]$ where
 $X\notin\FV(\Gamma)$, it also holds for particular subset such that
 $\xi' = \xi[X\mapsto\mathcal{F}]$ and $\rho'=\rho$ for all $\mathcal{F}\in[|\kappa|]$.
 That is,
 \[ [|t|]_{\xi[X\mapsto\mathcal{F}];\rho} \in [|B|]_{\xi[X\mapsto\mathcal{F}]}
-	\quad \text{for all}~\mathcal{F}\in[|\kappa|] \]
+        \quad \text{for all}~\mathcal{F}\in[|\kappa|] \]
 From $X\notin\FV(\Gamma)$, we know that
 $[|t|]_{\xi[X\mapsto\mathcal{F}];\rho} = [|t|]_{\xi;\rho}$
 because $\rho$ is independent of what $X$ maps to.
 So, we know that
 \[ [|t|]_{\xi;\rho} \in [|B|]_{\xi[X\mapsto\mathcal{F}]}
-	\quad \text{for all}~\mathcal{F}\in[|\kappa|] \]
+        \quad \text{for all}~\mathcal{F}\in[|\kappa|] \]
 By set theoretic definition, this is exactly what we wanted to show:
 \[ [|t|]_{\xi;\rho} \in
-	\bigcap_{\mathcal{F}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{F}]}
-	= [|\forall X^\kappa.B|]_\xi
+        \bigcap_{\mathcal{F}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{F}]}
+        = [|\forall X^\kappa.B|]_\xi
 \]
 
 \paragraph{Case (\rulename{TyApp})}
 We need to show that
 $ \inference{\Delta;\Gamma |- t : B[G/X] & \xi;\rho\in[|\Delta;\Gamma|]}
-	{[|t|]_{\xi;\rho} \in [|B[G/X]|]_\xi} $.
+        {[|t|]_{\xi;\rho} \in [|B[G/X]|]_\xi} $.
 
 By induction, we know that
 $ \inference
-	{ \Delta;\Gamma |- t : \forall X^\kappa.B
-	& \xi';\rho'\in[|\Delta;\Gamma|] }
-	{[|t|]_{\xi';\rho'} \in [|\forall X^\kappa.B|]_{\xi'}} $.
+        { \Delta;\Gamma |- t : \forall X^\kappa.B
+        & \xi';\rho'\in[|\Delta;\Gamma|] }
+        {[|t|]_{\xi';\rho'} \in [|\forall X^\kappa.B|]_{\xi'}} $.
 
 Since this holds for all $\xi';\rho' \in [|\Delta,\Gamma|]$,
 it also holds for $\xi'=\xi$ and $\rho'=\rho$. Then, we are done:
 $ [|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_{\xi}
-	= \bigcap_{\mathcal{G}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{G}]}
-	\subseteq [|B|]_{\xi[X\mapsto[|G|]_\xi]} = [|B[G/X]|]_\xi $.
+        = \bigcap_{\mathcal{G}\in[|\kappa|]} [|B|]_{\xi[X\mapsto\mathcal{G}]}
+        \subseteq [|B|]_{\xi[X\mapsto[|G|]_\xi]} = [|B[G/X]|]_\xi $.
 
 \paragraph{Case (\rulename{Conv})}
 We need to show that
 $ \inference{\Delta;\Gamma |- t : A' & \xi;\rho\in[|\Delta;\Gamma|]}
-	{[|t|]_{\xi;\rho} \in [|A'|]_\xi} $
+        {[|t|]_{\xi;\rho} \in [|A'|]_\xi} $
 
 By induction we know that 
 $ \inference{\Delta;\Gamma |- t : A & \xi;\rho\in[|\Delta;\Gamma|]}
-	{[|t|]_{\xi;\rho} \in [|A|]_\xi} $
+        {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
 
 If we can show that $[|A|]_\xi = [|A'|]_\xi$, we are done.
 
@@ -894,12 +894,12 @@ we use the soundness of type constructor equality lemma
 \end{proof}
 
 \begin{corollary}[strong normalization]
-	$\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
+        $\inference{\Delta;\Gamma |- t : A}{t \in \SN}$
 \end{corollary}
 
 \begin{lemma}[soundness of type equality] \label{lem:fw:soundtyeq}
 $ \inference{\Delta |- F = F' : \kappa & \xi\in[|\Delta|]}
-	{[|F|]_\xi = [|F'|]_\xi} $
+        {[|F|]_\xi = [|F'|]_\xi} $
 \end{lemma}
 \begin{proof}
 The only interesting case is the \rulename{EqTBeta} rule.
@@ -908,15 +908,15 @@ Let us elaborate on the \rulename{EqTBeta} case.
 
 \paragraph{Case (\rulename{EqTBeta})} We need to show that
 \[ \inference
-	{ \Delta |- (\l X^\kappa.F)\;G = F[G/X] : \kappa' & \xi\in[|\Delta|] }
-	{ [| (\l X^\kappa.F)\;G |]_\xi = [| F[G/X] |]_\xi }
+        { \Delta |- (\l X^\kappa.F)\;G = F[G/X] : \kappa' & \xi\in[|\Delta|] }
+        { [| (\l X^\kappa.F)\;G |]_\xi = [| F[G/X] |]_\xi }
 \]
 
 By applying the soundness of kinding lemma (Lemma \ref{lem:fw:soundki})
 to the premises, we know that
 \[ \inference
-	{\Delta,X^\kappa |- F : \kappa -> \kappa' & \xi'\in[|\Delta,X^\kappa|]}
-	{[|F|]_{\xi'} \in [|\kappa'|]}
+        {\Delta,X^\kappa |- F : \kappa -> \kappa' & \xi'\in[|\Delta,X^\kappa|]}
+        {[|F|]_{\xi'} \in [|\kappa'|]}
 \quad\text{and}\quad
    \inference{\Delta |- G : \kappa & \xi\in[|\Delta|]}{[|G|]_\xi \in [|\kappa|]}
 \]
@@ -960,11 +960,11 @@ when $X^\kappa \in [|\Delta|]$.
 \paragraph{Case (\rulename{TAll})}
 We need to show that
 $ \inference{\Delta |- \forall X^\kappa.B:* & \xi\in[|\Delta|]}
-	{[|\forall X^\kappa.B|]_\xi\in[|*|]} $.
+        {[|\forall X^\kappa.B|]_\xi\in[|*|]} $.
 
 By induction, we know that
 $ \inference{\Delta,X^\kappa |- B:* & \xi'\in[|\Delta,X^\kappa|]}
-	{[|B|]_{\xi'} \in [|*|]} $.
+        {[|B|]_{\xi'} \in [|*|]} $.
 
 Since it should hold for any $\xi'$, it also holds for
 $\xi'=\xi[X\mapsto\mathcal{G}]$ for any $\mathcal{G}\in[|\kappa|]$.
@@ -976,11 +976,11 @@ $  [|\forall X^\kappa.B|]_\xi
 \paragraph{Case (\rulename{TLam})}
 We need to show that
 $ \inference{\Delta |- \l X^\kappa.B:* & \xi\in[|\Delta|]}
-	{[|\forall X.B|]_\xi\in[|*|]} $.
+        {[|\forall X.B|]_\xi\in[|*|]} $.
 
 By induction, we know that 
 $ \inference{\Delta,X^\kappa |- F:\kappa' & \xi'\in[|\Delta,X^\kappa|]}
-	{[|F|]_{\xi'} \in [|\kappa'|]} $.
+        {[|F|]_{\xi'} \in [|\kappa'|]} $.
 
 Since it should hold for any $\xi$, it also holds for
 $\xi'=\xi[X\mapsto\mathcal{G}]$ for any $\mathcal{G}\in[|\kappa|]$.
@@ -988,7 +988,7 @@ $\xi'=\xi[X\mapsto\mathcal{G}]$ for any $\mathcal{G}\in[|\kappa|]$.
 Therefore,
 $  [|\l X^\kappa.F|]_\xi
  = \bbl(\mathcal{G}\in[|\kappa|]).[|F|]_{\xi[X\mapsto\mathcal{G}]}
- 	\in [|\kappa -> \kappa'|]$.
+        \in [|\kappa -> \kappa'|]$.
 
 \paragraph{Case (\rulename{TApp})} By induction, straightforward.
 \end{proof}
