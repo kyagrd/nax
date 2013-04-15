@@ -690,15 +690,43 @@ this burden can be alleviated.
 
 
 \section{Methodology and Overview}\label{sec:intro:overview}
-
-
-
 This dissertation consist of five parts:
 Part \ref{part:Prelude} (Prelude),
 Part \ref{part:Mendler} (The Mendler style),
 Part \ref{part:Calculi} (Term-indexed lambda calculi),
 Part \ref{part:Nax} (The Nax language), and
 Part \ref{part:Postlude} (Postlude).
+The three parts in the middle, excluding the prelude and postlude parts,
+describes the three steps of our approach. First, we experiment new ideas on
+Mendler-style recursion schemes driven from concrete examples
+using Haskell (with some GHC extensions), which is a functional language
+based on an extension of \Fw\ (Part \ref{part:Mendler}). Second, we develop
+theories (\ie, lambda calculi) for term-indexed datatypes to prove that
+the Mendler-style recursion schemes are well-defined over indexed datatypes
+and have the expected termination behavior. Lastly, we design a language system
+with practical features that embodies our new ideas in and is based on the
+theory we developed. Figure~\ref{fig:overview} summarizes the organization of
+key concepts throughout the dissertation.
+
+\begin{figure}
+TODO \\
+
+STLC\\
+\F\
+\Fw\    \Fi\ \\
+\Fixw\  \Fixi\ \\
+Hindley--Milner Nax type inference \\
+
+TODO \\
+make arrow diagrams
+TODO \\
+TODO \\
+TODO \\
+TODO \\
+TODO \\
+\caption{Summary of key concepts}
+\label{fig:overview}
+\end{figure}
 
 \paragraph{Part \ref{part:Prelude} (Prelude)}\hspace{-1em} opens
 the dissertation by giving an introduction (Chapter \ref{ch:intro}),
