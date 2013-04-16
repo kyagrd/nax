@@ -142,7 +142,7 @@ self application in the term |w (C w) :: T|. The negative occurrence of |T| in
 the datatype definition of |T| is what enables this self application to be well
 typed.
 
-For this reason, many systems (e.g., Hagino's CPL \cite{hagino87phd}, and
+For this reason, many systems (\eg, Hagino's CPL \cite{hagino87phd}, and
 Coq \cite{P-M93}) require all recursive datatypes to be positive
 (or covariant) in order to ensure normalization. \citet{UusVen99} call
 this style, limiting recursive occurrences to positive positions,
@@ -162,7 +162,7 @@ in the Mendler style.
 
 In the functional programming community, there are both well-known and useful
 examples of negative and mixed datatypes
-(e.g., delimited control\cite{Sha07}\footnote{
+(\eg, delimited control\cite{Sha07}\footnote{
 A Haskell datatype definition for this can be found at\\$~~~$
 {\tiny \url{http://lists.seas.upenn.edu/pipermail/types-list/2004/000267.html}}}).
 One of the classic examples is Higher-Order Abstract Syntax (HOAS)
@@ -243,9 +243,10 @@ only''\cite{UusVen99}. So, until recently, the study on Mendler-style recursion
 combinators focused on examples of positive recursive types with type
 rather than term) based indexing.
 
-Recently, I have developed several new contributions to the study of
-the Mendler-style recursion shemes \cite{AhnShe11}. These contributions
-fall into three broad categories:
+Recently, we developed several new contributions to the study of
+the Mendler-style recursion shemes \cite{AhnShe11}.\footnote{
+	This chapter is a revised and extended version of this ICFP paper.}
+These contributions fall into three broad categories:
 \begin{itemize}
 \item discovered a new family of Mendler-style recursion combinators
  (\S\ref{sec:msf}), which normalizes for negative recursive types and
@@ -336,7 +337,7 @@ at kind $*$ and kind $* -> *$}
 
 All of our results are summarized in Figures \ref{fig:datafix},
 \ref{fig:rcombty}, and \ref{fig:rcombdef}. In Figure \ref{fig:datafix},
-we define the Mendler-style datatype fixpoint operators (i.e. |Mu0| and |Mu1|).
+we define the Mendler-style datatype fixpoint operators (\ie, |Mu0| and |Mu1|).
 These are datatype definitions in Haskell that take type constructors
 as arguments. They are used to tie the recursive knot
 through the generating functor (or base datatype) that they take as an argument.

@@ -436,9 +436,12 @@ but requires base structure $F$ to be covariant (or, positive), \ie,
 $F : +\kappa -> \kappa$. This restriction on the polarity of $F$ is due to
 the equi-recursive nature of $\fix$, \ie, $\fix F=F(\fix F)$, which is
 described by the first type constructor equality rule inside a dashed box
-in Figure~\ref{fig:eqFixi}. Recall that adding equi-recursive types
-without restricting the polarity of base structure breaks strong normalization.
-\KYA{TODO should reference intro chapter section which is not written yet}
+in Figure~\ref{fig:eqFixi}. Restricting the polarity of the base structure,
+to which $\fix$ can be applied, is necessary to maintain strong normalization.
+Adding equi-recursive types without restricting the polarity breaks
+strong normalization because it amounts to having both formation and
+elimination of arbitrary iso-recursive types
+(see \S\ref{ec:intro:concpets:recursive)}. 
 
 Note that there are no explicit term syntax that guides the conversion between
 $\fix F$ and $F(\fix F)$, unlike in iso-recursive systems where $\In$ and

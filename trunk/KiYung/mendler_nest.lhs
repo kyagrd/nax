@@ -13,8 +13,8 @@
 
 \subsection{Nested datatypes} \label{ssec:tourNested}
 The datatypes |Nat| and |List|, defined in \S\ref{ssec:tourRegular}, 
-are regular datatypes.  Non-recursive datatypes (e.g., |Bool|) and
-recursive datatypes without any type arguments (e.g., |Nat|)
+are regular datatypes.  Non-recursive datatypes (\eg, |Bool|) and
+recursive datatypes without any type arguments (\eg, |Nat|)
 are always regular.  Among the recursive datatypes with type arguments,
 those datatypes where all of the recursive occurrence on the right-hand side
 have exactly the same type argument as the left-hand side (in the same order)

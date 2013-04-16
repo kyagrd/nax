@@ -30,7 +30,7 @@ type constructors as well as making sure that the type variables are bound in $\
 
 The kinding rules, for the type syntax inherited from System \F:
 \rulename{TVar}, \rulename{TArr}, \rulename{TAll}
-are similar to their conterparts in System \F, except for this additional
+are similar to their counterparts in System \F, except for this additional
 kinding annotation. The kinding rules 
 \rulename{TLam} and \rulename{TApp} state when the extensions (lambda types and
 application types) to System \F\ are well-kinded.
@@ -417,7 +417,7 @@ This additonal expressive power comes from two different uses of kinded types
 
 \begin{itemize}
 
-\item  \emph{Higher-kinded polymorphsim} is the ability to universally quantify over both types and
+\item  \emph{Higher-kinded polymorphism} is the ability to universally quantify over both types and
 type constructors.
 
 \item 
@@ -518,9 +518,8 @@ Intuitively, $X$ in the list encoding corresponds to $\textit{List}\;X_a$
 (\ie, the type constructor \textit{List} applied to its uniform argument $X_a$),
 and, $X$ in the powerlist encoding corresponds to \textit{Powl} without
 being applied to its argument so that it may be applied to a non-regular
-argument (\eg, $X(X_a\times X_a)$). See Chapter \ref{ch:mendler} for more
+argument (\eg, $X(X_a\times X_a)$). See \S\ref{mendler_nonreg} for more
 examples and discussions on non-regular datatypes.
-%% TODO update the fwd ref to a section later
 
 \paragraph{The recursive type operator $\mu$} builds a recursive type
 ($\mu F$) from a non-recursive base structure ($F:* -> *$).
@@ -546,12 +545,12 @@ Note, the simplified last equation looks very similar to
 the recursive datatype definitions for unary natural numbers
 in functional languages, such as Haskell: \[ \qquad\qquad
 \textbf{data}~\textit{Nat} = \texttt{Succ}~\textit{Nat}\,\mid\,\texttt{Zero} \]
-See Chapter \ref{ch:mendler} %% TODO update the fwd ref to a section later
+See Chapter \ref{ch:mendler}
 for more of the Haskell examples on recursive datatypes and $\mu$.
 
 Although recursive datatypes are encodable in System \F (\S\ref{sec:f:data}),
 extensions of System \F\ with $\mu$ have been studied %% TODO cite
-since we can reason about recursive datatypes more uniformly based on
+since one can reason about recursive datatypes more uniformly based on
 the properties of $\mu$. In System \Fw, we can encode $\mu$ using
 higher-kinded type constructors and higher-kinded polymorphism as follows:
 \[
@@ -589,7 +588,7 @@ impredicative encoding in two layers: for the base structure and for $\mu$.
 We already know how to encode the base structure: with the encoding above,
 we can eliminate to an arbitrary result type $X$. For $\mu$, we introduce
 yet another variable $X'$ so that we can eliminate to an arbitrary result
-type $X'$. Thus, the encoding for natrual number type constructed using $\mu$
+type $X'$. Thus, the encoding for natural number type constructed using $\mu$
 would be of the following form:
 \[ \forall X'^{*}.(\;\dots\;\dots\;\dots\;\dots\;\dots (X_r + \textit{Unit}) -> X') -> X' \]
 Since the recursive type contains the base structure, we would be able to
@@ -613,16 +612,13 @@ locally.
 See Chapter \ref{ch:mendler} %% TODO update the fwd ref to a section later
 for an intuitive explanation for why $X_r$ should be universally quantified.
 
-The (data) constructor for the recurisve type operator $\mu$ is called $\In$
+The (data) constructor for the recursive type operator $\mu$ is called $\In$
 and the eliminator is called $\MIt$. The encodings of $\In$ and $\MIt$ as
 Curry-style terms are as follows:
 \[ \In = \l x_r. \l x_\varphi.x_\varphi\,(\MIt~x_\varphi)\,x_r
 \qquad\qquad \MIt = \l x_\varphi.\l x_r.x_r\,x_\varphi \]
 These ($\mu$, $\In$, and $\MIt$) are, in fact, encodings for
-Mendler-style iteration, which will be discussed in Chapter \ref{ch:mendler}.
-%% TODO update the fwd ref to a section later
-
-%%% TODO fwd ref
+Mendler-style iteration, which will be discussed in \S\ref{sec:proof}.
 
 \paragraph{A kind-indexed family of recursive type operators $\mu_\kappa$:}
 The recursive type operator $\mu : (* -> *) -> *$ discussed so far can only
@@ -633,7 +629,7 @@ construct (non-mutually recursive) regular datatypes. For example,
 \end{align*}
 More generally, there is a family of recursive type operators
 $\mu_\kappa : (\kappa -> \kappa) -> \kappa$ for each kind $\kappa$.
-The $\mu$, which we discussed abive, is $\mu_{*} : (* -> *) -> *$.
+The $\mu$, which we discussed above, is $\mu_{*} : (* -> *) -> *$.
 We can construct \textit{Powl}, which is a non-regular datatype, using another
 recursive typer operator $\mu_{* -> *} : ((*-> *) -> (*-> *)) -> (*-> *) $
 as follows (\cf\ \textit{List}).
@@ -642,7 +638,7 @@ as follows (\cf\ \textit{List}).
                         (X_a\times X(X_a\times X_a)) + \textit{Unit}) \\
 \textit{List} &= \l X_a^{*}.\mu_{*}(\l X^{*}.(X_a\times X) + \textit{Unit})
 \end{align*}
-Note the difference where $X_a$ is bound in the defintions of \textit{Powl}
+Note the difference where $X_a$ is bound in the definitions of \textit{Powl}
 and \textit{List}. The encodings of $\mu_{*}$ and $\mu_{*-> *}$ in System \Fw\ 
 are shown below:
 \begin{align*}
@@ -681,7 +677,7 @@ $\forall X_1^{\kappa_1}.\cdots.\forall X_n^{\kappa_n}$,
 and $F\,\vec{X}$ stands for $F\,X_1\cdots X_n$
 when $\kappa = \vec{\kappa} -> * = \kappa_1 -> \cdots -> \kappa_n -> *$.
 
-The (data) constructor for the recurisve type operator $\mu_\kappa$ is
+The (data) constructor for the recursive type operator $\mu_\kappa$ is
 called $\In_\kappa$ and the eliminator is called $\MIt_\kappa$.
 The encodings of $\In_\kappa$ and $\MIt_\kappa$ as Curry-style terms are
 exactly the same as for $\In$ and $\MIt$ for the star kind:
@@ -689,8 +685,7 @@ exactly the same as for $\In$ and $\MIt$ for the star kind:
 \qquad\qquad \MIt_\kappa = \l x_\varphi.\l x_r.x_r\,x_\varphi \]
 These ($\mu_\kappa$, $\In_\kappa$, and $\MIt_\kappa$) are, in fact,
 encodings for Mendler-style iteration in \Fw, which will discussed in
-Chapter \ref{ch:mendler}. %% TODO update the fwd ref to a section later
-
+\S\ref{sec:fi:data}.
 
 
 \subsection{Subject reduction and strong normalization}\label{sec:fw:srsn}
@@ -777,13 +772,13 @@ as follows:
 \end{itemize}
 It is easy to see that $(\SAT_\kappa,\sqsubseteq_\kappa)$ forms
 a complete lattice by induction on $\kappa$. For kind $\star$,
-it is obvious since we alerady know that $(\SAT,\subseteq)$ forms
+it is obvious since we already know that $(\SAT,\subseteq)$ forms
 a complete lattice. For an arrow kind $\kappa -> \kappa'$, we know that
 $(\SAT_{\kappa'},\sqsubseteq_{\kappa})$ forms a complete lattice by induction.
 It is easy to see that for every two element $\mathcal{F}_1, \mathcal{F}_2
 \in \SAT{\kappa'},\sqsubseteq_{\kappa}$ there exist a greatest lower bound
 ($\mathcal{F}_1 \wedge \mathcal{F}_2$) and a greatest upper bound 
-($\mathcal{F}_1 \vee \mathcal{F}_2$), defiend pointwisely as follows:
+($\mathcal{F}_1 \vee \mathcal{F}_2$), defined pointwisely as follows:
 \begin{align*}
 (\mathcal{F}_1 \wedge \mathcal{F}_2)(\mathcal{G}) &=
    \mathcal{F}_1(\mathcal{G}) \wedge \mathcal{F}_2(\mathcal{G})
@@ -803,8 +798,8 @@ are the bottom and top elements at kind $\kappa -> \kappa'$
 by definition of $\sqsubseteq_{\kappa -> \kappa'}$.
 
 Then, we can give interpretation of kind $\kappa$ as $\SAT_\kappa$.
-That is, $[| \kappa |] = \SAT_\kappa$. An inetrpretation of a type constructor
-of kind $\kappa$ should be a membmer of $[| \kappa |]$, \ie, $\SAT_\kappa$.
+That is, $[| \kappa |] = \SAT_\kappa$. An interpretation of a type constructor
+of kind $\kappa$ should be a member of $[| \kappa |]$, \ie, $\SAT_\kappa$.
 The interpretation of kinds, type constructors, contexts, and
 terms of System \Fw\ are illustrated in Figure \ref{fig:interpFw}. 
 
@@ -829,7 +824,7 @@ The cases for \rulename{TyAbs} and \rulename{TyApp} is almost the same
 as the strong normalization proof for System \F, except that the type variable
 can be of some kind $\kappa$ other than just the star kind.
 We need to consider one more rule \rulename{Conv}, which is new in System \Fw.
-Let us elaboreate on the three cases of
+Let us elaborate on the three cases of
 \rulename{TyAbs} and \rulename{TyApp}, and \rulename{Conv}.
 
 \paragraph{Case (\rulename{TyAbs})}

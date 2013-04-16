@@ -2,9 +2,9 @@
 \section{Mendler-style course-of-values iteration (|mhist|) for regular datatypes}
 \label{ssec:tourHist0}
 Some computations are not easily expressible by iteration,
-since iteration only recurses on the direct subcomponents (e.g., tail
+since iteration only recurses on the direct subcomponents (\eg, tail
 of a list). Terminating recursion shcemes on deeper subcomponents
-(e.g., tail of tail of a list) requires rather complex encodings
+(\eg, tail of tail of a list) requires rather complex encodings
 in the conventional setting. Unfortunately, functional programmers often
 write simple recursive functions using nested pattern matching that
 recurse on deep subcomponents exposed by the nested patterns.
@@ -201,7 +201,7 @@ equivalence) is, in fact, the constant function returning the unit value.
 This illustrates the essence of how the Mendler-style iteration guarantees
 normalization even in the presence of negative occurrences in the
 recursive datatype definition. By quantifying over the recursive type
-parameter of the base datatype (e.g. |r| in |TBase r|), it prevents an
+parameter of the base datatype (\eg, |r| in |TBase r|), it prevents an
 embedded function with a negative occurrence from flowing into any
 outside terms (especially terms embedding that function).
 
@@ -220,7 +220,7 @@ instead of the original tail |xs|.
 The intuition behind the termination of |mcata0| for this negative datatype
 |Foo| is similar to the intuition for positive dataypes.  The embedded function
 |f::r->r| can only apply to the direct subcomponent of its parent, or to its
-sibling, |xs| and its transformed values (e.g. |f xs|, |f (f xs)|, $\ldots$),
+sibling, |xs| and its transformed values (\eg, |f xs|, |f (f xs)|, $\ldots$),
 but no larger values that contains |f| itself.  We illustrate a general proof
 on termination of |mcata0| in Figure \ref{fig:proof}. %% \S\ref{sec:proof}.
 

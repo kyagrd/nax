@@ -165,7 +165,7 @@ and a |Code| type, in order to write a stack-safe compiler
 
 The type constructor |Path| expects three arguments,
 that is, |Path x {i} {j} : *|.  The argument |x : {iota} -> {iota} -> *|
-is binary relation describing legal transitions (i.e. |x {i} {j}| is inhabited
+is binary relation describing legal transitions (\ie, |x {i} {j}| is inhabited
 if one can legally step from |i| to |j|).
 The arguments |i : iota| and |j : iota| represent the initial and
 final vertices of the |Path|. A term of type |Path x {i} {j}| witnesses

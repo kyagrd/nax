@@ -81,7 +81,7 @@ the conventional iteration combinator |cata|:\\
 This is necessary because |cata| is defined in terms of |fmap| (a method of the |Functor| class):\\
 \hspace*{.1in} |cata phi (In0 x) = phi (fmap (cata phi) x)| \hspace*{.1in}  (Figure \ref{fig:rcombdef}).\\
 The combinator |cata| takes a combining function |phi :: f a -> a|, which
-assumes the recursive subcomponents (e.g., tail of the list) have already been
+assumes the recursive subcomponents (\eg, tail of the list) have already been
 turned into a value of answer type (|a|) and combines the overall result.
 
 %format lenc = len"_{\!c}"
@@ -178,7 +178,7 @@ only the combinators in the iteration family ensure termination.
 The intuitive reasoning behind the termination property of |mcata0| for
 all positive recursive datatypes is that (1) |mcata0| strips off one |In0|
 constructor each time it is called, and (2) |mcata0| only recurses on the
-direct subcomponents (e.g., tail of a list) of its argument (because the type
+direct subcomponents (\eg, tail of a list) of its argument (because the type
 of the recursive caller won't allow it to be applied to anything else).
 Once we observe these two properties, it is obvious that |mcata0| always
 terminates since those properties imply that every recursive call to |mcata0|

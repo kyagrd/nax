@@ -9,7 +9,7 @@ We close this chapter by summarizing the termination properties
 of the Mendler-style recursion combinators
 (Table \ref{tbl:mendlerCombinatorSummary}) and the relationships
 between those combinators (Figure \ref{fig:cataviahisto})
-(i.e. which combinators can be defined in terms of others).
+(\ie, which combinators can be defined in terms of others).
 
 
 \begin{table}\centering

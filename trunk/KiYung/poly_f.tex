@@ -119,13 +119,13 @@ A,B ::= &~ X \\
 \label{fig:redf}
 \end{figure}
 
-System \F\ extends the type syntax of STLC with type variables ($X$)
+System \F\ extends the type syntax of the STLC with type variables ($X$)
 and forall types ($\forall X.B$), which enable us to express polymorphic types
 (see Figure \ref{fig:f}). However, System \F\ does not have a dedicated syntax
-for ground types, such as the void type $\iota$ in STLC. In System \F, we can
-populate types from forall types such as $\forall X.X$. This type is, in fact,
-an encoding of the void type. We shall see that a large class of datatypes are
-encodable in System \F (\S\ref{sec:f:data})
+for ground types, such as the void type $\iota$ in the STLC.
+In System \F, we can populate types from forall types such as $\forall X.X$.
+This type is, in fact, an encoding of the void type. We shall see that
+a large class of datatypes are encodable in System \F (\S\ref{sec:f:data})
 
 Unlike in the STLC, not all types constructed by the type syntax of System \F\
 make sense. Since we have type variables in System \F, we need to
@@ -420,7 +420,7 @@ The subject reduction theorem for System \F\ can be stated as follows:
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{theorem}
 We can prove subject reduction for System \F\, in a similar fashion
-to the proof of subject reduction for STLC,
+to the proof of subject reduction for the STLC,
 by induction on the derivation of the reduction rules.
 
 In Church style, proof for all other cases except for the rules

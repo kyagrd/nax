@@ -3,7 +3,7 @@ During the past decade, the functional programming community achieved
 partial success in their goal of maintaining fine-grained properties
 by only moderately extending functional language type systems
 \cite{CheHin03,CheHin02,Xi03}.
-This approach is often called \emph{``lightweight''}\footnote{e.g.,
+This approach is often called \emph{``lightweight''}\footnote{\eg,
   \url{http://okmij.org/ftp/Computation/lightweight-dependent-typing.html} }
 in contrast to the approach taken by fully dependent type systems
 (\eg, Coq, Agda).

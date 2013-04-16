@@ -1,0 +1,37 @@
+\centering
+$\xymatrix{
+ \textrm{STLC}
+     \ar@{-->}[dd]_{\begin{smallmatrix}
+                      \textrm{type}\\
+                      \textrm{polymorphism}
+                    \end{smallmatrix}} \\
+      &&& \textrm{Hindley--Milner} \ar[dd] & \\
+ \F  \ar[dd]_{\begin{smallmatrix}
+                \textrm{type constructor} \\
+                \textrm{polymorphism}
+              \end{smallmatrix}}
+     \ar@{.>}[rrru]|{\textrm{rank-1 restriction}}
+                &&&& \\
+                 &&& \textrm{Nax's type inference\hspace{-3em}} & \\
+ \Fw   \ar@/^/@{=>}[rr]
+       \ar@{~>}[dd]_{\begin{smallmatrix}
+                       \textrm{polaraized kinds,}\\
+                       \textrm{equi-recursive } \mu
+                     \end{smallmatrix}}
+                && \Fi \ar@{~>}[dd] \ar@/^/@{:>}[ll] \ar@{.>}[ru] &&
+             \\ &&&& ~ \MIt \;~\subset~\; \MsfIt \hspace{-4em}
+                            \ar@/^1pc/@{{ }{>}{>}}[llu]
+                          & \ar@<-.5ex>@/_1pc/@{{ }{>}{>}}[lllu] \\
+ \Fixw \ar@/^/@{=>}[rr]^{\textrm{term index}}
+                && \Fixi \ar@/^/@{:>}[ll]^{\textrm{index erasure}}
+                  && ~ \MPr \quad
+                             \ar@{}[u]^{\bigcap}
+			     \ar@/_/@{{ }{>}{>}}[ll]_{\textrm{embeded into}} \\
+                  &&&& \McvPr
+                             \ar@{}[u]^{\bigcap}
+                      \ar@<.5em>@{}[u]_{\begin{smallmatrix}
+                                         _\textrm{(termination behavior~}\\
+                                         ^\textrm{~is not subsumed here)}
+                                        \end{smallmatrix}}
+			     \ar@/^/@{{ }{>}{>}}[llu] \\
+}$

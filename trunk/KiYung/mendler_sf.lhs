@@ -269,7 +269,7 @@ Generalizing from |countLam| we can define a function from |Exp| to any
 type. How do we lift this kind of solution to the Mendler style?
 \citet{FegShe96} proposed moving the general inverse from the Base type
 to the datatype fixpoint. Later this approach was refined by \citet{bgb}
-to remove the junk introduced by that augmentation (i.e. things like
+to remove the junk introduced by that augmentation (\ie, things like
 |App (Inv 1) (Inv 1)|).
 
 We use the same inverse augmented datatype fixpoint appearing in \citet{bgb}.
@@ -305,7 +305,7 @@ from expressions that contain inverse values by exploiting parametricity.
 The expressions that do not contain inverses have a fully polymorphic type.
 For instance, |k|, |s| and |w| are of type (|Exp' a|).
 The expressions that contain |Inverse0| have more specific type
-(e.g., |(Inverse0 True) :: (Exp' Bool)|).
+(\eg, |(Inverse0 True) :: (Exp' Bool)|).
 Therefore, we define the type of |Exp| to be |forall a . Exp' a|.
 Then, expressions of type |Exp| are guaranteed to be be inverse-free.
 Using parametricity to sort out junk introduced by the inverse is the key idea
@@ -444,7 +444,7 @@ Figure \ref{fig:proofsf} also contains the $F_\omega$ encoding of the sum type
 |(+)| and its constructors (or injection functions) |inL| and |inR|.
 The case expression |caseSum| for the sum type is just binary function
 application. In the $F_\omega$ encoding, they could be omitted
-(i.e., |caseSum x f g| simplifies to |x f g|).  But, we choose to write
+(\ie, |caseSum x f g| simplifies to |x f g|).  But, we choose to write
 in terms of |caseSum| to make the definitions easier to read.
 
 In Figure \ref{fig:HOASshowFw}, we define both an recursive datatype
@@ -492,7 +492,7 @@ data Exp_g t where
 \end{code}
 
 The definition of |evalHOAS| specifies how to evaluate an HOAS expression
-to a host-language value (i.e. Haskell or Nax) wrapped by the identity newtype (|Id|).
+to a host-language value (\ie, Haskell or Nax) wrapped by the identity newtype (|Id|).
 In the description below, we ignore the wrapping (|MkId|) and unwrapping (unId) of |Id|
 by completely dropping them from the description. See the Figure \ref{fig:HOASeval}
 (where they are not omitted) if you care about these details. We discuss the

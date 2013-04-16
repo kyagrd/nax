@@ -4,7 +4,7 @@
 ##        example.lhs
 
 TEXSRC=mylhs2tex.sty main.tex \
-       intro.tex \
+       intro.tex intro_figoverview.tex \
        poly.tex poly_stlc.tex poly_f.tex poly_fw.tex poly_hm.tex \
        mendler.tex \
        mendler_intro.tex mendler_it.tex mendler_cv.tex mendler_sf.tex \
