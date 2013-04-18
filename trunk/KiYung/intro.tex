@@ -287,7 +287,7 @@ in functional programming languages. Here, the term
 language is not expected to be normalizing, so restrictions are few.
 
 Just as we can capture the essence of unrestricted general recursion at term
-level, by a fixpoint operator (usually denoted by \textsf{Y} or \textsf{fix}),
+level, by a fixpoint operator (usually denoted by \textsf{Y} or \textbf{fix}),
 we can capture the essence of recursive types by the
 use of a recursive type operator, $\mu$, at type level. 
 The rules for the formation {\small($\mu$-form)},
@@ -300,14 +300,14 @@ recursive types, at the term level.
 Surprisingly (if you hadn't known), the recursive type operator, $\mu$,
 as described in Figure \ref{fig:approaches}, is already powerful enough to
 express non-terminating programs, even without introducing the general recursive
-{\em term} operator, \textsf{fix}, to the language. We illustrate this below.
+{\em term} operator, \textbf{fix}, to the language. We illustrate this below.
 First, here is a short reminder of how a fixpoint at the term level operates.
-The typing rule and the reduction rule for \textsf{fix} can be given as follows:
-\[ \text{typing:}~ \inference{\Gamma |- f : A -> A}{\textsf{fix}\,f : A}
+The typing rule and the reduction rule for \textbf{fix} can be given as follows:
+\[ \text{typing:}~ \inference{\Gamma |- f : A -> A}{\textbf{fix}\,f : A}
  \qquad\qquad
-   \text{reduction}:~ \textsf{fix}\,f \rightsquigarrow f(\textsf{fix}\,f)
+   \text{reduction}:~ \textbf{fix}\,f \rightsquigarrow f(\textbf{fix}\,f)
 \]
-We can actually implement \textsf{fix}, using $\mu$, as follows
+We can actually implement \textbf{fix}, using $\mu$, as follows
 (using some Haskell-like syntax):
 \begin{align*}
 & \textbf{data}~T\;a\;r = C\;(r -> a) \quad
@@ -317,11 +317,11 @@ We can actually implement \textsf{fix}, using $\mu$, as follows
                                      $(\lambda x.x\;x)$
                                      in a typed language}~ \\
 & w = \lambda x . \,\textbf{case}~\unIn~x~\textbf{of}~C\;f -> f\;x \\
-& \textsf{fix} \,:\, (a -> a) -> a \quad
+& \textbf{fix} \,:\, (a -> a) -> a \quad
           \texttt{-}\texttt{-}~\text{\small an encoding of 
                                      $(\lambda f.(\lambda x.f(x\;x))\,
                                                  (\lambda x.f(x\;x)))$} \\
-& \textsf{fix} = \lambda f. (\lambda x. f (w\;x))\,(\In(C(\lambda x. f (w\;x))))
+& \textbf{fix} = \lambda f. (\lambda x. f (w\;x))\,(\In(C(\lambda x. f (w\;x))))
 \end{align*}
 
 Thus, to avoid the loss of termination guarantees, we need to alter the rules
