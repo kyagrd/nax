@@ -69,16 +69,17 @@ in the general recursive encoding, and |cons 1 (cons 2 nil)| or
 \section{Conventional iteration for regular datatypes} \label{ssec:convCata}
 The conventional iteration\footnote{Also known as catamorphism.
 In Haskell-ish words, |foldr| on lists generalized to other dataypes}
-is defined on the very same fixpoint, |Mu0|, as is used in the Mendler style,
+is defined on the very same fixpoint, |Mu0|, as in the Mendler style,
 provided that the base datatype |f| is a functor.
-This, more widely known approach \cite{hagino87phd}, was developed independently,
-and at about the same time, as the Mendler style.
+This, more widely known approach \cite{hagino87phd},
+was independently developed at about the same time as the Mendler style.
 
 The additional requirement, that the base datatype (|f|) is a functor, shows up
 as a type class constraint (|Functor f|) in the type signature of
 the conventional iteration combinator |cata|:\\
 \hspace*{.1in} |cata :: Functor f => (f a -> a) -> Mu0 f -> a| \hspace*{.1in} (Figure \ref{fig:rcombty}).\\
-This is necessary because |cata| is defined in terms of |fmap| (a method of the |Functor| class):\\
+This is necessary because |cata| is defined in terms of |fmap|, which is
+a method of the |Functor| class:\\
 \hspace*{.1in} |cata phi (In0 x) = phi (fmap (cata phi) x)| \hspace*{.1in}  (Figure \ref{fig:rcombdef}).\\
 The combinator |cata| takes a combining function |phi :: f a -> a|, which
 assumes the recursive subcomponents (\eg, tail of the list) have already been

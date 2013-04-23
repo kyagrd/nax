@@ -8,26 +8,27 @@ naturally, and are more expressive than iteration, is one of the important
 result of this dissertation.
 
 Interesting examples of Mendler-style operators over negative recursive types
-have been neglected in the literature. One of the reasons, I think, is because
-it is possible to encode negative recursive types into positive recursive ones.
+have been neglected in the literature. One of the reasons, we think, is because
+it is often possible to encode negative recursive types into
+positive recursive ones (\eg, \cite{Chl08}).
 Because conventional iteration and primitive recursion normalize for
-positive recursive types we can use standard techniques on these encodings
-of translating negative recursive types into positive recursive types.
-What we gain by using such encodings must be traded against the loss in
-transparency that such encodings force upon the implementation. The natural
-structure, which were evident in the negative data type, become obscured by
-the encoding.
+positive recursive types, one can use standard techniques
+on these encodings, which are translations of negative recursive types
+into positive recursive types.  What we gain by using such encodings must be
+traded against the loss in transparency that such encodings force upon
+the implementation. The natural structure, which were evident
+in the negative data type, become obscured by such encodings.
 
 A series of papers \cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} studied 
-techniques that define recursion schemes over negative recursive types in
-the conventional setting. In our recent work \cite{AhnShe11}, we discovered
-that this work can be naturally captured as a kind-indexed family of Mendler
-style combinator. The \textit{msfit} combinator (\aka\ \textit{msfcata})
-corresponds to the conventional recursion combinator discovered
+techniques that define recursion schemes directly over negative recursive types
+in the conventional setting. In our recent work \cite{AhnShe11}, we discovered
+that this work can be naturally captured as a kind-indexed family of
+Mendler style combinator. The \MsfIt\ combinator (\aka\ \textit{msfcata})
+at kind $*$ corresponds to the conventional recursion combinator discovered
 by \citet{FegShe96} and later refined by \citet{bgb}.
-With this new family, we were able to write many interesting programs,
+With this new \MsfIt\ family, we were able to write many interesting programs,
 involving negative recursive types, that may be impossible, or very unnatural,
-to write with the ordinary Mendler-style iteration family (\textit{mit},
+to write with the ordinary Mendler-style iteration family (\MIt,
 \aka, \textit{mcata}).
 
 \subsection{Formatting Higher-Order Abstract Syntax}\label{sec:showHOAS}
@@ -277,11 +278,11 @@ Here, we call it |Rec0| (see Figure \ref{fig:datafix}).
 The inverse augmented datatype fixpoint |Rec0| is similar to
 the standard datatype fixpoint |Mu0|.
 The difference is that |Rec0| has an additional type index |a|
-and an additional data constructor |Inverse0 :: a -> Rec0 a i|,
+and an additional data constructor |Inverse0 :: a -> Rec0 f a|,
 corresponding to the universal inverse.
 The data constructor |Roll0| and the projection function |unRoll0|
 correspond to |In0| and |out0| of the normal fixpoint |Mu0|.
-As usual we restrict the use of |unRoll0|, or pattern matching against |Roll0|.
+As usual, we restrict the use of |unRoll0|, or pattern matching against |Roll0|.
 %% to terms in the programatic fragment of the language.
 
 We illustrate this in the second part of Figure \ref{fig:HOASshow}.
@@ -294,7 +295,7 @@ However, there is another way to construct |Exp'| values that is
 problematic. Using the constructor |Inverse0|, we can turn values of
 arbitrary type |t| into values of |Exp' t|.  For example, 
 |Inverse0 True :: Exp' Bool|. This value is junk, since it does 
-not coorespond to any lambda term. By design, we wish to hide |Inverse0|
+not correspond to any lambda term. By design, we wish to hide |Inverse0|
 behind an abstraction boundary. We should never allow the user to construct
 expressions such as |Inverse0 True|, except for using them as callers
 for intermediate results during computation.
@@ -357,13 +358,14 @@ in the general recursive solution, except we use the inverse expression
 the embedded function |z|.  Note, |const v| plays exactly
 the same roll as |(Var_g v)| in |show'|.
 
+
 Does |msfcata0| really guarantee termination?  To prove this we need to
-address the first two of the three potential problems described at
-the beginning of Section \ref{ssec:showHOASmsfcata}.  The first problem
-(embedded functions may be partial) is addressed using logicality analysis.
-The second problem (cyclic use of constructors as arguments to
-embedded functions) is addressed by the same argument we used
-in Section \ref{ssec:tourNegative}.  The abstract type of the inverse
+address the first two of the three potential problems described
+in page \pageref{ssec:showHOASmsfcata}.  We assume that the first problem
+(embedded functions may be partial) won't happen. The second problem
+(cyclic use of constructors as arguments to embedded functions) is addressed
+by the same argument we used in \S\ref{ssec:tourNegative}.
+The abstract type of the inverse
 doesn't allow it to be applied to constructors, they're not abstract enough. 
 Just as we couldn't define |p_m| (in Section \ref{ssec:tourNegative}) we can't
 apply |z| to things like {\small (|Lam (\ x -> x)|)}.
@@ -373,39 +375,6 @@ the HOAS formatting example), into the strongly normalizing language $F_\omega$.
 This constitutes a proof that |msfcata| terminates for all
 inductive datatypes, even those with negative occurrences.
 
-%%Parallel reduction of lambda
-%%terms is an example of the use of |msfhist0|, which we have
-%%elided for space reasons. 
-
-%% The extra type parameter |a| to the type constructors |r|
-%% in the type of |msfcata0| (and the other |msf*| operators as well)
-%% \begin{code}
-%% (forall r.(a -> r a) -> (r a -> a) -> f (r a) -> a) ->  
-%% (forall a . Rec0 f a) -> a
-%% \end{code}
-%% is an artifact of the Haskell implementation that uses the device
-%% |Exp = forall a . Exp' f a| to ensure that inverse operator is truly abstract.
-%% In fact |msfcata0| is defined in terms of a local function |msfcata|
-%% that is less abstract (see Figure \ref{fig:rcombdef} for the details). 
-%% 
-%% In a language where we could use other kinds of abstraction boundaries to
-%% completely hide |Inverse0|, we could get away with the simpler type:
-%% \TODO{I doubt whether this is exactly correct}
-%% \begin{code}
-%% (forall r. (a -> r) -> (r -> a) -> f r -> a) -> (Rec0 f) -> a
-%% \end{code}
-%% If no programmer can access |Inverse0|, then every |Exp| will be abstract on
-%% |a|, so why bother to track |a| at all?  Of course, while the programmer can't
-%% get his hands on |Inverse0|, by using |mcata0|, he can get his hands on
-%% |Inverse0|'s effect, but this version has an abstract type that sanitizes
-%% its use.  Similar properties hold for |mhist0|, |mcata1|, and |mhist1|.
-
-
-\subsection{A graph datatype with cycles and sharing}
-%include mendler/Graph.lhs
-Another example of negative datatype is a graph with cycles and sharing.
-Due to the space limitation, we only give its implementation
-in Figure \ref{fig:graph}. For further details, see \citet{FegShe96}.
 
 \subsection{$F_\omega$ encoding of |Rec0| and |msfcata0|}\label{App:Fomega}
 
@@ -457,14 +426,8 @@ $>$ |putStrLn (showExp (lam(\x->lam(\y->x))))|\\
 \verb|(\a->(\b->a))|
 \end{quote}
 
-\newpage
 \subsection{Evaluating Simply-Typed Higher-Order Abstract Syntax}
 \label{sec:evalHOAS}
-\begin{figure}
-%include mendler/HOASeval.lhs
-\caption{|msfcata1| example: an evaluator for simply-typed HOAS}
-\label{fig:HOASeval}
-\end{figure}
 Surprisingly, we can write an evaluator for a simply-typed HOAS
 in a surprisingly simple manner. In Figure \ref{fig:HOASeval}
 is a Haskell program illustrating the technique.
@@ -481,6 +444,12 @@ The use of the |msfcata| requires
 that |Exp| should be parametric in this answer type
 (by defining |type Exp t = forall a. Exp' a|) just as we did in the
 untyped HOAS formatting example in Figure \ref{fig:HOASshow}.
+
+\begin{figure}
+%include mendler/HOASeval.lhs
+\caption{|msfcata1| example: an evaluator for simply-typed HOAS}
+\label{fig:HOASeval}
+\end{figure}
 
 Using general recursion, one would have defined
 the datatype |Exp_g :: * -> *| that corresponds to |Exp|
@@ -543,6 +512,13 @@ have exactly the same syntatctic definition. They differ only
 in their type signatures. This is illustrated
 in Figures \ref{fig:rcombty} and \ref{fig:rcombdef}
 on pages \pageref{fig:rcombty}-\pageref{fig:rcombdef}.
+
+\subsection{A graph datatype with cycles and sharing}
+%include mendler/Graph.lhs
+Another example of a negative datatype is a graph with cycles and sharing %%.
+%% Due to the space limitation, we only give its implementation
+in Figure~\ref{fig:graph}. For further details,
+see the paper by \citet{FegShe96}.
 
 \subsection{Additional Mendler-style combinators}
 The combinator |msfhist0| generalizes |mhist0| by the addition of an

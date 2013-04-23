@@ -11,36 +11,36 @@
 
 \section{Introduction}\label{sec:intro}
 The functional programming
-community has traditionally focused on a style of combinators that work
-well in Hindley-Milner languages. One well-known combinator is called
-fold (or catamorphism in the Squiggol \cite{AoP} school) \aka\ iteration.
-We explore a more expressive
-style called the Mendler-style. The Mendler-style combinators were
+community has traditionally focused on a style of recursion combinators that
+work well in Hindley--Milner languages. One well-known combinator is called
+fold (\aka catamorphism or iteration). We explore a more expressive style
+called the Mendler style. The Mendler-style recursion combinators were
 originally developed in the context of the Nuprl \cite{Con86} type system.
 Nuprl made extensive use of dependent types and higher-rank polymorhpism.
 General type checking in Nuprl was done by interactive theorem proving --
 not by type inference.  The Mendler-style combinators are considerably more
-expressive than the conventional combinators of the Squiggol school,
-in the sense that the Mendler-style combinators are well-behaved (\ie,
-guarantee termination) over a wider range of recursive datatypes.
-A historical perspective on the Mendler-style
+expressive than the conventional combinators of the Squiggol \cite{AoP} school,
+in two aspects: (1) the Mendler-style combinators are well-behaved (\ie,
+guarantee termination) over a wider range of recursive datatypes
+and (2) the Mendler-style combinators are uniformly defined over
+non-regular datatypes. A historical perspective on the Mendler style
 is summarized in \S\ref{mendler_history}.
 
-Recently, Mendler-style combinators have been studied in the context of
-modern functional languages with advanced type system features, including
-higher-rank polymorphism and generalized algebraic data types.
+Recently, Mendler-style recursion combinators have been studied
+in the context of modern functional languages with advanced type system
+features, including higher-rank polymorphism and
+generalized algebraic data types.
 This chapter extends that work by \vspace*{-.5em}
 \begin{itemize}
 
 \item[$\bigstar\!\!$] Illustrating that the Mendler-style approach applies 
 to useful examples of negative datatypes,
 through the case studies on the HOAS
-(\S\ref{sec:showHOAS} and \S\ref{sec:evalHOAS}).
-\vspace*{-.2em}
+(\S\ref{sec:showHOAS} and \S\ref{sec:evalHOAS}),\vspace*{-.2em}
 \item[$\bigstar\!\!$] Extending the Mendler-style iteration by using
 the inverse trick (|msfcata|) (\S\ref{sec:showHOAS}),
 which was first described by \citet{FegShe96}
-and later refined by \citet{bgb} in conventional style.
+and later refined by \citet{bgb} in conventional style,
 \item[$\bigstar\!\!$] Using |msfcata| over an indexed datatype
 to evaluate a simply-typed HOAS (\S\ref{sec:evalHOAS}), which clearly
 exemplifies the advantages of Mendler style over conventional style,
@@ -50,14 +50,14 @@ ensures termination (\S\ref{ssec:tourCata0})
 even for negative datatypes (\S\ref{ssec:tourNegative}).
 We illustrate a semi-formal proof of termination by encoding 
 |msfcata| in the $F_\omega$ fragment of Haskell
-(Figure \ref{fig:proof} in \S\ref{sec:proof}). %% \S\ref{sec:concl}
+(Figure \ref{fig:proof} in \S\ref{sec:proof}), %% \S\ref{sec:concl}
 \vspace*{-.2em}
 \item[$\bigstar\!\!$] Providing an intuitive explanation of
 why the Mendler-style course-of-values iteration
 terminates for positive datatypes (\S\ref{ssec:tourHist0}),
 but may fail to terminate for negative datatypes
 (\S\ref{ssec:tourNegative}), by illustrating a counter-example which
-obviously fails to terminate.
+obviously fails to terminate,
 \vspace*{-.2em}
 \item Organizing a large class of Mendler-style recursion combinators into
 an intuitive hierarchy, of increasing generality, that is expressive enough
@@ -65,14 +65,13 @@ to cover regular dataypes (\S\ref{ssec:tourRegular}, \S\ref{ssec:tourHist0}),
 nested datatypes (\S\ref{ssec:tourNested}),
 indexed datatypes (GADTs) (\S\ref{ssec:tourIndexed}),
 mutually recursive datatypes (\S\ref{ssec:tourMutRec}),
-and negative datatypes (\S\ref{ssec:tourNegative}, \S\ref{sec:showHOAS}).
+and negative datatypes (\S\ref{ssec:tourNegative}, \S\ref{sec:showHOAS}), and
 \vspace*{-.2em}
 \item 
 Providing a detailed set of examples, all written in Haskell,
 illustrating two versions (one with general recursion and one with
 the Mendler style recursion combinator) side by side, in order to
 illustrate the usage of each family of recursion combinators.
-
 \end{itemize}
 \vspace*{-.5em}
 The $\bigstar$-items are original contributions, and
@@ -86,15 +85,16 @@ However, this demonstration depends on a set of conventions, because we want
 to control the source of non-termination. We assert that all our code fragments
 conform with our conventions. The conventions include:
 \begin{enumerate}
-\item all values of algebraic data types are finite
+\item all values of algebraic datatypes are finite
     (\ie, do not use lazyness to build infinite structure),
 \item certain conventions of data abstraction not enforced by Haskell
-    (\ie, treating the recursive type operator $\mu$, and the recursion combinators,
-          as primitive constructs, rather than user-defined constructs), and
+    (\ie, treating the recursive type operator $\mu$,
+	and the recursion combinators, as primitive constructs,
+	rather than user-defined constructs), and
 \item other sources of nontermination are delineated 
     (\eg, not allowed to use general recursion in user-defined datatypes
-          and functions, pattern matching can only be done through
-          the recursion combinators).
+	and functions, pattern matching can only be done through
+	the recursion combinators).
 \end{enumerate}
 The Mendler-style combinators operate on types defined in two levels,
 \ie, two-level types (see \S\ref{ssec:tourRegular}). Two-level types are 
@@ -161,10 +161,10 @@ also failed to produce good examples that make use of negative datatypes
 in the Mendler style.
 
 In the functional programming community, there are both well-known and useful
-examples of negative and mixed datatypes
+examples of negative (or, mixed-variant) datatypes
 (\eg, delimited control\cite{Sha07}\footnote{
 A Haskell datatype definition for this can be found at\\$~~~$
-{\tiny \url{http://lists.seas.upenn.edu/pipermail/types-list/2004/000267.html}}}).
+{\small \url{http://lists.seas.upenn.edu/pipermail/types-list/2004/000267.html}}}).
 One of the classic examples is Higher-Order Abstract Syntax (HOAS)
 \cite{Church40,PfeEll88}. A non-standard definition of HOAS
 in Haskell is:\footnote{
@@ -181,17 +181,17 @@ showExp (Lam (\x -> x))             ~> "(\a->a)"
 showExp (Lam (\x -> App x x))       ~> "(\a->(a a))"
 \end{code}\vspace*{-.7em}\\
 The function |showExp| is total, provided the function values embedded in
-the |Lam| data constructor are total (which is one of the things the Trellys'
-logicality inference provides).  We will illustrates that this example
-(a negative datatype), and many others examples including non-regular
-datatypes and mutually recursive datatypes can all be easily written as
-Mendler-style recursion, whose termination properties are known.
-Detailed case study of how to express this function using our extended
-Mendler-style iteration is presented in \S\ref{sec:showHOAS}.
+the |Lam| data constructor are total.  We will illustrate that this example
+(involves a negative datatype), and many others examples, which involve
+non-regular datatypes and mutually recursive datatypes, can all be easily
+written using Mendler-style recursion combinators, whose termination
+properties are known.  Detailed case study of how to express this function
+using our Mendler-style iteration extended with syntactic inverses
+is presented in \S\ref{sec:showHOAS}.
 
 \subsection{Historical progression}\label{mendler_history}
 \citet{Mendler87} discovered an interesting way of formalizing
-primitive recursion, which was later dubbed ``the Mendler-style'',
+primitive recursion, which was later dubbed ``the Mendler style'',
 while he was formalizing a logic that extended System \textsf{F} with
 primitive recursion. Interestingly, Mendler did not seem to notice
 (or maybe, just did not bother to mention) that his style of formalizing
@@ -244,7 +244,7 @@ combinators focused on examples of positive recursive types with type
 rather than term) based indexing.
 
 Recently, we developed several new contributions to the study of
-the Mendler-style recursion shemes \cite{AhnShe11}.\footnote{
+the Mendler-style recursion schemes \cite{AhnShe11}.\footnote{
 	This chapter is a revised and extended version of this ICFP paper.}
 These contributions fall into three broad categories:
 \begin{itemize}
@@ -266,7 +266,7 @@ These contributions fall into three broad categories:
 \subsection{Roadmap to a tour of the Mendler-style approach}\label{sec:tour}
 %include mendler/RecComb.lhs
 
-In this subsection we give an overview of the Mendler-style approach,
+In this subsection, we give an overview of the Mendler-style approach,
 to orient the reader to navigate the following sections.
 
 First, we introduce the Mendler-style iteration (|mcata|. \aka\ catamorphism)
@@ -293,9 +293,9 @@ show how to encode mutually recursive datatypes using indexed datatypes
 (\S\ref{ssec:tourMutRec}).
 
 In \S\ref{sec:mpr}, we introduce the Mendler-style primitive recursion (|mprim|)
-and course-of-values recursion (|mcvpr|). |mprim| and |mcvpr| are
-equivalent to |mcata| and |mhist|, respectively, in terms of computability,
-but often lead to more efficient implementations.
+and course-of-values recursion (|mcvpr|). These two combinators
+|mprim| and |mcvpr| are equivalent to |mcata| and |mhist|, respectively,
+in terms of computability, but often lead to more efficient implementations.
 
 In \S\ref{sec:msf}, we introduce a new Mendler-style family (|msfcata|),
 which we discovered, and illustrate its expressiveness over negative datatypes
@@ -345,24 +345,31 @@ through the generating functor (or base datatype) that they take as an argument.
 In Figure \ref{fig:rcombty}, we provide the types of 8 Mendler-style
 combinators distributed over the two kinds that we consider,
 along with the type of a conventional iteration combinator for comparison.
-The combinators can be organized into a hierarchy of increasing generality, and
-juxtaposing the types of the combinators makes it clear where in the hierarchy
-each combinator appears, and how each is related to the others.
+The combinators can be organized into a hierarchy of increasing generality.
+By juxtaposing the types of the combinators, it looks clear
+where in the hierarchy each combinator appears and
+how each is related to the others.
 
 In Figure \ref{fig:rcombdef}, we define the combinators themselves,
 again distributed over two kinds. The definition of the corresponding
 combinators in the two kinds are textually identical, although they
 must be given different types in each kind.
 
-In Figures \ref{fig:len}, \ref{fig:fib}, and \ref{fig:bsum}, \ref{fig:vec}, and
-\ref{fig:mutrec}, we provide examples\footnote{Some of the examples
-(Figures \ref{fig:len}, \ref{fig:fib}, and \ref{fig:bsum}) are
-adopted from \cite{UusVen00,vene00phd,AbeMatUus03,AbeMatUus05}.}
-selected for each of the combinators |mcata0|, |mhist0|, |mcata1|, and |mhist1|.
-We discuss the remaining combinators of the inverse augmented fixpoints
-in \S\ref{sec:showHOAS}, where we culminate with the HOAS formatting example.
-We have structured each of the examples into two, side by side, parts.
-On the left, we provide a general recursive encoding, and
-on the right, a Mendler-style encoding.
+In addition to the Mendler-style recursion combinators
+in Figures \ref{fig:rcombty} and \ref{fig:rcombdef}, we introduce
+Mendler-style primitive recursion (\MPr) and course-of-values recursion (\McvPr)
+in \S\ref{sec:mpr}.
 
+In Figures \ref{fig:len}, \ref{fig:fib}, \ref{fig:bsum}, \ref{fig:vec}, and
+\ref{fig:mutrec}, we provide examples\footnote{Some of the examples
+	(Figures \ref{fig:len}, \ref{fig:fib}, and \ref{fig:bsum}) are
+	adopted from \cite{UusVen00,vene00phd,AbeMatUus03,AbeMatUus05}.}
+selected for each of the combinators |mcata0|, |mhist0|, |mcata1|, and |mhist1|.
+We provided examples using \MPr\ and \McvPr\ families in \S\ref{sec:mpr}.
+We discuss the remaining combinators of the inverse augmented fixpoints
+in \S\ref{sec:showHOAS} and \S\ref{sec:evalHOAS}, where we culminate with
+examples involving HOAS.
+We have structured each of the examples into two, side by side, parts.
+On the left, we provide a general recursive version, and
+on the right, a Mendler-style version.
 

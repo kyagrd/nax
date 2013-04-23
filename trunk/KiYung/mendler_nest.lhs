@@ -63,7 +63,7 @@ and Rank 2 Mendler combinator, matching the rank of the base structure
 instead of the rank of the recursive type constructor, but just happen to
 prefer counting from 0.}
 
-The powerlist datatype is defined as follows:
+The powerlist datatype is defined as follows (also in Figure \ref{fig:psum}):
 \begin{code}
 data Powl i = NP  | CP i (Powl (i,i))
 \end{code}
@@ -84,55 +84,24 @@ The tail of |ps| is |ps'|, and the tail of |ps'| is |ps''|.
 We can observe that the shape of elements includes deeper nested pairs
 as the type indices become more deeply nested.
 
-The bush datatype is defined as follows (also in Figure \ref{fig:bsum}):
-\begin{code}
-data Bush  i = NB  | CB i (Bush (Bush i))
-\end{code}
-The type argument |i| for |Bush| is a type index, since
-the type argument |(Bush i)| occurring on the right-hand side is
-different from |i| appearing on the left-hand side.  What is intriguing
-about |Bush| is that the variation on the type index involves itself.
-\citet{Mat09} calls such datatypes, like |Bush|, \emph{truly nested datatypes}.
-Here are some examples of bush values:
-\begin{code}
-bs    = CB 1 bs'           :: Bush Int
-bs'   = CB (CB 2 NB) bs''  :: Bush (Bush Int)
-bs''                       :: Bush (Bush (Bush Int))
-bs''  = CB (CB (CB 3 NB) (CB (CB (CB 4 NB) NB) NB)) NB
-\end{code}
-The tail of |bs| is |bs'|, and the tail of |bs'| is |bs''|.
-We can observe that the shape of the elements becomes more deeply nested as we
-move towards latter elements.
-Note, the element type of bushes becomes nested by bushes themselves.
-
-%% On the left-hand side of Figure \ref{fig:psum}
-%% we define a function that sums up all the nested elements in a powerlist
-%% using the general recursion style. This function takes 2 parameters:
-%% a function that turns elements into integers, and the powerlist itself.
-%% The key part in the definition of |psum| is constructing the function
-%% |(\(x,y)->f x+f y) :: (i,i) -> Int|. We must
-%% construct this function, on the fly, in order
-%% to make the recursive call of |psum| on its tail |xs :: Powl (i,i)|.
-%% Without this function, the recursive call wouldn't know how to sum up paired elements.
+On the left-hand side of Figure \ref{fig:psum}
+we define a function that sums up all the nested elements in a powerlist
+using the general recursion style. This function takes 2 parameters:
+a function that turns elements into integers, and the powerlist itself.
+The key part in the definition of |psum| is constructing the function
+|(\(x,y)->f x+f y) :: (i,i) -> Int|. We must construct this function,
+on the fly, in order to make the recursive call of |psum| on its tail
+|xs :: Powl (i,i)|.  Without this function, the recursive call wouldn't
+know how to sum up paired elements.
 %% Note this kind of recursive call is an instance of polymorphic recursion.
-%% 
-%% We can specialize |psum|, for instance, for integer powerlists as follows
-%% by supplying the identity function:
-%% \begin{code}
-%% sumP :: Powl Int -> Int
-%% sumP xs = psum xs id
-%% \end{code}
-%% Using |sumP|, we can sum up |ps| defined above: |sumP ps ~> 28|.
 
-%% On the left-hand side of Figure \ref{fig:bsum}, we similarly define a
-%% function that sums up all the nested elements in a bush using general
-%% recursion. As we did with |psum|, |bsum| can sum up any powerlist |(Bush i)|,
-%% once we supply a function |f :: i->Int| that maps elements to integers. The
-%% key part in the definition of |bsum| is constructing the function |(\ys->bsum
-%% ys f) :: Bush i -> Int| on the fly.  Without this function the recursive call
-%% of |bsum| on the tail |xs :: Bush (Bush i)| would be incomplete. As before,
-%% we can specialize |bsum|, for integer bushes as follows by
-%% supplying the identity function:
+We can specialize |psum|, for instance, for integer powerlists as follows
+by supplying the identity function:
+\begin{code}
+sumP :: Powl Int -> Int
+sumP xs = psum xs id
+\end{code}
+Using |sumP|, we can sum up |ps| defined above: |sumP ps ~> 28|.
 
 \begin{landscape}
 \begin{figure*}
@@ -165,6 +134,35 @@ Note, the element type of bushes becomes nested by bushes themselves.
 \label{fig:bsum}
 \end{figure*}
 \end{landscape}
+
+Below the |psum|, there is yet another general recursive version |psum'|,
+using the newtype |Ret| to wrap the return type.
+The purpose of illustrating |psum'| is to emphasize
+the syntactic similarity to the Mendler-style version |psumm|.
+On the right-hand side of Figure \ref{fig:psum}, we define the Mendler-style
+version |psumm|, which syntactically similar to |psum'| on the left-hand side.
+
+
+The bush datatype is defined as follows (also in Figure \ref{fig:bsum}):
+\begin{code}
+data Bush  i = NB  | CB i (Bush (Bush i))
+\end{code}
+The type argument |i| for |Bush| is a type index, since
+the type argument |(Bush i)| occurring on the right-hand side is
+different from |i| appearing on the left-hand side.  What is intriguing
+about |Bush| is that the variation on the type index involves itself.
+\citet{Mat09} calls such datatypes, like |Bush|, \emph{truly nested datatypes}.
+Here are some examples of bush values:
+\begin{code}
+bs    = CB 1 bs'           :: Bush Int
+bs'   = CB (CB 2 NB) bs''  :: Bush (Bush Int)
+bs''                       :: Bush (Bush (Bush Int))
+bs''  = CB (CB (CB 3 NB) (CB (CB (CB 4 NB) NB) NB)) NB
+\end{code}
+The tail of |bs| is |bs'|, and the tail of |bs'| is |bs''|.
+We can observe that the shape of the elements becomes more deeply nested as we
+move towards latter elements.
+Note, the element type of bushes becomes nested by bushes themselves.
 
 We can define a function that sums up all the nested elements in a bush.
 Let us first take a look at the function |bsum| in the general recursion style,
@@ -208,6 +206,7 @@ unification, either by making the Mendler-style combinators language constructs
 (rather than functions) so that the type system treats them with specialized
 typing rules; or by providing a version of the combinators with syntactic
 Kan-extension as in \cite{AbeMatUus05}.}
+
 
 Finally, let us discuss the summation function for bushes using
 the Mendler style, found on the right-hand side in Figure \ref{fig:bsum}.

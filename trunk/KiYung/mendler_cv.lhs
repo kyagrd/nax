@@ -5,9 +5,9 @@ Some computations are not easily expressible by iteration,
 since iteration only recurses on the direct subcomponents (\eg, tail
 of a list). Terminating recursion shcemes on deeper subcomponents
 (\eg, tail of tail of a list) requires rather complex encodings
-in the conventional setting. Unfortunately, functional programmers often
-write simple recursive functions using nested pattern matching that
-recurse on deep subcomponents exposed by the nested patterns.
+in the conventional setting. Functional programmers often write
+recursive functions using nested pattern matching that recurse on
+deeper subcomponents exposed by the nested patterns.
 A typical example is the Fibonacci function:
 \vspace*{.5em}
 \begin{code}
@@ -40,7 +40,7 @@ histormophism combinators implemented here are the non-memoizing ones.
 Mendler-style histomorphism, which uses co-algebraic construction.}.
 
 In the Mendler-style course-of-values iteration (|mhist|),
-we play the same trick we played in the Mendler-style iteration (|mit|).
+we play the same trick we played in the Mendler-style iteration (|mcata|).
 We arrange for the combining function to take additional arguments
 (Figures \ref{fig:rcombty} and \ref{fig:rcombdef}).
 \begin{itemize}
@@ -89,14 +89,15 @@ style (right) we pattern match over |n|.
 
 Let us visually relate the definition of |mhist0| with the second equation of
 |phi| in the definition of the Fibonocci function as follows:
+\begin{singlespace}
 \begin{code}
 mhist0 phi (In0 x) =  phi  out0            (mhist0 phi)         {-"~~"-}x
                            {-"~~\vdots"-}  {-"~~~~~\vdots"-}    {-"~~~\vdots"-}
-                      phi  out             {-"~~~"-}fib         (S n)  =
-                          case out n of
-                            Z     -> 1
-                            S n'  -> fib n + fib n'
-\end{code}      
+                      phi  out             {-"~~~"-}fib         (S n)  =  case out n of
+                                                                            Z     -> 1
+                                                                            S n'  -> fib n + fib n'
+\end{code}
+\end{singlespace}\noindent
 The abstract unrolling function |out| and the recursive caller |fib|
 stand for the actual arguments |out0| and |(mhist0 phi)|, but the higher-rank
 type of the combining function |phi| ensures that they are only used in a safe
@@ -147,7 +148,7 @@ including negative datatypes.
 \section{Properties of |mcata| and |mhist| for negative datatypes}
 \label{ssec:tourNegative}
 
-Let us revisit the negative inductive datatype |T|
+Let us revisit the negative recursive datatype |T|
 (from \S\ref{sec:mendler:motiv}) from which we constructed a diverging computation.
 %format T_m = T"_{\!m}"
 %format C_m = C"_{\!m}"
@@ -192,11 +193,11 @@ There is a function, with the right type, that you can define:
 pconst :: T_m -> (T_m -> ())
 pconst = mcata0 phi where phi g (C f) = const ()
 \end{code}
-Not surprisingly, given the abstract pieces composed of
-the recursive caller |g :: r -> ()|, the base structure |(C f) :: TBase r|,
+Given the abstract pieces composed of
+the recursive caller~|g :: r -> ()|, the base structure |(C f) :: TBase r|,
 and the function we can extract from the base structure |f :: r -> ()|,
-the only function that returns a unit value (modulo extensional
-equivalence) is, in fact, the constant function returning the unit value.
+the only function (modulo extensional equivalence) one is able to write is,
+in fact, the constant function returning the unit value.
 
 This illustrates the essence of how the Mendler-style iteration guarantees
 normalization even in the presence of negative occurrences in the
