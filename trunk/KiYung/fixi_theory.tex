@@ -250,7 +250,7 @@ for any $F : +* -> *$ such that
         \item $F$ is a value, that is, $F$ is
                 in normal form (\ie, has no redex) and
                 closed (\ie, $F$ has no free variables),
-        \item All the bound variabels within $F$ are
+        \item All the bound variables within $F$ are
                 introduced by universal quantification
                 and those variables are of kind $*$.
 \end{itemize}
@@ -265,7 +265,7 @@ for any $F : +* -> *$ such that
         
         We also assume that $F$ is in normal form, so if $F$ were an application
         then $F'$ must be a variable with an arrow kind. But we have assumed that
-        all variables have kind $*$. $F$ cannot be a varaible since we have
+        all variables have kind $*$. $F$ cannot be a variable since we have
         assumed that $F$ is a value with no free variables, thus $F$ must have the form $\l Z^{+*}.B$. We
         proceed by analyzing the structure of $B$.
  
@@ -334,7 +334,7 @@ To illustrate that the \textit{fmap}s derived in the proof above are indeed
 type correct, we provide some examples in Haskell accepted by GHC in
 Figure~\ref{fig:deriveFunctor}. In fact, all the \texttt{\small Functor}
 instances in Figure~\ref{fig:deriveFunctor} are automatically derivable
-using the \texttt{\small DeriveFunctor} extensino in GHC version 7.4.
+using the \texttt{\small DeriveFunctor} extension in GHC version 7.4.
 However, GHC does not derive functor instances when there are
 type constructor variables other than $*$, since the kind system in GHC
 does not keep track of polarity as in \Fixw\ or \Fixi.
@@ -397,7 +397,7 @@ an application, like $X\,G$, within the type $B$.
         Then the map for $\l Z^{+*}.X\,G$ is
         \[ \textit{fmap}_{(\l Z^{+*}.X\,G)} =
                 \textit{fmap}_{X} \circ\, \textit{fmap}_{(\l Z^{+*}.G)} \]
-        Note that $\textit{fmap}_{X}$ is not fixed untill it gets
+        Note that $\textit{fmap}_{X}$ is not fixed until it gets
         instantiated, but we know for sure that it exists for any
         valuation.
 
@@ -457,7 +457,7 @@ of any kind, we prove by induction on the rank of the kind of
 the type constructor variables. That is, assuming that it holds for any
 value $F$ with up to rank-$n$ kinded type constructor variables, we should
 show that it holds when we also allow rank-$(n+1)$ kinded type constructor
-variables. What we have proved so far is the baes case $n=0$ and the case $n=1$.
+variables. What we have proved so far is the base case $n=0$ and the case $n=1$.
 
 For simplicity let us consider type constructor variables
 that expect only one argument to become a type. That is,

@@ -323,17 +323,16 @@ and the index terms appearing in those types, after the erasure.\\
 	By induction we know that
 	$(\Delta,i^A)^\circ |- B^\circ : *^\circ$,
 	which simplifies $\Delta^\circ |- B^\circ : *$
-	by Definition \ref{def:ierase}.\qedhere
-\end{itemize}
+	by Definition \ref{def:ierase}.
+\end{itemize}\qedhere
 \end{proof}
 
 \begin{theorem}[index erasure on type constructor equality]
+\label{thm:ierasetyconeq}
 \[ \inference{\Delta |- F=F':\kappa}
 		{\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
 \]
-\label{thm:ierasetyconeq}
-\end{theorem}
-\begin{proof}
+\end{theorem}\begin{proof}
 By induction on the derivation of type constructor equality.
 
 Most of the cases are done by applying the induction hypothesis
@@ -473,8 +472,8 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
 	which is what we want since $(B[s/i])^\circ = B^\circ$.
 \item[case] ($=$)
-	By Theorem \ref{thm:ierasetyconeq} and induction.\qedhere
-\end{itemize}
+	By Theorem \ref{thm:ierasetyconeq} and induction.
+\end{itemize}\qedhere
 \end{proof}
 
 \begin{example}\label{PathologicalExampleContinued}

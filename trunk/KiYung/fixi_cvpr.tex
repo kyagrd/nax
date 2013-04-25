@@ -229,7 +229,7 @@ the the abstract recursive subcomponents of type $X_r$ inside $F\;X_r$
 values into a concrete recursive type $\mu_{*}^{+}F$ in order to obtain
 $F(\mu_{*}^{+}F)$ values.
 
-\paragraph{Embeding unrollers for nested datatypes} are no more complicated
+\paragraph{Embedding unrollers for nested datatypes} are no more complicated
 than embedding unrollers for regular datatypes. For instance, the embedding
 of $\unIn_P$ for powerlists is almost identical to the embedding of $\unIn_L$
 for regular lists except the use of $\McvPr_{* -> *}$ instead of $\McvPr_{*}$.
@@ -255,7 +255,7 @@ and then \textit{cast} the outer structure. Note the use of
 $(\textit{cast} \circ \textit{fmap}\;\textit{cast})$ in the embedding of
 the unroller $\unIn_R$ for bushes.
 
-\paragraph{Embeding unrollers for indexed datatypes} are no more complicated
+\paragraph{Embedding unrollers for indexed datatypes} are no more complicated
 than embedding unrollers for regular datatypes, as well. To embed unrollers
 for term-indexed datatypes, we would often need existential types
 (Figure~\ref{fig:fixiNonRecData}) and equality types. We can encode
@@ -594,14 +594,6 @@ where the underlined part can be optimized to the identity function \textit{id}.
 % bushes). Due to the erasure property, existence of unroll
 % We will discuss the conditions when we can further NO, it's the other way
 % around
-
-%% \KYA{ TODO cite Monotone Inductive and Coinductive Constructors of Rank 2  - Matthes CSL paper }
-%% 
-%% \KYA{ TODO state a theorem about this in metatheory and
-%% 	cite some previous work on this maybe? }
-%% \KYA{ TODO P do not need Functor requirement but $+* -> *$ kind already
-%%         implies that so it will be true anyway}
-%% \KYA{ TODO someone must have proved free theorems for higher-kinded cases? }
 
 
 %% Apart from the limitations of constant-time undefinability of $\unIn_F$

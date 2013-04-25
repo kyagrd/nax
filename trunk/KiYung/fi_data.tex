@@ -1,7 +1,7 @@
 \section{Embedding datatypes and Mendler-style iterators}\label{sec:fi:data}
 
 System \Fi\ can express a rich collection of datatypes.
-%% TODO cite some paper that does this with System Fw or System F
+%% TODO cite some paper that does this with System Fw or System F if exist
 First, we illustrate embeddings for both non-recursive and
 recursive datatypes using Church encodings \cite{Church33} to define
 data constructors (\S\ref{ssec:embedChurch}). Second, we illustrate
@@ -241,6 +241,7 @@ which recursive datatypes can be defined, but allow arbitrary unrolling. In Syst
 definable in \Fi. Such operators are quite expressive, capturing at least
 iteration, primitive recursion, and courses of values recursion.
 
+\afterpage{
 \begin{landscape}
 \begin{figure}
 \begin{singlespace}
@@ -305,7 +306,9 @@ iteration, primitive recursion, and courses of values recursion.
 \label{fig:mu}
 \end{figure}
 \end{landscape}
+} %% end afterpage
 
+\begin{singlespace}
 \begin{example}
 The datatype of \mbox{$\lambda$-terms} in context 
 \begin{verbatim}
@@ -348,68 +351,66 @@ This is encoded as
 \!\!\!
 \begin{array}[t]{l}
 \l i^{\mathtt{Nat}}.\,\forall X^{\mathtt{Nat}\to*}.\,
-\\[1mm]
-\quad 
 (\forall j^\mathtt{Nat}.\, X\s{\mathtt S\, j})
 	\to (\forall j^\mathtt{Nat}.\, X\s j\to X\s{\mathtt S\,j})
-\\[1mm]
-	\qquad\to X\s i
+	\to X\s i
 \end{array}
 \]
 \end{example}
+\end{singlespace}
+
+
 \subsection{Leibniz index equality}
 \label{Leibniz}
 
 The quantification over type-indexed kinding available in System~\Fi\
-allows the definition of \emph{Leibniz-equality type} constructors
-$\Eq_A: A\to A\to *$ on closed types~$A$, defined as follows:
-\[\begin{array}{l}
-\Eq_A \triangleq
-	\l i^A.\, \l j^A.\, 
-	\LEq_A\s i \s j \times \LEq_A\s j \s i
-\enspace,
-\\[1mm]
-\text{where } 
-\LEq_A \triangleq
+allows the definition of \emph{Leibniz-equality type} constructor
+$\LEq_A: A\to A\to *$ on closed types~$A$, defined as follows:
+\[ \LEq_A \triangleq
 	\l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
-\enspace.
-\end{array}\]
-For $F_A\in\{\Eq_A,\LEq_A\}$, 
+\]
+
 %\[\begin{array}{c}
 %\Delta;\cdot\vdash s=s':A\enspace\quad \Delta;\cdot\vdash t=t':A
 %\\ \hline \\[-3mm]
 %\Delta\vdash F_A \s s \s t = F_A\s{s'}\s{t'}:*
 %\end{array}\] 
 %and, as further basic properties, 
-observe that the following types are
+Observe that the following types are
 inhabited: 
 \[\!\!\!\!\begin{array}{l}
 \text{\small(Reflexive)} 
 ~~\,
-\forall i^A.\,F_A\s{i}\s{i}
+\forall i^A.\,\LEq_A\s{i}\s{i}
 \\[1mm]
 \text{\small(Transitive)} 
 ~~
 \forall i^A.\,\forall j^A.\,\forall k^A.\,
-  F_A\s{i}\s{j}\to F_A\s{j}\s{k}\to F_A\s{i}\s{k}
+  \LEq_A\s{i}\s{j}\to \LEq_A\s{j}\s{k}\to \LEq_A\s{i}\s{k}
 \\[1mm]
 \text{\small(Logical)}
 \quad~\, \forall i^A.\,\forall j^A.\, 
-F_A\s{i}\s{j}\to \forall f^{A\to B}.\, F_B\s{f\,i}\s{f\,j}
+\LEq_A\s{i}\s{j}\to \forall f^{A\to B}.\, \LEq_B\s{f\,i}\s{f\,j}
 \\[1mm]
 \qquad\qquad~~~
 \forall f^{A\to B}.\,\forall g^{A\to B}.\, 
-F_{A\to B}\s{f}\s{g}\to 
-\forall i^A.\, F_B\s{f\,i}\s{g\,i}
+\LEq_{A\to B}\s{f}\s{g}\to 
+\forall i^A.\, \LEq_B\s{f\,i}\s{g\,i}
 \end{array}\]
-Hence Leibniz equality is a congruence; in that, in addition to the above
-one also has the inhabitation of the type
+In addition to the above,
+one also has the inhabitation of the following type:\footnote{
+	Intuitively, this is obvious since we can swap the order of
+	consecutive universal quantification over indices.  That is,
+	from $(\forall i^A.\,\forall j^A.\cdots)$
+	to $(\forall j^A.\,\forall i^A.\cdots)$.}
 \[\!\!\!\!\begin{array}{l}
 \text{\small(Symmetric)} 
 \quad
 \forall i^A.\,\forall j^A.\,
-  \Eq_A\s{i}\s{j}\to\Eq_A\s{j}\s{i}
+  \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
 \end{array}\qquad\qquad\qquad\qquad\qquad\]
+Hence Leibniz equality is a congruence.
+
 %This is not so for the type 
 %\begin{equation}\label{NonSymmetry}
 %\forall i^A.\,\forall j^A.\, \LEq_A\s{i}\s{j}\to\LEq_A\s{j}\s{i}
@@ -434,7 +435,7 @@ A general such construction is given by the type constructors $\Ran_{A,B}:
 %for closed types~$A$ and $B$, 
 and are in spirit right Kan extensions, a notion that is being extensively
 used in programming,~\eg~\cite{AbeMatUus05,JohannGhani08}. %,Hinze}.  .  
-%%
+
 %It follows that, %Here, 
 %%for closed $t:A\to B$, $F:A\to*$, and $s:B$, a closed term $u:
 %%(\Ext_{A,B}\ \s t\ F) \s s$ is a polymorphic function that, for every
@@ -452,16 +453,12 @@ used in programming,~\eg~\cite{AbeMatUus05,JohannGhani08}. %,Hinze}.  .
 %
 One of their usefulness comes from the fact that the following type
 is inhabited by a section
-\[
-\!\!\!
-\begin{array}{l}
-%\l h.\,\l y.\,\l g.\, h(g\, y):
-\forall Y^{B\to*}.\,\forall X^{A\to*}.\,\forall f^{A\to B}.\,
-\\
-\big(\forall i^A.\,Y\s{f\,i}\to X\s i\big)
+\[%\l h.\,\l y.\,\l g.\, h(g\, y):
+\forall Y^{B\to*}\!.\,\forall X^{A\to*}\!.\,\forall f^{A\to B}\!.\,
+\big(\forall i^A\!.\,Y\s{f\,i}\to X\s i\big)
 \to
-\big(\forall j^B.\,Y\s j\to (\Ran_{A,B}\s f X)\s j\big)
-\end{array}\]
+\big(\forall j^B\!.\,Y\s j\to (\Ran_{A,B}\s f X)\s j\big)
+\]
 This allows one to represent functions from input datatypes with
 constrained indices as plain indexed functions, and vice versa.  For
 instance, by means of the iterators of the previous section one can define
@@ -480,11 +477,9 @@ S\, i} \to \mathtt{Vec}\, X\,\s i
 %
 Analogously, one can use an iterator to define a single-variable
 capture-avoiding substitution function of type
-\[\begin{array}{l}
+\[
 \forall i^{\mathtt{Nat}}.\,
 (\mathtt{Lam}\,\mathtt{Fin})\s i
-\\[1mm]
-\quad
 \to
 \big(\Ran_{\mathtt{Nat},\mathtt{Nat}}
 \s{\mathtt S}
@@ -493,7 +488,7 @@ capture-avoiding substitution function of type
 \to
 \mathtt{Lam}\,\mathtt{Fin}\s j)\big)
 \s i
-\end{array}\]
+\]
 and then retract it to one of type 
 \[
 \forall i^{\mathtt{Nat}}.\,
@@ -508,43 +503,39 @@ and then retract it to one of type
 Type constructors ${\Lan_{A,B}:(A\to B)\to (A\to*)\to B\to *}$, which are
 in spirit left Kan extensions, permit the encoding of functions of type
 $(\forall i^{A}.\, F\s i\to G\s{t\,i})$, for ${F:A\to*}$, ${G:B\to*}$, and
-${t:A\to B}$, as functions of type $(\forall j^{B}.\, (\Lan_{A,B}\s t F)\s
-j\to G\s{j})$.  Left Kan extensions are dual to right Kan extensions, but
-to define them as such one needs existential and product types.  In
-formalisms without them, these have to be encoded.  This can be done as
-follows: 
+${t:A\to B}$, as functions of type
+\[ \forall j^{B}.\, (\Lan_{A,B}\s t F)\s j\to G\s{j}\; .\]
+Left Kan extensions are dual to right Kan extensions, but
+to define them as such one needs existential and product types.
+In formalisms without them, these have to be encoded.
+This can be done as follows: 
 \[
 \Lan_{A,B}
 \triangleq
-\!\!\!
-\begin{array}[t]{l}
 \l f^{A\to B}.\,
 \l X^{A\to*}.\,
 \l j^{B}.\, 
-\\[1mm]
-\quad
 \forall Z^{*}.\,
   (\forall i^A.\, \LEq_B\s{f\,i}\s{j}\to X\s i\to Z)\to Z
-\end{array}
 \]
-The type 
-\[\begin{array}{l}
+The type
+\[
 \forall X^{A\to*}.\,
 \forall Y^{B\to*}.\,
 \forall f^{A\to B}.\,
-\\[1mm]
 (\forall i^{A}.\, 
 X\s i\to Y\s{f\,i})
 \to
 (\forall j^{B}.\, 
 (\Lan_{A,B}\s f X)\s j\to Y\s{j})
-\end{array}\]
-is thus inhabited by a section, providing a retractable coercion between
-the two functional representations.
+\]
+is thus inhabited by a section, providing a retractable coercion
+between the two functional representations.
 
 Left Kan extensions come with a canonical section of type
-$\forall f^{A\to B}.\,\forall X^{A\to *}.\,\forall i^A.\, X\s i \to
-(\Lan_{A,B}\s f X)\s{f\,i}$ that, according to a reindexing function
+\[ \forall f^{A\to B}.\,\forall X^{A\to *}.\,\forall i^A.\, X\s i \to
+(\Lan_{A,B}\s f X)\s{f\,i}\]
+that, according to a reindexing function
 $t:A\to B$, embeds an \mbox{$A$-indexed} type $F$ (at index $s$) into
 the $B$-indexed type $\Lan_{A,B}\s t F$ (at index $t\,s$).  For instance, the
 type constructor $\mathtt{Lan}_{A,A\times A}\s{\l x.\,\mathtt{pair}\,x\,x}$
