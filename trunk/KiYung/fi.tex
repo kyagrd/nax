@@ -25,8 +25,8 @@ In such regular datatypes, constructors have algebraic structure that
 directly translates into polymorphic operations on abstract types as
 encapsulated by universal quantification over types (of kind $*$).
 
-In the more expressive System \Fw\ (where one can abstract over
-type constructors of any kind), one can encode more general
+In the more expressive System \Fw, where one can abstract over
+type constructors of any kind, one can encode more general
 \emph{type-indexed datatypes} that go beyond the regular datatypes.
 For example, one can embed powerlists with heterogeneous elements
 in which an element of type \texttt{a} is followed by
@@ -65,13 +65,22 @@ defined along the following lines (in Nax-like syntax):\begin{singlespace}
      VNil  : Vec a {Z}
 \end{lstlisting}\end{singlespace}
 Here the type constructor~{\tt Vec} is defined to admit parameterisation
-by both type and term-indices.  For instance, the type 
-(\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
-vectors of lists of natural numbers.  By design, our syntax directly
-reflects the difference between type and term-indexing by enclosing
-the latter in curly braces.  We also make this distinction in 
-System~\Fi, where it is useful within the type system
-to guarantee the static nature of term-indexing.
+by both a type parameter and a term index.\footnote{Recall,
+	in Chapter \ref{ch:mendler}, we classify the arguments of
+	type constructors either as parameters,
+	which appear uniformly in the datatype definition
+	(\eg, \texttt{a} in \texttt{Vec}, or as indices,
+	which vary (\eg, \texttt{i}, \texttt{S i}, \texttt{Z}).
+	Type arguments are sometimes used as parameters and sometimes
+	used as as indices. Term arguments, on the other hand, are
+	almost always used as indices, except for some degenerate cases
+	(\eg, term-indexing by a unit value).}
+For instance, the type (\texttt{\small Vec\,(List\;Nat)\,\{S(S\;Z)\}}) is
+a vector whose elements are lists of natural numbers. By design, our syntax
+directly reflects the difference between type arguments and term arguments
+by enclosing the latter in curly braces. We also make this distinction
+in System~\Fi, where it is useful within the type system to guarantee
+the static nature of term-indexing.
 
 The encoding of the vector datatype in System~\Fi\ is as follows:\vspace*{-3pt}
 \begin{equation*}\label{FiVecType}

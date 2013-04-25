@@ -72,12 +72,6 @@ In our work, we demonstrated that |mhist0| may not terminate
 for negative datatypes by exhibiting the counter-example
 (Figure \ref{fig:LoopHisto}) in \S\ref{ssec:tourNegative}.
 
-\begin{figure}
-\CataViaHisto
-\caption{\normalsize Alternative definition of iteration via course-of-values iteration.}
-\label{fig:cataviahisto}
-\end{figure}
-
 Figure \ref{fig:cataviahisto} illustrates a well known fact that a standard
 iteration (|mcata|) is a special case of a course-of-values iteration (|mhist|).
 Note that |mcata| is defined in terms of |mhist|
@@ -87,4 +81,11 @@ Similarly, We can define |mcata| in terms of |mprim|, and,
 |mhist| in terms of |mcvpr|, by ignoring the casting operation of
 the primitive recursion families. It is also quite evident that
 we can define |mcata| in terms of |msfcata|.
+
+\begin{figure}[b]
+\CataViaHisto
+\caption{\normalsize Alternative definition of iteration via course-of-values iteration.}
+\label{fig:cataviahisto}
+\end{figure}
+
 

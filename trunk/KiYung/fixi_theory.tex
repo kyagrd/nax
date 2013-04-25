@@ -188,7 +188,7 @@ for the definition of saturated sets.
 In \S\ref{sec:fixi:cv}, we embedded Mendler-style course-of-values
 recursion (\McvPr) in \Fixi\ for the base structures ($F$)
 that have maps ($\textit{fmap}_F$), which are also known as
-\emph{monotonicity witnesses} [TODO cite]. The theoretical development of
+\emph{monotonicity witnesses} \cite{Mat98,Mat99}. The theoretical development of
 the termination of \McvPr\ by assuming the existence of maps is elegant, since
 it does not require ad-hoc syntactic restrictions on the formation of types.
 However, in a language implementation, it is not desirable to require users to
@@ -205,6 +205,10 @@ Conjecture \ref{conj:fixi:fmap} below. In this thesis, we only show that this
 conjecture holds for simple cases (Proposition \ref{prop:fixi:fmapBaseCase}),
 but still encompassing a broad range of types.
 The complete proof is left for future work.
+\citet{Mat99} showd that positive inductive types, in the context of System \F,
+are monotone (\ie, map exists), but it has not yet been studied
+whether we can rely on polarized kinds to derive monotonicity
+in the context of System \Fw.
 
 \begin{conjecture}\label{conj:fixi:fmap}
 For any $F : +* -> *$, there exists\\ \vspace*{-1ex}

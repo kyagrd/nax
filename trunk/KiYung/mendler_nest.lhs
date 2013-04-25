@@ -135,14 +135,54 @@ Using |sumP|, we can sum up |ps| defined above: |sumP ps ~> 28|.
 \end{figure*}
 \end{landscape}
 
-Below the |psum|, there is yet another general recursive version |psum'|,
-using the newtype |Ret| to wrap the return type.
-The purpose of illustrating |psum'| is to emphasize
-the syntactic similarity to the Mendler-style version |psumm|.
-On the right-hand side of Figure \ref{fig:psum}, we define the Mendler-style
-version |psumm|, which syntactically similar to |psum'| on the left-hand side.
+Before discussing the Mendler style version, let us take a look at yet another
+general recursive version of the function |psum'|, which explicitly wraps up
+the answer values of type |(i->Int) -> Int| inside the newtype |Ret i|.
+The relations between the plain vanilla version and the wrapped up version
+are simply:
+\begin{code}
+       psum  = unRet .  psum'
+Ret .  psum  =          psum'
+\end{code}
+The wrapped up version |psum'| has the same structure as the Mendler style
+version |psumm| found on the right-hand side of Figure \ref{fig:psum}.
+The wrapping of the answer type is for purely technical reasons:
+to avoid the need for higher-order unification.
+If we were to work with the unwrapped answer type in the Mendler style,
+the type system would need to unify (|a i|) with (|(i->Int) -> Int|),
+which is a higher-order unification, whereas unifying (|a i|) with
+the wrapped answer type (|Ret i|) is first-order.
+The type inference algorithm of Haskell (and most other languages)
+does not support higher-order unification.\footnote{We may avoid higher-order
+unification, either by making the Mendler-style combinators language constructs
+(rather than functions) so that the type system treats them with specialized
+typing rules; or by providing a version of the combinators with syntactic
+Kan-extension as in \cite{AbeMatUus05}.}
 
+The summation function for powerlists in Mendler style is illustrated
+on the right-hand side in Figure \ref{fig:psum}.
+First, we give two-level datatype definitions for powerlists.  As usual,
+we define the datatype |Powl| as a fixpoint of the base |PowlF|.
+However, an important difference that readers should notice is the use of
+fixpoint |Mu1| at kind $* -> *$ bases, instead of |Mu0|, for the kind $*$ bases
+inducing regular datatypes. Since we used |Mu1| to define
+the recursive datatype, we use |mcata1|, the Mendler style iteration
+combinator at kind $* -> *$, to define the function |psumm|.
 
+The beauty of the Mendler style approach is that the implementation of
+the recursion combinators for higher-ranks (or, higher-kinds) are
+\emph{exactly the same} as their kind $*$ counterparts.
+The definitions differ only in their type signatures.
+As you can see in Figures \ref{fig:rcombty} and \ref{fig:rcombdef},
+|mcata1| has a richer type than |mcata0|, but their implementations
+are \emph{exactly the same}! This is not the case for the conventional approach.
+The definition of |cata| won't generalize to nested datatypes in a trivial way.
+There has been several approaches \cite{BirPat99,MarGibBay04,Hin00}
+to extend folds or catamorphisms for nested datatypes
+in the conventional setting.
+
+We can also define a summation function for bushs in a similar way
+as the summation function for powerlists.
 The bush datatype is defined as follows (also in Figure \ref{fig:bsum}):
 \begin{code}
 data Bush  i = NB  | CB i (Bush (Bush i))
@@ -194,29 +234,12 @@ Ret .  bsum  =          bsum'
 \end{code}
 The wrapped up version |bsum'| has the same structure as the Mendler style
 version |bsumm| found on the right-hand side of Figure \ref{fig:bsum}.
-The wrapping of the answer type is for purely technical reasons:
-to avoid the need for higher-order unification.
-If we were to work with the unwrapped answer type in the Mendler style,
-the type system would need to unify (|a i|) with (|(i->Int) -> Int|),
-which is a higher-order unification, whereas unifying (|a i|) with
-the wrapped answer type (|Ret i|) is first-order.
-The type inference algorithm of Haskell (and most other languages)
-does not support higher-order unification.\footnote{We may avoid higher-order
-unification, either by making the Mendler-style combinators language constructs
-(rather than functions) so that the type system treats them with specialized
-typing rules; or by providing a version of the combinators with syntactic
-Kan-extension as in \cite{AbeMatUus05}.}
 
+the summation function for bushes in Mendler style is illustrated
+on the right-hand side in Figure \ref{fig:bsum}. As usual,
+we define the datatype |Bush| as a fixpoint (|Mu1|) of the base |BushF|.
 
-Finally, let us discuss the summation function for bushes using
-the Mendler style, found on the right-hand side in Figure \ref{fig:bsum}.
-First, we give Mendler style datatype definitions for bushes.  As usual,
-we define the datatype |Bush| as a fixpoint of the base |BushF|.
-However, an important difference that readers should notice is the use of
-fixpoint |Mu1| at kind $* -> *$ bases, instead of |Mu0|, for the kind $*$ bases
-inducing regular datatypes.
-
-That the type argument |i| in |Powl i| and |Bush i| is a type index that
+The type argument |i| in both |Powl i| and |Bush i| is a type index that
 forces us to choose the fixpoint on kind $* -> *$ (and its related recursion
 combinators). Note, in the definition of the base types |PowlF| and 
 type |BushF|, we place the index |i| after the type argument |r| for
@@ -226,18 +249,5 @@ indices (|i|).  Figure \ref{fig:vec}, which we will shortly discuss
 in \S\ref{ssec:tourIndexed}, contains an example where there are both
 type parameters and type indices in a datype (|Vec p i|). 
 
-Getting back to the right-hand side of Figure \ref{fig:bsum},
-since we used |Mu1| to define the recursive datatypes, we use |mcata1|,
-the Mendler style iteration combinator at kind $* -> *$, to define
-the functions. The beauty of the Mendler style approach is that
-the implementation of the recursion combinators for higher-ranks
-(or, higher-kinds) are \emph{exactly the same} as their kind $*$ counterparts.
-The definitions differ only in their type signatures. As you can see in Figures 
-\ref{fig:rcombty} and \ref{fig:rcombdef}, |mcata1| has a richer type than
-|mcata0|, but their implementations are \emph{exactly the same}!
-This is not the case for the conventional approach.
-The definition of |cata| won't generalize to nested datatypes in a trivial way.
-There has been several approaches \cite{BirPat99,MarGibBay04,Hin00}
-to extend folds or catamorphisms for nested datatypes
-in the conventional setting.
+
 

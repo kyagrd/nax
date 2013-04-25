@@ -13,7 +13,8 @@ TEXSRC=mylhs2tex.sty main.tex \
        mendler_prim.tex \
        fi.tex fi_fi.tex fi_theory.tex fi_data.tex \
        fixi.tex nax.tex casestd.tex \
-       relwork.tex futwork.tex concl.tex
+       relwork.tex futwork.tex concl.tex \
+       appendix.tex
 
 pdf: main.pdf
 
