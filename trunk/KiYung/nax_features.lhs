@@ -2,8 +2,8 @@
 This chapter provides an informal introduction to the Nax programming language.
 We go through several distinct features of Nax, providing one or more examples
 for each feature. Basic understanding of these features will be neccessary
-to continue further discussions on design principles (Chapter \ref{ch:nax}) and
-type inference (Chapter \ref{ch:naxTyInfer}) in the following chapters.
+to continue further discussions on design principles (Chapter~\ref{ch:nax}) and
+type inference (Chapter~\ref{ch:naxTyInfer}) in the following chapters.
 
 All the examples in this chapter run on our prototype implementation of Nax.
 An example usually consists of several parts.
@@ -13,20 +13,21 @@ Recursive data is introduced in two stages. We must be careful to separate
 parameters from indices when using indices to describe static properties of
 data.
 
-\item Introduce macros, either by explicit definition, or by
-automatic fixpoint derivation to limit the amount of explicit notation
-that must be supplied by the programmer.
+\item Introduce type synonyms and constructor functions,
+either by explicit definition, or by automatic fixpoint derivation
+to limit the amount of explicit notation that must be supplied
+by the programmer.
 
 \item Write a series of definitions that describe how the data is to be
 manipulated. Deconstruction of recursive data can only be performed with
-Mendler-style combinators to ensure strong normalization.
+Mendler-style recursion combinators to ensure strong normalization.
 \end{itemize}
 
 \section{Two-level types}\label{2level}
 Non recursive datatypes are introduced by the |data| declaration.
-The data declaration can include arguments. The kind and separation of
-arguments into parameters and a indices is inferred. For example, 
-the three non-recursive data types, |Bool|, |Either|, and |Maybe|,
+The data declaration can include arguments.
+%% The kind and separation of arguments into parameters and a indices is inferred.
+For example, the three non-recursive data types, |Bool|, |Either|, and |Maybe|,
 familiar to many functional programmers, are introduced by declaring
 the kind of the type, and the type of each of the constructors.
 This is similar to the way {\small GADT}s are introduced in Haskell.
@@ -133,21 +134,21 @@ A general rule of thumb, is to apply |In[k]| to terms of non-recursive type
 to get terms of recursive type. Writing programs using two level types, and
 recursive injections has definite benefits, but it surely makes programs rather
 annoying to write. Thus, we have provided Nax with a simple but powerful
-synonym (macro) facility.
+synonym (or, macro) facility.
 
 \section{Synonyms, constructor functions, and fixpoint derivation}
 \label{macro}
 
 We may codify that some type is the fixpoint of another, once and for all,
-by introducing a type synonym (macro).
+by introducing a type synonym.
 
 \begin{code}
 synonym Nat = Mu[*] N
 synonym List a = Mu[*] (L a)     
 \end{code}
 
-In a similar manner we can introduce constructor functions that create
-recursive values without explicit mention of |In| at their call sites
+In a similar manner, we can introduce constructor functions that create
+recursive values without explicit mention of |In[kappa]| at their call sites
 (potentially many), but only at their site of definition (exactly once).
 
 \begin{code}
@@ -159,15 +160,15 @@ cons x xs  = In[*] (Cons x xs)
 \end{code}
 
 This is such a common occurrence that recursive synonyms and
-recursive constructor functions can be automatically derived.
-Automatic synonym and constructor derivation using Nax is
-both concise and simple. The clause ``|deriving fixpoint List|" (below right)
-causes the |synonym| for |List| to be automatically defined.
-It also defines the constructor functions |nil| and |cons|.  By convention,
-the constructor functions are named by dropping the initial upper-case letter
-in the name of the non-recursive constructors to lower-case.  To illustrate,
-we provide side-by-side comparisons of Haskell and two different uses of Nax.
-
+constructor functions can be automatically derived.
+Automatic synonym and constructor derivation in Nax is both concise and simple.
+The clause ``|deriving fixpoint List|" (below right) automatically derives
+the |synonym| definition for |List|. It also defines the constructor functions
+|nil| and |cons|.  By convention, the constructor functions are named by
+dropping the initial upper-case letter in the name of the non-recursive
+constructors to lower-case.  To illustrate, we provide side-by-side
+comparisons of Haskell and two different uses of Nax.
+\vskip.5em
 \begin{singlespace}
 \vspace*{0.1in}\noindent
 \begin{tabular}{l || l || l}
@@ -220,25 +221,25 @@ x = cons 3 (cons 2 nil)
 
 \end{tabular}
 \end{singlespace}
+\vskip.5em
 
 \section{Mendler combinators for non-indexed types}
-There are no restrictions on what kind of datatypes
-can be defined in Nax. There are also no restrictions on the creation
-of values. Values are created using constructor functions, and
-the recursive injection (|In[k]|). 
-To ensure strong normalization, analysis of constructed
-values has some restrictions. Values of non-recursive types can
-be freely analysed using pattern matching. Values of recursive types
-must be analysed using one of the Mendler-style combinators. By design,
-we limit pattern matching to values of non-recursive types, by
-{\em not} providing any mechanism to match against
-the recursive injection (|In[k]|).
+There are no restrictions on what kind of datatypes can be defined in Nax.
+There are also no restrictions on the creation of values for those datatypes.
+Values of datatypes are created using data constructors and
+the recursive injection (|In[k]|). To ensure strong normalization,
+analysis (or, elimination, pattern matching) of the constructed values
+has some restrictions. Values of non-recursive types can be freely analysed
+using pattern matching. Values of recursive types must be analysed using
+one of the Mendler-style combinators. By design, we limit pattern matching
+to values of non-recursive types, by {\em not} providing any mechanism to
+match against the recursive injection (|In[k]|).
 
-To illustrate simple pattern matching over non-recursive types, we 
-give a Nax multi-clause definition 
-for the |not| function over the (non-recursive) |Bool| type,
-and a function that strips off the |Just| constructor over the (non-recursive)
-|Maybe| type using a case expression.
+To illustrate simple pattern matching over non-recursive types, we give
+a multi-clause definition for the |not| function over
+the (non-recursive) |Bool| type, and a function that strips off
+the |Just| constructor over the (non-recursive) |Maybe| type using
+a case expression.
 \begin{singlespace}
 \vspace*{.1in}
 \begin{tabular}{l || l}
@@ -260,9 +261,12 @@ unJust0 x =  casei{} x of  Just x   -> x
 \end{tabular}
 \vspace*{.1in}
 \end{singlespace}
+Of course, the |not| function can be also defined as a single clause definition
+using the |case| expression and the |unJust0| function an also be defined
+as a multi-clause definition.
 
-Analysis of recursive data is performed with Mendler-style combinators. In our
-implementation we provide 5 Mendler-style combinators:
+Analysis of recursive data is performed by Mendler-style recursion combinators.
+In our implementation, we provide 5 families of Mendler-style combinators:
  |MIt| (fold or catamorphism or iteration),
  |MPr| (primitive recursion),
  |McvIt| (courses-of-values iteration), and
@@ -840,8 +844,8 @@ the regular types (|Nat| and |List|), nested types (|PowerTree|),
 {\small GADT}s (|Vector|), and mutually recursive types (|Even| and |Odd|).
 
 \item Two-level types, while expressive, are a pain to program with (all those
-|Mu[kappa]| and |In[kappa]| annotations), so a strong synonym or macro
-facility is necessary. With syntactic support, one hardly even notices.
+|Mu[kappa]| and |In[kappa]| annotations), so a strong synonym facility is
+necessary. With syntactic support, one hardly even notices.
 
 \item The use of term-indexed types allows programmers to write types that
 act as logical relations, and form the basis for reasoning about programs.
