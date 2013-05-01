@@ -109,7 +109,7 @@ data L : * -> * -> * where
 \end{singlespace}
 
 A recursive type can be defined as the fixpoint of a (perhaps partially applied)
-non-recursive type constructor. Thus the traditional natural numbers are typed
+non-recursive type constructor. Thus, the traditional natural numbers are typed
 by |Mu[*] N| and the traditional lists with components of type |a| are typed by
 |Mu[*] (L a)|.  Note that the recursive type operator |Mu[kappa]| is itself
 specialized with a kind argument inside square brackets (|[ kappa ]|).
@@ -236,8 +236,9 @@ to values of non-recursive types, by {\em not} providing any mechanism to
 match against the recursive injection (|In[k]|).
 
 To illustrate simple pattern matching over non-recursive types, we give
-a multi-clause definition for the |not| function over
-the (non-recursive) |Bool| type, and a function that strips off
+a multi-clause definition for the |not| function\footnote{
+	|not| is just a pretty-printed notation of \textit{not} using lhs2TeX.}
+over the (non-recursive) |Bool| type, and a function that strips off
 the |Just| constructor over the (non-recursive) |Maybe| type using
 a case expression.
 \begin{singlespace}
@@ -375,11 +376,11 @@ MPr{psi} phi (In[*] x)
 \begin{minipage}[t]{.28\linewidth}
 \begin{code}
 McvIt{} x with
-  (NEWFI f) (NEWFI project) p_i = e_i
+  (NEWFI f) (NEWFI out) p_i = e_i
 {-" "-}
 x        : Mu[*] T
 f        : r -> ans
-project  : r -> T r
+out      : r -> T r
 p_i      : T r
 e_i      : ans
 {-" "-}
@@ -398,12 +399,14 @@ A Mendler-style combinator implements a (provably terminating) recursive functio
 applied to the scrutinee. The abstract type and its operations ensure
 termination. Note that every operation above includes an abstract operator,
 |f: r -> ans|. This operation represents a recursive call in the function
-defined by the Mendler-style combinator. Other operations, such as |cast| and |project|,
-support additional functionality within the abstraction in which they are
-defined (|MPr| and |McvIt| respectively).  The equations at the bottom of
-each section provide an operational understanding of how the operator works.
-These can be safely ignored until after we see some examples of how
-a Mendler-style combinator works in practice.
+defined by the Mendler-style combinator. Other operations, such as
+|cast| and |out|, support additional functionality within the abstraction
+in which they are defined (|MPr| and |McvIt| respectively). The equations
+at the bottom of each column above provide an operational understanding of
+how each Mendler-style combinator works. These can be safely ignored until
+after we see some examples of how a Mendler-style combinator works in practice.
+In Figure~\ref{fig:NaxExampleMendlerCombinatorUses},
+\begin{figure}
 \begin{singlespace}
 \begin{code}
 length y     = MIt{} y    with  len Nil          = zero
@@ -421,7 +424,11 @@ fibonacci x  = McvIt{} x  with  fib out Zero      =  succ zero
                                                        Succ m  -> fib n + fib m 
 \end{code}
 \end{singlespace}
-
+\caption{Illustrating the use of Mendler-style recursion combinators
+	provided in Nax by simple examples: |length|, |tail|, |factorial|,
+	and |fibonacci|.}
+\label{fig:NaxExampleMendlerCombinatorUses}
+\end{figure}
 The |length| function uses the simplest kind of recursion where
 each recursive call is an application to a direct subcomponent of the input.
 Operationally, |length| works as follows. The scrutinee, |y|,
@@ -434,29 +441,32 @@ The abstract type mechanism gives the pattern |(Cons x xs)| the type |(L a r)|,
 so (|x: a|) and (|xs: r|) for some abstract type |r|. The abstract operation,
 (|len: r -> Int|), can safely be applied to |xs|, obtaining the length of
 the tail of the original list. This value is incremented, and then returned.
-The |MIt| abstraction provides a safe way to allow the user to make
+The abstract operation of |MIt| provides a safe way to allow the user to make
 recursive calls, |len|, but the abstract type, |r|, limits its use to
 direct subcomponents, so termination is guaranteed.
 
-Some recursive functions need direct access, not only to the direct
-subcomponents, but also the original input as well. The Mendler-style combinator
-|MPr| provides a safe, yet abstract mechanism, to support this. The Mendler
-|MPr| abstraction provides two abstract operations. The recursive caller with
-type (|r -> ans|) and a casting function with type (|r -> Mu[k] T|).
+Some recursive functions need to direct access the concrete values of
+the direct subcomponents (of type |Mu[*] T|), in addtion to applying
+abstract recursive call on the abstract handles of the direct subcomponents
+(of type |r|). The Mendler-style combinator |MPr| provides a safe,
+yet abstract mechanism, to support this. There are two abstract operations
+provided by |MPr|: the recursive caller with type (|r -> ans|) and
+a casting function with type (|r -> Mu[*] T|).
 The casting operation allows the user to recover the original type from
 the abstract type |r|, but since the recursive caller only works on
-the abstract type |r|, the user cannot make a recursive call on one of these
-cast values. The functions |factorial| (over the natural numbers) and
-|tail| (over lists) are both defined using |MPr|.
+the abstract type |r|, the user cannot make a recursive call on one of
+these cast values. The functions |factorial| (over the natural numbers)
+and |tail| (over lists) are both defined using |MPr|.
 
-Note how in |factorial| the original input is recovered (in constant time) by
-taking the successor of casting the abstract predecessor, |n|. In the |tail|
-function, the abstract tail, |ys|, is cast to get the answer, and
-the recursive caller is not even used.
+Note how in |factorial| the original input is recovered (in constant time)
+by taking the successor of casting the abstract predecessor, |n|.
+In the |tail| function, the abstract tail, |ys|, is cast to get the answer,
+and the recursive caller is not even used.
 
-Some recursive functions need direct access, not only to the direct
-subcomponents, but even deeper subcomponents. The Mendler-style combinator |McvIt|
-provides a safe, yet abstract mechanism, to support this.
+Some recursive functions need direct access, not only to
+the direct subcomponents, but even deeper subcomponents.
+The Mendler-style combinator |McvIt| provides a safe,
+yet abstract mechanism, to support this.
 The function |fibonacci| is a classic example of this kind of recursion.
 The Mendler |McvIt| provides two abstract operations. The recursive caller
 with type (|r -> ans|) and a projection function with type (|r -> T r|).
@@ -831,16 +841,18 @@ The final line of the example above illustrates applying |showTerm| to |apply|.
 Recall that |apply = abs (\ f -> abs (\ x -> app f x))|, which is the HOAS
 representation of the $\lambda$-calculus term ($\lambda f . \lambda x . f\; x$).
 
+TODO point to theoretical discussions in sections from other chapters
+
 \section{Lessons from Nax}
 
-Nax is our first attempt to build a strongly normalizing, sound and consistent
-logic, based upon Mendler-style iteration. We would like to
+Nax is our attempt to build a strongly normalizing, sound and consistent
+logic, based upon Mendler-style recursion combinators. We would like to
 emphasize the lessons we learned along the way.
 
 \begin{itemize}
 \item Writing types as the fixed point of a non-recursive type constructor
-is quite expressive. It supports a wide variety of types including
-the regular types (|Nat| and |List|), nested types (|PowerTree|),
+(two-level types) is quite expressive. It supports a wide variety of types
+including the regular types (|Nat| and |List|), nested types (|PowerTree|),
 {\small GADT}s (|Vector|), and mutually recursive types (|Even| and |Odd|).
 
 \item Two-level types, while expressive, are a pain to program with (all those
@@ -853,19 +865,21 @@ In Chapters \ref{ch:fi} and \ref{ch:fixi}, we have formalized lambda calculi,
 which support term indices.
  
 \item Using Mendler-style combinators is expressive, and with syntactic support
-(the |with| equations of the Mendler combinators), is easy to use. In
-fact Nax programs are often no more complicated than their Haskell counterparts.
+(the |with| equations of the Mendler combinators), is reasonable easy to use.
+In fact, Nax programs are often no more complicated than
+their Haskell counterparts, except the use of Mendler-style recursion
+combinators instead of general recursion.
 
-\item Type inference is an important feature of a programming language. We
-hope you noticed, that apart from index transformers, no type information
-is supplied in any of the Nax examples. The Nax compiler reconstructs
-all type information.
+\item Type inference is an important feature of a programming language.
+We hope you noticed, apart from index transformers and datatype declarations,
+no type information is supplied in any of the Nax examples
+Our Nax implementation can reconstruct all other type information.
 
 \item Index transformers are the minimal information needed to extend 
-Hindley-Milner type inference over GADTs. One can always predict
-where they are needed, and the compiler can enforce that the
+Hindley--Milner type inference over GADTs. One can always predict
+where they are needed, and the Nax implementation can enforce that the
 programmer supplies them. They are never needed for non-indexed types.
-Nax faithfully extends Hindley-Milner type inference.
+Nax faithfully extends Hindley--Milner type inference.
 \end{itemize}
 
 

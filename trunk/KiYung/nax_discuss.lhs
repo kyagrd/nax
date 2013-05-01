@@ -1,27 +1,27 @@
 \section{Discussion} \label{sec:discuss}
-Indexed types (\eg, |Val| in Fig.\;\ref{fig:eval}) are
+Indexed types (\eg, |Val| in Figure\;\ref{fig:eval}) are
 classified by kinds (\eg, |Ty -> *|). What do valid kinds look like?
 Sorting rules define kind validity (or, well-sortedness).
 Different programming languages, that support term indices, have
 made different design choices.
 In this section, we compare the sorting rules of Nax with the sorting rules
-of other languages (Sect.\;\ref{ssec:sorting}). Then, we
+of other languages (\S\ref{ssec:sorting}). Then, we
 compare the class of indexed datatypes supported by Nax with
-those supported in other languages (Sect.\;\ref{ssec:sortingEx}).
+those supported in other languages (\S\ref{ssec:sortingEx}).
 
 \subsection{Universes, Kinds, and Well-sortedness} \label{ssec:sorting}
 
 The concrete syntax for kinds appears similar among Haskell, Nax, and Agda.
-For instance, in Fig.\;\ref{fig:eval}, the kind |Ty -> *| has exactly the same
+For instance, in Figure\;\ref{fig:eval}, the kind |Ty -> *| has exactly the same
 textual representation in all of the three languages. However, each language
 has its own universe structure, kind syntax, and sorting rules,
-as summarized in Fig.\;\ref{fig:sorting}. 
+as summarized in Figure\;\ref{fig:sorting}. 
 
 Figure\;\ref{fig:sortingEx}
 illustrates differences and similarities between the mechanism
 for checking well-sortedness, by comparing the justification for
 the well-sortedness of the kind |List Ty -> *|.
-The important lessons of Fig.\;\ref{fig:sortingEx} are
+The important lessons of Figure\;\ref{fig:sortingEx} are
 that the Nax approach is closely related to \emph{universe subtyping} in Agda,
 and, the datatype promotion in Haskell is closely related to
 \emph{universe polymorphism} in Agda. 
@@ -158,7 +158,7 @@ kinds in Nax always terminate in |*|. For example,\footnote{
 	when the domain of an arrow kind obviously looks like a type.
 	For instance, |Nat -> *| is considered as |{Nat} -> *|
 	since |Nat| is obviously a type because it starts with an uppercase.
-	In Sect.\;\ref{sec:example}, we omitted curly braces to help readers 
+	In \S\ref{sec:example}, we omitted curly braces to help readers 
 	compare Nax with other languages.
 	From now on, we will consistently put curly braces in kinds.} \\ $~$
 \quad |* -> * -> *|, \qquad |{Nat} -> {Nat} -> *|, \qquad
@@ -172,7 +172,7 @@ with stratified universes, which we will shortly explain.
 Agda has countably many stratified type universes for several good reasons.
 When we from a kind arrow |kappa1 -> kappa2| in Agda, the domain |kappa1| and 
 the codomain |kappa2| must be the same universe (or, sort), as specified by
-the (|->|) rule in Fig.\;\ref{fig:sorting}, and the arrow kind also lies in
+the (|->|) rule in Figure\;\ref{fig:sorting}, and the arrow kind also lies in
 the same universe. However, requiring |kappa1|, |kappa2|, and |kappa1 -> kappa2|
 to be in exactly the same universe can cause a lot of code duplication.
 For example, $|List Ty| -> \star_0$ cannot be justified by the (|->|) rule
@@ -187,14 +187,14 @@ Universe subtyping provides a remedy to such a code duplication problem
 by allowing objects in a lower universe to be considered as objects
 in a higher universe. This gives us a notion of subtyping such that
 $\star_i \leq \star_j$ where $i \leq j$.\footnote{
-	See Ulf Norell's thesis \cite{Norell07thesis} (Sect.\;1.4)
+	See Ulf Norell's thesis \cite{Norell07thesis} (\S1.4)
 	for the full description on universe subtyping.}
 With universe subtyping, we can form arrows from |Ty| to any level of universe
 (\eg, $|List Ty| -> \star_0$, $|List Ty| -> \star_1$, $\dots$). 
 Relating Agda's universes to sorts in Haskell and Nax, $\star_0$ and $\star_1$
 correspond to |*| and |BOX|. So, we write |*| and |BOX| instead of $\star_0$
 and $\star_1$ in the justification of well-formedness of |List Ty -> *|
-in Agda, to make the comparisons align in Fig.\;\ref{fig:sortingEx}.
+in Agda, to make the comparisons align in Figure\;\ref{fig:sortingEx}.
 
 In addition to universe subtyping, Agda also supports
 universe polymorphism,\footnote{See 
@@ -260,7 +260,7 @@ hlist = HCons 3 (HCons True (HCons (1 :. 2 :. Nil) HNil))
 \end{figure}
 
 Nax supports nested term indices while Haskell's datatype promotion cannot.
-Examples in Sect.\;\ref{sec:example} only used rather simple
+Examples in \S\ref{sec:example} only used rather simple
 indexed datatypes, whose terms indices are of non-indexed types
 (\eg, |Nat|, |List Ty|). One can imagine more complex indexed datatypes,
 where some term indices are themselves of term-indexed datatypes.
@@ -277,14 +277,14 @@ without term indices.
 
 On the contrary, Haskell supports promoted datatypes that hold types as
 elements, although limited to types without term indices, while Nax does not.
-The heterogeneous list datatype (|HList|) in Fig.\;\ref{fig:hlist} is
+The heterogeneous list datatype (|HList|) in Figure\;\ref{fig:hlist} is
 a well-known example\footnote{The |HList| library in Haskell by
 \citet{HList-HW04} was originally introduced using type class constraints,
 rather than using GADTs and other relatively new extensions.}
 that uses datatypes containing types.
 Note that |HList| is indexed by |List{-"\;"-}*|, which is a promoted list
 whose elements are of kind |*|, that is, element are types.
-For instance, |hlist| in Fig.\;\ref{fig:hlist} contains
+For instance, |hlist| in Figure\;\ref{fig:hlist} contains
 three elements |3 : Int|, |True : Bool|, and |(1 :.2 :. Nil) : List Int|,
 and its type is |HList (Int :. Bool :. List Int :. Nil)|.
 
@@ -300,10 +300,10 @@ kind structure is much simpler than Omega's (\eg, no user defined kinds in Nax),
 yet singleton types are definable with fewer worries about code duplication
 across different universes. Singleton types are typically indexed by
 the values of their non-singleton counterparts. For example,
-in Fig.\;\ref{fig:env}, singleton natural numbers (|SNat|) are indexed by
+in Figure\;\ref{fig:env}, singleton natural numbers (|SNat|) are indexed by
 natural numbers (|Nat|).  Note that we can index datatypes by singleton types
-in Nax, while datatype promotion cannot (recall Sect.\;\ref{ssec:sortingEx}).
-For instance, |Env'| indexed by |SNat| in Fig.\;\ref{fig:env} can better
+in Nax, while datatype promotion cannot (recall \S\ref{ssec:sortingEx}).
+For instance, |Env'| indexed by |SNat| in Figure\;\ref{fig:env} can better
 simulate the dependently typed version than |Env|, since |Env'| has a direct
 handle on size of the environment at type level, just by referring to
 the |SNat| index, without extra type level computation on the |Vec| index.
@@ -316,13 +316,12 @@ We think it would be possible to apply similar strategies to Nax, and even
 better, singleton types for already indexed datatypes would be derivable.
 
 \paragraph{The kind arrow |({A}->kappa)|{\rm ,}\!} from a type to a kind,
-predates Nax. Our kind syntax in Fig.\;\ref{fig:sorting}, although
+predates Nax. Our kind syntax in Figure\;\ref{fig:sorting}, although
 developed independently, happens to coincide with the kind syntax of Deputy
 \cite{ConHarAndGayNec07}, a dependently typed system for low-level
 imperative languages with variable mutation and heap-allocated structure.
 
-\paragraph{Curly braces in Nax are different from
-		 the curly braces in Agda or SHE.}~
+\paragraph{Curly braces in Nax are different from those in Agda or SHE.} ~
 
 In Nax, curly braces mean that things inside them are \emph{erasable} (\ie,
 must still type correct without all the curly braces). Agda's curly braces
@@ -342,7 +341,7 @@ kind variables (|calX : BOX|). That is, polymorphic kinds (or kind schemes)
 in Nax may be kind polymorphic (|forall calX.kappa|), type polymorphic
 (|forall alpha.kappa|), term-index polymorphic (|forall i.kappa|), or
 combinations of them (|forall calX alpha i.kappa|). For example, the kinds of
-|P| and |Path| in Fig.\;\ref{fig:glist} are polymorphic over the type variable
+|P| and |Path| in Figure\;\ref{fig:glist} are polymorphic over the type variable
 |iota: *|.  In contrast, datatype promotion in Haskell only needs to consider
 polymorphic kinds (|forall calX.kappa|) quantified over kind variables
 (|calX : BOX|) since everything is already promoted to the kind level.

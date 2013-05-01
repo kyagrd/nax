@@ -2,9 +2,9 @@
 \label{sec:example}
 
 In this section, we introduce three examples
-(Figs.\;\ref{fig:eval} and \ref{fig:evalCont},
- Figs.\;\ref{fig:glist} and \ref{fig:glistCont}, and
- Figs.\;\ref{fig:compile} and \ref{fig:compileCont})
+(Figures\;\ref{fig:eval} and \ref{fig:evalCont},
+ Figures\;\ref{fig:glist} and \ref{fig:glistCont}, and
+ Figures\;\ref{fig:compile} and \ref{fig:compileCont})
 that use term indexed datatypes to enforce program invariants.
 Each example is written in three different languages
 -- like the Rosetta Stone -- Haskell, Nax,  and Agda.
@@ -20,11 +20,11 @@ Chapter \ref{ch:naxFeatures} for further details on these features).
 The three examples we introduce are the following:
 \begin{itemize}\vspace*{-.5ex}
 \item A type-preserving evaluator for a simple expression language
-(Sect. \ref{ssec:eval}),
+(\S\ref{ssec:eval}),
 \item A generic |Path| datatype that can be specialized to various
-list-like structures with indices (Sect. \ref{ssec:glist}), and
+list-like structures with indices (\S\ref{ssec:glist}), and
 \item A stack-safe compiler for the same simple expression language,
-which uses the |Path| datatype (Sect. \ref{ssec:compile}).
+which uses the |Path| datatype (\S\ref{ssec:compile}).
 \end{itemize}
 We adopted the examples from Conor McBride's keynote talk \cite{McBride12}
 at ICFP 2012 (originally written in Agda). All the example code was tested
@@ -71,7 +71,7 @@ and (4) write the evaluator (from expressions to values) that preserves
 the term indices representing the type of the object language.
 Once the evaluator type checks, we are confident that the evaluator is
 type-preserving, relying on type preservation of the host-language type system.
-In Figs.\;\ref{fig:eval} and \ref{fig:evalCont}, we provide a concrete example
+In Figures\;\ref{fig:eval} and \ref{fig:evalCont}, we provide a concrete example
 of such a type-preserving evaluator for a very simple expression language
 (|Expr|).
 
@@ -159,9 +159,9 @@ In this section we introduce a generic |Path| datatype.\footnote{
 	\url{http://hackage.haskell.org/package/thrist} }
 We will instantiate |Path| into three different types of
 lists --  plain lists, length indexed lists 
-(|List'| and |Vec| in Figs.\;\ref{fig:glist} and \ref{fig:glistCont})
+(|List'| and |Vec| in Figures\;\ref{fig:glist} and \ref{fig:glistCont})
 and a |Code| type, in order to write a stack-safe compiler
-(Fig.\;\ref{fig:compile} and \ref{fig:compileCont}).
+(Figure\;\ref{fig:compile} and \ref{fig:compileCont}).
 
 The type constructor |Path| expects three arguments,
 that is, |Path x {i} {j} : *|.  The argument |x : {iota} -> {iota} -> *|
@@ -259,10 +259,10 @@ since type level functions are no different from term level functions.
 
 
 
-In Figs.\;\ref{fig:compile} and \ref{fig:compileCont},
+In Figures\;\ref{fig:compile} and \ref{fig:compileCont},
 we implement a stack-safe compiler for the same expression language
-(|Expr| in Figs.\;\ref{fig:eval} and \ref{fig:evalCont}) discussed in
-Sect.\;\ref{ssec:eval}. In Fig.s\;\ref{fig:eval} and \ref{fig:evalCont} of
+(|Expr| in Figures\;\ref{fig:eval} and \ref{fig:evalCont}) discussed in
+\S\ref{ssec:eval}. In Figures\;\ref{fig:eval} and \ref{fig:evalCont} of
 that section, we implemented an index preserving evaluator
 |eval : Expr {t} -> Val {t}|. Here, the stack-safe compiler
 |compile : Expr {t} -> Code {ts} {`cons t ts}| uses the index
@@ -275,7 +275,7 @@ that tracks only the types of the values stored there.
 We represent a stack configuration as
 a list of type representations (|List Ty|).\footnote{
 	The astute reader may wonder why we use |List| instead of the already
-	defined |List'| in Figs.\;\ref{fig:glist} and \ref{fig:glistCont},
+	defined |List'| in Figures\;\ref{fig:glist} and \ref{fig:glistCont},
 	which is exactly the plain list we want. In Nax and Agda, it is possible
 	to have term indices of |List' Ty| instead of |List Ty|. (In Nax and
 	Agda, the |List| datatype is defined in their standard libraries.)
@@ -300,7 +300,7 @@ replacing them with a new numeric value (the result of the addition)
 
 We define |Code| as a |Path| of stack consistent instructions
 (\ie, |Code {ts} {ts'}| is a synonym for |Path Inst {ts} {ts'}|
-from Sect. \ref{ssec:glist}).
+from \S\ref{ssec:glist}).
 For example, the compiled code consisting of the three instructions
 |inst1 : Inst {ts0} {ts1}|,
 |inst2 : Inst {ts1} {ts2}|, and

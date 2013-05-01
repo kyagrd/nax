@@ -47,26 +47,27 @@ in Chapter \ref{ch:naxTyInfer}.
 
 \item[$(3)$ Nax programs are expressive and concise.]~\\
 Nax programs are similar in size to their Haskell and Agda equivalents
-(Sect.\;\ref{sec:example}), yet they still retain logical consistency
+(\S\ref{sec:example}), yet they still retain logical consistency
 and type inference. Despite several features unique to Nax,
 explained in Table\;\ref{tbl:naxfeatures}, these features
 do not necessarily add verbosity.
 
 \item[$(4)$ Nax supports term indices within a relatively simple type system.]
-The type system of Nax (Sect.\;\ref{ssec:sorting}) is based on a
+~\\
+The type system of Nax (\S\ref{ssec:sorting}) is based on a
 two level universe structure, just like Haskell,
-yet it allows nested term indices (Sect.\;\ref{ssec:sortingEx}) as in languages
+yet it allows nested term indices (\S\ref{ssec:sortingEx}) as in languages
 based on a universe structure of countably many levels (\eg, Coq, Agda).
 \end{description}
 The detailed mechanism behind (1) and (2) above are discussed in other chapters.
 In this Chapter, we demonstrate (3) and (4), through a series of examples
--- a type-preserving evaluator (Sect.\;\ref{ssec:eval}),
-a generic path datatype (Sect.\;\ref{ssec:glist}), and
-a stack-safe compiler (Sect.\;\ref{ssec:compile}), that programming in Nax 
+-- a type-preserving evaluator (\S\ref{ssec:eval}),
+a generic path datatype (\S\ref{ssec:glist}), and
+a stack-safe compiler (\S\ref{ssec:compile}), that programming in Nax 
 is as simple as programming in Haskell or Agda.
 Then, we discuss the key design principles behind indexed datatypes in Nax
-(Sect.\;\ref{ssec:sorting}) and its strengths and limitations
-(Sect.\;\ref{ssec:sortingEx}).
+(\S\ref{ssec:sorting}) and its strengths and limitations
+(\S\ref{ssec:sortingEx}).
 
 
 \begin{table}
