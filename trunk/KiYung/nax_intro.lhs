@@ -8,7 +8,7 @@ This approach is often called \emph{``lightweight''}\footnote{\eg,
 in contrast to the approach taken by fully dependent type systems
 (\eg, Coq, Agda).
 The Generalized Algebraic Data Type (GADT) extension, implemented
-in the Glasgow Haskell Compiler (GHC) and in OCaml\cite{ManStu09,GarNor11}, 
+in the Glasgow Haskell Compiler (GHC) and in OCaml \cite{ManStu09,GarNor11}, 
 has made the lightweight approach
 widely applicable to everyday functional programming tasks.
 
