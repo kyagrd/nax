@@ -13,7 +13,8 @@ TEXSRC=mylhs2tex.sty main.tex \
        mendler_prim.tex \
        fi.tex fi_fi.tex fi_theory.tex fi_data.tex \
        fixi.tex nax.tex casestd.tex \
-       relwork.tex futwork.tex concl.tex \
+       relwork.tex relwork_mcoit.tex \
+       futwork.tex concl.tex \
        appendix.tex
 
 pdf: main.pdf
@@ -96,5 +97,8 @@ nax.tex: nax.lhs IFL12code/includelhs2tex.lhs \
 	IFL12code/GListExample.lagda IFL12code/GList.lagda \
 	IFL12code/Compile.lhs IFL12code/Compile.lnax IFL12code/Compile.lagda \
 	IFL12code/Env.lnax IFL12code/Env.lagda
+	lhs2TeX --poly -o $@ $<
+
+relwork_mcoit.tex: relwork_mcoit.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 

@@ -841,7 +841,13 @@ The final line of the example above illustrates applying |showTerm| to |apply|.
 Recall that |apply = abs (\ f -> abs (\ x -> app f x))|, which is the HOAS
 representation of the $\lambda$-calculus term ($\lambda f . \lambda x . f\; x$).
 
-TODO point to theoretical discussions in sections from other chapters
+There are more details behind the |MsfIt| and the fixpoint derivations
+for the datatypes on which |MsfIt| operates on.
+Recall, in Chpater~\ref{ch:mendler}, we desribed in Haskell that
+\MsfIt\ operates on recursive values of a fixpoint type ($\breve{\mu}$)
+augmented by a syntactic inverse, while other recursion schemes operate
+on recursive values of a standard fixpoint type ($\mu$).
+For further discussions, see \S\ref{sec:futwork:mu}.
 
 \section{Lessons from Nax}
 

@@ -2,6 +2,10 @@
 
 %format ~> = "\rightsquigarrow"
 
+%format Nu = "\nu"
+%format Nu0 = Nu "_{*}"
+%format Nu1 = Nu "_{* -> *}"
+
 %format Mu = "\mu"
 %format Mu0 = Mu "_{*}"
 %format Mu1 = Mu "_{* -> *}"
@@ -26,6 +30,12 @@
 %format Inverse1 = Inverse "_{* -> *}"
 
 %format cata = "\mathbf{cata}"
+%format mit = "\MIt"
+%format mit0 = mit "_{*}"
+%format mit1 = mit "_{* -> *}"
+%format mcoit = "\McoIt"
+%format mcoit0 = mcoit "_{*}"
+%format mcoit1 = mcoit "_{* -> *}"
 %format mcata = "\MIt"
 %format mcata0 = mcata "_{*}"
 %format mcata1 = mcata "_{* -> *}"
