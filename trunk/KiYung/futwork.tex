@@ -5,7 +5,126 @@ TODO
 \section{TODO different mu}\label{sec:futwork:mu}
 TODO
 
-\section{More on Mendler-style recursion schemes}
+\section{Another recursion scheme for mixed-variant datatypes}
+\label{sec:futwork:mprsi}
+TODO copy-pasted from abstract submisssion of TYPES 2013
+
+\newcommand{\mprsi}[0]{\textbf{mprsi}}
+
+In functional \emph{programming} languages, for instance, in Haskell,
+a HOAS for the untyped $\lambda$-calculus can be defined as
+{\small\texttt{\,data Exp~=~Abs\;(Exp\;->\;Exp)~|~App\;Exp\;Exp\,}}.
+Even if we assume all functions embedded in \texttt{Abs} are non-recursive,
+evaluating HOAS may still cause problems for logical reasoning,
+since the untyped $\lambda$-calculus has diverging terms. However, there are
+many well-behaved (\ie, terminating) computations on \texttt{Exp}, such as
+converting an HOAS expression to first-order syntax.
+Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme
+(\MsfIt, \aka\ \textit{msfcata}) that captures these well-behaved computations.
+
+If the datatype \texttt{Exp} had indexes to assert invariants of
+well-formed expressions, we could rely on these invariants to write
+even more expressive programs, such as a terminating well-typed evaluator.
+Discussion around this idea will constitute the latter parts of the paper.
+\vspace*{-2ex}
+\paragraph{A simply-typed HOAS evaluator\!\!\!} can be defined
+using \MsfIt\ at kind \texttt{*\,->\,*}.  Since \MsfIt\ terminates
+for any datatype, we are also proving that the evaluation of
+the simply-typed $\lambda$-calculus always terminates
+just by defining \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} in Nax, as below.
+We wonder \texttt{eval} has similarities to other normalization strategies
+like NbE \cite{BerSch91}.
+\vspace*{-1ex}
+{\small
+\begin{verbatim}
+  data E : (* -> *) -> (* -> *) where      -- the "deriving fixpoint Exp" defines
+    Abs : (r a -> r b) -> E r (a -> b)     --   abs f   = In[* -> *] (Abs f)
+    App : E r (a -> b) -> E r a -> E r b   --   app f e = In[* -> *] (App f e)
+      deriving fixpoint Exp                --   synonym Exp t = Mu[* -> *] E t
+
+  data Id a = MkId a -- the identity type
+  unId (MkId x) = x  -- destructor of Id
+  
+  eval e = msfit { t . Id t } e with
+             call inv (App f x) = MkId (unId(call f) (unId(call x)))
+             call inv (Abs f) = MkId (\v -> unId(call (f (inv (MkId v)))))
+\end{verbatim} }
+\vspace*{-.5ex}\noindent
+The type of \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} is inferred from
+\texttt{\{\,t\,.\;Id t\,\}}, which specifies the answer type in relation
+to the input type's index.
+Conceptually, \texttt{msfit} at kind \texttt{*\,->\,*} has the following type.\vspace*{-.5ex}
+% Note the types of \texttt{msfit}'s two abstract operations
+% \texttt{call} and \texttt{inv}.
+{\small
+\begin{verbatim}
+  msfit : (forall r . (forall i . r i -> ans i) -- call
+                   -> (forall i . ans i -> r i) -- inv
+                   -> (forall i . f r i -> ans i)      ) -> Mu[* -> *] f j -> ans j
+\end{verbatim} }
+\vspace*{-2.5ex}
+\paragraph{Evaluation via user-defined value domain\!\!\!\!\!}, instead of
+the native value space of Nax, motivates a new recursion scheme,
+\mprsi, standing for Mendler-style primitive recursion with sized index.
+%% A user-defined value domain is particularly useful for evaluating expressions
+%% of first-order syntax. Here, we stick to HOAS to avoid introducing a new datatype.
+Consider writing an evaluator \texttt{\,veval\;:\;Exp\;t\,->\,Val\;t\,}
+via the value domain \texttt{Val\;:\;*\,->\,*\,}.\vspace*{-.5ex}
+{\small
+\begin{verbatim}
+  data V : (* -> *) -> * -> * where      -- the "deriving fixpoint Val" defines
+    Fun : (r a -> r b) -> V r (a -> b)   -- fun f = In [* -> *] (Fun f)
+      deriving fixpoint Val              -- synonym Val t = Mu[* -> *] V t
+\end{verbatim}\vspace*{-1.5ex}
+\begin{verbatim}
+  veval e = msfit { t . V t } e with
+              call inv (App f x) = unfun (call f) (call x)  -- how do we define unfun?
+              call inv (Abs f) = fun (\v -> (call (f (inv v))))
+\end{verbatim} }
+\noindent
+Only if we were able to define
+\texttt{unfun\;:\;Val\,(a\,->\,b)\;->\;Val\;a\,->\,Val\;b},
+this would be admitted in Nax.
+However, it is not likely that \texttt{unfun} can be defined using
+recursion schemes currently available in Nax. Thereby, we propose
+a new recursion scheme \mprsi, which extends the Mendler-style primitive recursion
+(\texttt{mpr}) with the uncasting operation.\vspace*{-.5ex}
+{\small
+\begin{verbatim}
+  mprsi : (forall r . (forall i. r i -> ans i)                      -- call
+                   -> (forall i. (i < j) => r i -> Mu[* -> *] f i)  -- cast   
+                   -> (forall i. (i < j) => Mu[* -> *] f i -> r i)  -- uncast 
+                   -> (forall i. f r i -> ans i) ) -> Mu[* -> *] f j -> ans j
+\end{verbatim}\vspace*{-1.5ex}
+\begin{verbatim}
+  unfun v = mprsi { (a -> b) . V a -> V b } v with
+              call cast (Fun f) = cast . f . uncast   -- dot (.) is function composition
+\end{verbatim} }\vspace*{-.5ex}
+\noindent
+Note the size constraints \texttt{(i\;<\;j)} on both \texttt{cast} and \texttt{uncast} operations
+(FYI, \texttt{mpr}'s \texttt{cast} does not have size constraints).
+These constraints prevent writing evaluator-like functions on strange expressions
+that have constructors like below, which may cause non-termination.\vspace*{-.5ex}
+{\small
+\begin{verbatim}
+ app1 : (Exp1 (a->b) -> Exp1 b) -> Exp1 (a->b)  -- prevented by constraint on uncast
+ app2 : (Exp2 a -> Exp2 (a->b)) -> Exp2 (a->b)  -- prevented by constraint on cast
+\end{verbatim} }\vspace*{-.5ex}
+\noindent
+Our examples in this abstract only involve type indices, but similar
+formulation is possible for term indices as well.\vspace*{-1.5ex}
+This is still a fresh proposal awaiting proof of termination.
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Monotonicity and polarized kinds}
 TODO

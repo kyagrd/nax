@@ -16,19 +16,19 @@ infinite structures. For instance, the Mendler-style co-iteration, \McoIt,
 (\aka\ anamorpihsm or fold) is dual to the Mendler-style iteration, \MIt,
 (\aka\ catamorpihsm or unfold). Figure~\ref{fig:mcoit0} illustrates
 a Haskell transcription \cite{UusVen11} of \McoIt\ in comparison to \MIt,
-following the same conventions as in1 Chapter~\ref{ch:mendler}.
+following the same conventions as in Chapter~\ref{ch:mendler}.
 
 \begin{figure}[h]
 \begin{singlespace}
 \begin{code}
 -- Mendler-style co-fixpoint |Nu0| and co-iterator |mcoit0|
 data Nu0 f = UnOut0 { out0 :: f(Nu0 f) } -- use of |UnOut0| is restricted
-mcoit0  :: (forall r . (a -> r) -> a -> f r) -> a -> Nu0 f
+mcoit0  :: (forall r . (a -> r) -> (a -> f r)) -> (a -> Nu0 f)
 mcoit0 phi v = UnOut0 (phi (mcoit0 phi) v)
 {-""-}
 -- Mendler-style fixpoint |Mu0| and iterator |mit0|
 data Mu0 f = In0 { unIn0 :: f(Mu0 f) } -- use of |UnIn0| is restricted
-mit0    :: (forall r . (r -> a) -> f r -> a) -> Mu0 f -> a
+mit0    :: (forall r . (r -> a) -> (f r -> a)) -> (Mu0 f -> a)
 mit0 phi x = phi (mit0 phi) (unIn0 x)
 \end{code}
 \end{singlespace}
@@ -36,6 +36,15 @@ mit0 phi x = phi (mit0 phi) (unIn0 x)
 	 in comparison to the Mendler-style iteration (\MIt) at kind |*|}
 \label{fig:mcoit0}
 \end{figure}
+You can visually apprehend whey the are dual constructions 
+from the type signatures of |mcoit0| and |mit0| in Figure~\ref{fig:mcoit0}.
+Note the domain and the codomain in each of the following are flipped:
+|(a -> r)|, |(a -> f r)|, |(a -> Nu0 f)| verses
+|(r -> a)|, |(f r -> a)|, |(Mu0 f -> a)|.
+
+We only illustrate Mendler-style co-iteration for kind |*| here,
+but you can naturally imagine that it generalizes to higher kinds
+just as Mendler-style iteration naturally generalizes to higher kinds.
 
 Let us first review how we define recursive datatypes. In Mendler-style,
 recursive datatypes are defined as fixpoints of (non-recursive) base structures.
@@ -109,7 +118,7 @@ the general recursive implementation below, relying on laziness of Haskell:
 %format Stream_g = Stream"_g"
 %format SCons_g = SCons"_g"
 \begin{code}
-data Stream_g a = SCons_g a Stream_g
+data Stream_g a = SCons_g a (Stream_g a)
 
 upfrom_g n = SCons_g n (upfrom_g (succ n))
 \end{code}
@@ -131,9 +140,35 @@ take n = mit0 phi n where
 For example, |(take three (upfrom zero))| produces a list with
 three elements |(cons (one (cons two (cons three nil))))|
 where |one = succ zero|, |two = succ one| and |three = succ two|.
+Note that the |phi| function above looks very similar to how one would
+typically implement Haskell's standard prelude |take :: Int -> [a] -> [a]|
+function for Haskell lists, but does not have to worry about running out of
+elements because |Stream|s are always infinite by definition.
 
-\citet{matthes98phd} embedded Mendler-style (co-)iteration and 
-primitive (co-)recursion into System~\F. \citet{AbeMatUus05} embedded
+One could define a possibly finite stream by taking co-fixpoint over |L|,
+sharing the same base structure of |List|, as follows:
+\begin{singlespace}
+\begin{code}
+type Stream' a = Nu0 (L a)
+head'  s = case out0 s of  Nil       -> Nothing
+                           Cons h _  -> Just h
+tail'  s = case out0 s of  Nil       -> Nothing
+                           Cons _ t  -> Just t
+\end{code}
+\end{singlespace}
+Then, the destructor |head'| and |tail'| should become slightly more complicated
+since |Stream'| can be finite, ending up in |Nil|. We can view that datatypes
+in Haskell have characteristics of both recursive and co-recursive datatypes.
+However, when we use Haskell to explain Mendler-style concepts, we clearly
+distinguish recursive and co-recursive datatypes by adhering to the conventions
+we discussed: no general recursion except to define |Mu0|, |Nu0|, and
+(co-)recursion schemes; |unIn0| and |unOut0| are restricted as well.
+
+\citet{matthes98phd} embedded Mendler-style (co-)iteration\footnote{
+	A word prefixed by `(co-)' refers to the words
+	both with and without `(co-)'. That is, (co-)iteration
+	refers to both iteration and co-iteration.}
+and primitive (co-)recursion into System~\F. \citet{AbeMatUus05} embedded
 Mendler-style (co-)iteration into System~\Fw.
 \citet{AbeMatUus05} embedded Mendler-style (co-)iteration
 in the context of System~\Fw.
@@ -141,4 +176,11 @@ in the context of System~\Fw.
 of the Mendler-style primitive recursion into \Fixw, and also
 mention that embedding primitive co-recursion is similarly possible
 (although not given in the paper due to space restrictions).
+
+\citet{UusVen11,UusVen99,UusVen99histo} studied Mendler-style recursion
+schemes in a categorical setting, while the work mentioned in the paragraph
+above are in the context of typed lambda calculi.
+In Vene's thesis \citet{vene00phd}, he relates a Mendler style recursion scheme
+and its conventional counterpart for each of the following recursion schemes:
+(co-)iteration, primitive (co-)recursion, and course-of-values (co-)iteration.
 
