@@ -11,10 +11,10 @@ import Prelude hiding (head, tail, pred, succ, take)
 \section{Mendler-style co-iteration and co-recursion} \label{sec:relwork:co}
 There exist dual constructs to the Mendler-style recursion schemes
 discussed in this dissertation. These dual constructs, known as
-Mendler-style co-recursion schemes are able to generate possibly
+Mendler-style co-recursion schemes, are able to generate possibly
 infinite structures. For instance, the Mendler-style co-iteration, \McoIt,
-(\aka\ anamorpihsm or fold) is dual to the Mendler-style iteration, \MIt,
-(\aka\ catamorpihsm or unfold). Figure~\ref{fig:mcoit0} illustrates
+(\aka\ anamorpihsm or unfold) is dual to the Mendler-style iteration, \MIt,
+(\aka\ catamorpihsm or fold). Figure~\ref{fig:mcoit0} illustrates
 a Haskell transcription \cite{UusVen11} of \McoIt\ in comparison to \MIt,
 following the same conventions as in Chapter~\ref{ch:mendler}.
 
@@ -33,11 +33,11 @@ mit0 phi x = phi (mit0 phi) (unIn0 x)
 \end{code}
 \end{singlespace}
 \caption{A Haskell transcription of the Mendler-style co-iteration (\McoIt)
-	 in comparison to the Mendler-style iteration (\MIt) at kind |*|}
+	 in contrast to the Mendler-style iteration (\MIt) at kind |*|}
 \label{fig:mcoit0}
 \end{figure}
-You can visually apprehend whey the are dual constructions 
-from the type signatures of |mcoit0| and |mit0| in Figure~\ref{fig:mcoit0}.
+You can visually apprehend why |mcoit0| and |mit0| are duals
+from their type signatures in Figure~\ref{fig:mcoit0}.
 Note the domain and the codomain in each of the following are flipped:
 |(a -> r)|, |(a -> f r)|, |(a -> Nu0 f)| verses
 |(r -> a)|, |(f r -> a)|, |(Mu0 f -> a)|.
@@ -122,7 +122,6 @@ data Stream_g a = SCons_g a (Stream_g a)
 
 upfrom_g n = SCons_g n (upfrom_g (succ n))
 \end{code}
-\vspace*{2mm}
 Although the streams built up by |upfrom| conceptually stand for infinite
 list of values, it does not mean that they diverge. For instance, the stream
 |(upfrom zero)| can be understood as a generator that is ready to generate
@@ -155,7 +154,7 @@ head'  s = case out0 s of  Nil       -> Nothing
 tail'  s = case out0 s of  Nil       -> Nothing
                            Cons _ t  -> Just t
 \end{code}
-\end{singlespace}
+\end{singlespace}\noindent
 Then, the destructor |head'| and |tail'| should become slightly more complicated
 since |Stream'| can be finite, ending up in |Nil|. We can view that datatypes
 in Haskell have characteristics of both recursive and co-recursive datatypes.
