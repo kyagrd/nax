@@ -24,8 +24,8 @@ cons x xs  = In0 (Cons x xs)
 There are more Mendler-style recursion schemes other than the ones
 we discussed in Chapter~\ref{ch:mendler}.
 We introduce two more Mendler-style recursion schemes here.
-%% Another new recursion scheme that we 
-%% in the future work chapter (\S\ref{})
+In \S\ref{sec:futwork:mprsi}, we introduce another Mendler-style
+recursion scheme, which is useful for mixed-variant datatypes.
 
 \subsection{Simultaneous iteration}
 \citet{UusVen00} studied course-of-value iteration (\aka\ histomorphism)
@@ -119,7 +119,6 @@ either stay the same (in more significant positions) or even increase
 (in less significant positions) while the other arguments decrease.
 A typical example of lexicographic recursion is the Ackermann function,
 which we can define using general recursion in Haskell as follows:
-%%(a variation to make the base case simple for iteration):
 %format Nat_g = Nat"_g"
 %format Zero_g = Zero"_g"
 %format Succ_g = Succ"_g"
@@ -144,17 +143,45 @@ natg2int (Succ_g n) = 1 + natg2int n
 ackerg n m = natg2int (acker_g (int2natg n) (int2natg m))
 \end{code}
 \end{comment}
-
+The following Mendler-style recursion scheme captures the idea of
+lexicographic recursion over two arguments.
+%format mlexpr0 = mlexpr"_{*,*}"
+\begin{singlespace}
 \begin{code}
-mlexpr :: (forall r . 
-mlexpr phi (In0 x1) (In0 x2) = mlexpr phi 
+mlexpr0 :: (forall r1 r2  .   (r1 -> Mu0 f2 -> a)  -- outer recursive call
+                          ->  (r2 -> a)            -- inner recursive call
+                          ->  (r1 -> Mu0 f1)       -- cast1
+                          ->  (r2 -> Mu0 f2)       -- cast2
+                          ->  f1 r1 -> f2 r2 -> a) -> Mu0 f1 -> Mu0 f2 -> a
+mlexpr0 phi (In0 x1) (In0 x2) = phi (mlexpr0 phi) (mlexpr0 phi (In0 x1)) id id x1 x2 
 \end{code}
+\end{singlespace}
+The Mendler-style lexicograph recursion |mlexpr0| is similar to
+the Mendler-style simultaneous recursion |msimpr0| introduced
+in the previous section, but has two abstract operations for
+inner and outer recursion. Note the types of these two recursive calls
+|(r1 -> Mu0 f2 -> a)| and |(r2 -> a)|. The outer recursive call expects
+its first argument to be a direct subcomponent by requiring its type to be |r1|.
+The second argument has type |Mu0 f2|, which means that it could be any value,
+because it is the less significant factor of the lexicographic ordering.
+The inner recursive call only expects its second argument
+to be a direct subcomponent by requiring its type to be |r2|.
+Since the inner call assumes that the first argument stays the same,
+the first argument is omitted. Using |mlexpr0|,
+we can define the Ackermann function as follows:
+\begin{singlespace}
+\begin{code}
+acker = mlexpr0 phi where
+  phi ack ack' cast1 cast2 Zero      Zero      = succ zero
+  phi ack ack' cast1 cast2 Zero      (Succ n)  = succ (succ (cast2 n))
+  phi ack ack' cast1 cast2 (Succ m)  Zero      = succ (ack m zero)
+  phi ack ack' cast1 cast2 (Succ m)  (Succ n)  = ack m (ack' n)
+\end{code}
+\end{singlespace}
 
-The idea for this recursion scheme comes from the conversation of
-Tarmo Uustalu and Tim Sheard at the TYPES 2013 workshop
-(not published anywhere else at the moment).
-
-
-See \S\ref{sec:futwork:mprsi} for our motivating example
-and further discussions.
+The idea for |mlexpr0| originated from the conversation between Tarmo Uustalu
+and Tim Sheard at the TYPES 2013 workshop (not published anywhere else
+at the moment). We strongly believe that |mexplr0| terminates for
+positive datatypes, but the termination behavior for negative (or,
+mixed-variant) datatypes needs further investigation.
 
