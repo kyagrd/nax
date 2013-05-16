@@ -7,13 +7,49 @@ in the introduction or related work sections (\S\ref{sec:intro},
 
 \input{relwork_mmult} %% sec:relwork:mult
 
-\section{Mendler-style induction principle (dependently typed)}
+\section{Mendler-style induction}
 \label{sec:relwork:dep}
-dependent types
+Dependently-typed version of primitive recursion is called induction.
+We can formulate the Mendler-style induction over regular datatypes as follows.
+\vspace*{-2em}
+\begin{singlespace}
+\[\begin{array}{ll}
+\textbf{mind}_{*} \, :
+& \!\!\forall (F:* -> *) (A: \mu_{*}f -> *). \\
+& ~~ \big(\forall(r:*).\;(cast : r -> \mu_{*}F) \\
+& ~\qquad\quad -> (call : (x:r) -> A\,(cast~x)) \\
+& ~\qquad\quad -> (y: F\;r) -> a\,(\In_{*}(\textit{fmap}_{F}\;call\;y)) \big) 
+-> (z:\mu_{*}\,f) -> A\;z
+\end{array}
+\]
+\[
+\textbf{mind}_{*} ~ \varphi ~ (\In_{*}\;x)
+  ~=~ \varphi~~\textit{id}~~(\textbf{mind}_{*}~\varphi)~~x \]
+\end{singlespace}\noindent
+The definition of Mendler-style induction $\textbf{mind}$ is
+essentionally the same as the Mendler-style primitive recursion $\MPr$,
+but the type signature involves dependent types.
+Note, the final answer type $A\;z$ is dependent on
+the recursive argument $z:\mu_{*}F$.
+Since $A: \mu_{*}F -> *$ expects a concrete recursive value,
+we use $cast$ and $call$ in the type signature of $\varphi$ function
+to cast $x:r$ and $y:F\,r$ into $\mu_{*}F$ values, so that
+they can be passed to $A$.
+In the type signature of $\textbf{mind}$, $cast$ comes before $call$
+because the type signature of $call$ depends on $cast$.
+When defining $\MPr$, $cast$ and $call$ can come in any order
+since there is no dependency in the type signature of $\MPr$.
 
-TODO TODO
+One important thing to notice about $\textbf{mind}_{*}$ is that
+it is well-defined only over positivity $F$, because we relied on
+the existence of $\textit{fmap}_F$ to write its type signature.
+It is an open question whether one can formulate a Mendler-style induction
+that works for negative datatypes.
+
+The idea for $\textbf{}_{*}$ TODO
 
 \section{Type-based termination and sized types}
+Only defined on MPr
 TODO
 
 \section{Logical Framwork based on $\lambda\Pi$-calculus}

@@ -62,19 +62,15 @@ and |take :: Nat -> List a -> List a| as follows:
 \begin{singlespace}
 \begin{code}
 lessthan :: Nat -> Nat -> Bool
-lessthan = msimit0 phi
-  where
-    phi lt Zero      Zero      = False
-    phi lt Zero      (Succ _)  = True
-    phi lt (Succ _)  Zero      = False
-    phi lt (Succ m)  (Succ n)  = lt m n
+lessthan = msimit0 phi where  phi lt Zero      Zero      = False
+                              phi lt Zero      (Succ _)  = True
+                              phi lt (Succ _)  Zero      = False
+                              phi lt (Succ m)  (Succ n)  = lt m n
 {-""-}
 take :: Nat -> List a -> List a
-take = msimit0 phi
-  where
-    phi tk Zero      _            = nil
-    phi tk (Succ _)  Nil          = nil
-    phi tk (Succ n)  (Cons x xs)  = cons x (tk n xs)
+take = msimit0 phi where  phi tk Zero      _            = nil
+                          phi tk (Succ _)  Nil          = nil
+                          phi tk (Succ n)  (Cons x xs)  = cons x (tk n xs)
 \end{code}
 \end{singlespace}\noindent
 Note that the |phi| functions above are very similar to how one would typically
@@ -100,6 +96,7 @@ msimpr0 :: (forall r1 r2  .   (r1 -> r2 -> a)      -- recursive call
                           ->  (r1 -> Mu0 f1)       -- cast1
                           ->  (r2 -> Mu0 f2)       -- cast2
                           ->  f1 r1 -> f2 r2 -> a) -> Mu0 f1 -> Mu0 f2 -> a
+
 msimpr0 phi (In0 x1) (In0 x2) = phi (msimpr0 phi) id id x1 x2
 \end{code}
 \end{singlespace}\noindent
@@ -123,12 +120,15 @@ which we can define using general recursion in Haskell as follows:
 %format Zero_g = Zero"_g"
 %format Succ_g = Succ"_g"
 %format acker_g = acker"_g"
+\begin{singlespace}
 \begin{code}
 data Nat_g = Zero_g | Succ_g Nat_g
+
 acker_g Zero_g      n           = Succ_g n
 acker_g (Succ_g m)  Zero_g      = Succ_g (acker_g m Zero_g)
 acker_g (Succ_g m)  (Succ_g n)  = acker_g m (acker_g (Succ_g m) n)
 \end{code}
+\end{singlespace}
 Observe that the first argument is more significant than the second.
 In the third equation, the first argument |m| of the outer recursive call
 decreases (\ie, smaller than |(Succ_g m)|) while the second argument
@@ -145,6 +145,7 @@ ackerg n m = natg2int (acker_g (int2natg n) (int2natg m))
 \end{comment}
 The following Mendler-style recursion scheme captures the idea of
 lexicographic recursion over two arguments.
+%format mlexpr = "\textbf{mlexpr}"
 %format mlexpr0 = mlexpr"_{*,*}"
 \begin{singlespace}
 \begin{code}
@@ -153,9 +154,10 @@ mlexpr0 :: (forall r1 r2  .   (r1 -> Mu0 f2 -> a)  -- outer recursive call
                           ->  (r1 -> Mu0 f1)       -- cast1
                           ->  (r2 -> Mu0 f2)       -- cast2
                           ->  f1 r1 -> f2 r2 -> a) -> Mu0 f1 -> Mu0 f2 -> a
+
 mlexpr0 phi (In0 x1) (In0 x2) = phi (mlexpr0 phi) (mlexpr0 phi (In0 x1)) id id x1 x2 
 \end{code}
-\end{singlespace}
+\end{singlespace}\noindent
 The Mendler-style lexicograph recursion |mlexpr0| is similar to
 the Mendler-style simultaneous recursion |msimpr0| introduced
 in the previous section, but has two abstract operations for
@@ -181,7 +183,7 @@ acker = mlexpr0 phi where
 
 The idea for |mlexpr0| originated from the conversation between Tarmo Uustalu
 and Tim Sheard at the TYPES 2013 workshop (not published anywhere else
-at the moment). We strongly believe that |mexplr0| terminates for
+at the moment). We strongly believe that |mlexpr0| terminates for
 positive datatypes, but the termination behavior for negative (or,
 mixed-variant) datatypes needs further investigation.
 
