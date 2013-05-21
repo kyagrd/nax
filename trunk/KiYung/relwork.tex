@@ -99,16 +99,27 @@ due to subtyping. The casting operation $(r -> \mu F)$ in Mendler-style
 primitive recursion corresponds to an implicit conversion by subtyping
 from $\mu^\alpha F$ to $\mu^\infty F$ because $\alpha \leq \infty$.
 
-TODO what about negative datatypes
-in Mendler style
-enforcing sized types without extending the syntax of size annotation,
-and for this reason, he Mendler father of sized type
-Only defined on MPr
-TODO
+System \Fwhat\ \cite{abel06phd} is closely related to
+System \Fixw\ \cite{AbeMat04}. Both of these systems are base on
+equi-recursive fixpoint types over positive base structures.
+Both of theses systems able to embed (or simulate) Mendler-style
+primitive recursion (which is based on iso-recursive types) via
+the encoding \cite{Geu92} of arbitrary base structures into
+positive base structures. In \S\ref{sec:fixi:data}, we rely on
+the same encoding, denoted by $\Phi$, when embedding \MPr\ into System \Fixi.
+
+Abel's sized-type approach provides good intuitions for those recursion schemes,
+which terminate over positive datatypes. However, it is not clear whether
+the sized type approach based on positive equi-recursive fixpoint types
+can provide a good intuition for our recursion scheme \MsfIt, which is
+especially useful over negative datatypes. In \ref{sec:futwork:mprsi},
+we will discuss another Mendler-style recursion scheme (\mprsi), which is
+also useful over negative datatypes and has a termination property
+(not proved yet) due the size of the index in the datatype.
 
 \section{Logical Frameworks based on the $\lambda\Pi$-calculus}
 
-Logical Framework (LF)
+Logical Frameworks
 
 lambda pi calculus
 
