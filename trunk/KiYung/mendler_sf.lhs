@@ -520,7 +520,7 @@ Another example of a negative datatype is a graph with cycles and sharing %%.
 in Figure~\ref{fig:graph}. For further details,
 see the paper by \citet{FegShe96}.
 
-\subsection{Additional Mendler-style combinators}
+\subsection{Additional Mendler-style combinators}\label{sec:openit}
 The combinator |msfhist0| generalizes |mhist0| by the addition of an
 abstract inverse to a combinator that already has an abstract unroller.
 The combining function |phi| becomes a function of 4 arguments:

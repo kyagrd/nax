@@ -108,18 +108,80 @@ the encoding \cite{Geu92} of arbitrary base structures into
 positive base structures. In \S\ref{sec:fixi:data}, we rely on
 the same encoding, denoted by $\Phi$, when embedding \MPr\ into System \Fixi.
 
-Abel's sized-type approach provides good intuitions for those recursion schemes,
-which terminate over positive datatypes. However, it is not clear whether
-the sized type approach based on positive equi-recursive fixpoint types
-can provide a good intuition for our recursion scheme \MsfIt, which is
-especially useful over negative datatypes. In \ref{sec:futwork:mprsi},
-we will discuss another Mendler-style recursion scheme (\mprsi), which is
-also useful over negative datatypes and has a termination property
+Abel's sized-type approach provides good intuitions why 
+certain recursion schemes terminate over positive datatypes.
+But, it does not give a good intuition of whether or not
+those recursion schemes would terminate also for negative datatypes,
+unless there is an encoding that can translate negative datatypes into
+positive datatypes. For primitive recursion, this is possible as we
+mentioned above. However, for our recursion scheme \MsfIt, which is
+especially useful over negative datatypes, we do not know of an encoding
+that can map the inverse augmented fixpoints into positive fixpoints.
+So, it is not clear whether Abel's the sized type approach based on
+positive equi-recursive fixpoint types can provide a good intuition
+for the termination behavior of \MsfIt.  In \ref{sec:futwork:mprsi},
+we will discuss another Mendler-style recursion scheme (\mprsi), which
+is also useful over negative datatypes and has a termination property
 (not proved yet) due the size of the index in the datatype.
 
 \section{Logical Frameworks based on the $\lambda\Pi$-calculus}
 
-Logical Frameworks
+based on the $\lambda\Pi$-calculus
+
+dependently typed Logical Frameworks 
+
+also known as Edinburgh LF \cite{TODO}
+
+constants for types
+
+on top of Twelf such as
+But Twelf does not abstract over relations.
+
+introduce relations involving those constants
+TODO
+
+as a functional programming language.
+more generally higher-order functions, such as map or fold,
+are not directly expressible in Twelf.
+
+To write a program using higher-order functions in Twelf,
+you need to go through several steps.
+\begin{itemize}
+\item[(1)] Define an object language syntax
+(as you define the syntax |z| and |s| for natural numbers)
+with bindings (this is done by HOAS), applications, and
+whatsoever you would need express higher-order functions.
+\item[(2)] Define the evaluation semantics of your object language using
+	inductive relations (\i, write an evaluator for
+	your object language in a Prolog-like way).
+\item[(3)] Write the program in the object language by putting
+	together pieces of the syntax you defined in (1).
+\item[(4)] Finally, you can evaluate your program by reasoning based on
+	the evaluation relation defined in (2).
+\end{itemize}
+This is clearly an overkill if what you wanted was just to ``program''
+with higher-order functions in a type-safe way, and possibly with some
+termination guarantee, but you don't really need to reason about
+the meta-theory of the object functional language in general.
+
+Beluga \cite{Pie10} is similar to Twelf but it is more closer to
+a functional language since the inductive definitions are functional
+rather than relational. So, one can to write higher-order functions
+(\eg, map, fold) is almost the same as in functional programming languages,
+except a few tedious bookkeeping of context objects. Since Beluga has access
+to context objects, it can express what \MsfIt\ can express, and in addtion,
+it can also express what \textbf{openit} ((\S\ref{sec:openit})) can express.
+
+Regarding higher-order functions, Beluga is in a much better position
+than Twelf. In Twelf, one needs to create a whole new object-level
+functional programming language by describing its semantics with
+inductive relations in order express higher-order functions.
+Termination is not type based in Beluga either. Like Twelf, it needs
+an external termination (or totality) checker, but its prototype
+implementation currently lacks a termination (or totality) checker.
+
+Delphine \cite{pos08phd} TODO
+Delphine has a termination checker based on lexicographic subterm ordering.
 
 lambda pi calculus
 
