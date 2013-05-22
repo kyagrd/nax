@@ -20,18 +20,17 @@ cons x xs  = In0 (Cons x xs)
 \end{code}
 \end{comment}
 
-\section{More Mendler-style recursion schemes} \label{sec:relwork:mult}
-There are more Mendler-style recursion schemes other than the ones
-we discussed in Chapter~\ref{ch:mendler}.
-We introduce two more Mendler-style recursion schemes here.
-In \S\ref{sec:futwork:mprsi}, we introduce another Mendler-style
-recursion scheme, which is useful for mixed-variant datatypes.
+\section{Mendler-style recursion schemes over multiple values} \label{sec:relwork:mult}
+There are many Mendler-style recursion schemes in addition
+to those discussed in Chapter~\ref{ch:mendler}.
+Here, we introduce two Mendler-style recursion schemes that
+work over two (or more) structures simultaneously. 
 
 \subsection{Simultaneous iteration}
 \citet{UusVen00} studied course-of-value iteration (\aka\ histomorphism)
 and \emph{simultaneous iteration} (\aka\ multimorhpism). They formulate
-these two recursion schemes in both conventional and Mendler style, and
-show both formulations are equivalent provided that the base structures
+these two recursion schemes in both the conventional and Mendler style.
+They show that the formulations are equivalent provided that the base structures
 for recursive types are functors (\ie, positive). We have already discussed
 Mendler-style course-of-values iteration in previous chapters.
 Here, we introduce Mendler-style simultaneous iteration over
@@ -73,22 +72,23 @@ take = msimit0 phi where  phi tk Zero      _            = nil
                           phi tk (Succ n)  (Cons x xs)  = cons x (tk n xs)
 \end{code}
 \end{singlespace}\noindent
-Note that the |phi| functions above are very similar to how one would typically
+Note that the |phi| functions above are similar in structure to how one would typically
 define |lessthan| and |take| using general recursion in Haskell. Although
 it is possible to define these functions by multiple nested uses of |mit0|,
-it would not end up as simple as above (try it yourself!).
+it is certainly not as simple as the definitions above (try it for yourself!).
 
 The termination behavior of simultaneous iteration (|msimit|)
-has not been studied well when negative datatypes are involved.
-We do not know of any studies that tried to embed |msimit| into
-a strongly normalizing typed lambda calculus either.
-For course-of-values iteration (\McvIt) or recursion (\McvPr),
-on the other hand, we found a conterexample that \McvIt\ does not terminate
-for negative datatypes (Figure~\ref{fig:LoopHisto} in \S\ref{ssec:tourHist0},
-p\pageref{fig:LoopHisto}), and we also showed that \McvPr\ can be embedded
+has not been studied when negative datatypes are involved.
+Neither do we know of any studies that have embeded |msimit| into
+a strongly normalizing typed lambda calculus.
+For both course-of-values iteration (\McvIt) and recursion (\McvPr),
+we have found conterexamples that nontermination is possible
+for negative datatypes. The example that \McvIt\ does not always terminate
+for negative datatypes can be found in Figure~\ref{fig:LoopHisto} in \S\ref{ssec:tourHist0},
+p\pageref{fig:LoopHisto}. We also showed that \McvPr\ can be embedded
 into \Fixi\ (or \Fixw) assuming monotonicity (\S\ref{sec:fixi:cv}).
 
-We can also think of simultaneous recursion (|msimpr0|),
+One can imagine simultaneous recursion (|msimpr0|),
 which has additional casting operations, as follows:
 \begin{singlespace}
 \begin{code}
@@ -100,18 +100,18 @@ msimpr0 :: (forall r1 r2  .   (r1 -> r2 -> a)      -- recursive call
 msimpr0 phi (In0 x1) (In0 x2) = phi (msimpr0 phi) id id x1 x2
 \end{code}
 \end{singlespace}\noindent
-Unlike primitive recursion (|mprim0|), which as has only one casting operation,
-we need multiple casting operations as many as the number of arguments
-since each argument may be of different recursive type.
-Here, we formulated |msimpr0| for two arguments, so we have two
+Extending primitive recursion (|mprim0|), which as has only one casting operation,
+multiple casting operations are needed. One for 
+each of the recursive arguments.
+Here, we formulated |msimpr0| with two recursive arguments, so we have two
 casting operations, whose types are |(r1 -> Mu0 f1)| and |(r2 -> Mu0 f2)|.
 
 \subsection{Lexicographic recursion}
 Some recursive functions over multiple recursive values
-terminate since their arguments decrease every recursive call.
-by lexicographic ordering Note that this is more general than
-simultaneous iteration where each of the arguments should decrease
-every recursive call. In lexicographic recursion, some arguments may
+justify termination because their arguments decrease at every recursive call
+under a lexicographic ordering.  Note that this different from
+simultaneous iteration where each of the arguments decrease in
+every recursive call. In a lexicographic ordering, some arguments may
 either stay the same (in more significant positions) or even increase
 (in less significant positions) while the other arguments decrease.
 A typical example of lexicographic recursion is the Ackermann function,
@@ -181,9 +181,10 @@ acker = mlexpr0 phi where
 \end{code}
 \end{singlespace}
 
-The idea for |mlexpr0| originated from the conversation between Tarmo Uustalu
+The idea for |mlexpr0| originated in a conversation between Tarmo Uustalu
 and Tim Sheard at the TYPES 2013 workshop (not published anywhere else
-at the moment). We strongly believe that |mlexpr0| terminates for
-positive datatypes, but the termination behavior for negative (or,
+at the moment). We strongly believe that |mlexpr0| terminates for all
+positive datatypes. The termination behavior for negative (or,
 mixed-variant) datatypes needs further investigation.
+
 

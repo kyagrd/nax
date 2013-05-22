@@ -1,7 +1,15 @@
 \chapter{Related work}\label{ch:relwork}
-We introduce some more related work that have not been discussed
-in the introduction or related work sections (\S\ref{sec:intro},
-\S\ref{sec:related}) in the previous chapters.
+In this chapter we discuss additional related work,
+not discussed in the introduction or the related work sections
+of \S\ref{sec:intro} and  \S\ref{sec:related}.
+This work falls naturally into five categories -- Mendler style
+operations over co-data, new and unusual Mendler style operations, 
+Mendler style dependently-typed induction, 
+the use of sized-types to explain the termination of Mendler style
+operators, and 
+the relationship
+of the Mendler style to logical frameworks, 
+
 
 \input{relwork_mcoit} %% sec:relwork:co
 
@@ -9,16 +17,16 @@ in the introduction or related work sections (\S\ref{sec:intro},
 
 \section{Mendler-style induction}
 \label{sec:relwork:dep}
-Dependently-typed version of primitive recursion is called induction.
-We can formulate the Mendler-style induction over regular datatypes as follows.
+The dependently-typed version of primitive recursion is called induction.
+We formulate Mendler style induction over regular datatypes as follows.
 \vspace*{-2em}
 \begin{singlespace}
 \[\begin{array}{ll}
 \textbf{mind}_{*} \, :
-& \!\!\forall (F:* -> *) (A: \mu_{*}f -> *). \\
+& \!\!\forall (F:* -> *) (A: \mu_{*}F -> *). \\
 & ~~ \big(\forall(r:*).\;(cast : r -> \mu_{*}F) \\
 & ~\qquad\quad -> (call : (x:r) -> A\,(cast~x)) \\
-& ~\qquad\quad -> (y: F\;r) -> a\,(\In_{*}(\textit{fmap}_{F}\;call\;y)) \big) 
+& ~\qquad\quad -> (y: F\;r) -> A\,(\In_{*}(\textit{fmap}_{F}\;cast\;y)) \big) 
 -> (z:\mu_{*}\,f) -> A\;z
 \end{array}
 \]
@@ -26,14 +34,14 @@ We can formulate the Mendler-style induction over regular datatypes as follows.
 \textbf{mind}_{*} ~ \varphi ~ (\In_{*}\;x)
   ~=~ \varphi~~\textit{id}~~(\textbf{mind}_{*}~\varphi)~~x \]
 \end{singlespace}\noindent
-The definition of Mendler-style induction $\textbf{mind}$ is
-essentionally the same as the Mendler-style primitive recursion $\MPr$,
-but the type signature involves dependent types.
-Note, the final answer type $A\;z$ is dependent on
+The definition of Mendler style induction $\textbf{mind}$ shows
+that induction is essentionally the same as the Mendler-style primitive recursion $\MPr$,
+except that the type signature involves dependent types.
+Note, the final answer type $(A\;z)$ is dependent on
 the recursive argument $z:\mu_{*}F$.
 Since $A: \mu_{*}F -> *$ expects a concrete recursive value,
-we use $cast$ and $call$ in the type signature of $\varphi$ function
-to cast $x:r$ and $y:F\,r$ into $\mu_{*}F$ values, so that
+we use $cast$ in the type signature of the $\varphi$ function
+to cast $(x:r)$ and $(y:F\,r)$ into $\mu_{*}F$ values, so that
 they can be passed to $A$.
 In the type signature of $\textbf{mind}$, $cast$ comes before $call$
 because the type signature of $call$ depends on $cast$.
@@ -41,68 +49,79 @@ When defining $\MPr$, $cast$ and $call$ can come in any order
 since there is no dependency in the type signature of $\MPr$.
 
 One important thing to notice about $\textbf{mind}_{*}$ is that
-it is well-defined only over positivity $F$, because we relied on
+it is well-defined only over positive $F$, because we relied on
 the existence of $\textit{fmap}_F$ to write its type signature.
 It is an open question whether one can formulate a Mendler-style induction
 that works for negative datatypes.
 
-The idea for $\textbf{mind}_{*}$ comes from
+The idea behind $\textbf{mind}_{*}$ comes from
 the discussion with Tarmo Uustalu. He described this on a whiteboard
-     when we met with him at the University of Cambridge in 2011.
+when I met with him at the University of Cambridge in Fall 2011.
+
+In the future work section (\S\ref{sec:futwork:mprsi}), we introduce 
+even another Mendler-style
+recursion scheme, which is useful for mixed-variant datatypes.
+The work of a Mendler stylist is never done.
+
+
 
 \section{Type-based termination and sized types}
-\emph{Type based termination} (coined by \citet{BartheFGPU04}) stands for
-approaches that integrates termination into type checking, as apposed to
-syntactic approaches that reason termination over untyped term structures.
+\emph{Type-based termination} (coined by \citet{BartheFGPU04}) stands for
+approaches that integrate termination into type checking, as opposed to
+syntactic approaches that reason about termination over untyped term structures.
 The Mendler-style approach is, of course, type-based.  In fact, the idea of
 type-based termination was inspired by \citet{Mendler87,Mendler91}.
-In Mendler-style, we know that the recursive functions defined using
-the Mendler-style recursion schemes will terminate once they are
-type correct (provided that the termination behaviors of
-those recursion schemes are clearly studied).
+In the Mendler style, we know that well-typed functions defined using
+Mendler style recursion schemes always terminate.
+This guarantee flows from the design
+of the operator, and that the the abstract operations
+use types to enforce the invariants necessary for termination.
 
 \citet{abel06phd,Abel12talkFICS} summarizes the advantages of
 type-based termination as follows:
-\textbf{communication} (programmers can think in types),
-\textbf{certification} (types are machine checkable certificate),
+\textbf{communication} (programmers can think using types),
+\textbf{certification} (types are machine checkable certificates),
 \textbf{a simple theoretical justification}
-	(no additional complication for termination other than type checking),
-\textbf{orthogonality} (only small parts of the language is affected,
-	\eg, principled recursion schemes instead of general recursion),
+        (no additional complication for termination other than type checking),
+\textbf{orthogonality} (only small parts of the language are affected,
+        \eg, principled recursion schemes instead of general recursion),
 \textbf{robustness} (type system extensions are less likely to
-			disrupt termination checking),
+                        disrupt termination checking),
 \textbf{compositionality}\footnote{This is not listed in Abel's thesis,
-				but comes from his invited talk in FICS 2012.}
-	(need only types not the code for function definitions), and
+                                but comes from his invited talk in FICS 2012.}
+        (one needs only types, not the code, for checking the termination), and
 \textbf{higher-order functions and higher-kinded datatypes}
-	(works well even for higher-order functions and non-regular datatypes,
-	as a consequence of compositionality).
+        (works well even for higher-order functions and non-regular datatypes,
+        as a consequence of compositionality).
 In his dissertation \cite{abel06phd} (Section 4.4) on sized types,
 Abel views the Mendler style approach as enforcing size restrictions
 using higher-rank polymorphism as follows:
 \begin{itemize}
-\item The abstract recursive type $r$ in Mendler style corresponds to
-	$\mu^\alpha F$ in his sized-type system (System \Fwhat),
-	where the sized type
-	for the value being passed in corresponds to $\mu^{\alpha+1} F$.
+\item The abstract recursive type $r$ in the Mendler style corresponds to
+        $\mu^\alpha F$ in his sized-type system (System \Fwhat),
+        where the sized type
+        for the value being passed in corresponds to $\mu^{\alpha+1} F$.
 \item The concrete recursive type $\mu F$ in Mendler style corresponds to
-	$\mu^\infty F$ since there is no size restriction.
-\item By subtyping, a type with a smaller size index can be considered as
-	the same type but with a larger size index.
+        $\mu^\infty F$ since there is no size restriction.
+\item By subtyping, a type with a smaller size index can be cast to
+        the same type with a larger size index.
 \end{itemize}
-This view is based on the same intuition, which we discussed in
-Chapter \ref{ch:mendler}, why Mendler-style recursion schemes terminate for
-positive datatypes -- since $r$-values are direct subcomponents, they should
-have one less depth of $\In$ constructors than the value being passed in.
+This view is based on the same intuition we discussed in
+Chapter \ref{ch:mendler}. Mendler-style recursion schemes terminate, for
+positive datatypes -- because $r$-values are direct subcomponents
+of the value being eliminated. They are always smaller
+than the value being passed in. Types enforce that recursive calls
+are only well typed, when applied to smaller subcomponents.
+
 Abel's System \Fwhat\ can express primitive recursion quite naturally
-due to subtyping. The casting operation $(r -> \mu F)$ in Mendler-style
+using subtyping. The casting operation $(r -> \mu F)$ in Mendler-style
 primitive recursion corresponds to an implicit conversion by subtyping
 from $\mu^\alpha F$ to $\mu^\infty F$ because $\alpha \leq \infty$.
 
 System \Fwhat\ \cite{abel06phd} is closely related to
 System \Fixw\ \cite{AbeMat04}. Both of these systems are base on
 equi-recursive fixpoint types over positive base structures.
-Both of theses systems able to embed (or simulate) Mendler-style
+Both of these systems are able to embed (or simulate) Mendler-style
 primitive recursion (which is based on iso-recursive types) via
 the encoding \cite{Geu92} of arbitrary base structures into
 positive base structures. In \S\ref{sec:fixi:data}, we rely on
@@ -111,10 +130,10 @@ the same encoding, denoted by $\Phi$, when embedding \MPr\ into System \Fixi.
 Abel's sized-type approach provides good intuitions why 
 certain recursion schemes terminate over positive datatypes.
 But, it does not give a good intuition of whether or not
-those recursion schemes would terminate also for negative datatypes,
+those recursion schemes would terminate for negative datatypes,
 unless there is an encoding that can translate negative datatypes into
-positive datatypes. For primitive recursion, this is possible as we
-mentioned above. However, for our recursion scheme \MsfIt, which is
+positive datatypes. For primitive recursion, this is possible (as we
+mentioned above). However, for our recursion scheme \MsfIt, which is
 especially useful over negative datatypes, we do not know of an encoding
 that can map the inverse augmented fixpoints into positive fixpoints.
 So, it is not clear whether Abel's the sized type approach based on
@@ -122,7 +141,7 @@ positive equi-recursive fixpoint types can provide a good intuition
 for the termination behavior of \MsfIt.  In \ref{sec:futwork:mprsi},
 we will discuss another Mendler-style recursion scheme (\mprsi), which
 is also useful over negative datatypes and has a termination property
-(not proved yet) due the size of the index in the datatype.
+(not proved yet) based on the size of the index in the datatype.
 
 \section{Logical Frameworks based on the $\lambda\Pi$-calculus}
 
@@ -152,12 +171,12 @@ you need to go through several steps.
 with bindings (this is done by HOAS), applications, and
 whatsoever you would need express higher-order functions.
 \item[(2)] Define the evaluation semantics of your object language using
-	inductive relations (\i, write an evaluator for
-	your object language in a Prolog-like way).
+        inductive relations (\i, write an evaluator for
+        your object language in a Prolog-like way).
 \item[(3)] Write the program in the object language by putting
-	together pieces of the syntax you defined in (1).
+        together pieces of the syntax you defined in (1).
 \item[(4)] Finally, you can evaluate your program by reasoning based on
-	the evaluation relation defined in (2).
+        the evaluation relation defined in (2).
 \end{itemize}
 This is clearly an overkill if what you wanted was just to ``program''
 with higher-order functions in a type-safe way, and possibly with some
