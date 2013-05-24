@@ -73,8 +73,7 @@ showExp e = msfcata0  phi e vars where
 \newcommand{\ExpGExamples}{
 \begin{code}
 k_g    = Lam_g  (\x -> Lam_g (\y -> x))
-s_g    = Lam_g  (\x -> Lam_g (\y -> Lam_g (\z ->
-                    App_g (App_g x z) (App_g y z))))
+s_g    = Lam_g  (\x -> Lam_g (\y -> Lam_g (\z -> App_g (App_g x z) (App_g y z))))
 w_g    = Lam_g  (\x -> App_g x x)
 skk_g  = App_g (App_g s_g k_g) k_g
 \end{code}
@@ -95,8 +94,7 @@ skk_m  = app_m (app_m s_m k_m) k_m
 \newcommand{\ExpExamples}{
 \begin{code}
 k    = lam  (\x -> lam (\y -> x))
-s    = lam  (\x -> lam (\y -> lam (\z ->
-                app (app x z) (app y z))))
+s    = lam  (\x -> lam (\y -> lam (\z -> app (app x z) (app y z))))
 w    = lam  (\x -> app x x)
 skk  = app (app s k) k
 \end{code}

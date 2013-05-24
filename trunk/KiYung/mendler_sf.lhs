@@ -76,7 +76,9 @@ This is called a shallow embedding, since we use functions in the host language,
 Haskell, to represent lambda abstractions in the object language |Exp_g|.
 For example, using the Haskell lambda expressions,
 we can construct some |Exp_g| representing lambda expressions as follows:
-\vspace*{.5em}\ExpGExamples\vspace*{-.5em}\\
+\begin{singlespace}
+\ExpGExamples
+\end{singlespace}
 Since we can build any untyped lambda expressions with |Exp_g|, 
 even the problematic self application expression |w_g|, it is not possible to write a terminating
 evaluation function for |Exp_g|.  However, there are many 
@@ -255,17 +257,18 @@ to write a function |showExp_g :: Exp_g -> String|, by including a constructor
 |f:: Exp_g -> Int| we would have needed another constructor |C :: Int -> Exp_g|.
 Clearly we need a better solution.  The solution is to generalize the kind of
 the datatype from |Exp_g :: *| to |Exp :: * -> *|, and add a universal inverse.
-\vspace*{.5em}
+\begin{singlespace}
 \begin{code}
 data Exp a   =  App (Exp a) (Exp a)
              |  Lam (Exp a -> Exp a)
              |  Inv a
-
+{-""-}
 countLam:: Exp Int -> Int   
 countLam (Inv n) = n
 countLam (App x y) = countLam x + countLam y
 countLam (Lam f) = countLam(f (Inv 1))
-\end{code}\vspace*{-.5em}\\
+\end{code}
+\end{singlespace}\noindent
 Generalizing from |countLam| we can define a function from |Exp| to any
 type. How do we lift this kind of solution to the Mendler style?
 \citet{FegShe96} proposed moving the general inverse from the Base type
@@ -290,7 +293,9 @@ As usual, we define |Exp' a| as a fixpoint of the base datatype |ExpF|
 and define shorthand constructors |lam| and |app|.
 Using the shorthand constructor functions,
 we can define some lambda expressions: %% as follows:
-\vspace*{.3em}\ExpExamples\vspace*{-1em}\\
+\begin{singlespace}
+\ExpExamples
+\end{singlespace}
 However, there is another way to construct |Exp'| values that is
 problematic. Using the constructor |Inverse0|, we can turn values of
 arbitrary type |t| into values of |Exp' t|.  For example, 

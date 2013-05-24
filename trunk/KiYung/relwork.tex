@@ -1,14 +1,14 @@
 \chapter{Related work}\label{ch:relwork}
-In this chapter we discuss additional related work,
+In this chapter, we discuss additional related work,
 not discussed in the introduction or the related work sections
 of \S\ref{sec:intro} and  \S\ref{sec:related}.
-This work falls naturally into five categories -- Mendler style
-operations over co-data, new and unusual Mendler style operations, 
-Mendler style dependently-typed induction, 
-the use of sized-types to explain the termination of Mendler style
-operators, and 
-the relationship
-of the Mendler style to logical frameworks, 
+We discuss five categories of related work:
+Mendler-style co-recursion schemes over co-data (\S\ref{sec:relwork:co}),
+Mendler-style recursion schemes over multiple values (\S\ref{sec:relwork:mult}),
+dependently-typed Mendler-style induction (\S\ref{sec:relwork:dep}), 
+the use of sized-types to explain the termination of Mendler-style
+recursion schemes (\S\ref{sec:relwork:sized}), and the comparison of
+our Mendler-style approach to logical frameworks (\S\ref{sec:relwork:LF}).
 
 
 \input{relwork_mcoit} %% sec:relwork:co
@@ -18,7 +18,7 @@ of the Mendler style to logical frameworks,
 \section{Mendler-style induction}
 \label{sec:relwork:dep}
 The dependently-typed version of primitive recursion is called induction.
-We formulate Mendler style induction over regular datatypes as follows.
+We formulate Mendler-style induction over regular datatypes as follows.
 \vspace*{-2em}
 \begin{singlespace}
 \[\begin{array}{ll}
@@ -34,8 +34,8 @@ We formulate Mendler style induction over regular datatypes as follows.
 \textbf{mind}_{*} ~ \varphi ~ (\In_{*}\;x)
   ~=~ \varphi~~\textit{id}~~(\textbf{mind}_{*}~\varphi)~~x \]
 \end{singlespace}\noindent
-The definition of Mendler style induction $\textbf{mind}$ shows
-that induction is essentionally the same as the Mendler-style primitive recursion $\MPr$,
+The definition of Mendler-style induction $\textbf{mind}$ shows that induction
+is essentially the same as the Mendler-style primitive recursion $\MPr$,
 except that the type signature involves dependent types.
 Note, the final answer type $(A\;z)$ is dependent on
 the recursive argument $z:\mu_{*}F$.
@@ -65,17 +65,17 @@ The work of a Mendler stylist is never done.
 
 
 
-\section{Type-based termination and sized types}
+\section{Type-based termination and sized types}\label{sec:relwork:sized}
 \emph{Type-based termination} (coined by \citet{BartheFGPU04}) stands for
 approaches that integrate termination into type checking, as opposed to
 syntactic approaches that reason about termination over untyped term structures.
 The Mendler-style approach is, of course, type-based.  In fact, the idea of
 type-based termination was inspired by \citet{Mendler87,Mendler91}.
 In the Mendler style, we know that well-typed functions defined using
-Mendler style recursion schemes always terminate.
-This guarantee flows from the design
-of the operator, and that the the abstract operations
-use types to enforce the invariants necessary for termination.
+Mendler-style recursion schemes always terminate.  This guarantee flows
+from the design of the recursion scheme, where the use of higher-rank 
+polymorphic types in the abstract operations enforce the invariants
+necessary for termination.
 
 \citet{abel06phd,Abel12talkFICS} summarizes the advantages of
 type-based termination as follows:
@@ -94,10 +94,10 @@ type-based termination as follows:
         (works well even for higher-order functions and non-regular datatypes,
         as a consequence of compositionality).
 In his dissertation \cite{abel06phd} (Section 4.4) on sized types,
-Abel views the Mendler style approach as enforcing size restrictions
+Abel views the Mendler-style approach as enforcing size restrictions
 using higher-rank polymorphism as follows:
 \begin{itemize}
-\item The abstract recursive type $r$ in the Mendler style corresponds to
+\item The abstract recursive type $r$ in Mendler style corresponds to
         $\mu^\alpha F$ in his sized-type system (System \Fwhat),
         where the sized type
         for the value being passed in corresponds to $\mu^{\alpha+1} F$.
@@ -144,6 +144,7 @@ is also useful over negative datatypes and has a termination property
 (not proved yet) based on the size of the index in the datatype.
 
 \section{Logical Frameworks based on the $\lambda\Pi$-calculus}
+\label{sec:relwork:LF}
 
 based on the $\lambda\Pi$-calculus
 
@@ -167,11 +168,11 @@ To write a program using higher-order functions in Twelf,
 you need to go through several steps.
 \begin{itemize}
 \item[(1)] Define an object language syntax
-(as you define the syntax |z| and |s| for natural numbers)
+(as you define the syntax \texttt{z} and \texttt{s} for natural numbers)
 with bindings (this is done by HOAS), applications, and
 whatsoever you would need express higher-order functions.
 \item[(2)] Define the evaluation semantics of your object language using
-        inductive relations (\i, write an evaluator for
+        inductive relations (\ie, write an evaluator for
         your object language in a Prolog-like way).
 \item[(3)] Write the program in the object language by putting
         together pieces of the syntax you defined in (1).
@@ -188,8 +189,8 @@ a functional language since the inductive definitions are functional
 rather than relational. So, one can to write higher-order functions
 (\eg, map, fold) is almost the same as in functional programming languages,
 except a few tedious bookkeeping of context objects. Since Beluga has access
-to context objects, it can express what \MsfIt\ can express, and in addtion,
-it can also express what \textbf{openit} ((\S\ref{sec:openit})) can express.
+to context objects, it can express what \MsfIt\ can express, and in addition,
+it can also express what \textbf{openit} (\S\ref{sec:openit}) can express.
 
 Regarding higher-order functions, Beluga is in a much better position
 than Twelf. In Twelf, one needs to create a whole new object-level
@@ -198,6 +199,7 @@ inductive relations in order express higher-order functions.
 Termination is not type based in Beluga either. Like Twelf, it needs
 an external termination (or totality) checker, but its prototype
 implementation currently lacks a termination (or totality) checker.
+
 
 Delphine \cite{pos08phd} TODO
 Delphine has a termination checker based on lexicographic subterm ordering.

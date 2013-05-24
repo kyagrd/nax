@@ -14,26 +14,25 @@ Data structures have a natural dual, often called co-data.
 Data is characterized by how it is constructed, and co-data is
 characterized by how it is observed (destructed).
 
-Mendler-style recursion schemes generalize 
-(dualize?) naturally to co-data. We call these generalizations
-Mendler-style co-recursion schemes. These
-schemes generate possibly infinite structures. 
-For instance, an infinite sequence of ones. 
+Mendler-style recursion schemes generalize (or, dualize) naturally to co-data.
+We call these generalizations Mendler-style co-recursion schemes.
+These co-recursion schemes generate possibly infinite structures. 
+For instance, an infinite sequence of natural numbers.
 
-The Mendler-style co-iteration, \McoIt,
-(\aka\ anamorphism or unfold) is dual to the Mendler-style iteration, \MIt,
-(\aka\ catamorpihsm or fold). Figure~\ref{fig:mcoit0} 
-(adapted from \citet{UusVen11}) illustrates
-a Haskell transcription of  \MIt\ and its dual \McoIt.
+The Mendler-style co-iteration, \McoIt, (\aka\ anamorphism or unfold) is
+dual to the Mendler-style iteration, \MIt, (\aka\ catamorpihsm or fold).
+Figure~\ref{fig:mcoit0} (adapted from \citet{UusVen11}) illustrates
+a Haskell transcription of \MIt\ and its dual \McoIt.
 Readers can compare the two for similarities and differences.
-We use the same style of Haskell code we
-used in Chapter~\ref{ch:mendler}. The reversal of the function
-arrows is typical of a dual construction. Note that domain and the codomain of the abstract operations are flipped:
+We use the same style of Haskell code we used in Chapter~\ref{ch:mendler}.
+The reversal of the function arrows is typical of a dual construction.
+Note that domain and the codomain of the abstract operations are flipped:
 |(a -> r)|, |(a -> f r)|, |(a -> Nu0 f)| verses
 |(r -> a)|, |(f r -> a)|, |(Mu0 f -> a)|.
 
-
 \begin{figure}
+%format unIn0 = unIn"_{*}"
+%format UnOut0 = UnOut"_{*}"
 \begin{singlespace}
 \begin{code}
 -- Mendler-style co-fixpoint |Nu0| and co-iterator |mcoit0|
@@ -87,7 +86,7 @@ Using the conventions described in Chapter~\ref{ch:mendler},
 the use of |In0| is unrestricted, but its inverse |unIn0|
 (or pattern matching against |In0|) is
 restricted. To eliminate a list or a natural number
-one must use a Mendler-style operator, like |mit0|.
+one must use a Mendler-style recursion scheme, like |mit0|.
 In Mendler style, one can freely \emph{construct}
 recursive values but cannot freely tear them down. 
 For example, one cannot define head or tail functions for |List|
@@ -125,9 +124,9 @@ the use of |UnOut0|. We can pattern match against a value
 |(UnOut0 x)| (or freely use the function |out0|), but we
 cannot use |UnOut0| to construct co-data. The last step
 of contructing co-data (the application of |UnOut0|) must
-be done by a Mendler style co-recursion operation. Just as the first step
+be done by a Mendler-style co-recursion scheme. Just as the first step
 of eliminating data (stripping off |In0|) must be done by
-a Mendler style recursion operation.
+a Mendler-style recursion scheme.
 
 As an example of constructing a |Stream|, we define a function |upfrom :: Nat -> Stream Nat|
 as follows. |upfrom| builds up a stream starting from a given natural number |n| where each element
@@ -196,28 +195,26 @@ Because of laziness, datatypes
 in Haskell have characteristics of both recursive and co-recursive datatypes.
 However, when we use Haskell to explain Mendler-style concepts, we always
 distinguish recursive and co-recursive datatypes by adhering to the conventions
-we discussed: no general recursion except to define the fixed-point
-operators themselves (|Mu0|, |Nu0|) and their
-(co-)recursion schemes (|mit0|,|mcoit0|).
-We also restrict the use of |unIn0| and |unOut0| as described.
-
-\citet{matthes98phd} extended System~\F\ with Mendler-style (co-)iteration\footnote{
+we discussed: no general recursion except to define the (co-)\footnote{
         A word prefixed by `(co-)' refers to the words
         both with and without `(co-)'. That is, (co-)iteration
-        refers to both iteration and co-iteration.}
+        refers to both iteration and co-iteration.}fixpoint operators
+themselves (|Mu0|, |Nu0|) and their (co-)recursion schemes (|mit0|,|mcoit0|).
+We also restrict the use of |unIn0| and |unOut0| as described.
+
+\citet{matthes98phd} extended System~\F\ with Mendler-style (co-)iteration
 and primitive (co-)recursion, and studied their properties. 
 \citet{AbeMatUus05} embedded
 Mendler-style (co-)iteration into System~\Fw.
 \citet{AbeMat04} discovered a reduction preserving embedding
-of Mendler-style primitive recursion into \Fixw. They
-mention that an embedding of primitive co-recursion is similarly possible
-(although they did not give the embedding in the paper due to space restrictions).
+of Mendler-style primitive recursion into \Fixw. They mention that
+an embedding of primitive co-recursion is similarly possible (although
+they did not give the embedding in the paper due to space restrictions).
 
 \citet{UusVen11,UusVen99,UusVen99histo} studied Mendler-style recursion
 schemes in a categorical setting, while the works mentioned in the paragraph
 above are set in the context of typed lambda calculi.
-In Vene's thesis \citet{vene00phd}, he relates several Mendler style recursion scheme
-with their non-Mendler style counterparts -- (co-)iteration, primitive (co-)recursion, 
-and course-of-values (co-)iteration.
-
+In Vene's thesis \citet{vene00phd}, he relates several Mendler-style
+recursion schemes with their non Mendler-style counterparts -- (co-)iteration,
+primitive (co-)recursion, and course-of-values (co-)iteration.
 
