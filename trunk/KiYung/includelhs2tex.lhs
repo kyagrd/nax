@@ -58,7 +58,8 @@
 %format mcvpr0 = mcvpr "_{*}"
 %format mcvpr1 = mcvpr "_{* -> *}"
 %format msfcvpr = "\MsfcvPr"
-
+%format mprsi = "\mathbf{mprsi}"
+%format mprsi1 = mprsi"_{* -> *}"
 
 %format phi = "\varphi"
 

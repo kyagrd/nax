@@ -61,15 +61,17 @@ and |take :: Nat -> List a -> List a| as follows:
 \begin{singlespace}
 \begin{code}
 lessthan :: Nat -> Nat -> Bool
-lessthan = msimit0 phi where  phi lt Zero      Zero      = False
-                              phi lt Zero      (Succ _)  = True
-                              phi lt (Succ _)  Zero      = False
-                              phi lt (Succ m)  (Succ n)  = lt m n
+lessthan = msimit0 phi where
+  phi lt Zero      Zero      = False
+  phi lt Zero      (Succ _)  = True
+  phi lt (Succ _)  Zero      = False
+  phi lt (Succ m)  (Succ n)  = lt m n
 {-""-}
 take :: Nat -> List a -> List a
-take = msimit0 phi where  phi tk Zero      _            = nil
-                          phi tk (Succ _)  Nil          = nil
-                          phi tk (Succ n)  (Cons x xs)  = cons x (tk n xs)
+take = msimit0 phi where
+  phi tk Zero      _            = nil
+  phi tk (Succ _)  Nil          = nil
+  phi tk (Succ n)  (Cons x xs)  = cons x (tk n xs)
 \end{code}
 \end{singlespace}\noindent
 Note that the |phi| functions above are similar in structure to how one would typically
