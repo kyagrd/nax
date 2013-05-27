@@ -312,7 +312,6 @@ By induction on recursive call step of the algorithm $W$.
         By induction, we know that \vspace*{-2em}
         \begin{singlespace}
         \begin{align}
-        \label{WcompleteLetsCase1}
         \inference{S_1'\Gamma |-s s : A_1'}{
         W(\Gamma,s) ~> (S_1,A_1)
         ~\land~
@@ -320,8 +319,8 @@ By induction on recursive call step of the algorithm $W$.
                 \left( S_1'\Gamma=R_1(S_1\Gamma) \;\land\;
                         R_1(\overline{S_1\Gamma}(A_1)) \sqsubseteq A_1'
                 \right) }
+        \label{WcompleteLetsCase1}
         \\
-        \label{WcompleteLetsCase2}
         \inference{S_2'(S_1\Gamma,x:\overline{S_1\Gamma}(A_1)) |-s t : A_2'}{
         \begin{smallmatrix} W((S_1\Gamma,x:\overline{S_1\Gamma}(A_1)),t) \\
                 ~> (S_2,A_2)
@@ -333,6 +332,7 @@ By induction on recursive call step of the algorithm $W$.
                         R_2(\overline{S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1))}(A_2))
                         \sqsubseteq A_2'
                 \end{smallmatrix}\right) }
+        \label{WcompleteLetsCase2}
         \end{align}
         \end{singlespace}
 

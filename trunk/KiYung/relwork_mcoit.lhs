@@ -29,6 +29,9 @@ The reversal of the function arrows is typical of a dual construction.
 Note that domain and the codomain of the abstract operations are flipped:
 |(a -> r)|, |(a -> f r)|, |(a -> Nu0 f)| verses
 |(r -> a)|, |(f r -> a)|, |(Mu0 f -> a)|.
+We illustrate Mendler-style co-iteration at kind |*|.
+The reader can imagine generalizing to higher kinds
+just as Mendler-style iteration generalizes to higher kinds.
 
 \begin{figure}
 %format unIn0 = unIn"_{*}"
@@ -50,10 +53,6 @@ mit0 phi x = phi (mit0 phi) (unIn0 x)
          in comparison to Mendler-style iteration (\MIt) at kind |*|}
 \label{fig:mcoit0}
 \end{figure}
-
-We illustrate Mendler-style co-iteration at kind |*|.
-The reader can imagine generalizing to higher kinds
-just as Mendler-style iteration generalizes to higher kinds.
 
 To understand this dualization,
 let us review how we define recursive datatypes. In Mendler-style,

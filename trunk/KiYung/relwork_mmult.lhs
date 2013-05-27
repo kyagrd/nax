@@ -122,15 +122,13 @@ which we can define using general recursion in Haskell as follows:
 %format Zero_g = Zero"_g"
 %format Succ_g = Succ"_g"
 %format acker_g = acker"_g"
-\begin{singlespace}
 \begin{code}
 data Nat_g = Zero_g | Succ_g Nat_g
 
 acker_g Zero_g      n           = Succ_g n
 acker_g (Succ_g m)  Zero_g      = Succ_g (acker_g m Zero_g)
 acker_g (Succ_g m)  (Succ_g n)  = acker_g m (acker_g (Succ_g m) n)
-\end{code}
-\end{singlespace}
+\end{code}~\vspace*{-1.3em}\\
 Observe that the first argument is more significant than the second.
 In the third equation, the first argument |m| of the outer recursive call
 decreases (\ie, smaller than |(Succ_g m)|) while the second argument
@@ -149,7 +147,6 @@ The following Mendler-style recursion scheme captures the idea of
 lexicographic recursion over two arguments.
 %format mlexpr = "\textbf{mlexpr}"
 %format mlexpr0 = mlexpr"_{*,*}"
-\begin{singlespace}
 \begin{code}
 mlexpr0 :: (forall r1 r2  .   (r1 -> Mu0 f2 -> a)  -- outer recursive call
                           ->  (r2 -> a)            -- inner recursive call
@@ -158,8 +155,7 @@ mlexpr0 :: (forall r1 r2  .   (r1 -> Mu0 f2 -> a)  -- outer recursive call
                           ->  f1 r1 -> f2 r2 -> a) -> Mu0 f1 -> Mu0 f2 -> a
 
 mlexpr0 phi (In0 x1) (In0 x2) = phi (mlexpr0 phi) (mlexpr0 phi (In0 x1)) id id x1 x2 
-\end{code}
-\end{singlespace}\noindent
+\end{code}~\vspace*{-1.3em}\\
 The Mendler-style lexicograph recursion |mlexpr0| is similar to
 the Mendler-style simultaneous recursion |msimpr0| introduced
 in the previous section, but has two abstract operations for
@@ -173,16 +169,14 @@ to be a direct subcomponent by requiring its type to be |r2|.
 Since the inner call assumes that the first argument stays the same,
 the first argument is omitted. Using |mlexpr0|,
 we can define the Ackermann function as follows:
-\begin{singlespace}
+
 \begin{code}
 acker = mlexpr0 phi where
   phi ack ack' cast1 cast2 Zero      Zero      = succ zero
   phi ack ack' cast1 cast2 Zero      (Succ n)  = succ (succ (cast2 n))
   phi ack ack' cast1 cast2 (Succ m)  Zero      = succ (ack m zero)
   phi ack ack' cast1 cast2 (Succ m)  (Succ n)  = ack m (ack' n)
-\end{code}
-\end{singlespace}
-
+\end{code}~\vspace*{-1.3em}\\ \indent
 The idea for |mlexpr0| originated in a conversation between Tarmo Uustalu
 and Tim Sheard at the TYPES 2013 workshop (not published anywhere else
 at the moment). We strongly believe that |mlexpr0| terminates for all

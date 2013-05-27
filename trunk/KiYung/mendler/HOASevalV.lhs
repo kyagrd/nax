@@ -27,9 +27,9 @@ evalHOAS e = msfcata1 phi e where
 -- The code above are exactly the same as the code from Figure\ref{fig:HOASeval}
 -- in \S\ref{sec:msf}, in order to review the |evalHOAS| example.
 {-""-}
-data V r t where V :: (r t1 -> r t2) -> V r (t1 -> t2)
+data V r t where VFun :: (r t1 -> r t2) -> V r (t1 -> t2)
 type Val t = Mu1 V t
-val f = In1 (V f) 
+val f = In1 (VFun f) 
 {-""-}
 vevalHOAS :: Exp t -> Val t
 vevalHOAS e = msfcata1 phi e where
@@ -40,5 +40,5 @@ vevalHOAS e = msfcata1 phi e where
 -- |unVal| does not follow the restrictions of the Mendler style
 -- since its definition relies on pattern matching againts |In1|
 unVal :: Val (t1 -> t2) -> (Val t1 -> Val t2)
-unVal (In1(V f)) = f
+unVal (In1(VFun f)) = f
 \end{code}
