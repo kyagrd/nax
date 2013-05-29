@@ -18,7 +18,10 @@ In this section, we introduce another Mendler-style recursion scheme,
 The name of |mprsi| stands for
 Mendler-style primitive recursion with sized index.
 
-
+%format t1
+%format t2
+%format e1
+%format e2
 \begin{figure}
 \begin{singlespace}
 %include mendler/HOASevalV.lhs
@@ -81,11 +84,11 @@ unVal = mprim1 phi where
   phi cast call (VFun f) = ...
 \end{code}~\vspace{-1em}
 \end{singlespace}\noindent
-Inside the |phi| function, we a function |f :: (r t1 -> r t2)| over
-abstract recursive values. We need to somehow cast |f| into
-a function over concrete recursive values with type |(Mu V t1 -> Mu V t2)|.
+Inside the |phi| function, we have a function |f :: (r t1 -> r t2)| over
+abstract recursive values. We need to somehow cast |f| into a function over
+concrete recursive values with the type |(Mu V t1 -> Mu V t2)|.
 We would not need to use |call|, since we do not expect
-any recursive computation to define |unVal|.
+any recursive computations to define |unVal|.
 So, |cast :: (forall i. r i -> Mu f i)| is what is left for us to work with.
 Composing |cast| with |f|, we can get |(cast . f) :: (r t1 -> Mu V t2)|,
 whose domain type (|Mu V t2|) is exactly what we want. But, the codomain type
@@ -96,14 +99,9 @@ What additional abstract operation would help us complete the definition of
 |unVal|? We need an abstract operation to cast from |(r t1)| to |(Mu V t1)|
 in a contravariant position.
 If we had an inverse of cast, |uncast :: (forall i. Mu f i -> r i)|, we can
-complete the definition of |unVal| by compsoing |uncast|, |f|, and |cast|.
-Observe that |(uncast . f . cast) :: (Mu1 V t1 -> Mu1 V t2)|.
-
-existing
-So, we design a new recursion scheme |mprsi|
-
-not erasable
-
+complete the definition of |unVal| by composing |uncast|, |f|, and |cast|.
+Observe that |(uncast . f . cast) :: (Mu1 V t1 -> Mu1 V t2)|. Thus, we can
+formulate |mprsi1| with a naive type signature as follows:
 \begin{singlespace}
 \begin{code}
 -- a naive type signature for mprsi1
@@ -115,122 +113,76 @@ mprsi1 :: (forall r  i.  (forall i. r i -> Mu1 f i)  -- cast
 mprsi1 phi (In1 x) = phi id id (mprsi1 phi) x
 \end{code}~\vspace{-1em}
 \end{singlespace}
-
-%% \texttt{unfun\;:\;Val\,(a\,->\,b)\;->\;Val\;a\,->\,Val\;b},
-%% this would be admitted in Nax.
-
-\begin{singlespace}
+Although above type signature is type correct, it is too powerful.
+We know that the evaluator |vevalHOAS| always terminates because
+it evaluates a well-typed HOAS. However, using |mprsi1| with
+the naive type signature above, we can even write an evaluator
+for the untyped HOAS, which does not always terminate.
+The base structures of the untyped HOAS and its value domain
+can be defined as follows:
+%format ExpF_u = ExpF"_u"
+%format Lam_u = Lam"_u"
+%format App_u = App"_u"
+%format V_u = V"_u"
+%format VFun_u = VFun"_u"
 \begin{code}
--- candidate 1
+data ExpF_u r t = Lam_u (r t -> r t) | App_u (r t) (r t)
+data V_u r t = VFun_u (r t -> r t)
+\end{code}
+The structures above represent the untyped HOAS and its value domain
+because its index |t| is virtually meaningless, always being the same.
+Over these structures, we can define an evaluator similar to |vevalHOAS|,
+but it would not always terminate. Having both |cast| and |uncast| gives
+virtually the same ability to freely pattern match over recursive values.
+To recover the guarantee of termination, we need to restrict the use of
+either |cast| or |uncast|, or both, 
+
+Why did we believe that |vevalHOAS| always terminates?
+Because it evaluates a well-typed HOAS, whose type is encoded as
+an index |t| of the recursive datatype |(Exp t)|. That is,
+the paradigmatic use of indices is the key to the termination property.
+Therefore, our idea is to restrict the use of the abstract operations
+by requiring certain conditions to their indices. We allow the use
+of abstract operations only over abstract values, whose indices are
+smaller in size compared to the index of the argument value passed in.
+For the |vevalHOAS| example, we define being smaller as the structural ordering
+over types, that is, |t1 < (t1 -> t2)| and |t2 < (t2 -> t1)|.
+We have two candidates for the type signature of |mprsi1|:\vspace{-1em}
+\begin{singlespace}
+\begin{itemize}
+\item Candidate 1: restrict uses of both |cast| and |uncast|
+\begin{code}
 mprsi1 :: (forall r  j.  (forall i. (i<j) =>  r i -> Mu1 f i)  -- cast
                      ->  (forall i. (i<j) =>  Mu1 f i -> r i)  -- uncast
                      ->  (forall i.           r i -> a i)      -- call
                      ->  f r j -> a j) ) -> Mu f i -> a i
--- candidate 2
+\end{code}
+\item Candidate 2: restrict the use of |uncast| only
+\begin{code}
 mprsi1 :: (forall r  j.  (forall i.           r i -> Mu1 f i)  -- cast
                      ->  (forall i. (i<j) =>  Mu1 f i -> r i)  -- uncast
                      ->  (forall i.           r i -> a i)      -- call
                      ->  f r j -> a j) ) -> Mu f i -> a i
-\end{code}~\vspace{-1em}
-\end{singlespace}
+\end{code}
+\end{itemize}
+\end{singlespace}\noindent
+We strongly believe that the first candidate will always terminate,
+but it might be overly restrictive. Maybe the second candidate is
+enough to guarantee termination. Both candidates allow defining |vevalHOAS|,
+because one can define |unVal| using |mprsi1| with either one of
+the candidates, but not the evaluator over the untyped HOAS, because
+non of the candidates would be possible to extract functions from
+the untyped value domain.
 
+We need further studies to prove termination properties of |mprsi|.
+The idea behind sized-types, discussed in \S\ref{sec:relwork:sized},
+seems to be relevant to showing termination of |mprsi|. However,
+existing sized-type approaches are not directly applicable to |mprsi|
+because they are focused on positive datatypes, but not negative datatypes.
 
-
-
-motivates
-a new recursion scheme, The |vevalHOAS| function.
-
-%% If the datatype \texttt{Exp} had indexes to assert invariants of
-%% well-formed expressions, we could rely on these invariants to write
-%% even more expressive programs, such as a terminating well-typed evaluator.
-%% Discussion around this idea will constitute the latter parts of the paper.
-%% \vspace*{-2ex}
-%% \paragraph{A simply-typed HOAS evaluator\!\!\!} can be defined
-%% using \MsfIt\ at kind \texttt{*\,->\,*}.  Since \MsfIt\ terminates
-%% for any datatype, we are also proving that the evaluation of
-%% the simply-typed $\lambda$-calculus always terminates
-%% just by defining \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} in Nax, as below.
-%% We wonder \texttt{eval} has similarities to other normalization strategies
-%% like NbE \cite{BerSch91}.
-%% \vspace*{-1ex}
-%% {\small
-%% \begin{verbatim}
-%%   data E : (* -> *) -> (* -> *) where      -- the "deriving fixpoint Exp" defines
-%%     Abs : (r a -> r b) -> E r (a -> b)     --   abs f   = In[* -> *] (Abs f)
-%%     App : E r (a -> b) -> E r a -> E r b   --   app f e = In[* -> *] (App f e)
-%%       deriving fixpoint Exp                --   synonym Exp t = Mu[* -> *] E t
-%% 
-%%   data Id a = MkId a -- the identity type
-%%   unId (MkId x) = x  -- destructor of Id
-%%   
-%%   eval e = msfit { t . Id t } e with
-%%              call inv (App f x) = MkId (unId(call f) (unId(call x)))
-%%              call inv (Abs f) = MkId (\v -> unId(call (f (inv (MkId v)))))
-%% \end{verbatim} }
-%% \vspace*{-.5ex}\noindent
-%% The type of \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} is inferred from
-%% \texttt{\{\,t\,.\;Id t\,\}}, which specifies the answer type in relation
-%% to the input type's index.
-%% Conceptually, \texttt{msfit} at kind \texttt{*\,->\,*} has the following type.\vspace*{-.5ex}
-%% % Note the types of \texttt{msfit}'s two abstract operations
-%% % \texttt{call} and \texttt{inv}.
-%% {\small
-%% \begin{verbatim}
-%%   msfit : (forall r . (forall i . r i -> ans i) -- call
-%%                    -> (forall i . ans i -> r i) -- inv
-%%                    -> (forall i . f r i -> ans i)      ) -> Mu[* -> *] f j -> ans j
-%% \end{verbatim} }
-%% \vspace*{-2.5ex}
-%% \paragraph{Evaluation via user-defined value domain\!\!\!\!\!}, instead of
-%% the native value space of Nax, motivates a new recursion scheme,
-%% \mprsi, standing for Mendler-style primitive recursion with sized index.
-%% %% A user-defined value domain is particularly useful for evaluating expressions
-%% %% of first-order syntax. Here, we stick to HOAS to avoid introducing a new datatype.
-%% Consider writing an evaluator \texttt{\,veval\;:\;Exp\;t\,->\,Val\;t\,}
-%% via the value domain \texttt{Val\;:\;*\,->\,*\,}.\vspace*{-.5ex}
-%% {\small
-%% \begin{verbatim}
-%%   data V : (* -> *) -> * -> * where      -- the "deriving fixpoint Val" defines
-%%     Fun : (r a -> r b) -> V r (a -> b)   -- fun f = In [* -> *] (Fun f)
-%%       deriving fixpoint Val              -- synonym Val t = Mu[* -> *] V t
-%% \end{verbatim}\vspace*{-1.5ex}
-%% \begin{verbatim}
-%%   veval e = msfit { t . V t } e with
-%%               call inv (App f x) = unfun (call f) (call x)  -- how do we define unfun?
-%%               call inv (Abs f) = fun (\v -> (call (f (inv v))))
-%% \end{verbatim} }
-%% \noindent
-%% Only if we were able to define
-%% \texttt{unfun\;:\;Val\,(a\,->\,b)\;->\;Val\;a\,->\,Val\;b},
-%% this would be admitted in Nax.
-%% However, it is not likely that \texttt{unfun} can be defined using
-%% recursion schemes currently available in Nax. Thereby, we propose
-%% a new recursion scheme \mprsi, which extends the Mendler-style primitive recursion
-%% (\texttt{mpr}) with the uncasting operation.\vspace*{-.5ex}
-%% {\small
-%% \begin{verbatim}
-%%   mprsi : (forall r . (forall i. r i -> ans i)                      -- call
-%%                    -> (forall i. (i < j) => r i -> Mu[* -> *] f i)  -- cast   
-%%                    -> (forall i. (i < j) => Mu[* -> *] f i -> r i)  -- uncast 
-%%                    -> (forall i. f r i -> ans i) ) -> Mu[* -> *] f j -> ans j
-%% \end{verbatim}\vspace*{-1.5ex}
-%% \begin{verbatim}
-%%   unfun v = mprsi { (a -> b) . V a -> V b } v with
-%%               call cast (Fun f) = cast . f . uncast   -- dot (.) is function composition
-%% \end{verbatim} }\vspace*{-.5ex}
-%% \noindent
-%% Note the size constraints \texttt{(i\;<\;j)} on both \texttt{cast} and \texttt{uncast} operations
-%% (FYI, \texttt{mpr}'s \texttt{cast} does not have size constraints).
-%% These constraints prevent writing evaluator-like functions on strange expressions
-%% that have constructors like below, which may cause non-termination.\vspace*{-.5ex}
-%% {\small
-%% \begin{verbatim}
-%%  app1 : (Exp1 (a->b) -> Exp1 b) -> Exp1 (a->b)  -- prevented by constraint on uncast
-%%  app2 : (Exp2 a -> Exp2 (a->b)) -> Exp2 (a->b)  -- prevented by constraint on cast
-%% \end{verbatim} }\vspace*{-.5ex}
-%% \noindent
-%% Our examples in this abstract only involve type indices, but similar
-%% formulation is possible for term indices as well.\vspace*{-1.5ex}
-%% This is still a fresh proposal awaiting proof of termination.
-
+The idea described in this section was presented in the TYPES 2013 workshop.
+%% |Exp| and |Val| in this section are chosen to be minimal for simplicity,
+%% kbut it does not well motivate why one might need a user-defined value domain.
+%% kThe normalization by evaluation based on HOAS in Appendix \ref{app:nbeHOAS}
+%% kgives a clear motivation why one would need a user-defined value domain.
 

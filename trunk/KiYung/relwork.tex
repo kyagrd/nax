@@ -164,8 +164,47 @@ as a functional programming language.
 more generally higher-order functions, such as map or fold,
 are not directly expressible in Twelf.
 
-To write a program using higher-order functions in Twelf,
-you need to go through several steps.
+You can define a new type and constants involving those types in Twelf.
+For example, you can define natrual numbers as follows.\footnote{
+	Twelf examples are adopted from Boyland's Twelf Library on Github.\\
+	$~~~~~~~$
+	\url{https://github.com/boyland/twelf-library}}\vspace*{-2em}
+\begin{singlespace}
+\begin{verbatim}
+  nat : type.       %%% define a type name
+  z : nat.          %%% define a syntax for zero
+  s : nat -> nat.   %%% define a syntax for sucessor
+\end{verbatim}
+\end{singlespace}\noindent
+At this point, the constants \texttt{z} and \texttt{s} are just typed syntax.
+It is not yet involved with any semantics, unlike the natively supported
+inductive datatypes in Coq or Agda. So, there are no restrictions regarding
+well-formnedss of these constants, such as the positivity constraint on
+inductive datatypes in Coq or Agda.
+You can give meanings to these natrual number syntax by defining
+inductive relations over them. For example, we can define addition
+as a ternery reation over natural numbers, as follows:\vspace*{-2em}
+\begin{singlespace}
+\begin{verbatim}
+  plus : nat -> nat -> nat -> type.
+  plus/z : plus z Y Y.
+  plus/s : plus (s X) Y (s Z)
+        <- plus X Y Z.
+\end{verbatim}
+\end{singlespace}\noindent
+If you are famillar to Prolog, you would have noticed that
+right-hand sides of the colon next to \verb|plus/z| and \verb|plus/s|
+look like a Prolog program defininig addition. Twelf's meta-logic
+is typed first-order relational logic.  It really is just
+like pure Prolog programming at type level, but type-checked
+(unlike Prolog, which is untyped).
+
+You cannot write higer-order relations natively in Twelf
+because Twelf's meta-logic is first-order, not higher-order.
+To write a program using higher-order functions in Twelf, one has to model
+one's own object language that supports higher-order functions, and program
+within that object language, rather than programming in twelf's meta-logic.
+Here are the summarized steps to program using higher-order functions in Twelf:
 \begin{itemize}
 \item[(1)] Define an object language syntax
 (as you define the syntax \texttt{z} and \texttt{s} for natural numbers)
@@ -185,12 +224,14 @@ termination guarantee, but you don't really need to reason about
 the meta-theory of the object functional language in general.
 
 Beluga \cite{Pie10} is similar to Twelf but it is more closer to
-a functional language since the inductive definitions are functional
-rather than relational. So, one can to write higher-order functions
-(\eg, map, fold) is almost the same as in functional programming languages,
-except a few tedious bookkeeping of context objects. Since Beluga has access
-to context objects, it can express what \MsfIt\ can express, and in addition,
-it can also express what \textbf{openit} (\S\ref{sec:openit}) can express.
+a functional language since the inductive definitions are functional,
+rather than relational, and supports higher-order functions. 
+One can to write higher-order functions (\eg, map, fold) in Beluga
+almost the same way as in functional programming languages, except
+a few tedious bookkeeping of context objects. Since Beluga has access
+to context objects, we think it can express what \MsfIt\ can express,
+and in addition, it can also express what \textbf{openit} (\S\ref{sec:openit})
+can express.
 
 Regarding higher-order functions, Beluga is in a much better position
 than Twelf. In Twelf, one needs to create a whole new object-level
