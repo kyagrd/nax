@@ -14,7 +14,7 @@ TEXSRC=mylhs2tex.sty main.tex \
        fi.tex fi_fi.tex fi_theory.tex fi_data.tex \
        fixi.tex nax.tex casestd.tex \
        relwork.tex relwork_mcoit.tex relwork_mmult.tex \
-       futwork.tex futwork_mprsi.tex \
+       futwork.tex futwork_mprsi.tex futwork_mu.tex \
        concl.tex \
        appendix.tex
 
@@ -107,5 +107,8 @@ relwork_mmult.tex: relwork_mmult.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 
 futwork_mprsi.tex: futwork_mprsi.lhs includelhs2tex.lhs mendler/HOASevalV.lhs
+	lhs2TeX --poly -o $@ $<
+
+futwork_mu.tex: futwork_mu.lhs includelhs2tex.lhs
 	lhs2TeX --poly -o $@ $<
 

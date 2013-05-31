@@ -175,9 +175,9 @@ non of the candidates would be possible to extract functions from
 the untyped value domain.
 
 We need further studies to prove termination properties of |mprsi|.
-The idea behind sized-types, discussed in \S\ref{sec:relwork:sized},
+The sized-type approach, discussed in \S\ref{sec:relwork:sized},
 seems to be relevant to showing termination of |mprsi|. However,
-existing sized-type approaches are not directly applicable to |mprsi|
+existing theories on sized-types are not directly applicable to |mprsi|
 because they are focused on positive datatypes, but not negative datatypes.
 
 The idea described in this section was presented in the TYPES 2013 workshop.

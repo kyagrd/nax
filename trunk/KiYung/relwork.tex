@@ -59,9 +59,8 @@ the discussion with Tarmo Uustalu. He described this on a whiteboard
 when I met with him at the University of Cambridge in Fall 2011.
 
 In the future work section (\S\ref{sec:futwork:mprsi}), we introduce 
-even another Mendler-style
-recursion scheme, which is useful for mixed-variant datatypes.
-The work of a Mendler stylist is never done.
+even another Mendler-style recursion scheme, which is useful for
+mixed-variant datatypes. The work of a Mendler stylist is never done.
 
 
 
@@ -145,45 +144,75 @@ is also useful over negative datatypes and has a termination property
 
 \section{Logical Frameworks based on the $\lambda\Pi$-calculus}
 \label{sec:relwork:LF}
+A ``logical framework'', in a broad sense, could refer to
+any system that could serve as ``a meta-language for
+the formalization of deductive systems'' \cite{Pfe02LFintro}.
+In a narrow sense, logical frameworks are systems closely related to
+to the Edinburgh Logical Framework (LF or ELF) \cite{Harper87}, which
+uses the $\lambda\Pi$-calculus as its specification language.
+In this section, we discuss \emph{logical frameworks} in the narrow sense.
 
-based on the $\lambda\Pi$-calculus
+The $\lambda\Pi$-calculus (\aka\ $\lambda\mathbf{P}$) is one of the three
+corners in Barendregt's $\lambda$-cube \cite{Barendregt91}, which re
+next to the simply-typed lambda calculus (STLC, or, $\lambda\!\!\rightarrow$).
+The $\lambda\Pi$-calculus extends the STLC with dependent types,
+but without polymorphism or type operators.
+The syntax of $\lambda\Pi$, extended with constants ($c$), is describe below:
+\[
+\begin{array}{lll}
+\text{Kinds}         & K   & ::= \texttt{type} \mid \Pi x:A.K
+	\\
+\text{Type Families} & A,B & ::= c \mid \Pi x:A.B \mid \lambda x:A.B \mid AM
+	\\
+\text{Objects}       & M,N & ::= c \mid x \mid \l x:A.M \mid MN
+\end{array}
+\]
+In logical frameworks, you can introduce new constants for types and objects,
+often intended to represent datatypes such as natural numbers, lists, and
+thy may even involve higher-order abstract syntax. However, these constants
+are merely syntactic descriptions, not necessary tied to specific 
+semantics or logical interpretations. That is, introducing constants
+does not automatically arrange them with any recursion schemes or
+induction principles, as in functional languages or proof assistants
+that supports datatypes as its native feature. Each logical framework
+supports its own meta-logic to give meanings to the logic (or, the language)
+specified by introducing constants. The choice of meta-logic can be either
+relational (like a logic programming language),
+functional (like a functional programming language), or something else.
 
-dependently typed Logical Frameworks 
+Logical frameworks are very flexible for describing many
+different logical systems (or, formalizing a language),
+by the two-layered approach of a minimal specification language ($\lambda\Pi$)
+and a meta-logic. However, this two-layered approach is not ideal
+as a programming system, because one might need to model one's
+own programming language specification and its semantics
+in the logical framework, before actually starting to write programs.
+In the remainder if this section, we discuss Twelf, whose meta-logic
+is relational, and, Beluga and Delphin, whose meta-logics are functional.
 
-also known as Edinburgh LF \cite{TODO}
-
-constants for types
-
-on top of Twelf such as
-But Twelf does not abstract over relations.
-
-introduce relations involving those constants
-TODO
-
-as a functional programming language.
-more generally higher-order functions, such as map or fold,
-are not directly expressible in Twelf.
-
-You can define a new type and constants involving those types in Twelf.
-For example, you can define natrual numbers as follows.\footnote{
+\paragraph{}
+Twelf\footnote{\url{http://twelf.org/}} is the most widely used
+logical framework. In Twelf, you can define abstract syntax for datatypes
+by introducing constants for types and objects involving those types.
+For example, you can define natural numbers as follows.\footnote{
 	Twelf examples are adopted from Boyland's Twelf Library on Github.\\
 	$~~~~~~~$
 	\url{https://github.com/boyland/twelf-library}}\vspace*{-2em}
 \begin{singlespace}
 \begin{verbatim}
-  nat : type.       %%% define a type name
-  z : nat.          %%% define a syntax for zero
-  s : nat -> nat.   %%% define a syntax for sucessor
+  nat : type.       %%% define a type constant
+  z : nat.          %%% define a constant for zero
+  s : nat -> nat.   %%% define a constant for sucessor
 \end{verbatim}
 \end{singlespace}\noindent
 At this point, the constants \texttt{z} and \texttt{s} are just typed syntax.
 It is not yet involved with any semantics, unlike the natively supported
 inductive datatypes in Coq or Agda. So, there are no restrictions regarding
-well-formnedss of these constants, such as the positivity constraint on
+well-formedness of these constants, such as the positivity constraint on
 inductive datatypes in Coq or Agda.
-You can give meanings to these natrual number syntax by defining
+You can give meanings to these natural number syntax by defining
 inductive relations over them. For example, we can define addition
-as a ternery reation over natural numbers, as follows:\vspace*{-2em}
+as a ternary reason over natural numbers, as follows:\vspace*{-2em}
 \begin{singlespace}
 \begin{verbatim}
   plus : nat -> nat -> nat -> type.
@@ -192,14 +221,24 @@ as a ternery reation over natural numbers, as follows:\vspace*{-2em}
         <- plus X Y Z.
 \end{verbatim}
 \end{singlespace}\noindent
-If you are famillar to Prolog, you would have noticed that
+If you are familiar to Prolog, you would have noticed that
 right-hand sides of the colon next to \verb|plus/z| and \verb|plus/s|
-look like a Prolog program defininig addition. Twelf's meta-logic
+look like a Prolog program defining addition. Twelf's meta-logic
 is typed first-order relational logic.  It really is just
 like pure Prolog programming at type level, but type-checked
-(unlike Prolog, which is untyped).
+(unlike Prolog, which is untyped). All the computational matters,
+such as termination checking, are present at the level of these
+relational definitions. Twelf has a termination checker
+for inductive relations, which is external to the type checker,
+based on lexicographic subterm ordering over untyped terms.
+In addition to the type signatures of the relations, one can optionally specify
+input/output for each of the arguments, if necessary, to guide
+the termination checker to consider only the input arguments
+for termination.\footnote{There are various directives to guide
+	checking input/output modes, coverage, and termination in Twelf.
+	For further information, see the  documentations from its homepage.}
 
-You cannot write higer-order relations natively in Twelf
+One cannot write higher-order relations natively in Twelf
 because Twelf's meta-logic is first-order, not higher-order.
 To write a program using higher-order functions in Twelf, one has to model
 one's own object language that supports higher-order functions, and program
@@ -207,9 +246,9 @@ within that object language, rather than programming in twelf's meta-logic.
 Here are the summarized steps to program using higher-order functions in Twelf:
 \begin{itemize}
 \item[(1)] Define an object language syntax
-(as you define the syntax \texttt{z} and \texttt{s} for natural numbers)
-with bindings (this is done by HOAS), applications, and
-whatsoever you would need express higher-order functions.
+	(as you define the syntax \texttt{z} and \texttt{s} for natural numbers)
+	with bindings (this is done by HOAS), applications, and whatsoever
+	you would need to express higher-order functions of your need.
 \item[(2)] Define the evaluation semantics of your object language using
         inductive relations (\ie, write an evaluator for
         your object language in a Prolog-like way).
@@ -223,40 +262,98 @@ with higher-order functions in a type-safe way, and possibly with some
 termination guarantee, but you don't really need to reason about
 the meta-theory of the object functional language in general.
 
+\paragraph{}
 Beluga \cite{Pie10} is similar to Twelf but it is more closer to
 a functional language since the inductive definitions are functional,
-rather than relational, and supports higher-order functions. 
-One can to write higher-order functions (\eg, map, fold) in Beluga
-almost the same way as in functional programming languages, except
-a few tedious bookkeeping of context objects. Since Beluga has access
-to context objects, we think it can express what \MsfIt\ can express,
-and in addition, it can also express what \textbf{openit} (\S\ref{sec:openit})
-can express.
+rather than relational, and supports higher-order functions.
+One can write a natural number addition function in Beluga 
+as follows:\footnote{
+	Adopted from the Beluga tutorial.
+	\url{http://complogic.cs.mcgill.ca/beluga/} }\vspace*{-2em}
+\begin{singlespace}
+\begin{verbatim}
+  rec add : [. nat ] -> [. nat ] -> [. nat ]
+    = fn x => fn y =>
+      case x of
+      | [. z ]   => y
+      | [. s N ] => let [. R ] = add [. N ] y in [. s R ]
+      ;
+\end{verbatim}
+\end{singlespace}\noindent
+Types like \verb|{nat}| and \verb|nat -> nat| are called
+representation-level types. So, objects like \verb|z| and \verb|s|
+are called representation-level objects.
+Types like \verb|[. nat ]| and \verb|[. nat ] -> [. nat ]| are called
+computation-level types.
+Note, the new representation-level variable binding \verb|R| in
+the second case branch of the \verb|add| function definition.
+One cannot write \verb|[. s (add [. N ] y) ]| because \verb|s|
+expects a representation-level object as its argument.
+In Twelf-style logical frameworks, representation-level types are
+inhabited only by $\eta$-long $\beta$-normal representation-level objects,
+which does not include application forms of computational-level objects.
+Either a variable or a lambda abstraction.
 
+More generally, computation-level types can have the form \verb|[g . t]|
+where \verb|g| is a context object and \verb|t| is a representation-level type.
+One of the Beluga's unique features is supporting pattern matching over
+computational objects with contexts, and also coverage checking of those
+patterns. Computational types with the empty context, of the form
+\verb|[. t]|, are inhabited by closed values, which do not involve
+any free (representation-level) variables.
+Since Beluga has explicit access to context objects, we think
+it can express what \MsfIt\ can express, and in addition, it can
+also express what \textbf{openit} (\S\ref{sec:openit}) can express.
+
+One can also to write higher-order functions (\eg, map)\footnote{
+	A map function example over natural number lists are
+	also given in the Beluga tutorial. }
+in Beluga almost the same way as in functional programming languages, except
+for the tedious bindings (\eg, \verb|R| in the \verb|add| function above)
+when applications need to appear in argument positions.
 Regarding higher-order functions, Beluga is in a much better position
-than Twelf. In Twelf, one needs to create a whole new object-level
-functional programming language by describing its semantics with
-inductive relations in order express higher-order functions.
+than Twelf. Recall that, In Twelf, one needs to model a whole new
+functional language by describing its semantics with inductive relations
+in order express higher-order functions.
+
 Termination is not type based in Beluga either. Like Twelf, it needs
 an external termination (or totality) checker, but its prototype
 implementation currently lacks a termination (or totality) checker.
+We suspect one of the reasons why Beluga does not yet implement
+a termination checker is due to the difficulty of checking termination
+of higher-order functions. The syntactic approaches to termination,
+which the logical frameworks based on first-order meta-logic use,
+may fail to check termination of typical uses of higher-order functions.
 
+\paragraph{}
+Delphin \cite{pos08phd} has a similar motivation to Beluga,
+supporting functional programming rather than relational reasoning.
+For example, the addition function over natural numbers can be defined
+in Delphin as follows.\vspace{-2em}
+\begin{singlespace}
+\begin{verbatim}
+fun plus : <nat> -> <nat> -> <nat> 
+  = fn <z>   <M> => <M>
+    |  <s N> <M> => let val <x> = plus <N> <M> in <s x> end
+    ;
+\end{verbatim}
+\end{singlespace}\noindent
+Although both Beluga and Delphin support similar features with similar syntax,
+their theoretical foundations differ \cite{Pie10} on how they treat contexts.
+Delphin cannot distinguish open values and closed values as in Beluga
+since Delpin does not explicitly manage contexts.
+\citet{Pie10} also points out that Delphin tries use Twelf's infrastructure
+as much as possible. For instance, the termination checker of Delphin is
+based on lexicographic subterm ordering, which is also the case of Twelf.
 
-Delphine \cite{pos08phd} TODO
-Delphine has a termination checker based on lexicographic subterm ordering.
-
-lambda pi calculus
-
-term-indexing and term-dependency 
-but lack polymorphism
-
-System \Fi\
-term-indexing and polymorhpism
-but lack term-dependency.
-
-
-termination checking is not type based
-
-%% 
-%% \section{TODO}
+Although Delphin and Beluga do support higher-order functions,
+they do not support polymorphism natively. That is, you can only write
+a meromorphic (possibly dependently-typed) functions. Recall that,
+in $\lambda\Pi$, you cannot pass around types as arguments of types families,
+but only terms. This is inconvienent for programming higher-order functions,
+because many higher-order functions are polymorphic in nature -- you would
+have to duplicate thier definitions for each differenet type you need.
+%% One may work around this limiation by using type-representation objects
+%% -- define constant objects that represent types and pass them around instead
+%% of passing types.
 
