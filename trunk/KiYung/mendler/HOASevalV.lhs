@@ -24,8 +24,8 @@ evalHOAS e = msfcata1 phi e where
   phi inv ev (Lam f) = MkId(\v -> unId(ev (f (inv (MkId v)))))
   phi inv ev (App f x) = MkId(unId(ev f) (unId(ev x)))
 {-""-}
--- The code above are exactly the same as the code from Figure\ref{fig:HOASeval}
--- in \S\ref{sec:msf}, in order to review the |evalHOAS| example.
+-- The code above is the same as the code in Figure \ref{fig:HOASeval} in \S\ref{sec:msf}. 
+-- We repeat it here, in order to review the |evalHOAS| example.
 {-""-}
 data V r t where VFun :: (r t1 -> r t2) -> V r (t1 -> t2)
 type Val t = Mu1 V t
@@ -37,8 +37,9 @@ vevalHOAS e = msfcata1 phi e where
   phi inv ev (Lam f) = val(\v -> ev (f (inv v)))
   phi inv ev (App e1 e2) = unVal(ev e1) (ev e2)
 {-""-}
--- |unVal| does not follow the restrictions of the Mendler style
--- since its definition relies on pattern matching againts |In1|
+-- |unVal| does not follow the restrictions of the Mendler style.
+-- Its definition relies on pattern matching against |In1|.
+{-""-}
 unVal :: Val (t1 -> t2) -> (Val t1 -> Val t2)
 unVal (In1(VFun f)) = f
 \end{code}
