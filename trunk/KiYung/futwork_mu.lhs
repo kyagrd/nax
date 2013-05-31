@@ -22,10 +22,15 @@ Recall the Haskell definitions of the two different fixpoint type operators,
 newtype  Mu0 f      = In0 (f (Mu0 f))                      -- |mcata0|, |mprim0|, $\dots$
 data     Rec0 f a   = Roll0 (f (Rec0 f a))  | Inverse0 a   -- |msfcata0|
 \end{code}
-TODO
-We want to say that
-|Mu0 f| and
-|(forall a.Rec0 f a)| are isomorphic
+We want to establish an isomorphism,
+|Mu0 f| $\simeq$ |(forall a. Rec0 f a)|, between these two fixpoints types,
+because we want the Nax language to have one fixpoint rather than two.
+Intuitivly, there is likely to be a one-to-one mapping between
+the |Mu0|-values and the |Rec0|-values, which do not involve |Inverse0|.
+|Mu0| and |Rec0| look structurallly isomorphic to each other, except for
+|Inverse0|, and we expect that the quantification |forall a| in
+|(forall a. Rec0 f a)| would prevent |Inverse0| to apper in
+values of type |(forall a. Rec0 f a)|.
 
 TODO
 
