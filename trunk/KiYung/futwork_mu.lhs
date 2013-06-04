@@ -22,7 +22,7 @@ Recall the Haskell definitions of the two different fixpoint type operators,
 newtype  Mu0 f      = In0 (f (Mu0 f))                      -- |mcata0|, |mprim0|, $\dots$
 data     Rec0 f a   = Roll0 (f (Rec0 f a))  | Inverse0 a   -- |msfcata0|
 \end{code}
-We want to establish an isomorphism,\footnote{It is more than a isomorphism
+We want to establish an isomorphism,\footnote{It is more than an isomorphism
         since we want to preserve the structure as well. But, for simplicity,
         we will just say isomorphism here.}
 |Mu0 f| $\simeq$ |(forall a. Rec0 f a)|, between these two fixpoint types,
@@ -41,6 +41,7 @@ it would be easier to find a mapping of type |Mu0 f -> (forall a. Rec0 f a)|
 by replacing all the |In0|s with |Roll0|s. However, contrary to our
 expectation, the other mapping turns out to be more natural.
 We illustrate this by using the HOAS datatype as an example.
+%% At the end of this section, we will contemplate on why this is so.
 
 Figure \ref{fig:rec2mu} illustrates a mapping from
 |(forall a. Rec0 E a)|  to |Mu0 E| implemented using |msfcata0|,
@@ -51,9 +52,9 @@ we can define two recursive datatypes from |E|:
 The function |exp2expr :: Exp -> Expr| implements the mapping from
 |Rec0|-based HOAS expressions to |Mu0|-based HOAS expressions.
 Note, |exp2expr| is defined using |msfcata0|.
-This means that the mapping from |(forall a. Rec0 f a)|  to |Mu0 f|
-is already admissible within our theory, System \Fi.
-
+This indicates that the mapping from |(forall a. Rec0 f a)| to |Mu0 f|
+is admissible within our theory, System \Fi.
+%format msfcata'
 \begin{figure}[p]
 \begin{singlespace}
 \begin{code}
@@ -74,7 +75,7 @@ exp2expr = msfcata0 phi where
 \label{fig:rec2mu}
 %%%%%%%%%%%%%%%%%%%% \end{figure}
 \vspace*{1.5em}
-%format msfcata'
+
 %%%%%%%%%%%%%%%%%%%% \begin{figure}
 \begin{singlespace}
 \begin{code}
@@ -118,9 +119,9 @@ has been instantiated to |Expr|. To define |expr2exp'|, we need
 its inverse function |exp'2expr :: Exp' Expr -> Expr|, whose implementation is
 structurally identical to |exp2expr| in Figure \ref{fig:rec2mu}, but its type
 signature instantiates |a| by |Expr|. Note that |exp'2expr| is defined using
-|msfit'|, whose definition is structurally identical to |msfcata0|, but recurses
+|msfcata'|, whose definition is structurally identical to |msfcata0|, but recurses
 over values of |Rec0 f a| rather than |(forall a.Rec0 f a)|. We can prove that
-|msfit'| always terminates by embedding it into System \Fw\ (see
+|msfcata'| always terminates by embedding it into System \Fw\ (see
 Figure~\ref{fig:msfitFw}). Thus, |exp'2expr| is admissible within our theory.
 
 Lastly, we define |expr2exp'| similar in structure to its inverse |exp'2expr|.
@@ -129,5 +130,10 @@ general recursion and the actual inverse function |exp'2expr|.
 Here, we use general recursion and pattern matching against |In0| because
 we do not know of a Mendler-style recursion scheme to define |expr2exp'|.
 We need further investigation on whether |expr2exp'| would always terminate
-and how to make it work for |Exp| rather than |Exp' Expr|.
+and whether it is possible to make it work for |Exp| rather than |Exp' Expr|.
 
+%% \paragraph{}
+%% Let us contemplate on why the coercion from |(forall a.Rec0 E a)| to |Mu0 E|
+%% exists, but the coercion the other way is hard (perhaps impossible) to find.
+%% 
+%% |msfcata0| can express more functions than |mcata0|

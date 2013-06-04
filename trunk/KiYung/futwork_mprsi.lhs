@@ -19,7 +19,7 @@ using |msfcata1| (Figure \ref{fig:HOASeval} on p\pageref{fig:HOASeval}).
 In this section, we speculate about another Mendler-style recursion scheme,
 |mprsi|, motivated by an example similar to the |evalHOAS| function.
 The name |mprsi| stands for
-Mendler-style primitive recursion with a size index.
+Mendler-style primitive recursion with a sized index.
 
 %format t1
 %format t2
@@ -74,9 +74,9 @@ Let us try to define |unVal| using |mprim1|, and see where it falls short.
 see from its type sigaure:
 \begin{singlespace}
 \begin{code}
-mprim1 :: (forall r i.  (forall i. r i -> Mu1 f i)  ->    -- cast
-                        (forall i. r i -> a i)      ->    -- call
-                        (f r i -> a i) )            -> Mu f i -> a i
+mprim1 :: (forall r i.  (forall i. r i -> Mu1 f i)  -- cast
+                    ->  (forall i. r i -> a i)      -- call
+                    ->  (f r i -> a i)              ) -> Mu f i -> a i
 \end{code}~\vspace{-1em}
 \end{singlespace}
 \noindent
@@ -109,10 +109,10 @@ Observe that |(uncast . f . cast) :: (Mu1 V t1 -> Mu1 V t2)|. Thus, we can
 formulate |mprsi1| with a naive type signature as follows:
 \begin{singlespace}
 \begin{code}
-mprsi1 :: (forall r  i.  (forall i. r i -> Mu1 f i)  ->     -- cast
-                         (forall i. Mu1 f i -> r i)  ->     -- uncast
-                         (forall i. r i -> a i)      ->     -- call
-                         (f r i -> a i) )            -> Mu f i -> a i
+mprsi1 :: (forall r  i.  (forall i. r i -> Mu1 f i)  -- cast
+                     ->  (forall i. Mu1 f i -> r i)  -- uncast
+                     ->  (forall i. r i -> a i)      -- call
+                     ->  (f r i -> a i)              ) -> Mu f i -> a i
 
 mprsi1 phi (In1 x) = phi id id (mprsi1 phi) x
 \end{code}~\vspace{-1em}
@@ -125,7 +125,7 @@ which as we showed in introduction can lead to non-termination.
 To recover the guarantee of termination, we need to restrict the use of
 either |cast| or |uncast|, or both.
 
-Lets see how this nontermination might occur. If we allowed |mprsi1| with
+Let us see how this non=termination might occur. If we allowed |mprsi1| with
 the naive type signature above, we could write an evaluator
 (similar to |vevalHOAS| but for an untyped HOAS), which does not always terminate.
 This evaluator would diverge for terms with self application. Typed terms
@@ -144,7 +144,7 @@ data ExpF_u r t = Lam_u (r t -> r t) | App_u (r t) (r t)
 data V_u r t = VFun_u (r t -> r t)
 \end{code}
 The structures above represent the untyped HOAS and its value domain.
-Here the index |t| does not track the types of terms
+Here, the index |t| does not track the types of terms
 but remains constant everywhere.
 Why did we believe that |vevalHOAS| always terminates?
 Because it evaluates a well-typed HOAS, whose type is encoded as
@@ -156,22 +156,22 @@ of the abstract operations only over abstract values whose indices are
 smaller in size compared to the size of the argument index.
 For the |vevalHOAS| example, we define being smaller as the structural ordering
 over types, that is, |t1 < (t1 -> t2)| and |t2 < (t2 -> t1)|.
-We have two candidates for the type signature of |mprsi1|:\vspace{-1em}
+We have two candidates for the type signature of |mprsi1|:\vspace{-1.6em}
 \begin{singlespace}
 \begin{itemize}
 \item Candidate 1: restrict uses of both |cast| and |uncast|
 \begin{code}
-mprsi1 :: (forall r  j. (forall i. (i<j) =>  r i -> Mu1 f i)  ->   -- cast
-                        (forall i. (i<j) =>  Mu1 f i -> r i)  ->   -- uncast
-                        (forall i.           r i -> a i)      ->   -- call
-                        (f r j -> a j) ) -> Mu f i -> a i
+mprsi1 :: (forall r  j.  (forall i. (i<j) =>  r i -> Mu1 f i)  --  cast
+                     ->  (forall i. (i<j) =>  Mu1 f i -> r i)  --  uncast
+                     ->  (forall i.           r i -> a i)      --  call
+                     ->  (f r j -> a j)                        ) -> Mu f i -> a i
 \end{code}
 \item Candidate 2: restrict the use of |uncast| only
 \begin{code}
-mprsi1 :: (forall r  j. (forall i.           r i -> Mu1 f i)  ->   -- cast
-                        (forall i. (i<j) =>  Mu1 f i -> r i)  ->   -- uncast
-                        (forall i.           r i -> a i)      ->   -- call
-                        (f r j -> a j) ) -> Mu f i -> a i
+mprsi1 :: (forall r  j.  (forall i.           r i -> Mu1 f i)  --  cast
+                     ->  (forall i. (i<j) =>  Mu1 f i -> r i)  --  uncast
+                     ->  (forall i.           r i -> a i)      --  call
+                     ->  (f r j -> a j)                        ) -> Mu f i -> a i
 \end{code}
 \end{itemize}
 \end{singlespace}\noindent
