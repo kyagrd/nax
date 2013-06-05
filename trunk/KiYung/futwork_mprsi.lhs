@@ -156,7 +156,7 @@ of the abstract operations only over abstract values whose indices are
 smaller in size compared to the size of the argument index.
 For the |vevalHOAS| example, we define being smaller as the structural ordering
 over types, that is, |t1 < (t1 -> t2)| and |t2 < (t2 -> t1)|.
-We have two candidates for the type signature of |mprsi1|:\vspace{-1.6em}
+We have two candidates for the type signature of |mprsi1|:\vspace{-2em}
 \begin{singlespace}
 \begin{itemize}
 \item Candidate 1: restrict uses of both |cast| and |uncast|

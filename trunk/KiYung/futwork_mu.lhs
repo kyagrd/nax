@@ -53,7 +53,7 @@ The function |exp2expr :: Exp -> Expr| implements the mapping from
 |Rec0|-based HOAS expressions to |Mu0|-based HOAS expressions.
 Note, |exp2expr| is defined using |msfcata0|.
 This indicates that the mapping from |(forall a. Rec0 f a)| to |Mu0 f|
-is admissible within our theory, System \Fi.
+is admissible within our theory, System~\Fi.
 %format msfcata'
 \begin{figure}[p]
 \begin{singlespace}

@@ -1,27 +1,110 @@
 \chapter{Future work}\label{ch:futwork}
-We summaraize some ongoing and future work in this chapter:
+We summarize some ongoing and future work in this chapter:
 designing a new Mendler-style recursion scheme
-useful for negative datatypes \S\ref{futwork:mprsi},
-different fixpoint types \S\ref{futwork:mu},
+useful for negative datatypes \S\ref{sec:futwork:mprsi},
+different fixpoint types \S\ref{sec:futwork:mu},
+deriving monotonicity from polarized kinds \S\ref{sec:futwork:kindpoly}, and
 kind polymorphism and kind inference \S\ref{sec:futwork:kindpoly}.
-monotonicity and polarized kinds \S\ref{sec:futwork:kindpoly}.
-
-TODO
-
-TODO
-
-TODO
-
-TODO
-
-TODO
 
 \input{futwork_mprsi} %% sec:futwork:mprsi
 
 \input{futwork_mu} %% sec:futwork:mu
 
+\section{Monotonicity from polarized kinds}\label{sec:futwork:mon}
+We first review the summary of discussions in \S\ref{sec:fixi:cv}
+and then list the future work on monotonicity and polarized kinds.
+
+\subsection*{Summary of the discussions in \S\ref{sec:fixi:cv}}
+In \S\ref{sec:fixi:cv}, we embedded Mendler-style course-of-values recursion
+into System \Fixi\ assuming monotonicity. Recall that kinds are polarized in
+System \Fixi. For instance, $F: p* -> *$ is a type constructor that expects
+a type argument, whose polarity is $p$, and returns a type. We discussed that,
+for a regular recursive datatype ($\mu_{*} F$), monotonicity amounts to
+its base structure ($F:p* -> *$) being a functor. When $F$ is a functor,
+there exists $\textit{fmap}_F : \forall X^{*} Y^{*}. (X -> Y) -> F X -> F Y$,
+which satisfies the desired properties of a functor.
+
+We can generalizes the concept of ``being a functor''
+to type constructors of arbitrary kinds, and such
+type constructors are called \emph{monotone}.
+A \emph{monotonicity witness} is a generalization of $\textit{fmap}_F$,
+which witnesses $F$ being a functor, and its type is called \emph{monotonicity},
+denoted by $\textit{mon}_{\kappa}F$. For example, monotonicity for $F$
+at kind $*$ is denoted by $mon_{*}F$, thus, $\textit{fmap}_F : mon_{*} F$.
+More generally, when the type constructor has more than one argument,
+there can be more than one notion of monotonicity.
+For example, consider $F : p_1\kappa_1 -> p_2\kappa_2 -> *$.
+We say
+that $F$ is monotone on its first argument
+when $(X_1 -> X_2)$ implies $(F X_1 Y -> F X_2 Y)$, and,
+that $F$ is monotone on its second argument
+when $(Y_1 -> Y_2)$ implies $(F X Y_1 -> F X Y_2)$.
+One possible notion of monotonicity for $F$ is requiring only the first
+argument to be monotone. Another possible notion is requiring both of
+the arguments to be monotone.
+
+We discussed in \S\ref{sec:fixi:cv} that there are more than one notion of
+monotonicity witness at hinger kinds. For a non-regular recursive type
+($\mu_{p* -> *} F$), where $F : p_r(p* -> *) -> (p* -> *)$, there are
+two different notions of monotonicity.\vspace*{-1.5em}
+\begin{singlespace}
+\begin{align*}
+\textit{mon}_{p* -> *}F =~&
+	\forall G_1^{p* -> *}.\forall G_2^{p* -> *}.
+	(\forall X. G_1 X -> G_2 X) -> (\forall X.F\,G_1 X -> F\,G_2 X)
+	\\[1mm]
+\textit{mon}_{p* -> *}'F =~&
+	\forall G_1^{p* -> *}.\forall G_2^{p* -> *}.
+		mon_{*} G_1 -> \\ & \qquad\qquad\qquad\quad
+		(\forall X^{*}. G_1 X -> G_2 X) -> \\ & \qquad\qquad\qquad\quad
+		\forall X_1^{*}.\forall X_2^{*}.
+		(X_1 -> X_2) -> F\,G_1 X_1 -> F\,G_2 X_2
+\end{align*}
+\end{singlespace}
+The former, $\textit{mon}_{p* -> *}F$, requires $F$ to be monotone
+on its first argument, which is the recursive argument.
+We discussed that $\textit{mon}_{p* -> *}F$ is sufficient
+for the embedding of \McvPr\ over non-truly nested datatypes,
+such as powerlists.
+
+The latter, $\textit{mon}_{p* -> *}F$, requires $F$ to be monotone
+on both arguments (\ie, both the recursive argument and the index argument).
+We discussed that we need this stronger notion of monotonicity
+to embed \McvPr\ over truly nested datatypes, such as bushes,
+whose index involves the recursive argument in its definition.
+
+\subsection*{Future work deriving monotonicity from polarized kinds.}
+TODO
+
+Appropriate monotonicity
+
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+TODO \\ 
+
+
 \section{Kind polymorphism and kind inference}\label{sec:futwork:kindpoly}
 TODO
 
-\section{Monotonicity and polarized kinds}\label{sec:futwork:mon}
-TODO
+
+TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
+TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
+TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
+TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
+TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
+TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
+
+
+

@@ -113,30 +113,28 @@ Note that we can define destructor functions for streams,
 |head :: Stream a -> a| and |tail :: Stream a -> Stream a|, simply by
 pattern matching, since we can freely use |out0 :: Nu0 f -> f (Nu0 f)|.
 
-However, without the help of a Mendler-style co-recursion scheme,
-one cannot define a constructor function, such as
-|scons :: a -> Stream a -> Stream a|, that builds up
-a new stream from an element and an existing stream.
-One must use Mendler-style co-recursion schemes to construct co-recursive values.
-This limitation flows from the restriction we place on 
-the use of |UnOut0|. We can pattern match against a value
-|(UnOut0 x)| (or freely use the function |out0|), but we
-cannot use |UnOut0| to construct co-data. The last step
-of contructing co-data (the application of |UnOut0|) must
-be done by a Mendler-style co-recursion scheme. Just as the first step
-of eliminating data (stripping off |In0|) must be done by
-a Mendler-style recursion scheme.
+However, without the help of a Mendler-style co-recursion scheme, one cannot
+define a constructor function, such as |scons :: a -> Stream a -> Stream a|,
+that builds up a new stream from an element and an existing stream. One must
+use Mendler-style co-recursion schemes to construct co-recursive values.
+This limitation flows from the restriction we place on the use of |UnOut0|.
+We can pattern match against a value |(UnOut0 x)| (or freely use
+the function |out0|), but we cannot use |UnOut0| to construct co-data.
+The last step of constructing co-data (applying |UnOut0|) must be done by
+a Mendler-style co-recursion scheme. Just as the first step of eliminating data
+(stripping off |In0|) must be done by a Mendler-style recursion scheme.
 
-As an example of constructing a |Stream|, we define a function |upfrom :: Nat -> Stream Nat|
-as follows. |upfrom| builds up a stream starting from a given natural number |n| where each element
-is followed by its successor, as follows:
+As an example of constructing a |Stream|, we define
+a function |upfrom :: Nat -> Stream Nat|, which
+builds up a stream starting from a given natural number |n|
+where each element is followed by its successor, as follows:
 \begin{singlespace}
 \begin{code}
 upfrom n = mcoit0 phi n where
   phi upfrm n = SCons n (upfrm (succ n))
 \end{code}
-\end{singlespace}
-For example, |upfrom zero| is a stream of all the natural numbers,
+\end{singlespace}\noindent
+For instance, |upfrom zero| is a stream of all the natural numbers,
 starting from zero, and counting upwards.
 
 Note that the |phi| function is similar in structure to
@@ -165,8 +163,8 @@ take n = mit0 phi n where
   phi tk Zero      = \ _ -> nil
   phi tk (Succ n)  = \ s -> cons (head s) (tk n (tail s))
 \end{code}
-\end{singlespace}
-For example, |(take three (upfrom zero))| produces a list with
+\end{singlespace}\noindent
+For instance, |(take three (upfrom zero))| produces a list with
 three elements |(cons (one (cons two (cons three nil))))|
 where |one = succ zero|, |two = succ one| and |three = succ two|.
 
