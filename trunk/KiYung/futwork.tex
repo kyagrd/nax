@@ -73,7 +73,7 @@ We discussed that we need this stronger notion of monotonicity
 to embed \McvPr\ over truly nested datatypes, such as bushes,
 whose index involves the recursive argument in its definition.
 
-\subsection*{Future work deriving monotonicity from polarized kinds.}
+\subsection*{Future work on deriving monotonicity from polarized kinds.}
 According to the embedding of $\McvPr_\kappa$ in \S\ref{sec:fixi:cv},
 one needs to witness monotonicity of $F$ to ensure that $\McvPr_\kappa$
 always terminates for $(\mu_\kappa F)$-values. That is, one must show
@@ -103,11 +103,23 @@ for any $F:+(+* -> *) -> (+* -> *)$. Proofs for such conejctures
 at higher kinds are also future work.
 
 \section{Kind polymorphism and kind inference}\label{sec:futwork:kindpoly}
-TODO \\
-TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
-TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
-TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
-TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
-TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
-TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ TODO \\ 
+We support rank-1 polymorphism at kind level in our Nax implementation.
+(\eg, \textit{Path} in Figure~\ref{fig:glist} on p\pageref{fig:glist},
+      \textit{Env} in Figure~\ref{fig:env} on p\pageref{fig:env}).
+However, our theories (System \Fi\ and \Fixi) do not have kind polymorphism.
+We strongly believe that rank-1 polymorphism at kind level do not affect
+normalisation and consistency, but needs further investigation to confirm
+our belief.
+
+In the Nax implementation, types are mostly inferred but kinds are always
+annotated. For example, we must annotate $\kappa$ in $\mu_{[\kappa]}$ and
+$\In_{[\kappa]}$, in addition to the kind annotations in datatype declarations
+($\mathbf{data} F : \kappa \mathbf{where} \cdots$). We believe we only
+need kind annotations in datatype declarations. We can omit the kind
+annotations in $\mu$ and because $\mu$ is always folioed by a type constructor,
+$\mu F$, and we can always infer the kind of $F$. Similarly, we can omit
+the kind annotation in $\In$, because $\In$ is always followed by a term,
+$\In t$, and we can infer the type of $t$, and we must have already inferred
+the kind to infer the type. We are planning to change the Nax syntax
+to write $\mu$ and $\In$, instead of $\mu_{[\kappa]}$ and $\In_{[\kappa]}$.
 
