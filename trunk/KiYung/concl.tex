@@ -188,7 +188,7 @@ by taking a fixpoint of a non-recursive datatype.
 
 Chapter \ref{ch:naxTyInfer} describes the type inference in Nax.
 To support Hindley--Milner-style type inference, Nax only
-allow rank-1 type polymorphism. One cannot generally infer types
+allows rank-1 type polymorphism. One cannot generally infer types
 in System \Fi\ or \Fixi\ since they allow higher-rank polymorphism.
 For programs involving only regular (\ie, non-indexed) datatypes,
 type inference is exactly the same as the Hindley--Milner type inference,
@@ -197,32 +197,33 @@ we require type annotations on datatype declarations, case expressions, and
 Mendler-style recursion combinators, but nowhere else.
 Our current implementation requires kind annotations on
 the fixpoint type operator ($\mu_{[\kappa]}$) and its constructor
-($\In_{[\kappa]}$), but we believe these kind annotations can be inferred.
+($\In_{[\kappa]}$), but we believe these kind annotations can eventually be inferred.
 
 \paragraph{}
 Chapter \ref{ch:relwork} discusses five categories of related work:
 Mendler-style co-recursion schemes for possibly infinite structures,
 Mendler-style recursion schemes over multiple recursive values,
-dependently-typed Mendler-style induction, sized-types approach,
+dependently-typed Mendler-style induction, sized-types and the Mendler style,
 and comparison of our approach to logical frameworks.
 
 Chapter \ref{ch:futwork} summarizes some ongoing and future work.
 We are designing a new Mendler-style recursion scheme useful
-for negative datatypes, studying the relation between two different
-fixpoint types ($\mu$ and $\breve\mu$). We wonder how we can derive
-monotonicity from polarized kinds. We want to confirm more rigorously
+for negative datatypes, and studying the relation between two different
+fixpoint types ($\mu$ and $\breve\mu$). We plan to investigate derivation of
+monotonicity from polarized kinds. We also want to find a rigorous proof 
 that rank-1 kind polymorphism does not break logical consistency.
-We plan to implement kind inference in Nax.
+Finally we would like to implement kind inference in Nax.
 
 \section{Significance}\label{sec:concl:sig}
 Our main contribution is a logically consistent language design that supports
-all recursive datatypes available in factional programming languages such as
-Haskell and, in addition, term-indexed types. Our design compromises between
-convenient programming and strong guarantee of program invariants, taking
-advantages of both. Our language, Nax, is based on a small theory and
+all recursive datatypes available in functional programming languages such as
+Haskell, and in addition, term-indexed types. Our design steers the narrow
+path between
+convenient programming and strong guarantees of program invariants, while taking
+advantages of the strong points of both. Our language, Nax, is based on a small theory and
 admits a simple implementation framework.
 
-Our investigations on Mendler style uncovered two new aspects.
+Our investigations into the Mendler style uncovered two new aspects.
 First, we discovered a useful recursion scheme (\MsfIt) for negative datatypes.
 The discovery of \MsfIt\ lead to the novel discovery that simply-typed HOAS
 evaluation is expressible within System \Fw. Second, we generalized
@@ -237,18 +238,18 @@ the calculi with primitive datatypes in order to model a practical language.
 Datatypes and Mendler-style recursion schemes in Nax can be embedded into
 our term-indexed calculi.
 
-The Nax language implementation does not need extra termination checker
+The Nax language implementation does not need an extra termination checker
 because termination is type-based. Once the program type checks, we know
 that it terminates because Nax programs can be embedded into
 the term-indexed calculi, which is strongly normalizing.
 
 In addition, Nax supports a conservative extension of Hindley-Milner
 type inference in the presense of type- and term-indices.
-This is made possible by clarifying the required annotattion sites
+This is made possible by clarifying the required annotation sites
 in the programming language syntax, rather than ad-hoc type reconstruction
 from optional annotations appearing at arbitrary locations.
 For the programs involving indexed types, we require annotations
-on datatype declearations and their elimiators
+on datatype declarations and their eliminators
 (\ie, case expressions and Mendler-style recursion combinators),
 but nowhere else.
 
@@ -289,40 +290,40 @@ but nowhere else.
 We summarise several limitations of our term-indexed calculi and
 the Nax language design.
 
-We implemented rank-1 kind polymorphism in the Nax langauge implementation,
-but our term-indexed calculi does not have any form of kind polymorphism.
-We believe that rank-1 polymorphism would not cause inconsistency, but
-further investigation is needed for theoretical clarification.
+We implemented rank-1 {\it kind} polymorphism in the Nax langauge implementation,
+but our term-indexed calculi do not have any form of kind polymorphism.
+We believe that rank-1 {\it kind} polymorphism should not cause inconsistency, but
+further investigation is needed.
 
 Mendler-style course-of-values recursion only terminates for monotone
 recursive types. We conjecture that we can derive monotonicity from kinds,
 but it is an open question whether this is a sound method. We need further
-theoretical investigation, but it seems to be a difficult problem.
+theoretical investigation into this difficult problem.
 Meanwhile, we plan to support ad-hoc methods of deriving monotonicity
 by analyzing the syntactic structure of datatype definitions in Nax.
 
-Nax does not support datatypes containing types, which is often useful
-for datatype generic programming. Most of the time, we can work around this
-by reflecting a certain subset of types as term representations of types.
+Nax does not support datatypes that contain types (e.g. $[Int,Bool]$). This
+is often useful
+for datatype generic programming. We can work around this
+by reflecting a certain subset of types as term representations of types
+(universes). 
 We plan to investigate whether we can extend Nax with
 first-class datatype descriptions \cite{DagMcb12}, which
-enables representing arbitrary types as terms in general.
+enable representing arbitrary types as terms.
 
-Nax currently does not support any syntax for optional type annotations
-since types can be completely inferred, with the help of index transformer
-annotations on case expressions and Mendler-style recursion combinators.
+Nax currently does not support any syntax for optional type annotations.
+Because types can be completely inferred (except for index transformer
+annotations on case expressions and Mendler-style recursion combinators), this
+did not seem necessary.
 However, optional type annotations can be useful for documentation purposes,
-especially for the global definitions, which are reused as library functions
+especially for global definitions, which are often reused as library functions
 in many other places.
 
-We are thinking about supporting some implicit coercions in Nax
-to make the code even more concise, and also look more similar
-to the code using general recursion. For instance, we believe
-that the abstract cast operation in primitive recursion can be made implicit
-by allowing implicit casting from abstract recursive type
-to the concrete recursive type inside the combining function
-(denoted as $\phi$ or \texttt{phi} in the code). Similarly,
-We can also support implicit conversion from the indexed augmented
+We are thinking about supporting some implicit coercions (e.g. the {\tt cast}
+abstract operation of \MPr) in Nax to make the code more concise.
+This would allow Nax programs to look similar
+to the code using general recursion.  Similarly,
+we can also support implicit conversion from the indexed augmented
 recursive types ($\breve{\mu}$-values) to the standard recursive types
 ($\mu$-values).
 
