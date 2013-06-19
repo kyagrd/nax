@@ -573,7 +573,8 @@ or, simply \emph{reasoning systems}, we mean such dependently-typed
 formal reasoning systems.
 
 We assume that readers are familiar with \emph{programming}
-in \emph{functional languages}, but not necessary familiar
+in \emph{functional languages} and some basic concepts of lambda calculus
+(\eg, $\beta$-reduction, normal forms), but not necessary familiar
 with \emph{logical reasoning} in \emph{reasoning systems}.
 
 Functional languages and reasoning systems are closely related.
@@ -605,11 +606,38 @@ is known as the Curry--Howard correspondence \cite{Howard69}.
 In late 1960s, \citet{Howard69} observed that intuitionistic natural deduction,
 which is a proof system of a formal logic, and a typed lambda calculus,
 which is a model of computation, are directly related.
+\[
+\begin{array}{ccc}
+	\text{Intuitionistic natrual deduction} & &
+	\text{Typing rules of lambda calculus} \\ \\
+\inference{\bot \in \Gamma}{\Gamma |- A} & (\bot_\textsc{E})  &
+\inference{x:\bot \in \Gamma}{\Gamma |- A} \\ \\
+\inference{A \in \Gamma}{\Gamma |- A} & (\textsc{Ax}) &
+\inference{x:A \in \Gamma}{\Gamma |- A} \\ \\
+\inference{\Gamma,A |- B}{\Gamma |- A -> B} & (->_\textsc{I}) &
+\inference{\Gamma,x:A |- B}{\Gamma |- \l x.t : A -> B} \\ \\
+\inference{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B} & (->_\textsc{E}) &
+\inference{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t\;s : B}
+\end{array}
+\]
+
+TODO
+
+The terms in the typing rules of lambda calculus reflects
+the structure of deduction.
+
+which is the essence of proofs
+
+TODO
+
+Prawitz's normal deduction
+for intuitionisitic logic.
+
+illlustrates this relation
+
+
 A proof of a proposition corresponds to a program and its type
 and a cut-elimination corresponds to a computation step.
-%%% \[
-%%% \inference{A \in Gamma}{\Gamma |- A}
-%%% \]
 
 
 Since this observation, known as the Curry--Howard correspondence,
