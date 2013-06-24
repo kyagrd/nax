@@ -574,8 +574,10 @@ formal reasoning systems.
 
 We assume that readers are familiar with \emph{programming}
 in \emph{functional languages} and some basic concepts of lambda calculus
-(\eg, $\beta$-reduction, normal forms), but not necessary familiar
-with \emph{logical reasoning} in \emph{reasoning systems}.
+(\eg, $\beta$-reduction, normal forms). We assume that the readers have
+basic knowlege of logic (\eg, concepts of axioms, inference, and proofs)
+but not necessary familiar with \emph{formal reasoning}
+in \emph{reasoning systems}.
 
 Functional languages and reasoning systems are closely related.
 Proofs in reasoning systems are similar in structure to programs
@@ -606,10 +608,25 @@ is known as the Curry--Howard correspondence \cite{Howard69}.
 In late 1960s, \citet{Howard69} observed that intuitionistic natural deduction,
 which is a proof system of a formal logic, and a typed lambda calculus,
 which is a model of computation, are directly related.
+
+Traditinoally, in Hilbert-style deduction, a formal logic is formalized
+by a minimal set of inferene rules (\eg, modus ponens
+$\inference{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B}$)
+and a set of axiom schemes (\eg, $A -> A$ and $A -> (B -> A)$).
+\emph{Natrual deduction}, on the other hand, is a style of formalizing logic
+mostly by a set of inference rules and a minimal (often empty) set of
+axiom schemes.
+
+There are many variations of formal logic based on natural deduction
+(and also its corresponding typed lambda calculus) depending on
+the set of logical connectives and constants they support.
+We illustrate a intuitionistic natural deduction
+(and its corresponding simply typed lambda calculus)
+with implication $->$ (function type) and falsity $\bot$ (void type) below.
 \[
 \begin{array}{ccc}
 	\text{Intuitionistic natrual deduction} & &
-	\text{Typing rules of lambda calculus} \\ \\
+	\text{Typing rules of a simply typed lambda calculus} \\ \\
 \inference{\bot \in \Gamma}{\Gamma |- A} & (\bot_\textsc{E})  &
 \inference{x:\bot \in \Gamma}{\Gamma |- A} \\ \\
 \inference{A \in \Gamma}{\Gamma |- A} & (\textsc{Ax}) &
@@ -620,17 +637,18 @@ which is a model of computation, are directly related.
 \inference{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t\;s : B}
 \end{array}
 \]
+Typing derivations following the typing rules corresponds
+to the structure of deduction.
 
-TODO
-
-The terms in the typing rules of lambda calculus reflects
-the structure of deduction.
+That is, a type correct terms of lambda calculus captures the structure of
+a corresponding proof by natural deduction.
 
 which is the essence of proofs
 
 TODO
 
-Prawitz's normal deduction
+Prawitz \cite{Pra65} normal deduction
+
 for intuitionisitic logic.
 
 illlustrates this relation
