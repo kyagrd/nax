@@ -575,7 +575,7 @@ formal reasoning systems.
 We assume that readers are familiar with \emph{programming}
 in \emph{functional languages} and some basic concepts of lambda calculus
 (\eg, $\beta$-reduction, normal forms). We assume that the readers have
-basic knowlege of logic (\eg, concepts of axioms, inference, and proofs)
+basic knowlege on logic (\eg, concepts of axioms, inference, and proofs)
 but not necessary familiar with \emph{formal reasoning}
 in \emph{reasoning systems}.
 
@@ -583,8 +583,8 @@ Functional languages and reasoning systems are closely related.
 Proofs in reasoning systems are similar in structure to programs
 in functional languages. For example, the Haskell program \textit{id},
 which computes a value of type $A$ when given a value of type $A$,
-and the Agda proof \textit{id}, which proves that $A$ is true
-when given a proof of $A$, are very similar:
+and, the Agda proof \textit{id}, which proves that the proposition $A$
+is true when given a proof of $A$, are very similar:
 \begin{center}
 \begin{singlespace}
 \begin{minipage}{.4\linewidth}
@@ -620,15 +620,17 @@ axiom schemes.
 There are many variations of formal logic based on natural deduction
 (and also its corresponding typed lambda calculus) depending on
 the set of logical connectives and constants they support.
-We illustrate a intuitionistic natural deduction
-(and its corresponding simply typed lambda calculus)
-with implication $->$ (function type) and falsity $\bot$ (void type) below.
+We illustrate a intuitionistic natural deduction with implication ($->$) and
+falsity ($\bot$), and, its corresponding simply-tyed lambda calculus (STLC)
+in Figure\;\ref{fig:nd}. The implication and the falsity in natrual deduction
+corresponds to the function type ($->$) and the void type ($\bot$) in the STLC.
+\begin{figure}
 \[
 \begin{array}{ccc}
 	\text{Intuitionistic natrual deduction} & &
-	\text{Typing rules of a simply typed lambda calculus} \\ \\
-\inference{\bot \in \Gamma}{\Gamma |- A} & (\bot_\textsc{E})  &
-\inference{x:\bot \in \Gamma}{\Gamma |- A} \\ \\
+	\text{Typing rules of STLC} \\ \\
+\inference{\Gamma |- \bot}{\Gamma |- A} & (\bot_\textsc{E})  &
+\inference{\Gamma |- t:\bot}{\Gamma |- \texttt{elim}_\bot\,t : A} \\ \\
 \inference{A \in \Gamma}{\Gamma |- A} & (\textsc{Ax}) &
 \inference{x:A \in \Gamma}{\Gamma |- A} \\ \\
 \inference{\Gamma,A |- B}{\Gamma |- A -> B} & (->_\textsc{I}) &
@@ -637,6 +639,10 @@ with implication $->$ (function type) and falsity $\bot$ (void type) below.
 \inference{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t\;s : B}
 \end{array}
 \]
+\caption{Intuitionanisitc natural deduction with implication and falsity,
+	and its corresponding simply-typed lambda calculus.}
+\label{fig:nd}
+\end{figure}
 Typing derivations following the typing rules corresponds
 to the structure of deduction.
 
@@ -647,7 +653,17 @@ which is the essence of proofs
 
 TODO
 
-Prawitz \cite{Pra65} normal deduction
+\[
+\inference[->_E]{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B}
+\]
+\[
+\inference[d]{}{\Gamma |- B}
+\]
+
+
+Prawitz \cite{Pra65} observed that
+aaa
+normal deduction
 
 for intuitionisitic logic.
 
