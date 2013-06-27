@@ -572,13 +572,6 @@ dependent types (\ie, term arguments to type constructors). When we say
 or, simply \emph{reasoning systems}, we mean such dependently-typed
 formal reasoning systems.
 
-We assume that readers are familiar with \emph{programming}
-in \emph{functional languages} and some basic concepts of lambda calculus
-(\eg, $\beta$-reduction, normal forms). We assume that the readers have
-basic knowlege on logic (\eg, concepts of axioms, inference, and proofs)
-but not necessary familiar with \emph{formal reasoning}
-in \emph{reasoning systems}.
-
 Functional languages and reasoning systems are closely related.
 Proofs in reasoning systems are similar in structure to programs
 in functional languages. For example, the Haskell program \textit{id},
@@ -603,65 +596,247 @@ Such similarities are not accidental but intended by the design of
 reasoning systems, based on the observation that proofs corresponds
 to programs and propositions corresponds to types. This observation
 is known as the Curry--Howard correspondence \cite{Howard69}.
+The \emph{reasoning systems} we consider in this dissertation
+are the ones that are based on the Curry--Howard correspondence.
+We will explain the basic concepts to understand this correspondence
+in the following subsection.
+
+We assume that readers are familiar with \emph{programming}
+in \emph{functional languages} and some basic concepts of lambda calculus
+(\eg, $\beta$-reduction, normal forms). We assume that the readers have
+basic knowledge on logic (\eg, concepts of axioms, inference, and proofs)
+but not necessary familiar with \emph{formal reasoning}
+in \emph{reasoning systems}.
 
 \subsection*{The Curry--Howard correspondence}
 In late 1960s, \citet{Howard69} observed that intuitionistic natural deduction,
 which is a proof system of a formal logic, and a typed lambda calculus,
-which is a model of computation, are directly related.
+which is a model of computation, are directly related. This relation,
+known as the Curry--Howard correspondence, is established as follows:
+\begin{itemize}
+\item A proposition in the natural deduction corresponds to
+	a type in the lambda calculus.
+\item A proof for the proposition corresponds to
+	a term of the type, to which that proposition corresponds.
+\item Simplification of proofs correspond to computation,
+	that is, simplification of terms.
+\end{itemize}
+We explain this correspondence with a very simple
+version of intuitionistic natural deduction and
+a simply-typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
+	The readers who are familiar to the literature on natural deduction
+	would notice that the left column in Figure\;\ref{fig:nd} is not
+	the same style as the natural deduction formalized by
+	\citet{Gentzen35,Gentzen69}. It has a has the flavours of
+	both natural deduction and the sequent calculus. The context $\Gamma$
+	are part of the syntax of judgments as in sequent calculus,
+	but rather than the very syntactic structural rules (weakening,
+	contraction, permutation) of sequent calculus, we simply rely on
+	$A^x \in \Gamma$ to use the hypothetical propositions from $\Gamma$.
+	We choose to formalize natural deduction this way to emphasize
+	the structural similarities to the typical formalization
+	for typing rules of lambda calculi.}
 
-Traditinoally, in Hilbert-style deduction, a formal logic is formalized
-by a minimal set of inferene rules (\eg, modus ponens
+Traditionally, in Hilbert-style deduction, a formal logic is formalized
+by a minimal set of inference rules (\eg, modus ponens
 $\inference{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B}$)
-and a set of axiom schemes (\eg, $A -> A$ and $A -> (B -> A)$).
-\emph{Natrual deduction}, on the other hand, is a style of formalizing logic
-mostly by a set of inference rules and a minimal (often empty) set of
-axiom schemes.
+and a set of axiom schemes (\eg, $A -> A$ and $A -> (B -> A)$ where
+the meta-variables $A$ and $B$ can be instantiated to arbitrary propositions).
+\emph{Natural deduction}, on the other hand, is another style of
+formalizing logic mostly by a set of inference rules and a minimal
+(often empty) set of axiom schemes.
 
 There are many variations of formal logic based on natural deduction
 (and also its corresponding typed lambda calculus) depending on
 the set of logical connectives and constants they support.
 We illustrate a intuitionistic natural deduction with implication ($->$) and
-falsity ($\bot$), and, its corresponding simply-tyed lambda calculus (STLC)
-in Figure\;\ref{fig:nd}. The implication and the falsity in natrual deduction
+falsity ($\bot$), and, its corresponding simply-typed lambda calculus (STLC)
+in Figure\;\ref{fig:nd}. The implication and the falsity in natural deduction
 corresponds to the function type ($->$) and the void type ($\bot$) in the STLC.
+In the inference rules (\rulename{Ax}) and (\rulename{$->_\textsc{I}$}),
+$x$ on $A^x$ is a meta-tag to distinguish between possibly multiple
+occurrences of $A$ in $\Gamma$ (\eg, $\Gamma = A^{x_1},B^{x_2},A^{x_3}$).
+
 \begin{figure}
 \[
 \begin{array}{ccc}
-	\text{Intuitionistic natrual deduction} & &
+	\text{Intuitionistic natural deduction} & &
 	\text{Typing rules of STLC} \\ \\
-\inference{\Gamma |- \bot}{\Gamma |- A} & (\bot_\textsc{E})  &
-\inference{\Gamma |- t:\bot}{\Gamma |- \texttt{elim}_\bot\,t : A} \\ \\
-\inference{A \in \Gamma}{\Gamma |- A} & (\textsc{Ax}) &
+\inference{A^x \in \Gamma}{\Gamma |- A} & (\textsc{Ax}) &
 \inference{x:A \in \Gamma}{\Gamma |- A} \\ \\
-\inference{\Gamma,A |- B}{\Gamma |- A -> B} & (->_\textsc{I}) &
+\inference{\Gamma,A^x |- B}{\Gamma |- A -> B} & (->_\textsc{I}) &
 \inference{\Gamma,x:A |- B}{\Gamma |- \l x.t : A -> B} \\ \\
 \inference{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B} & (->_\textsc{E}) &
-\inference{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t\;s : B}
+\inference{\Gamma |- t : A -> B & \Gamma |- s : A}{\Gamma |- t\;s : B} \\ \\
+\inference{\Gamma |- \bot}{\Gamma |- A} & (\bot_\textsc{E})  &
+\inference{\Gamma |- t:\bot}{\Gamma |- \texttt{elim}_\bot\,t : A}
 \end{array}
 \]
-\caption{Intuitionanisitc natural deduction with implication and falsity,
+\caption{Intuitionistic natural deduction with implication and falsity,
 	and its corresponding simply-typed lambda calculus.}
 \label{fig:nd}
 \end{figure}
-Typing derivations following the typing rules corresponds
-to the structure of deduction.
 
-That is, a type correct terms of lambda calculus captures the structure of
-a corresponding proof by natural deduction.
+Note that each typing rule (in the right column) has exactly the same structure
+as its corresponding inference rule (in the left column), except for
+the variables and terms appearing on the right-hand side of the colon
+(\eg, $x$ in $x:A$ and $t$ in $t:A -> B$). So, a type correct term,
+which is justified by the derivation following the typing rules of
+the lambda calculus, captures the structure of its corresponding proof
+by natural deduction. For instance, $(\l x. x)$ is a term that captures
+the structure of a proof for $A -> A$.
+For this reason, such type correct terms in reasoning systems
+are called proof terms, proof objects, or simply proofs.
 
-which is the essence of proofs
+We explained that proofs and propositions in the natural deduction
+corresponds to terms and types in the lambda calculus. Lastly,
+we need to show the correspondence between simplification of proofs
+and simplification of terms (\ie, computation) in order to establish
+the Curry--Howard correspondence between the natural deduction
+and the lambda calculus.
 
-TODO
-
-\[
-\inference[->_E]{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B}
+There can be multiple proofs for the same proposition, and,
+correspondingly, there can be more than one term of the same type.
+Some of these terms are closely related while others are rather independent.
+For example, both $\l x_1.\l x_2.x_1$ and $\l x_1.\l x_2.x_2$ are
+rather independent terms that inhabit the same type $A -> A -> A$.
+The typing derivations for these terms (right column) and
+its corresponding proofs (left column) are illustrated in
+Figure\;\ref{fig:proofAAA}.
+\begin{figure}
+\[\setpremisesend{.1em}
+\inference[$(->_\textsc{I})^{x_1}$]
+	{\hspace*{-3em}
+	 \inference[$(->_\textsc{I})^{x_2}$]
+	 	{\hspace*{-3em}
+		 \inference[$(\textsc{Ax})^{x_1}$]
+			{A^{x_1}\in A^{x_1},A^{x_2}}
+			{A^{x_1},A^{x_2} |- A} }
+		{A^{x_1} |- A -> A} }
+	{|- A -> A -> A }
+\qquad
+\inference[($->_\textsc{I}$)]
+	{\hspace*{-1.3em}
+	 \inference[($->_\textsc{I}$)]
+		{\hspace*{-1.5em}
+		 \inference[(\textsc{Ax})]
+			{x_1 : A \in x_1 : A, x_2 : A}
+			{x_1 : A, x_2 : A |- x_1 : A} }
+		{x_1 : A |- \l x_2.x_1 : A -> A} }
+	{|- \l x_1.\l x_2.x_1 : A -> A -> A }
 \]
-\[
-\inference[d]{}{\Gamma |- B}
+\[\setpremisesend{.1em}
+\inference[$(->_\textsc{I})^{x_1}$]
+	{\hspace*{-3em}
+	 \inference[$(->_\textsc{I})^{x_2}$]
+		{\hspace*{-3em}
+		 \inference[$(\textsc{Ax})^{x_2}$]
+			{A^{x_2}\in A^{x_1},A^{x_2}}
+			{A^{x_1},A^{x_2} |- A} }
+		{A^{x_1} |- A -> A} }
+	{|- A -> A -> A }
+\qquad
+\inference[($->_\textsc{I}$)]
+	{\hspace*{-1.3em}
+	 \inference[($->_\textsc{I}$)]
+		{\hspace*{-1.5em}
+		 \inference[(\textsc{Ax})]
+			{x_2 : A \in x_1 : A, x_2 : A}
+			{x_1 : A, x_2 : A |- x_2 : A} }
+		{x_1 : A |- \l x_2.x_2 : A -> A} }
+	{|- \l x_1.\l x_2.x_2 : A -> A -> A }
 \]
+\caption{Typing derivations (right) for terms of type $A -> A -> A$
+	and their corresponding proofs (left).}
+\label{fig:proofAAA}
+\end{figure}
+
+On the other hand, there are closely related terms of the same type.
+For example, $(\l x_1.x_2) x_3$ reduces to $x_2$ by a $\beta$-reduction step
+(\ie, $(\l x_1.x_2) x_3 -->_\beta x_2$). A term like $x_2$, which does not
+($\beta$-)reduce any further, is called a ($\beta$-)\emph{normal form} or
+a ($\beta$-)\emph{normal term}. \citet{Pra65} established a notion of
+reduction and normalization for natural deduction. One can reduce a proof
+when there is a paired use of introduction and elimination rules.
+An introduction rule introduces a certain form of propositions
+in the conclusion (below the horizontal bar), and, an elimination rule
+uses those form of propositions in the premise (above the horizontal bar).
+The rules (\rulename{$->_\textsc{I}$}) and (\rulename{$->_\textsc{E}$})
+are introduction and elimination rules for implication ($->$).
+Figure\;\ref{fig:proofreduce} illustrates that
+the reduction of a proof involving paired uses of
+(\rulename{$->_\textsc{I}$}) and (\rulename{$->_\textsc{E}$})
+corresponds to the $\beta$-reduction of well-typed terms.
+
+\begin{figure}
+Reduction of a proof involving paired uses of
+(\rulename{$->_\textsc{I}$}) and (\rulename{$->_\textsc{E}$}):
+\[
+\inference[($->_\textsc{E}$)]
+	{\hspace*{-3em}
+	 \inference[$(->_\textsc{I})^{x}$]
+		{\hspace*{-1em}
+		 \inference*
+			{\hspace*{-4em}
+			 \inference[$(\textsc{Ax})^{x}$]
+				{A^x\in\Gamma,A^x,\Gamma'}
+				{\Gamma,A^x,\Gamma' |- A} \\
+			 \vdots \\
+			 \mathcal{D}_{[\Gamma,A^x]} }
+			{\Gamma,A^x |- B} }
+		{\Gamma |- A -> B}
+	&\inference*
+		{\mathcal{D}'_{[\Gamma]}}
+		{\Gamma |- A} }
+	{\Gamma |- B}
+\quad
+\longrightarrow
+~
+\inference*
+	{\inference*
+		{\mathcal{D}'_{[\Gamma,\Gamma']}}
+		{\Gamma,\Gamma' |- A} \\
+	 \vdots_{\phantom{G}} \\
+	 \mathcal{D}_{[\Gamma]} }
+	{\Gamma |- B}
+\]
+$\beta$-reduction of terms along with their typing derivation:
+\[
+\inference[($->_\textsc{E}$)]
+	{\hspace*{-3em}
+	 \inference[$(->_\textsc{I})$]
+		{\hspace*{-1em}
+		 \inference*
+			{\hspace*{-4em}
+			 \inference[$(\textsc{Ax})$]
+				{x:A\in\Gamma,x:A,\Gamma'}
+				{\Gamma,x:A,\Gamma' |- x:A} \\
+			 \vdots \\
+			 \mathcal{D}_{[\Gamma,x:A]} }
+			{\Gamma,x:A |- t:B} }
+		{\Gamma |- \l x.t : A -> B}
+	&\inference*
+		{\mathcal{D}'_{[\Gamma]}}
+		{\Gamma |- s:A} }
+	{\Gamma |- (\l x.t)\,s:B}
+\quad
+\longrightarrow_\beta
+~
+\inference*
+	{\inference*
+		{\mathcal{D}'_{[\Gamma,\Gamma']}}
+		{\Gamma,\Gamma' |- s:A} \\
+	 \vdots_{\phantom{G}} \\
+	 \mathcal{D}_{[\Gamma]} }
+	{\Gamma |- t[s/x]:B}
+\]
+\caption{Reduction of a proof involving introduction and elimination rules
+	for implication, and its corresponding $\beta$-reduction 
+	of well-typed terms.}
+\label{fig:proofreduce}
+\end{figure}
 
 
-Prawitz \cite{Pra65} observed that
 aaa
 normal deduction
 
