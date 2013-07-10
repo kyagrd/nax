@@ -218,10 +218,9 @@ Finally we would like to implement kind inference in Nax.
 Our main contribution is a logically consistent language design that supports
 all recursive datatypes available in functional programming languages such as
 Haskell, and in addition, term-indexed types. Our design steers the narrow
-path between
-convenient programming and strong guarantees of program invariants, while taking
-advantages of the strong points of both. Our language, Nax, is based on a small theory and
-admits a simple implementation framework.
+path between convenient programming and strong guarantees of program invariants,
+while taking advantages of the strong points of both. Our language,
+Nax, is based on a small theory and admits a simple implementation framework.
 
 Our investigations into the Mendler style uncovered two new aspects.
 First, we discovered a useful recursion scheme (\MsfIt) for negative datatypes.
@@ -290,10 +289,11 @@ but nowhere else.
 We summarise several limitations of our term-indexed calculi and
 the Nax language design.
 
-We implemented rank-1 {\it kind} polymorphism in the Nax langauge implementation,
-but our term-indexed calculi do not have any form of kind polymorphism.
-We believe that rank-1 {\it kind} polymorphism should not cause inconsistency, but
-further investigation is needed.
+We implemented rank-1 {\it kind} polymorphism
+in the Nax langauge implementation, but our term-indexed calculi
+do not have any form of kind polymorphism. We believe that
+rank-1 {\it kind} polymorphism should not cause inconsistency,
+but further investigation is needed.
 
 Mendler-style course-of-values recursion only terminates for monotone
 recursive types. We conjecture that we can derive monotonicity from kinds,
@@ -302,12 +302,10 @@ theoretical investigation into this difficult problem.
 Meanwhile, we plan to support ad-hoc methods of deriving monotonicity
 by analyzing the syntactic structure of datatype definitions in Nax.
 
-Nax does not support datatypes that contain types (e.g. $[Int,Bool]$). This
-is often useful
-for datatype generic programming. We can work around this
-by reflecting a certain subset of types as term representations of types
-(universes). 
-We plan to investigate whether we can extend Nax with
+Nax does not support datatypes that contain types (e.g. $[Int,Bool]$).
+This is often useful for datatype generic programming. We can work around
+this by reflecting a certain subset of types as term representations of types
+(\aka\ type universes). We plan to investigate whether we can extend Nax with
 first-class datatype descriptions \cite{DagMcb12}, which
 enable representing arbitrary types as terms.
 
