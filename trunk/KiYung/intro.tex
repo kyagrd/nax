@@ -99,7 +99,7 @@ a simply-typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
         the structural similarities to the typical formalization
         of typing rules for the lambda calculi.}
 
-Traditionally, in {\it Hilbert-style deduction}, a formal logic is formalized
+Traditionally, in \emph{Hilbert-style deduction}, a formal logic is formalized
 by a minimal set of inference rules (\eg, modus ponens
 $\inference{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B}$)
 and a set of axiom schemes (\eg, $A -> A$ and $A -> (B -> A)$ where
@@ -272,13 +272,10 @@ Reducing a proof involving consecutive uses of
 \quad
 \longrightarrow
 ~
-\inference*
-        {\inference*
-                {\mathcal{D}'_{[\Gamma,\Gamma']}}
-                {\Gamma,\Gamma' |- A} \\
-         \vdots_{\phantom{G}} \\
-         \mathcal{D}_{[\Gamma]} }
-        {\Gamma |- B}
+\inference*{
+	\inference*{\mathcal{D}'_{[\Gamma,\Gamma']}}{\Gamma,\Gamma' |- A} \\
+        \vdots_{\phantom{G}} \\
+        \mathcal{D}_{[\Gamma]} }{\Gamma |- B}
 \]
 Reduction of a well-typed term along with its typing derivation:
 \[
@@ -300,13 +297,10 @@ Reduction of a well-typed term along with its typing derivation:
 \quad
 \longrightarrow_\beta
 ~
-\inference*
-        {\inference*
-                {\mathcal{D}'_{[\Gamma,\Gamma']}}
-                {\Gamma,\Gamma' |- s:A} \\
-         \vdots_{\phantom{G}} \\
-         \mathcal{D}_{[\Gamma]} }
-        {\Gamma |- t[s/x]:B}
+\inference*{
+	\inference*{\mathcal{D}'_{[\Gamma,\Gamma']}}{\Gamma,\Gamma' |- s:A} \\
+        \vdots_{\phantom{G}} \\
+        \mathcal{D}_{[\Gamma]} }{\Gamma |- t[s/x]:B}
 \]
 \caption{Reduction of a proof involving introduction and elimination rules
         for implication, and its corresponding $\beta$-reduction 
@@ -356,10 +350,9 @@ we construct models for several lambda calculi based on this idea of
 interpreting propositions (or, types) as sets of well-typed terms.
 Since our scope of research is for reasoning systems, which are based on
 the Curry--Howard correspondence, most of our descriptions will be in terms of
-lambda calculi, without mentioning their corresponding natural deduction counterparts.
-Because of this correspondence, we will
-use {\it lambda calculs} and {\it natural deduction system}
-interchangeably.
+lambda calculi, without mentioning their corresponding natural deduction
+counterparts. Because of this correspondence, we will use \emph{lambda calculs}
+and \emph{natural deduction system} interchangeably.
 
 Construction of such models typically assume strong normalization of
 the lambda calculus.\footnote{Strong normalization is a property that
