@@ -273,7 +273,7 @@ Reducing a proof involving consecutive uses of
 \longrightarrow
 ~
 \inference*{
-	\inference*{\mathcal{D}'_{[\Gamma,\Gamma']}}{\Gamma,\Gamma' |- A} \\
+        \inference*{\mathcal{D}'_{[\Gamma,\Gamma']}}{\Gamma,\Gamma' |- A} \\
         \vdots_{\phantom{G}} \\
         \mathcal{D}_{[\Gamma]} }{\Gamma |- B}
 \]
@@ -298,7 +298,7 @@ Reduction of a well-typed term along with its typing derivation:
 \longrightarrow_\beta
 ~
 \inference*{
-	\inference*{\mathcal{D}'_{[\Gamma,\Gamma']}}{\Gamma,\Gamma' |- s:A} \\
+        \inference*{\mathcal{D}'_{[\Gamma,\Gamma']}}{\Gamma,\Gamma' |- s:A} \\
         \vdots_{\phantom{G}} \\
         \mathcal{D}_{[\Gamma]} }{\Gamma |- t[s/x]:B}
 \]
@@ -517,21 +517,23 @@ positions are called \emph{positive datatypes}, and, datatypes
 that are recursive over one or more contravariant positions are
 called \emph{negative datatypes}. Negative datatypes are not admitted
 in reasoning systems since they might cause non-termination. Recall that
-the Curry--Howard correspondence is established when proofs are normalizing.
+the Curry--Howard correspondence is established only when proofs are normalizing.
 
 \paragraph{}
-Each inductive datatype admitted in reasoning systems must come with
-a recursion scheme (or, induction principle),\footnote{
+Each inductive datatype admitted under the Curry--Howard correspondence
+come with a recursion scheme in the calculus and an in induction principle in the logic\footnote{
         Induction principles provided in reasoning systems are
         dependently typed. Disregarding dependent types, these
         induction principles are computationally equivalent to
         recursion schemes such as primitive recursion,
         course-of-values recursion, or lexicographic recursion.
         Since we do not consider dependent types, we will only discuss
-        those non-dependently typed recursion schemes.}
-whose reduction step follows from the Curry--Howard correspondence
-over that datatype, just as the $\beta$-reduction follows from
-the Curry--Howard correspondence over functions. The design process
+        those non-dependently typed recursion schemes.}.
+The reduction step in the calculus follows from the Curry--Howard correspondence.
+Just as the $\beta$-reduction follows from
+the Curry--Howard correspondence over functions. 
+
+A process for the design 
 of reasoning systems can be summarized as follows: 
 start from a strongly normalizing and logically consistent calculus,
 add language extensions, and then theoretically justify that those extensions
@@ -556,7 +558,7 @@ The conventional approach restricts the definition of datatypes and
 the key mechanism to check termination of recursion schemes are based on
 size decreasing arguments in an untyped setting. Due to the positivity
 restriction put on the datatype definitions, one can assume that
-recursive values contained inside a data constructor is smaller than
+recursive values contained inside a data constructor are smaller than
 the value which contains them. This assumption of measuring size by
 structural containment does not always hold for negative datatypes.
 
@@ -568,10 +570,10 @@ development for termination of recursion schemes is type based.
 Instead of treating datatypes as primitive language constructs, datatypes
 and their recursion schemes are embedded into a typed lambda calculus,
 which is proven to be strongly normalizing and logically consistent.
-Then, there is no need for extra theoretical burden for establishing
-the Curry--Howard correspondence for datatypes, becuase datatypes are
-encoded using other more basic primites of the lambda calculus, which we
-know that the Curry--Howard correspondence holds. In addtion, there is
+Then, there is no extra theoretical burden to establish
+the Curry--Howard correspondence for datatypes, because datatypes are
+encoded using the basic primitives of the lambda calculus, for which we
+know, the Curry--Howard correspondence already holds. In addition, there is
 no need for any extra mechanism, other than type checking, to ensure
 termination of the recursion schemes. We take this non-conventional
 approach in designing our language system.
@@ -581,12 +583,12 @@ for terminating recursion schemes are discussed in \S\ref{sec:intro:concepts}
 and in Chapter\;\ref{ch:mendler}. From now on, we develop our discussions
 from the perspective of recursive datatypes. That is, when we need to describe
 inductive datatypes, we consider them as recursive datatypes with additional
-restrictions.
+restrictions on their formation.
 
 \section{Motivation}\label{sec:intro:motiv}
-Since the observation of the Curry--Howard correspondence, logicians and
+Since the discovery of the Curry--Howard correspondence, logicians and
 programming language researchers have dreamed of building a system in which
-one can both write programs (\ie, model computation) and formally reason about
+one can borh write programs (\ie, model computation) and formally reason about
 (\ie, construct proofs of) the properties (\ie, types) of those programs.
 
 However, building a practical system that unifies programming and
@@ -594,21 +596,21 @@ formal reasoning, based on the Curry--Howard correspondence, is still
 an open research problem. The gap between the conflicting design goals of
 typed functional programming languages, such as ML and Haskell, and
 formal reasoning systems, such as Coq and Agda, is still wide. For instance,
-we discussed in the previous section that datatypes admitted in
-functional languages and in reasoning systems do not completely overlap.
+as discussed in the previous section, datatypes admitted in
+functional languages and in reasoning systems do not completely coincide.
 
 \begin{itemize}
 
 \item
-Programming languages are designed to achieve computational expressiveness.
-They often sacrifice logical consistency for computational expressiveness.
+Programming languages are designed to achieve computational expressiveness,
+for which they often sacrifice logical consistency.
 Programmers should be able to conveniently express all possible computations,
 regardless of whether those computations have a logical interpretation
 (by the Curry--Howard correspondence) or not.
 
 \item
-Formal reasoning systems are designed to achieve logical consistency.
-They often sacrifice computational expressiveness for logical consistency.
+Formal reasoning systems are designed to achieve logical consistency, for which
+they often sacrifice computational expressiveness.
 Users expect that it is only possible to prove true propositions,
 and it is impossible to prove falsity. They are willing to live with
 the difficultly (or even inability) to express certain computations
@@ -625,15 +627,19 @@ or, in the computational view, principled recursion schemes that can only
 express terminating computation.
 
 The two different design goals also lead to significant differences
-in their type system design as well. Programming languages place
+in the design of their type systems as well. Programming languages place
 few restrictions on the definition of new datatypes. Programmers can
-express computations over a wide variety of datatypes. In addition,
-most of the functional programing languages have clear distinction between
+express computations over a wide variety of datatypes. 
+In reasoning systems, additional restrictions are enforced on datatype
+introduction, accepting only positive datatypes. 
+In addition,
+most of the functional programing languages have a clear distinction between
 terms and types (\ie, terms do not appear in types).
-Reasoning systems place additional restrictions, accepting only
-positive datatypes. In addition, terms can appear in types to specify
+In reasoning systems terms can appear in types to specify
 fine grained properties involving values at term level
 (\eg, size invariants of data structures).
+
+
 
 This dissertation explores a sweet spot where one can benefit from
 the advantages of both programming languages and formal reasoning systems.
@@ -658,7 +664,7 @@ programming languages and reasoning systems.
 
 \section{Thesis}\label{sec:intro:thesis}
 We characterize the sweet spot of the language design for unifying
-programming and reasoning by the four necessary features:
+programming and reasoning by these four features:
 %% Whatever design choices we make, the sweet spot should have
 %% the following features.
 \begin{enumerate}[(1)]
@@ -687,7 +693,7 @@ and \emph{term-indexed types} can lead to a system that supports these four
 features.
 
 \paragraph{}
-From a bird's-eye view, the following chapters back up our claim as follows:
+The following chapters support our claim as follows:
 Mendler-style recursion schemes support (1) because they are based on
 parametric polymorphism and well-defined over a wide range of datatypes.
 Term-indexed types support (2), because they can statically track
@@ -698,16 +704,13 @@ a well known polymorphic lambda calculus with term-indexed types.
 Mendler-style recursion schemes also also support (4) because their
 termination is type-based -- no need for an auxiliary termination checker.
 
-In next section, we summarize the two important concepts mentioned
-in our thesis: Mendler-style recursion schemes and term-indexed types.
-
 \section{Mendler-style recursion and term-indexed types}
 \label{sec:intro:concepts}
 We give summaries of the following preliminary concepts:
 Mendler-style recursion schemes (\S\ref{sec:intro:concepts:mendler}),
 and term-indexed types (\S\ref{sec:intro:concepts:indexed}).
-Further details and historical backgrounds on each of these concepts
-will appear in the following chapters (see \S\ref{sec:intro:overview}
+Further details and the historical background on each of these concepts
+appears in subsequent chapters (see \S\ref{sec:intro:overview}
 for the overview of chapter organization).
 
 %% \subsection{The Curry--Howard correspondence and Normalization}
@@ -763,7 +766,7 @@ for the overview of chapter organization).
 
 \subsection{Restriction on recursive types for normalization}
 \label{sec:intro:concpets:recursive}
-We have discussed that logical reasoning systems establish
+Logical reasoning systems establish
 the Curry--Howard correspondence assuming normalization.
 So, one challenge to the successful design of reasoning systems
 is how to restrict recursion so that all well-typed terms have normal forms.
@@ -881,13 +884,13 @@ We can actually implement \textbf{fix}, using $\mu$, as follows
 Thus, to avoid the loss of termination guarantees, we need to alter the rules
 for $\mu$, in someways, to ensure a consistent logic. One way, is to restrict
 the rule {\small $\mu$-form}; the other way, is to restrict the rule
-{\small $\mu$-elim}. Once we decide which of these two alterations of the
+{\small $\mu$-elim}. Once we decide which of these two restrictions of the
 rules we will use, the design of principled recursion combinators (\eg, \It\
 for the former and \MIt\ for the latter) follows from that choice.
 
 \paragraph{Positive (recursive) datatypes and negative (recursive) datatypes.}
 Positive datatypes have recursion only in covariant positions.
-For example, $\mu\,T_2$, where $\textbf{data}\;T_2 = C_2\,(Bool -> r)$,
+For example, $\mu\,T_2$, where $\textbf{data}\;T_2 \; r = C_2\,(Bool -> r)$,
 is a positive datatype since the recursive argument $r$ in
 the base structure $T_2$ only appears in the covariant position.
 Recursive datatypes that have no function arguments are by default
@@ -900,21 +903,24 @@ since the recursive argument $r$ in the base structure $T$ appears
 in the contravariant position. Another example of a negative datatype is
 $\mu\,T'$, where $\textbf{data}\;T'\;r = C'\,(r -> r)$, since $r$ in $T'$
 appears in both contravariant and covariant positions.
+We say that $r$ is in a negative position, since $(r -> a)$ is analogous to
+$(\neg r \land a)$ when we think of $->$ as a logical implication.
 
-\paragraph{Recursive types in the conventional approach}
+
+\paragraph{Recursive types in the conventional approach.}
 In the conventional approach, the formation (\ie, datatype definition) of
 recursive types is restricted, but arbitrary elimination (\ie, pattern matching)
 over the values of recursive types is allowed. In particular, the formation of
 negative recursive types is restricted. Only positive recursive types are
 supported. Thus, in Figure \ref{fig:approaches}, we have a restricted version of
 the formation rule {\small($\mu$-form$^{+}$)} has an additional condition that
-require $F$ to be positive. The other rules {\small($\mu$-intro)},
+requires $F$ to be positive. The other rules {\small($\mu$-intro)},
 {\small($\mu$-elim)}, and {\small(\unIn-\In)} remain the same as for
 functional languages. Since we have restricted the recursive types
 at the type level and we do not have general recursion at the term level,
-the language is indeed normalizing. However, we can neither write
-interesting (\ie, recursive) programs that involves recursive types nor
-inductively reason about those programs, unless we have principled recursion
+the language is indeed normalizing. However, we cannot write
+interesting (\ie, recursive) programs that involve recursive types, nor
+can we reason inductively about those programs, unless we have principled recursion
 schemes that are guaranteed to normalize. One such recursion scheme is called
 iteration (\aka\ catamorphism). The typing rules for the conventional iteration
 \It\ are illustrated in Figure \ref{fig:approaches}. Note, we have the typing
@@ -948,43 +954,34 @@ You can think of the rule {\small(\MIt)} as replacing both the elimination rule
 We choose to base our approach to the design of a seamless synthesis of both
 logical reasoning and programming on the Mendler style. It restricts
 the elimination (\ie, pattern matching) over values of recursive types,
-rather restricting the formation (\ie, datatype definition) of recursive types
+rather than restricting the formation (\ie, datatype definition) of recursive types
 (a more conventional approach). The impact of this design choice is that
 it enables our language system to include all datatype definitions that
 are used in functional programming languages.
 
-Functional programming promotes ``functions as first class values''.
-It is natural to pass functions as arguments and embed functions into
-(recursive) datatypes. If embedding functions in datatypes is allowed,
-we can embed a function whose domain is the very type we are defining.
-For example, the recursive datatype definition
-$\mathbf{data}~T = C\;(T -> \textit{A})$ in Haskell is such a recursive
-datatype definition. Such datatypes are called negative recursive datatypes
-since the recursive occurrence $T$ appears in a negative position.
-We say that $T$ is in a negative position, since $(T -> A)$ is analogous to
-$(\neg T \land A)$ when we think of $->$ as a logical implication. There exist
-both interesting and useful examples in functional programming involving
-negative datatypes. In \S\ref{sec:msf}, we illustrate that
-the Mendler-style recursion scheme we discovered can express
-interesting examples involving negative datatypes.
+Functional programming promotes ``functions as first class values''. It is natural
+to both pass functions as arguments and to embed functions into (recursive)
+datatypes.  There exist many interesting and useful examples in functional
+programming involving negative datatypes. In \S\ref{sec:msf}, we illustrate that
+the Mendler-style recursion scheme we discovered can express interesting examples
+involving negative datatypes.
 
-Recall that the motivation of this dissertation research (quoting again from
-the beginning of this chapter) is to contribute to answering the question of
+
+
+Recall that the motivation of this dissertation research is to begin to answer
 ``how does one build a seamless system where programmers can both
 write (functional) programs and formally reason about those programs''.
+The Mendler style is a promising approach because
+all the recursive types (both positive and negative) are definable and
+the recursion schemes over those types are normalizing.
+
 Under the Curry--Howard correspondence, to formally reason about a program,
 the logic needs to refer to the type of the program, since the type,
 interpreted as a proposition, describes the property of the program.
 Since the Mendler-style approach does not restrict recursive datatype
 definitions, we can directly refer to the types of programs that use
 negative recursive datatypes.
-
-The Mendler style is a promising approach to building a unified system because
-all the recursive types (both positive and negative) are definable and
-the recursion schemes over those types are normalizing.
-Although the conventional approach is widely followed in the design of
-reasoning systems (\eg, Coq, Agda), it cannot directly refer to programs
-that use non-positive recursive types. One may object that it is possible to
+One may object that it is possible to
 indirectly model negative recursive types in the conventional style,
 via alternative equivalent encodings which map negative recursive types
 into positive ones. But, such encodings do not align with our motivation
@@ -1003,8 +1000,7 @@ One of the most frequently asked questions about our design choices for Nax,
 regarding term-indexed types, is ``why not dependent types?". Our answer
 is that a moderate extension to the polymorphic calculus is a better candidate
 than a dependently typed calculus as the basis for a practical programming
-system. Recall, that we hope to design a unified system for programming
-as well as reasoning. Language designs based on indexed types can
+system.  Language designs based on indexed types can
 benefit from existing compiler technology and type inference algorithms
 for functional programming languages. In addition, theories for
 term-indexed datatypes are simpler than theories for full-fledged
@@ -1037,8 +1033,8 @@ in a dependent type theory, but one soon realizes that the induction principles
 (or, dependent eliminators) for those datatypes cannot be derived within
 the pure dependent calculi \cite{Geuvers01}.
 So, dependently typed reasoning systems support datatypes as primitives.
-For instance, Coq is based on Calculus of Inductive Constructions, which
-extends Calculus of Constructions \cite{CoqHue86} with dependent datatypes
+For instance, Coq is based on The Calculus of Inductive Constructions, which
+extends The Calculus of Constructions \cite{CoqHue86} with dependent datatypes
 and their induction principles.
 
 In contrast, in polymorphic type theories, all imaginable datatypes
@@ -1067,14 +1063,14 @@ This dissertation makes contributions in several areas.
     It organizes and expands the realm of \emph{Mendler-style recursion schemes}
     (Part~\ref{part:Mendler})
 
-\item[2.] It establishes a meta-theories for \emph{term-indexed types}
+\item[2.] It establishes meta-theories for \emph{term-indexed types}
         (Part~\ref{part:Calculi}),
 
 \item[3.] It designs a practical language (with an implementation)
         \emph{in the sweet spot} between programming and logical reasoning
         (Part~\ref{part:Nax}), and
 
-\item[4.] It identifies several interesting open problems related to above.
+\item[4.] It identifies several interesting open problems related to the three areas above.
 \end{itemize}
 
 \subsection{Contributions related to the Mendler style}
@@ -1117,7 +1113,7 @@ We embed Mendler-style course-of-values recursion into \Fixi\
 (or into \Fixw\ \cite{AbeMat04}, when we do not consider term-indices).
 
 \subsection{Contributions to the theory of Term-Indexed Types}
-Mendler-style recursion schemes have been studies in the context of
+Mendler-style recursion schemes have been studied in the context of
 polymorphic lambda calculi. For instance, \citet{AbeMatUus03} embedded 
 Mendler-style iteration (\MIt) into \Fw\ and \citet{AbeMat04} embedded
 Mendler-style primitive recursion (\MPr) into \Fixw. These calculi
