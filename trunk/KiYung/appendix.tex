@@ -545,4 +545,130 @@ Proof of Proposition \ref{prop:wftype}:
 
 
 
+\chapter{TODO Type Inference in Nax}
+aaaaaaaaaaaaaaaa\\
+bbbbbbbbbbbbbbbbbbbbbbbbbbbb
+bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb
+bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb bbbb
+\begin{singlespace}
+\begin{align*}
+\hspace*{-5em}
+&\textbf{Term}&
+t,s&~::= ~ x
+    ~  | ~ \l x    . t 
+    ~  | ~ t ~ s       
+    ~  | ~ \<let> x=s \<in> t \\ &&& \quad ~
+    ~  | ~ C
+    ~  | ~ \<case>_{\!\!\psi}\; s \<of> \overline{C \overline{x} -> t}
+\\
+&\textbf{Type constructor}&
+F,G,A,B&~::= ~ T ~
+        ~  | ~ X
+        ~  | ~ A -> B            
+        ~  | ~ F ~ G
+\\
+&\textbf{Type scheme}&
+\sigma&~::= ~ \forall X^\kappa.\sigma
+       ~  | ~ A
+\end{align*}
+\[ \textbf{Kinding rules} \quad \framebox{$ \Delta |- F:\kappa$}\]\vspace*{-2em}
+\begin{align*}
+& \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} &
+& \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
+& \inference[\sc TCon]{T^\kappa \in \Delta}{\Delta |- T:\kappa} &
+& \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
+                      {\Delta |- F ~ G : \kappa'} \\
+\end{align*}
+\[ \textbf{Type scheme ordering (or, generic instantiation)} \quad
+   \framebox{$\sigma \sqsubseteq_\Delta \sigma'$} \]
+\[
+ \inference[\sc GenInst]{
+    X_1',\dots,X_m'\notin\FV(\forall X_1^{\kappa_1}\dots X_n^{\kappa_n}.\sigma)
+    \\
+    \Delta |- \forall X_1^{\kappa_1}\dots X_n^{\kappa_n}.\sigma : *
+    &
+    \Delta |- \forall X_1'^{\kappa_1'}\dots X_m'^{\kappa_m'}.\,A[F_1/X_1]\cdots[F_n/X_n] : *
+  }{\forall X_1^{\kappa_1}\dots X_n^{\kappa_n}.\sigma \;\sqsubseteq_\Delta\;
+    \forall X_1'^{\kappa_1'}\dots X_m'^{\kappa_m'}.\,A[F_1/X_1]\cdots[F_n/X_n]} \]
+\end{singlespace}
+\begin{singlespace}
+\begin{align*}
+&\textbf{Declarative typing rules}&\quad
+&\textbf{Syntax-directed typing rules}
+        \\
+& \qquad\framebox{$\Delta;\Gamma |- t : \sigma$}
+&
+&~\qquad\framebox{$\Delta;\Gamma |-s t : A$}
+        \\
+& \inference[\sc Var]{x:\sigma \in \Gamma}{\Delta;\Gamma |- x:\sigma} &
+& \inference[\sc Var$_s$]{x:\sigma \in \Gamma & \sigma \sqsubseteq_\Delta A}
+                         {\Delta;\Gamma |-s x:A} \\
+& \inference[\sc Abs]{\Delta |- A:* \\ \Delta;\Gamma,x:A |- t : B}
+                     {\Delta;\Gamma |- \l x   .t : A -> B} &
+& \inference[\sc Abs$_s$]{\Delta |- A:* \\ \Delta;\Gamma,x:A |-s t:B}
+                         {\Delta;\Gamma |-s \l x   .t : A -> B} \\
+& \inference[\sc App]{\Delta;\Gamma |- t : A -> B \\ \Delta;\Gamma |- s : A}
+                     {\Delta;\Gamma |- t~s : B} &
+& \inference[\sc App$_s$]{\Gamma |-s t : A -> B \\ \Gamma |-s s : A}
+                         {\Gamma |-s t~s : B} \\
+& \inference[\sc Let]{ \Delta;\Gamma |- s : \sigma \\
+                       \Delta;\Gamma,x:\sigma |- t : B}
+                     {\Delta;\Gamma |- \<let> x=s \<in> t : B} &
+& \inference[\sc Let$_s$]
+            { \Delta;\Gamma |-s s : A \\
+              \Delta;\Gamma,x:\overline{\Delta;\Gamma}(A) |-s t : B}
+            {\Gamma |-s \<let> x=s \<in> t : B} \\
+& \inference[\sc Inst]{ \Delta;\Gamma |- t : \sigma
+                      & \sigma \sqsubseteq_\Delta \sigma'}
+                      {\Delta;\Gamma |- t : \sigma'} &
+&\quad \begin{smallmatrix}\overline{\Delta;\Gamma}(A)=\forall\vec{X}.A
+                         ~\text{where}~\vec{X}=\FV(A)\setminus\dom(\Delta)\setminus\FV(\Gamma)
+                 \end{smallmatrix}
+                 \\
+& \inference[\sc Gen]{\Delta,X^\kappa;\Gamma |- t : \sigma}
+                     {\Delta;\Gamma |- t : \forall X^\kappa.\sigma}
+                     ~ \text{\small$(X \notin\FV(\Gamma))$} &
+& \\
+& \inference[\sc Con]{C:\sigma \in \Gamma}{\Delta;\Gamma |- C:\sigma} &
+& \inference[\sc Con$_s$]{C:\sigma \in \Gamma & \sigma \sqsubseteq_\Delta A}
+                         {\Delta;\Gamma |-s C:A} \\
+& \inference[\sc Case]{ \Delta;\Gamma |- s : A \\
+                        \Delta;\Gamma |-^\psi \varphi : A -> B
+                      }{\Delta;\Gamma |- \<case>_{\!\!\psi}\;s\<of>\varphi:B} &
+& \inference[\sc Case$_s$]{
+                       \Delta;\Gamma |-s s : A \\
+                       \Delta;\Gamma |-s^\psi \varphi : A -> B
+                     }{\Delta;\Gamma |-s \<case>_{\!\!\psi}\;s\<of>\varphi:B} \\
+& \qquad\framebox{$\Delta;\Gamma |-^\psi \varphi : \sigma$} &
+& \qquad\framebox{$\Delta;\Gamma |-s^\psi \varphi : A$} \\
+& \inference[\sc Branches]{
+              \overline{\Delta;\Gamma |-^\psi C\overline{x} ->t : \sigma}
+            }{\Delta;\Gamma |-^\psi \overline{C\overline{x} -> t} : \sigma } &
+& \inference[\sc Branches]{
+              \overline{\Delta;\Gamma |-s^\psi C\overline{x} ->t : \sigma} \\
+              \sigma \sqsubseteq_\Delta A
+            }{\Delta;\Gamma |-^\psi \overline{C\overline{x} -> t} : A } \\
+& \inference[\sc Inst$'$]{ \Delta;\Gamma |-s^\psi \varphi : \sigma
+                       & \sigma \sqsubseteq_\Delta \sigma'
+                       }{\Delta;\Gamma |-^\psi \varphi : \sigma'} &
+& \\
+& \qquad\framebox{$\Delta;\Gamma |-^\psi C\overline{x} -> t : \sigma$} &
+& \qquad\framebox{$\Delta;\Gamma |-s^\psi C\overline{x} -> t : \sigma$} \\
+& \inference[\sc Branch]{
+              \Delta;\Gamma |- C:\overline{A} -> T\overline{B}\,\overline{A'} \\
+              \Delta;\Gamma,\overline{x:A} |- t : \psi(\overline{A'})
+            }{ \begin{array}{ll}\Delta;\Gamma |-^\psi C\overline{x} -> t \\
+                \qquad : \forall\overline{X^\kappa}.
+                          T\overline{B}\,\overline{X} -> \psi(\overline{X})
+               \end{array} } &
+& \inference[\sc Branch$_s$]{
+             \Delta;\Gamma |-s C:\overline{A} -> T\overline{B}\,\overline{A'} \\
+             \Delta;\Gamma,\overline{x:A} |-s t : \psi(\overline{A'})
+           }{ \begin{array}{ll}\Delta;\Gamma |-s^\psi C\overline{x} -> t \\
+               \qquad : \forall\overline{X^\kappa}.
+                         T\overline{B}\,\overline{X} -> \psi(\overline{X})
+              \end{array} }
+\end{align*}
+\end{singlespace}
+
 
