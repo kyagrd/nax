@@ -1,0 +1,193 @@
+\chapter{Type Inference in Nax} \label{ch:naxTyInfer}
+Type inference for a language supporting indexed datatypes are
+known to be difficult, and it becomes more difficult when the language
+supports wider range of indexed datatypes. Here, in this chapter, we
+illustrate the key idea that enables a conservative extension of
+Hindley-Miler type inference.  The \emph{index transformers},
+which are type annotations on the pattern matching constructs,
+plays a key role in inferring types for Nax programs involving
+indexed datatypes. We discuss how index transformers help infer types
+in the context of a small subset of Nax, only considering nested datatypes
+(\ie, no GADT-style datatype definitions, no term indices) but omitting other
+details of Nax. There are two reasons why we discuss the type inference
+over a small subset of Nax. Firstly, describing type inference over
+the full Nax language increases accidental complexity, making it more
+difficult to understand the key idea. Secondly, type inference over
+other omitted features (\eg, term indices, GADT-style datatype definitions)
+are rather orthogonal to the role of index transformers -- they could
+be considered separately.
+
+In the following sections, we discuss the role of index transformers
+(\S\ref{sec:naxTyInfer:psi}), type inference for Mendler-style recursion
+combinators (\S\ref{sec:naxTyInfer:rec}), and how we treat other features
+of Nax in the type system (\S\ref{sec:naxTyInfer:etc}).
+
+\section{Index transformers in a small subset of Nax}
+\label{sec:naxTyInfer:psi}
+We describe the role of index transformers in the type system of
+a small language (SmallNax) that supports recursive datatypes.
+The syntax of SmallNax is illustrated in Definition\;\ref{def:SmallNax},
+its kinding and typing rules are illustrated in Figure\;\ref{fig:SmallNax}.
+\begin{definition}[Syntax of SmallNax]
+\label{def:SmallNax}
+\begin{singlespace}
+\begin{align*}
+&\textbf{Term}&
+t,s&~::= ~ x
+    ~  | ~ \l x    . t 
+    ~  | ~ t ~ s       
+    ~  | ~ \<let> x=s \<in> t
+    ~  | ~ C
+    ~  | ~ \varphi^\psi
+%%    ~  | ~ \<case>_{\!\!\psi}\; s \<of> \overline{C \overline{x} -> t}
+\\
+&\textbf{Type constructor}&
+F,G,A,B&~::= ~ T ~
+        ~  | ~ X
+        ~  | ~ A -> B            
+        ~  | ~ F ~ G
+\\
+&\textbf{Type scheme}&
+\sigma&~::= ~ \forall X^\kappa.\sigma
+       ~  | ~ A
+\end{align*}
+\end{singlespace}
+\end{definition}
+\begin{definition}[Type scheme ordering (or, generic instantiation)]
+\label{def:SmallNaxGInst}
+\framebox{$\sigma \sqsubseteq_\Delta \sigma'$}
+\[
+ \inference[\sc GInst]{
+    X_1',\dots,X_m'\notin\FV(\forall X_1^{\kappa_1}\dots X_n^{\kappa_n}.\sigma)
+    \\
+    \Delta |- \forall X_1^{\kappa_1}\dots X_n^{\kappa_n}.\sigma : *
+    &
+    \Delta |- \forall X_1'^{\kappa_1'}\dots X_m'^{\kappa_m'}.\,A[F_1/X_1]\cdots[F_n/X_n] : *
+  }{\forall X_1^{\kappa_1}\dots X_n^{\kappa_n}.\sigma \;\sqsubseteq_\Delta\;
+    \forall X_1'^{\kappa_1'}\dots X_m'^{\kappa_m'}.\,A[F_1/X_1]\cdots[F_n/X_n]} \]
+\end{definition}
+TODO
+
+\begin{figure}
+\begin{singlespace}
+\[ \textbf{Kinding rules} \quad \framebox{$ \Delta |- F:\kappa$}\]\vspace*{-2em}
+\begin{align*}
+& \inference[\sc TVar]{X^\kappa \in \Delta}{\Delta |- X:\kappa} &
+& \inference[\sc TArr]{\Delta |- A:* & \Delta |- B:*}{\Delta |- A -> B:*} \\
+& \inference[\sc TCon]{T^\kappa \in \Delta}{\Delta |- T:\kappa} &
+& \inference[\sc TApp]{\Delta |- F : \kappa -> \kappa' & \Delta |- G : \kappa}
+                      {\Delta |- F ~ G : \kappa'}
+\end{align*}
+\begin{align*}
+&\textbf{Declarative typing rules}&\quad
+&\textbf{Syntax-directed typing rules}
+        \\
+& \qquad\framebox{$\Delta;\Gamma |- t : \sigma$}
+&
+&~\qquad\framebox{$\Delta;\Gamma |-s t : A$}
+        \\
+& \inference[\sc Var]{x:\sigma \in \Gamma}{\Delta;\Gamma |- x:\sigma} &
+& \inference[\sc Var$_s$]{x:\sigma \in \Gamma & \sigma \sqsubseteq_\Delta A}
+                         {\Delta;\Gamma |-s x:A} \\
+& \inference[\sc Abs]{\Delta |- A:* \\ \Delta;\Gamma,x:A |- t : B}
+                     {\Delta;\Gamma |- \l x   .t : A -> B} &
+& \inference[\sc Abs$_s$]{\Delta |- A:* \\ \Delta;\Gamma,x:A |-s t:B}
+                         {\Delta;\Gamma |-s \l x   .t : A -> B} \\
+& \inference[\sc App]{\Delta;\Gamma |- t : A -> B \\ \Delta;\Gamma |- s : A}
+                     {\Delta;\Gamma |- t~s : B} &
+& \inference[\sc App$_s$]{\Gamma |-s t : A -> B \\ \Gamma |-s s : A}
+                         {\Gamma |-s t~s : B} \\
+& \inference[\sc Let]{ \Delta;\Gamma |- s : \sigma \\
+                       \Delta;\Gamma,x:\sigma |- t : B}
+                     {\Delta;\Gamma |- \<let> x=s \<in> t : B} &
+& \inference[\sc Let$_s$]
+            { \Delta;\Gamma |-s s : A \\
+              \Delta;\Gamma,x:\overline{\Delta;\Gamma}(A) |-s t : B}
+            {\Gamma |-s \<let> x=s \<in> t : B} \\
+& \inference[\sc Inst]{ \Delta;\Gamma |- t : \sigma
+                      & \sigma \sqsubseteq_\Delta \sigma'}
+                      {\Delta;\Gamma |- t : \sigma'} &
+&\quad \begin{smallmatrix}\overline{\Delta;\Gamma}(A)=\forall\vec{X}.A
+                         ~\text{where}~\vec{X}=\FV(A)\setminus\dom(\Delta)\setminus\FV(\Gamma)
+                 \end{smallmatrix}
+                 \\
+& \inference[\sc Gen]{\Delta,X^\kappa;\Gamma |- t : \sigma}
+                     {\Delta;\Gamma |- t : \forall X^\kappa.\sigma}
+                     ~ \text{\small$(X \notin\FV(\Gamma))$} &
+& \\
+& \inference[\sc Con]{C:\sigma \in \Gamma}{\Delta;\Gamma |- C:\sigma} &
+& \inference[\sc Con$_s$]{C:\sigma \in \Gamma & \sigma \sqsubseteq_\Delta A}
+                         {\Delta;\Gamma |-s C:A} \\
+& \inference[\sc Case]{
+              \overline{\Delta;\Gamma |-^\psi C\overline{x} ->t : \sigma}
+          }{\Delta;\Gamma |- (\overline{C\overline{x} -> t})^\psi : \sigma } &
+& \inference[\sc Case$_s$]{
+	      \overline{\Delta;\Gamma |-s^\psi C\overline{x} ->t : \sigma} &
+              \sigma \sqsubseteq_\Delta A
+          }{\Delta;\Gamma |- (\overline{C\overline{x} -> t})^\psi : A } \\
+& \qquad\framebox{$\Delta;\Gamma |-^\psi C\overline{x} -> t : \sigma$} &
+& \qquad\framebox{$\Delta;\Gamma |-s^\psi C\overline{x} -> t : \sigma$} \\
+& \inference*[\sc Branch]{
+              \Delta;\Gamma |- C:\overline{A} -> T\overline{B}\,\overline{A'} \\
+              \Delta;\Gamma,\overline{x:A} |- t : \psi(\overline{A'})
+            }{ \begin{array}{ll}\Delta;\Gamma |-^\psi C\overline{x} -> t \\
+                \qquad : \forall\overline{X^\kappa}.
+                          T\overline{B}\,\overline{X} -> \psi(\overline{X})
+               \end{array} } &
+& \inference*[\sc Branch$_s$]{
+             \Delta;\Gamma |-s C:\overline{A} -> T\overline{B}\,\overline{A'} \\
+             \Delta;\Gamma,\overline{x:A} |-s t : \psi(\overline{A'})
+           }{ \begin{array}{ll}\Delta;\Gamma |-s^\psi C\overline{x} -> t \\
+               \qquad : \forall\overline{X^\kappa}.
+                         T\overline{B}\,\overline{X} -> \psi(\overline{X})
+              \end{array} }
+\end{align*}
+\caption{Kinding and typing rules of SmallNax}
+\label{fig:SmallNax}
+\end{singlespace}
+\end{figure}
+
+
+
+\section{Inferring types for Mendler-style recursion combinators}
+\label{sec:naxTyInfer:rec}
+we first review and go on
+
+\paragraph{A review of monomorphic recursion and polymorphic recursion}
+The Hindley--Milner type system (HM) \cite{DamMil82} supports
+monomorphic (general) recursion by assigning a monomorphic type ($A$)
+to the recursive variable ($x$), as described in the rule \rulename{Fix-m}
+below right.\footnote{
+	In \S\ref{sec:hm}, we excluded the general recursion in
+	our formalization of HM, althouth its original presentation
+	has general recursion, because our language does not support
+	general recursion.}
+The Milner--Mycroft type systems (MM) \cite{TODO} supports
+polymorphic recursion by assigning a polymorphic type ($\sigma$)
+to the recursive variable ($x$), as described by in the rule \rulename{Fix-p}
+below left.
+\[
+\qquad
+\inference[\sc Fix-m]{\Gamma,x:A |- t : B}{
+	\Gamma |- \textbf{fix}\;x.t : B}
+\qquad
+\inference[\sc Fix-p]{\Gamma,x:\sigma |- t : \sigma}{
+	\Gamma |- \textbf{fix}\;x.t : B}
+\]
+Polymorphic recursion is necessary for writing recursive programs involving
+nested datatypes. However, type inference for MM, which supports polymorphic
+recursion, is known to be undecidable \cite{Hen93}.
+
+TODO
+the result types of 
+result types of data constructors are always the same as the left-hand side
+of the equational definition, that is, type constructor followed by
+type variable arguments
+
+\section{TODO etc}
+\label{sec:naxTyInfer:etc}
+TODO
+existential type variables
+weak existential type variables
+TODO
+

@@ -17,5 +17,6 @@
 %include nax_discuss.lhs
 
 %% chapter
-%include nax_tyinfer.lhs
+%%% %include nax_tyinfer.lhs
 
+\input{naxtyinfer}

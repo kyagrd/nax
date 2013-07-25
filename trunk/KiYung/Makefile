@@ -11,8 +11,8 @@ TEXSRC=mylhs2tex.sty main.tex \
        mendler_nonreg.tex mendler_nest.tex mendler_gadt.tex mendler_mutrec.tex \
        mendler_proof.tex \
        mendler_prim.tex \
-       fi.tex fi_fi.tex fi_theory.tex fi_data.tex \
-       fixi.tex nax.tex casestd.tex \
+       fi.tex fi_fi.tex fi_theory.tex fi_data.tex fixi.tex \
+       nax.tex naxtyinfer.tex casestd.tex \
        relwork.tex relwork_mcoit.tex relwork_mmult.tex \
        futwork.tex futwork_mprsi.tex futwork_mu.tex \
        concl.tex \
@@ -88,10 +88,10 @@ mendler_prim.tex: mendler_prim.lhs includelhs2tex.lhs \
 	mendler/Fac.lhs mendler/FacG.lhs
 	lhs2TeX --poly -o $@ $<
 
+####	nax_tyinfer.lhs
 nax.tex: nax.lhs IFL12code/includelhs2tex.lhs \
 	nax_features.lhs \
 	nax_intro.lhs nax_examples.lhs nax_discuss.lhs \
-	nax_tyinfer.lhs \
 	IFL12code/Eval.lhs IFL12code/Eval.lnax IFL12code/Eval.lagda \
 	IFL12code/GList.lhs IFL12code/GListExample.lhs \
        	IFL12code/GList.lnax IFL12code/GListExample.lnax \
