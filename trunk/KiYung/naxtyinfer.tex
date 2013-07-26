@@ -42,9 +42,9 @@ t,s&~::= ~ x
 %%    ~  | ~ \<case>_{\!\!\psi}\; s \<of> \overline{C \overline{x} -> t}
 \\
 &\textbf{Type constructor}&
-F,G,A,B&~::= ~ T ~
-        ~  | ~ X
+F,G,A,B&~::= ~ X
         ~  | ~ A -> B            
+        ~  | ~ T
         ~  | ~ F ~ G
 \\
 &\textbf{Type scheme}&
@@ -65,8 +65,23 @@ F,G,A,B&~::= ~ T ~
     \Delta |- \forall X_1'^{\kappa_1'}\dots X_m'^{\kappa_m'}.\,A[F_1/X_1]\cdots[F_n/X_n] : *
   }{\forall X_1^{\kappa_1}\dots X_n^{\kappa_n}.\sigma \;\sqsubseteq_\Delta\;
     \forall X_1'^{\kappa_1'}\dots X_m'^{\kappa_m'}.\,A[F_1/X_1]\cdots[F_n/X_n]} \]
+~
 \end{definition}
-TODO
+
+The syntax of SmallNax is similar to the syntax of 
+the Hindley--Milner type system (HM) in \S\ref{sec:hm}.
+SmallNax has data constructors ($C$) and case functions ($\varphi^\psi$)
+in addition to the terms of HM. A case function $\varphi^\psi$ is
+a list of alternatives ($\varphi ::= \overline{C \overline{x} -> t}$)
+annotated with an index transformer $\psi$. The case expression
+$\textbf{case}_\psi\;s\<of> \varphi$ in Nax correspond to $\varphi^\psi\;s$,
+an application of the case function ($\varphi^\psi$) to the scrutinee ($s$).
+Considering case expressions as applications simplifies the typing rules
+because we do not need a sparate typing rule for case expressions.
+In addition to the types of HM, SmallNax type constructure include
+type constructor name ($T$) and type constructor application ($F G$).
+Type scyemes in SmallNax is similar to the type schemes in HM,
+but the universally quantified type variable is annotated with its kind.
 
 \begin{figure}
 \begin{singlespace}
@@ -127,14 +142,14 @@ TODO
           }{\Delta;\Gamma |- (\overline{C\overline{x} -> t})^\psi : A } \\
 & \qquad\framebox{$\Delta;\Gamma |-^\psi C\overline{x} -> t : \sigma$} &
 & \qquad\framebox{$\Delta;\Gamma |-s^\psi C\overline{x} -> t : \sigma$} \\
-& \inference*[\sc Branch]{
+& \inference*[\sc Alt]{
               \Delta;\Gamma |- C:\overline{A} -> T\overline{B}\,\overline{A'} \\
               \Delta;\Gamma,\overline{x:A} |- t : \psi(\overline{A'})
             }{ \begin{array}{ll}\Delta;\Gamma |-^\psi C\overline{x} -> t \\
                 \qquad : \forall\overline{X^\kappa}.
                           T\overline{B}\,\overline{X} -> \psi(\overline{X})
                \end{array} } &
-& \inference*[\sc Branch$_s$]{
+& \inference*[\sc Alt$_s$]{
              \Delta;\Gamma |-s C:\overline{A} -> T\overline{B}\,\overline{A'} \\
              \Delta;\Gamma,\overline{x:A} |-s t : \psi(\overline{A'})
            }{ \begin{array}{ll}\Delta;\Gamma |-s^\psi C\overline{x} -> t \\
