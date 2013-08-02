@@ -3,24 +3,39 @@ Type inference for a language supporting indexed datatypes are
 known to be difficult, and it becomes more difficult when the language
 supports wider range of indexed datatypes. Here, in this chapter, we
 illustrate the key idea that enables a conservative extension of
-Hindley-Miler type inference.  The \emph{index transformers},
-which are type annotations on the pattern matching constructs,
-plays a key role in inferring types for Nax programs involving
-indexed datatypes. We discuss how index transformers help infer types
-in the context of a small subset of Nax, only considering nested datatypes
-(\ie, no GADT-style datatype definitions, no term indices) but omitting other
-details of Nax. There are two reasons why we discuss the type inference
-over a small subset of Nax. Firstly, describing type inference over
-the full Nax language increases accidental complexity, making it more
-difficult to understand the key idea. Secondly, type inference over
-other omitted features (\eg, term indices, GADT-style datatype definitions)
-are rather orthogonal to the role of index transformers -- they could
-be considered separately.
+Hindley-Miler type inference. We will not be as formal and detailed
+on proofs as we did for HM in \S\ref{sec:hm}. We extrapolate from
+the properties of HM that the same property should hold for
+a small subset of Nax, which is structurally similar to HM.
+Then, we will argue that some key new features in Nax, which are
+not present in HM preserves those properties.
 
-In the following sections, we discuss the role of index transformers
-(\S\ref{sec:naxTyInfer:psi}), type inference for Mendler-style recursion
-combinators (\S\ref{sec:naxTyInfer:rec}), and how we treat other features
-of Nax in the type system (\S\ref{sec:naxTyInfer:etc}).
+The \emph{index transformers}, which are type annotations on
+the pattern matching constructs, plays a key role in inferring types for
+Nax programs involving indexed datatypes. We discuss how index transformers
+help infer types in the context of a small subset of Nax, SmallNax, only
+considering nested datatypes (\ie, no GADT-style datatype definitions,
+no term indices) but omitting other details of Nax (\S\ref{sec:naxTyInfer:psi}).
+Next, we we extend SmallNax with recursive types and Mendler-style iteration,
+describe their kinding and typing rules, and discuss why they are suitable
+for type inference (\S\ref{sec:naxTyInfer:rec}). Then, we discuss how we
+treat those Nax features omitted in SmallNax (\eg, term indices, GADT-style
+datatype definitions) in our implementation (\S\ref{sec:naxTyInfer:etc}).
+
+%% There are two reasons why we discuss
+%% the type inference over a small subset of Nax. Firstly, describing
+%% type inference over the full Nax language increases accidental complexity,
+%% making it more difficult to understand the key idea. Secondly, type inference
+%% over other omitted features (\eg, term indices, GADT-style datatype definitions)
+%% are rather orthogonal to the role of index transformers -- they could
+%% be considered separately.
+
+%% In the following sections, we discuss the role of index transformers
+%% (\ie, type annotations on the pattern matching constructs)
+%% (\S\ref{sec:naxTyInfer:psi}), type inference for Mendler-style recursion
+%% combinators (\S\ref{sec:naxTyInfer:rec}), and how we treat other features
+%% of Nax in the type system (\S\ref{sec:naxTyInfer:etc}).
+
 
 \section{Index transformers in a small subset of Nax}
 \label{sec:naxTyInfer:psi}
@@ -73,15 +88,35 @@ the Hindley--Milner type system (HM) in \S\ref{sec:hm}.
 SmallNax has data constructors ($C$) and case functions ($\varphi^\psi$)
 in addition to the terms of HM. A case function $\varphi^\psi$ is
 a list of alternatives ($\varphi ::= \overline{C \overline{x} -> t}$)
-annotated with an index transformer $\psi$. The case expression
-$\textbf{case}_\psi\;s\<of> \varphi$ in Nax correspond to $\varphi^\psi\;s$,
-an application of the case function ($\varphi^\psi$) to the scrutinee ($s$).
-Considering case expressions as applications simplifies the typing rules
-because we do not need a sparate typing rule for case expressions.
-In addition to the types of HM, SmallNax type constructure include
-type constructor name ($T$) and type constructor application ($F\;G$).
-Type scyemes in SmallNax is similar to the type schemes in HM,
-but the universally quantified type variable is annotated with its kind.
+annotated with an index transformer $\psi$.\footnote{Our Nax implementation
+	supports nested patterns (\eg, $(C_1\,x_1\,(C_2\,x_2)\,x_3$), but
+	SmallNax only allows simple patterns (\ie, data constructor
+	followed by variables) in alternatives.}
+The case expression $\textbf{case}_\psi\;s\<of> \varphi$ in Nax
+correspond to $\varphi^\psi\;s$, an application of the case function
+($\varphi^\psi$) to the scrutinee ($s$). Considering case expressions as
+applications simplifies the typing rules because we do not need
+a separate typing rule for case expressions. In addition to the types of HM,
+the type constructor syntax in SmallNax includes type constructor names ($T$)
+and type constructor applications ($F\;G$). Type schemes in SmallNax 
+($\forall X^\kappa.$) is similar to the type schemes in HM, but
+the universally quantified type variable ($X$) is annotated with
+its kind ($\kappa$).
+
+We assume that type constructor names and their associated data constructors are
+introduced into the context by preprocessing equational datatype definitions.
+For example, an equational datatype definition
+$\textbf{data}\;\texttt{Maybe}\;a = \texttt{Just}\;a \mid \texttt{Nil}$
+introduces a type constructor name \texttt{Maybe} and its associated
+data constructors \texttt{Just} and \texttt{Nil} into the context
+($\Delta$ and $\Gamma$ in Figure\;\ref{fig:SmallNax}). That is,
+$\texttt{Maybe}^{* -> *} \in \Delta$ and
+$\texttt{Just}: \forall X_a^{*}.X_a -> \texttt{Maybe}\,X_a,~
+ \texttt{Nil} : \forall X_a^{*}.\texttt{Maybe}\,X_a \in \Gamma$.
+Data constructors introduced from an equational datatype definition have
+uniform return types ($T\;\overline{X}$) and no existential variables
+in their types. For instance, return types of both \texttt{Just} and
+\texttt{Nil} have the form of $\texttt{Maybe}\,X_a$.
 
 \begin{figure}
 \begin{singlespace}
@@ -162,13 +197,53 @@ but the universally quantified type variable is annotated with its kind.
 \end{singlespace}
 \end{figure}
 
+The typing rules of SmallNax (Figure\;\ref{fig:SmallNax}),
+excluding the rules for datatypes (\rulename{Con}, \rulename{Case},
+\rulename{Alt} in the declarative rules and their corresponding
+syntax-directed rules), are structurally similar to the typing rules of HM
+(Figure\;\ref{fig:hm}). Each of those typing rules in SmallNax has
+its corresponding typing rule with the same name in HM. The difference from HM
+are the kinding rules to ensure well-kindedness of type constructors
+and the additional context $\Delta$ to keeping track of the kinding of
+type constructor variables. The generic instantiation rule (\rulename{GInst})
+also takes the $\Delta$ context into consideration so that both sides of
+$\sqsubseteq$ are well-kinded.  We can view that HM is a restriction of
+SmallNax (excluding datatypes) where kinds are always $*$.
+So, we know that the syntax-directed typing rules
+(excluding \rulename{Con$_s$}, \rulename{Case$_s$}, \rulename{Alt$_s$}) 
+are sound and complete with respect to the declarative typing rules
+(excluding \rulename{Con}, \rulename{Case}, \rulename{Alt}) in SmallNax.
+\begin{theorem}[$|-s$ is sound with respect to $|-$]
+$ \inference{\Delta;\Gamma |-s t : A}{\Delta;\Gamma |- t : A} $
+\label{thm:sdSmallNaxSound}
+\end{theorem}
+\begin{theorem}[$|-s$ is complete with respect to $|-$]
+$ \inference
+        {\Delta;\Gamma |- t : \sigma}
+        {\exists A.\;\Delta;\Gamma |-s t : A ~\land~
+	 \overline{\Gamma}(A) \sqsubseteq_\Delta \sigma} $
+\label{thm:sdSmallNaxComplete}
+\end{theorem}
+
+Declarative typing rules of SmallNax (without features for datatypes)
+are restrictions of the Curry-style System \Fw, which we discussed
+in \S\ref{sec:fw}. That is, the kinding rules and the declarative typing rules
+excluding the rules for datatypes (\rulename{TCon}, \rulename{Con},
+\rulename{Case}, \rulename{Alt}), in Figure\;\ref{fig:SmallNax} are
+admissible in System \Fw.
 
 
-\section{Inferring types for Mendler-style recursion combinators}
+Compared to HM
+The relation
+in SmallNax
+
+HM
+
+\section{Extending SmallNax with Mendler-style recursion combinators}
 \label{sec:naxTyInfer:rec}
-we first review and go on
+TODO We first review and go on
 
-\paragraph{A review of monomorphic recursion and polymorphic recursion}
+\subsection{A review of monomorphic recursion and polymorphic recursion}
 The Hindley--Milner type system (HM) \cite{DamMil82} supports
 monomorphic (general) recursion by assigning a monomorphic type ($A$)
 to the recursive variable ($x$), as described in the rule \rulename{Fix-m}
@@ -193,11 +268,32 @@ Polymorphic recursion is necessary for writing recursive programs involving
 nested datatypes. However, type inference for MM, which supports polymorphic
 recursion, is known to be undecidable \cite{Hen93}.
 
-TODO
-the result types of 
-result types of data constructors are always the same as the left-hand side
-of the equational definition, that is, type constructor followed by
-type variable arguments
+What makes HM (including \rulename{Fix-m}) peculiarly suitable for
+type inference while type inference for MM is undecidable?
+\citet{Hen93} summarizes the peculiarity of HM is that occurrences of
+a recursive definition ``\emph{inside} the body of its definition can
+only be used \emph{monomorphically}'' whereas occurrences ``\emph{outside}
+its body can be used \emph{polymorphically}''.
+
+\subsection{Typing rules for recursion combinators in SmallNax}
+We design the typing rules for recursion combinators in SmallNax
+(Figure\;\ref{fig:SmallNaxRec}) based on a similar idea to
+what makes HM suitable for type inference.
+What makes SmallNax (including the \rulename{mit} rule) to be suitable
+for type inference is that the \emph{type parameters} of
+the recursive function argument are \emph{monomorphic} whereas
+the \emph{type indices} are \emph{polymorphic} inside the body of
+the recursive function definition. Outside the body, the recursive function
+can be used polymorphically over both type parameters and type indices.
+
+\begin{figure}
+\inference[\sc mit]{\Delta;\Gamma,x:\sigma |- \varphi^\psi : \sigma}{
+	\Delta;\Gamma |- \MIt_\kappa\;x\;\varphi^\psi: \sigma}
+\caption{SmallNax extended with $\mu_\kappa$ and $\MIt_\kappa$}
+\label{fig:SmallNaxRec}
+\end{figure}
+
+TODO short reminder of type indices and type parameters
 
 \section{TODO etc}
 \label{sec:naxTyInfer:etc}

@@ -490,7 +490,8 @@ than the type scheme $\sigma$ deduced from the declarative typing rules.
 \begin{theorem}[$|-s$ is complete with respect to $|-$]
 $ \inference
         {\Gamma |- t : \sigma}
-        {\exists A.\;\Gamma |-s t : A ~\land~ \overline{\Gamma}(A)\sqsubseteq\sigma} $
+        {\exists A.\;\Gamma |-s t : A ~\land~
+	 \overline{\Gamma}(A) \sqsubseteq \sigma} $
 \label{thm:sdHMcomplete}
 \end{theorem}
 \begin{proof}
