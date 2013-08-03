@@ -248,30 +248,64 @@ from \rulename{Case$_s$} is a generic instantiation of the typing
 one can get from \rulename{Case}. It is indeed the case that
 \rulename{Alt} is sound and complete with respect to \rulename{Alt$_s$}
 becase they have exactly the same structure. Unlike other syntax-directed
-typing rules of the form \framebox{$\Delta;\Gamma |-s t : A$}, which
-assignes a type to a monomorphic type ($A$), the rule \rules{Alt$_s$}
-of the form \framebox{$\Delta;\Gamma |-s^\psi C\overline{x} -> t : \sigma$}
+typing rules of the form $\Delta;\Gamma |-s t : A$, which
+assignes a type to a monomorphic type ($A$), the rule \rulename{Alt$_s$}
+of the form $\Delta;\Gamma |-s^\psi C\overline{x} -> t : \sigma$
 assinges a polymorhpic type scheme ($\sigma$). Since \rulename{Alt} and
 \rulename{Alt$_s$} has exactly the samem structure, one caling on $|-$
 and the other calling on $|-s$ in their premises, they must be sound
 and complete with respect to each other.
 
-%% TODO decl is sound w.r.t Fw
-Declarative typing rules of SmallNax (without the features for datatypes)
-are restrictions of the Curry-style System \Fw, which we discussed
-in \S\ref{sec:fw}. That is, the kinding rules and the declarative typing rules
-excluding the rules for datatypes (\rulename{TCon}, \rulename{Con},
-\rulename{Case}, \rulename{Alt}), in Figure\;\ref{fig:SmallNax} are
-admissible in System \Fw.
+\paragraph{}
+The type system of SmallNax is sound with respect to System \Fw.
+That is, when $\Delta;\Gamma |- t:\sigma$ in SmallNax, then 
+$\Delta;\Gamma |- t:\sigma$ in System \Fw.
+Considering the let-term ($\<let> x=s \<in> t$) as a syntactic sugar of
+a lambda term applied to the scrutinee ($(\l x.t)\,s$), the terms of SmallNax,
+except data constructors and case expressions, are exactly the same as
+the term of the Curry-style System \Fw, which we discussed in \S\ref{sec:fw}.
+For SmallNax terms involving data constructors and case expressions, we use
+the Church encoding to translate those SmallNax terms into System \Fw\ terms.
+We show the soundness of typing with respect to System \Fw\ by reasoning about
+the declarative typing rules. Recall that we discussed
+the soundness of typing for HM with respect to System \F\ by reasoning about
+the declarative typing rules of HM in \S\ref{sec:hm}.
 
+The kinding and typing rules, except those rules for datatypes, are admissible
+in System \Fw. The kinding rules except \rulename{TCon} are exactly the same as
+the kinding rules with the same name in System \Fw\ (see Figure\;\ref{fig:fw}
+on p\pageref{fig:fw}). The declarative typing rules except \rulename{Con},
+\rulename{Case}, \rulename{Alt} are admissible in System~\Fw. The rules
+\rulename{Var}, \rulename{Abs}, \rulename{App}, \rulename{Gen}\footnote{
+	The \rulename{Gen} rule in SmallNax corresponds to
+	the \rulename{TyAbs} rule in the Curry-style System \Fw
+	(see Figure\;\ref{fig:fw}). The other rules, \rulename{Var},
+	\rulename{Abs}, \rulename{App} corresponds to the rules with
+	the same name same name in the Curry-style System \Fw. }
+are exactly the same as the typing rules of the Curry-stye System \Fw.
+We can show that the rules \rulename{Let} and \rulename{Inst} in SmallNax are
+adimssible in System \Fw\ by following virtually the same argument, which
+we used show that the rules \rulename{Let} and \rulename{Inst} in HM are
+admissible in Sytem \F\ (see p\pageref{hm:LetAdmissibleFw} in \S\ref{sec:hm}).
+The \rulename{Let} rule in SmallNax corresponds to a consectuvie use of
+\rulename{App} and \rulename{Abs} in System \Fw. A single derivation step of
+\rulename{Inst} in SmallNax corresponds to multiple usese of \rulename{TyAbs}
+and \rulename{TyApp} rules in System \Fw.
 
+The kinding and typing rules involving datatypes (\rulename{TCon},
+\rulename{Con}, \rulename{Case}, and \rulename{Alt}) can be understood as
+being admissible in System \Fw\ via the Church encodings of datatypes.
+%% TODO rules for datatypes Church encoding
+
+%% \paragraph{}
+%% TODO give an idea why we can make an algorithm
+%% no worry for Conv rule because we do not have type level lambda
+TODO
 Compared to HM
 The relation
 in SmallNax
 
 HM
-
-%% TODO give an idea why we can make an algorithm
 
 \section{Extending SmallNax with Mendler-style recursion combinators}
 \label{sec:naxTyInfer:rec}

@@ -135,7 +135,8 @@ F,G,A,B ::= &~ X                  & \text{variable type} \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
                      {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
-                       {\Delta;\Gamma |- \L X^\kappa.t : \forall X^\kappa.B} \\
+                       {\Delta;\Gamma |- \L X^\kappa.t : \forall X^\kappa.B}
+	 \begin{smallmatrix}(X\notin\FV(\Gamma))\end{smallmatrix} \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X^\kappa.B & \Delta |- G:\kappa}
                        {\Delta;\Gamma |- t[G] : B[G/X]} \\
 & \inference[\sc Conv]{\Delta;\Gamma |- t : A & \Delta |- A = A' : *}
@@ -182,7 +183,8 @@ F,G,A,B ::= &~ X                  \\
 & \inference[\sc App]{\Delta;\Gamma |- t : A -> B & \Delta;\Gamma |- s : A}
                      {\Delta;\Gamma |- t~s : B} \\
 & \inference[\sc TyAbs]{\Delta,X^\kappa;\Gamma |- t : B}
-                       {\Delta;\Gamma |- t : \forall X^\kappa.B} \\
+                       {\Delta;\Gamma |- t : \forall X^\kappa.B}
+	 \begin{smallmatrix}(X\notin\FV(\Gamma))\end{smallmatrix} \\
 & \inference[\sc TyApp]{\Delta;\Gamma |- t : \forall X^\kappa.B & \Delta |- G:\kappa}
                        {\Delta;\Gamma |- t : B[G/X]} \\
 & \inference[\sc Conv]{\Delta;\Gamma |- t : A & \Delta |- A = A' : *}

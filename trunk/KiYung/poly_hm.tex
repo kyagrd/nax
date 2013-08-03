@@ -345,7 +345,9 @@ $(\l x.t)\;s$. We first desugar the let-term into an application of
 an abstraction $(\l x.t)$ to the body of the local definition ($s$).
 Then, we can simply apply the \rulename{App} rule and the \rulename{Abs} rule
 in System~\F, as below:
-\[\inference[\sc App]
+\label{hm:LetAdmissibleFw}
+\[
+ \inference[\sc App]
         { \inference[\sc Abs]
                 { \Delta |- \sigma
                 & \Delta;\Gamma,x:\sigma |- t : B}
