@@ -40,7 +40,7 @@ datatype definitions) in our implementation (\S\ref{sec:naxTyInfer:etc}).
 \section{Index transformers in a small subset of Nax}
 \label{sec:naxTyInfer:psi}
 We describe the role of index transformers in the type system of
-a small language (SmallNax) that supports recursive datatypes.
+a small language (SmallNax) that supports typing rules for datatypes.
 The syntax of SmallNax is illustrated in Definition\;\ref{def:SmallNax},
 its kinding and typing rules are illustrated in Figure\;\ref{fig:SmallNax}.
 \begin{definition}[Syntax of SmallNax]
@@ -117,6 +117,9 @@ Data constructors introduced from an equational datatype definition have
 uniform return types ($T\;\overline{X}$) and no existential variables
 in their types. For instance, return types of both \texttt{Just} and
 \texttt{Nil} have the form of $\texttt{Maybe}\,X_a$.
+We also assume that datatypes definitions are not recursive.
+We will consider recursive datatypes in the next section,
+where we extend SmallNax with recursive types and Mendler-style iteration.
 
 \begin{figure}
 \begin{singlespace}
@@ -202,30 +205,59 @@ excluding the rules for datatypes (\rulename{Con}, \rulename{Case},
 \rulename{Alt} in the declarative rules and their corresponding
 syntax-directed rules), are structurally similar to the typing rules of HM
 (Figure\;\ref{fig:hm}). Each of those typing rules in SmallNax has
-its corresponding typing rule with the same name in HM. The difference from HM
-are the kinding rules to ensure well-kindedness of type constructors
-and the additional context $\Delta$ to keeping track of the kinding of
-type constructor variables. The generic instantiation rule (\rulename{GInst})
-also takes the $\Delta$ context into consideration so that both sides of
-$\sqsubseteq$ are well-kinded.  We can view that HM is a restriction of
-SmallNax (excluding datatypes) where kinds are always $*$.
-So, we know that the syntax-directed typing rules
-(excluding \rulename{Con$_s$}, \rulename{Case$_s$}, \rulename{Alt$_s$}) 
-are sound and complete with respect to the declarative typing rules
+its corresponding typing rule with the same name in HM.
+The difference from HM are the existence of kinding rules to ensure
+well-kindedness of type constructors (which can have kind other than $*$)
+and the additional context $\Delta$ in the typing rules to keep track of
+whether type constructor variables are in scope with correctly assigned kinds.
+The generic instantiation rule (\rulename{GInst}) also takes $\Delta$ into
+consideration so that both sides of $\sqsubseteq$ are well-kinded.
+We can view HM as a restriction of SmallNax (excluding datatypes)
+where kinds are always $*$. So, we know that the syntax-directed typing rules
+(excluding \rulename{Con$_s$}, \rulename{Case$_s$}, \rulename{Alt$_s$})
+are sound (Theorem\;\ref{thm:sdSmallNaxSound}) and
+complete (Theorem\;\ref{thm:sdSmallNaxComplete})
+with respect to the declarative typing rules
 (excluding \rulename{Con}, \rulename{Case}, \rulename{Alt}) in SmallNax.
 \begin{theorem}[$|-s$ is sound with respect to $|-$]
 $ \inference{\Delta;\Gamma |-s t : A}{\Delta;\Gamma |- t : A} $
 \label{thm:sdSmallNaxSound}
 \end{theorem}
-\begin{theorem}[$|-s$ is complete with respect to $|-$]
-$ \inference
-        {\Delta;\Gamma |- t : \sigma}
-        {\exists A.\;\Delta;\Gamma |-s t : A ~\land~
-	 \overline{\Gamma}(A) \sqsubseteq_\Delta \sigma} $
+\begin{theorem}[$|-s$ is complete with respect to $|-$] ~
+\begin{center}
+$ \inference{\Delta;\Gamma |- t : \sigma}{
+	\exists A.\;\Delta;\Gamma |-s t : A ~\land~
+	\overline{\Delta;\Gamma}(A) \sqsubseteq_\Delta \sigma} $
+\end{center}
 \label{thm:sdSmallNaxComplete}
 \end{theorem}
 
-Declarative typing rules of SmallNax (without features for datatypes)
+We have argued that Theorem\;\ref{thm:sdSmallNaxSound} and
+Theorem\;\ref{thm:sdSmallNaxComplete} holds for all the typing rules
+in SmallNax excluding the rules for datatypes. So, we only need to check
+whether these two theorems hold for the rules for datatypes, that is,
+for the declarative rules \rulename{Con}, \rulename{Case}, and \rulename{Alt},
+and, their syntax-directed counterparts \rulename{Con$_s$}, \rulename{Case$_s$},
+and \rulename{Alt$_s$}. They obviously hold for the rules \rulename{Con} and
+\rulename{Con$_s$} because these rules have exactly the same structure as 
+\rulename{Var} and \rulename{Var$_s$}. Once we know that \rulename{Alt} is
+sound and complete with respect to \rulename{Alt$_s$}, it is quite
+straightforward to show that \rulename{Case} is sound and complete
+with respect to \rulename{Case$_s$} because the typing one can get
+from \rulename{Case$_s$} is a generic instantiation of the typing
+one can get from \rulename{Case}. It is indeed the case that
+\rulename{Alt} is sound and complete with respect to \rulename{Alt$_s$}
+becase they have exactly the same structure. Unlike other syntax-directed
+typing rules of the form \framebox{$\Delta;\Gamma |-s t : A$}, which
+assignes a type to a monomorphic type ($A$), the rule \rules{Alt$_s$}
+of the form \framebox{$\Delta;\Gamma |-s^\psi C\overline{x} -> t : \sigma$}
+assinges a polymorhpic type scheme ($\sigma$). Since \rulename{Alt} and
+\rulename{Alt$_s$} has exactly the samem structure, one caling on $|-$
+and the other calling on $|-s$ in their premises, they must be sound
+and complete with respect to each other.
+
+%% TODO decl is sound w.r.t Fw
+Declarative typing rules of SmallNax (without the features for datatypes)
 are restrictions of the Curry-style System \Fw, which we discussed
 in \S\ref{sec:fw}. That is, the kinding rules and the declarative typing rules
 excluding the rules for datatypes (\rulename{TCon}, \rulename{Con},
@@ -238,6 +270,8 @@ The relation
 in SmallNax
 
 HM
+
+%% TODO give an idea why we can make an algorithm
 
 \section{Extending SmallNax with Mendler-style recursion combinators}
 \label{sec:naxTyInfer:rec}
