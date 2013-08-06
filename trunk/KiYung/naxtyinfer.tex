@@ -12,35 +12,17 @@ not present in HM preserves those properties.
 
 The \emph{index transformers}, which are type annotations on
 the pattern matching constructs, plays a key role in inferring types for
-Nax programs involving indexed datatypes. We discuss how index transformers
-help infer types in the context of a small subset of Nax, SmallNax, only
-considering nested datatypes (\ie, no GADT-style datatype definitions,
-no term indices) but omitting other details of Nax (\S\ref{sec:naxTyInfer:psi}).
-Next, we we extend SmallNax with recursive types and Mendler-style iteration,
-describe their kinding and typing rules, and discuss why they are suitable
-for type inference (\S\ref{sec:naxTyInfer:rec}). Then, we discuss how we
-treat those Nax features omitted in SmallNax (\eg, term indices, GADT-style
-datatype definitions) in our implementation (\S\ref{sec:naxTyInfer:etc}).
+Nax programs involving indexed datatypes. We introduce a small subset of Nax,
+SmallNax, only considering non-recursive equational datatypes but omitting
+other details of Nax (\S\ref{sec:naxTyInfer:psi}). Next, we extend SmallNax
+with recursive types and Mendler-style iteration, describe their kinding and
+typing rules, and discuss the role of index transformers for type inference
+(\S\ref{sec:naxTyInfer:rec}). Then, we discuss how we treat other Nax features
+such as GADT-style definitions and term indices in our implementation
+(\S\ref{sec:naxTyInfer:gadt}).
 
-%% There are two reasons why we discuss
-%% the type inference over a small subset of Nax. Firstly, describing
-%% type inference over the full Nax language increases accidental complexity,
-%% making it more difficult to understand the key idea. Secondly, type inference
-%% over other omitted features (\eg, term indices, GADT-style datatype definitions)
-%% are rather orthogonal to the role of index transformers -- they could
-%% be considered separately.
-
-%% In the following sections, we discuss the role of index transformers
-%% (\ie, type annotations on the pattern matching constructs)
-%% (\S\ref{sec:naxTyInfer:psi}), type inference for Mendler-style recursion
-%% combinators (\S\ref{sec:naxTyInfer:rec}), and how we treat other features
-%% of Nax in the type system (\S\ref{sec:naxTyInfer:etc}).
-
-
-\section{Index transformers in a small subset of Nax}
+\section{SmallNax}
 \label{sec:naxTyInfer:psi}
-We describe the role of index transformers in the type system of
-a small language (SmallNax) that supports typing rules for datatypes.
 The syntax of SmallNax is illustrated in Definition\;\ref{def:SmallNax},
 its kinding and typing rules are illustrated in Figure\;\ref{fig:SmallNax}.
 \begin{definition}[Syntax of SmallNax]
@@ -99,13 +81,13 @@ applications simplifies the typing rules because we do not need
 a separate typing rule for case expressions. In addition to the types of HM,
 the type constructor syntax in SmallNax includes type constructor names ($T$)
 and type constructor applications ($F\;G$). Type schemes in SmallNax 
-($\forall X^\kappa.$) is similar to the type schemes in HM, but
-the universally quantified type variable ($X$) is annotated with
+($\forall X^\kappa.\sigma$) is similar to the type schemes ($\forall X.\sigma$)
+in HM, but the universally quantified type variable ($X$) is annotated with
 its kind ($\kappa$).
 
-We assume that type constructor names and their associated data constructors are
-introduced into the context by preprocessing equational datatype definitions.
-For example, an equational datatype definition
+We assume that type constructor names and their associated data constructors
+are introduced into the context by preprocessing non-recursive equational
+datatype definitions. For example,
 $\textbf{data}\;\texttt{Maybe}\;a = \texttt{Just}\;a \mid \texttt{Nil}$
 introduces a type constructor name \texttt{Maybe} and its associated
 data constructors \texttt{Just} and \texttt{Nil} into the context
@@ -116,10 +98,12 @@ $\texttt{Just}: \forall X_a^{*}.X_a -> \texttt{Maybe}\,X_a,~
 Data constructors introduced from an equational datatype definition have
 uniform return types ($T\;\overline{X}$) and no existential variables
 in their types. For instance, return types of both \texttt{Just} and
-\texttt{Nil} have the form of $\texttt{Maybe}\,X_a$.
-We also assume that datatypes definitions are not recursive.
-We will consider recursive datatypes in the next section,
-where we extend SmallNax with recursive types and Mendler-style iteration.
+\texttt{Nil} have the form of $\texttt{Maybe}\,X_a$. For such non-recursive
+equational datatype definitions, index transformer annotations are not needed.
+So, we either omit the annotation on the case function ($\varphi$) or
+write a dot ($\varphi^\cdot$). We will really need index transformers
+to infer types involving recursive datatypes (\S\ref{sec:naxTyInfer:rec})
+and GADTs (\S\ref{sec:naxTyInfer:gadt}).
 
 \begin{figure}
 \begin{singlespace}
@@ -200,7 +184,7 @@ where we extend SmallNax with recursive types and Mendler-style iteration.
 \end{singlespace}
 \end{figure}
 
-\paragraph{Delcarative typing rules and syntax-directed typing rules.}
+\paragraph{Declarative typing rules and syntax-directed typing rules.}
 The typing rules of SmallNax (Figure\;\ref{fig:SmallNax}),
 excluding the rules for datatypes (\rulename{Con}, \rulename{Case},
 \rulename{Alt} in the declarative rules and their corresponding
@@ -248,16 +232,16 @@ with respect to \rulename{Case$_s$} because the typing one can get
 from \rulename{Case$_s$} is a generic instantiation of the typing
 one can get from \rulename{Case}. It is indeed the case that
 \rulename{Alt} is sound and complete with respect to \rulename{Alt$_s$}
-becase they have exactly the same structure. Unlike other syntax-directed
+because they have exactly the same structure. Unlike other syntax-directed
 typing rules of the form $\Delta;\Gamma |-s t : A$, which
-assignes a type to a monomorphic type ($A$), the rule \rulename{Alt$_s$}
+assignees a type to a monomorphic type ($A$), the rule \rulename{Alt$_s$}
 of the form $\Delta;\Gamma |-s^\psi C\overline{x} -> t : \sigma$
-assinges a polymorhpic type scheme ($\sigma$). Since \rulename{Alt} and
+assigns a polymorphic type scheme ($\sigma$). Since \rulename{Alt} and
 \rulename{Alt$_s$} has exactly the samem structure, one caling on $|-$
 and the other calling on $|-s$ in their premises, they must be sound
 and complete with respect to each other.
 
-\paragraph{SmallNax is stronly normalizing and logically consistent.}
+\paragraph{SmallNax is strongly normalizing and logically consistent.}
 The type system of SmallNax is sound with respect to System \Fw.
 That is, when $\Delta;\Gamma |- t:\sigma$ in SmallNax, then 
 $\Delta;\Gamma |- t:\sigma$ in System \Fw.
@@ -283,28 +267,28 @@ on p\pageref{fig:fw}). The declarative typing rules except \rulename{Con},
 	(see Figure\;\ref{fig:fw}). The other rules, \rulename{Var},
 	\rulename{Abs}, \rulename{App} corresponds to the rules with
 	the same name same name in the Curry-style System \Fw. }
-are exactly the same as the typing rules of the Curry-stye System \Fw.
+are exactly the same as the typing rules of the Curry-style System \Fw.
 We can show that the rules \rulename{Let} and \rulename{Inst} in SmallNax are
-adimssible in System \Fw\ by following virtually the same argument, which
+admissible in System \Fw\ by following virtually the same argument, which
 we used show that the rules \rulename{Let} and \rulename{Inst} in HM are
 admissible in Sytem \F\ (see p\pageref{hm:LetAdmissibleFw} in \S\ref{sec:hm}).
-The \rulename{Let} rule in SmallNax corresponds to a consectuvie use of
+The \rulename{Let} rule in SmallNax corresponds to a consecutive use of
 \rulename{App} and \rulename{Abs} in System \Fw. A single derivation step of
-\rulename{Inst} in SmallNax corresponds to multiple usese of \rulename{TyAbs}
+\rulename{Inst} in SmallNax corresponds to multiple uses of \rulename{TyAbs}
 and \rulename{TyApp} rules in System \Fw.
 
 The kinding and typing rules involving datatypes (\rulename{TCon},
 \rulename{Con}, \rulename{Case}, and \rulename{Alt}) can be understood as
 being admissible in System \Fw\ via the Church encodings of datatypes.
 In \S\ref{sec:f:data} and \S\ref{sec:fw:data}, we discussed
-how non-recursive datatypes (\eg, unit, void, boolean, sums, products) can
-be encodded as functions. The rules \rulename{TCon}, \rulename{Con},
+how non-recursive datatypes (\eg, unit, void, boolean, sums, products)
+can be encodded as functions. The rules \rulename{TCon}, \rulename{Con},
 \rulename{Case}, and \rulename{Alt} are compatible with those encodings.
 Thus, the type system of SmallNax, described in Figure\;\ref{fig:SmallNax},
-is sound with resepct to System \Fw.
+is sound with respect to System \Fw.
 Therefore, SmallNax is strongly normalizing and logically consistent.
 
-\paragraph{Type inference and index transformers}
+\paragraph{From System \Fw\ to SmallNax}
 We will discuss informal and high-level design concepts of what restrictions
 from System \Fw\ make SmallNax feasible for type inference, rather than
 formally discussing concrete type inference algorithms. There are two
@@ -329,15 +313,13 @@ in System \Fw\ is another feature that makes type inference undecidable.
 Type inference algorithms involving type abstractions would require
 higher-order unification (\ie, unification involving reconstruction of
 function implementation), which is known to be undecidable \cite{Gol81}.
-In SmallNax, we avoid higher-order unification because there is no
+In SmallNax, we can avoid higher-order unification because there are no
 type abstractions. Datatypes in SmallNax are introduced into the context
 as primitives, that is, type constructor names into $\Delta$ and
 their associated data constructors into $\Gamma$. So, we only need
 first-order unification for inferring types in SmallNax.
 
-TODO Index transformers in SmallNax
-
-\section{Extending SmallNax with Mendler-style recursion combinators}
+\section{Extending SmallNax with Mendler-style recursion}
 \label{sec:naxTyInfer:rec}
 TODO We first review and go on
 
@@ -393,8 +375,8 @@ can be used polymorphically over both type parameters and type indices.
 
 TODO short reminder of type indices and type parameters
 
-\section{TODO etc}
-\label{sec:naxTyInfer:etc}
+\section{TODO TODO}
+\label{sec:naxTyInfer:gadt}
 TODO
 existential type variables
 weak existential type variables
