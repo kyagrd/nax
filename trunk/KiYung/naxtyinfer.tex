@@ -200,6 +200,7 @@ where we extend SmallNax with recursive types and Mendler-style iteration.
 \end{singlespace}
 \end{figure}
 
+\paragraph{Delcarative typing rules and syntax-directed typing rules.}
 The typing rules of SmallNax (Figure\;\ref{fig:SmallNax}),
 excluding the rules for datatypes (\rulename{Con}, \rulename{Case},
 \rulename{Alt} in the declarative rules and their corresponding
@@ -256,7 +257,7 @@ assinges a polymorhpic type scheme ($\sigma$). Since \rulename{Alt} and
 and the other calling on $|-s$ in their premises, they must be sound
 and complete with respect to each other.
 
-\paragraph{}
+\paragraph{SmallNax is stronly normalizing and logically consistent.}
 The type system of SmallNax is sound with respect to System \Fw.
 That is, when $\Delta;\Gamma |- t:\sigma$ in SmallNax, then 
 $\Delta;\Gamma |- t:\sigma$ in System \Fw.
@@ -295,17 +296,46 @@ and \rulename{TyApp} rules in System \Fw.
 The kinding and typing rules involving datatypes (\rulename{TCon},
 \rulename{Con}, \rulename{Case}, and \rulename{Alt}) can be understood as
 being admissible in System \Fw\ via the Church encodings of datatypes.
-%% TODO rules for datatypes Church encoding
+In \S\ref{sec:f:data} and \S\ref{sec:fw:data}, we discussed
+how non-recursive datatypes (\eg, unit, void, boolean, sums, products) can
+be encodded as functions. The rules \rulename{TCon}, \rulename{Con},
+\rulename{Case}, and \rulename{Alt} are compatible with those encodings.
+Thus, the type system of SmallNax, described in Figure\;\ref{fig:SmallNax},
+is sound with resepct to System \Fw.
+Therefore, SmallNax is strongly normalizing and logically consistent.
 
-%% \paragraph{}
-%% TODO give an idea why we can make an algorithm
-%% no worry for Conv rule because we do not have type level lambda
-TODO
-Compared to HM
-The relation
-in SmallNax
+\paragraph{Type inference and index transformers}
+We will discuss informal and high-level design concepts of what restrictions
+from System \Fw\ make SmallNax feasible for type inference, rather than
+formally discussing concrete type inference algorithms. There are two
+restrictions from System \Fw, rank-1 polymorphism and type constructor names,
+which makes type inference decidable in SmallNax. In addition, we discuss
+the role of index transformer in type inference. Although index transformers
+are not essential for pattern matching of datatypes defined by non-recursive
+equations, it does play essential roles in inferring types of recursive
+datatype definitions and GADT-style datatype definitions.
 
-HM
+Let us review what restriction from System \F\ makes HM (without recursion)
+feasible for type inference. Type inference is undecidable in System \F\ 
+due to its arbitrary rank polymorphism (\ie, polymorphic types can appear
+arbitrary deep inside type constructor arguments, in particular, inside
+the left-hand side of $->$). Type inference becomes decidable in HM
+by restricting the polymorphism to be rank-1 (\ie, universal quantification
+can only appear at the top level). Similarly, we restrict the polymorphism
+to be rank-1 in SmallNax (see Definition\;\ref{def:SmallNax}).
+
+In addition to arbitrary rank polymorphism, type abstractions ($\l X^\kappa.F$)
+in System \Fw\ is another feature that makes type inference undecidable.
+Type inference algorithms involving type abstractions would require
+higher-order unification (\ie, unification involving reconstruction of
+function implementation), which is known to be undecidable \cite{Gol81}.
+In SmallNax, we avoid higher-order unification because there is no
+type abstractions. Datatypes in SmallNax are introduced into the context
+as primitives, that is, type constructor names into $\Delta$ and
+their associated data constructors into $\Gamma$. So, we only need
+first-order unification for inferring types in SmallNax.
+
+TODO Index transformers in SmallNax
 
 \section{Extending SmallNax with Mendler-style recursion combinators}
 \label{sec:naxTyInfer:rec}
@@ -317,7 +347,7 @@ monomorphic (general) recursion by assigning a monomorphic type ($A$)
 to the recursive variable ($x$), as described in the rule \rulename{Fix-m}
 below right.\footnote{
 	In \S\ref{sec:hm}, we excluded the general recursion in
-	our formalization of HM, althouth its original presentation
+	our formalization of HM, although its original presentation
 	has general recursion, because our language does not support
 	general recursion.}
 The Milner--Mycroft type systems (MM) \cite{Myc84} supports
