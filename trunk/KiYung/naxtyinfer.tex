@@ -632,10 +632,14 @@ The \rulename{Alt} rule above (\ref{AltGEx}) still lacks consideration for
 case functions that only expect scrutinee types with more specific indices
 than fully polymorphic variables. For example, pattern matching only against
 values of type \texttt{Exp\;(Int,Bool)}, rather than \texttt{Exp\;t} for
-any type \texttt{t}. In our Nax implementation, we do support experimental
-syntax for such pattern matching by allowing index transformers of the form
+any type \texttt{t}. In our Nax implementation, we do support the syntax for
+such pattern matching by allowing index transformers of the form
 such as \texttt{\{\,(Int,Bool)\;.\;$A$\,\}}, whose argument list
-on the left-hand side of the dot could be of more specific form than variables.
+on the left-hand side of the dot could contain more specific forms
+than just type variables. Formulation of typing rules, which further adjusts
+from the \rulename{Alt} rule (\ref{AltGEx}), and implementation of
+coverage checking considering such index tranformers with
+such constrained input index is left for future work.
 
 %% $\exists^\psi_\Gamma(C)$, the list of generalized existential type variables
 %% for the data constructor $C$. That is, all the existential type variables

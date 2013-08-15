@@ -27,7 +27,7 @@ so called, dynamically typed functional languages (\eg, Lisp, Erlang)
 in this dissertation.
 
 \emph{Formal reasoning}, or \emph{logical reasoning},
-refers to constructing proofs with dependently-typed formal reasoning systems
+refers to constructing proofs with depend\-ently-typed formal reasoning systems
 (\eg, Coq, Agda) that support (inductive) datatypes, higher-order functions,
 polymorphism (\ie, type arguments to type constructors), and, of course,
 dependent types (\ie, term arguments to type constructors). When we say
@@ -351,7 +351,7 @@ interpreting propositions (or, types) as sets of well-typed terms.
 Since our scope of research is for reasoning systems, which are based on
 the Curry--Howard correspondence, most of our descriptions will be in terms of
 lambda calculi, without mentioning their corresponding natural deduction
-counterparts. Because of this correspondence, we will use \emph{lambda calculs}
+counterparts. Because of this correspondence, we will use \emph{lambda calculus}
 and \emph{natural deduction system} interchangeably.
 
 Construction of such models typically assume strong normalization of
@@ -380,10 +380,10 @@ diverging terms cannot be considered as proofs in general. In fact,
 it is well-known that functional languages are logically inconsistent,
 if we try to view diverging terms (\ie, non-terminating programs)
 in functional languages as proofs using a naive Curry--Howard correspondence.
-For example, the non-terminating program $\textit{loop} = \textit{loop}$
-in Haskell can inhabit arbitrary types (even $\forall a.a$,
-which is the polymorphic encoding of the void type). Intuitively, such
-non-terminating programs correspond to logical fallacies of
+For example, the non-terminating program defined as
+$\textit{loop} = \textit{loop}$ in Haskell can inhabit arbitrary types
+(even $\forall a.a$, which is the polymorphic encoding of the void type).
+Intuitively, such non-terminating programs correspond to logical fallacies of
 circular reasoning (\ie, arguing something by assuming the same thing)
 to view programs like \textit{loop} as proofs. For this reason,
 reasoning systems are designed to be strongly normalizing, unlike
@@ -438,7 +438,7 @@ as follows:\footnote{
         We can also define \textit{Coord} as a non-recursive datatype
         and understand it as a product of numbers, but here, you can just
         consider \textit{Coord} given as primitive type for simplicity.}
-\vspace*{-2em}
+\vspace*{-4em}
 \begin{singlespace}
 \begin{verbatim}
   data Diagram = Empty
@@ -487,6 +487,7 @@ Only those datatypes for which the Curry--Howard correspondence hold are
 admitted. Some recursive datatypes, admitted as valid in functional languages,
 are not admitted as valid inductive datatypes in reasoning systems. For example,
 the Haskell datatype $T$ below would not be admitted in a reasoning system.
+\vspace*{-2.5em}
 \begin{singlespace}
 \begin{align*}
 & \textbf{data}~T\;a = C\;(T -> a) \quad
@@ -529,12 +530,12 @@ come with a recursion scheme in the calculus and an in induction principle in th
         course-of-values recursion, or lexicographic recursion.
         Since we do not consider dependent types, we will only discuss
         those non-dependently typed recursion schemes.}.
-The reduction step in the calculus follows from the Curry--Howard correspondence.
-Just as the $\beta$-reduction follows from
-the Curry--Howard correspondence over functions. 
+The reduction step for recursion schemes in the calculus follows from
+the Curry--Howard correspondence over recursive types, just as
+the $\beta$-reduction follows from the Curry--Howard correspondence
+over function types.
 
-A process for the design 
-of reasoning systems can be summarized as follows: 
+A process for the design of reasoning systems can be summarized as follows: 
 start from a strongly normalizing and logically consistent calculus,
 add language extensions, and then theoretically justify that those extensions
 do not break normalization and consistency. Since datatypes are one of the most
@@ -766,21 +767,6 @@ for the overview of chapter organization).
 
 \subsection{Restriction on recursive types for normalization}
 \label{sec:intro:concpets:recursive}
-Logical reasoning systems establish
-the Curry--Howard correspondence assuming normalization.
-So, one challenge to the successful design of reasoning systems
-is how to restrict recursion so that all well-typed terms have normal forms.
-There are two different design choices illustrated
-in Figure~\ref{fig:approaches}, in contrast to
-the unrestricted general recursion in functional languages.
-The conventional approach restricts the formation of recursive types
-(\ie, the restriction is in datatype definition), and
-the Mendler-style approach restricts the elimination of the values of
-recursive types (\ie, the restriction is in pattern matching).
-
-
-
-
 \begin{figure}
 {\centering
 \begin{tabular}{p{3cm}|p{12.5cm}}
@@ -834,6 +820,17 @@ recursive types (\ie, the restriction is in pattern matching).
          (in contrast to unrestricted general recursion in functional languages)}
 \label{fig:approaches}
 \end{figure}
+Logical reasoning systems establish
+the Curry--Howard correspondence assuming normalization.
+So, one challenge to the successful design of reasoning systems
+is how to restrict recursion so that all well-typed terms have normal forms.
+There are two different design choices illustrated
+in Figure~\ref{fig:approaches}, in contrast to
+the unrestricted general recursion in functional languages.
+The conventional approach restricts the formation of recursive types
+(\ie, the restriction is in datatype definition), and
+the Mendler-style approach restricts the elimination of the values of
+recursive types (\ie, the restriction is in pattern matching).
 
 \paragraph{Recursive types in functional programming languages.}
 Let us start with a review of the theory of recursive types used
@@ -1246,7 +1243,7 @@ perform course-of-values recursion. If the type system can automatically
 categorize datatypes that have maps from their polarized kinds,
 this burden can be alleviated.
 
-\section{Methodology and Overview}\label{sec:intro:overview}
+\section{Chapter organization}\label{sec:intro:overview}
 \begin{figure}
 \input{intro_figoverview}
 \caption{Summary on how key concepts are related}
