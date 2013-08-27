@@ -6,12 +6,12 @@ data ExpF r t where
   App :: r (a -> b) -> r a -> ExpF r b
 type Exp' a t = Rec1 ExpF a t
 type Exp t = forall a . Exp' a t
-lam :: (forall a. Exp' a t1 -> Exp' a t2) -> Exp (t1 -> t2)
+-- lam :: (Exp' a t1 -> Exp' a t2) -> Exp' a (t1 -> t2)
 lam e    = Roll1 (Lam e)
-app :: Exp (t1 -> t2) -> Exp t1 -> Exp t2
+-- app :: Exp (t1 -> t2) -> Exp t1 -> Exp t2
 app f e  = Roll1 (App f e)
 
-data Id a = MkId { unId :: a }
+data Id a = MkId {unId :: a}
 
 evalHOAS :: Exp t -> Id t
 evalHOAS e = msfcata1 phi e where
