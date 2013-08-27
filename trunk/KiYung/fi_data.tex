@@ -106,20 +106,20 @@ logic and arithmetic. Church encoded the data constructors of natural numbers,
 successor and zero, as higher-order functions,
 $\mathtt{succ}=\l x.\l x_s.\l x_z.x_s(x\,x_s x_z)$ and
 $\mathtt{zero}=\l x_s.\l x_z.x_z$.
-The heart of the Church encoding is that a value is encoded as an elimination function.
-The bound variables $x_s$ and $x_z$ (of both $\mathtt{succ}$ and $\mathtt{zero}$) stand for the operations needed to
-eliminate the successor case and the zero case respectively. The Church encodings of
-successor states: to eliminate $\mathtt{succ}\,x$, ``apply $x_s$
-to the elimination of the predecessor $(x\,x_s x_z)$"; and,
-to eliminate $\mathtt{zero}$, just ``return $x_z$".
-Since values {\it are} elimination functions, the
-eliminator can be defined as applying the value itself to the needed operations. One
-for each of the data constructors. 
-For instance, we can define an eliminator
-for the natural numbers as $\mathtt{elim_{Nat}}=\l x.\l x_s.\l x_z.x\,x_s x_z$.
+The heart of the Church encoding is that a value is encoded as
+an elimination function. The bound variables $x_s$ and $x_z$
+(of both $\mathtt{succ}$ and $\mathtt{zero}$) stand for the operations
+needed to eliminate the successor case and the zero case respectively.
+The Church encodings of successor states: to eliminate $\mathtt{succ}\,x$,
+``apply $x_s$ to the elimination of the predecessor $(x\,x_s x_z)$'';
+and, to eliminate $\mathtt{zero}$, just ``return $x_z$". Since values {\it are}
+elimination functions, the eliminator can be defined as applying the value
+itself to the needed operations, one for each of the data constructors.
+For instance, we can define an eliminator for the natural numbers as
+$\mathtt{elim_{Nat}}=\l x.\l x_s.\l x_z.x\,x_s x_z$.
 This is just an $\eta$-expansion of the identity function $\l x.x$.
-The Church encoded natural numbers are typable in a polymorphic $\lambda$-calculi,
-such as System \Fw, as follows:\vspace*{-2pt}
+The Church encoded natural numbers are typable in polymorphic $\lambda$-calculi,
+such as System \Fw, as follows:\vspace*{-1ex}
 \begin{align*}
 &\texttt{Nat} &=~& \forall X^{*}.(X -> X) -> X -> X \qquad\qquad\qquad\\
 &\texttt{S} &\!\!\!:~~& \texttt{Nat} -> \texttt{Nat}
@@ -128,20 +128,20 @@ such as System \Fw, as follows:\vspace*{-2pt}
 	~~ =~ \l x_s.\l x_z.x_z \\
 &\mathtt{elim_{Nat}} &\!\!\!:~~& \texttt{Nat} -> \forall X^{*}.(X -> X)-> X-> X \\
 & &=~& \l x.\l x_s.\l x_z.x\,x_s x_z
-\end{align*}~\vspace*{-13pt}
+\end{align*}~\vspace*{-3.5ex}
 
-In a Similar fashion, other datatypes are also embeddable into
-polymorphic $\lambda$-calculi.
-Embeddings of some well-known non-recursive datatypes are illustrated
-in Figure \ref{fig:churchnonrec}, and embeddings of the list-like
-recursive datatypes, which we discussed as motivating examples
-in the beginning of this chapter, are illustrated in Figure \ref{fig:churchrec}.
+Other datatypes are also embeddable into polymorphic $\lambda$-calculi
+in a similar fashion. Embeddings of some well-known non-recursive datatypes
+are illustrated in Figure\;\ref{fig:churchnonrec}, and embeddings of
+the list-like recursive datatypes, which we discussed as motivating examples in
+the beginning of this chapter, are illustrated in Figure\;\ref{fig:churchrec}.
 Note that the term encodings for the constructors and eliminators of
-the list-like datatypes in Figure \ref{fig:churchrec} are exactly the same.
+the list-like datatypes in Figure\;\ref{fig:churchrec} are exactly the same.
 For instance, the term encodings for \texttt{nil}, \texttt{pnil}, and
-\texttt{vnil} are all the same term: $\l x_s.\l x_z.x_z$. The nil and cons terms
-capture the linear nature of lists, so they are the same for all list like structures.
-But, the types differ, capturing different invariants about lists -- shape of the elements ({\tt Powl}), and
+\texttt{vnil} are all the same term: $\l x_s.\l x_z.x_z$. The term encodings
+for nil and cons capture the linear nature of lists, so they are the same for
+all list like structures. But, their types differ, capturing different
+invariants about lists, for example, shape of the elements ({\tt Powl}) and
 length of the list ({\tt Vec}).
 
 \subsection{Embedding recursive datatypes as two-level types}
@@ -231,15 +231,18 @@ of arbitrary type- and term-indexed recursive datatypes into System \Fi.
 Thus we can reason about these datatypes in a logically consistent calculus.
 
 However, it is important to note that there does not exist an embedding of the
-arbitrary destruction (or, pattern matching away) of the $\mathtt{In}_\kappa$
+arbitrary destruction of (or, pattern matching away) the $\mathtt{In}_\kappa$
 constructor. It is known that combining arbitrary recursive datatypes with
-the ability to destruct (or, unroll) their values
-is powerful enough to define non-terminating computations in a type safe way,
-leading to logical inconsistency. Some systems maintain consistency by restricting
-which recursive datatypes can be defined, but allow arbitrary unrolling. In System
-\Fi, we can define any datatype, but restrict unrolling to Mendler style operators
-definable in \Fi. Such operators are quite expressive, capturing at least
-iteration, primitive recursion, and courses of values recursion.
+the ability to destruct (or, unroll) their values is powerful enough
+to define non-terminating computations in a type safe way, leading to
+logical inconsistency. Some systems maintain consistency by restricting
+which recursive datatypes can be defined, but allow arbitrary unrolling.
+In Mendler style, one can define any datatype, but restrict unrolling
+of recursive values only within Mendler-style recursion combinators.
+Such datatypes and Mendler-style recursion combinators are embeddable
+in \Fi\ (and some in \Fixi). The family of Mendler-style recursion schemes
+are quite expressive, capturing at least iteration, primitive recursion,
+and course-of-values recursion.
 
 \afterpage{
 \begin{landscape}

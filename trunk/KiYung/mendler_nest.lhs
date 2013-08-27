@@ -45,23 +45,22 @@ type arguments in some of the recursive occurrences in the recursive
 datatype equation differ from the left-hand side of the datatype equation.
 
 Such types can be expressed in Haskell and ML without using GADT extensions.
-%% We introduce two well-known examples, powerlists and bushes.
-We introduce a well-known example of the bush datatype, and
-%% We illustrate the Mendler style by writing
-a function that sums up the elements of bush (Figure \ref{fig:bsum}).
-Nested datatypes require us to move from rank 0 Mendler combinators
-to rank 1 Mendler combinators.\footnote{The rank of a kined is defined by
-the equations $\textrm{rank}(*)=0$ and
-$\textrm{rank}(\kappa -> \kappa')=
-   \textrm{max}(1+\textrm{rank}(\kappa),\textrm{rank}(\kappa'))$.
-Rank 0 Mendler combinators work on recursive types of kind $*$, whose rank 0,
-constructed from rank 1 base structure of kind $* -> *$.
-Rank 1 Mendler combinators work on recursive type constructors of kind $* -> *$,
-whose rank is 1, constructed from rank 1 base structure of kind
-$(* -> *) -> (* -> *)$. We could have called them Rank 1 Mendler combinator
-and Rank 2 Mendler combinator, matching the rank of the base structure
-instead of the rank of the recursive type constructor, but just happen to
-prefer counting from 0.}
+We introduce two well-known examples of nested datatypes, powerlists and bushes.
+functions that sum up the elements in those datat structures
+(Figure \ref{fig:psum} and Figure \ref{fig:bsum}). Nested datatypes require us
+to move from rank-0 Mendler combinators to rank-1 Mendler combinators.\footnote{
+	The rank of a kined is defined by the equations $\textrm{rank}(*)=0$
+	and $\textrm{rank}(\kappa -> \kappa') =
+	\textrm{max}(1+\textrm{rank}(\kappa),\textrm{rank}(\kappa'))$.
+	Rank-0 Mendler combinators work on recursive types of kind $*$,
+	whose rank is 0, constructed from base structures of kind $* -> *$,
+	whose rank is 1. Rank-1 Mendler combinators work on recursive
+	type constructors of kind $* -> *$, whose rank is 1, constructed from
+	base structures of kind $(* -> *) -> (* -> *)$, whose rank is 2.
+	We could have called them rank-1 and rank-2 Mendler combinators,
+	matching the rank of the base structure, instead of the rank of
+	the recursive type constructor, but just happen to prefer counting
+	from 0.}
 
 The powerlist datatype is defined as follows (also in Figure \ref{fig:psum}):
 \begin{code}
@@ -81,7 +80,7 @@ ps'   = CP (2,3) ps''        :: Powl (Int,Int)
 ps''  = CP ((4,5),(6,7)) NP  :: Powl ((Int,Int),(Int,Int))
 \end{code}
 The tail of |ps| is |ps'|, and the tail of |ps'| is |ps''|.
-We can observe that the shape of elements includes deeper nested pairs
+Note that the shape of elements includes deeper nested pairs
 as the type indices become more deeply nested.
 
 On the left-hand side of Figure \ref{fig:psum}
@@ -104,7 +103,7 @@ sumP xs = psum xs id
 Using |sumP|, we can sum up |ps| defined above: |sumP ps ~> 28|.
 
 \begin{landscape}
-\begin{figure*}
+\begin{figure}
 %include mendler/PowlG.lhs
 %include mendler/Powl.lhs
 \begin{minipage}{.49\linewidth}
@@ -116,11 +115,11 @@ Using |sumP|, we can sum up |ps| defined above: |sumP ps ~> 28|.
 \caption{Summing up a powerlist (|Powl|), a nested datatype,
          expressed in terms of |mcata1|.}
 \label{fig:psum}
-\end{figure*}
+\end{figure}
 \end{landscape}
 
 \begin{landscape}
-\begin{figure*}
+\begin{figure}
 %include mendler/BushG.lhs
 %include mendler/Bush.lhs
 \begin{minipage}{.49\linewidth}
@@ -132,7 +131,7 @@ Using |sumP|, we can sum up |ps| defined above: |sumP ps ~> 28|.
 \caption{Summing up a bush (|Bush|), a recursively nested datatype,
          expressed in terms of |mcata1|.}
 \label{fig:bsum}
-\end{figure*}
+\end{figure}
 \end{landscape}
 
 Before discussing the Mendler style version, let us take a look at yet another
@@ -183,7 +182,7 @@ in the conventional setting.
 
 We can also define a summation function for bushs in a similar way
 as the summation function for powerlists.
-The bush datatype is defined as follows (also in Figure \ref{fig:bsum}):
+The bush datatype is defined as below (also in Figure \ref{fig:bsum}):
 \begin{code}
 data Bush  i = NB  | CB i (Bush (Bush i))
 \end{code}
@@ -200,9 +199,9 @@ bs''                       :: Bush (Bush (Bush Int))
 bs''  = CB (CB (CB 3 NB) (CB (CB (CB 4 NB) NB) NB)) NB
 \end{code}
 The tail of |bs| is |bs'|, and the tail of |bs'| is |bs''|.
-We can observe that the shape of the elements becomes more deeply nested as we
-move towards latter elements.
-Note, the element type of bushes becomes nested by bushes themselves.
+Note that the shape of the elements becomes more deeply nested as we
+move towards latter elements. More interestingly, the element type of
+the bush becomes nested by the bush type itself.
 
 We can define a function that sums up all the nested elements in a bush.
 Let us first take a look at the function |bsum| in the general recursion style,
@@ -234,20 +233,19 @@ Ret .  bsum  =          bsum'
 \end{code}
 The wrapped up version |bsum'| has the same structure as the Mendler style
 version |bsumm| found on the right-hand side of Figure \ref{fig:bsum}.
-
-the summation function for bushes in Mendler style is illustrated
-on the right-hand side in Figure \ref{fig:bsum}. As usual,
-we define the datatype |Bush| as a fixpoint (|Mu1|) of the base |BushF|.
+In Mendler style, we define the datatype |Bush| as a fixpoint (|Mu1|) of
+the base |BushF| and define |bsumm| in terms of |mcata1|, similarly to
+the definition of the summation function for powerlists in Mendler style.
 
 The type argument |i| in both |Powl i| and |Bush i| is a type index that
 forces us to choose the fixpoint on kind $* -> *$ (and its related recursion
 combinators). Note, in the definition of the base types |PowlF| and 
 type |BushF|, we place the index |i| after the type argument |r| for
 the recursion points. This is the convention we use. We always write
-parameters (|p|), before the recursion point arugment (|r|), followed by
+parameters (|p|), before the recursion point argument (|r|), followed by
 indices (|i|).  Figure \ref{fig:vec}, which we will shortly discuss
 in \S\ref{ssec:tourIndexed}, contains an example where there are both
-type parameters and type indices in a datype (|Vec p i|). 
+type parameters and type indices in a datatype (|Vec p i|). 
 
 
 

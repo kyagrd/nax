@@ -17,16 +17,16 @@ They are: (1) a \emph{convenient programming style},
 (4) a \emph{simple implementation framework}.
 
 In Chapter \ref{ch:poly}, we reviewed the two well-known polymorphic calculi,
-System \F\ and System \Fw, to prepare the reader for
-our term-indexed calculi, System \Fi\ and \Fixi, in later chapters.
+System~\F\ and System~\Fw, to prepare the reader for
+our term-indexed calculi, System~\Fi\ and System~\Fixi, in later chapters.
 We formalized these polymorphic calculi with Curry-style terms and
 typing contexts divided into two parts in order to clearly show that
 our term-indexed calculi are extensions of System \Fw.
 We focused on the strong normalization proofs of these systems
 because the strong normalization proof of System \Fi\ in Chapter \ref{ch:fi}
-relies on the strong normalization of System \Fw.
-In addition, we reviewed the Hindley-Milner type system to prepare
-the reader for our discussion of type inference in Nax (Chapter \ref{ch:naxTyInfer}).
+relies on the strong normalization of System \Fw. In addition, we reviewed
+the Hindley-Milner type system to prepare the reader for our discussion of
+type inference in Nax (Chapter \ref{ch:naxTyInfer}).
 
 \paragraph{}
 Chapter \ref{ch:mendler} explores Mendler-style recursion schemes,
@@ -37,13 +37,13 @@ and to provide a semi-formal termination proof for some of them.
 We use Haskell for two purposes.
 
 The first is a type correct syntax and an executable platform for
-fast prototyping of examples and experimenting with new ideas. We use a certain
-subset of Haskell that conforms to the Mendler-style conventions.
+fast prototyping of examples and experimenting with new ideas. We use
+a certain subset of Haskell that conforms to the Mendler-style conventions.
 The discovery of our new Mendler-style recursion combinator (\MsfIt)
 was suggested by this method of experimentation.
 
-The second purpose is the use of a subset of Haskell as
-an implementation of System \Fw. We illustrated a semi-formal termination proof of
+The second purpose is the use of a subset of Haskell as an implementation of
+System \Fw. We illustrated a semi-formal termination proof of
 $\MIt_{*}$ and $\MsfIt_{*}$ by embedding them into this subset.
 
 We organize the hierarchy of Mendler-style recursion schemes
@@ -70,82 +70,81 @@ which additionally supports abstract inverse operation. To support
 this abstract inverse operation, we needed to augment the fixpoint type operator
 with a syntactic inverse. We denote this abstract inverse as $\breve{\mu}$,
 to distinguish with the standard fixpoint type operator $\mu$. We discuss
-the ramifications of having two differrent fixpoint types, later in
+the ramifications of having two different fixpoint types, later in
 Chapter \ref{ch:futwork}.
 
 The second aspect, the kinds of datatypes operated on, categorizes
-the indexing structure
-of the recursive datatype within each family. Each family of
-Mendler-style recursion scheme is a collection of many recursion combinators,
-one at each kind. For instance, $\MIt_{*}$ iterates over regular datatypes
-with no type index (\ie, $\mu_{*}F$ where $F : * -> *$), $\MIt_{* -> *}$
-iterates over datatypes with one type index (\ie, $\mu_{* -> *} F$ where
-$F : (* -> *) -> (* -> *)$), and, more generally, $\MIt_{\kappa}$ iterates
-over recursive datatypes of the form $\mu_{\kappa}F$ where $F : \kappa -> \kappa$.
+the indexing structure of the recursive datatype within each family.
+Each family of Mendler-style recursion scheme is a collection of
+many recursion combinators, one at each kind. For instance, $\MIt_{*}$
+iterates over regular datatypes with no type index (\ie, $\mu_{*}F$
+where $F : * -> *$), $\MIt_{* -> *}$ iterates over datatypes with
+one type index (\ie, $\mu_{* -> *} F$ where $F : (* -> *) -> (* -> *)$),
+and, more generally, $\MIt_{\kappa}$ iterates over recursive datatypes of
+the form $\mu_{\kappa}F$ where $F : \kappa -> \kappa$.
 Mendler-style recursion schemes are uniformly defined regardless of the kinds
 of datatypes they operate on. That is, the definition of $\MIt_{\kappa}$ is
 identical regardless of $\kappa$, only its type signatures depends on $\kappa$.
-Uniform definitions, regardless of indexing structure,
-is one of the advanages of Mendler style over conventional (or, Squiggol) style.
-This advangage, allowed us to discover that simply-typed Higher-Order
-Abstract Syntax (HOAS) evaluation can be expressed within System \Fw.
-We were able to write a simply-typed HOAS evaluator using $\MsfIt_{* -> *}$.
+Uniform definitions, regardless of indexing structure, is one of the advantages
+of Mendler style over conventional (or, Squiggol) style. This advantage allowed
+us to discover that simply-typed Higher-Order Abstract Syntax (HOAS) evaluation
+can be expressed within System \Fw. We were able to write a simply-typed HOAS
+evaluator using $\MsfIt_{* -> *}$.
 
-The indexing structure discussed in Chapter \ref{ch:mendler} is restricted
-to type indices (as opposed to term indicies). To formulate Mendler-style recursion
-schemes over term-indexed datatypes, we need to extend kinds.
-For instance, $\MIt_{A -> *}$ where $A$ is a type, which cannot
-be expressed in System \Fw\ because $A -> *$ is not a valid \Fw-kind.
-In later chapters, we extend Mendler-style recursion schemes over
-term-indexed datatypes by formalizing two term-indexed calculi, which extends
-System \Fw\ with term indices.
+The indexing structure discussed in Chapter \ref{ch:mendler} is restricted to
+type indices (as opposed to term indices). To formulate Mendler-style recursion
+schemes over term-indexed datatypes, we need to extend kinds. For instance,
+$\MIt_{A -> *}$ where $A$ is a type, which cannot be expressed in System \Fw\ 
+because $A -> *$ is not a valid \Fw-kind. In later chapters, we extend
+Mendler-style recursion schemes over term-indexed datatypes by formalizing
+two term-indexed calculi, which extends System \Fw\ with term indices.
 
-The termination behaviors of Mendler-style recursion schemes can depend
-on the particular recursion scheme. Some recursion schemes (\MIt, \MPr, \MsfIt) terminate
-for arbitrary datatypes, while others (\McvPr, \McvIt) only terminate for
-positive (or, monotone) datatypes. One of our contributions to
-the study of the Mendler style is finding a counterexample for
-the termination of course-of-values iteration (and also recursion) over 
-negative datatypes. In Chapter \ref{ch:fixi}, we discuss how to embed
-\McvPr\ into a strongly normalizing calculi, which is another original
-contribution to the study of the Mendler style.
+The termination behaviors of Mendler-style recursion schemes can depend on
+the particular recursion scheme. Some recursion schemes (\MIt, \MPr, \MsfIt)
+terminate for arbitrary datatypes, while others (\McvPr, \McvIt) only terminate
+for positive (or, monotone) datatypes. One of our contributions to the study of
+the Mendler style is finding a counterexample for the termination of
+course-of-values iteration (and also recursion) over negative datatypes.
+In Chapter \ref{ch:fixi}, we discuss how to embed \McvPr\ into
+a strongly normalizing calculi, which is another original contribution to
+the study of the Mendler style.
 
 \paragraph{}
 Chapters \ref{ch:fi} and \ref{ch:fixi} present two term-indexed calculi,
-System \Fi\ and \Fixi. Our term-indexed calculi serve as the theoretical basis
-for the understanding of Mendler-style recursion schemes over recursive types
-with term indices. By embedding Mendler-style recursion schemes in
-our term-indexed calculi, we know that those recursion schemes always terminate,
-because our term indexed calculi are strongly normalizing.
+System~\Fi\ and System~\Fixi. Our term-indexed calculi serve as
+the theoretical basis for the understanding of Mendler-style recursion schemes
+over recursive types with term indices. By embedding Mendler-style recursion
+schemes in our term-indexed calculi, we know that those recursion schemes
+always terminate, because our term indexed calculi are strongly normalizing.
 
-System \Fi\ (Chapter \ref{ch:fi}) extends System \Fw\ (which supports
-type indices) with term indices.  Term indices in System \Fi\ are 
+System~\Fi\ (Chapter \ref{ch:fi}) extends System~\Fw\ (which supports
+type indices) with term indices. Term indices in System~\Fi\ are 
 erasable\footnote{Well-typed terms in (Curry style) \Fi\ are well-typed in \Fw} unlike term indices in the dependently-typed calculi. We establish
-strong normalization and logical consistency of System \Fi\ by
-term-index erasure, which projects a typing judgement in System \Fi\ into
-a typing judgement in System \Fw. We have extended the understanding of
+strong normalization and logical consistency of System~\Fi\ by
+term-index erasure, which projects a typing judgement in System~\Fi\ into
+a typing judgement in System~\Fw. We have extended the understanding of
 Mendler-style recursion schemes over term-indexed datatypes. All
-Mendler-style recursion schemes which are embeddable in System \Fw,
-(\eg, \MIt, \MsfIt), can also be embedded into System \Fi.
+Mendler-style recursion schemes which are embeddable in System~\Fw,
+(\eg, \MIt, \MsfIt), can also be embedded into System~\Fi.
 
 Similarly, System~\Fixi\ (Chapter \ref{ch:fixi}) extends System~\Fixw\ with
 erasable term indices. System~\Fixw\ is an extension of System~\Fw\ with
 polarized kinds and equi-recursive fixpoint types. By term-index erasure,
-well-typed terms in System \Fixi\ are well-typed in System~\Fixw.
+well-typed terms in System~\Fixi\ are well-typed in System~\Fixw.
 Since \Fixw\ is known to be strongly normalizing and logically consistent,
 we know that \Fixi\ is also strongly normalizing and logically consistent.
 There exists a reduction preserving embedding of the Mendler-style
-primitive recursion (\MPr) in System \Fixi. This follows from
-the embedding of \MPr\ in System \Fixw. In addition, we discovered
+primitive recursion (\MPr) in System~\Fixi. This follows from
+the embedding of \MPr\ in System~\Fixw. In addition, we discovered
 an embedding of \McvPr\ (although not a reduction preserving embedding)
-in System \Fixi\ for monotone (or positive) datatypes. Our embedding of
+in System~\Fixi\ for monotone (or positive) datatypes. Our embedding of
 \McvPr\ motivates more research into the open question of whether
 monotonicity witness is derivable from the polarized kinds of type constructors.
 
 \paragraph{}
 In Chapters \ref{ch:naxFeatures}, \ref{ch:nax}, and \ref{ch:naxTyInfer},
 We introduce the Nax programming language, which is based on
-our term-indexed calculi, System \Fi\ and \Fixi.
+our term-indexed calculi, Systems \Fi\ and \Fixi.
 
 Chapter \ref{ch:naxFeatures} provides a tutorial of Nax.
 We introduce the syntax and features of the language
@@ -186,18 +185,17 @@ in each of the three different languages are about the same size,
 despite the fact that Nax must define recursive types in two levels,
 by taking a fixpoint of a non-recursive datatype.
 
-Chapter \ref{ch:naxTyInfer} describes the type inference in Nax.
-To support Hindley--Milner-style type inference, Nax only
-allows rank-1 type polymorphism. One cannot generally infer types
-in System \Fi\ or \Fixi\ since they allow higher-rank polymorphism.
-For programs involving only regular (\ie, non-indexed) datatypes,
-type inference is exactly the same as the Hindley--Milner type inference,
-requiring no type annotation. For programs involving indexed datatypes,
-we require type annotations on datatype declarations, case expressions, and
-Mendler-style recursion combinators, but nowhere else.
+Chapter \ref{ch:naxTyInfer} describes the type inference in Nax. To support
+Hindley--Milner-style type inference, Nax only allows rank-1 type polymorphism.
+One cannot generally infer types in System \Fi\ or \Fixi\ since they allow
+higher-rank polymorphism. For programs involving only regular (\ie, non-indexed)
+datatypes, type inference is exactly the same as the Hindley--Milner
+type inference, requiring no type annotation. For programs involving
+indexed datatypes, we require type annotations on datatype declarations,
+case expressions, and Mendler-style recursion combinators, but nowhere else.
 Our current implementation requires kind annotations on
 the fixpoint type operator ($\mu_{[\kappa]}$) and its constructor
-($\In_{[\kappa]}$), but we believe these kind annotations can eventually be inferred.
+($\In_{[\kappa]}$), but we believe these kind annotations can be inferred.
 
 \paragraph{}
 Chapter \ref{ch:relwork} discusses five categories of related work:
@@ -219,11 +217,11 @@ Our main contribution is a logically consistent language design that supports
 all recursive datatypes available in functional programming languages such as
 Haskell, and in addition, term-indexed types. Our design steers the narrow
 path between convenient programming and strong guarantees of program invariants,
-while taking advantages of the strong points of both. Our language,
-Nax, is based on a small theory and admits a simple implementation framework.
+while taking advantages of the strong points of both. Our language, Nax, is
+based on a small theory and admits a simple implementation framework.
 
 Our investigations into the Mendler style uncovered two new aspects.
-First, we discovered a useful recursion scheme (\MsfIt) for negative datatypes.
+First, we discovered a useful recursion scheme (\MsfIt) for negative datatypes
 The discovery of \MsfIt\ lead to the novel discovery that simply-typed HOAS
 evaluation is expressible within System \Fw. Second, we generalized
 Mendler-style recursion schemes over term-indexed datatypes.
@@ -243,7 +241,7 @@ that it terminates because Nax programs can be embedded into
 the term-indexed calculi, which is strongly normalizing.
 
 In addition, Nax supports a conservative extension of Hindley-Milner
-type inference in the presense of type- and term-indices.
+type inference in the presence of both type- and term-indices.
 This is made possible by clarifying the required annotation sites
 in the programming language syntax, rather than ad-hoc type reconstruction
 from optional annotations appearing at arbitrary locations.
@@ -290,7 +288,7 @@ We summarise several limitations of our term-indexed calculi and
 the Nax language design.
 
 We implemented rank-1 {\it kind} polymorphism
-in the Nax langauge implementation, but our term-indexed calculi
+in the Nax language implementation, but our term-indexed calculi
 do not have any form of kind polymorphism. We believe that
 rank-1 {\it kind} polymorphism should not cause inconsistency,
 but further investigation is needed.

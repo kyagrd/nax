@@ -68,7 +68,7 @@ in the general recursive encoding, and |cons 1 (cons 2 nil)| or
 
 \section{Conventional iteration for regular datatypes} \label{ssec:convCata}
 The conventional iteration\footnote{Also known as catamorphism.
-In Haskell-ish words, |foldr| on lists generalized to other dataypes}
+In Haskell-ish words, |foldr| on lists generalized to other datatypes}
 is defined on the very same fixpoint, |Mu0|, as in the Mendler style,
 provided that the base datatype |f| is a functor.
 This, more widely known approach \cite{hagino87phd},
@@ -161,15 +161,13 @@ mcata0:: (forall r. (r -> a) -> (f r -> a)) -> Mu0 f -> a
 
 Under what conditions do |mcata0| calls always terminate? Although we defined
 |Mu0| as a newtype and |mcata0| as a function in Haskell, you should consider
-them as an information hiding abstraction. The rules of the game (which will be enforced in Trellys)
-require programmers to construct values using the |In0| constructor (as in
-|zero|, |succ|, |nil| and |cons|), but forbid programmers from deconstructing those
-values by pattern matching against |In0| (or, by using the selector function
-|out0|). These operations are hidden by the abstraction boundary (or in the case
-of Trellys' logicality inference, lead to classifying a term as programatic,
-rather than as logical). To remain in the logical (terminating) classification,
-whenever you need to decompose values of recursive datatypes you must do it via
-|mcata0| (or, any of the other terminating Mendler-style combinators).
+them as an information hiding abstraction. The rules of the game (which will
+be enforced by the language design of Nax) require programmers to construct
+recursive values using the |In0| constructor (as in |zero|, |succ|, |nil|
+and |cons|), but forbid programmers from deconstructing those values
+by pattern matching against |In0| (or, by using the selector function |out0|).
+Whenever you need to decompose values of recursive datatypes, you must do it
+via |mcata0| (or, any of the other terminating Mendler-style combinators).
 To conform to these rules, all functions over positive recursive datatypes,
 except the trivial ones such as identity and constant functions (which don't
 inspect their structure), need to be implemented in terms of the combinators
@@ -185,9 +183,8 @@ Once we observe these two properties, it is obvious that |mcata0| always
 terminates since those properties imply that every recursive call to |mcata0|
 decreases the number of |In0| constructors in its argument.\footnote{We assume
 that the values of recursive types are always finite. We can construct infinite
-values (or, co-recursive values) in Haskell exploiting lazyness, but we exclude
-such infinite values from our discussion in this work, and this property is
-a fundamental design decision in Trellys.} 
+values (or, co-recursive values) in Haskell exploiting laziness, but we exclude
+such infinite values from our discussion in this work.} 
 
 The first property is easy to observe from the definition of |mcata0|
 in Figure \ref{fig:rcombdef}, in particular, the pattern matching of

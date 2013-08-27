@@ -27,24 +27,24 @@ We want to establish an isomorphism,\footnote{It is more than an isomorphism
         we will just say isomorphism here.}
 |Mu0 f| $\simeq$ |(forall a. Rec0 f a)|, between these two fixpoint types,
 because we want the Nax language to have one fixpoint rather than two.
-Intuitively, there is likely to be a one-to-one mapping between
-the |Mu0|-values and the |Rec0|-values, which do not involve the constructor |Inverse0|.
-|Mu0| and |Rec0| look structurally isomorphic to each other (if one
-does not use |Inverse0|), and we expect that the quantification |forall a| in
-|(forall a. Rec0 f a)| would prevent the constructor |Inverse0| from appearing in
-values of type |(forall a. Rec0 f a)|.
+Naively thinking, there is likely to be a one-to-one mapping between
+the |Mu0|-values and the |Rec0|-values, which do not involve the constructor
+|Inverse0|. Since |Mu0| and |Rec0| look structurally isomorphic to each other
+excuding |Inverse0|, one could expect that the quantification |forall a| in
+|(forall a. Rec0 f a)| would prevent the constructor |Inverse0| from appearing
+in values of type |(forall a. Rec0 f a)|.
 
-To establish an isomorphism between |Mu0| and |Rec0|, we must construct two mapping
-(or, coercion) functions of type |Mu0 f -> (forall a. Rec0 f a)|
-and |(forall a. Rec0 f a) -> Mu0 f| (that are each other's inverse). At first glance, we thought
-it would be easier to find a mapping of type |Mu0 f -> (forall a. Rec0 f a)|
-by replacing all the |In0|s with |Roll0|s. However, contrary to our
-expectation, the other mapping turns out to be more natural.
-We illustrate this by using the HOAS datatype as an example.
-%% At the end of this section, we will contemplate on why this is so.
+To establish an isomorphism between |Mu0| and |Rec0|, we must construct
+two mapping (or, coercion) functions of type |Mu0 f -> (forall a. Rec0 f a)|
+and |(forall a. Rec0 f a) -> Mu0 f| (that are each other's inverse).
+At first glance, we thought it would be easier to find a mapping of type
+|Mu0 f -> (forall a. Rec0 f a)| by replacing all the |In0|s with |Roll0|s.
+However, contrary to our expectation, the other mapping turns out to be
+more natural.  We illustrate this by using the HOAS datatype as an example.
+At the end of this section, we will contemplate on why this is so.
 
 Figure \ref{fig:rec2mu} illustrates a mapping from
-|(forall a. Rec0 E a)|  to |Mu0 E| implemented using |msfcata0|,
+|(forall a. Rec0 E a)| to |Mu0 E| implemented using |msfcata0|,
 where |E| is a base structure for the untyped HOAS.
 Since we have two fixpoint type operators, |Rec0| and |Mu0|,
 we can define two recursive datatypes from |E|:
@@ -52,8 +52,8 @@ we can define two recursive datatypes from |E|:
 The function |exp2expr :: Exp -> Expr| implements the mapping from
 |Rec0|-based HOAS expressions to |Mu0|-based HOAS expressions.
 Note, |exp2expr| is defined using |msfcata0|.
-This indicates that the mapping from |(forall a. Rec0 f a)| to |Mu0 f|
-is admissible within our theory, System~\Fi.
+This indicates that the mapping from |(forall a. Rec0 f a)| to |Mu0 f|,
+for any given $f$, is admissible within our theory, System~\Fi.
 %format msfcata'
 \begin{figure}[p]
 \begin{singlespace}
@@ -112,17 +112,19 @@ msfcata phi x = caseSum x unId (\ f -> f (phi Id))
 
 Figure \ref{fig:mu2rec} illustrates an incomplete attempt to
 define a mapping the other way. Finding a mapping from
-|(Mu0 E)| to |(forall a. Rec0 E a)| turns out to be difficult (perhaps impossible).
-So, we found a mapping (we call |expr2exp'|) from  |(Mu0 E)|, \ie |Expr|,
-to |(Rec0 E Expr)|, \ie, |Exp' Expr|, where the formerly universally quantifed |a|
-has been instantiated to |Expr|. To define |expr2exp'|, we need
-its inverse function |exp'2expr :: Exp' Expr -> Expr|, whose implementation is
+|(Mu0 E)| to |(forall a. Rec0 E a)| turns out to be difficult
+(perhaps impossible). So, we found a mapping (we call |expr2exp'|)
+from |(Mu0 E)|, \ie |Expr|, to |(Rec0 E Expr)|, \ie, |Exp' Expr|,
+where the formerly universally quantified |a| has been instantiated to |Expr|.
+To define |expr2exp'|, we need its inverse function
+|exp'2expr :: Exp' Expr -> Expr|, whose implementation is
 structurally identical to |exp2expr| in Figure \ref{fig:rec2mu}, but its type
 signature instantiates |a| by |Expr|. Note that |exp'2expr| is defined using
-|msfcata'|, whose definition is structurally identical to |msfcata0|, but recurses
-over values of |Rec0 f a| rather than |(forall a.Rec0 f a)|. We can prove that
-|msfcata'| always terminates by embedding it into System \Fw\ (see
-Figure~\ref{fig:msfitFw}). Thus, |exp'2expr| is admissible within our theory.
+|msfcata'|, whose definition is structurally identical to |msfcata0|,
+but recurses over values of |Rec0 f a| rather than |(forall a.Rec0 f a)|.
+We can prove that |msfcata'| always terminates by embedding it into
+System \Fw\ (see Figure~\ref{fig:msfitFw}). Thus, |exp'2expr| is admissible
+within our theory.
 
 Lastly, we define |expr2exp'| similar in structure to its inverse |exp'2expr|.
 Instead of an abstract recursive call and an abstract inverse, we use
@@ -132,8 +134,17 @@ we do not know of a Mendler-style recursion scheme to define |expr2exp'|.
 We need further investigation on whether |expr2exp'| would always terminate
 and whether it is possible to make it work for |Exp| rather than |Exp' Expr|.
 
-%% \paragraph{}
-%% Let us contemplate on why the coercion from |(forall a.Rec0 E a)| to |Mu0 E|
-%% exists, but the coercion the other way is hard (perhaps impossible) to find.
-%% 
-%% |msfcata0| can express more functions than |mcata0|
+\paragraph{}
+Let us contemplate on why the coercion from |(forall a.Rec0 E a)| to |Mu0 E|
+exists, but the coercion the other way is hard (perhaps impossible) to find.
+We know that |msfcata0| can express more functions than |mcata0|
+(e.g., |showHOAS| in Figure\;\ref{fig:HOASshow}). Then, it may be the case
+that values of |(forall a. Rec0 f a)| is in fact more restrictive than
+the values of |(Mu0 f)|. The additional expressiveness of |msfcata0| may be
+a compensation of the restrictions on the value of |(forall a. Rec0 f a)|.
+In summary, |(forall a. Rec0 f a)| is a subset of |(Mu0 f)|.
+From this observation, we plan to design Nax with two fixpoints $\breve\mu$
+and $\mu$, recursive values being constructed by data constructors are
+by default as $\breve\mu$-values, and allow upcasting from $\breve\mu$
+to $\mu$ when needed (e.g. when applying |msfcata|).
+

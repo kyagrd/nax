@@ -446,7 +446,7 @@ recursive calls, |len|, but the abstract type, |r|, limits its use to
 direct subcomponents, so termination is guaranteed.
 
 Some recursive functions need to direct access the concrete values of
-the direct subcomponents (of type |Mu[*] T|), in addtion to applying
+the direct subcomponents (of type |Mu[*] T|), in addition to applying
 abstract recursive call on the abstract handles of the direct subcomponents
 (of type |r|). The Mendler-style combinator |MPr| provides a safe,
 yet abstract mechanism, to support this. There are two abstract operations
@@ -863,7 +863,9 @@ including the regular types (|Nat| and |List|), nested types (|PowerTree|),
 
 \item Two-level types, while expressive, are a pain to program with (all those
 |Mu[kappa]| and |In[kappa]| annotations), so a strong synonym facility is
-necessary. With syntactic support, one hardly even notices.
+necessary. With syntactic support of synonyms and automatic derivatoin of
+synonyms for recursive types, one hardly notices extra verbosity due to
+the use of two-level types.
 
 \item The use of term-indexed types allows programmers to write types that
 act as logical relations, and form the basis for reasoning about programs.

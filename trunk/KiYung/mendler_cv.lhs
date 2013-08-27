@@ -3,7 +3,7 @@
 \label{ssec:tourHist0}
 Some computations are not easily expressible by iteration,
 since iteration only recurses on the direct subcomponents (\eg, tail
-of a list). Terminating recursion shcemes on deeper subcomponents
+of a list). Terminating recursion schemes on deeper subcomponents
 (\eg, tail of tail of a list) requires rather complex encodings
 in the conventional setting. Functional programmers often write
 recursive functions using nested pattern matching that recurse on
@@ -20,7 +20,6 @@ which is a direct subcomponent of the argument, and the predecessor of
 the predecessor |m|, which is a deeper subcomponent of the argument.
 The Histomorphism \cite{UusVen99histo} captures such patterns of recursion.
 The Histomorphism is also known as the course-of-values iteration.
-
 In the conventional style, course-of-values iteration are defined through
 co-algebraic construction of an intermediate stream data structure that
 pairs up the current argument and the results from the previous steps.
@@ -73,7 +72,7 @@ general recursion style (left) and the definition in the Mendler style (right)
 look almost identical.  Particularly, when we have unrolled the nested pattern
 matching in the general recursive definition into a case expression.
 The only difference between the two, is that in the Mendler style (left),
-we pattern match over |out n| in the case expression, in the gerneral recursion
+we pattern match over |out n| in the case expression, in the general recursion
 style (right) we pattern match over |n|.  
 
 \begin{figure}
@@ -139,7 +138,7 @@ For negative datatypes, however, we have additional functions with domain |r|.
 Inside the |phi| function passed to |mhist0|, the embedded functions with
 negative occurrences, will have type |r| as their domain.
 These can be problematic, as shown in Figure \ref{fig:LoopHisto},
-which conatins the counter-example to termination of |mhist0|.
+which contains the counter-example to termination of |mhist0|.
 In the following section (\S\ref{ssec:tourNegative}), we will discuss
 why |mhist| family fails to guarantee termination for negative datatypes
 while |mcata| family guarantees termination for arbitrary datatypes
@@ -219,7 +218,7 @@ The function |lenFoo|, defined with |mcata0|, is a length like function,
 but it recurses on the transformed tail, |(f xs)|,
 instead of the original tail |xs|.
 The intuition behind the termination of |mcata0| for this negative datatype
-|Foo| is similar to the intuition for positive dataypes.  The embedded function
+|Foo| is similar to the intuition for positive datatypes.  The embedded function
 |f::r->r| can only apply to the direct subcomponent of its parent, or to its
 sibling, |xs| and its transformed values (\eg, |f xs|, |f (f xs)|, $\ldots$),
 but no larger values that contains |f| itself.  We illustrate a general proof

@@ -25,7 +25,7 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\
 \end{figure*}
 
 We can express mutual recursion over mutually recursive datatypes
-in the Mendler style using an indexed base dataype.
+in the Mendler style using an indexed base datatype.
 The context extension function |extend| and
 the expression evaluation function |eval| in Figure \ref{fig:mutrec}
 are mutually recursive functions over the mutually recursive datatypes of

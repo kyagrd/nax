@@ -49,7 +49,7 @@ $\forall X.X$ and $\forall X'.X'$ are considered to be same types in System \F.
 In System \Fw, we expect a richer notion of equality which
 incorporates the notion of 
 $\beta$-equivalence at the type level,
-since the type syntax of System \Fw\ has the structure of the STLC at the type level.
+since the type syntax of System~\Fw\ has the structure of the STLC at the type level.
 For instance, we want $(\lambda X^{*}.X) A = A$. 
 \end{itemize}
 
@@ -67,19 +67,16 @@ and transitivity of equality (\rulename{EqTTrans}).
 
 The complete syntax, kinding rules, and typing rules of System \Fw\
 are illustrated in Figure \ref{fig:fw}. Since lambda binders exist
-at both the term and type levels in System \Fw, we have a choice of
+at both the term and type levels in System \Fw, we also have a choice of
 either Church style (kind annotations on lambda types) or
 Curry style (no kind annotations on lambda types) for the type syntax.
-The Church-Church-style System \Fw\ is a version of System \Fw\ with
-the Church-style term syntax and the Church-style type syntax.
-The Curry-Church-style System \Fw\ is a version of System \Fw\ with
-the Curry-style term syntax and the Church-style type syntax.
-In Figure \ref{fig:fw}, the left column describes
-the Church-Church-style System \Fw\ and the right column describes
-the Curry-Church-style System \Fw. 
-%% Another version of System \Fw, the Curry-Curry-style System \Fw,
-%% with Curry-style term syntax and Curry style type syntax is described
-%% in the left column of Figure \ref{fig:fw2}.
+In this section (and, also throughout the dissertation), we consider
+only the Church style type syntax, that is, the explicitly annotated kinds
+on type-level lambdas. So, the distinction between the Church style and
+the Curry style is only on the type syntax. The Church-style System \Fw,
+on the left column of Figure \ref{fig:fw}, is a version of System \Fw\ with
+the Church-style term syntax. The Curry-style System \Fw, on the right column,
+is a version of System \Fw\ with the Curry-style term syntax.
 
 The reduction rules of System \Fw\ (Figure \ref{fig:redfw}) are almost identical
 to the reduction rules of System \F\ since the term syntax of System \Fw\ is
@@ -95,7 +92,7 @@ System \F.
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
-        \begin{center}Church-Church-style\end{center}\vspace*{-1em}
+        \begin{center}Church style\end{center}\vspace*{-1em}
 \def\baselinestretch{0}
 \small
 \begin{align*}
@@ -144,7 +141,7 @@ F,G,A,B ::= &~ X                  & \text{variable type} \\
 \end{align*}
 \end{minipage}
 \begin{minipage}{.46\textwidth}
-        \begin{center}Curry-Church-style\end{center}\vspace*{-1em}
+        \begin{center}Curry style\end{center}\vspace*{-1em}
 \def\baselinestretch{0}
 \small
 \begin{align*}
@@ -192,7 +189,7 @@ F,G,A,B ::= &~ X                  \\
 \end{align*}
 \end{minipage}
 ~\\
-\caption{System \Fw\ in Church-Church-style and Curry-Church-style}
+\caption{System \Fw\ in Church style and Curry style}
 \label{fig:fw}
 \end{singlespace}
 \end{figure}
@@ -296,7 +293,7 @@ F,G,A,B ::= &~ X                  \\
 %% \end{figure}
 
 \begin{figure}
-\paragraph{Reduction rules for the Church-Church-style System \Fw}
+\paragraph{Reduction rules for the Church-style System \Fw}
 \begin{align*}
 & \inference[\sc RedBeta]{}{(\l(x:A).t)~s --> t[s/x]}
 &&\inference[\sc RedTy]{}{(\L X   .t)[A] --> t[A/X]} \\
@@ -306,7 +303,7 @@ F,G,A,B ::= &~ X                  \\
 &&\inference[\sc RedTyApp]{t --> t'}{t[A] --> t'[A]} \\
 & \inference[\sc RedApp2]{s --> s'}{t~s --> t~s'}
 \end{align*}
-\paragraph{Reduction rules for the Curry-Church-style System \Fw}
+\paragraph{Reduction rules for the Curry-style System \Fw}
 \begin{align*}
 & \inference[\sc RedBeta]{}{(\l x   .t)~s --> t[s/x]} \\
 & \inference[\sc RedAbs]{t --> t'}{\l x   .t --> \l x   .t'} \\
@@ -397,10 +394,9 @@ F,G,A,B ::= &~ X                  \\
 \subsection{Encodings of datatypes in System \Fw}
 \label{sec:fw:data}
 In System \Fw\ we can encode all the datatypes encodable in System \F\ (see
-\S\ref{sec:f:data}) and more. In addition
-to the obvious type constructors, one can encode indexed-types, nested-types, and even
-a fixpoint operator over types.
-
+\S\ref{sec:f:data}) and more. In addition to the obvious type constructors,
+one can encode indexed types, nested types, and even fixpoint operators
+over type constructors.
 \begin{itemize}
 
 \item \emph{Type constructors} for polymorphic datatypes
@@ -415,12 +411,13 @@ the recursive type operator $\mu$ in System \Fw\ by abstracting
 over non-star type constructors.
 \end{itemize}
 
-This additonal expressive power comes from two different uses of kinded types
-
+This additional expressive power comes from two different uses of
+type-level constructs other than types of kind $*$.
 \begin{itemize}
 
-\item  \emph{Higher-kinded polymorphism} is the ability to universally quantify over both types and
-type constructors.
+\item  \emph{Higher-kinded polymorphism} is the ability to
+	universally quantify over both type constructors
+	of arbitrary kinds.
 
 \item 
 \emph{Type constructors of higher kinds} or \emph{higher-kinded
@@ -550,10 +547,11 @@ in functional languages, such as Haskell: \[ \qquad\qquad
 See Chapter \ref{ch:mendler}
 for more of the Haskell examples on recursive datatypes and $\mu$.
 
-Although recursive datatypes are encodable in System \F (\S\ref{sec:f:data}),
+Although recursive datatypes are encodable in System \F\ (\S\ref{sec:f:data}),
 extensions of System \F\ with $\mu$ have been studied %% TODO cite
-since one can reason about recursive datatypes more uniformly based on
-the properties of $\mu$. In System \Fw, we can encode $\mu$ using
+since one can reason about the properties of recursive datatypes more
+uniformly by factoring out the recursion at the type level as
+the fixpoint $\mu$. In System \Fw, we can encode $\mu$ using
 higher-kinded type constructors and higher-kinded polymorphism as follows:
 \[
 \mu =
@@ -690,18 +688,18 @@ encodings for Mendler-style iteration in \Fw, which will discussed in
 \S\ref{sec:fi:data}.
 
 
-\subsection{Subject reduction and strong normalization}\label{sec:fw:srsn}
-We discuss two important properties of System \Fw\ --
-\emph{subject reduction} (\aka\ \emph{type preservation})
-and \emph{strong normalization}.
+\subsection{Strong normalization}\label{sec:fw:srsn}
+Here, we will take the \emph{subject reduction} (Theorem\;\ref{thm:srfw})
+(\aka\ \emph{type preservation}) for granted,\footnote{
+	The proof for subject reduction of System~\Fw\ is similar to
+	the proof for the subject reduction of System~\F.}
+and focus our discussion on the \emph{strong normalization}
+of System~\Fw.
 
-\subsection*{Subject reduction}
-\begin{theorem}[subject reduction]
+\begin{theorem}[subject reduction]\label{thm:srfw}
 $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{theorem}
 
-
-\subsection*{Strong normalization}
 \begin{figure}
 \begin{singlespace}
 \begin{description}
@@ -805,7 +803,7 @@ of kind $\kappa$ should be a member of $[| \kappa |]$, \ie, $\SAT_\kappa$.
 The interpretation of kinds, type constructors, contexts, and
 terms of System \Fw\ are illustrated in Figure \ref{fig:interpFw}. 
 
-We use the Curry-Church-style System \Fw\ to present the strong normalization
+We use the Curry-style System \Fw\ to present the strong normalization
 proof. It is more convenient to interpret terms in Curry style since
 the Curry-style terms syntax is simpler than the Church-style term syntax.
 It is more convenient to interpret type constructors in Curry style since

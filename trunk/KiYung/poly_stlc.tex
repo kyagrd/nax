@@ -155,11 +155,11 @@ in both Curry style and Church style (\S\ref{sec:stlc:srsn}).
 Then, we motivate the discussion of polymorphic type systems
 by reviewing the limitations of the STLC (\S\ref{sec:stlc:topoly}).
 
-\subsection{Subject reduction and strong normalization}\label{sec:stlc:srsn}
+\subsection{Strong normalization}\label{sec:stlc:srsn}
 We discuss two important properties of the STLC, which hold in both
 the Church style and the Curry style -- \emph{subject reduction} (\aka\
 type preservation) and \emph{strong normalization}. Since we 
-focus on strong normalization, we well be rather brief on the proof of
+focus on strong normalization, we will be rather brief on the proof of
 subject reduction and elaborate in more detail on the proof of
 strong normalization.
  
@@ -503,7 +503,7 @@ is always well-typed (corollary of subject reduction), we really need
 the condition that expanded term is also well-typed ($\Gamma |- t : A$).
 We need this premise, because a well-typed term can be expanded to a ill-typed term.
 In fact, we can always expand any well-typed term to an ill-typed term
-(see Figure \ref{ill-typed_expand}).
+(see Figure~\ref{ill-typed_expand}).
 
 The proof of the claim (\ref{eqn:welltypedarrow}) is very simple.
 Recall that we want to show that $A = A'$,

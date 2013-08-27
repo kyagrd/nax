@@ -199,7 +199,7 @@ in Agda, to make the comparisons align in Figure\;\ref{fig:sortingEx}.
 In addition to universe subtyping, Agda also supports
 universe polymorphism,\footnote{See 
 \url{http://wiki.portal.chalmers.se/agda/agda.php?n=Main.UniversePolymorphism}.}
-which is closely reated to datatype promotion. In fact, it is more intuitive to
+which is closely related to datatype promotion. In fact, it is more intuitive to
 understand the datatype promotion in Haskell as a special case of
 universe polymorphism. Since there are only two universes |*| and |BOX|
 in Haskell, we can think of datatypes like |List| and |Ty| are defined

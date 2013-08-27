@@ -156,7 +156,7 @@ mlexpr0 :: (forall r1 r2  .   (r1 -> Mu0 f2 -> a)  -- outer recursive call
 
 mlexpr0 phi (In0 x1) (In0 x2) = phi (mlexpr0 phi) (mlexpr0 phi (In0 x1)) id id x1 x2 
 \end{code}~\vspace*{-1.3em}\\
-The Mendler-style lexicograph recursion |mlexpr0| is similar to
+The Mendler-style lexicographic recursion |mlexpr0| is similar to
 the Mendler-style simultaneous recursion |msimpr0| introduced
 in the previous section, but has two abstract operations for
 inner and outer recursion. Note the types of these two recursive calls

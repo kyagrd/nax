@@ -81,7 +81,7 @@ will be linear in the size of the input rather than being constant.
 \begin{minipage}{.5\linewidth}\small \ExTailG \end{minipage}
 \begin{minipage}{.6\linewidth}\small \ExConstTail \end{minipage}
 \caption{|mprim0| example (non-recursive):
-         a constatn time tail function for lists}
+         a constant time tail function for lists}
 \label{fig:consttail}
 \end{figure}
 

@@ -1,5 +1,5 @@
 %include includelhs2tex.lhs
-\section{Mendler-style iteration with a syntactic inverse (|msfcata|)}
+\section{Mendler-style iteration with syntactic inverses (|msfcata|)}
 \label{sec:msf}
 While it is known that iteration and primitive recursion terminate for all types
 \cite{AbeMatUus05,AbeMat04}, they are not particularly expressive over negative
@@ -232,7 +232,7 @@ yet another new |Lam_g (\x->x)| expression and keeps on recursing.
 %% As in \citet{Pat93} and \citet{MeiHut95}, we typically need anamorphism
 %% in addition to catamorphism. 
 %% \TODO{some refined writing needed here to close the subsection maybe
-%% we should note up front that there is a differnce?? that we start with
+%% we should note up front that there is a difference?? that we start with
 %% an example of HOAS with variable constructor}
 
 \subsubsection{A Mendler-style solution for closed HOAS}
@@ -286,7 +286,6 @@ corresponding to the universal inverse.
 The data constructor |Roll0| and the projection function |unRoll0|
 correspond to |In0| and |out0| of the normal fixpoint |Mu0|.
 As usual, we restrict the use of |unRoll0|, or pattern matching against |Roll0|.
-%% to terms in the programatic fragment of the language.
 
 We illustrate this in the second part of Figure \ref{fig:HOASshow}.
 As usual, we define |Exp' a| as a fixpoint of the base datatype |ExpF|
@@ -404,8 +403,9 @@ inductive datatypes, even those with negative occurrences.
 \label{fig:HOASshowFw}
 \end{figure}
 
-Figure \ref{fig:proofsf} is the $F_\omega$ encoding of
-the inverse augmented datatype |Rec0| and its iteration |msfcata0|.
+Figure \ref{fig:proofsf} is the $F_\omega$ encoding\footnote{
+	using a fragment of Haskell, which we believe to be a subset of \Fw.}
+of the inverse augmented datatype |Rec0| and its iteration |msfcata0|.
 We use the sum type to encode |Rec0| since it consists of two constructors,
 one for the inverse and the other for the recursion.  The newtype |Id| wraps
 answer values inside the inverse. The iteration combinator |msfcata0| unwraps
@@ -466,13 +466,12 @@ data Exp_g t where
 \end{code}
 
 The definition of |evalHOAS| specifies how to evaluate an HOAS expression
-to a host-language value (\ie, Haskell or Nax) wrapped by the identity newtype (|Id|).
-In the description below, we ignore the wrapping (|MkId|) and unwrapping (unId) of |Id|
-by completely dropping them from the description. See the Figure \ref{fig:HOASeval}
-(where they are not omitted) if you care about these details. We discuss the
-evaluation for each of the constructors of |Exp|,
-
-
+to a host-language value (\ie, Haskell) wrapped by the identity type (|Id|).
+In the description below, we ignore the wrapping (|MkId|) and unwrapping
+(|unId|) of |Id| by completely dropping them from the description.
+See the Figure \ref{fig:HOASeval} (where they are not omitted)
+if you care about these details. We discuss the evaluation for each of
+the constructors of |Exp|:
 \begin{itemize}
 \item Evaluating an HOAS abstraction |(Lam f)| lifts an object-language function
 (|f|) over |Exp| into a host-language function over values:
@@ -503,10 +502,10 @@ and type indices.
 The |showHOAS| example in Figure \ref{fig:HOASshow}, which we discussed
 in the previous subsection, has appeared in other work \cite{FegShe96},
 written in conventional style.
-So the |showHOAS| example, only shows that the Mendler style is
+So, the |showHOAS| example, only shows that the Mendler style is
 as expressive as the conventional style (although it is
 perhaps syntactically more pleasant than the conventional style).
-However, it is not obvious how one extends
+However, it is not obvious how one could extend
 the conventional-style Sheard--Fegaras iteration over indexed datatypes.
 
 In contrast, the Mendler-style Sheard--Fegaras iteration is naturally

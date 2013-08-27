@@ -1214,13 +1214,16 @@ in Nax. For instance, iteration (\MIt) can be subsumed by either
 iteration with a syntactic inverse (\MsfIt) or primitive recursion (\MPr).
 But, there is no known recursion scheme that can subsume both \MsfIt\ and \MPr.
 
-However, we strongly believe that it is okay to apply \MsfIt\ to
-the result of \MPr\ (when \MPr\ produces a recursive value) and vice versa.
-Intuitively, the different interpretations of $\mu$ only matter during
-the internal computation of the recursion scheme. That is, one may consider
-that (recursive) values resulting from different recursion schemes
-share a common abstract representation of $\mu$.
-The theoretical justification for this is still ongoing work.
+We discovered that $\mu$-values, to which \MIt\ can be applied,
+can be considered as a superset of $\breve\mu$-values,
+to which \MsfIt\ can be applied. That is, casting from $\breve\mu$-values to
+$\mu$-values is alwyas safe. Howver, we do not know whether it is safe to
+cast the other way. We have neither found a casting function from
+$\mu$-values to $\breve\mu$-values nor found a counterexample.
+The search for whether casting from $\mu$-values to $\breve\mu$-values
+is possible is still ongoing work. We curruntly plan to support two
+fixpoints and allow one way casting. Further discussions can be found
+in \S\ref{sec:futwork:mu}.
 
 \paragraph{Deriving positivity (or monotonicity) from polarized kinds:}
 One can extend the kind syntax of arrow kinds in \Fw\ with polarities

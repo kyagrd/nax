@@ -61,7 +61,7 @@ obviously fails to terminate,
 \vspace*{-.2em}
 \item Organizing a large class of Mendler-style recursion combinators into
 an intuitive hierarchy, of increasing generality, that is expressive enough
-to cover regular dataypes (\S\ref{ssec:tourRegular}, \S\ref{ssec:tourHist0}),
+to cover regular datatypes (\S\ref{ssec:tourRegular}, \S\ref{ssec:tourHist0}),
 nested datatypes (\S\ref{ssec:tourNested}),
 indexed datatypes (GADTs) (\S\ref{ssec:tourIndexed}),
 mutually recursive datatypes (\S\ref{ssec:tourMutRec}),
@@ -86,7 +86,7 @@ to control the source of non-termination. We assert that all our code fragments
 conform with our conventions. The conventions include:
 \begin{enumerate}
 \item all values of algebraic datatypes are finite
-    (\ie, do not use lazyness to build infinite structure),
+    (\ie, do not use laziness to build infinite structure),
 \item certain conventions of data abstraction not enforced by Haskell
     (\ie, treating the recursive type operator $\mu$,
 	and the recursion combinators, as primitive constructs,
