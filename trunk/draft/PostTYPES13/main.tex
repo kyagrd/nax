@@ -1,0 +1,567 @@
+%This is a template for producing LIPIcs articles.
+%See lipics-manual.pdf for further information.
+
+\documentclass[a4paper,UKenglish]{lipics}
+  %for A4 paper format use option "a4paper", for US-letter use option "letterpaper"
+  %for british hyphenation rules use option "UKenglish", for american hyphenation rules use option "USenglish"
+ % for section-numbered lemmas etc., use "numberwithinsect"
+ 
+\usepackage{microtype}%if unwanted, comment out or use option "draft"
+
+%\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
+
+\bibliographystyle{plain}% the recommended bibstyle
+
+% Author macros %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Mendler-style Recursion Schemes for Mixed-Variant Datatypes\footnote{
+	This work was partially supported by someone.} }
+%% \titlerunning{A Sample LIPIcs Article} %optional, in case that the title is too long; the running title should fit into the top page column
+
+\author[1]{Ki Yung Ahn}
+\author[1]{Tim Sheard}
+\author[2]{Marcelo Fiore}
+\affil[1]{Department of Computer Science, Portland State University\\
+  Oregon, USA\\
+  \texttt{\{kya,sheard\}@cs.pdx.edu}}
+\affil[2]{Computer Laboratory, University of Cambridge\\
+  Cambridge, UK\\
+  \texttt{Marcelo.Fiore@cl.cam.ac.uk}}
+\authorrunning{KY. Ahn, T. Sheard and M. Fiore} %mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et. al.'
+
+\Copyright{Ki Yung Ahn, Tim Sheard and Marcelo Fiore}%mandatory. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+
+\subjclass{Dummy classification -- please refer to \url{http://www.acm.org/about/class/ccs98-html}}% mandatory: Please choose ACM 1998 classifications from http://www.acm.org/about/class/ccs98-html . E.g., cite as "F.1.1 Models of Computation". 
+\keywords{Mendler-style recursion, Higher-Order Abstract Syntax (HOAS), mixed-variant datatypes, negative datatypes, termination}% mandatory: Please provide 1-5 keywords
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Editor-only macros (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\serieslogo{}%please provide filename (without suffix)
+\volumeinfo%(easychair interface)
+  {Billy Editor, Bill Editors}% editors
+  {2}% number of editors: 1, 2, ....
+  {Conference title on which this volume is based on}% event
+  {1}% volume
+  {1}% issue
+  {1}% starting page number
+\EventShortName{}
+\DOI{10.4230/LIPIcs.xxx.yyy.p}% to be completed by the volume editor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\cf}[0]{{cf.}}
+\newcommand{\eg}[0]{{e.g.}}
+\newcommand{\ie}[0]{{i.e.}}
+\newcommand{\aka}[0]{{a.k.a.}}
+
+%% \newcommand{\F}[0]{{\ensuremath{\mathsf{\uppercase{F}}}}}
+\newcommand{\Fw}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\!\omega}}}}
+
+\newcommand{\MIt}[1]{\textit{mit}_{#1}}
+\newcommand{\msfit}[1]{\ensuremath{\textit{msfit}_{#1}}}
+\newcommand{\lift}[0]{\textit{lift}}
+\newcommand{\In}[1]{\textit{In}_{#1}}
+\newcommand{\inL}[0]{\textit{in}_{L}}
+\newcommand{\inR}[0]{\textit{in}_{R}}
+
+%% \setlength{\thickmuskip}{0mu}
+%% \setlength{\medmuskip}{0mu}
+%% \setlength{\thinmuskip}{0mu}
+\lstset{captionpos=t,
+	float,
+	keepspaces=false,
+	abovecaptionskip=-\medskipamount,
+	language=Haskell,
+ 	basicstyle=\rmfamily\it,
+ 	keywordstyle=\rm\bfseries,
+	commentstyle=\color{blue},
+	stringstyle=\rm\ttfamily,
+	deletekeywords={Bool,Int,Integer,String,show,const},
+ 	literate=
+ 		{forall}{{$\forall$}}1
+ 		{:}{{$:$}}1
+ 		{::}{{$::$}}1
+ 		{->}{{$\to$}}2
+ 		{=>}{{$\Rightarrow$}}2
+ 		{=}{{$=$}}1
+ 		{*}{{$*$}}1
+ 		{\\}{{$\lambda$}}1
+		{Phi0}{{Phi$_{*}$}}3
+		{Phi1}{{Phi$_{*\to*}$}}5
+		{Phi0'}{{Phi$_{*}^{\phantom{.}\prime}$}}3
+		{Phi1'}{{Phi$_{*\to*}^{\phantom{.}\prime}$}}5
+		{Mu0}{{$\mu_{*}$}}1
+		{In0}{{In$_{*}$}}2
+		{out0}{{out$_{*}$}}3
+		{Mu1}{{$\mu_{*\to*}$}}3
+		{In1}{{In$_{*\to*}$}}4
+		{out1}{{out$_{*\to*}$}}5
+		{Rec0}{{$\mu_{*}^\prime$}}1
+		{Roll0}{{In$_{*}^\prime$}}2
+		{Inverse0}{{Inverse$_{*}$}}6
+		{Rec1}{{$\mu_{*\to*}^\prime$}}3
+		{Roll1}{{In$_{*\to*}^\prime$}}4
+		{Inverse1}{{Inverse$_{*\to*}$}}8
+ 		{phi}{{$\varphi$}}1
+ 		{t1}{{$t_1$}}1
+ 		{t1}{{$t_1$}}1
+ 		{t2}{{$t_2$}}1
+ 		{e1}{{$e_1$}}1
+ 		{e2}{{$e_2$}}1
+		{mcata}{{mit}}3
+		{mcata0}{{mit$_{*}$}}3
+		{mcata1}{{mit$_{*\to*}$}}5
+		{msfcata}{{msfit}}5
+		{msfcata0}{{msfit$_{*}$}}5
+		{msfcata1}{{msfit$_{*\to*}$}}7
+		{++}{{$+\!\!\!\!+$}}2
+ 		{+}{{$+$}}1
+ 		{(}{{$($}}1
+ 		{)}{{$)$}}1
+ 		{[}{{$[$}}1
+ 		{]}{{$]$}}1
+ 		{\{}{{$\{$}}1
+ 		{\}}{{$\}$}}1
+ 		{|}{{$\mid$}}1
+		{Exp'}{{Exp$\,^\prime$}}3
+		{show'}{{show$\,^\prime$}}4
+		{const}{const}4
+		{String}{String}5
+		{Bool}{{Bool}}4
+		{Int}{{Int}}3
+		{inv}{{inv}}3
+		{ev}{{ev}}2
+		{vs}{{vs}}2
+		{vars}{{vars}}3
+		{lam}{{lam}}3
+		{app}{{app}}3
+		{unId}{{unId}}4
+		{exp2expr}{{exp2expr}}7
+		{p2r}{{p2r}}2
+}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Some concepts, such as like Higher-Order Abstract Syntax (HOAS),
+are most naturally expressed by mixed-variant datatypes. Unfortunately,
+mixed-variant datatypes are often outlawed in formal reasoning systems
+based on the Curry--Howard correspondence (\eg, Coq, Agda), because
+the conventional recursion schemes (or, induction principles) supported in
+such systems cannot guarantee termination for mixed-variant datatypes.
+In the previous work, Ahn and Sheard \cite{AhnShe11} formulated
+a Mendler-style recursion scheme (\msfit{})
+
+There is an alternative style of formulating recursion schemes,
+known as the Mendler style, that can guarantee termination for
+arbitrary datatypes. Ahn and Sheard \cite{AhnShe11} formulated
+a Mendler-style recursion scheme (\msfit{}), and demonstrated
+examples involving regular (\ie, non-indexed) mixed-variant datatypes
+(\eg, untyped $\lambda$-calculus in HOAS). Their examples demonstrate
+the advantage of the Mender style -- termination guarantee for
+arbitrary datatypes, including mixed-variant ones. They prove
+termination of the examples via embedding into System~\Fw.
+
+Another advantage of the Mendler style is that recursion schemes 
+naturally extends to non-regular (\ie, indexed) datatypes. Our
+type-preserving evaluator example for the simply-typed HOAS,
+defined as type-indexed mixed-variant datatype, demonstrates
+both advantages of the Mendler style. This example has its own
+theoretical value, which is a novel discovery that
+the simply-typed HOAS evaluation is expressible within System \Fw.
+To our knowledge, this is the first report of a simply-typed HOAS
+evaluator that is equipped with correct-by-construction proofs
+(in the Curry--Howard sense) of both type-preservation and normalization.
+We also develop more detailed discussions on the termination proof
+involving \msfit{}.
+
+We hope that our study advances the understandings of the \msfit{}
+recursion scheme, and, further motivates the design of
+logical reasoning systems that support wider range of
+datatypes including mixed-variant ones.
+\end{abstract}
+
+\section{TODO intro}
+\begin{enumerate}
+	\item discuss the advantages of the Mendler style,
+	\item report that we can define an evaluator for the simply-typed HOAS
+		using Mendler-style iteration with syntactic inverses
+		(\lstinline{msfcata}), and
+	\item propose a new recursion scheme (work in progress) whose
+		termination relies on the invariants specified by
+		size measures on indices.
+\end{enumerate}
+
+
+
+Advantages of the Mendler style include allowing arbitrary definitions of
+recursive datatypes, while still ensuring well-behaved use by providing
+a rich set of principled eliminators (\ie, recursion schemes).
+Certain concepts, such as HOAS, are most succinctly defined as
+mixed-variant datatypes, which are unfortunately, outlawed in many existing
+reasoning systems (\eg, Coq, Agda). One is forced to devise clever encodings
+(\eg, \cite{PHOAS}) to use concepts like HOAS within such systems.
+
+We believe it is worthwhile to allow the definition all recursive datatypes
+available in functional \emph{programming} languages, including those outlawed
+in many reasoning systems. For example, the untyped $\lambda$-calculus can be
+defined in HOAS as an Haskell dataype (\lstinline{Exp}):
+\begin{lstlisting}
+data Exp = Lam (Exp -> Exp) | App Exp Exp
+\end{lstlisting}
+Even if we assume all functions embedded in \lstinline{Lam} are non-recursive,
+evaluating HOAS may still cause problems for logical reasoning, since
+the untyped $\lambda$-calculus has diverging terms. However, there are many
+well-behaved (\ie, terminating) computations over \lstinline{Exp}, such as
+converting an HOAS expression to first-order syntax.
+Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme,
+\lstinline{msfcata}  (\aka\ \textit{msfcata}), which captures these
+well-behaved computations.
+
+If the datatype \lstinline{Exp} had indices to assert invariants of
+well-typed expressions (\eg, \lstinline{Exp Bool}\, for boolean expressions
+and \lstinline{Exp Int}\, for integer expressions), we could rely on these
+invariants to write even more expressive termiating programs, such as
+a type-preserving evaluator. In Section\;\ref{sec:HOASeval}, we report
+our novel discovery that we can define a type-preserving evaluator for
+a simply-typed HOAS using \lstinline{msfcata}.
+
+%% \begin{lemma}[Lemma name]
+%% TODO
+%% \end{lemma}
+%% \begin{proof}
+%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+%% \end{proof}
+
+\section{Mendler-style recursion schemes}
+
+In this section, we introduce basic concepts of two Mendler-style recursion
+schemes: iteration (\lstinline{mcata}\,) and iteration with syntactic inverses
+(\lstinline{msfcata}\,). Further details on Mendler-style recursion schemes,
+including these two and more, can be found in \cite{AhnShe11} TODO TODO
+more citations TODO.
+
+
+
+\begin{lstlisting}[caption={TODO}]
+data Mu0   (f::(* -> *))               = In0   {out0  ::f (Mu0   f)  }
+data Mu1 (f::(* -> *) -> (* -> *)) i = In1 {out1::f (Mu1 f) i}
+                                                              
+data Rec0   f a   = Roll0   {unRoll0   :: f (Rec0 f a)    } | Inverse0   a
+data Rec1 f a i = Roll1 {unRoll1 :: f (Rec1 f a) i} | Inverse1 (a i)
+\end{lstlisting}
+
+\begin{lstlisting}[caption={TODO \label{lst:reccomb}}]
+type Phi0   f a = forall r . (    r   -> a  ) -> (f r   -> a  )
+type Phi1 f a = forall r i.(forall i.r i -> a i) -> (f r i -> a i)
+
+mcata0   :: Phi0   f a ->  Mu0  f    -> a
+mcata1 :: Phi1 f a ->  Mu1 f i -> a i
+
+
+type Phi0'   f a = forall r . (     a  -> r a  ) ->
+                       (     r a  -> a  ) -> (f (r a)   -> a  )
+type Phi1' f a = forall r i.(forall i.a i -> r a i) ->
+                       (forall i.r a i -> a i) -> (f (r a) i -> a i)
+
+msfcata0   :: Phi0'   f a -> (forall a. Rec0   f a  ) -> a
+msfcata1 :: Phi1' f a -> (forall a. Rec1 f a i) -> a i
+\end{lstlisting}
+
+\begin{figure}
+\lstinputlisting[
+	caption={Formatting an untyped HOAS expression into a \lstinline{String}
+		\label{lst:HOASshow}},
+	firstline=5]{HOASshow.hs}
+\vspace*{-3ex}
+\end{figure}
+
+\section{TODO HOAS TODO}\label{sec:HOASeval}
+We can write an evaluator for a simply-typed HOAS
+in a simple manner. Listing\;\ref{lst:HOASeval}
+is a Haskell program illustrating the technique.
+
+We first define the simply-typed HOAS as a recursive indexed datatype
+\lstinline{Exp :: * -> *}. We take the fixpoint using \lstinline{Rec1}
+(the fixpoint with a syntactic inverse). This fixpoint is taken over
+a non recursive base structure \lstinline{ExpF :: (* -> *) -> (* -> *)}.
+Note that \lstinline{ExpF} is an indexed type. So expressions will be indexed
+by their type. Using \lstinline{Rec1} the fixpoint of any structure is also
+parameterized by the type of the answer. The use of the \lstinline{msfcata1}
+requires that \lstinline{Exp} should be parametric in this answer type
+(by defining \lstinline{type Exp t = forall a. Exp' a}). just as we did
+in the untyped HOAS formatting example in Listing\;\ref{lst:HOASshow}.
+
+\begin{figure}
+\lstinputlisting[
+	caption={Simply-typed HOAS evaluation using \lstinline{msfcata1}
+		\label{lst:HOASeval}},
+        firstline=4]{HOASeval.hs}
+\vspace*{-3ex}
+\end{figure}
+%% Using general recursion, one would have defined
+%% the datatype |Exp_g :: * -> *| that corresponds to |Exp|
+%% as follows, using Haskell's native recursive datatype definition.
+%% \begin{code}
+%% data Exp_g t where
+%%   Lam_g :: (Exp_g a -> Exp_g b) -> Exp_g (a -> b)
+%%   App_g :: Exp_g (a -> b) -> Exp_g a -> Exp_g b
+%% \end{code}
+
+The definition of \lstinline{evalHOAS} specifies how to evaluate
+an HOAS expression to a host-language value (\ie, Haskell) wrapped by
+the identity type \lstinline{(Id)}. In the description below, we ignore
+the wrapping \lstinline{(MkId)} and unwrapping \lstinline{(unId)} of
+\lstinline{Id} by completely dropping them from the description.
+See the Listing\;\ref{lst:HOASeval} (where they are not omitted)
+if you care about these details. We discuss the evaluation for each of
+the constructors of \lstinline{Exp}:
+\begin{itemize}
+	\item Evaluating an HOAS abstraction \lstinline{(Lam f)} lifts
+		an object-language function \lstinline{(f)} over \lstinline{Exp}
+		into a host-language function over values:
+		\lstinline{(\v -> ev (f(inv v)))}.
+		In the body of this host-language lambda abstraction,
+		the inverse of the (host-language) argument value \lstinline{v}
+		is passed to the object-language function \lstinline{f}.
+		The resulting HOAS expression \lstinline{(f(inv v))} is
+		evaluated by the recursive caller (\lstinline{ev}) to
+		obtain a host-language value.
+
+	\item Evaluating an HOAS application \lstinline{(App f x)} lifts
+		the function \lstinline{f} and argument \lstinline{x} to
+		host-language values \lstinline{(ev f)} and \lstinline{(ev x)},
+		and uses host-language application to compute
+		the resulting value. Note that the host-language application
+		\lstinline{((ev f) (ev x))} is type correct since
+		\lstinline{ev f :: a -> b}\, and \lstinline{ev x :: a},
+		thus the resulting value has type \lstinline{b}.
+\end{itemize}
+We know that \lstinline{evalHOAS} indeed terminates since \lstinline{Rec1} and
+\lstinline{msfcata1} can be embedded into System \Fw\ in manner similar to
+the embedding of \lstinline{Rec0} and \lstinline{msfcata0} into System \Fw.
+
+Listing\;\ref{lst:HOASeval} highlights two advantages of the Mendler style over
+conventional style in one example. This example shows that the Mendler-style
+iteration with syntactic inverses is useful for both\textit{negative} and
+\textit{indexed} datatypes. \lstinline{Exp} in Listing\;\ref{lst:HOASeval} has
+both negative recursive occurrences and type indices.
+
+The \lstinline{showHOAS} example in Listing\;\ref{lst:HOASshow},
+which we discussed in the previous section, has appeared in the work
+of Fegaras and Sheard \cite{FegShe96}, written in conventional style.
+So, the \lstinline{showHOAS} example, only shows that the Mendler style is
+as expressive as the conventional style (although it is
+perhaps syntactically more pleasant than the conventional style).
+However, it is not obvious how one could extend the conventional-style
+counterpart over indexed datatypes.
+
+In contrast, \lstinline{msfcata} is uniformly defined over indexed datatypes of
+arbitrary kinds. Both \lstinline{msfcata1}, used in the \lstinline{evalHOAS},
+and \lstinline{msfcata0}, used in the \lstinline{showHOAS}, have exactly
+the same syntatctic definition, differing only in their type signatures,
+as lillustrated in Listing\;\ref{lst:reccomb}.
+
+\section{Relation between $\mu$ and $\mu'$}
+Listing\;\ref{lst:rec2mu} illustrates a mapping from
+\lstinline{(forall a. Rec0 E a)}  to \lstinline{(Mu0 E)} implemented
+using \lstinline{msfcata0}, where \lstinline{E} is a base structure
+for the untyped HOAS. Since we have two fixpoint type operators,
+\lstinline{Rec0} and \lstinline{Mu0}, we can define two recursive datatypes
+from the base structure \lstinline{E}\,:
+\lstinline{Exp} defined as \lstinline{(forall a. Rec0 E a)} and
+\lstinline{Expr} defined as \lstinline{Mu0 E}.
+The function \lstinline{exp2expr :: Exp -> Expr}\, implements the mapping from
+\lstinline{Rec0}-based HOAS expressions to \lstinline{Mu0}-based
+HOAS expressions. Note, \lstinline{exp2expr}\, is defined
+using \lstinline{msfcata0}.  Since there exists an embedding of
+\lstinline{Mu0} and \lstinline{msfcata0} into System~\Fw\ \cite{AhnShe11},
+\lstinline{exp2expr}\, is admissible in System \Fw.
+
+
+This indicates that the mapping
+from \lstinline{(forall a. Rec0 f a)} to (\lstinline{Mu0 f}\,) is admissible
+within System~\Fw.
+
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+
+\begin{figure}
+\lstinputlisting[
+	caption={Conversion from $\mu'$-values to $\mu$-values
+		using \textit{msfcata} \label{lst:rec2mu} },
+	firstline=4]{Exp2Expr.hs}
+\vspace*{-3ex}
+\end{figure}
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+
+
+\section{TODO Theory ??? codensity monad}
+\begin{align*}
+\mu_{*} &~=~ \lambda F^{* \to *}.\forall X^{*}.
+		(\forall R^{*}.(R \to X) \to F R X \to X) \to X
+	\\
+\mu_{*}'&~=~ \lambda F^{* \to *}.\lambda A^{*}.
+		K A + ((K A \to A) \to F(K A) \to A) \to A
+\end{align*}
+
+\[K = \lambda A^{*}.\forall X^{*}.(A \to X) \to X \]
+
+\[ \eta = \lambda a.\lambda f.f~a : A \to KA \]
+\[\eta^{-1} = \lambda \varphi.\varphi~\textit{id} : KA \to A\]
+
+
+\[K_T = \lambda A^{*}.\forall X^{*}.(A \to T X) \to T X \] codensity monad
+
+
+\[ A \xrightarrow{\eta} KA \xrightarrow{\inL} \mu_{*}' = KA+((KA \to A) \to F(KA) \to A) \to A \]
+
+
+\begin{align*}
+&\MIt{*} ~:~ \forall A^{*}.
+	(\forall R^{*}.(R \to A) \to F R \to A) \to \mu_{*} F \to A \\
+&\MIt{*}~\varphi~x ~=~ x~\varphi \\
+&\In{*} ~:~\forall F^{* \to *}.F(\mu_{*} F) \to \mu_{*} F \\
+&\In{*}~x~\varphi ~=~ \varphi~(\MIt{*}~\varphi)~x
+\end{align*}
+
+
+\begin{align*}
+&\msfit{*} ~:~ \forall A^{*}.
+	(\forall R^{*}.(A \to R A) \to (R A \to A) \to F(R A) \to A) \to
+	(\forall A^{*}.\mu_{*}' F A) \to A \\
+&\msfit{*}~\varphi~x ~=~ x~\eta^{-1}~(\underbrace{\lambda f.f(\varphi~\eta)}_g)
+\end{align*}
+
+\begin{align*}
+&\msfit{*} ~:~ \forall A^{*}.
+	(\forall R^{*}.(A \to R A) \to (R A \to A) \to F(R A) \to A) \to
+	(\forall A^{*}.\mu_{*}' F A) \to A \\
+&\msfit{*}~\varphi~x ~=~ x~\eta^{-1}~(\underbrace{\lambda f.f(\varphi~\eta)}_g)
+\end{align*}
+
+\begin{align*}
+& \lift~:~(\forall A^{*}.(K A\to A)\to F(K A)\to A)\to \mu_{*}' F A\to K A\\
+& \lift~\varphi'~x ~=~ x~\textit{id}~(\lambda z.\eta(z~\varphi'))
+\end{align*}
+
+
+%% \[ \textit{ExpF} = \lambda R^{*}.R \times R + R \]
+
+
+\begin{align*}
+\textit{lam}&~:~(\forall A^{*}.\textit{Exp}'~A \to \textit{Exp}'~A) \to
+		\textit{Exp} \\
+\textit{lam}&~f~=~\In{*}'(\textit{Lam}~f)
+= \inR~(\underbrace{
+	\lambda \varphi'.\varphi'~\eta^{-1}~
+	(\overbrace{\textit{Lam}(\lambda y.\textit{lift}~\varphi'~(f(\inL~y))) }^v)\;
+	}_w)
+\end{align*}
+
+\[
+\msfit{*}~\varphi~(\textit{lam}~f)
+=?= \varphi~\eta~\eta^{-1}~(Lam(\lambda y.\eta(\msfit~\varphi~(f(\inL~y)))))
+\]
+
+$\psi = (f(\inL~y))~\textit{id}~(\lambda z.\eta(z(\varphi\eta)))$
+
+\begin{align*}
+\msfit{*}~\varphi~(\textit{lam}~f)
+&~=~ (\textit{lam}~f)~\eta^{-1}~g \\
+&~=~ \inR~w~\eta^{-1}~g ~=~ g~w ~=~ w(\varphi\eta) \\
+&~=~ \varphi~\eta~\eta^{-1}~
+	(\textit{Lam}(\lambda y.\lift~(\varphi\eta)~(f(\inL~y)))) \\
+&~=~ \varphi~\eta~\eta^{-1}~(\textit{Lam}(\lambda y.\psi))
+\end{align*}
+
+\[ \eta(\msfit~\varphi~(f(\inL~y)))) = \eta(\inL~\psi~\eta^{-1}~g)
+	= \eta(\eta^{-1}~\psi)
+\]
+section retraction since not same as $\psi$
+
+
+\begin{align*}
+\textit{app} &~:~ \textit{Exp} \to \textit{Exp} \to \textit{Exp} \\
+\textit{app} &~ x~y = \In{*}'(\textit{App}~x~y)
+= \inR~(\underbrace{\lambda \varphi'.\varphi'~\eta^{-1}~
+			(\textit{App}~(\lift~\varphi'~x)~(\lift~\varphi'~y))}_h)
+\end{align*}
+
+
+\[ \msfit{*}~\varphi~(\textit{app}~x~y)
+=?= \varphi~\eta~\eta^{-1}
+	~(\textit{App}~(\eta(\msfit{*}~\varphi~x))~(\eta(\msfit{*}~\varphi~y)))
+\]
+\begin{align*}
+\msfit{*}~\varphi~(\textit{app}~x~y)
+&~=~ (\textit{app}~x~y)~\eta^{-1}~g \\
+&~=~ \inR~h~\eta^{-1}~g ~=~ g~h ~=~ h(\varphi~\eta) \\
+&~=~ \varphi~\eta~\eta^{-1}
+     ~(\textit{App}~(\lift(\varphi\eta)x)~(\lift(\varphi\eta)y))
+\end{align*}
+\[ \eta(\msfit{*}~\varphi~x) =?= \lift(\varphi\eta)x \]
+
+
+
+\[ \eta(x~\eta^{-1}~g) =?= x~\textit{id}~(\lambda z.\eta(z(\phi\eta))) \]
+
+when $x = \inR~z$
+
+\[
+	\eta(x~\eta^{-1}~g) = \eta~g~z = \eta(z(\varphi\eta))
+	= x~\textit{id}~(\lambda z.\eta(z.(\varphi\eta)))
+\]
+
+
+\[ \eta(\msfit{*}~\varphi~(\inR~z)) ~=~ \lift~(\varphi\eta)~(\inR~z) \]
+
+
+
+when $x = \inL~z$
+
+\[ \eta(\eta^{-1}z) =?= z \]
+is this a section / retraction thing here???
+
+\[\eta^{-1} = \lambda \varphi.\varphi~\textit{id} : KA \to A\]
+\[ \eta = \lambda a f.f a : A \to KA \]
+
+\[ \varphi \mapsto \varphi \mapsto \lambda f . f(\varphi~\textit{id}) \]
+
+section retraction since not same as $\varphi$
+
+\section{Related Work}
+TODO
+
+\section{Summary and Future Work}
+TODO
+
+\section*{Acknowledgements}
+%% \subparagraph*{Acknowledgements}
+I want to thank \dots
+
+\appendix
+\section{TODO Appendix Section}
+TODO
+
+\bibliography{main}
+
+\end{document}
