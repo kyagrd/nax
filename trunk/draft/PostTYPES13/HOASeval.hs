@@ -13,8 +13,8 @@ app f e  = Roll1 (App f e)
 
 data Id a = MkId {unId :: a}
 
-evalHOAS :: Exp t -> Id t
-evalHOAS e = msfcata1 phi e where
+eval :: Exp t -> Id t
+eval e = msfcata1 phi e where
   phi :: Phi1' ExpF Id
   phi inv ev (Lam f)   = MkId(\v -> unId(ev (f (inv (MkId v)))))
   phi inv ev (App f x) = MkId(unId(ev f) (unId(ev x)))

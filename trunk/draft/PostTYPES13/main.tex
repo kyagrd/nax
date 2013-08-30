@@ -30,8 +30,18 @@
 
 \Copyright{Ki Yung Ahn, Tim Sheard and Marcelo Fiore}%mandatory. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
 
-\subjclass{Dummy classification -- please refer to \url{http://www.acm.org/about/class/ccs98-html}}% mandatory: Please choose ACM 1998 classifications from http://www.acm.org/about/class/ccs98-html . E.g., cite as "F.1.1 Models of Computation". 
-\keywords{Mendler-style recursion, Higher-Order Abstract Syntax (HOAS), mixed-variant datatypes, negative datatypes, termination}% mandatory: Please provide 1-5 keywords
+\subjclass{
+D.3.3 [Programming Languages]: Language Constructs and Features
+--- Data types and structures, Polymorphism, and Recursion;
+F.3.3 [Logics and Meanings of Programs]: Studies of Program Constructs
+-- Functional constructs, Program and recursion schemes, and Type structure;
+F.4.1 [Mahtematical Logic and Formal Systems]: Mathematical Logic
+--- Lambda calculus and related systems
+}
+\keywords{
+Mendler-style recursion, Higher-Order Abstract Syntax (HOAS),
+mixed-variant datatypes, negative datatypes, termination}
+% mandatory: Please provide 1-5 keywords
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Editor-only macros (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,11 +62,17 @@
 \newcommand{\ie}[0]{{i.e.}}
 \newcommand{\aka}[0]{{a.k.a.}}
 
-%% \newcommand{\F}[0]{{\ensuremath{\mathsf{\uppercase{F}}}}}
+\newcommand{\F}[0]{{\ensuremath{\mathsf{\uppercase{F}}}}}
 \newcommand{\Fw}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\!\omega}}}}
+\newcommand{\Fixw}[0]{{\ensuremath{\mathsf{\uppercase{F}\lowercase{ix}}_{\omega}}}}
+\newcommand{\Fwhat}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\!\omega}\!\!\char`\^}}}
 
-\newcommand{\MIt}[1]{\textit{mit}_{#1}}
-\newcommand{\msfit}[1]{\ensuremath{\textit{msfit}_{#1}}}
+\newcommand{\MIt}[1]{\ensuremath{\textbf{\textit{mit}}_{#1}}}
+\newcommand{\MPr}[1]{\ensuremath{\textbf{\textit{mpr}}_{#1}}}
+\newcommand{\mpr}[1]{\ensuremath{\textbf{\textit{mpr}}_{#1}}}
+\newcommand{\MsfIt}[1]{\ensuremath{\textbf{\textit{msfit}}_{#1}}}
+\newcommand{\msfit}[1]{\ensuremath{\textbf{\textit{msfit}}_{#1}}}
+\newcommand{\mprsi}[1]{\ensuremath{\textbf{\textit{mprsi}}_{#1}}}
 \newcommand{\lift}[0]{\textit{lift}}
 \newcommand{\In}[1]{\textit{In}_{#1}}
 \newcommand{\inL}[0]{\textit{in}_{L}}
@@ -74,14 +90,14 @@
  	keywordstyle=\rm\bfseries,
 	commentstyle=\color{blue},
 	stringstyle=\rm\ttfamily,
-	deletekeywords={Bool,Int,Integer,String,show,const},
+	deletekeywords={Bool,Int,Integer,String,show,const,id},
  	literate=
  		{forall}{{$\forall$}}1
  		{:}{{$:$}}1
  		{::}{{$::$}}1
  		{->}{{$\to$}}2
- 		{=>}{{$\Rightarrow$}}2
  		{=}{{$=$}}1
+ 		{=>}{{$\Rightarrow$}}2
  		{*}{{$*$}}1
  		{\\}{{$\lambda$}}1
 		{Phi0}{{Phi$_{*}$}}3
@@ -106,12 +122,22 @@
  		{t2}{{$t_2$}}1
  		{e1}{{$e_1$}}1
  		{e2}{{$e_2$}}1
+		{mpr}{{mpr}}3
+		{mpr1}{{mpr$_{* \to *}$}}6
+		{mprim}{{\mpr{}}}3
+		{mprim1}{{\mpr{* \to *}}}6
+		{mprsi}{{\mprsi{}}}5
+		{mprsi1}{{\mprsi{* \to *}}}7
+		{uncast}{{uncast}}6
+		{cast}{{cast}}4
+		{call}{{call}}4
+		{unVal}{{un\!Val}}4
 		{mcata}{{mit}}3
-		{mcata0}{{mit$_{*}$}}3
-		{mcata1}{{mit$_{*\to*}$}}5
-		{msfcata}{{msfit}}5
-		{msfcata0}{{msfit$_{*}$}}5
-		{msfcata1}{{msfit$_{*\to*}$}}7
+		{mcata0}{{\MIt{*}}}3
+		{mcata1}{{\MIt{* \to *}}}5
+		{msfcata}{{\msfit{}}}5
+		{msfcata0}{{\msfit{*}}}5
+		{msfcata1}{{\msfit{* \to *}}}7
 		{++}{{$+\!\!\!\!+$}}2
  		{+}{{$+$}}1
  		{(}{{$($}}1
@@ -121,14 +147,25 @@
  		{\{}{{$\{$}}1
  		{\}}{{$\}$}}1
  		{|}{{$\mid$}}1
+		{Exp}{{Exp}}3
+		{Exp_u}{{Exp$_u$}}3
+		{ExpF}{{ExpF}}4
+		{ExpF_u}{{ExpF$_u$}}4
+		{App_u}{{App$_u$}}4
+		{Lam_u}{{Lam$_u$}}4
+		{V_u}{{V\!$_u$}}1
+		{VFun_u}{{VFun$_u$}}4
 		{Exp'}{{Exp$\,^\prime$}}3
 		{show'}{{show$\,^\prime$}}4
+		{showExp}{{showExp}}7
 		{const}{const}4
 		{String}{String}5
 		{Bool}{{Bool}}4
 		{Int}{{Int}}3
 		{inv}{{inv}}3
 		{ev}{{ev}}2
+		{eval}{{eval}}4
+		{veval}{{eval}}4
 		{vs}{{vs}}2
 		{vars}{{vars}}3
 		{lam}{{lam}}3
@@ -145,13 +182,12 @@
 
 \begin{abstract}
 Some concepts, such as like Higher-Order Abstract Syntax (HOAS),
-are most naturally expressed by mixed-variant datatypes. Unfortunately,
+are most naturally expressed by \emph{mixed-variant datatypes}
+(\aka\ negative (recursive) datatypes). Unfortunately,
 mixed-variant datatypes are often outlawed in formal reasoning systems
 based on the Curry--Howard correspondence (\eg, Coq, Agda), because
 the conventional recursion schemes (or, induction principles) supported in
 such systems cannot guarantee termination for mixed-variant datatypes.
-In the previous work, Ahn and Sheard \cite{AhnShe11} formulated
-a Mendler-style recursion scheme (\msfit{})
 
 There is an alternative style of formulating recursion schemes,
 known as the Mendler style, that can guarantee termination for
@@ -160,26 +196,27 @@ a Mendler-style recursion scheme (\msfit{}), and demonstrated
 examples involving regular (\ie, non-indexed) mixed-variant datatypes
 (\eg, untyped $\lambda$-calculus in HOAS). Their examples demonstrate
 the advantage of the Mender style -- termination guarantee for
-arbitrary datatypes, including mixed-variant ones. They prove
+arbitrary datatypes, including mixed-variant ones. They proved
 termination of the examples via embedding into System~\Fw.
 
-Another advantage of the Mendler style is that recursion schemes 
-naturally extends to non-regular (\ie, indexed) datatypes. Our
-type-preserving evaluator example for the simply-typed HOAS,
-defined as type-indexed mixed-variant datatype, demonstrates
-both advantages of the Mendler style. This example has its own
-theoretical value, which is a novel discovery that
-the simply-typed HOAS evaluation is expressible within System \Fw.
-To our knowledge, this is the first report of a simply-typed HOAS
-evaluator that is equipped with correct-by-construction proofs
+Another advantage of the Mendler style is that recursion schemes
+naturally extends to non-regular (\ie, indexed) datatypes.
+Our type-preserving evaluator example for the simply-typed HOAS, defined as
+a type-indexed mixed-variant datatype, demonstrates both advantages of
+the Mendler style. This example has its own theoretical value, which is
+a novel discovery that the simply-typed HOAS evaluation is expressible
+within System \Fw. To our knowledge, this is the first report of
+a simply-typed HOAS evaluator (without translation through first-order syntax)
+that is equipped with correct-by-construction proofs
 (in the Curry--Howard sense) of both type-preservation and normalization.
-We also develop more detailed discussions on the termination proof
-involving \msfit{}.
+We also develop further theoretical discussions on the \Fw-embedding of \msfit{}
+and propose yet another recursion scheme (\mprsi{}), which is also useful for
+mixed-variant datatypes.
 
-We hope that our study advances the understandings of the \msfit{}
-recursion scheme, and, further motivates the design of
-logical reasoning systems that support wider range of
-datatypes including mixed-variant ones.
+Our study promotes the usefulness of the recursion schemes,
+which are useful over mixed-variant datatypes. We hope our
+work motivates designing logical reasoning systems that support
+wider range of datatypes including mixed-variant ones.
 \end{abstract}
 
 \section{TODO intro}
@@ -227,12 +264,30 @@ a type-preserving evaluator. In Section\;\ref{sec:HOASeval}, we report
 our novel discovery that we can define a type-preserving evaluator for
 a simply-typed HOAS using \lstinline{msfcata}.
 
-%% \begin{lemma}[Lemma name]
-%% TODO
-%% \end{lemma}
-%% \begin{proof}
-%% TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-%% \end{proof}
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
 
 \section{Mendler-style recursion schemes}
 
@@ -242,8 +297,6 @@ schemes: iteration (\lstinline{mcata}\,) and iteration with syntactic inverses
 including these two and more, can be found in \cite{AhnShe11} TODO TODO
 more citations TODO.
 
-
-
 \begin{lstlisting}[caption={TODO}]
 data Mu0   (f::(* -> *))               = In0   {out0  ::f (Mu0   f)  }
 data Mu1 (f::(* -> *) -> (* -> *)) i = In1 {out1::f (Mu1 f) i}
@@ -252,13 +305,13 @@ data Rec0   f a   = Roll0   {unRoll0   :: f (Rec0 f a)    } | Inverse0   a
 data Rec1 f a i = Roll1 {unRoll1 :: f (Rec1 f a) i} | Inverse1 (a i)
 \end{lstlisting}
 
+\begin{figure}
 \begin{lstlisting}[caption={TODO \label{lst:reccomb}}]
 type Phi0   f a = forall r . (    r   -> a  ) -> (f r   -> a  )
 type Phi1 f a = forall r i.(forall i.r i -> a i) -> (f r i -> a i)
 
 mcata0   :: Phi0   f a ->  Mu0  f    -> a
 mcata1 :: Phi1 f a ->  Mu1 f i -> a i
-
 
 type Phi0'   f a = forall r . (     a  -> r a  ) ->
                        (     r a  -> a  ) -> (f (r a)   -> a  )
@@ -268,6 +321,8 @@ type Phi1' f a = forall r i.(forall i.a i -> r a i) ->
 msfcata0   :: Phi0'   f a -> (forall a. Rec0   f a  ) -> a
 msfcata1 :: Phi1' f a -> (forall a. Rec1 f a i) -> a i
 \end{lstlisting}
+\vspace*{-3ex}
+\end{figure}
 
 \begin{figure}
 \lstinputlisting[
@@ -285,7 +340,7 @@ is a Haskell program illustrating the technique.
 We first define the simply-typed HOAS as a recursive indexed datatype
 \lstinline{Exp :: * -> *}. We take the fixpoint using \lstinline{Rec1}
 (the fixpoint with a syntactic inverse). This fixpoint is taken over
-a non recursive base structure \lstinline{ExpF :: (* -> *) -> (* -> *)}.
+a non recursive base structure \lstinline{ExpF ::  (* -> *) -> (* -> *)}.
 Note that \lstinline{ExpF} is an indexed type. So expressions will be indexed
 by their type. Using \lstinline{Rec1} the fixpoint of any structure is also
 parameterized by the type of the answer. The use of the \lstinline{msfcata1}
@@ -309,16 +364,16 @@ in the untyped HOAS formatting example in Listing\;\ref{lst:HOASshow}.
 %%   App_g :: Exp_g (a -> b) -> Exp_g a -> Exp_g b
 %% \end{code}
 
-The definition of \lstinline{evalHOAS} specifies how to evaluate
+The definition of \lstinline{eval} specifies how to evaluate
 an HOAS expression to a host-language value (\ie, Haskell) wrapped by
-the identity type \lstinline{(Id)}. In the description below, we ignore
-the wrapping \lstinline{(MkId)} and unwrapping \lstinline{(unId)} of
+the identity type (\lstinline{Id}\,). In the description below, we ignore
+the wrapping (\lstinline{MkId}\,) and unwrapping (\lstinline{unId}\,) of
 \lstinline{Id} by completely dropping them from the description.
 See the Listing\;\ref{lst:HOASeval} (where they are not omitted)
 if you care about these details. We discuss the evaluation for each of
 the constructors of \lstinline{Exp}:
 \begin{itemize}
-	\item Evaluating an HOAS abstraction \lstinline{(Lam f)} lifts
+	\item Evaluating an HOAS abstraction (\lstinline{Lam f}\,) lifts
 		an object-language function \lstinline{(f)} over \lstinline{Exp}
 		into a host-language function over values:
 		\lstinline{(\v -> ev (f(inv v)))}.
@@ -331,35 +386,35 @@ the constructors of \lstinline{Exp}:
 
 	\item Evaluating an HOAS application \lstinline{(App f x)} lifts
 		the function \lstinline{f} and argument \lstinline{x} to
-		host-language values \lstinline{(ev f)} and \lstinline{(ev x)},
+		host-language values \lstinline{(ev f}) and \lstinline{(ev x)},
 		and uses host-language application to compute
 		the resulting value. Note that the host-language application
 		\lstinline{((ev f) (ev x))} is type correct since
 		\lstinline{ev f :: a -> b}\, and \lstinline{ev x :: a},
 		thus the resulting value has type \lstinline{b}.
 \end{itemize}
-We know that \lstinline{evalHOAS} indeed terminates since \lstinline{Rec1} and
+We know that \lstinline{eval} indeed terminates since \lstinline{Rec1} and
 \lstinline{msfcata1} can be embedded into System \Fw\ in manner similar to
 the embedding of \lstinline{Rec0} and \lstinline{msfcata0} into System \Fw.
 
 Listing\;\ref{lst:HOASeval} highlights two advantages of the Mendler style over
 conventional style in one example. This example shows that the Mendler-style
-iteration with syntactic inverses is useful for both\textit{negative} and
+iteration with syntactic inverses is useful for both \textit{negative} and
 \textit{indexed} datatypes. \lstinline{Exp} in Listing\;\ref{lst:HOASeval} has
 both negative recursive occurrences and type indices.
 
-The \lstinline{showHOAS} example in Listing\;\ref{lst:HOASshow},
+The \lstinline{showExp} example in Listing\;\ref{lst:HOASshow},
 which we discussed in the previous section, has appeared in the work
 of Fegaras and Sheard \cite{FegShe96}, written in conventional style.
-So, the \lstinline{showHOAS} example, only shows that the Mendler style is
+So, the \lstinline{showExp} example, only shows that the Mendler style is
 as expressive as the conventional style (although it is
 perhaps syntactically more pleasant than the conventional style).
 However, it is not obvious how one could extend the conventional-style
 counterpart over indexed datatypes.
 
 In contrast, \lstinline{msfcata} is uniformly defined over indexed datatypes of
-arbitrary kinds. Both \lstinline{msfcata1}, used in the \lstinline{evalHOAS},
-and \lstinline{msfcata0}, used in the \lstinline{showHOAS}, have exactly
+arbitrary kinds. Both \lstinline{msfcata1}, used in the \lstinline{eval},
+and \lstinline{msfcata0}, used in the \lstinline{showExp}, have exactly
 the same syntatctic definition, differing only in their type signatures,
 as lillustrated in Listing\;\ref{lst:reccomb}.
 
@@ -546,13 +601,290 @@ is this a section / retraction thing here???
 
 \[ \varphi \mapsto \varphi \mapsto \lambda f . f(\varphi~\textit{id}) \]
 
-section retraction since not same as $\varphi$
+Section retraction since not same as $\varphi$
+
+\section{TODO}
+
 
 \section{Related Work}
 TODO
 
+\subsection{Type-based termination and sized types}\label{sec:relwork:sized}
+\emph{Type-based termination} (coined by Barthe and others \cite{BartheFGPU04})
+stands for approaches that integrate termination into type checking,
+as opposed to syntactic approaches (\ie, conventional approach) that
+reason about termination over untyped term structures.
+The Mendler-style approach is, of course, type-based. In fact, the idea of
+type-based termination was inspired by Mendler \cite{Mendler87,Mendler91}.
+In the Mendler style, we know that well-typed functions defined using
+Mendler-style recursion schemes always terminate.  This guarantee flows
+from the design of the recursion scheme, where the use of higher-rank 
+polymorphic types in the abstract operations enforce the invariants
+necessary for termination.
+
+Abel \cite{abel06phd,Abel12talkFICS} summarizes the advantages of
+type-based termination as follows:
+\textbf{communication} (programmers can think using types),
+\textbf{certification} (types are machine checkable certificates),
+\textbf{a simple theoretical justification}
+        (no additional complication for termination other than type checking),
+\textbf{orthogonality} (only small parts of the language are affected,
+        \eg, principled recursion schemes instead of general recursion),
+\textbf{robustness} (type system extensions are less likely to
+                        disrupt termination checking),
+\textbf{compositionality}\footnote{This is not listed in Abel's thesis,
+                                but comes from his invited talk in FICS 2012.}
+        (one needs only types, not the code, for checking the termination), and
+\textbf{higher-order functions and higher-kinded datatypes}
+        (works well even for higher-order functions and non-regular datatypes,
+        as a consequence of compositionality).
+In his dissertation \cite{abel06phd} (Section 4.4) on sized types,
+Abel views the Mendler-style approach as enforcing size restrictions
+using higher-rank polymorphism as follows:
+\begin{itemize}
+\item The abstract recursive type $r$ in Mendler style corresponds to
+        $\mu^\alpha F$ in his sized-type system (System \Fwhat),
+        where the sized type
+        for the value being passed in corresponds to $\mu^{\alpha+1} F$.
+\item The concrete recursive type $\mu F$ in Mendler style corresponds to
+        $\mu^\infty F$ since there is no size restriction.
+\item By subtyping, a type with a smaller size index can be cast to
+        the same type with a larger size index.
+\end{itemize}
+This view is based on the same intuition we discussed in
+Chapter \ref{ch:mendler}. Mendler-style recursion schemes terminate, for
+positive datatypes -- because $r$-values are direct subcomponents
+of the value being eliminated. They are always smaller
+than the value being passed in. Types enforce that recursive calls
+are only well typed, when applied to smaller subcomponents.
+
+Abel's System \Fwhat\ can express primitive recursion quite naturally
+using subtyping. The casting operation $(r -> \mu F)$ in Mendler-style
+primitive recursion corresponds to an implicit conversion by subtyping
+from $\mu^\alpha F$ to $\mu^\infty F$ because $\alpha \leq \infty$.
+
+System \Fwhat\ \cite{abel06phd} is closely related to
+System \Fixw\ \cite{AbeMat04}. Both of these systems are base on
+equi-recursive fixpoint types over positive base structures.
+Both of these systems are able to embed (or simulate) Mendler-style
+primitive recursion (which is based on iso-recursive types) via
+the encoding \cite{Geu92} of arbitrary base structures into
+positive base structures. In \S\ref{sec:fixi:data}, we rely on
+the same encoding, denoted by $\Phi$, when embedding \MPr\ into System \Fixw.
+
+Abel's sized-type approach provides good intuitions why 
+certain recursion schemes terminate over positive datatypes.
+But, it does not give a good intuition of whether or not
+those recursion schemes would terminate for negative datatypes,
+unless there is an encoding that can translate negative datatypes into
+positive datatypes. For primitive recursion, this is possible (as we
+mentioned above). However, for our recursion scheme \MsfIt, which is
+especially useful over negative datatypes, we do not know of an encoding
+that can map the inverse augmented fixpoints into positive fixpoints.
+So, it is not clear whether Abel's the sized type approach based on
+positive equi-recursive fixpoint types can provide a good intuition
+for the termination behavior of \MsfIt.  In \ref{sec:futwork:mprsi},
+we will discuss another Mendler-style recursion scheme (\mprsi{}), which
+is also useful over negative datatypes and has a termination property
+(not proved yet) based on the size of the index in the datatype.
+
+
+
+
+\section{Another Mendler-style recursion scheme for mixed-variant datatypes}
+\label{sec:mprsi}
+%% This section is an extended and revised version of our extended abstract
+%% (without the introduction section) in the TYPES 2013 workshop.
+
+In \S\ref{sec:msf}, we discussed Mendler-style iteration with
+a syntactic inverse, \lstinline{msfcata}, which is particularly useful for
+defining functions over mixed-variant datatypes.
+We demonstrated the usefulness of \lstinline{msfcata} by defining
+functions over HOAS:
+\begin{itemize}
+\item the string formatting function \lstinline{showExp} for
+	the untyped HOAS using \lstinline{msfcata0}
+	(Figure\;\ref{lst:HOASshow}) and
+\item the type-preserving evaluator \lstinline{eval} for
+	the simply-typed HOAS using \lstinline{msfcata1}
+	(Figure\;\ref{list:HOASeval}).
+\end{itemize}
+In this section, we speculate about another Mendler-style recursion scheme,
+\lstinline{mprsi}, motivated by an example similar to the \lstinline{eval}
+function. The name \lstinline{mprsi} stands for
+Mendler-style primitive recursion with a sized index.
+
+\begin{figure}
+\lstinputlisting[
+	caption={
+		Two evaluators for the simply-typed $\lambda$-calculus in HOAS.
+		One uses a native (Haskell) value domain (\lstinline{eval}),
+		the other uses a user-defined value domain (\lstinline{veval}).
+		\label{lst:HOASevalV}
+		},
+	firstline=4]{HOASevalV.hs}
+\vspace*{-3ex}
+\end{figure}
+
+We review the \lstinline{eval} example and then compare
+it to our motivating example \lstinline{veval} for \lstinline{mprsi}.
+Both \lstinline{eval} and \lstinline{veval} are illustrated
+in Figure\;\ref{lst:HOASevalV}. Recall that this code is written in Haskell,
+following the Mendler-style conventions.
+The function \lstinline{eval :: Exp t -> Id t} is
+a type preserving evaluator that evaluates an HOAS expression of type
+\lstinline{t} to a (Haskell) value of type \lstinline{t}.
+The \lstinline{eval} function always terminates because
+\lstinline{msfcata1} always terminates. Recall that \lstinline{msfcata1}
+and \lstinline{Rec1} can be embedded into System~\Fw.
+
+The motivating example \lstinline{veval :: Exp t -> Val t} is also 
+a type preserving evaluator. Unlike \lstinline{eval} it evaluates to 
+a user-defined value domain \lstinline{Val} of type \lstinline{t} (rather
+than a Haskell value). The definition of \lstinline{veval} is similar to
+\lstinline{eval} -- both of them are defined using \lstinline{msfcata1}.
+The first equation of \lstinline{phi} for evaluating
+the \lstinline{Lam}-expression is essentially the same as
+the corresponding equation in the definition of \lstinline{eval}.
+The second equation of \lstinline{phi} for evaluating
+the \lstinline{App}-expression is also similar in structure to
+the corresponding equation in the definition of \lstinline{eval},
+but the use of \lstinline{unVal} is problematic. Note, the definition of
+\lstinline{unVal} relies on pattern matching against \lstinline{In1}.
+Recall that one cannot freely pattern match against a recursive value
+in Mendler style. Recursive values must be analyzed (or, eliminated) by
+using Mendler-style recursion schemes. It is not a problem to use
+\lstinline{unId} in the definition of \lstinline{eval} because
+\lstinline{Id} is non-recursive.
+
+It is not likely that \lstinline{unVal} can be defined using any of
+the existing Mendler-style recursion schemes. So, we designed
+a new Mendler-style recursion scheme that can express \lstinline{unVal}.
+The new recursion scheme \lstinline{mprsi} extends \lstinline{mprim} with
+an additional uncast operation. Recall that \lstinline{mprim} has
+two abstract operations, call and cast. So, \lstinline{mprsi} has
+three abstract operations, call, cast, and uncast. In the following paragraphs,
+we explain the design of \lstinline{mprsi} step-by-step.
+
+Let us try to define \lstinline{unVal} using \lstinline{mprim1}, and see
+where it falls short. \lstinline{mprim1} provides two abstract operations,
+\lstinline{cast} and {call}, as you can see from its type sigaure:
+\begin{lstlisting}
+mprim1 :: (forall r i. (forall i. r i -> Mu1 f i)  -- cast
+              -> (forall i. r i -> a i)      -- call
+              -> (f r i -> a i)        ) -> Mu1 f i -> a i
+\end{lstlisting}
+We attempt to define \lstinline{unVal} using \lstinline{mprim1} as follows:
+\begin{lstlisting}
+unVal :: Mu1 V (t1 -> t2) -> (Mu1 V t1 -> Mu1 V t2)
+unVal = mprim1 phi where
+  phi cast call (VFun f) = ...
+\end{lstlisting}
+Inside the \lstinline{phi} function, we have a function
+\lstinline{f :: (r t1 -> r t2)} over abstract recursive values.
+We need to cast \lstinline{f} into a function over concrete recursive values
+\lstinline{(Mu1 V t1 -> Mu1 V t2)}.
+We should not need to use |call|, since we do not expect
+to use any recursion to define |unVal|.
+So the only available operation to
+work with is \lstinline{cast :: (forall i. r i -> Mu1 f i)}.
+Composing \lstinline{cast} with \lstinline{f}, we can get
+\lstinline{(cast . f) :: (r t1 -> Mu1 V t2)}, whose codomain
+\lstinline{(Mu1 V t2)} is exactly what we want. But, the domain
+is still abstract \lstinline{(r t1)} rather than being concrete
+\lstinline{(Mu V t1)}. We are stuck.
+
+What additional abstract operation would help us complete
+the definition of \lstinline{unVal}? We need an abstract operation
+to cast from \lstinline{(r t1)} to \lstinline{(Mu V t1)}
+in a contravariant position. If we had an inverse of cast,
+\lstinline{uncast :: (forall i. Mu f i -> r i)}, we can
+complete the definition of \lstinline{unVal} by composing
+\lstinline{uncast}, \lstinline{f}, and \lstinline{cast}.
+Observe that \lstinline{uncast . f . cast :: (Mu1 V t1 -> Mu1 V t2)}.
+Thus, we can formulate \lstinline{mprsi1} with a naive type signature
+as follows:
+\begin{lstlisting}
+mprsi1 :: (forall r i. (forall i. r i -> Mu1 f i)  -- cast
+               -> (forall i. Mu1 f i -> r i)  -- uncast
+               -> (forall i. r i -> a i)      -- call
+               -> (f r i -> a i)        ) -> Mu1 f i -> a i
+
+mprsi1 phi (In1 x) = phi id id (mprsi1 phi) x
+\end{lstlisting}
+Although the type signature above is type correct, it is too powerful.
+The Mendler-style uses types to forbid, as ill-typed, non terminating
+computations. Having both \lstinline{cast} and \lstinline{uncast} supports
+the same ability as freely pattern matching over recursive values,
+which as we showed in introduction can lead to non-termination.
+To recover the guarantee of termination, we need to restrict the use of
+either \lstinline{cast} and \lstinline{uncast}, or both.
+
+Let us see how this non-termination might occur. If we allowed
+\lstinline{mprsi1} with the naive type signature above, we could write
+an evaluator (similar to \lstinline{veval} but for an untyped HOAS),
+which does not always terminate. This evaluator would diverge for terms
+with self application. Typed terms use the type index to prevent
+such diverging terms.
+
+We walk through the process of defining an untyped HOAS.
+The base structures of the untyped HOAS and its value domain
+can be defined as follows:
+\begin{lstlisting}
+data ExpF_u r t = Lam_u (r t -> r t) | App_u (r t) (r t)
+data V_u r t = VFun_u (r t -> r t)
+\end{lstlisting}
+Fixpoints of the structures above represent the untyped HOAS and
+its value domain. Here, the index \lstinline{t} does not track
+the types of terms but remains constant everywhere.
+Why did we believe that \lstinline{veval} always terminates?
+Because it evaluates a well-typed HOAS, whose type is encoded as
+an index \lstinline{t} of the recursive datatype \lstinline{(Exp t)}. That is,
+the use of indices as types is the key to the termination property.
+Therefore, our idea is to restrict the use of the abstract operations
+by enforcing constraints over their indices. We allow the use
+of the abstract operations only over abstract values whose indices are
+smaller in size compared to the size of the argument index.
+For the \lstinline{veval} example, we define being smaller as
+the structural ordering over types, that is, \lstinline{t1 < (t1 -> t2)}
+and \lstinline{t2 < (t2 -> t1)}.
+We have two candidates for the type signature of \lstinline{mprsi1}:
+\begin{itemize}
+\item Candidate 1: restrict uses of both \lstinline{cast} and \lstinline{uncast}
+\begin{lstlisting}
+mprsi1 :: (forall r j. (forall i. (i<j) => r i -> Mu1 f i)  --  cast
+               -> (forall i. (i<j) => Mu1 f i -> r i)  --  uncast
+               -> (forall i.          r i -> a i)      --  call
+               -> (f r j -> a j)          ) -> Mu1 f i -> a i
+\end{lstlisting}
+\item Candidate 2: restrict the use of \lstinline{uncast} only
+\begin{lstlisting}
+mprsi1 :: (forall r j. (forall i.           r i -> Mu1 f i)  --  cast
+               -> (forall i. (i<j) =>  Mu1 f i -> r i)  --  uncast
+               -> (forall i.           r i -> a i)      --  call
+               -> (f r j -> a j)          ) -> Mu1 f i -> a i
+\end{lstlisting}
+\end{itemize}
+We strongly believe that the first candidate always terminate,
+but it might be overly restrictive. Maybe the second candidate is
+enough to guarantee termination? Both candidates allow defining
+\lstinline{veval}, since one can define \lstinline{unVal}
+using \lstinline{mprsi1} with either one of the candidates.
+Both candiates forbid the definition of an evaluator over the untyped HOAS,
+because neither support extracting functions from the untyped value domain.
+
+We need further studies to prove termination properties of \lstinline{mprsi}.
+The sized-type approach, discussed in the related work section,
+seems to be relevant to showing termination of \lstinline{mprsi}.
+However, existing theories on sized-types are not directly applicable to
+\lstinline{mprsi} because they are focused on positive datatypes, but
+not negative datatypes.
+
+
 \section{Summary and Future Work}
 TODO
+
+
 
 \section*{Acknowledgements}
 %% \subparagraph*{Acknowledgements}

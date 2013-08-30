@@ -1,9 +1,15 @@
 %include includelhs2tex.lhs
 
-\section{Another Mendler-style recursion scheme for mixed-variant datatypes}
+\section[Another Mendler-style recursion scheme for mixed-variant datatypes]{
+	 Another Mendler-style recursion scheme for mixed-variant datatypes
+	\footnotemark{} }
+\footnotetext{
+	This section is an extended and revised version of
+ 	our extended abstract (without the introduction section) in
+	the TYPES 2013 workshop. We also plan to submit a modified version of
+	this section as a part of the TYPES 2013 post-proceedings draft.}
 \label{sec:futwork:mprsi}
-%% This section is an extended and revised version of our extended abstract
-%% (without the introduction section) in the TYPES 2013 workshop.
+
 
 In \S\ref{sec:msf}, we discussed Mendler-style iteration with
 a syntactic inverse, |msfcata|, which is particularly useful for
@@ -125,7 +131,7 @@ which as we showed in introduction can lead to non-termination.
 To recover the guarantee of termination, we need to restrict the use of
 either |cast| or |uncast|, or both.
 
-Let us see how this non=termination might occur. If we allowed |mprsi1| with
+Let us see how this non-termination might occur. If we allowed |mprsi1| with
 the naive type signature above, we could write an evaluator
 (similar to |vevalHOAS| but for an untyped HOAS), which does not always terminate.
 This evaluator would diverge for terms with self application. Typed terms
@@ -188,7 +194,6 @@ seems to be relevant to showing termination of |mprsi|. However,
 existing theories on sized-types are not directly applicable to |mprsi|
 because they are focused on positive datatypes, but not negative datatypes.
 
-The idea described in this section was presented in the TYPES 2013 workshop.
 %% |Exp| and |Val| in this section are chosen to be minimal for simplicity,
 %% kbut it does not well motivate why one might need a user-defined value domain.
 %% kThe normalization by evaluation based on HOAS in Appendix \ref{app:nbeHOAS}
