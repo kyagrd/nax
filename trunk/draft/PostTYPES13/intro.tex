@@ -1,0 +1,61 @@
+\section{TODO intro}\label{sec:intro}
+\begin{enumerate}
+	\item discuss the advantages of the Mendler style,
+	\item report that we can define an evaluator for the simply-typed HOAS
+		using Mendler-style iteration with syntactic inverses
+		(\lstinline{msfcata}), and
+	\item propose a new recursion scheme (work in progress) whose
+		termination relies on the invariants specified by
+		size measures on indices.
+\end{enumerate}
+
+
+
+Advantages of the Mendler style include allowing arbitrary definitions of
+recursive datatypes, while still ensuring well-behaved use by providing
+a rich set of principled eliminators (\ie, recursion schemes).
+Certain concepts, such as HOAS, are most succinctly defined as
+mixed-variant datatypes, which are unfortunately, outlawed in many existing
+reasoning systems (\eg, Coq, Agda). One is forced to devise clever encodings
+(\eg, \cite{PHOAS}) to use concepts like HOAS within such systems.
+
+We believe it is worthwhile to allow definining all recursive datatypes
+available in functional \emph{programming} languages, including those outlawed
+in many reasoning systems. For example, the untyped $\lambda$-calculus can be
+defined in HOAS as an Haskell dataype (\lstinline{Exp}):
+\begin{lstlisting}
+data Exp = Lam (Exp -> Exp) | App Exp Exp
+\end{lstlisting}
+Even if we assume all functions embedded in \lstinline{Lam} are non-recursive,
+evaluating HOAS may still cause problems for logical reasoning, since
+the untyped $\lambda$-calculus has diverging terms. However, there are many
+well-behaved (\ie, terminating) computations over \lstinline{Exp}, such as
+converting an HOAS expression to first-order syntax.
+Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme,
+\lstinline{msfcata}  (\aka\ \textit{msfcata}), which captures these
+well-behaved computations.
+
+If the datatype \lstinline{Exp} had indices to assert invariants of
+well-typed expressions (\eg, \lstinline{Exp Bool}\, for boolean expressions
+and \lstinline{Exp Int}\, for integer expressions), we could rely on these
+invariants to write even more expressive termiating programs, such as
+a type-preserving evaluator. In Section\;\ref{sec:HOASeval}, we report
+our novel discovery that we can define a type-preserving evaluator for
+a simply-typed HOAS using \lstinline{msfcata}.
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+

@@ -1,0 +1,189 @@
+\section{Mendler-style primitive recursion with a sized index}
+\label{sec:mprsi}
+
+In \S\ref{sec:mendler} and \S\ref{sec:HOASeval}, we discussed
+Mendler-style iteration with a syntactic inverse, \lstinline{msfcata},
+which is particularly useful for defining functions over
+mixed-variant datatypes. We demonstrated the usefulness of
+\lstinline{msfcata} by defining functions over HOAS:
+\begin{itemize}
+\item the string formatting function \lstinline{showExp} for
+	the untyped HOAS using \lstinline{msfcata0}
+	(Figure\;\ref{lst:HOASshow}) and
+\item the type-preserving evaluator \lstinline{eval} for
+	the simply-typed HOAS using \lstinline{msfcata1}
+	(Figure\;\ref{lst:HOASeval}).
+\end{itemize}
+
+In this section, we speculate about another Mendler-style recursion scheme,
+\lstinline{mprsi}, motivated by an example similar to the \lstinline{eval}
+function. The name \lstinline{mprsi} stands for
+Mendler-style primitive recursion with a sized index.
+
+\begin{figure}
+\lstinputlisting[
+	caption={
+		Two evaluators for the simply-typed $\lambda$-calculus in HOAS.
+		One uses a native (Haskell) value domain (\lstinline{eval}),
+		the other uses a user-defined value domain (\lstinline{veval}).
+		\label{lst:HOASevalV}
+		},
+	firstline=4]{HOASevalV.hs}
+\vspace*{-3ex}
+\end{figure}
+
+We review the \lstinline{eval} example and then compare
+it to our motivating example \lstinline{veval} for \lstinline{mprsi}.
+Both \lstinline{eval} and \lstinline{veval} are illustrated
+in Figure\;\ref{lst:HOASevalV}. Recall that this code is written in Haskell,
+following the Mendler-style conventions.
+The function \lstinline{eval :: Exp t -> Id t} is
+a type preserving evaluator that evaluates an HOAS expression of type
+\lstinline{t} to a (Haskell) value of type \lstinline{t}.
+The \lstinline{eval} function always terminates because
+\lstinline{msfcata1} always terminates. Recall that \lstinline{msfcata1}
+and \lstinline{Rec1} can be embedded into System~\Fw.
+
+The motivating example \lstinline{veval :: Exp t -> Val t} is also 
+a type preserving evaluator. Unlike \lstinline{eval} it evaluates to 
+a user-defined value domain \lstinline{Val} of type \lstinline{t} (rather
+than a Haskell value). The definition of \lstinline{veval} is similar to
+\lstinline{eval} -- both of them are defined using \lstinline{msfcata1}.
+The first equation of \lstinline{phi} for evaluating
+the \lstinline{Lam}-expression is essentially the same as
+the corresponding equation in the definition of \lstinline{eval}.
+The second equation of \lstinline{phi} for evaluating
+the \lstinline{App}-expression is also similar in structure to
+the corresponding equation in the definition of \lstinline{eval},
+but the use of \lstinline{unVal} is problematic. Note, the definition of
+\lstinline{unVal} relies on pattern matching against \lstinline{In1}.
+Recall that one cannot freely pattern match against a recursive value
+in Mendler style. Recursive values must be analyzed (or, eliminated) by
+using Mendler-style recursion schemes. It is not a problem to use
+\lstinline{unId} in the definition of \lstinline{eval} because
+\lstinline{Id} is non-recursive.
+
+It is not likely that \lstinline{unVal} can be defined using any of
+the existing Mendler-style recursion schemes. So, we designed
+a new Mendler-style recursion scheme that can express \lstinline{unVal}.
+The new recursion scheme \lstinline{mprsi} extends \lstinline{mprim} with
+an additional uncast operation. Recall that \lstinline{mprim} has
+two abstract operations, call and cast. So, \lstinline{mprsi} has
+three abstract operations, call, cast, and uncast. In the following paragraphs,
+we explain the design of \lstinline{mprsi} step-by-step.
+
+Let us try to define \lstinline{unVal} using \lstinline{mprim1}, and see
+where it falls short. \lstinline{mprim1} provides two abstract operations,
+\lstinline{cast} and {call}, as you can see from its type sigaure:
+\begin{lstlisting}
+mprim1 :: (forall r i. (forall i. r i -> Mu1 f i)  -- cast
+              -> (forall i. r i -> a i)      -- call
+              -> (f r i -> a i)        ) -> Mu1 f i -> a i
+\end{lstlisting}
+We attempt to define \lstinline{unVal} using \lstinline{mprim1} as follows:
+\begin{lstlisting}
+unVal :: Mu1 V (t1 -> t2) -> (Mu1 V t1 -> Mu1 V t2)
+unVal = mprim1 phi where
+  phi cast call (VFun f) = ...
+\end{lstlisting}
+Inside the \lstinline{phi} function, we have a function
+\lstinline{f :: (r t1 -> r t2)} over abstract recursive values.
+We need to cast \lstinline{f} into a function over concrete recursive values
+\lstinline{(Mu1 V t1 -> Mu1 V t2)}.
+We should not need to use |call|, since we do not expect
+to use any recursion to define |unVal|.
+So the only available operation to
+work with is \lstinline{cast :: (forall i.r i -> Mu1 f i)}.
+Composing \lstinline{cast} with \lstinline{f}, we can get
+\lstinline{(cast . f) :: (r t1 -> Mu1 V t2)}, whose codomain
+\lstinline{(Mu1 V t2)} is exactly what we want. But, the domain
+is still abstract \lstinline{(r t1)} rather than being concrete
+\lstinline{(Mu1 V t1)}. We are stuck.
+
+What additional abstract operation would help us complete
+the definition of \lstinline{unVal}? We need an abstract operation
+to cast from \lstinline{(r t1)} to \lstinline{(Mu1 V t1)}
+in a contravariant position. If we had an inverse of cast,
+\lstinline{uncast :: (forall i.Mu1 f i -> r i)}, we can
+complete the definition of \lstinline{unVal} by composing
+\lstinline{uncast}, \lstinline{f}, and \lstinline{cast}.
+Observe that \lstinline{uncast . f . cast :: (Mu1 V t1 -> Mu1 V t2)}.
+Thus, we can formulate \lstinline{mprsi1} with a naive type signature
+as follows:
+\begin{lstlisting}
+mprsi1 :: (forall r i. (forall i. r i -> Mu1 f i)  -- cast
+               -> (forall i. Mu1 f i -> r i)  -- uncast
+               -> (forall i. r i -> a i)      -- call
+               -> (f r i -> a i)        ) -> Mu1 f i -> a i
+
+mprsi1 phi (In1 x) = phi id id (mprsi1 phi) x
+\end{lstlisting}
+Although the type signature above is type correct, it is too powerful.
+The Mendler-style uses types to forbid non terminating computations
+as ill-typed. Having both \lstinline{cast} and \lstinline{uncast} supports
+the same ability as freely pattern matching over recursive values,
+which can lead to non-termination as we showed in the introduction.
+To recover the guarantee of termination, we need to restrict the use of
+either \lstinline{cast} and \lstinline{uncast}, or both.
+
+Let us see how this non-termination might occur. If we allowed
+\lstinline{mprsi1} with the naive type signature above, we could write
+an evaluator (similar to \lstinline{veval} but for an untyped HOAS),
+which does not always terminate. This evaluator would diverge for terms
+with self application. Typed terms use the type index to prevent
+such diverging terms.
+
+We walk through the process of defining an untyped HOAS.
+The base structures of the untyped HOAS and its value domain
+can be defined as follows:
+\begin{lstlisting}
+data ExpF_u r t = Lam_u (r t -> r t) | App_u (r t) (r t)
+data V_u r t = VFun_u (r t -> r t)
+\end{lstlisting}
+Fixpoints of the structures above represent the untyped HOAS and
+its value domain. Here, the index \lstinline{t} does not track
+the types of terms but remains constant everywhere.
+Why did we believe that \lstinline{veval} always terminates?
+Because it evaluates a well-typed HOAS, whose type is encoded as
+an index \lstinline{t} of the recursive datatype \lstinline{(Exp t)}. That is,
+the use of indices as types is the key to the termination property.
+Therefore, our idea is to restrict the use of the abstract operations
+by enforcing constraints over their indices. We allow the use
+of the abstract operations only over abstract values whose indices are
+smaller in size compared to the size of the argument index.
+For the \lstinline{veval} example, we define being smaller as
+the structural ordering over types, that is, \lstinline{t1 < (t1 -> t2)}
+and \lstinline{t2 < (t2 -> t1)}.
+We have two candidates for the type signature of \lstinline{mprsi1}:
+\begin{itemize}
+\item Candidate 1: restrict uses of both \lstinline{cast} and \lstinline{uncast}
+\begin{lstlisting}
+mprsi1 :: (forall r j. (forall i. (i<j) => r i -> Mu1 f i)  --  cast
+               -> (forall i. (i<j) => Mu1 f i -> r i)  --  uncast
+               -> (forall i.          r i -> a i)      --  call
+               -> (f r j -> a j)          ) -> Mu1 f i -> a i
+\end{lstlisting}
+\item Candidate 2: restrict the use of \lstinline{uncast} only
+\begin{lstlisting}
+mprsi1 :: (forall r j. (forall i.           r i -> Mu1 f i)  --  cast
+               -> (forall i. (i<j) =>  Mu1 f i -> r i)  --  uncast
+               -> (forall i.           r i -> a i)      --  call
+               -> (f r j -> a j)          ) -> Mu1 f i -> a i
+\end{lstlisting}
+\end{itemize}
+We strongly believe that the first candidate always terminate,
+but it might be overly restrictive. Maybe the second candidate is
+enough to guarantee termination? Both candidates allow defining
+\lstinline{veval}, since one can define \lstinline{unVal}
+using \lstinline{mprsi1} with either one of the candidates.
+Both candiates forbid the definition of an evaluator over the untyped HOAS,
+because neither support extracting functions from the untyped value domain.
+
+We need further studies to prove termination properties of \lstinline{mprsi}.
+The sized-type approach, discussed in the related work section,
+seems to be relevant to showing termination of \lstinline{mprsi}.
+However, existing theories on sized-types are not directly applicable to
+\lstinline{mprsi} because they are focused on positive datatypes, but
+not negative datatypes.
+
+

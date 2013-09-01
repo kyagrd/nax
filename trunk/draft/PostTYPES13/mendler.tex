@@ -1,0 +1,70 @@
+\section{Mendler-style recursion schemes}
+\label{sec:mendler}
+In this section, we introduce basic concepts of two Mendler-style recursion
+schemes: iteration (\lstinline{mcata}\,) and iteration with syntactic inverses
+(\lstinline{msfcata}\,). Further details on Mendler-style recursion schemes,
+including these two and more, can be found in \cite{AhnShe11} TODO TODO
+more citations TODO.
+
+\begin{lstlisting}[caption={TODO \label{lst:mu}}]
+data Mu0   (f::(* -> *))               = In0   {out0  ::f (Mu0   f)  }
+data Mu1 (f::(* -> *) -> (* -> *)) i = In1 {out1::f (Mu1 f) i}
+                                                              
+data Rec0   f a   = Roll0   {unRoll0   :: f (Rec0 f a)    } | Inverse0   a
+data Rec1 f a i = Roll1 {unRoll1 :: f (Rec1 f a) i} | Inverse1 (a i)
+\end{lstlisting}
+
+\begin{figure}
+\begin{lstlisting}[caption={TODO \label{lst:reccomb}}]
+type Phi0   f a = forall r . (    r   -> a  ) -> (f r   -> a  )
+type Phi1 f a = forall r i.(forall i.r i -> a i) -> (f r i -> a i)
+
+mcata0   :: Phi0   f a ->  Mu0  f    -> a
+mcata1 :: Phi1 f a ->  Mu1 f i -> a i
+
+type Phi0'   f a = forall r . (     a  -> r a  ) ->
+                       (     r a  -> a  ) -> (f (r a)   -> a  )
+type Phi1' f a = forall r i.(forall i.a i -> r a i) ->
+                       (forall i.r a i -> a i) -> (f (r a) i -> a i)
+
+msfcata0   :: Phi0'   f a -> (forall a. Rec0   f a  ) -> a
+msfcata1 :: Phi1' f a -> (forall a. Rec1 f a i) -> a i
+\end{lstlisting}
+\vspace*{-3ex}
+\end{figure}
+
+TODO Write text about the showExp example TODO
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+
+\begin{figure}
+\lstinputlisting[
+	caption={Formatting an untyped HOAS expression into a \lstinline{String}
+		\label{lst:HOASshow}},
+	firstline=5]{HOASshow.hs}
+\vspace*{-3ex}
+\end{figure}
+
+%% Using general recursion, one would have defined
+%% the datatype |Exp_g :: * -> *| that corresponds to |Exp|
+%% as follows, using Haskell's native recursive datatype definition.
+%% \begin{code}
+%% data Exp_g t where
+%%   Lam_g :: (Exp_g a -> Exp_g b) -> Exp_g (a -> b)
+%%   App_g :: Exp_g (a -> b) -> Exp_g a -> Exp_g b
+%% \end{code}
+
+

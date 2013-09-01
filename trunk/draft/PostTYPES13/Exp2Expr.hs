@@ -4,10 +4,6 @@ import RecComb
 data ExpF r = Lam (r -> r) | App r r
 
 type Expr = Mu0 ExpF
--- lam :: (Exp' a -> Exp' a) -> Exp' a
-lam e    = Roll0 (Lam e)
--- app :: Exp -> Exp -> Exp
-app f e  = Roll0 (App f e)
 
 type Exp' a = Rec0 ExpF a
 type Exp = (forall a. Exp' a)  -- (forall a. Rec0 E a)

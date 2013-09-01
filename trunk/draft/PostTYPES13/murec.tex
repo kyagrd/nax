@@ -1,0 +1,47 @@
+\section{Relation between $\mu$ and $\mu'$}\label{sec:murec}
+Listing\;\ref{lst:rec2mu} illustrates a mapping from
+\lstinline{(forall a. Rec0 E a)}  to \lstinline{(Mu0 E)} implemented
+using \lstinline{msfcata0}, where \lstinline{E} is a base structure
+for the untyped HOAS. Since we have two fixpoint type operators,
+\lstinline{Rec0} and \lstinline{Mu0}, we can define two recursive datatypes
+from the base structure \lstinline{E}\,:
+\lstinline{Exp} defined as \lstinline{(forall a. Rec0 E a)} and
+\lstinline{Expr} defined as \lstinline{Mu0 E}.
+The function \lstinline{exp2expr :: Exp -> Expr}\, implements the mapping from
+\lstinline{Rec0}-based HOAS expressions to \lstinline{Mu0}-based
+HOAS expressions. Note, \lstinline{exp2expr}\, is defined
+using \lstinline{msfcata0}.  Since there exists an embedding of
+\lstinline{Mu0} and \lstinline{msfcata0} into System~\Fw\ \cite{AhnShe11},
+\lstinline{exp2expr}\, is admissible in System~\Fw.
+This indicates that the mapping from \lstinline{(forall a. Rec0 f a)} to
+(\lstinline{Mu0 f}\,) is admissible within System~\Fw.
+
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+
+\begin{figure}
+\lstinputlisting[
+	caption={Conversion from $\mu'$-values to $\mu$-values
+		using \textit{msfcata} \label{lst:rec2mu} },
+	firstline=4]{Exp2Expr.hs}
+\vspace*{-3ex}
+\end{figure}
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+

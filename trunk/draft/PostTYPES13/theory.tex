@@ -1,0 +1,193 @@
+\section{TODO Theory TODO \Fw-embeddings}\label{sec:theory}
+
+Mendler-style iteration (\MIt{*}) can be embedded into System~\Fw\ as follows
+\cite{TODO,TODO,TODO}:
+\begin{align*}
+&\mu_{*} ~=~ \lambda F^{* \to *}.\forall X^{*}.
+		(\forall R^{*}.(R \to X) \to F R X \to X) \to X
+	\\
+&\MIt{*} ~:~ \forall A^{*}.
+	(\forall R^{*}.(R \to A) \to F R \to A) \to \mu_{*} F \to A \\
+&\MIt{*}~\varphi~r ~=~ r~\varphi
+	\\
+&\In{*} ~:~\forall F^{* \to *}.F(\mu_{*} F) \to \mu_{*} F \\
+&\In{*}~x~\varphi ~=~ \varphi~(\MIt{*}~\varphi)~x
+\end{align*}
+From the above embedding, one can derive the equational property of \MsfIt{*}
+apparent in the Haskell definition (Listing~\ref{lst:reccomb}) as follows:
+$\MIt{*}~\varphi~(\In{*}~x) = \In{*}~x~\varphi = \varphi~(\MIt{*}~\varphi)~x$.
+
+We embed Mendler-style iteration with static inverses (\msfit{*})
+into System \Fw\ as follows:\footnote{A Haskell transcription of this embedding
+	appears in the previous work of Ahn and Sheard \cite{AhnShe11}.}
+\begin{align*}
+&\mu_{*}' ~=~ \lambda F^{* \to *}.\lambda A^{*}.
+		K A + ((K A \to A) \to F(K A) \to A) \to A
+	\\
+&\msfit{*} ~:~ \forall A^{*}.
+	(\forall R^{*}.(A \to R A) \to (R A \to A) \to F(R A) \to A) \to
+	(\forall A^{*}.\mu_{*}' F A) \to A \\
+&\msfit{*}~\varphi~r ~=~ r~\eta^{-1}~(\underbrace{\lambda f.f(\varphi~\eta)}_g)
+	\\
+&\textit{Inverse}_{*} ~:~ \forall F^{*\to*}.\forall A^{*}.A \to \mu{*}' F A \\
+&\textit{Inverse}_{*}~a ~=~ \inL (\eta~a)
+	\\
+&\In{*}' ~:~ \forall F^{*\to*}.\forall A^{*}.F(\mu{*}' F A) \to \mu{*}' F A \\
+&\In{*}'~x ~=~ \inR(\,\cdots\;\text{\color{blue}missing complete definition}\;\cdots)
+\end{align*}
+where $K = \lambda A^{*}.\forall X^{*}.(A \to X) \to X$,
+whose data constructor ($\eta$) and eliminator ($\eta^{-1}$)
+are defined as follows:
+\begin{align*}
+\eta &~:~ A \to KA &
+\eta^{-1} &~:~ KA \to A \\
+\eta &~=~ \lambda a.\lambda f.f~a : A \to KA &
+\eta^{-1} &~=~ \lambda \varphi.\varphi~\textit{id} : KA \to A
+\end{align*}
+$K$ is an embedding of the identity datatype (\lstinline{Id})
+in Listing~\ref{lst:HOASeval} where its data constructor (\lstinline{MkId}) and
+selector function (\lstinline{unId}) are embedded as $\eta$ and $\eta^{-1}$.
+For your information, the purpose of using \lstinline{Id}
+in Listing~\ref{lst:HOASeval}, which is to avoid higher-order unification
+in type inference, and the purpose of using $K$ here are not related but
+just a coincidence. For later use in the discussion, we label the subterm
+$(\lambda f.f(\varphi~\eta))$ in the definition of \msfit{*} above as $g$.
+
+TODO brief mention embeddings of msfit and Inverse
+Note that the definition of $\In{*}'$ is missing the complete embedding of
+$\msfit{*}$ above. We know that it must be a right injection ($\inR$), but
+we were not able to complete the embedding for $\In{*}'$.\footnote{
+	It was also the case in the previous work of Ahn and Sheard
+	\cite{AhnShe11}, but was not clearly stated in the text.}
+However, we were able to give embeddings for each individual recursive types
+for a particular base structure $F$. For instance, we can embed
+the recursive type \lstinline{Exp'} in Listing\;\ref{lst:HOASshow},
+which is the fixpoint ($\mu{*}'$) over \lstinline{ExpF}, and
+its two data constructors \textit{lam} and \textit{app}\, into System~\Fw.
+
+TODO TODO TODO TODO
+\begin{align*}
+\textit{lam}&~:~\forall A^{*}.
+		(\textit{Exp}'~A \to \textit{Exp}'~A) \to \textit{Exp}'~A \\
+\textit{lam}&~f~=~\In{*}'(\textit{Lam}~f)
+= \inR~(\underbrace{
+	\lambda \varphi'.\varphi'~\eta^{-1}~
+	(\overbrace{\textit{Lam}(\lambda y.\textit{lift}~\varphi'~(f(\inL~y))) }^v)\;
+	}_w)
+\end{align*}
+\begin{align*}
+\textit{app}&~:~\forall A^{*}.
+		\textit{Exp}'~A \to \textit{Exp}'~A \to \textit{Exp}'~A \\
+\textit{app}&~r_1~r_2 = \In{*}'(\textit{App}~r_1~r_2)
+= \inR~(\underbrace{
+		\lambda \varphi'.\varphi'~\eta^{-1}~
+		(\textit{App}~(\lift~\varphi'~r_1)~(\lift~\varphi'~r_2))}_h)
+\end{align*}
+TODO TODO TODO TODO
+
+We conjecture that it is possible to give an embedding for any recursive type
+in this way. That is, by lifting $(\textit{lift}~\varphi)$ the $r$-values
+in covariant positions and by left injecting ($\inL$) the answers\footnote{
+	More precisely, $\eta$ applied answers
+	because the type we expect is not $A$ but $K A$.}
+when $r$-values are needed in contravariant positions.
+We strongly believe that this conjecture is true, but we leave
+detailed investigation for this conjecture as future work.
+In addition, it is an interesting theoretical quest to search for
+a calculus that can directly embed $\In{*}' : $
+
+\[K_T = \lambda A^{*}.\forall X^{*}.(A \to T X) \to T X \] codensity monad ???
+
+
+\[ A \xrightarrow{\eta} KA \xrightarrow{\inL} \mu_{*}' = KA+((KA \to A) \to F(KA) \to A) \to A \]
+
+
+\begin{align*}
+& \lift~:~(\forall A^{*}.(K A\to A)\to F(K A)\to A)\to \mu_{*}' F A\to K A\\
+& \lift~\varphi'~r ~=~ r~\textit{id}~(\lambda z.\eta(z~\varphi'))
+\end{align*}
+
+
+%% \[ \textit{ExpF} = \lambda R^{*}.R \times R + R \]
+
+
+\begin{align*}
+\textit{lam}&~:~(\forall A^{*}.\textit{Exp}'~A \to \textit{Exp}'~A) \to
+		\textit{Exp} \\
+\textit{lam}&~f~=~\In{*}'(\textit{Lam}~f)
+= \inR~(\underbrace{
+	\lambda \varphi'.\varphi'~\eta^{-1}~
+	(\overbrace{\textit{Lam}(\lambda y.\textit{lift}~\varphi'~(f(\inL~y))) }^v)\;
+	}_w)
+\end{align*}
+
+\[
+\msfit{*}~\varphi~(\textit{lam}~f)
+=?= \varphi~\eta~\eta^{-1}~(Lam(\lambda y.\eta(\msfit~\varphi~(f(\inL~y)))))
+\]
+
+$\psi = (f(\inL~y))~\textit{id}~(\lambda z.\eta(z(\varphi\eta)))$
+
+\begin{align*}
+\msfit{*}~\varphi~(\textit{lam}~f)
+&~=~ (\textit{lam}~f)~\eta^{-1}~g \\
+&~=~ \inR~w~\eta^{-1}~g ~=~ g~w ~=~ w(\varphi\eta) \\
+&~=~ \varphi~\eta~\eta^{-1}~
+	(\textit{Lam}(\lambda y.\lift~(\varphi\eta)~(f(\inL~y)))) \\
+&~=~ \varphi~\eta~\eta^{-1}~(\textit{Lam}(\lambda y.\psi))
+\end{align*}
+
+\[ \eta(\msfit~\varphi~(f(\inL~y)))) = \eta(\inL~\psi~\eta^{-1}~g)
+	= \eta(\eta^{-1}~\psi)
+\]
+section retraction since not same as $\psi$
+
+
+\begin{align*}
+\textit{app} &~:~ \textit{Exp} \to \textit{Exp} \to \textit{Exp} \\
+\textit{app} &~ r_1~r_2 = \In{*}'(\textit{App}~r_1~r_2)
+= \inR~(\underbrace{
+		\lambda \varphi'.\varphi'~\eta^{-1}~
+		(\textit{App}~(\lift~\varphi'~r_1)~(\lift~\varphi'~r_2))}_h)
+\end{align*}
+
+
+\[ \msfit{*}~\varphi~(\textit{app}~x~y)
+=?= \varphi~\eta~\eta^{-1}
+	~(\textit{App}~(\eta(\msfit{*}~\varphi~x))~(\eta(\msfit{*}~\varphi~y)))
+\]
+\begin{align*}
+\msfit{*}~\varphi~(\textit{app}~x~y)
+&~=~ (\textit{app}~r_1~r_2)~\eta^{-1}~g \\
+&~=~ \inR~h~\eta^{-1}~g ~=~ g~h ~=~ h(\varphi~\eta) \\
+&~=~ \varphi~\eta~\eta^{-1}
+     ~(\textit{App}~(\lift~(\varphi\eta)~r_1)~(\lift~(\varphi\eta)~r_2))
+\end{align*}
+\[ \eta(\msfit{*}~\varphi~r) =?= \lift~(\varphi\eta)~r \]
+
+
+
+\[ \eta(x~\eta^{-1}~g) =?= x~\textit{id}~(\lambda z.\eta(z(\phi\eta))) \]
+
+when $x = \inR~z$
+
+\[
+	\eta(x~\eta^{-1}~g) = \eta~g~z = \eta(z(\varphi\eta))
+	= x~\textit{id}~(\lambda z.\eta(z.(\varphi\eta)))
+\]
+
+
+\[ \eta(\msfit{*}~\varphi~(\inR~z)) ~=~ \lift~(\varphi\eta)~(\inR~z) \]
+
+
+
+when $x = \inL~z$
+
+\[ \eta(\eta^{-1}z) =?= z \]
+is this a section / retraction thing here???
+
+\[ \varphi \mapsto \varphi \mapsto \lambda f . f(\varphi~\textit{id}) \]
+
+Section retraction since not same as $\varphi$
+
+
