@@ -36,8 +36,7 @@ into System \Fw\ as follows:\footnote{A Haskell transcription of this embedding
 &\In{*}'~x ~=~ \inR(\,\cdots\;\text{\color{blue}missing complete definition}\;\cdots)
 \end{align*}
 where $K = \lambda A^{*}.\forall X^{*}.(A \to X) \to X$,
-whose data constructor ($\eta$) and eliminator ($\eta^{-1}$)
-are defined as follows:
+whose constructor ($\eta$) and eliminator ($\eta^{-1}$) are:
 \begin{align*}
 \eta &~:~ A \to KA &
 \eta^{-1} &~:~ KA \to A \\
@@ -53,19 +52,41 @@ in type inference, and the purpose of using $K$ here are not related but
 just a coincidence. For later use in the discussion, we label the subterm
 $(\lambda f.f(\varphi~\eta))$ in the definition of \msfit{*} above as $g$.
 
-TODO brief mention embeddings of msfit and Inverse
-Note that the definition of $\In{*}'$ is missing the complete embedding of
-$\msfit{*}$ above. We know that it must be a right injection ($\inR$), but
-we were not able to complete the embedding for $\In{*}'$.\footnote{
+To understand the embedding of $\msfit{*}$, note that $r : \mu_{*}'$ and
+$\mu_{*}'$ is defined as a sum type ($+$), whose polymorphic embedding is
+$A + B = \forall X^{*}.(A \to X) \to (B \to X) \to X$ and its two constructors
+$\inL : \forall A^{*}.\forall B^{*}.A \to A + B$ (left injection) and
+$\inR : \forall A^{*}.\forall B^{*}.B \to A + B$ (right injection) are
+defined as $\inL = \lambda a.\lambda f_1.\lambda f_2.f_1\;a$ and
+$\inR = \lambda b.\lambda f_1.\lambda f_2.f_2\;b$. The value $r$ selects
+$\eta^{-1} : KA \to A$ to handle $\textit{Inverse}_{*}$-values and selects
+$g$ to handle $\In{*}'$-values.
+
+From the embedding of $\textit{Inverse}_{*}$, we can derive the equational
+property of \msfit{*} over $\textit{Inverse}_{*}$-values, which is apparent in
+the Haskell definition of \msfit{*} in Listing\;\ref{lst:reccomb}, as follows:
+\[
+\msfit{*}~\varphi~(\textit{Inverse}_{*} a) =
+(\textit{Inverse}_{*}~a)~\eta^{-1}~g
+= \inL~(\eta~a)~\eta^{-1}~g = \eta^{-1}(\eta~a) = a
+\]
+We leave it as an exercise for the reader to observe that
+$\eta^{-1}(\eta~a) = a$.
+
+Unfortunately, our embedding is not complete. Note that the definition of
+$\In{*}'$ is not complete in the embedding above. We know that it must be
+in the form of a right injection using $\inR$, but we were not able to
+complete the embedding for $\In{*}'$.\footnote{
 	It was also the case in the previous work of Ahn and Sheard
 	\cite{AhnShe11}, but was not clearly stated in the text.}
 However, we were able to give embeddings for each individual recursive types
 for a particular base structure $F$. For instance, we can embed
 the recursive type \lstinline{Exp'} in Listing\;\ref{lst:HOASshow},
 which is the fixpoint ($\mu{*}'$) over \lstinline{ExpF}, and
-its two data constructors \textit{lam} and \textit{app}\, into System~\Fw.
-
-TODO TODO TODO TODO
+its two data constructors \textit{lam} and \textit{app}\, into System~\Fw,
+as follows:\footnote{The use of $\In{*}'$ here is
+	just a conceptual illustration. We do not have
+	an embedding for the stand-alone $\In{*}'$ in System~\Fw.}
 \begin{align*}
 \textit{lam}&~:~\forall A^{*}.
 		(\textit{Exp}'~A \to \textit{Exp}'~A) \to \textit{Exp}'~A \\
@@ -75,6 +96,7 @@ TODO TODO TODO TODO
 	(\overbrace{\textit{Lam}(\lambda y.\textit{lift}~\varphi'~(f(\inL~y))) }^v)\;
 	}_w)
 \end{align*}
+\vspace*{-4ex}
 \begin{align*}
 \textit{app}&~:~\forall A^{*}.
 		\textit{Exp}'~A \to \textit{Exp}'~A \to \textit{Exp}'~A \\
@@ -83,51 +105,79 @@ TODO TODO TODO TODO
 		\lambda \varphi'.\varphi'~\eta^{-1}~
 		(\textit{App}~(\lift~\varphi'~r_1)~(\lift~\varphi'~r_2))}_h)
 \end{align*}
-TODO TODO TODO TODO
-
-We conjecture that it is possible to give an embedding for any recursive type
-in this way. That is, by lifting $(\textit{lift}~\varphi)$ the $r$-values
-in covariant positions and by left injecting ($\inL$) the answers\footnote{
-	More precisely, $\eta$ applied answers
-	because the type we expect is not $A$ but $K A$.}
-when $r$-values are needed in contravariant positions.
-We strongly believe that this conjecture is true, but we leave
-detailed investigation for this conjecture as future work.
-In addition, it is an interesting theoretical quest to search for
-a calculus that can directly embed $\In{*}' : $
-
-\[K_T = \lambda A^{*}.\forall X^{*}.(A \to T X) \to T X \] codensity monad ???
-
-
-\[ A \xrightarrow{\eta} KA \xrightarrow{\inL} \mu_{*}' = KA+((KA \to A) \to F(KA) \to A) \to A \]
-
-
+where \textit{lift} is defined as follows:
 \begin{align*}
 & \lift~:~(\forall A^{*}.(K A\to A)\to F(K A)\to A)\to \mu_{*}' F A\to K A\\
 & \lift~\varphi'~r ~=~ r~\textit{id}~(\lambda z.\eta(z~\varphi'))
 \end{align*}
+We also label some of the subterms ($v$, $w$, and $h$)
+in the embeddings of \textit{lam}, and \textit{app} for
+later use in the discussion.
 
+Recall that $\mu_{*}'$ is a sum type. The \textit{lift} function converts
+$(\mu_{*}'FA)$-values to $(KA)$-values, when given a function
+$\varphi' : \forall A^{*}.(KA \to A) \to F(K A) \to A$,
+Observe that the type of $\varphi'$ matches with the partial application of
+$\varphi$, the first argument of \textit{msfit}, applied to $\eta$ Since
+$\varphi : \forall R^{*}.(A \to R A) \to (R A \to A) \to F(R A) \to A$
+and $\eta : A \to K A$, we first instantiate $R$ with $K$ in the type of
+$\varphi$, that is, $(A \to K A) \to (K A \to A) \to F(K A) \to A$.
+Then, $(\varphi\eta) : (K A \to A) \to F(K A) \to A$, which matches
+the type of $\varphi'$, the first argument of \textit{lift}.
 
-%% \[ \textit{ExpF} = \lambda R^{*}.R \times R + R \]
+We use \textit{lift} for the recursive values that are covariant,
+in order to convert from $F(\mu_{*}'FA)$-structures, or $F(RA)$-structures,
+to $F(KA)$-structures -- recall the type of the $varphi'$.
+We lift recursive values $r_1$ and $r_2$, which both covariant,
+in the embedding of \textit{app}. We also lift the value resulting from $f$,
+whose return type is $F(\mu_{*}'FA)$, in the embedding of \textit{lam},
+since the right-hand side of the function type is covariant.
 
+For recursive values needed in contravariant positions, we simply left inject
+answer values. For example, $y$ in the embedding of \textit{lam} has type $KA$
+since we expect argument to $Lam$ be $KA \to KA$ because we expect $v : F(KA)$,
+which is the second argument to be applied to $\varphi'$. To convert from
+$(KA)$ to $\mu_{*}'FA$, we only need to left inject, that is, $(\inL~y)$,
+which can be applied to $f : \mu_{*}'FA \to \mu_{*}'FA$.
 
-\begin{align*}
-\textit{lam}&~:~(\forall A^{*}.\textit{Exp}'~A \to \textit{Exp}'~A) \to
-		\textit{Exp} \\
-\textit{lam}&~f~=~\In{*}'(\textit{Lam}~f)
-= \inR~(\underbrace{
-	\lambda \varphi'.\varphi'~\eta^{-1}~
-	(\overbrace{\textit{Lam}(\lambda y.\textit{lift}~\varphi'~(f(\inL~y))) }^v)\;
-	}_w)
-\end{align*}
+We conjecture that it is possible to give an embedding for any recursive type
+in this way,\footnote{This is analogous to the situation that
+	all regular recursive types can be embedded into System \F,
+	but not the fixpoint operator $\mu{*}$ itself.}
+that is, by lifting $(\textit{lift}~\varphi)$ the recursive values in
+covariant positions and by left injecting ($\inL$) the answer values\footnote{
+	More precisely, $\eta$ applied answer values
+	since the type we expect is not $A$ but $K A$.}
+when recursive values are needed in contravariant positions.
+We strongly believe that this conjecture is true, but we leave
+detailed investigations for this conjecture as future work.
+In addition, it would be an interesting theoretical quest to search for
+a calculus that can directly embed the constructor
+$\In{*}' : \forall F^{*\to*}.\forall A^{*}.F(\mu{*}' F A) \to \mu{*}' F A$.
 
-\[
+In the remainder of this section, we discuss the equational properties
+of \msfit{*} over $\In{*}'$-values of the type \lstinline{Exp}. That is,
+when \msfit{*} is applied to the values constructed either by \textit{app}
+or by \textit{lam}.
+
+%% \[ A \xrightarrow{\eta} KA \xrightarrow{\inL} \mu_{*}' = KA+((KA \to A) \to F(KA) \to A) \to A \]
+\paragraph*{Equational properties of \msfit{*} over \textit{lam}}
+When applied to $(\textit{lam}~f)$, we expect \msfit{*} to
+satisfy the following equation:
+\begin{equation}
 \msfit{*}~\varphi~(\textit{lam}~f)
-=?= \varphi~\eta~\eta^{-1}~(Lam(\lambda y.\eta(\msfit~\varphi~(f(\inL~y)))))
-\]
+= \varphi~\eta~\eta^{-1}~(Lam(\lambda y.\eta(\msfit~\varphi~(f(\inL~y)))))
+\label{eqn:msfitLam}
+\end{equation}
+We need $\eta$ to convert answer values of type $A$, resulting from $f$,
+to values of type $KA$, since we need $(\textit{Lam}~(\lambda y.\cdots))$
+to be of type $F(KA)$. The type of $\varphi$ expects a value of type $F(RA)$
+as its third argument, where $R$ is a polymorphic type variable, which
+instantiates to $K$ in the right-hand side of Equation~\ref{eqn:msfitLam}.
+TODO explain $\inL$ TODO
 
-$\psi = (f(\inL~y))~\textit{id}~(\lambda z.\eta(z(\varphi\eta)))$
-
+The left-hand side of Equation~\ref{eqn:msfitLam} expands as below,
+by expanding the definitions of \msfit{*}, $\inR$, $g$, and  $w$:
 \begin{align*}
 \msfit{*}~\varphi~(\textit{lam}~f)
 &~=~ (\textit{lam}~f)~\eta^{-1}~g \\
@@ -136,26 +186,39 @@ $\psi = (f(\inL~y))~\textit{id}~(\lambda z.\eta(z(\varphi\eta)))$
 	(\textit{Lam}(\lambda y.\lift~(\varphi\eta)~(f(\inL~y)))) \\
 &~=~ \varphi~\eta~\eta^{-1}~(\textit{Lam}(\lambda y.\psi))
 \end{align*}
+where $\psi = (f(\inL~y))~\textit{id}~(\lambda z.\eta(z(\varphi\eta)))$.
+The resulting equation is similar in structure to the right-hand side of
+Equation~\ref{eqn:msfitLam}. Thus, justifying Equation~\ref{eqn:msfitLam}
+amounts to showing the equation below:
+\begin{equation}
+\psi = \eta(\msfit~\varphi~(f(\inL~y))))
+\label{eqn:msfitPsi}
+\end{equation}
 
+The right-hand side of Equation~\ref{eqn:msfitPsi} expands as follows:
 \[ \eta(\msfit~\varphi~(f(\inL~y)))) = \eta(\inL~\psi~\eta^{-1}~g)
 	= \eta(\eta^{-1}~\psi)
 \]
-section retraction since not same as $\psi$
+We need to show that $\psi = \eta(\eta^{-1}\psi$, but, unfortunately, we cannot.
+TODO explain section/retraction here??? TODO 
 
+\paragraph*{Equational properties of \msfit{*} over \textit{app}}
+When applied to $(\textit{app}~r_1~r_2)$, we expect \msfit{*} to
+recurse on each of $r_1$ and $r_2$, as follows.
+\begin{equation} \msfit{*}~\varphi~(\textit{app}~r_1~r_2)
+= \varphi~\eta~\eta^{-1}~(\textit{App}~(\eta(\msfit{*}~\varphi~r_1))
+					~(\eta(\msfit{*}~\varphi~r_2)))
+\label{eqn:msfitApp}
+\end{equation}
+We need $\eta$ to convert answer values of type $A$ to values of type $KA$,
+since we need $(\textit{App}~(\eta(\msfit{*}~\varphi~r_1))
+					~(\eta(\msfit{*}~\varphi~r_2)))$
+to have type $F(KA)$. The type of $\varphi$ expects a value of type $F(RA)$
+as its third argument, where $R$ is a polymorphic type variable, which
+instantiates to $K$ in the right-hand side of Equation~\ref{eqn:msfitApp}.
 
-\begin{align*}
-\textit{app} &~:~ \textit{Exp} \to \textit{Exp} \to \textit{Exp} \\
-\textit{app} &~ r_1~r_2 = \In{*}'(\textit{App}~r_1~r_2)
-= \inR~(\underbrace{
-		\lambda \varphi'.\varphi'~\eta^{-1}~
-		(\textit{App}~(\lift~\varphi'~r_1)~(\lift~\varphi'~r_2))}_h)
-\end{align*}
-
-
-\[ \msfit{*}~\varphi~(\textit{app}~x~y)
-=?= \varphi~\eta~\eta^{-1}
-	~(\textit{App}~(\eta(\msfit{*}~\varphi~x))~(\eta(\msfit{*}~\varphi~y)))
-\]
+The left-hand side of Equation~\ref{eqn:msfitApp} expands as below,
+by expanding the definitions of \msfit{*}, $\inR$, $g$, and  $h$:
 \begin{align*}
 \msfit{*}~\varphi~(\textit{app}~x~y)
 &~=~ (\textit{app}~r_1~r_2)~\eta^{-1}~g \\
@@ -163,31 +226,38 @@ section retraction since not same as $\psi$
 &~=~ \varphi~\eta~\eta^{-1}
      ~(\textit{App}~(\lift~(\varphi\eta)~r_1)~(\lift~(\varphi\eta)~r_2))
 \end{align*}
-\[ \eta(\msfit{*}~\varphi~r) =?= \lift~(\varphi\eta)~r \]
-
-
-
-\[ \eta(x~\eta^{-1}~g) =?= x~\textit{id}~(\lambda z.\eta(z(\phi\eta))) \]
-
-when $x = \inR~z$
-
-\[
-	\eta(x~\eta^{-1}~g) = \eta~g~z = \eta(z(\varphi\eta))
-	= x~\textit{id}~(\lambda z.\eta(z.(\varphi\eta)))
+The resulting expression is similar in structure to the right-hand side of
+Equation~\ref{eqn:msfitApp}. Thus, justifying Equation~\ref{eqn:msfitApp}
+amounts to showing the equation below:
+\begin{equation}
+\eta(\msfit{*}~\varphi~r) = \lift~(\varphi\eta)~r
+\label{eqn:msfitLift}
+\end{equation}
+When $r = \inR~z$,
+\begin{align*}
+\eta(\msfit{*}~\varphi~(\inR~z))
+&~=~ \eta(\inR~z~\eta^{-1}~g) ~=~ \eta(g~z) ~=~ \eta(z(\varphi\eta)) \\
+&~=~ (\inR~z)~\textit{id}~(\lambda z.\eta(z.(\varphi\eta)))
+ ~=~ \lift~(\varphi\eta)~(\inR~z)
+\end{align*}
+When $r = \inL~z$,
+\[ \eta(\msfit{*}~\varphi~r) ~=~\eta(\inL~z~\eta^{-1}~g) = \eta(\eta^{-1}z)
 \]
+\[ \lift~\varphi~(\inL~z)
+   ~=~ (\inL~z)~\textit{id}~(\lambda z.\eta(z.(\varphi\eta)))
+   ~=~ \textit{id}~z = z
+\]
+We need to show that $\eta(\eta^{-1}z) = z$, but, unfortunately, we cannot.
+TODO explain section/retraction thing here??? TODO
+
+%% \[ \varphi \mapsto \varphi \mapsto \lambda f . f(\varphi~\textit{id}) \]
+%% 
+%% Section retraction since not same as $\varphi$
 
 
-\[ \eta(\msfit{*}~\varphi~(\inR~z)) ~=~ \lift~(\varphi\eta)~(\inR~z) \]
 
-
-
-when $x = \inL~z$
-
-\[ \eta(\eta^{-1}z) =?= z \]
-is this a section / retraction thing here???
-
-\[ \varphi \mapsto \varphi \mapsto \lambda f . f(\varphi~\textit{id}) \]
-
-Section retraction since not same as $\varphi$
+TODO other things: do we need to talk about codensity monad
+$K_T = \lambda A^{*}.\forall X^{*}.(A \to T X) \to T X$
+somewhere ??? maybe not necessary ...
 
 

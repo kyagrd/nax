@@ -90,8 +90,8 @@ Inside the \lstinline{phi} function, we have a function
 \lstinline{f :: (r t1 -> r t2)} over abstract recursive values.
 We need to cast \lstinline{f} into a function over concrete recursive values
 \lstinline{(Mu1 V t1 -> Mu1 V t2)}.
-We should not need to use |call|, since we do not expect
-to use any recursion to define |unVal|.
+We should not need to use \lstinline{call}, since we do not expect
+to use any recursion to define \lstinline{unVal}.
 So the only available operation to
 work with is \lstinline{cast :: (forall i.r i -> Mu1 f i)}.
 Composing \lstinline{cast} with \lstinline{f}, we can get
