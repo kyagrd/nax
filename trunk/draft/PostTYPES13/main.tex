@@ -180,7 +180,7 @@ mixed-variant datatypes, negative datatypes, termination}
 		{Id}{{Id}}1
 		{MkId}{{MkId}}4
 		{unId}{{unId}}4
-		{exp2expr}{{exp2expr}}7
+		{exp2expr}{{exp2expr}}8
 		{p2r}{{p2r}}2
 }
 
@@ -190,7 +190,7 @@ mixed-variant datatypes, negative datatypes, termination}
 \maketitle
 
 \begin{abstract}
-Some concepts, such as like Higher-Order Abstract Syntax (HOAS),
+Some concepts, such as Higher-Order Abstract Syntax (HOAS),
 are most naturally expressed by \emph{mixed-variant datatypes}
 (\aka\ negative (recursive) datatypes). Unfortunately,
 mixed-variant datatypes are often outlawed in formal reasoning systems
@@ -204,12 +204,12 @@ arbitrary datatypes. Ahn and Sheard \cite{AhnShe11} formulated
 a Mendler-style recursion scheme (\msfit{}), and demonstrated
 examples involving regular (\ie, non-indexed) mixed-variant datatypes
 (\eg, untyped $\lambda$-calculus in HOAS). Their examples demonstrate
-the advantage of the Mender style -- termination guarantee for
+an advantage of the Mender style -- termination guarantee for
 arbitrary datatypes, including mixed-variant ones. They proved
 termination of the examples via embedding into System~\Fw.
 
 Another advantage of the Mendler style is that recursion schemes
-naturally extends to non-regular (\ie, indexed) datatypes.
+naturally extend to non-regular (\ie, indexed) datatypes.
 Our type-preserving evaluator example for the simply-typed HOAS, defined as
 a type-indexed mixed-variant datatype, demonstrates both advantages of
 the Mendler style. This example has its own theoretical value, which is

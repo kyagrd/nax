@@ -1,22 +1,24 @@
 \section{Relation between $\mu$ and $\mu'$}\label{sec:murec}
 Listing\;\ref{lst:rec2mu} illustrates a mapping from
-\lstinline{(forall a. Rec0 E a)}  to \lstinline{(Mu0 E)} implemented
-using \lstinline{msfcata0}, where \lstinline{E} is a base structure
+\lstinline{(forall a. Rec0 ExpF a)}  to \lstinline{(Mu0 ExpF)} implemented
+using \lstinline{msfcata0}, where \lstinline{ExpF} is a base structure
 for the untyped HOAS. Since we have two fixpoint type operators,
 \lstinline{Rec0} and \lstinline{Mu0}, we can define two recursive datatypes
-from the base structure \lstinline{E}\,:
-\lstinline{Exp} defined as \lstinline{(forall a. Rec0 E a)} and
-\lstinline{Expr} defined as \lstinline{Mu0 E}.
+from the base structure \lstinline{ExpF}\,:
+\lstinline{Exp} defined as \lstinline{(forall a. Rec0 ExpF a)} and
+\lstinline{Expr} defined as \lstinline{Mu0 ExpF}.
 The function \lstinline{exp2expr :: Exp -> Expr}\, implements the mapping from
 \lstinline{Rec0}-based HOAS expressions to \lstinline{Mu0}-based
 HOAS expressions. Note, \lstinline{exp2expr}\, is defined
 using \lstinline{msfcata0}.  Since there exists an embedding of
 \lstinline{Mu0} and \lstinline{msfcata0} into System~\Fw\ \cite{AhnShe11},
-\lstinline{exp2expr}\, is admissible in System~\Fw.
-
-%TODO This indicates that the mapping from \lstinline{(forall a. Rec0 f a)} to
-%TODO (\lstinline{Mu0 f}\,) is admissible within System~\Fw.
-
+\lstinline{exp2expr}\, is admissible in System~\Fw. However, it is not likley
+that we can embed a casting function for an arbitrary base structure $f$,
+\lstinline{mu2rec :: (forall a. Rec0 f a) -> Mu0 f}, in System~\Fw.\footnote{
+	The discussions in \S\ref{sec:theory} on the embedding of \msfit{}
+	suggests why the \lstinline{mu2rec} is not likely to be embedded
+	in System~\Fw, but its specific instnaces, such as
+	\lstinline{exp2expr}, can be embedded in System~\Fw.}
 
 TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO

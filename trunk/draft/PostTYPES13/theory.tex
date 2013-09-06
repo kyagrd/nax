@@ -1,5 +1,36 @@
-\section{TODO Theory TODO \Fw-embeddings}\label{sec:theory}
+\section{Embedding \msfit{} into System~\Fw{}}\label{sec:theory}
 
+We first review the embedding of Mendler-style iteration (\MIt{*}),
+before discussing the embedding of Mendler-style iteration with
+syntactic inverses (\MIt{*}). The embedding of Mendler-style iteration
+consists of a polymorphic encoding of the fixpoint operator ($\mu{*}$)
+and term encodings (as functions) of its constructor ($\In{*}$)
+and eliminator (\MIt{*}). We also show that one can derive
+the equational properties of \MIt{*}, which corresponds to
+its Haskell definition discussed earlier.
+
+Next, we discuss the (incomplete) embeddings of \msfit{*} into System~\Fw.
+The embedding of Mendler-style iteration with syntactic inverses should
+consists of a polymorphic encodings of the inverse-augmented fixpoint operator
+($\mu{*}'$) and term encodings of its two constructors ($\textit{Inverse}_{*}$
+and $\In{*}'$ and eliminator (\msfit{*}). The embedding is not complete
+because we have not found an \Fw-term that embeds $\In{*}'$. However,
+we can embed each recursive type (\eg, \lstinline{Exp'}) , when given
+a concrete base structure (\eg, \lstinline{ExpF}), and deduce general rules
+of how to embed (inverse-augmented) recursive types. We also show that we
+can derive the expected equational properties for a specific example,
+which is the untyped HOAS example (\lstinline{Exp'}) discussed
+in earlier sections.
+
+Our discussion in this section is focused at kind $*$, but the embeddings for
+Mendler-style recursion schemes at higher-kinds (\eg, embeddings for
+\MIt{*\to*} and \msfit{*\to*}) are similar to the embeddings at kind $*$.
+In fact, the term definitions for data constructors and eliminators
+(\ie, recursion schemes) are always exactly the same regardless of their kinds.
+Only their types become richer as we move to higher kinds, having more indices
+applied to type constructors.
+
+\subsection{The embedding of \MIt{*} and its equational property}
 Mendler-style iteration (\MIt{*}) can be embedded into System~\Fw\ as follows
 \cite{TODO,TODO,TODO}:
 \begin{align*}
@@ -17,6 +48,7 @@ From the above embedding, one can derive the equational property of \MsfIt{*}
 apparent in the Haskell definition (Listing~\ref{lst:reccomb}) as follows:
 $\MIt{*}~\varphi~(\In{*}~x) = \In{*}~x~\varphi = \varphi~(\MIt{*}~\varphi)~x$.
 
+\subsection{Embedding \msfit{*}}
 We embed Mendler-style iteration with static inverses (\msfit{*})
 into System \Fw\ as follows:\footnote{A Haskell transcription of this embedding
 	appears in the previous work of Ahn and Sheard \cite{AhnShe11}.}
@@ -161,20 +193,24 @@ when \msfit{*} is applied to the values constructed either by \textit{app}
 or by \textit{lam}.
 
 %% \[ A \xrightarrow{\eta} KA \xrightarrow{\inL} \mu_{*}' = KA+((KA \to A) \to F(KA) \to A) \to A \]
-\paragraph*{Equational properties of \msfit{*} over \textit{lam}}
+\subsection{Equational properties of \msfit{*} over
+	values constructed by \textit{lam}}
 When applied to $(\textit{lam}~f)$, we expect \msfit{*} to
 satisfy the following equation:
 \begin{equation}
 \msfit{*}~\varphi~(\textit{lam}~f)
-= \varphi~\eta~\eta^{-1}~(Lam(\lambda y.\eta(\msfit~\varphi~(f(\inL~y)))))
+\stackrel{?}{=} \varphi~\eta~\eta^{-1}
+	~(\textit{Lam}(\lambda y.\eta(\msfit~\varphi~(f(\inL~y)))))
 \label{eqn:msfitLam}
 \end{equation}
-We need $\eta$ to convert answer values of type $A$, resulting from $f$,
-to values of type $KA$, since we need $(\textit{Lam}~(\lambda y.\cdots))$
+We use $\eta$ to convert answer values of type $A$, resulting from
+$(\msfit~\varphi~(f(\inL~y)))$, to values of type $KA$, since we need
+$(\textit{Lam}(\lambda y.\eta(\msfit~\varphi~(f(\inL~y)))))$
 to be of type $F(KA)$. The type of $\varphi$ expects a value of type $F(RA)$
 as its third argument, where $R$ is a polymorphic type variable, which
 instantiates to $K$ in the right-hand side of Equation~\ref{eqn:msfitLam}.
-TODO explain $\inL$ TODO
+We use $\inL$ to convert $y : KA$, to a value of $\mu_{*}' F A$
+in order to apply it to $f : \mu_{*}' F A \to \mu_{*}' F A$.
 
 The left-hand side of Equation~\ref{eqn:msfitLam} expands as below,
 by expanding the definitions of \msfit{*}, $\inR$, $g$, and  $w$:
@@ -191,7 +227,7 @@ The resulting equation is similar in structure to the right-hand side of
 Equation~\ref{eqn:msfitLam}. Thus, justifying Equation~\ref{eqn:msfitLam}
 amounts to showing the equation below:
 \begin{equation}
-\psi = \eta(\msfit~\varphi~(f(\inL~y))))
+\psi \stackrel{?}{=} \eta(\msfit~\varphi~(f(\inL~y))))
 \label{eqn:msfitPsi}
 \end{equation}
 
@@ -199,14 +235,17 @@ The right-hand side of Equation~\ref{eqn:msfitPsi} expands as follows:
 \[ \eta(\msfit~\varphi~(f(\inL~y)))) = \eta(\inL~\psi~\eta^{-1}~g)
 	= \eta(\eta^{-1}~\psi)
 \]
-We need to show that $\psi = \eta(\eta^{-1}\psi$, but, unfortunately, we cannot.
+We need to show that $\psi=\eta(\eta^{-1}\psi)$, but, unfortunately, we cannot.
 TODO explain section/retraction here??? TODO 
 
-\paragraph*{Equational properties of \msfit{*} over \textit{app}}
+\subsection{Equational properties of \msfit{*} over
+	values constructed by \textit{app}}
 When applied to $(\textit{app}~r_1~r_2)$, we expect \msfit{*} to
 recurse on each of $r_1$ and $r_2$, as follows.
-\begin{equation} \msfit{*}~\varphi~(\textit{app}~r_1~r_2)
-= \varphi~\eta~\eta^{-1}~(\textit{App}~(\eta(\msfit{*}~\varphi~r_1))
+\begin{equation}
+\msfit{*}~\varphi~(\textit{app}~r_1~r_2)
+\stackrel{?}{=}
+\varphi~\eta~\eta^{-1}~(\textit{App}~(\eta(\msfit{*}~\varphi~r_1))
 					~(\eta(\msfit{*}~\varphi~r_2)))
 \label{eqn:msfitApp}
 \end{equation}
@@ -230,10 +269,10 @@ The resulting expression is similar in structure to the right-hand side of
 Equation~\ref{eqn:msfitApp}. Thus, justifying Equation~\ref{eqn:msfitApp}
 amounts to showing the equation below:
 \begin{equation}
-\eta(\msfit{*}~\varphi~r) = \lift~(\varphi\eta)~r
+\eta(\msfit{*}~\varphi~r) \stackrel{?}{=} \lift~(\varphi\eta)~r
 \label{eqn:msfitLift}
 \end{equation}
-When $r = \inR~z$,
+When $r = \inR~z$, Equation~\ref{eqn:msfitLift} is justified as follows:
 \begin{align*}
 \eta(\msfit{*}~\varphi~(\inR~z))
 &~=~ \eta(\inR~z~\eta^{-1}~g) ~=~ \eta(g~z) ~=~ \eta(z(\varphi\eta)) \\
@@ -241,8 +280,10 @@ When $r = \inR~z$,
  ~=~ \lift~(\varphi\eta)~(\inR~z)
 \end{align*}
 When $r = \inL~z$,
+The left-hand side of Equation~\ref{eqn:msfitLift} expands as below
 \[ \eta(\msfit{*}~\varphi~r) ~=~\eta(\inL~z~\eta^{-1}~g) = \eta(\eta^{-1}z)
 \]
+and the right-hand side of Equation~\ref{eqn:msfitLift} expands as below
 \[ \lift~\varphi~(\inL~z)
    ~=~ (\inL~z)~\textit{id}~(\lambda z.\eta(z.(\varphi\eta)))
    ~=~ \textit{id}~z = z
