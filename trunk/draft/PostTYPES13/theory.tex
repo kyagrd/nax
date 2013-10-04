@@ -2,7 +2,7 @@
 
 We first review the embedding of Mendler-style iteration (\MIt{*}),
 before discussing the embedding of Mendler-style iteration with
-syntactic inverses (\MIt{*}). The embedding of Mendler-style iteration
+syntactic inverses (\msfit{*}). The embedding of Mendler-style iteration
 consists of a polymorphic encoding of the fixpoint operator ($\mu{*}$)
 and term encodings (as functions) of its constructor ($\In{*}$)
 and eliminator (\MIt{*}). We also show that one can derive
@@ -32,7 +32,7 @@ applied to type constructors.
 
 \subsection{The embedding of \MIt{*} and its equational property}
 Mendler-style iteration (\MIt{*}) can be embedded into System~\Fw\ as follows
-\cite{TODO,TODO,TODO}:
+\cite{AbeMatUus05,AhnShe11}:
 \begin{align*}
 &\mu_{*} ~=~ \lambda F^{* \to *}.\forall X^{*}.
 		(\forall R^{*}.(R \to X) \to F R X \to X) \to X
@@ -44,7 +44,7 @@ Mendler-style iteration (\MIt{*}) can be embedded into System~\Fw\ as follows
 &\In{*} ~:~\forall F^{* \to *}.F(\mu_{*} F) \to \mu_{*} F \\
 &\In{*}~x~\varphi ~=~ \varphi~(\MIt{*}~\varphi)~x
 \end{align*}
-From the above embedding, one can derive the equational property of \MsfIt{*}
+From the above embedding, one can derive the equational property of \MIt{*}
 apparent in the Haskell definition (Listing~\ref{lst:reccomb}) as follows:
 $\MIt{*}~\varphi~(\In{*}~x) = \In{*}~x~\varphi = \varphi~(\MIt{*}~\varphi)~x$.
 

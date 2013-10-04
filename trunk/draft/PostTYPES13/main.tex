@@ -93,10 +93,11 @@ mixed-variant datatypes, negative datatypes, termination}
 	commentstyle=\color{blue},
 	escapechar={\%},
 	stringstyle=\rm\ttfamily,
-	deletekeywords={Bool,Int,Integer,String,show,const,id},
+	deletekeywords={Bool,Int,Integer,String,show,const,id,length,List},
  	literate=
  		{forall}{{$\forall$}}1
  		{:}{{$:$}}1
+ 		{;}{{$;$}}1
  		{::}{{$::$}}1
  		{->}{{$\to$}}2
  		{=}{{$=$}}1
@@ -114,11 +115,11 @@ mixed-variant datatypes, negative datatypes, termination}
 		{In1}{{\In{*\to*}}}4
 		{out1}{{out$_{*\to*}$}}5
 		{Rec0}{{$\mu_{*}^\prime$}}1
-		{Roll0}{{\In{*}$^\prime$}}2
+		{Roll0}{{$\In{*}^\prime$}}2
 		{unRoll0}{{unIn$_{*}^\prime$}}4
 		{Inverse0}{{Inverse$_{*}$}}6
 		{Rec1}{{$\mu_{*\to*}^\prime$}}3
-		{Roll1}{{\In{*\to*}$^\prime$}}4
+		{Roll1}{{$\In{*\to*}^\prime$}}4
 		{unRoll1}{{unIn$_{*\to*}^\prime$}}6
 		{Inverse1}{{Inverse$_{*\to*}$}}8
  		{phi}{{$\varphi$}}1
@@ -137,10 +138,11 @@ mixed-variant datatypes, negative datatypes, termination}
 		{cast}{{cast}}4
 		{call}{{call}}4
 		{unVal}{{un\!Val}}4
-		{mcata}{{mit}}3
+		{mcata}{{\MIt{}}}3
 		{mcata0}{{\MIt{*}}}3
 		{mcata1}{{\MIt{* \to *}}}5
-		{msfcata}{{\msfit{}}}5
+		{msfcata}{{\msfit{}}}4
+		{msfcata'}{{\msfit{}$^\prime$}}5
 		{msfcata0}{{\msfit{*}}}5
 		{msfcata1}{{\msfit{* \to *}}}7
 		{++}{{$+\!\!\!\!+$}}2
@@ -160,8 +162,9 @@ mixed-variant datatypes, negative datatypes, termination}
 		{App_u}{{App$_u$}}4
 		{Lam_u}{{Lam$_u$}}4
 		{V_u}{{V\!$_u$}}1
+		{Val}{{Val}}3
 		{VFun_u}{{VFun$_u$}}4
-		{Exp'}{{Exp$\,^\prime$}}3
+		{Exp'}{{Exp$\,^\prime$}}4
 		{show'}{{show$\,^\prime$}}4
 		{showExp}{{showExp}}7
 		{const}{const}4
@@ -180,7 +183,9 @@ mixed-variant datatypes, negative datatypes, termination}
 		{Id}{{Id}}1
 		{MkId}{{MkId}}4
 		{unId}{{unId}}4
-		{exp2expr}{{exp2expr}}8
+		{exp2expr}{{exp2expr}}7
+		{expr2exp'}{{expr2exp$^\prime$}}7
+		{exp'2expr}{{exp$^\prime$2expr}}7
 		{p2r}{{p2r}}2
 }
 

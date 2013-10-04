@@ -137,14 +137,14 @@ and whether it is possible to make it work for |Exp| rather than |Exp' Expr|.
 \paragraph{}
 Let us contemplate on why the coercion from |(forall a.Rec0 E a)| to |Mu0 E|
 exists, but the coercion the other way is hard (perhaps impossible) to find.
-We know that |msfcata0| can express more functions than |mcata0|
+We believe that |msfcata0| can express more functions than |mcata0|
 (e.g., |showHOAS| in Figure\;\ref{fig:HOASshow}). Then, it may be the case
 that values of |(forall a. Rec0 f a)| is in fact more restrictive than
 the values of |(Mu0 f)|. The additional expressiveness of |msfcata0| may be
-a compensation of the restrictions on the value of |(forall a. Rec0 f a)|.
-In summary, |(forall a. Rec0 f a)| is a subset of |(Mu0 f)|.
-From this observation, we plan to design Nax with two fixpoints $\breve\mu$
-and $\mu$, recursive values being constructed by data constructors are
-by default as $\breve\mu$-values, and allow upcasting from $\breve\mu$
+a compensation for the restrictions on the value of |(forall a. Rec0 f a)|.
+In summary, we strongly believe that |(forall a. Rec0 f a)| is a subset of
+|(Mu0 f)|. From this observation, we plan to design Nax with two fixpoints
+$\breve\mu$ and $\mu$, recursive values being constructed by data constructors
+are by default as $\breve\mu$-values, and allow upcasting from $\breve\mu$
 to $\mu$ when needed (e.g. when applying |msfcata|).
 

@@ -1,50 +1,92 @@
-\section{Relation between $\mu$ and $\mu'$}\label{sec:murec}
-Listing\;\ref{lst:rec2mu} illustrates a mapping from
-\lstinline{(forall a. Rec0 ExpF a)}  to \lstinline{(Mu0 ExpF)} implemented
-using \lstinline{msfcata0}, where \lstinline{ExpF} is a base structure
-for the untyped HOAS. Since we have two fixpoint type operators,
-\lstinline{Rec0} and \lstinline{Mu0}, we can define two recursive datatypes
-from the base structure \lstinline{ExpF}\,:
-\lstinline{Exp} defined as \lstinline{(forall a. Rec0 ExpF a)} and
-\lstinline{Expr} defined as \lstinline{Mu0 ExpF}.
-The function \lstinline{exp2expr :: Exp -> Expr}\, implements the mapping from
+\section{$\mu'$ is a subtype of $\mu$}\label{sec:murec}
+We discussed the usefulness of \msfit{} by the illustrating examples on HOAS.
+If one is to design a language based on Mendler-style recursion schemes,
+one would want to support as many useful recursion schemes avilaible,
+including \MIt{} and \msfit{}. One issue in such design is that we have
+two different fixpoints $\mu$ and $\mu'$. The standard fixpoint $\mu$
+does not come with syntactic inverses while $\mu'$ comes with
+its syntactic inverse. It would be a bad design choice to have those
+two fixpoints unrelated in the language semantics and let users deal
+with them manually. We would like to apply as many recursion schemes to
+one recursive value without having to manually convert from one another.
+
+We discovered that $\mu'$ is a subtype of $\mu$. Listing\;\ref{lst:rec2mu}
+illustrates a mapping from \lstinline{(forall a.Rec0 ExpF  a)}
+to \lstinline{(Mu0 ExpF)} implemented using \lstinline{msfcata0},
+where \lstinline{ExpF} is a base structure for the untyped HOAS.
+Since we have two fixpoints, \lstinline{Rec0} and \lstinline{Mu0},
+we can define two recursive datatypes from the base structure \lstinline{ExpF}.
+One is \lstinline{Exp} defined as \lstinline{(forall a.Rec0 ExpF  a)} and
+the other is \lstinline{Expr} defined as \lstinline{Mu0 ExpF}.
+The function \lstinline{exp2expr  :: Exp -> Expr}\, implements the mapping from
 \lstinline{Rec0}-based HOAS expressions to \lstinline{Mu0}-based
 HOAS expressions. Note, \lstinline{exp2expr}\, is defined
 using \lstinline{msfcata0}.  Since there exists an embedding of
 \lstinline{Mu0} and \lstinline{msfcata0} into System~\Fw\ \cite{AhnShe11},
 \lstinline{exp2expr}\, is admissible in System~\Fw. However, it is not likley
-that we can embed a casting function for an arbitrary base structure $f$,
-\lstinline{mu2rec :: (forall a. Rec0 f a) -> Mu0 f}, in System~\Fw.\footnote{
+that we can embed a coercion function for an arbitrary base structure $f$,
+\lstinline{mu2rec :: (forall a.Rec0 f a) -> Mu0 f}, in System~\Fw.\footnote{
 	The discussions in \S\ref{sec:theory} on the embedding of \msfit{}
 	suggests why the \lstinline{mu2rec} is not likely to be embedded
-	in System~\Fw, but its specific instnaces, such as
+	in System~\Fw, but its specific instances, such as
 	\lstinline{exp2expr}, can be embedded in System~\Fw.}
-
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-
+We conjecture that it should be possible to derive a coercion function
+from $\mu'$-values to $\mu$-values when given a specific instance of
+the base structure. Therefore, when designing a language based on Mendler-style
+recursion schemes, we may support coercion from $\mu'$-values to $\mu$-values.
 
 \begin{figure}
 \lstinputlisting[
-	caption={Conversion from $\mu'$-values to $\mu$-values
-		using \textit{msfcata} \label{lst:rec2mu} },
+	caption={Coercoin from $\mu'$-values to $\mu$-values
+		using \lstinline{msfcata0} \label{lst:rec2mu} },
 	firstline=4]{Exp2Expr.hs}
 \vspace*{-3ex}
 \end{figure}
 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+\begin{figure}
+\begin{lstlisting}[
+	caption={An incomplete attempt to convert from  from $\mu$-values
+		to $\mu'$-values \label{lst:mu2rec} } ]
+msfcata'  :: Phi0' f a -> Rec0 f a -> a
+msfcata' phi (Roll0 x)     = phi Inverse0 (msfcata' phi)  x
+msfcata' phi (Inverse0 z) = z
 
+exp'2expr :: Exp' Expr -> Expr  -- %\textcomment{i.e, %} Rec0 E (Mu0 E) -> Mu0 E
+exp'2expr = msfcata' phi where
+  phi inv p2r (Lam f)    = In0(Lam((\x -> p2r (f (inv x)))))
+  phi inv p2r (App e1 e2)  = In0(App (p2r e1) (p2r e2))
+
+expr2exp' :: Expr -> Exp' Expr  -- %\textcomment{i.e., %} Mu0 E -> Rec0 E (Mu0 E)
+expr2exp' (In0(Lam f))   = Roll0 (Lam (\x->expr2exp' (f (exp'2expr x))))
+expr2exp' (In0(App e1 e2)) = Roll0 (App (expr2exp' e1) (expr2exp' e2))
+\end{lstlisting}
+\vspace*{-3ex}
+\end{figure}
+
+Coercion the other way around, from $\mu$-values to $\mu'$-values,
+is not likely to be possible in general, but might be possible
+only when the answer type of the $\mu'$-values (\eg, \lstinline{a}
+in \lstinline{Rec0 ExpF  a}) has been monomorphically instantiated
+to the final answer value. That is, we attempted to convert from
+\lstinline{Exp' Expr} to \lstinline{Expr}, rather than from \lstinline{Exp}
+(\ie, \lstinline{forall a.Exp' a}) to \lstinline{Expr}.\footnote{
+	Also note that \lstinline{a} in \lstinline{(Rec0 ExpF  a)}
+	in the type signature of $\msfit{}'$
+	is not quantified. {c.f.} (\lstinline{(forall a.Rec0 f a)}
+	in the type signature of $\msfit{*}$.}
+We illustrate this idea in Listing~\ref{lst:mu2rec}, which is still
+an incomplete attempt since there is no termination guarantee for
+\lstinline{expr2exp'}. Note that \lstinline{expr2exp'} is not defined
+using a Mendler-style recursion scheme but using general recursion.
+
+Let us contemplate on why the coercion from \lstinline{(forall a.Rec0 ExpF  a)}
+to \lstinline{(Mu0 ExpF)} exists, but the coercion the other way is hard
+(perhaps impossible) to find. We believe that \lstinline{msfcata0} can
+express more functions than \lstinline{mcata0} (e.g., \lstinline{showHOAS}
+in Listing\;\ref{lst:HOASshow}). Then, it may be the case that values of
+\lstinline{(forall a.Rec0 f a)} is in fact more restrictive than
+the values of \lstinline{(Mu0 f)}. The additional expressiveness of
+\lstinline{msfcata0} may be a compensation for the restrictions on
+the value of \lstinline{(forall a.Rec0 f a)}. In summary, we believe
+that \lstinline{(forall a.Rec0 f a)} is a subset of \lstinline{(Mu0 f)}.
 

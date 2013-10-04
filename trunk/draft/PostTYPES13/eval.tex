@@ -3,15 +3,16 @@
 We can write an evaluator for a simply-typed HOAS in a simple manner,
 as illustrated in Listing\;\ref{lst:HOASeval}.
 We first define the simply-typed HOAS as a recursive indexed datatype
-\lstinline{Exp :: * -> *}. We take the fixpoint using \lstinline{Rec1}
+\lstinline{Exp  :: * -> *}. We take the fixpoint using \lstinline{Rec1}
 (the fixpoint with a syntactic inverse). This fixpoint is taken over
-a non recursive base structure \lstinline{ExpF ::  (* -> *) -> (* -> *)}.
+a non recursive base structure \lstinline{ExpF  :: (* -> *) -> (* -> *)}.
 Note that \lstinline{ExpF} is an indexed type. So expressions will be indexed
 by their type. Using \lstinline{Rec1} the fixpoint of any structure is also
 parameterized by the type of the answer. The use of the \lstinline{msfcata1}
 requires that \lstinline{Exp} should be parametric in this answer type
-(by defining \lstinline{type Exp t = forall a. Exp' a}). just as we did
-in the untyped HOAS formatting example in Listing\;\ref{lst:HOASshow}.
+(by defining \lstinline{type Exp  t =  forall a. Exp' a}). 
+%% just as we did
+%% in the untyped HOAS formatting example in Listing\;\ref{lst:HOASshow}.
 
 \begin{figure}
 \lstinputlisting[

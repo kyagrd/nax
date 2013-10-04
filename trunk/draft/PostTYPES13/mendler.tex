@@ -3,60 +3,226 @@
 In this section, we introduce basic concepts of two Mendler-style recursion
 schemes: iteration (\lstinline{mcata}\,) and iteration with syntactic inverses
 (\lstinline{msfcata}\,). Further details on Mendler-style recursion schemes,
-including these two and more, can be found in \cite{AhnShe11} TODO TODO
-more citations TODO.
-
-\begin{lstlisting}[caption={TODO \label{lst:mu}}]
-data Mu0   (f::(* -> *))               = In0   {out0  ::f (Mu0   f)  }
-data Mu1 (f::(* -> *) -> (* -> *)) i = In1 {out1::f (Mu1 f) i}
-                                                              
-data Rec0   f a   = Roll0   {unRoll0   :: f (Rec0 f a)    } | Inverse0   a
-data Rec1 f a i = Roll1 {unRoll1 :: f (Rec1 f a) i} | Inverse1 (a i)
-\end{lstlisting}
+including these two and more,
+can be found in \cite{AhnShe11,AbeMatUus05,UusVen00,AbeMat04}.
 
 \begin{figure}
-\begin{lstlisting}[caption={TODO \label{lst:reccomb}}]
-type Phi0   f a = forall r . (    r   -> a  ) -> (f r   -> a  )
-type Phi1 f a = forall r i.(forall i.r i -> a i) -> (f r i -> a i)
+\begin{lstlisting}[
+	caption={Mendler-style iteration (\MIt{}) and
+		Mendler-style iteration with syntactic inverses (\msfit{})
+		at kind $*$ and $*\to *$ transcribed in Haskell
+		\label{lst:reccomb}}]
+data Mu0   (f::(* -> *))               = In0   (f (Mu0   f)  )
+data Mu1 (f::(* -> *) -> (* -> *)) i = In1 (f (Mu1 f) i)
+
+type Phi0   f a = forall r . (    r   -> a  )  -- %\textcomment{abstract recursive call%}
+                    -> (f r   -> a  )
+type Phi1 f a = forall r i.(forall i.r i -> a i)  -- %\textcomment{abstract recursive call%}
+                    -> (f r i -> a i)
 
 mcata0   :: Phi0   f a ->  Mu0  f    -> a
 mcata1 :: Phi1 f a ->  Mu1 f i -> a i
 
-type Phi0'   f a = forall r . (     a  -> r a  ) ->
-                       (     r a  -> a  ) -> (f (r a)   -> a  )
-type Phi1' f a = forall r i.(forall i.a i -> r a i) ->
-                       (forall i.r a i -> a i) -> (f (r a) i -> a i)
+mcata0   phi (In0   x) = phi (mcata0   phi) x
+mcata1 phi (In1 x) = phi (mcata1 phi) x
+
+
+data Rec0   f a   = Roll0   (f (Rec0 f a)    ) | Inverse0   a
+data Rec1 f a i = Roll1 (f (Rec1 f a) i) | Inverse1 (a i)
+
+type Phi0'   f a = forall r . (     a  -> r a  )  -- %\textcomment{abstract recursive call%}
+                    -> (     r a  -> a  )  -- %\textcomment{abstract inverse%}
+                    -> (f (r a)   -> a  )
+type Phi1' f a = forall r i.(forall i.a i -> r a i)  -- %\textcomment{abstract recursive call%}
+                    -> (forall i.r a i -> a i)  -- %\textcomment{abstract inverse%}
+                    -> (f (r a) i -> a i)
 
 msfcata0   :: Phi0'   f a -> (forall a. Rec0   f a  ) -> a
 msfcata1 :: Phi1' f a -> (forall a. Rec1 f a i) -> a i
+
+msfcata0  phi r = msfcata phi r where
+  msfcata phi (Roll0   x)      = phi Inverse0  (msfcata phi)  x
+  msfcata phi (Inverse0 z)    = z
+
+msfcata1  phi r = msfcata phi r  where
+  msfcata  :: Phi1' -> Rec1 f a i -> a i
+  msfcata phi (Roll1 x)     = phi Inverse1 (msfcata phi)  x
+  msfcata phi (Inverse1 z) = z
 \end{lstlisting}
 \vspace*{-3ex}
 \end{figure}
 
-TODO Write text about the showExp example TODO
+Each Mendler-style recursion scheme is described by a pair:
+a fixpoint and its constructors, and, the recursion scheme itself.
+In Listing~\ref{lst:reccomb}, we illustrate the two recursion schemes,
+\lstinline{mcata} and \lstinline{msfcata}, using Haskell. We follow
+a certain style of Haskell, where we restrict the use of certain langauge
+features and some of the definitions we introduce. We will explain such
+stylistic restrictions as we discuss the details of Listing~\ref{lst:reccomb}.
 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+A Mendler-style recursion scheme is characterized by
+the set of abstract operations it supports. The types of
+these abstract operations are evident in the type sigature
+of the recursion scheme. In Listing~\ref{lst:reccomb},
+we made this more evident by factoring out the first agument types
+as the type synonyms prefixed by \lstinline{Phi}.
+Mendler-style recursion schemes take two arguments:
+the first is a function\footnote{By convention,
+	we denote the function as $\varphi$. Guess why
+	the type synonyms are prefixed by \lstinline{Phi}.}
+that describes the computation, and,
+the second is a recursive value to compute over.
+One describes the computation by defining the function, which is to be passed
+as the first argument, in terms of the abstract operations supported by
+the recursion scheme.
+
+\subsection{Mendler-style iteration}
+Mendler-style iteration (\MIt{}) operates on recursive types constructed by
+the fixpoint $\mu$. The fixpoint $\mu$ is indexed by a kind. We describe
+$\mu$ at kind $*$ and $*\to*$ using Haskell in Listing~\ref{lst:reccomb}.
+There are two stylistic restrictions on the Haskell code
+following Mendler style:
+\begin{itemize}
+\item Recursion is allowed only by the fixpoint at type-level and
+	by the recursion scheme at term-level.
+\lstinline{Mu0} expects a non-recursive base structure \lstinline{f : * -> *}
+to construct a recursive type \lstinline{(Mu0 f : *)}. \lstinline{Mu1} expects
+a non-recursive base structure \lstinline{f : (* -> *) -> (* -> *)}
+to construct a recursive type constructor \lstinline{(Mu1 f  : * -> *)},
+which expects one type index (\lstinline{i :: *}). We do not rely on
+recursive datatype definition natively supported by Haskell, except for
+defining $\mu$. We do not rely on function definitions using general recursion
+either, except for defining \msfit{}.
+
+\item Elimination of recursive values is only allowed via the recursion scheme.
+One is allowed to freely introduce recursive values using \In{}-constructors,
+but not allowed to freely eliminate (\ie, pattern match against \In{})
+those recursive values. One can only eliminate recursive values via
+the recursion scheme. Note that \lstinline{mcata0} and \lstinline{mcata1}
+are defined using pattern matching against \In{*} and \In{*\to*}.
+Pattern matching against them elsewhere is prohibited.
+\end{itemize}
+
+The type synonyms \lstinline{Phi0} and \lstinline{Phi1} stands for
+the first argument types of \lstinline{mcata0} and \lstinline{mcata1}.
+These type synonyms indicate that Mendler-style iteration supports
+one abstract operation: abstract recursive call.
+The type (constructor) variable $r$ stands for abstract recursive values.
+Since $r$ universally quantified within \lstinline{Phi0} and \lstinline{Phi1},
+functions of either \lstinline{Phi0}-type or \lstinline{Phi1}-type must be
+parametric over $r$ (\ie, must not rely on examining specifics of $r$-values).
+In \lstinline{Phi0}, \lstinline{(r -> a)} is the type for
+an abstract recursive call, which computes an answer of type \lstinline{a}
+from the abstract recursive type \lstinline{r}. One uses an handle to
+this abstract recursive call when implementing a function of type
+\lstinline{f r -> a}, which computes en answer (\lstinline{a})) from
+\lstinline{f}-structures filled with abstract recursive values (\lstinline{r}).
+Similarly, \lstinline{(forall i.r i -> a i)} in \lstinline{Phi1} is the type
+for an abstract recursive call, which is an index preserving function that
+computes an indexed answer \lstinline{(a i)} from an indexed recursive value
+\lstinline{(r i)}. In the Haskell definitions of \lstinline{mcata0} and
+\lstinline{mcata1}, these abstract operations are implemented by Haskell's
+natively supported recursive function call. Note that the first arguments to
+\lstinline{phi} in the definitions of \lstinline{mcata0} and \lstinline{mcata1}
+are \lstinline{(mcata0 phi)} and \lstinline{(mcata1 phi)}.
+
+Uses of Mendler-style recursion schemes are best explained by examples.
+Listing~\ref{lst:Len} is a well-known example of a list length function
+defined in terms of \lstinline{mcata0}. The recursive type for lists
+\lstinline{(List a)} is defined as a fixpoint of \lstinline{(L a)},
+where \lstinline{L} is the base structure for lists. The data constructors
+of \lstinline{List}, \lstinline{nil} and \lstinline{cons}, are defined
+in terms of \lstinline{In0} and the data constructors of \lstinline{L}.
+We define \lstinline{length} by applying \lstinline{mcata0} to
+the \lstinline{phi} function, The function \lstinline{phi} is defined
+by two equations, one for the \lstinline{N}-case and the other for
+the \lstinline{C}-case. When the list is empty (\lstinline{N}-case),
+the \lstinline{phi} function simply returns 0. When the list has an
+element (\lstinline{N}-case), we first compute the length of the tail
+(\ie, the list excluding the head, that is, the first element) by
+applying the abstract recursive call \lstinline{(len :: r -> Int)}\footnote{
+	Here, the answer type is \lstinline{Int}. }
+to the (abstract) tail \lstinline{(xs :: r)},\footnote{
+	Note that \lstinline{C x xs :: L p r} since \lstinline{xs :: r}.}
+and, then, we add 1 to the length of the tail \lstinline{(len xs)}.
 
 \begin{figure}
 \lstinputlisting[
+	caption={List length example using \lstinline{mcata0} \label{lst:Len}},
+	firstline=3]{Len.hs}
+\vspace*{-3ex}
+\end{figure}
+
+
+\subsection{Mendler-style iteration with syntactic inverses}
+Mendler-style iteration with syntactic inverses (\msfit{}) operates on
+recursive types constructed by the fixpoint $\mu'$. The fixpoint $\mu'$
+is a non-standard fixpoint additionally parameterized by the answer type ($a$)
+and has two constructors $\In{}'$ and \textit{Inverse}. $\In{}'$-constructors
+are analogous to \In{}-constructors of $\mu$. \textit{Inverse}-constructors
+hold answers to be computed by \msfit{}. For example,\footnote{
+	In fact, this example is ill typed, because \msfit{} expects
+	its second argument type to be parametric over
+	(\ie, does not rely on specifics of) the answer type.
+	This example is just to illustrate the intuitive idea.}
+the result of computing \lstinline{ msfcata0  phi (Inverse0 5) }
+is \lstinline{5} regardless of \lstinline{phi}.
+The stylistic restrictions on the Haskell code involving \msfit{} are:
+\begin{itemize}
+\item Recursion is only allowed by the fixpoint at type-level ($\mu'$)
+	and by the recursion scheme (\msfit{}) at term-level.
+We do not rely on recursive datatype definitions and function definitions
+general recursion
+natively supported in Haskell.
+\item Elimination of recursive values are only allowed via the recursion scheme.
+One is allowed to freely construct recursive values using $\In{}'$-constructors,
+but not allowed to freely eliminate (\ie, pattern match against $\In{}'$) them.
+Pattern matching against \textit{Inverse} is also restricted.
+\end{itemize}
+These restrictions are similar to the stylistic restrictions involving \MIt{}.
+
+The abstract operations supported by \msfit{} are evident
+in the first argument type -- \lstinline{Phi0'} and \lstinline{Phi1'}
+are the type synonyms for the first argument types of \lstinline{msfcata0}
+and \lstinline{msfcata1}. Note that the abstract recursive type $r$ is also
+additionally parameterized by the answer type $a$ in the type sigatures
+of \lstinline{msfcata0} and \lstinline{msfcata1}, since $\mu'$ is additionaly
+parameterized by $a$. In addition to the abstract recursive call, \msfit{}
+also supports the abstract inverse operation. Note that the types for
+abstract inverse (\lstinline{(a -> r a)} and \lstinline{(a i -> r a i)})
+are indeed the types for inverse functions of abstract recursive call
+(\lstinline{(r a -> a)} and \lstinline{(r a i -> a i)}). Instead of using
+actual inverse functions to compute inverse images from answer values
+during computation, one can hold intermediate answer values, whose inverse
+images are irrelevant, inside \textit{Inverse}-constructors during
+the computation using \msfit{}.
+
+The type signature of \msfit{} expects the second argument to be
+parametric over the answer type. Note the second argument types
+\lstinline{(forall a. Rec0 f a)} and \lstinline{(forall a. Rec1 f a i)}
+in the type signatures of \lstinline{msfcata0} and \lstinline{msfcata1}. 
+Using \textit{Inverse} to construct recursive values elsewhere is, in a way,
+prohibited due to the second argument type of \msfit{}. Using \textit{Inverse}
+to construct concrete recursive values makes the answer type specific.
+For example, \lstinline{(Inverse0 5) :: Rec0 f Int}, whose answer type
+made specific to \lstinline{Int}, cannot be passed to \lstinline{msfcata0}
+its second argument. The constructor \textit{Inverse} is only intended to
+define \msfit{} and its first argument (\lstinline{phi}). One can indirectly
+access \textit{Inverse} via the abstract inverse operation supported by
+\msfit{}. Note, in the Haskell definitions of \lstinline{msfcata0} and
+\lstinline{msfcata1}, the second arguments to \lstinline{phi} are
+\lstinline{Inverse0} and \lstinline{Inverse0}. That is, the abstract inverse
+operation is implemented by the \textit{Inverse}-constructor.
+
+We adopt the HOAS formatting
+\begin{figure}
+\lstinputlisting[
 	caption={Formatting an untyped HOAS expression into a \lstinline{String}
-		\label{lst:HOASshow}},
+		\label{lst:HOASshow} (adopted from \cite{AhnShe11}) },
 	firstline=5]{HOASshow.hs}
 \vspace*{-3ex}
 \end{figure}
+TODO Write text about the showExp example TODO
 
 %% Using general recursion, one would have defined
 %% the datatype |Exp_g :: * -> *| that corresponds to |Exp|
