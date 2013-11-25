@@ -83,6 +83,15 @@ known as the Curry--Howard correspondence, is established as follows:
 \item Simplification of proofs corresponds to computation,
         that is, simplification of terms.
 \end{itemize}
+Once these are established, we can formalize a logic within
+one unified language system by internally witnessing proofs as terms
+(or, programs) since we consider \emph{``propositions as types''}.\footnote{
+	Coq and Agda are based on the Curry-Howard correspondence.}
+In contrast, one needs a meta-language other than the object language for logic,which is an extension of lambda calculus with logical constants and connectives,
+for constructing proofs in a more traditional approach, where one represents
+\emph{``propositions as terms''},\footnote{
+	HOL family is based on this more traditional approach.}
+
 We explain this correspondence with a very simple
 version of intuitionistic natural deduction and
 a simply-typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
@@ -97,17 +106,18 @@ a simply-typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
         $A^x \in \Gamma$ to use the hypothetical propositions from $\Gamma$.
         We choose to formalize natural deduction this way to emphasize
         the structural similarities to the typical formalization
-        of typing rules for the lambda calculi.}
+        of typing rules for the lambda calculi.
 
-Traditionally, in \emph{Hilbert-style deduction}, a formal logic is formalized
-by a minimal set of inference rules (\eg, modus ponens
-$\inference{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B}$)
-and a set of axiom schemes (\eg, $A -> A$ and $A -> (B -> A)$ where
-the meta-variables $A$ and $B$ can be instantiated to arbitrary propositions).
-\emph{Natural deduction}, on the other hand, is another style of
-formalizing logic mostly by a set of inference rules and a minimal
-(often empty) set of axiom schemes.
-
+	Traditionally, in \emph{Hilbert-style deduction}, a logic is formalized
+	by a minimal set of inference rules (\eg, modus ponens
+	$\inference{\Gamma |- A -> B & \Gamma |- A}{\Gamma |- B}$)
+	and a set of axiom schemes (\eg, $A -> A$ and $A -> (B -> A)$ where
+	the meta-variables $A$ and $B$ can be instantiated to arbitrary
+	propositions).
+	\emph{Natural deduction}, on the other hand, is another style of
+	formalizing logic mostly by a set of inference rules and a minimal
+	(often empty) set of axiom schemes.
+	}
 There are many variations of formal logic based on natural deduction
 (and also their corresponding typed lambda calculi) depending on
 the set of logical connectives, constants, and quantifiers they support.
