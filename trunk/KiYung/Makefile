@@ -1,4 +1,4 @@
-.PHONY: pdf ps dvi
+.PHONY: pdf ps dvi drop
 
 ## LHSSRC=main.lhs \
 ##        example.lhs
@@ -23,6 +23,9 @@ pdf: main.pdf
 ps: main.ps
 
 dvi: main.dvi
+
+drop: main.pdf
+	cp $< ~/Dropbox/Public/thesis/draft`date +%Y%M%d`.pdf
 
 ## main.tex: ${LHSSRC}
 ## 	lhs2TeX --poly -v -o main.tex main.lhs
