@@ -11,7 +11,6 @@ of the Mendler-style recursion combinators
 between those combinators (Figure \ref{fig:cataviahisto})
 (\ie, which combinators can be defined in terms of others).
 
-
 \begin{table}\centering
 \begin{tabular}{llll}
        & positive & negative & example\\\hline
@@ -39,16 +38,16 @@ between those combinators (Figure \ref{fig:cataviahisto})
 \end{figure}
 
 We give a termination proof for the Mendler-style iteration
-(at kind $*$) in Figure \ref{fig:proof}. The proof takes the form
-of an embedding into $F_\omega$ which is known to be strongly normalizing.
-The proof in Figure \ref{fig:proof} is adapted from work by \citet{AbeMatUus05}.
+(at kind $*$) in Figure~\ref{fig:proof}. The proof takes the form
+of an embedding into \Fw\ which is known to be strongly normalizing.
+The proof in Figure~\ref{fig:proof} is adapted from work by \citet{AbeMatUus05}.
 They prove termination of Mendler-style iteration at arbitrary kinds.
-A proof similar to Figure \ref{fig:proof} is also given by \citet{vene00phd}.
+A proof similar to Figure~\ref{fig:proof} is also given by \citet{vene00phd}.
 
 The definitions given in Figure \ref{fig:proof}, are $F_\omega$ terms,
 but are also legal Haskell terms that execute in GHC. Try the following code
 with the definitions of |Mu0| and |mcata0| from in Figure \ref{fig:proof}.
-They run and return the expected results!\vspace*{-3ex}
+They run and return the expected results!\vspace*{-3ex} \label{pageNatFw}
 \begin{center}
 \ProofCataEx
 \end{center}\vskip1ex
@@ -76,16 +75,17 @@ Figure \ref{fig:cataviahisto} illustrates a well known fact that a standard
 iteration (|mcata|) is a special case of a course-of-values iteration (|mhist|).
 Note that |mcata| is defined in terms of |mhist|
 by ignoring the inverse operation (|out|).
-
 Similarly, We can define |mcata| in terms of |mprim|, and,
 |mhist| in terms of |mcvpr|, by ignoring the casting operation of
-the primitive recursion families. It is also quite evident that
-we can define |mcata| in terms of |msfcata|.
+the primitive recursion families.
+
+%% It is also quite evident that we can define |mcata| in terms of |msfcata|.
 
 \begin{figure}[b]
 \CataViaHisto
 \caption{\normalsize Alternative definition of iteration via course-of-values iteration.}
 \label{fig:cataviahisto}
 \end{figure}
+
 
 

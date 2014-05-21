@@ -589,6 +589,14 @@ made in the previous subsection that all unroller embeddings have uniform shape
 \]
 where the underlined part can be optimized to the identity function \textit{id}.
 
+It is important to note that embeddings of the Mendler-style course-of-values
+primitive recursion rely on the existence of unrollers. However, we have not
+formally proved its existence of unrollers in general. We only conjecture and
+strongly believe that unrollers exist for recursive types whose kinds are
+decorated with enough positive polarity. Clarifying these issues will be
+an interesting future work. Some preliminary ideas are elaborated in
+\S\ref{ssec:fixi:theory:cv}.
+
 % Embeddings of unrollers for term-indexed datatypes (\eg, vectors)
 % are intuitively more simple than type-indexed datatypes (\eg, powerlists,
 % bushes). Due to the erasure property, existence of unroll

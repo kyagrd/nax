@@ -332,11 +332,12 @@ A polarity ($p$) is either covariant ($+$), contravariant ($-$), or
 avariant ($0$). When a type variable is bound, its polarity is 
 made explicit both at its binding site, and in the context.
 The avariant polarity ($0$) means a variable can be used both
-covariantly and contravariantly\footnote{the notation ``invariant'' is sometimes used
-	(see \cite{AbeMat04}), but we think this notation is quite misleading,
-	since $0$ means that the system \emph{does not care} about that
-	variable's polarity,
-	rather than maintaining some unchanging set of properties about the variable's polarities.}
+covariantly and contravariantly\footnote{
+	the notation ``invariant'' is sometimes used (see \cite{AbeMat04}),
+	but we think this notation is quite misleading,
+	since $0$ means that the system \emph{does not care} about
+	that variable's polarity, rather than maintaining some
+	unchanging set of properties about the variable's polarities.}
 We prefix a kind  by a polarity (\ie, $p\kappa$) to specify the variable's
 kind and polarity. For example,
 \[
@@ -440,8 +441,8 @@ in Figure~\ref{fig:eqFixi}. Restricting the polarity of the base structure,
 to which $\fix$ can be applied, is necessary to maintain strong normalization.
 Adding equi-recursive types without restricting the polarity breaks
 strong normalization because it amounts to having both formation and
-elimination of arbitrary iso-recursive types
-(see \S\ref{ec:intro:concpets:recursive)}. 
+elimination of arbitrary iso-recursive types.
+%% TODO we have not explained what equi- and iso- recursive means
 
 Note that there are no explicit term syntax that guides the conversion between
 $\fix F$ and $F(\fix F)$, unlike in iso-recursive systems where $\In$ and

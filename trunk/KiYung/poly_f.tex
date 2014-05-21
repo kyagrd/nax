@@ -1,4 +1,29 @@
 \section{System \F} \label{sec:f}
+System \F\ \cite{Gir71} extends the type syntax of the STLC with
+type variables ($X$) and forall types ($\forall X.B$), which enable us
+to express polymorphic types (see Figure \ref{fig:f}). However,
+System \F\ does not have a dedicated syntax for ground types, such as
+the void type $\iota$ in the STLC. In System \F, we can populate types
+from forall types such as $\forall X.X$. This type is, in fact,
+an encoding of the void type. We shall see that a large class of datatypes
+are encodable in System \F (\S\ref{sec:f:data})
+
+Unlike in the STLC, not all types constructed by the type syntax of System \F\
+make sense. Since we have type variables in System \F, we need to
+make sure that types are well-kinded. That is, we should make sure
+that all the type variables appearing in types are properly bound by
+universal quantifiers ($\forall$). For instance, consider the two types
+$\forall X.X$ and $\forall X.X'$. Under the empty kinding context,
+$\forall X.X$ is well-kinded since $X$ is bounded by $\forall$, but
+$\forall X.X'$ is ill-kinded since $X'$ is an unbound type variable.
+The kinding rules determine whether a type is well-kinded.
+In the kinding rules and typing rules, the kinding context ($\Delta$)
+keeps track of the bound type variables. The complete syntax, kinding rules,
+and typing rules of System \F\ are illustrated in Figure \ref{fig:f}.
+The left column describes the Church-style System \F\ and the right
+column describes the Curry-style System \F. The reduction rules are
+shown separately in Figure \ref{fig:redf}.
+
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
@@ -119,29 +144,7 @@ A,B ::= &~ X \\
 \label{fig:redf}
 \end{figure}
 
-System \F\ extends the type syntax of the STLC with type variables ($X$)
-and forall types ($\forall X.B$), which enable us to express polymorphic types
-(see Figure \ref{fig:f}). However, System \F\ does not have a dedicated syntax
-for ground types, such as the void type $\iota$ in the STLC.
-In System \F, we can populate types from forall types such as $\forall X.X$.
-This type is, in fact, an encoding of the void type. We shall see that
-a large class of datatypes are encodable in System \F (\S\ref{sec:f:data})
 
-Unlike in the STLC, not all types constructed by the type syntax of System \F\
-make sense. Since we have type variables in System \F, we need to
-make sure that types are well-kinded. That is, we should make sure
-that all the type variables appearing in types are properly bound by
-universal quantifiers ($\forall$). For instance, consider the two types
-$\forall X.X$ and $\forall X.X'$. Under the empty kinding context,
-$\forall X.X$ is well-kinded since $X$ is bounded by $\forall$, but
-$\forall X.X'$ is ill-kinded since $X'$ is an unbound type variable.
-The kinding rules determine whether a type is well-kinded.
-In the kinding rules and typing rules, the kinding context ($\Delta$)
-keeps track of the bound type variables. The complete syntax, kinding rules,
-and typing rules of System \F\ are illustrated in Figure \ref{fig:f}.
-The left column describes the Church-style System \F\ and the right
-column describes the Curry-style System \F. The reduction rules are
-shown separately in Figure \ref{fig:redf}.
 
 As in the STLC, the term syntax for abstractions differs between the two styles.
 The Church-style System \F\ has type annotations in abstractions but

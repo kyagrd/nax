@@ -399,11 +399,11 @@ inductive datatypes, even those with negative occurrences.
 
 \begin{figure}
 \HOASshowFw
-\caption{HOAS string formatting example in $F_\omega$.}
+\caption{HOAS string formatting example in \Fw.}
 \label{fig:HOASshowFw}
 \end{figure}
 
-Figure \ref{fig:proofsf} is the $F_\omega$ encoding\footnote{
+Figure \ref{fig:proofsf} is the \Fw\ encoding\footnote{
 	using a fragment of Haskell, which we believe to be a subset of \Fw.}
 of the inverse augmented datatype |Rec0| and its iteration |msfcata0|.
 We use the sum type to encode |Rec0| since it consists of two constructors,
@@ -414,10 +414,10 @@ combining function |phi| over the recursive structure |(\f->f(phi Id))|.
 The utility function |lift| abstracts a common pattern, useful
 when we define the shorthand constructors (|lam| and |app|).
 
-Figure \ref{fig:proofsf} also contains the $F_\omega$ encoding of the sum type
+Figure \ref{fig:proofsf} also contains the \Fw\ encoding of the sum type
 |(+)| and its constructors (or injection functions) |inL| and |inR|.
 The case expression |caseSum| for the sum type is just binary function
-application. In the $F_\omega$ encoding, they could be omitted
+application. In the \Fw\ encoding, they could be omitted
 (\ie, |caseSum x f g| simplifies to |x f g|).  But, we choose to write
 in terms of |caseSum| to make the definitions easier to read.
 
@@ -430,6 +430,35 @@ those expressions using |showExp|.  For example,
 $>$ |putStrLn (showExp (lam(\x->lam(\y->x))))|\\
 \verb|(\a->(\b->a))|
 \end{quote}
+
+\paragraph{}
+It is important to note that we embedded |Rec0| and |msfcata0| into \Fw\
+in Figure~\ref{fig:HOASshowFw}, but we have not embedded |Roll0| into \Fw.
+Instead, we embedded the two constructors of |Exp|, |app| and |lam|,
+into \Fw. Note that |app| and |lam| are defined in terms of |inR|, |unId|,
+and |lift|, which are definable in \Fw\ as in Figure~\ref{fig:proofsf}.
+
+The situation is different from embedding of Mendler-style iteration
+into \Fw, where |Mu0|, |mcata0|, and also |In0| is embedded into \Fw\ (see
+Figure~\ref{fig:proof} in \S\ref{sec:proof}). Then, the embeddings for
+data constructors of recursive types are simply given in terms of |In0| (see
+the embedding of natural numbers in p\pageref{pageNatFw}, \S\ref{sec:proof}).
+
+Unfortunately, for Mendler-style iteration with syntactic inverses,
+we have not found a way to to factor out |Rec0| as an \Fw-term to reuse it
+for embedding data constructors of inverse-augmented recursive types.
+We could only embed data constructors (|app| and |lam|) of a specific
+recursive type (|Exp|). This is analogous to the situation where we can
+embed any given regular recursive type in System \F, but not able to factor
+out |Mu| or |In| as we can do in System \Fw.
+
+We strongly believe that there exist systematic algorithm of
+embedding any given regular recursive types |Rec0| and |msfcata0|.
+We can already see the pattern: |lift| is applied to recursive arguments
+in positive positions and |inL| is used in recursive arguments
+in negative positions. More precise and general description of
+the algorithm for embedding, and, a proof that the algorithm
+leads to desired embeddings would be an interesting future work.
 
 \subsection{Evaluating Simply-Typed Higher-Order Abstract Syntax}
 \label{sec:evalHOAS}
@@ -539,15 +568,6 @@ and \ref{fig:rcombdef} (p\pageref{fig:rcombdef}), and the reader is
 encouraged to study those Figures for a complete understanding of
 the results of this chapter.
 
-We believe |msfcata1| might be useful for writing functions over
-negative datatypes with type indices.  The combinator, |msfhist1|,
-like its kind $*$ counterpart |msfhist0|, may not terminate given
-ill-behaved |phi| functions. Such functions
-use the unroller to {\it reach down inside a tree} to extract an 
-embedded function, and then applies that function to an ancestor that
-contains that function. Yet, they may be nevertheless useful 
-for well-behaved |phi| functions. 
-
 \begin{figure}
 %{
 %format e1
@@ -559,6 +579,16 @@ for well-behaved |phi| functions.
         and the |freevarused| function defined using |mopenit0|.}
 \label{fig:openiter}
 \end{figure}
+
+We believe |msfcata1| might be useful for writing functions over
+negative datatypes with type indices.  The combinator, |msfhist1|,
+like its kind $*$ counterpart |msfhist0|, may not terminate given
+ill-behaved |phi| functions. Such functions
+use the unroller to {\it reach down inside a tree} to extract an 
+embedded function, and then applies that function to an ancestor that
+contains that function. Yet, they may be nevertheless useful 
+for well-behaved |phi| functions. 
+
 \paragraph{}
 In a HOAS, a meta-level function from expressions to expressions, represents
 an expression with a single free variable. For example,

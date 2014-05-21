@@ -205,7 +205,7 @@ Conjecture \ref{conj:fixi:fmap} below. In this thesis, we only show that this
 conjecture holds for simple cases (Proposition \ref{prop:fixi:fmapBaseCase}),
 but still encompassing a broad range of types.
 The complete proof is left for future work.
-\citet{Mat99} showd that positive inductive types, in the context of System \F,
+\citet{Mat99} showed that positive inductive types, in the context of System \F,
 are monotone (\ie, map exists), but it has not yet been studied
 whether we can rely on polarized kinds to derive monotonicity
 in the context of System \Fw.
@@ -465,12 +465,12 @@ $X : p\kappa -> *$ and $\kappa$ itself is in the form of $\kappa' -> *$.
 \begin{itemize}
         \item[case]($X : 0\kappa -> * $)
         Since $G$ in $X\,G$ cannot have $Z$,
-        we simply return the identiy function as the map for $\l Z^{+*}.X\,G$.
+        we simply return the identity function as the map for $\l Z^{+*}.X\,G$.
 
         \item[case]($X : +\kappa -> * $)
         Valuation of $X$ must have the form of $\l X_1^{+\kappa}. B_1$.
         The argument $G$ in $X\,G$ must either be lambda or an application.
-        When $G$ is an application of the form $X_2 G_2$, after reducting
+        When $G$ is an application of the form $X_2 G_2$, after reducing
         $(\l X_1^{+\kappa}. B_1)(X_2 G_2)$ to $B_1[X_2G_2/X_1]$, there are
         no new redex introduced by this reduction. Thus, this is just an
         inductive case.
@@ -514,7 +514,7 @@ such that
 \end{align*}
 \end{proposition}
 \begin{proof}
-        You can check that each case
+        You can check that each case %% TODO
         in the proof of Theorem \ref{thm:fixi:fmap} (TODO maybe refer to lemmas)
         satisfies the two equations above.
 \end{proof}

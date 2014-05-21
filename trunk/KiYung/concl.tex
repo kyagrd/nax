@@ -287,10 +287,11 @@ but nowhere else.
 We summarise several limitations of our term-indexed calculi and
 the Nax language design.
 
-We implemented rank-1 {\it kind} polymorphism
-in the Nax language implementation, but our term-indexed calculi
-do not have any form of kind polymorphism. We believe that
-rank-1 {\it kind} polymorphism should not cause inconsistency,
+We implemented rank-1 {\it kind} polymorphism, for the type constructors
+defined by the top level datatype declarations, in the Nax language
+implementation. However, our term-indexed calculi do not have any form of
+kind polymorphism. We strongly believe that rank-1 {\it kind} polymorphism
+for those type constructors should not cause inconsistency,
 but further investigation is needed.
 
 Mendler-style course-of-values recursion only terminates for monotone
@@ -304,22 +305,28 @@ Nax does not support datatypes that contain types (e.g. $[Int,Bool]$).
 This is often useful for datatype generic programming. We can work around
 this by reflecting a certain subset of types as term representations of types
 (\aka\ type universes). We plan to investigate whether we can extend Nax with
-first-class datatype descriptions \cite{DagMcb12}, which
-enable representing arbitrary types as terms.
+first-class datatype descriptions \cite{DagMcb12}, which enable representing
+arbitrary types as terms.
 
 Nax currently does not support any syntax for optional type annotations.
 Because types can be completely inferred (except for index transformer
-annotations on case expressions and Mendler-style recursion combinators), this
-did not seem necessary.
-However, optional type annotations can be useful for documentation purposes,
-especially for global definitions, which are often reused as library functions
-in many other places.
+annotations on case expressions and Mendler-style recursion combinators),
+this did not seem necessary. However, optional type annotations can be useful
+for documentation purposes, especially for global definitions, which are often
+reused as library functions in many other places.
 
 We are thinking about supporting some implicit coercions (e.g. the {\tt cast}
 abstract operation of \MPr) in Nax to make the code more concise.
-This would allow Nax programs to look similar
-to the code using general recursion.  Similarly,
-we can also support implicit conversion from the indexed augmented
-recursive types ($\breve{\mu}$-values) to the standard recursive types
-($\mu$-values).
+This would allow Nax programs to look even more similar to the code
+using general recursion. Similarly, we can also support implicit conversion
+from the indexed augmented recursive types ($\breve{\mu}$-values) to
+the standard recursive types ($\mu$-values).
 
+%% We are also working on a new implementation of Nax with better syntax
+%% that support better kind inference and non-ambiguous fixpoint derivation.
+%% In the syntax used in this dissertation, we annotate $\Mu_{[\kappa]}$ and
+%% $\In_{[\kappa]}$ with the kind $\kappa$. In our new implementation,
+%% the kind is inferred for $\Mu$ without any annotation.
+%% and appropriate kind is inferred.
+%% The new syntax does not need any
+%% annotation for $\Mu$

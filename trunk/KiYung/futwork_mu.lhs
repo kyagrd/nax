@@ -134,7 +134,6 @@ we do not know of a Mendler-style recursion scheme to define |expr2exp'|.
 We need further investigation on whether |expr2exp'| would always terminate
 and whether it is possible to make it work for |Exp| rather than |Exp' Expr|.
 
-\paragraph{}
 Let us contemplate on why the coercion from |(forall a.Rec0 E a)| to |Mu0 E|
 exists, but the coercion the other way is hard (perhaps impossible) to find.
 We believe that |msfcata0| can express more functions than |mcata0|
@@ -148,3 +147,12 @@ $\breve\mu$ and $\mu$, recursive values being constructed by data constructors
 are by default as $\breve\mu$-values, and allow upcasting from $\breve\mu$
 to $\mu$ when needed (e.g. when applying |msfcata|).
 
+In this section, we discussed what we should consider when using both
+|mcata| and |msfcata| together. For some recursion schemes, it is easy
+quite trivial to establish a theory for using them together. For instance,
+there is no problem using |mpr| together with |mcata| since |mpr| subsumes
+|mcata| -- we can implement |mcata| in terms of |mpr|.
+However, for some recursion schemes, such as |mprim| and |msfcata|,
+it is not trivial to establish a theory for using them together.
+Developing theories for using such recursion schemes together
+is also important future work.

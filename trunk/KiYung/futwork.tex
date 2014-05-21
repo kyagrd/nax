@@ -95,11 +95,11 @@ and proof that $mon_{*}F$ exists for any $F:+* -> *$ in \Fixi\ is
 left for future work.
 
 We discussed that there are two notions of monotonicity at kind $p* -> *$,
-one ($\textit{mon}_{p* -> *}F$) for non-truley nested datatypes and
-the other ($\textit{mon'}_{p* -> *}F$) for truley nested datatypes.
-We conjectore that $\textit{mon}_{p* -> *}F$ exists for any non-truely nested
+one ($\textit{mon}_{p* -> *}F$) for non-truly nested datatypes and
+the other ($\textit{mon'}_{p* -> *}F$) for truly nested datatypes.
+We conjecture that $\textit{mon}_{p* -> *}F$ exists for any non-truly nested
 $F:+(p* -> *) -> (p* -> *)$, and, that $\textit{mon'}_{+* -> *}F$ exists
-for any $F:+(+* -> *) -> (+* -> *)$. Proofs for such conejctures
+for any $F:+(+* -> *) -> (+* -> *)$. Proofs for such conjectures
 at higher kinds are also future work.
 
 \section{Kind polymorphism and kind inference}\label{sec:futwork:kindpoly}
@@ -114,12 +114,37 @@ our belief.
 In the Nax implementation, types are mostly inferred but kinds are always
 annotated. For example, we must annotate $\kappa$ in $\mu_{[\kappa]}$ and
 $\In_{[\kappa]}$, in addition to the kind annotations in datatype declarations
-($\mathbf{data} F : \kappa \mathbf{where} \cdots$). We believe we only
-need kind annotations in datatype declarations. We can omit the kind
-annotations in $\mu$ and because $\mu$ is always folioed by a type constructor,
-$\mu F$, and we can always infer the kind of $F$. Similarly, we can omit
+($\mathbf{data}\;F : \kappa\;\mathbf{where} \cdots$).
+We believe we only need kind annotations in datatype declarations.
+We can omit the kind annotations in $\mu$ and because $\mu$ is always
+followed by a type constructor, $\mu F$, and we can always infer
+the kind of $F$. Similarly, we might be able omit or simplify
 the kind annotation in $\In$, because $\In$ is always followed by a term,
-$\In t$, and we can infer the type of $t$, and we must have already inferred
-the kind to infer the type. We are planning to change the Nax syntax
-to write $\mu$ and $\In$, instead of $\mu_{[\kappa]}$ and $\In_{[\kappa]}$.
+$\In t$, and we can infer the type of $t$, and we might have
+enough information to infer the kind for $\In$.
+
+We are also working on a new implementation of Nax with better syntax
+that support better kind inference and non-ambiguous fixpoint derivation.
+In our new implementation, the kind is inferred for $\mu$ without
+any annotation. We have not found a good way to completely infer the kind
+for $\In$, but we found out that it is enough to specify the arith of the kind.
+That is, write $\In_n$ instead of $\In_{[\kappa]}$ where $n$ is the arity of
+$\kappa$. For example, in the new syntax we write $\In_3$ instead of
+$\In_{[* -> * -> * -> *]}$, $\In_{[* -> (* -> *) -> * -> *]}$, or
+$\In_{[* -> \{\texttt{Nat}\} -> * -> *]}$, which is much more succinct,
+especially for larger arities. Another change to the syntax is on
+the datatype declaration of the GADT form. The syntax in our dissertation
+($\mathbf{data}\;F : \kappa\;\mathbf{where} \cdots$) can be ambiguous
+to derive fixpoint of $F$. For example, when $F : (* -> *) -> * -> *$,
+we can either take fixpoint of $\mu F : * -> *$, or $\mu (F\;t) : *$
+for some $t : *$. In the current syntax, we simply choose the longest match,
+that is $\mu F : * -> *$. In the new syntax, we change the datatype declaration
+syntax, similar to the syntax of Agda's, to clearly distinguish parameter
+arguments from index arguments. For instance,
+($\mathbf{data}\;F_1\;r: * -> * \;\mathbf{where} \cdots$) or
+($\mathbf{data}\;F_0\;t\;r: * \;\mathbf{where} \cdots$), where
+parameter arguments ($t$, $r$) appear on the left of the colon ($:$).
+Then, we can derive fixpoints without ambiguity, always on the last
+parameter argument, for instance, we would derive $\mu F_1 : * -> *$
+and $\mu(F_0\;t): *$.
 
