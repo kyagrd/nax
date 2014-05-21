@@ -30,13 +30,13 @@ drop: main.pdf
 ## main.tex: ${LHSSRC}
 ## 	lhs2TeX --poly -v -o main.tex main.lhs
 
-main.pdf: ${TEXSRC} main.bbl
+main.pdf: main.bbl main.idx
 	pdflatex main
 
 main.ps: main.dvi
 	dvips main
 
-main.dvi: ${TEXSRC} main.bbl
+main.dvi: main.bbl main.idx
 	latex main
 
 main.aux:
@@ -46,7 +46,8 @@ main.bbl: main.aux main.bib
 	bibtex main
 	latex main
 
-
+main.idx: ${TEXSRC}
+	makeindex main
 
 
 
