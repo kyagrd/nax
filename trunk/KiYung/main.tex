@@ -29,8 +29,11 @@
 \usepackage[normal]{subfigure}
 \usepackage[all]{xy}
 \usepackage{enumerate}
+\usepackage{makeidx}
 
 \usepackage{mylhs2tex}
+
+\makeindex
 
 \definecolor{grey}{rgb}{0.8,0.8,0.8}
 \definecolor{gray}{rgb}{0.57,0.57,0.57}
@@ -181,6 +184,7 @@ In this dissertation, we design a language called Nax, which balances
 between the benefits of the both. Nax accepts all recursive datatypes,
 allowing the same flexibility of defining recursive datatypes
 in functional programming languages. Nax supports a number of
+\index{Mendler-style}
 Mendler-style recursion schemes that can express various kinds of recursive
 computations and also grantee termination. Nax supports term-indexed types
 to enable specifications of fine-grained properties. In addition, Nax supports
@@ -248,6 +252,8 @@ out in the evenings.
 \appendix
 \part{Appendix}
 \include{appendix}
+
+\printindex
 
 \end{document}
 

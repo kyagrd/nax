@@ -580,7 +580,9 @@ smaller than the value which contains them. This assumption holds due to
 the positivity restriction put on datatype definitions. However, measuring
 size by structural containment does not always hold for negative datatypes.
 
-The latter non-conventional approach, known as the \emph{Mendler-style} approach
+The latter non-conventional approach, known as
+\index{Mendler-style}
+the \emph{Mendler-style} approach
 puts no restrictions on the definition of datatypes, but instead, carefully
 restricts the use of, in particular, the decomposition (\ie, elimination, or,
 pattern matching) of recursive values. In this approach, theoretical
@@ -708,6 +710,7 @@ Our thesis is
 that a language design based on \emph{Mendler-style recursion schemes}
 and \emph{term-indexed types} can lead to a system that supports these four
 features.
+\index{Mendler-style}
 
 The following chapters support the thesis as follows:
 Mendler-style recursion schemes support (1) because they are based on
@@ -722,6 +725,7 @@ termination is type-based -- no need for an auxiliary termination checker.
 
 \section{Mendler-style recursion and term-indexed types}
 \label{sec:intro:concepts}
+\index{Mendler-style}
 We give summaries of the preliminary concepts on
 Mendler-style recursion schemes (\S\ref{sec:intro:concepts:mendler})
 and term-indexed types (\S\ref{sec:intro:concepts:indexed}).
@@ -844,6 +848,7 @@ in Figure~\ref{fig:approaches}, in contrast to
 the unrestricted general recursion in functional languages.
 The conventional approach restricts the formation of recursive types
 (\ie, the restriction is in datatype definition), and
+\index{Mendler-style}
 the Mendler-style approach restricts the elimination of the values of
 recursive types (\ie, the restriction is in pattern matching).
 
@@ -940,6 +945,7 @@ rule {\small(\It)} and the reduction rule {\small(\It-\In)} for \It\,
 in addition to the rules for the recursive type operator $\mu$.
 
 \paragraph{Recursive types in the Mendler-style approach}
+\index{Mendler-style}
 In the Mendler-style approach, we allow arbitrary formation
 (\ie, datatype definition) of recursive types, but we restrict
 the elimination (\ie, pattern matching) over the values of recursive types. 
@@ -962,6 +968,7 @@ You can think of the rule {\small(\MIt)} as replacing both the elimination rule
 {\small(\It)}, but in a safe way that guarantees normalization.
 
 \subsection{Justification of the Mendler-style as a design choice.}
+\index{Mendler-style}
 \label{sec:intro:concepts:mendler}
 We choose to base our approach to the design of a seamless synthesis of both
 logical reasoning and programming on the Mendler style. It restricts
@@ -1055,6 +1062,7 @@ recursive datatypes with type indices.
 
 Another reason to use term-indexed calculi, rather than dependent type theories,
 is to extend the application of Mendler-style recursion schemes,
+\index{Mendler-style}
 which are well-understood in the context of \Fw.
 Researchers have thought about (though not published)\footnote{
      Tarmo Uustalu described this on a whiteboard
@@ -1084,6 +1092,7 @@ This dissertation makes contributions in several areas.
 \end{itemize}
 
 \subsection{Contributions related to the Mendler style}
+\index{Mendler-style}
 We organize a hierarchy of Mendler-style recursion schemes in two dimensions.
 The first dimension is the abstract operations they support. For instance,
 the Mendler-style iteration (\MIt) supports a single abstract operation
@@ -1123,6 +1132,7 @@ We embed Mendler-style course-of-values recursion into \Fixi\
 (or into \Fixw\ \cite{AbeMat04}, when we do not consider term-indices).
 
 \subsection{Contributions to the theory of Term-Indexed Types}
+\index{Mendler-style}
 Mendler-style recursion schemes have been studied in the context of
 polymorphic lambda calculi. For instance, \citet{AbeMatUus03} embedded 
 Mendler-style iteration (\MIt) into \Fw\ and \citet{AbeMat04} embedded
@@ -1155,6 +1165,7 @@ The language features supported by Nax provide the advantages
 of both programming oriented systems and logic oriented systems.
 Nax supports both term- and type-indexed datatypes,
 rich families of Mendler-style recursion combinators,
+\index{Mendler-style}
 and a conservative extension of Hindley--Milner type inference.
 We designed Nax so that its foundational theory and
 implementation framework could be kept simple.
@@ -1212,6 +1223,7 @@ in one language system.
 Recall that we can embed datatypes as functional encodings in
 our indexed type theory. Recursive datatypes and their recursion schemes in Nax
 are embedded using Mendler-style encodings.
+\index{Mendler-style}
 In Mendler style, one encodes the recursive type operator $\mu$
 and its eliminator (the recursion scheme) as a pair.
 So, there are several different encodings of $\mu$,
@@ -1248,6 +1260,7 @@ It is still an open problem whether it is possible to derive monotonicity
 without examining the type constructor definition.
 
 We identified a useful application for a solution to this open problem.
+\index{Mendler-style}
 We discovered an embedding of Mendler-style course-of-values recursion in
 a polarized system for positive (or monotone) type constructors.
 That is, once you can show the existence of a map for a datatype,
@@ -1319,7 +1332,9 @@ Later in Part~\ref{part:Nax} Chapter \ref{ch:naxTyInfer},
 we formulate a conservative extension of HM, which restricts
 the term-indexed calculus System \Fi\ (Chapter \ref{ch:fi}) in a similar manner.
 
-\paragraph{Part \ref{part:Mendler} (the Mendler style)}\hspace{-1em} introduces
+\paragraph{Part \ref{part:Mendler} (the Mendler style)}\hspace{-1em}
+\index{Mendler-style}
+introduces
 the concept of Mendler-style recursion schemes (Chapter \ref{ch:mendler})
 using examples written in Haskell (with some GHC extensions). The readers
 of Chapter \ref{ch:mendler} need no background knowledge
@@ -1357,6 +1372,7 @@ the polymorphic calculus that the term-indexed calculus extends.
 That is, all well-typed terms in \Fi\ and \Fixi\ are
 also well-typed typed terms in \Fw\ and \Fixw.
 
+\index{Mendler-style}
 By embedding Mendler-style recursion schemes into our term-indexed
 lambda calculi, we prove that those schemes are well-defined and
 terminate over term-indexed datatypes.  For instance,
@@ -1380,6 +1396,7 @@ term- or type-indexed datatypes, which are not supported in HM, need
 some annotation to infer their types in Nax. These annotations are only
 required on three syntactic entities (datatype declarations, case expressions,
 and Mendler-style recursion combinators).
+\index{Mendler-style}
 
 \paragraph{Part \ref{part:Postlude} (Postlude)}\hspace{-1em} closes
 the dissertation by summarizing

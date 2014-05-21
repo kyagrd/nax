@@ -21,12 +21,14 @@ cons x xs  = In0 (Cons x xs)
 \end{comment}
 
 \section{Mendler-style recursion schemes over multiple values} \label{sec:relwork:mult}
+\index{Mendler-style}
 There are many Mendler-style recursion schemes in addition
 to those discussed in Chapter~\ref{ch:mendler}.
 Here, we introduce two Mendler-style recursion schemes that
 work over two (or more) structures simultaneously. 
 
 \subsection{Simultaneous iteration}
+\index{Mendler-style!simultaneous iteration}
 \citet{UusVen00} studied course-of-value iteration (\aka\ histomorphism)
 and \emph{simultaneous iteration} (\aka\ multimorhpism). They formulate
 these two recursion schemes in both the conventional and Mendler style.
@@ -109,6 +111,7 @@ Here, we formulated |msimpr0| with two recursive arguments, so we have two
 casting operations, whose types are |(r1 -> Mu0 f1)| and |(r2 -> Mu0 f2)|.
 
 \subsection{Lexicographic recursion}
+\index{Mendler-style!lexicographic iteration}
 Some recursive functions over multiple recursive values
 justify termination because their arguments decrease at every recursive call
 under a lexicographic ordering.  Note that this different from

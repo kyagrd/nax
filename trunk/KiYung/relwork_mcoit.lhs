@@ -9,7 +9,7 @@ import Prelude hiding (head, tail, pred, succ, take)
 \end{comment}
 
 \section{Mendler-style co-iteration and co-recursion} \label{sec:relwork:co}
-
+\index{Mendler-style}
 Data structures have a natural dual, often called co-data.
 Data is characterized by how it is constructed, and co-data is
 characterized by how it is observed (destructed).
@@ -19,6 +19,8 @@ We call these generalizations Mendler-style co-recursion schemes.
 These co-recursion schemes generate possibly infinite structures. 
 For instance, an infinite sequence of natural numbers.
 
+\index{Mendler-style!co-iteration}
+%% \index{Mendler-style!co-recursion}
 The Mendler-style co-iteration, \McoIt, (\aka\ anamorphism or unfold) is
 dual to the Mendler-style iteration, \MIt, (\aka\ catamorpihsm or fold).
 Figure~\ref{fig:mcoit0} (adapted from \citet{UusVen11}) illustrates
