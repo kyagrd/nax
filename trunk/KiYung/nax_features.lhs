@@ -24,6 +24,7 @@ Mendler-style recursion combinators to ensure strong normalization.
 \end{itemize}
 
 \section{Two-level types}\label{2level}
+\index{two-level type}
 Non recursive datatypes are introduced by the |data| declaration.
 The data declaration can include arguments.
 %% The kind and separation of arguments into parameters and a indices is inferred.
@@ -108,6 +109,9 @@ data L : * -> * -> * where
 \vspace*{0.1in}
 \end{singlespace}
 
+\index{recursive type}
+\index{type!recursive}
+\index{type!fixpoint}
 A recursive type can be defined as the fixpoint of a (perhaps partially applied)
 non-recursive type constructor. Thus, the traditional natural numbers are typed
 by |Mu[*] N| and the traditional lists with components of type |a| are typed by
@@ -141,6 +145,8 @@ synonym (or, macro) facility.
 
 We may codify that some type is the fixpoint of another, once and for all,
 by introducing a type synonym.
+\index{synonym}
+\index{type!synonym}
 
 \begin{code}
 synonym Nat = Mu[*] N
@@ -161,6 +167,7 @@ cons x xs  = In[*] (Cons x xs)
 
 This is such a common occurrence that recursive synonyms and
 constructor functions can be automatically derived.
+\index{deriving fixpoint}
 Automatic synonym and constructor derivation in Nax is both concise and simple.
 The clause ``|deriving fixpoint List|" (below right) automatically derives
 the |synonym| definition for |List|. It also defines the constructor functions
@@ -235,6 +242,7 @@ one of the Mendler-style combinators. By design, we limit pattern matching
 to values of non-recursive types, by {\em not} providing any mechanism to
 match against the recursive injection (|In[k]|).
 
+\index{pattern mathcing}
 To illustrate simple pattern matching over non-recursive types, we give
 a multi-clause definition for the |not| function\footnote{
 	|not| is just a pretty-printed notation of \textit{not} using lhs2TeX.}
@@ -489,6 +497,11 @@ also work for the actual type (|Mu[*] T|), but because it cannot assume that
 operations in carefully proscribed ways.
   
 \section{Types with static indices}\label{sec:bg:ixty}
+\index{type!indexed}
+\index{parameter}
+\index{index}
+\index{type!parameter}
+\index{type!index}
 Recall that a type can have both parameters and indices, and that indices
 can be either types or terms. We define three types below each with one or more
 indices. Each example defines a non-recursive type, and then uses derivation to
@@ -520,6 +533,8 @@ data P: (Tag -> Nat -> *) -> Tag -> Nat -> * where
     deriving fixpoint Proof
 \end{code}
 \end{singlespace}
+\index{type index}
+\index{term index}
 Note, to distinguish type indices from term indices (and to make parsing
 unambiguous), we enclose term indices in braces (|{ ... }|). We also
 backquote (|`|) variables in terms that we expect to be bound in
@@ -582,6 +597,7 @@ within abstraction have to be generalized to deal with the type indices in
 a consistent manner. How this is done is best first explained by example, and
 then later abstracted to its full general form.
 
+\index{balanced binary tree}
 Recall, a value of type (|PowerTree Int|) is a set of integers. This
 set is constructed as a balanced binary tree with pairs at the leaves
 (see {\it tree2} and {\it tree3} above).
@@ -689,6 +705,8 @@ e_i  : psi a b c
 \end{tabular}
 %}
 \end{center}
+\index{index transformation}
+\index{vector}
 The simplest form of index transformation, is where the transformation
 is a constant function. This is the case of the function that computes
 the integer length of a natural-number, length-indexed, list
@@ -724,6 +742,7 @@ flop x =  MIt {{t} {i} . Proof {`flip t} {`succ i}} x with
 \end{code}
 \end{singlespace}
 
+\index{vector}
 For our last term-indexed example, every length-indexed list has a length,
 which is either even or odd. We can witness this fact by writing a function
 with type: |Vector a {n} -> Either (Even {n}) (Odd {n})|.
@@ -782,7 +801,15 @@ there is a more expressive Mendler-style combinator that is safe over
 recursive types with negative occurrences. We call this combinator |MsfIt|.
 This combinator is based upon an interesting programming trick, first described
 by Sheard and Fegaras \cite{FegShe96}, hence the ``\textbf{sf}'' in the name
-|MsfIt|.  The abstraction supported by |MsfIt| is as follows:
+|MsfIt|.  The abstraction supported by |MsfIt| is as follows:\footnote{
+	More precisely, we need to use $\breve{\mu}$, which is different
+        from $\mu$, for |MsfIt| (see \S\ref{sec:futwork:mu}).
+	We have not correctly implmented this in our current implmentation,
+        which we are using to run the examples in this dissertation.
+        So, our example here just uses $\mu$ instead of $\breve{\mu}$.
+	But, we are working it the right way in the new implementation.
+	}
+\vspace*{-2em}
 \begin{singlespace}
 \begin{center}
 %{
@@ -818,6 +845,7 @@ new variable, \texttt{x}$n$ (see the function |new|), where $n$ is the current
 value of the integer variable. When we make a recursive call, we increment
 the integer. In the comments (the rest of a line after |--|), we give
 the type of a few terms, including the abstract operations |sh| and |inv|.
+\vspace*{-1em}
 \begin{singlespace}
 \begin{code}
                           {-" "-} -- |cat           : List String -> String|
@@ -832,6 +860,8 @@ showHelp x =
     sh inv (App x y)  = \ m -> cat [  "(", sh x m, " ", sh y m, ")"]
     sh inv (Abs f)    = \ m -> cat [  "(fn ", new m, " => ",
                                       sh (f (inv (\ n -> new m))) (m+1), ")"]
+\end{code}
+\begin{code}
 showTerm x = showHelp x 0
 
 showTerm apply : List Char = "(fn x0 => (fn x1 => (x0 x1)))"

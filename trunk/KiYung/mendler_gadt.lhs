@@ -5,6 +5,11 @@
 %format nilv = nil"_{\!"V"}"
 %format consv = cons"_{\!"V"}"
 
+\index{GADT}
+\index{generalized algebraic datatype}
+\index{datatype!generalized algebraic}
+\index{datatype!GADT}
+\index{datatype!indexed}
 A recent, popular extension to the GHC Haskell compiler is generalized
 algebraic datatypes (GADTs) \cite{She05}. In our nested examples, the
 variation of type indices always occurred in the arguments of the data
@@ -12,11 +17,12 @@ constructors. GADTs are indexed datatypes, where the index may vary in
 the result types of the data constructors. Haskell's normal |data| 
 declaration, which uses an ``equation'' syntax, 
 makes the assumption that the result types of every constructor
-is the ``same'' type with no variation. GHC's GADT datatype extension is more expressive than
-the recursive |data| declaration. The GHC compiler extends the |
-datatype| syntax, so that each datatype constructor is given its full
-type. The datatype definition for vectors (or size indexed lists) is a
-prime example:
+is the ``same'' type with no variation. GHC's GADT datatype extension
+ is more expressive than the recursive |data| declaration.
+The GHC compiler extends the |datatype| syntax, so that
+each datatype constructor is given its full type.
+The datatype definition for vectors (or size indexed lists) is a prime example:
+\index{vector}
 
 \begin{code}
 data Vec p i where
@@ -36,6 +42,7 @@ Nested datatypes, which we discussed earlier, are a special case of
 indexed datatypes that happened to be expressible within
 the recursive type equation syntax of Haskell, because the indices only vary
 in the recursive arguments of the data constructors, but not in the result type.
+\index{bush}
 For a clearer comparison, we express the bush datatype in GADT syntax as
 follows: \footnote {We can translate any recursive type equation into
 a definition using the GADT syntax since GADTs are indeed \emph{generalized}
@@ -56,18 +63,23 @@ the parameter |p|, and then apply the resulting fixpoint to the index |i|.
 The base datatype |V p r i| is a GADT with a parameter |p| and an index |i|.
 Recall that by convention we place the parameter |p| before
 the type argument |r| for recursion points, followed by the index |i|.
+\index{parameter}
+\index{index}
+\index{type!parameter}
+\index{type!index}
 We can express the |copy| function that traverses a given vector and
 reconstructs that vector with the same elements, in the Mendler style,
 using Mendler-style iteration combinator |mcata1| at kind $* -> *$.
 We can express the |switch2| function that switches every two elements of
 the given vector, in the Mendler style, using the course-of-values iteration
 combinator |mhist1| at kind $* -> *$.
+\index{Mendler-style!course-of-values iteration}
 The definitions for |mcata1| and |mhist1| are exactly the same as
 the definitions for |mcata0| and |mhist0|, except that |mcata1| and |mhist1|
 have richer type signatures
 (see Figures \ref{fig:rcombty} and \ref{fig:rcombdef}).
 Thus, defining functions using |mcata1| and |mhist1| is no more complicated
-than defining the functions for regluar datatypes using |mcata0| and |mhist0|.
+than defining the functions for regular datatypes using |mcata0| and |mhist0|.
 The one proviso to this statement is that we need to give explicit
 type signatures for |phi| because GHC does not support type inference
 for higher-rank types (\ie, types with inner $\forall$s that are not top-level).

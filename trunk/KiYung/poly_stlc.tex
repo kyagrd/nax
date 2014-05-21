@@ -84,9 +84,14 @@ A,B ::= &~ A -> B \\
 \label{fig:stlc}
 \end{singlespace}
 \end{figure}
+\index{lambda calculus!simply-typed}
+\index{simply-typed lambda calculus|see{STLC}}
+\index{STLC}
 We illustrate two styles of the simply-typed lambda calculus (STLC)
 in Figure~\ref{fig:stlc}. The left column of the figure describes
 the Church style and the right column describes the Curry style.
+\index{Curry style}
+\index{Church style}
 
 A term can be either a variable, an abstraction (\aka\ lambda term), or
 an application. The distinction between the two styles comes from whether
@@ -156,12 +161,15 @@ Then, we motivate the discussion of polymorphic type systems
 by reviewing the limitations of the STLC (\S\ref{sec:stlc:topoly}).
 
 \subsection{Strong normalization}\label{sec:stlc:srsn}
+\index{strong normalization}
 We discuss two important properties of the STLC, which hold in both
 the Church style and the Curry style -- \emph{subject reduction} (\aka\
-type preservation) and \emph{strong normalization}. Since we 
-focus on strong normalization, we will be rather brief on the proof of
-subject reduction and elaborate in more detail on the proof of
-strong normalization.
+type preservation) and \emph{strong normalization}.
+\index{subject reduction}
+\index{type preservation}
+Since we focus on strong normalization, we will be rather brief on
+the proof of subject reduction and elaborate in more detail on
+the proof of strong normalization.
  
 \paragraph{Subject reduction}\hspace{-1em}
 states that reduction preserves types.
@@ -188,17 +196,22 @@ Values are terms that meet certain syntactic criteria, \ie, those terms
 that are meant to represent ``final answers", \ie, terms that
 are done evaluating. We do not further discuss progress in this dissertation.
 
+\index{evaluation}
+\index{normalization}
+\index{progress}
+\index{type safety}
 An {\em evaluation} is a reduction strategy
 (\ie, a certain subset of the reduction relation which computes a value --
 hence the name {\em evaluation}), which is often deterministic.
-In such a setting, type safety is usually defined to be subject reduction together
-with progress -- all well typed terms are either fully evaluated (\ie, they are values), 
-or they can take a step to another well typed term.  However, in a calculus considering
-reductions of terms to normal forms, rather than evaluations to values,
-type safety is just subject reduction since normal terms are
-irreducible by definition.
+In such a setting, type safety is usually defined to be subject reduction
+together with progress -- all well typed terms are either fully evaluated
+(\ie, they are values), or they can take a step to another well typed term.
+However, in a calculus considering reductions of terms to normal forms,
+rather than evaluations to values, type safety is just subject reduction
+since normal terms are irreducible by definition.
 
 \paragraph{Strong normalization.} 
+\index{strong normalization!STLC}
 When we consider terms of the STLC as proofs in a propositional logic,
 using the Curry-Howard correspondence, strong normalization
 is another important property of the STLC. Strong normalization states
@@ -229,7 +242,9 @@ The strong normalization proofs for System \F\ (\S\ref{sec:f}) and
 are also based on this strategy using saturated sets. As the languages
 increase in complexity, we gradually
 increase the complexity of the interpretation of types in those systems.
+\index{interpretation!type}
 
+\index{normalizing terms}
 The set of strongly normalizing terms ($\SN$) can be defined
 using a straight forward inductive definition:
 \[
@@ -255,6 +270,7 @@ $\SN$, as follows:
         {(\lambda x.t)~s~s_1~\cdots~s_n \in \SN}
 \]
 
+\index{weak head expansion}
 A set $\mathcal{A}$ is saturated when it is closed under adding
 strongly normalizing neutral terms, and when it is closed under strongly normalizing weak head expansion:
 \[
@@ -263,10 +279,13 @@ strongly normalizing neutral terms, and when it is closed under strongly normali
 \inference{t[s/x]~s_1~\cdots~s_n\in \mathcal{A} & s\in\SN}
           {(\l x.t)~s~s_1~\cdots~s_n \in \mathcal{A}}
 \]
+\index{saturated}
+\index{saturated set}
+\index{neutral terms}
 There is a sort of cleverness in this definition of saturated.
 A set is saturated when the terms it contains are either variables,
 or ``come from" other terms in the saturated set using these two rules
-(neutral terms and weak-head expansion). We can easily observe that $\SN$ is
+(neutral terms and weak head expansion). We can easily observe that $\SN$ is
 a saturated set by definition.  We can get the first and last part of
 the inductive definition for $\SN$ when $\mathcal{A}=\SN$. We can define
 an arrow operation ($->$), which given two saturated sets, defines
@@ -307,6 +326,8 @@ when both $\mathcal{A}$ and $\mathcal{B}$ are saturated \cite{Tait75}.
 \vspace*{.5em}\hrule
 \end{figure}
 
+\index{interpretation!STLC}
+\index{saturated subset}
 We interpret types as saturated subsets of $\SN$ (\ie, subsets of $\SN$ that
 are saturated) as in Figure \ref{fig:interpSTLC}. We interpret the void type as
 the minimal saturated set ($\bot$), which is saturated from the empty set.
@@ -325,6 +346,7 @@ the interpretation of its desired type ($[|A|]$). That is,
 if $x : A \in \Gamma$ then any $\rho \in [|\Gamma|]$ should
 satisfy the proposition that $\rho(x) \in [|A|]$.
 
+\index{strong normalization!STLC}
 The proof of strong normalization amounts to proving the following theorem:
 \begin{theorem}[soundness of typing]
 $ \inference{\Gamma|- t:A & \rho \in [|\Gamma|]}{[|t|]_\rho \in [|A|]} $

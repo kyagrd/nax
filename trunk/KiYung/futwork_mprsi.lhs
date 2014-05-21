@@ -13,8 +13,9 @@
 
 In \S\ref{sec:msf}, we discussed Mendler-style iteration with
 a syntactic inverse, |msfcata|, which is particularly useful for
-defining functions over
-negative (or mixed-variant) datatypes.
+defining functions over negative (or mixed-variant) datatypes.
+\index{datatype!negative}
+\index{datatype!mixed-variant}
 We demonstrated the usefulness of |msfcata| by defining functions over HOAS:
 \begin{itemize}
 \item the string formatting function |showHOAS| for the untyped HOAS using |msfcata0|
@@ -68,11 +69,12 @@ recursion schemes. It is not a problem to use |unId| in the definition of
 |evalHOAS| because |Id| is non-recursive.
 
 It is not likely that |unVal| can be defined using any of the existing
-Mendler-style recursion schemes discussed earlier. So, we designed a new Mendler-style
-recursion scheme that can express |unVal|. The new recursion scheme |mprsi|
-extends |mprim| with an additional uncast operation. Recall that |mprim| has
-two abstract operations, call and cast. So, |mprsi| has three abstract
-operations, call, cast, and uncast. In the following paragraphs,
+Mendler-style recursion schemes discussed earlier.
+So, we designed a new Mendler-style recursion scheme that can express |unVal|.
+The new recursion scheme |mprsi| extends |mprim| with an additional
+uncast operation. Recall that |mprim| has two abstract operations,
+call and cast. So, |mprsi| has three abstract operations,
+call, cast, and uncast. In the following paragraphs,
 we explain the design of |mprsi| step-by-step.
 
 Let us try to define |unVal| using |mprim1|, and see where it falls short.
@@ -124,8 +126,8 @@ mprsi1 phi (In1 x) = phi id id (mprsi1 phi) x
 \end{code}~\vspace{-1em}
 \end{singlespace}
 Although the type signature above is type correct, it is too powerful.
-The Mendler-style uses types to forbid, as ill-typed, non terminating computations.
-Having both |cast| and |uncast| supports
+The Mendler-style uses types to forbid, as ill-typed,
+non-terminating computations. Having both |cast| and |uncast| supports
 the same ability as freely pattern matching over recursive values,
 which as we showed in introduction can lead to non-termination.
 To recover the guarantee of termination, we need to restrict the use of

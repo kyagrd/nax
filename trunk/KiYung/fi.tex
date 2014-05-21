@@ -5,7 +5,9 @@
 It is well known that datatypes can be embedded into polymorphic lambda
 calculi by means of functional encodings,
 such as the Church and Boehm-Berarducci encodings~\cite{BoehmBerarducci}.
+\index{Church encoding}
 
+\index{regular datatypes}
 In System~\textsf{F}, one can embed \emph{regular datatypes},
 like homogeneous lists:
 \[
@@ -25,6 +27,7 @@ In such regular datatypes, constructors have algebraic structure that
 directly translates into polymorphic operations on abstract types as
 encapsulated by universal quantification over types (of kind $*$).
 
+\index{type constructor}
 In the more expressive System \Fw, where one can abstract over
 type constructors of any kind, one can encode more general
 \emph{type-indexed datatypes} that go beyond the regular datatypes.
@@ -51,10 +54,12 @@ The term encodings for {\small\tt PCons} and {\small\tt PNil} are exactly
 the same as the term encodings for {\small\tt Cons} and {\small\tt Nil},
 but have different types.
 
+\index{datatype!term-indexed}
 What about term-indexed datatypes?  What extensions to System~\Fw\ are
 needed to embed term-indices as well as type-indices?  Our answer is
 System~\Fi.
 
+\index{vector}
 In a functional language supporting term-indexed datatypes, we envisage
 that the classic example of homogeneous length-indexed lists would be
 defined along the following lines (in Nax-like syntax):\begin{singlespace}
@@ -112,25 +117,23 @@ highlighted extended syntax).
   type~(rule~$(Ri)$ in \Fig{Fi2}).
 
 \item 
-  Term-index abstraction~$\lambda i^A.F$~(as $\lambda
-  i^{\texttt{{Nat}}}.\cdots$ in the example above) for constructing (or
-  introducing) term-indexed kinds (rule~$(\lambda i)$ in
-  \Fig{Fi2}).  
+  Term-index abstraction~$\lambda i^A.F$~(as
+  $\lambda i^{\texttt{{Nat}}}.\cdots$ in the example above) for constructing
+  (or introducing) term-indexed kinds (rule~$(\lambda i)$ in \Fig{Fi2}).
 
 \item 
   Term-index application~$F\{s\}$ (as $X\{{\tt Z}\}$, $X\{j\}$, and
   $X\{\texttt{S}\;j\}$ in the example above) for destructing (or
   eliminating) term-indexed kinds, where the compile-time nature of
   indexing will be reflected in the typing rules, enforcing that the index be
-  statically typed% in that it does not depend on run-time parameters
-~(rule~$(@i)$ in \Fig{Fi2}) .
+  statically typed (rule~$(@i)$ in \Fig{Fi2}).
 
 \item 
-  Term-index polymorphism~$\forall i^A.B$ (as $\forall
-  j^{\texttt{{Nat}}}.\cdots$ in the example above) where the compile-time
-  nature of polymorphic term-indexing will be reflected in the typing rules enforcing
-  that the variable~$i$ be static of closed type~$A$~(rule~$(\forall
-  Ii)$ in \Fig{Fi2}).
+  Term-index polymorphism~$\forall i^A.B$~(as
+  $\forall j^{\texttt{{Nat}}}.\cdots$ in the example above)
+  where the compile-time nature of polymorphic term-indexing
+  will be reflected in the typing rules enforcing that the variable~$i$
+  be static of closed type~$A$~(rule~$(\forall Ii)$ in \Fig{Fi2}).
 \end{enumerate}
 
 As described above, System~\Fi\ maintains a clear-cut separation between

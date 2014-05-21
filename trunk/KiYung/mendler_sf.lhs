@@ -1,6 +1,7 @@
 %include includelhs2tex.lhs
 \section{Mendler-style iteration with syntactic inverses (|msfcata|)}
 \label{sec:msf}
+\index{Mendler-style!iteration with syntactic inverses}
 While it is known that iteration and primitive recursion terminate for all types
 \cite{AbeMatUus05,AbeMat04}, they are not particularly expressive over negative
 recursive types. Identifying additional Mendler-style operators that work
@@ -32,6 +33,8 @@ to write with the ordinary Mendler-style iteration family (\MIt,
 \aka, \textit{mcata}).
 
 \subsection{Formatting Higher-Order Abstract Syntax}\label{sec:showHOAS}
+\index{Higher-Order Abstract Syntax||see{HOAS}}
+\index{HOAS}
 To lead up to the Mendler-style solution to formatting HOAS, we first review
 some earlier work on turning expressions, expressed in 
 Higher-Order Abstract Syntax (HOAS)\cite{Church40,PfeEll88}, into strings.
@@ -317,13 +320,14 @@ Using parametricity to sort out junk introduced by the inverse is the key idea
 of \citet{bgb}, and the inverse augmented fixpoint |Mu0| is the key idea
 of \citet{FegShe96}.  The contribution we make in this work is putting
 together these ideas in Mender-style setting.  By doing so, we are able
-define recursion combinators over types with negative occurrences,
-which have well understood termination properties enforced by parametricity. We define
+define recursion combinators over types with negative occurrences, which have
+well understood termination properties enforced by parametricity. We define
 4 such combinators: |msfcata0|, |msfhist0|, |msfcata1|, and |msfhist1|. 
-The combinator |msfcata0| is the simplest, to define it
-we generalize over |mcata0| by using the same device we used earlier,
-we abstract the combining function over an additional argument,
-this time an abstract inverse.
+The combinator |msfcata0| is the simplest. To define it,
+we generalize over |mcata0| by using the same device we used earlier.
+We abstract the combining function over an additional argument,
+this time, an abstract inverse.
+\index{combining function}
 \begin{itemize}
   \item The combining function |phi| becomes a function of 3 arguments.
         An abstract inverse, an 
@@ -333,7 +337,10 @@ this time an abstract inverse.
   msfcata phi (Inverse0 z)       = z
 \end{code}
   \item For inverse values, return the value inside |Inverse0| as it is.
-  \item We use higher-rank polymorphism to insist that 
+  \item \index{higher-rank polymorphism}
+        \index{abstract inverse}
+        \index{recursive caller}
+        We use higher-rank polymorphism to insist that 
         the abstract inverse function, with type (|a -> r a|),
         the recursive caller function, with type (|r a -> a|), and
         the base structure, with type (|f (r a)|), only work
@@ -343,7 +350,8 @@ msfcata0  ::  (forall r .  (a -> r a)  ->
                            (r a -> a)  ->
                            (f (r a)    -> a)) ->  (forall a . Rec0 f a) -> a
 \end{code}
-  \item Note, the abstract recursive type |r| is parameterized by
+  \item \index{abstract recursive type}
+        Note, the abstract recursive type |r| is parameterized by
         the answer type |a| because the augmented datatype fixpoint |Rec0|
         is parameterized by the answer type |a|.
 
@@ -403,6 +411,7 @@ inductive datatypes, even those with negative occurrences.
 \label{fig:HOASshowFw}
 \end{figure}
 
+\index{termination!Mendler-style iteration with syntactic inverses}
 Figure \ref{fig:proofsf} is the \Fw\ encoding\footnote{
 	using a fragment of Haskell, which we believe to be a subset of \Fw.}
 of the inverse augmented datatype |Rec0| and its iteration |msfcata0|.
@@ -462,10 +471,14 @@ leads to desired embeddings would be an interesting future work.
 
 \subsection{Evaluating Simply-Typed Higher-Order Abstract Syntax}
 \label{sec:evalHOAS}
+\index{HOAS!simply-typed}
+\index{evaluator!simply-typed HOAS}
 Surprisingly, we can write an evaluator for a simply-typed HOAS
 in a surprisingly simple manner. In Figure \ref{fig:HOASeval}
 is a Haskell program illustrating the technique.
 
+\index{indexed datatype}
+\index{datatype!indexed}
 We first define the simply-typed HOAS as a recursive indexed datatype
 |Exp :: * -> *|. We take the fixpoint using |Rec1| (the fixpoint 
 operation that supports a syntactic inverse). This fixpoint is taken over
@@ -478,6 +491,7 @@ The use of the |msfcata| requires
 that |Exp| should be parametric in this answer type
 (by defining |type Exp t = forall a. Exp' a|) just as we did in the
 untyped HOAS formatting example in Figure \ref{fig:HOASshow}.
+\index{HOAS!untyped}
 
 \begin{figure}
 %include mendler/HOASeval.lhs
@@ -527,6 +541,8 @@ This example shows that the Mendler-style Sheard--Fegaras iteration is
 useful for both \textit{negative} and \textit{indexed} datatypes.
 |Exp| in Figure \ref{fig:HOASeval} has both negative recursive occurrences
 and type indices.
+\index{datatype!negative}
+\index{datatype!indexed}
 
 The |showHOAS| example in Figure \ref{fig:HOASshow}, which we discussed
 in the previous subsection, has appeared in other work \cite{FegShe96},
@@ -537,6 +553,7 @@ perhaps syntactically more pleasant than the conventional style).
 However, it is not obvious how one could extend
 the conventional-style Sheard--Fegaras iteration over indexed datatypes.
 
+\index{Mendler-style!Sheard--Fegaras iteration}
 In contrast, the Mendler-style Sheard--Fegaras iteration is naturally
 defined over indexed datatypes of arbitrary kinds. In fact, both the
 the |msfcata1|, used in the |evalHOAS|, 
@@ -590,6 +607,7 @@ contains that function. Yet, they may be nevertheless useful
 for well-behaved |phi| functions. 
 
 \paragraph{}
+\index{Mendler-style!open-iteration}
 In a HOAS, a meta-level function from expressions to expressions, represents
 an expression with a single free variable. For example,
 |\ x -> app (lam (\ f -> app f x))| represents |\ f -> f x|, where

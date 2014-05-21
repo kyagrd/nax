@@ -15,7 +15,7 @@ $\!\!\!\!\!\!\!\!\!$\mprimDef
 \end{landscape}
 }
 \section{Mendler-style primitive recursion (|mprim|)} \label{sec:mpr}
-
+\index{Mendler-style!primitive recursion}
 In Figure \ref{fig:mprim} we list a type declaration and a 
 defining equation for several families of Mendler-style recursion combinators.
 We give two versions for each family, one at kind $*$ and one at kind $* -> *$.
@@ -30,8 +30,8 @@ abstract operation, which we call |cast|.
 The |cast| operation explicitly converts a value of the abstract recursive type
 (|r|) into a value of the concrete recursive type (|Mu0 t|). 
 
-Similarly,
-the Mendler-style course-of-values recursion family (|mcvpr|),
+\index{Mendler-style!course-of-values recursion}
+Similarly, the Mendler-style course-of-values recursion family (|mcvpr|),
 when compared to the |mhist| family, also has
 an additional |cast| operation.
 
@@ -41,7 +41,8 @@ the additional |cast| operation, can increase the efficiency of the program
 by supporting constant time access to the concrete value of the
 recursive component.
 
-
+\index{factorial}
+\index{primitive recursion}
 A typical example of primitive recursion is the factorial function.
 Figure \ref{fig:fac} illustrates the general recursive version (right) and
 the Mendler-style version (left) of the factorial function, where
@@ -59,10 +60,12 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \label{fig:fac}
 \end{figure}
 
-The primitive recursion family also enables programmers to define non-recursive functions,
-such as a constant time predecessor for natural numbers
-(Figure \ref{fig:constpred}) and a constant time tail function for lists
-(Figure \ref{fig:consttail}).
+\index{predecessor}
+The primitive recursion family also enables programmers to define
+non-recursive functions, such as a constant time predecessor for
+natural numbers (Figure \ref{fig:constpred}) and a constant time
+tail function for lists (Figure \ref{fig:consttail}).
+\index{tail}
 Although it is possible to implement |factorial|, |pred|, and |tail|
 in terms of |mcata|, those implementations will be less efficient.
 The time complexity of |factorial| in terms of iteration
@@ -85,15 +88,20 @@ will be linear in the size of the input rather than being constant.
 \label{fig:consttail}
 \end{figure}
 
+\index{course-of-values recursion}
 The course-of-values recursion family can be defined by adding
-the |out| operation to the |mprim| family, as is shown in Figure \ref{fig:mprim},
-just as the |mhist| family can be defined by adding the |out| operation
-to |mcata|. The |mcvpr| family is only guaranteed to terminate for
-positive datatypes, for the same reason that the |mhist| family is
-only guaranteed to terminate for positive datatypes (recall Figure \ref{fig:LoopHisto}).
+the |out| operation to the |mprim| family, as is shown
+in Figure \ref{fig:mprim}, just as the |mhist| family can be defined by
+adding the |out| operation to |mcata|. The |mcvpr| family is
+only guaranteed to terminate for positive datatypes, for the same reason
+that the |mhist| family is only guaranteed to terminate for positive datatypes
+(recall Figure \ref{fig:LoopHisto}).
 
+\index{Fibonacci}
+\index{Lucas}
 A simple variation of the Fibonacci function, shown  in Figure \ref{fig:lucas},
 is an example of a course-of-values recursion.
+\index{recurrence relation}
 The Fibonacci function |fib| and the Lucas function |luc| satisfy
 the following recurrence relations:\footnote{
 The |luc| function in Figure \ref{fig:lucas} is slightly
@@ -111,11 +119,12 @@ luc (n+2)  = luc (n+1)  + luc n + n
 Note the trailing ``$\cdots+\,$|n|'' in the recurrence relation for |luc|.
 We need the ability of course-of-values recursion because $n$ is
 a deep recursive component of $n+2$ (\ie, $n$ is the predecessor of
-the predecessor of $n+2$). We need primitive recursion, since we not only perform
-a recursive call over $n$ ($\cdots+\,$|luc n|$\,+\cdots$), but also add the value
-of $n$ itself ($\cdots+\,$|n|). The |mcvpr| family provides
-both |out| and |cast| operations for accessing deep recursive components and
-casting from an abstract value to a concrete recursive value.
+the predecessor of $n+2$). We need primitive recursion, since we not
+only perform a recursive call over $n$ ($\cdots+\,$|luc n|$\,+\cdots$),
+but also add the value of $n$ itself ($\cdots+\,$|n|). The |mcvpr| family
+provides both |out| and |cast| operations for accessing
+deep recursive components and casting from an abstract value
+to a concrete recursive value.
 
 \begin{figure}
 \begin{minipage}{.5\linewidth}\small \ExLucasG \end{minipage}
@@ -125,6 +134,7 @@ casting from an abstract value to a concrete recursive value.
 \label{fig:lucas}
 \end{figure}
 
+\index{reduction preserving}
 It is strongly believed that the primitive recursion family cannot be
 embedded in \Fw\ in a reduction preserving manner, since it is known that
 induction is not derivable from second-order dependent calculi \cite{Geuvers01}.

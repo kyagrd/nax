@@ -10,13 +10,14 @@ compare the class of indexed datatypes supported by Nax with
 those supported in other languages (\S\ref{ssec:sortingEx}).
 
 \subsection{Universes, Kinds, and Well-sortedness} \label{ssec:sorting}
-
+\index{universe}
 The concrete syntax for kinds appears similar among Haskell, Nax, and Agda.
 For instance, in Figure\;\ref{fig:eval}, the kind |Ty -> *| has exactly the same
 textual representation in all of the three languages. However, each language
 has its own universe structure, kind syntax, and sorting rules,
 as summarized in Figure\;\ref{fig:sorting}. 
 
+\index{well-sortedness}
 Figure\;\ref{fig:sortingEx}
 illustrates differences and similarities between the mechanism
 for checking well-sortedness, by comparing the justification for
@@ -24,7 +25,10 @@ the well-sortedness of the kind |List Ty -> *|.
 The important lessons of Figure\;\ref{fig:sortingEx} are
 that the Nax approach is closely related to \emph{universe subtyping} in Agda,
 and, the datatype promotion in Haskell is closely related to
-\emph{universe polymorphism} in Agda. 
+\emph{universe polymorphism} in Agda.
+\index{datatype promotion}
+\index{universe!subtyping}
+\index{universe!polymorphism}
 
 \begin{figure}[t]
 \hspace*{-10ex} \centering

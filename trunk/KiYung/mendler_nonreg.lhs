@@ -4,6 +4,7 @@
          and course-of-values iteration (|mhist|)
          on non-regular datatypes and mutually recursive datatypes}
 \label{mendler_nonreg}
+\index{datatype!non-regular}
 We discussed Mendler style iteration and course-of-values iteration
 over non-mutually recursive datatypes so far. In this section, we discuss
 Mendler-style iteration and course-of-values iteration over

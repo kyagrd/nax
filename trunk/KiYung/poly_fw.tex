@@ -1,4 +1,5 @@
 \section{System \Fw} \label{sec:fw}
+\index{System Fw@System \Fw}
 System \Fw\ \cite{Gir72} extends the type syntax of System \F\ with lambda types
 and application types (see Figure \ref{fig:fw}). Lambda types ($\l X^\kappa.F$)
 and application types ($F\;G$), at the type level, are analogous to lambda terms
@@ -497,6 +498,7 @@ Such datatypes are also called \emph{nested datatypes} %% TODO cite
 since the the type constructor is applied to ever increasing complex arguments
 (here they are nested, but one can imagine even richer kinds of complexity)
 as we step further inside the recursive components.
+\index{powerlist}
 
 We can encode the type constructor \textit{Powl} for powerlists using
 higher-kinded polymorphism of System \Fw, as follows
@@ -743,11 +745,15 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \label{fig:interpFw}
 \end{singlespace}
 \end{figure}
+
+\index{strong normalization!System Fw@System \Fw}
 To prove strong normalization of System \F, we use the same proof strategy
 as in the proof of strong normalization of System \F\ (\S\ref{sec:f:srsn}).
 That is, we interpret types as saturated sets of normalizing terms as we did
 for System \F. However, we need to generalize the interpretation of types to
-the interpretation of type constructors. In the strong normalization proof of
+the interpretation of type constructors.
+
+In the strong normalization proof of
 System \F, we had a complete lattice $(\SAT,\subseteq)$. We generalize from
 $(\SAT,\subseteq)$, which is for kind $*$ only, to
 $(\SAT_\kappa,\sqsubseteq_\kappa)$ for an arbitrary kind $\kappa$,
@@ -796,6 +802,9 @@ $\bot_{\kappa -> \kappa'}$ and $\top_{\kappa -> \kappa'}$
 are the bottom and top elements at kind $\kappa -> \kappa'$
 by definition of $\sqsubseteq_{\kappa -> \kappa'}$.
 
+\index{interpretation!System Fw@System \Fw}
+\index{interpretation!kind}
+\index{interpretation!type constructor}
 Then, we can give interpretation of kind $\kappa$ as $\SAT_\kappa$.
 That is, $[| \kappa |] = \SAT_\kappa$. An interpretation of a type constructor
 of kind $\kappa$ should be a member of $[| \kappa |]$, \ie, $\SAT_\kappa$.

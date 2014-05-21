@@ -23,7 +23,9 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\
          expressed in terms of |mcata1| over an indexed datatype |DecExpF|}
 \label{fig:mutrec}
 \end{figure*}
-
+\index{datatype!mutually recursive}
+\index{mutually recursive datatype}
+\index{datatype!indexed}
 We can express mutual recursion over mutually recursive datatypes
 in the Mendler style using an indexed base datatype.
 The context extension function |extend| and
@@ -36,7 +38,7 @@ declaration |Dec| and expression |Exp|.
 %% %% programming language syntax tree.}
 %% Expressions (|Expr|) include variables, integer values, additions, and
 %% let-bindings, which contain a declaration.
-The general recursive version on left-hand side of Figure \ref{fig:mutrec}
+The general recursive version on left-hand side of Figure~\ref{fig:mutrec}
 is a self-explanatory standard evaluator implementation for the expression.
 
 To express this in Mender-style (right), we first define the common base

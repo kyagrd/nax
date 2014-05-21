@@ -37,6 +37,7 @@ between those combinators (Figure \ref{fig:cataviahisto})
 \label{fig:proof}
 \end{figure}
 
+\index{termination!Mendler-style iteration}
 We give a termination proof for the Mendler-style iteration
 (at kind $*$) in Figure~\ref{fig:proof}. The proof takes the form
 of an embedding into \Fw\ which is known to be strongly normalizing.
@@ -52,6 +53,7 @@ They run and return the expected results!\vspace*{-3ex} \label{pageNatFw}
 \ProofCataEx
 \end{center}\vskip1ex
 
+\index{termination!Mendler-style primitive recursion}
 \citet{AbeMat04} proved termination of Mendler-style primitive recursion
 (|mprim|) by a reduction preserving embedding of |mprim| into \Fixw.
 We discuss the details of this embedding in \S\ref{sec:fixi:data}.

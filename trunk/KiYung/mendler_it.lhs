@@ -1,5 +1,7 @@
 %include includelhs2tex.lhs
 \section{Defining recursive regular datatypes} \label{ssec:tourRegular}
+\index{regular datatype}
+\index{datatype!regular}
 In the Mendler-style approach, we define recursive datatypes
 as fixpoints of non-recursive base datatypes.  For example, the following
 are definitions of the natural number type in the general recursion style (left)
@@ -33,6 +35,8 @@ We can express the number 2 as |S (S Z)| in the general recursive encoding,
 and |succ (succ zero)| or |In0 (S (In0 (S (In0 Z))))| in the Mendler-style
 encoding.
 
+\index{parametrized datatype}
+\index{datatype!parametrized}
 We can also define parameterized datatypes, such as lists, in the Mendler style,
 using the same datatype fixpoint |Mu0|, provided that we consistently order
 the parameter arguments (|p|) to come before the type argument that denotes
@@ -67,6 +71,8 @@ in the general recursive encoding, and |cons 1 (cons 2 nil)| or
 
 
 \section{Conventional iteration for regular datatypes} \label{ssec:convCata}
+\index{conventional!iteration}
+\index{catamorphism}
 The conventional iteration\footnote{Also known as catamorphism.
 In Haskell-ish words, |foldr| on lists generalized to other datatypes}
 is defined on the very same fixpoint, |Mu0|, as in the Mendler style,
@@ -74,6 +80,7 @@ provided that the base datatype |f| is a functor.
 This, more widely known approach \cite{hagino87phd},
 was independently developed at about the same time as the Mendler style.
 
+\index{functor}
 The additional requirement, that the base datatype (|f|) is a functor, shows up
 as a type class constraint (|Functor f|) in the type signature of
 the conventional iteration combinator |cata|:\\
@@ -81,9 +88,11 @@ the conventional iteration combinator |cata|:\\
 This is necessary because |cata| is defined in terms of |fmap|, which is
 a method of the |Functor| class:\\
 \hspace*{.1in} |cata phi (In0 x) = phi (fmap (cata phi) x)| \hspace*{.1in}  (Figure \ref{fig:rcombdef}).\\
+\index{combining funciton}
 The combinator |cata| takes a combining function |phi :: f a -> a|, which
 assumes the recursive subcomponents (\eg, tail of the list) have already been
 turned into a value of answer type (|a|) and combines the overall result.
+\index{answer type}
 
 %format lenc = len"_{\!c}"
 A typical example of iteration is the list length function.  We can define
@@ -113,6 +122,7 @@ instance Functor (L p) where
 Of course, we need the functor instance for the base |L p|,
 which properly defines |fmap|, to complete the definition.
 
+\index{foldr}
 The conventional iteration is widely known, especially on the list type,
 as |foldr|. The conventional iteration is more often used than
 the Mendler-style iteration, but it does not generalize easily to more
@@ -134,22 +144,27 @@ exotic datatypes such as nested datatypes and GADTs.
 
 \section{Mendler-style iteration (|mcata|) for regular datatypes}
 \label{ssec:tourCata0}
+\index{Mendler-style!iteration}
 The Mendler-style iteration combinator |mcata0| lifts the restriction that the
 base type be a functor, but still maintains the strict termination behavior of
 |cata|. This restriction is lifted by using two devices.
 \vspace*{-.5em}
 \begin{itemize}
-  \item The combining function |phi| becomes a function of two arguments
+  \item \index{combining function}
+        The combining function |phi| becomes a function of two arguments
         rather than one. The first argument is a function that represents a
         recursive caller, and the second is the base structure
-        that must be combined into an answer. The recursive caller 
+        that must be combined into an answer.
+        \index{recursive caller}
+        The recursive caller 
         allows the programmer to direct where recursive calls must be made.
         The Functor class requirement is lifted, because the definition of
 	|mcata0| does not rely on |fmap|:
 \begin{code}
 mcata0 phi (In0 x) = phi (mcata0 phi) x
 \end{code}
-  \item The second device is the use of higher-rank polymorphism to insist
+  \item \index{higher-rank polymorphism}
+        The second device is the use of higher-rank polymorphism to insist
         that the recursive caller, with type (|r -> a|), and
         the base structure, with type (|f r|),
         work over an abstract type, denoted by (|r|). 

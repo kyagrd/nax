@@ -1,6 +1,7 @@
 %include includelhs2tex.lhs
 \section{Mendler-style course-of-values iteration (|mhist|) for regular datatypes}
 \label{ssec:tourHist0}
+\index{Mendler-style!course-of-values iteration}
 Some computations are not easily expressible by iteration,
 since iteration only recurses on the direct subcomponents (\eg, tail
 of a list). Terminating recursion schemes on deeper subcomponents
@@ -9,6 +10,7 @@ in the conventional setting. Functional programmers often write
 recursive functions using nested pattern matching that recurse on
 deeper subcomponents exposed by the nested patterns.
 A typical example is the Fibonacci function:
+\index{Fibonacci}
 \vspace*{.5em}
 \begin{code}
 fib Z          = 0
@@ -18,6 +20,7 @@ fib (S (S m))  = fib (S m) + fib m
 Note, in the third equation |fib| recurses on both the predecessor |(S m)|,
 which is a direct subcomponent of the argument, and the predecessor of
 the predecessor |m|, which is a deeper subcomponent of the argument.
+\index{histomorphism}
 The Histomorphism \cite{UusVen99histo} captures such patterns of recursion.
 The Histomorphism is also known as the course-of-values iteration.
 In the conventional style, course-of-values iteration are defined through
@@ -146,7 +149,7 @@ including negative datatypes.
 
 \section{Properties of |mcata| and |mhist| for negative datatypes}
 \label{ssec:tourNegative}
-
+\index{datatype!negative}
 Let us revisit the negative recursive datatype |T|
 (from \S\ref{sec:mendler:motiv}) from which we constructed a diverging computation.
 %format T_m = T"_{\!m}"
@@ -228,33 +231,25 @@ on termination of |mcata0| in Figure \ref{fig:proof}. %% \S\ref{sec:proof}.
 %include mendler/LoopHisto.lhs
 \caption{An example of a total function |lenFoo|
          over a negative datatype |Foo| defined with |mcata0|,
-     and a counter-example |loopFoo| illustrating that |mhist0|
+     and a counterexample |loopFoo| illustrating that |mhist0|
          can diverge for negative datatypes.}
 \label{fig:LoopHisto}
 \end{figure}
-
+\index{counterexample!Mendler-style course-of-values iteration}
+\index{Mendler-style!course-of-values iteration}
 While all functions written in terms of |mcata0| are total, the
 same cannot be said of function written in terms of |mhist0|.
-The function |loopFoo| defined with |mhist0| is a counter-example to totality, which
-shows that the Mendler-style course-of-values iteration do not always terminate.
-Try evaluating |loopFoo foo|.  It will loop.  This function |loopFoo| is
-similar to |lenFoo|, but has an additional twist.  At the very end of the
-function definition, we recurse on the transformed tail |(f' xs)|,
-when we have more than two elements where the first and second elements
-are named |f| and |f'|, respectively.  Note, |f'| is an element embedded
-inside the tail |xs|.  Thus, |(f' xs)| is dangerous since it applies |f'|
-to a larger value |xs|, which contains |f'|.
+The function |loopFoo| defined with |mhist0| is a counterexample to totality,
+which shows that the Mendler-style course-of-values iteration
+do not always terminate. Try evaluating |loopFoo foo|. It will loop.
+This function |loopFoo| is similar to |lenFoo|, but has an additional twist.
+At the very end of the function definition, we recurse on
+the transformed tail |(f' xs)|, when we have more than two elements
+where the first and second elements are named |f| and |f'|, respectively.
+Note, |f'| is an element embedded inside the tail |xs|. Thus, |(f' xs)| is
+dangerous since it applies |f'| to a larger value |xs|, which contains |f'|.
 The abstract type of the unrolling function (|out::r->f r|),
 prevents the recursive caller from being applied to a larger value, but it
 does not preclude the risk of embedded functions, with negative domains,
 being applied to larger values which contain the embedded function itself.
-
-%% One should not be punished just by defining negative recursive types as long
-%% as one uses them in a safe way.  We know from functional programming examples
-%% that negative occurrences have real constructive uses, how do we generalize
-%% the Mendler Hierarchy to express these useful examples?  If you guessed that
-%% we will make the combining function |phi| abstract over yet another argument
-%% you are correct.
-
-
 

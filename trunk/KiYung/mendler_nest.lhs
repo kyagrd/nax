@@ -12,6 +12,7 @@
 %format bsumm = bsum"_{\!m}"
 
 \subsection{Nested datatypes} \label{ssec:tourNested}
+\index{datatype!nested}
 The datatypes |Nat| and |List|, defined in \S\ref{ssec:tourRegular}, 
 are regular datatypes.  Non-recursive datatypes (\eg, |Bool|) and
 recursive datatypes without any type arguments (\eg, |Nat|)
@@ -62,6 +63,9 @@ to move from rank-0 Mendler combinators to rank-1 Mendler combinators.\footnote{
 	the recursive type constructor, but just happen to prefer counting
 	from 0.}
 
+\index{powerlist}
+\index{nested datatype!powerlist}
+\index{nested datatype!bush}
 The powerlist datatype is defined as follows (also in Figure \ref{fig:psum}):
 \begin{code}
 data Powl i = NP  | CP i (Powl (i,i))
@@ -165,8 +169,9 @@ we define the datatype |Powl| as a fixpoint of the base |PowlF|.
 However, an important difference that readers should notice is the use of
 fixpoint |Mu1| at kind $* -> *$ bases, instead of |Mu0|, for the kind $*$ bases
 inducing regular datatypes. Since we used |Mu1| to define
-the recursive datatype, we use |mcata1|, the Mendler style iteration
+the recursive datatype, we use |mcata1|, the Mendler-style iteration
 combinator at kind $* -> *$, to define the function |psumm|.
+\index{Mendler-style!iteration}
 
 The beauty of the Mendler style approach is that the implementation of
 the recursion combinators for higher-ranks (or, higher-kinds) are
@@ -179,7 +184,9 @@ The definition of |cata| won't generalize to nested datatypes in a trivial way.
 There has been several approaches \cite{BirPat99,MarGibBay04,Hin00}
 to extend folds or catamorphisms for nested datatypes
 in the conventional setting.
+\index{conventional!nested datatype}
 
+\index{bush}
 We can also define a summation function for bushs in a similar way
 as the summation function for powerlists.
 The bush datatype is defined as below (also in Figure \ref{fig:bsum}):
@@ -191,6 +198,8 @@ the type argument |(Bush i)| occurring on the right-hand side is
 different from |i| appearing on the left-hand side.  What is intriguing
 about |Bush| is that the variation on the type index involves itself.
 \citet{Mat09} calls such datatypes, like |Bush|, \emph{truly nested datatypes}.
+\index{datatype!truly nested}
+\index{truly nested datatype}
 Here are some examples of bush values:
 \begin{code}
 bs    = CB 1 bs'           :: Bush Int
@@ -222,7 +231,7 @@ sumB xs = bsum xs id
 \end{code}
 Using |sumB|, we can sum up |bs| defined above: |sumB bs ~> 10|.
 
-Before discussing the Mendler style version, let us take a look at yet another
+Before discussing the Mendler-style version, let us take a look at yet another
 general recursive version of the function |bsum'|, which explicitly wraps up
 the answer values of type |(i->Int) -> Int| inside the newtype |Ret i|.
 The relations between the plain vanilla version and the wrapped up version
@@ -246,6 +255,9 @@ parameters (|p|), before the recursion point argument (|r|), followed by
 indices (|i|).  Figure \ref{fig:vec}, which we will shortly discuss
 in \S\ref{ssec:tourIndexed}, contains an example where there are both
 type parameters and type indices in a datatype (|Vec p i|). 
-
+\index{type parameter}
+\index{type index}
+\index{type!parameter}
+\index{type!index}
 
 

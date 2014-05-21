@@ -13,10 +13,17 @@
 The functional programming
 community has traditionally focused on a style of recursion combinators that
 work well in Hindley--Milner languages. One well-known combinator is called
-fold (\aka catamorphism or iteration). We explore a more expressive style
-called the Mendler style. The Mendler-style recursion combinators were
+fold (\aka catamorphism or iteration).
+\index{fold}
+\index{catamorphism}
+\index{iteration}
+We explore a more expressive style called the Mendler style.
+\index{Mendler style}
+The Mendler-style recursion combinators were
 originally developed in the context of the Nuprl \cite{Con86} type system.
 Nuprl made extensive use of dependent types and higher-rank polymorhpism.
+\index{dependent type}
+\index{higher-rank polymorhpism}
 General type checking in Nuprl was done by interactive theorem proving --
 not by type inference.  The Mendler-style combinators are considerably more
 expressive than the conventional combinators of the Squiggol \cite{AoP} school,
@@ -49,7 +56,7 @@ exemplifies the advantages of Mendler style over conventional style,
 ensures termination (\S\ref{ssec:tourCata0})
 even for negative datatypes (\S\ref{ssec:tourNegative}).
 We illustrate a semi-formal proof of termination by encoding 
-|msfcata| in the $F_\omega$ fragment of Haskell
+|msfcata| in the \Fw\ fragment of Haskell
 (Figure \ref{fig:proof} in \S\ref{sec:proof}), %% \S\ref{sec:concl}
 \vspace*{-.2em}
 \item[$\bigstar\!\!$] Providing an intuitive explanation of
@@ -96,6 +103,7 @@ conform with our conventions. The conventions include:
 	and functions, pattern matching can only be done through
 	the recursion combinators).
 \end{enumerate}
+\index{two-level type}
 The Mendler-style combinators operate on types defined in two levels,
 \ie, two-level types (see \S\ref{ssec:tourRegular}). Two-level types are 
 characterized by splitting the definition of a recursive type into
@@ -132,6 +140,7 @@ w x = (p x) x
 \end{minipage}
 \end{tabular}
 \end{center}
+\index{datatype!negative}
 On the left is a data definition of the negative datatatpe |T|,
 and the non-recursive functions |p| and |q|.
 On the right is a diverging computation (|~>| denotes reduction steps).
@@ -160,11 +169,15 @@ pioneered the Mendler style in practical functional programming,
 also failed to produce good examples that make use of negative datatypes
 in the Mendler style.
 
+\index{negative datatype}
+\index{datatype!negative}
+\index{datatype!mixed-variant}
 In the functional programming community, there are both well-known and useful
 examples of negative (or, mixed-variant) datatypes
 (\eg, delimited control\cite{Sha07}\footnote{
 A Haskell datatype definition for this can be found at\\$~~~$
 {\small \url{http://lists.seas.upenn.edu/pipermail/types-list/2004/000267.html}}}).
+\index{HOAS}
 One of the classic examples is Higher-Order Abstract Syntax (HOAS)
 \cite{Church40,PfeEll88}. A non-standard definition of HOAS
 in Haskell is:\footnote{
@@ -201,6 +214,7 @@ System \textsf{F}. A decade later, \citet{matthes98phd} and \citet{uustalu98phd}
 noticed that Mendler never used the positivity condition in his proof of
 strong normalization.
 
+\index{Mendler-style!primitive recursion}
 \citet{AbeMat04} generalized Mendler's primitive recursion combinator
 \cite{Mendler87} into a family of combinators that are uniformly defined for
 type constructors of arbitrary kinds. This was necessary for
@@ -208,12 +222,17 @@ handling nested datatypes. Their system extends System \Fw\
 (\citet{Mendler87} extends System \textsf{F}). The notion
 of a kind indexed family of Mendler combinators has now become the norm.
 
+\index{termination!Mendler-style primitive recursion}
+\index{strong normalization!MRec@@\textsf{MRec}}
 \citet{AbeMat04} prove strong normalization of their language \textsf{MRec},
 which extends System \Fw\ by adding a family of kind-indexed Mendler-style
 primitive recursion combinators. They show that \textsf{MRec} has
 a reduction preserving embedding into a calculus they call \Fixw.
 Then, they show that \Fixw\ is strongly normalizing.
+\index{System Fw@System \Fw}
+\index{System Fixw@System \Fixw}
 
+\index{Mendler-style!iteration}
 Abel, Matthes, and Uustalu \cite{AbeMatUus03,AbeMatUus05} studied
 a kind-indexed family of iteration combinators, along with examples
 involving nested datatypes that make use of those combinators.
@@ -221,6 +240,7 @@ Iteration (\aka\ catamorphism) is a recursion scheme, which has the same
 computational power as primitive recursion (\ie, both can be defined
 in terms of each other), but has different algorithmic complexity. 
 
+\index{Mendler-style!primitive recursion}
 It is strongly believed that primitive recursion is more efficient than
 iteration. For instance, it is trivial to define a constant time predecessor
 for natural numbers with primitive recursion, but it is believed impossible
@@ -269,6 +289,10 @@ These contributions fall into three broad categories:
 In this subsection, we give an overview of the Mendler-style approach,
 to orient the reader to navigate the following sections.
 
+\index{regular datatype}
+\index{datatype!regular}
+\index{catamorphism}
+\index{histomorpism}
 First, we introduce the Mendler-style iteration (|mcata|. \aka\ catamorphism)
 (\S\ref{ssec:tourCata0}) and course-of-values iteration
 (|mhist|. \aka\ histomorpism) (\S\ref{ssec:tourHist0}) combinators at kind $*$,
@@ -277,11 +301,13 @@ that is, for (non-mutually recursive) regular datatypes
 an intuitive explanation why these Mendler-style recursion combinators
 ensure termination for positive datatypes.
 
+\index{datatype!negative}
 In \S\ref{ssec:tourNegative}, we discuss why the Mendler-style iteration
 (|mcata|) ensures termination even for negative datatypes, while
 the Mendler-style course-of-values iteration (|mhist|) can only ensure
 termination for positive datatypes.
 
+\index{datatype!nested}
 Then, we move our focus from non-mutually recursive regular datatypes
 to more expressive datatypes (\S\ref{mendler_nonreg}), which require
 recursion combinators at kind $* -> *$. We provide several examples of
@@ -292,6 +318,7 @@ iteration (|mhist|) at kind $* -> *$. We also provide some examples, which
 show how to encode mutually recursive datatypes using indexed datatypes
 (\S\ref{ssec:tourMutRec}).
 
+\index{Mendler-style!primitive recursion}
 In \S\ref{sec:mpr}, we introduce the Mendler-style primitive recursion (|mprim|)
 and course-of-values recursion (|mcvpr|). These two combinators
 |mprim| and |mcvpr| are equivalent to |mcata| and |mhist|, respectively,

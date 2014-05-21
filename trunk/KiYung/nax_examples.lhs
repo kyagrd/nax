@@ -33,6 +33,7 @@ our prototype Nax implementation, and Agda 2.3.0.1.
 
 \subsection{Type preserving evaluator for an expression language}
 \label{ssec:eval}
+\index{evaluator!type perserving}
 
 \begin{figure}
 \,\;~~\,\qquad\textcolor{gray}{\texttt{GADTs},}\\ \vskip-7ex
@@ -96,6 +97,7 @@ need type annotations (they appear as comments in \textcolor{gray}{gray}).
 In fact, Nax currently does not support any syntax for type annotations
 on function declarations.
 
+\index{term index}
 Curly braces in the Nax code above indicates the use of term indices in types.
 For instance, |t| appearing in |{ t }| is a term-index variable rather than
 a type variable.
@@ -153,7 +155,7 @@ a type variable.
 \label{fig:glistCont}
 \end{figure}
 
-
+\index{compiler!stack-safe}
 In this section we introduce a generic |Path| datatype.\footnote{
 	There is a Haskell library package for this
 	\url{http://hackage.haskell.org/package/thrist} }
@@ -209,6 +211,7 @@ current scope
 (\eg, |`zero| appearing in |Path (ElemV a) {n} {`zero}| refers to the predefined
 |zero : Nat|). Names without backquotes (\eg, |n| and |a|) are implicitly universally quantified.
 
+\index{vector}
 For plain lists and vectors, the relations, (|Elem a|) and (|ElemV a|),
 are parameterized by the type |a|. That is, the transition
 step for adding one value to the path is always the same,
