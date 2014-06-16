@@ -1,15 +1,19 @@
 \section{The Hindley-Milner type system} \label{sec:hm}
-
+\index{Hindley--Milner}
 \citet{Hindley69} demonstrated the existence of a unique principal type scheme
 for every object in a combinatory logic. \citet{Milner78} rediscovered this fact
 in the setting of a polymorphic lambda calculus. He was devising
 an algorithm, called algorithm $W$, which infers a most general
 type scheme (\aka\ principal type scheme) for a Curry-style lambda term.
+\index{type scheme}
 \citet{Damas85} (a student of Milner) published detailed theories about
 Milner's polymorphic lambda calculus and the type inference algorithm $W$.
 This type system for Milner's polymorphic lambda calculus \cite{Milner78,DamMil82,Damas85}
 is also known as the Hindley-Milner type system (HM),
 the Damas-Hindley-Milner type system (DHM), or let-polymorphic type system.
+\index{polymorphic lambda calculus!Milner's}
+\index{let-polymorphic}
+\index{type inference}
 
 The syntax of Milner's polymorphic lambda calculus and its typing rules
 are illustrated in Figure \ref{fig:hm}. The type inference algorithm $W$
@@ -18,9 +22,11 @@ figures separately -- the syntax in
 \S\ref{sec:hm:syntax}, the typing rules in \S\ref{sec:hm:dectyrule} and
 \S\ref{sec:hm:syntyrule}, and the inference algorithm in \S\ref{sec:hm:W}.
 We provide two equivalent sets of typing rules (we prove this in \S\ref{sec:hm:syntyrule}).
+\index{typing rules!declarative}
 The declarative typing rules (\S\ref{sec:hm:dectyrule}) are suited for
 reasoning about the soundness of typing.
-The syntax directed typing rules (\S\ref{sec:hm:syntyrule}) are suited
+\index{typing rules!syntax-directed}
+The syntax-directed typing rules (\S\ref{sec:hm:syntyrule}) are suited
 for reasoning about the properties of the type inference algorithm $W$
 (\S\ref{sec:hm:W}).
 
@@ -104,7 +110,10 @@ a polymorphic type scheme for $x$ into the typing context when typing the let-te
 body $t$. We will discuss many
 further details of typing let-terms (the \rulename{Let} rule) when
 we explain the typing rules.
+\index{type scheme}
 
+\index{monotype}
+\index{polytype}
 The syntax of types (or, monotypes) include all the types in the STLC
 ($A -> B$ and $\iota$) and type variables ($X$).
 The syntax of type schemes (or, polytypes) are similar to
@@ -131,6 +140,7 @@ equivalent to $\forall X'. X' -> X'$). In fact, we can derive
 $\alpha$-equivalence as a special case of the type scheme ordering rule \rulename{GenInst} (Figure \ref{fig:hm}),
 where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
 
+\index{generic instance}
 The usual \empty{instantiation} (\ie, substitution of quantified variables
 with monotypes) is a special case of generic instantiation. For example,
 consider the instantiations of $\forall X_1\,X_2.X_1 -> X_2$ below:
@@ -159,6 +169,7 @@ instantiating $X$ to $(X'-> X')$. However, the latter,
 $\forall X'.(X'-> X')-> (X'-> X')$, is not an instance
 but a generic instance of $\forall X.X-> X$ because
 the newly introduced variable $X'$ is universally quantified.
+\index{generic instance}
 
 There is a difference between the (mono)type $(X'-> X')-> (X'-> X')$,
 where $X'$ is free, and the type scheme $\forall X'.(X'-> X')-> (X'-> X')$,
@@ -238,6 +249,7 @@ To discover why the first must be ill-typed, and the second can be well-typed
 we must look at the details of the typing rules.
 
 \subsection{Declarative typing rules}\label{sec:hm:dectyrule}
+\index{typing rules!declarative}
 The declarative typing rules deduce a type scheme for a given term under
 a typing context ($\Gamma |- t : \sigma$). The type scheme ($\sigma$)
 deduced for the given term ($t$) under the typing context ($\Gamma$) may not
@@ -315,7 +327,8 @@ the typing context $\Gamma$, as below:
 
 \end{itemize}
 
-\paragraph{} The soundness of typing is obvious
+\paragraph{}
+The soundness of typing is obvious
 once we observe that HM is a restriction of the Curry-style System \F\ (\ie,
 if $\Gamma|- t:\sigma$ in HM, then $\Delta;\Gamma|- t:\sigma$ in System \F).
 The terms in HM are exactly the same as the terms in the Curry-style System \F,
@@ -379,6 +392,7 @@ in the generic instantiation rule, as below:
               \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
 \end{multline*}
 \end{singlespace}
+\index{generic instantiation}
 The generic instantiation from $\sigma$ to $\sigma'$
 in the \rulename{Inst} rule above can be understood as having two phases:
 instantiation from $\sigma$ to $A[B_1/X_1]\cdots[B_n/X_n]$ and
@@ -422,13 +436,14 @@ consecutive applications of the \rulename{TyAbs} rule in System \F, as below:
 \end{align*}
 } %end \small
 
-\subsection{Syntax directed typing rules}\label{sec:hm:syntyrule}
-The syntax directed typing rules \cite{Clement86} deduce a type,
+\subsection{Syntax-directed typing rules}\label{sec:hm:syntyrule}
+\index{typing rules!syntax-directed}
+The syntax-directed typing rules \cite{Clement86} deduce a type,
 rather than a type scheme, for a given term under a typing context
-($\Gamma |- t : A$). These rules are syntax directed, since 
+($\Gamma |- t : A$). These rules are syntax-directed, since 
 for each syntactic category of terms, there is only one typing rule that can apply.
 
-The syntax directed typing rules are based on the observation
+The syntax-directed typing rules are based on the observation
 that the \rulename{Inst} and \rulename{Gen} in the declarative typing rules
 are only necessary at the \rulename{Var} and \rulename{Let} rules, respectively.
 That is, we only need to apply the \rulename{Inst} rule to the conclusion of
@@ -449,7 +464,7 @@ variables occurring in $\Gamma$. The free type variables of $\Gamma$ are defined
 $\FV(\Gamma) = \bigcup_{x:\sigma\in \Gamma} \FV(\sigma)$.
 
 \paragraph{}
-The syntax directed typing rules are sound (Theorem \ref{thm:sdHMsound})
+The syntax-directed typing rules are sound (Theorem \ref{thm:sdHMsound})
 and complete (Theorem \ref{thm:sdHMcomplete}) with respect to
 the declarative typing rules.
 
@@ -485,8 +500,8 @@ in the \rulename{Gen} rule holds.
 The completeness of $|-s$ is stated below.
 Note that the completeness of $|-s$ must be stated in terms of generalization closure and
 the type scheme ordering relation ($\overline{\Gamma}(A)\sqsubseteq\sigma$),
-since the syntax directed rules can only deduce types, not type schemes.
-The syntax directed rule $|-s$ is complete in the sense that for any given term
+since the syntax-directed rules can only deduce types, not type schemes.
+The syntax-directed rule $|-s$ is complete in the sense that for any given term
 we can always deduce a type $A$ such that the closure of $A$ is more general
 than the type scheme $\sigma$ deduced from the declarative typing rules.
 \begin{theorem}[$|-s$ is complete with respect to $|-$]
@@ -603,13 +618,14 @@ type schemes (\rulename{GenInst} in Figure \ref{fig:hm}).
 \end{proof}
 
 \subsection{The type inference algorithm $W$}\label{sec:hm:W}
+\index{type inference!algorithm W}
 \citet{DamMil82} presented the type inference algorithm $W$
 (Figure \ref{fig:algW}) and proved its soundness and completeness
 with respect to the declarative typing rules. Here, we show the
 soundness and completeness of the type inference algorithm, $W$ (Figure \ref{fig:algW}),
-with respect to the syntax directed typing rules.
+with respect to the syntax-directed typing rules.
 Each rule of the type inference algorithm $W$
-has a similar structure to the corresponding syntax directed rule.
+has a similar structure to the corresponding syntax-directed rule.
 The type inference algorithm has additional details of explicitly
 managing fresh type variable introduction and substitution.
 

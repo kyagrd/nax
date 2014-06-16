@@ -51,6 +51,7 @@ We organize the hierarchy of Mendler-style recursion schemes
 by two aspects: (1) the abstract operations they support and
 (2) the kinds of the datatypes they operate on.
 
+\index{abstract operation}
 The first aspect, the abstract operations, categorizes the family
 of Mendler-style recursion schemes. All Mendler-style recursion schemes
 support the abstract recursive call, which enables recursive
@@ -230,7 +231,7 @@ Generalization over term-indexed datatypes are established by
 the formalization of our term-indexed calculi (System \Fi\ and \Fixi),
 which extends the polymorphic calculi (System \Fw\ and \Fixw).
 
-Our term-indexed calculi is a small theory that can embed indexed datatypes
+Our term-indexed calculi are small theories that can embed indexed datatypes
 and their (Mendler-style) recursion schemes. That is, we do not need to extend
 the calculi with primitive datatypes in order to model a practical language.
 Datatypes and Mendler-style recursion schemes in Nax can be embedded into
@@ -296,8 +297,10 @@ for those type constructors should not cause inconsistency,
 but further investigation is needed.
 
 \index{Mendler-style}
-Mendler-style course-of-values recursion only terminates for monotone
-recursive types. We conjecture that we can derive monotonicity from kinds,
+\index{monotonicity}
+Mendler-style course-of-values recursion only terminates
+for monotone recursive types.
+We conjecture that we can derive monotonicity from kinds,
 but it is an open question whether this is a sound method. We need further
 theoretical investigation into this difficult problem.
 Meanwhile, we plan to support ad-hoc methods of deriving monotonicity

@@ -7,6 +7,8 @@
 
 \section{Conversion between different fixpoint types}
 \label{sec:futwork:mu}
+\index{fixpoint!conversion}
+\index{type!fixpoint}
 In Chapter~\ref{ch:mendler}, we introduced
 several Mendler-style recursion schemes by describing them in Haskell,
 following certain stylistic conventions. Most of the recursion schemes,

@@ -3,10 +3,14 @@ During the past decade, the functional programming community achieved
 partial success in their goal of maintaining fine-grained properties
 by only moderately extending functional language type systems
 \cite{CheHin03,CheHin02,Xi03}.
+\index{lightweight}
 This approach is often called \emph{``lightweight''}\footnote{\eg,
   \url{http://okmij.org/ftp/Computation/lightweight-dependent-typing.html} }
 in contrast to the approach taken by fully dependent type systems
 (\eg, Coq, Agda).
+\index{dependent type}
+\index{type!dependent}
+\index{GADT}
 The Generalized Algebraic Data Type (GADT) extension, implemented
 in the Glasgow Haskell Compiler (GHC) and in OCaml \cite{ManStu09,GarNor11}, 
 has made the lightweight approach
@@ -18,13 +22,13 @@ lack \textbf{logical consistency} and
 they often lack term indexing, so \textbf{term indices are faked}
 (or, simulated) by additional type structure replicating the requisite term
 structure.
+\index{datatype promotion}
 A recent extension in GHC, datatype promotion \cite{YorWeiCrePeyVytMag12},
 addresses the issue of term indices, but the issues of
 logical consistency and type inference still remain.
 
 Nax is a programming language designed to support both type and
-term indexed datatypes,
-logical consistency, and type inference.
+term indexed datatypes, logical consistency, and type inference.
 \begin{description}
 \item[$(1)$ Nax is strongly normalizing and logically consistent.]~\\
 Types in Nax can be given logical interpretations as propositions
@@ -91,6 +95,7 @@ just like Haskell's |type| keyword.
 
 \quad
 In Nax, |data| declarations cannot be recursive.
+\index{fixpoint}
 Instead, to define recursive types, one uses a fixpoint type operator
 |Mu[kappa] : (kappa -> kappa) -> kappa| over non-recursive base structures
 of kind |kappa -> kappa| (\eg, |(L a) : * -> *|).

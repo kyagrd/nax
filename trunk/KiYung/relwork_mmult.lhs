@@ -20,8 +20,9 @@ cons x xs  = In0 (Cons x xs)
 \end{code}
 \end{comment}
 
-\section{Mendler-style recursion schemes over multiple values} \label{sec:relwork:mult}
-\index{Mendler-style}
+\section{Mendler-style recursion schemes over multiple values}
+\label{sec:relwork:mult}
+\index{Mendler-style!multiple values}
 There are many Mendler-style recursion schemes in addition
 to those discussed in Chapter~\ref{ch:mendler}.
 Here, we introduce two Mendler-style recursion schemes that
@@ -111,7 +112,7 @@ Here, we formulated |msimpr0| with two recursive arguments, so we have two
 casting operations, whose types are |(r1 -> Mu0 f1)| and |(r2 -> Mu0 f2)|.
 
 \subsection{Lexicographic recursion}
-\index{Mendler-style!lexicographic iteration}
+\index{Mendler-style!lexicographic recursion}
 Some recursive functions over multiple recursive values
 justify termination because their arguments decrease at every recursive call
 under a lexicographic ordering.  Note that this different from
@@ -159,6 +160,8 @@ mlexpr0 :: (forall r1 r2  .   (r1 -> Mu0 f2 -> a)  -- outer recursive call
 
 mlexpr0 phi (In0 x1) (In0 x2) = phi (mlexpr0 phi) (mlexpr0 phi (In0 x1)) id id x1 x2 
 \end{code}~\vspace*{-1.3em}\\
+\index{Mendler-style!lexicographic recursion}
+\index{abstract operation}
 The Mendler-style lexicographic recursion |mlexpr0| is similar to
 the Mendler-style simultaneous recursion |msimpr0| introduced
 in the previous section, but has two abstract operations for

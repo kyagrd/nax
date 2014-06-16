@@ -9,7 +9,9 @@ import Prelude hiding (head, tail, pred, succ, take)
 \end{comment}
 
 \section{Mendler-style co-iteration and co-recursion} \label{sec:relwork:co}
-\index{Mendler-style}
+\index{Mendler-style!co-iteration}
+\index{Mendler-style!co-recursion}
+\index{co-data}
 Data structures have a natural dual, often called co-data.
 Data is characterized by how it is constructed, and co-data is
 characterized by how it is observed (destructed).
@@ -20,7 +22,8 @@ These co-recursion schemes generate possibly infinite structures.
 For instance, an infinite sequence of natural numbers.
 
 \index{Mendler-style!co-iteration}
-%% \index{Mendler-style!co-recursion}
+\index{anamorphism}
+\index{unfold}
 The Mendler-style co-iteration, \McoIt, (\aka\ anamorphism or unfold) is
 dual to the Mendler-style iteration, \MIt, (\aka\ catamorpihsm or fold).
 Figure~\ref{fig:mcoit0} (adapted from \citet{UusVen11}) illustrates
@@ -28,6 +31,7 @@ a Haskell transcription of \MIt\ and its dual \McoIt.
 Readers can compare the two for similarities and differences.
 We use the same style of Haskell code we used in Chapter~\ref{ch:mendler}.
 The reversal of the function arrows is typical of a dual construction.
+\index{abstract operation}
 Note that domain and the codomain of the abstract operations are flipped:
 |(a -> r)|, |(a -> f r)|, |(a -> Nu0 f)| verses
 |(r -> a)|, |(f r -> a)|, |(Mu0 f -> a)|.
@@ -103,6 +107,8 @@ Co-recursive datatypes are defined as the co-fixpoint |Nu0| of (non-recursive)
 base structures. For example, infinite streams are
 defined as a co-recursive datatype
 as follows:
+\index{dataype!co-recursive}
+\index{co-recursive datatype}
 \begin{singlespace}
 \begin{code}
 data StreamF a r = SCons a r
@@ -111,6 +117,7 @@ head  s = case (out0 s) of SCons h _  -> h
 tail  s = case (out0 s) of SCons _ t  -> t
 \end{code}
 \end{singlespace}
+\index{destructor}
 Note that we can define destructor functions for streams,
 |head :: Stream a -> a| and |tail :: Stream a -> Stream a|, simply by
 pattern matching, since we can freely use |out0 :: Nu0 f -> f (Nu0 f)|.
@@ -205,6 +212,7 @@ We also restrict the use of |unIn0| and |unOut0| as described.
 and primitive (co-)recursion, and studied their properties. 
 \citet{AbeMatUus05} embedded
 Mendler-style (co-)iteration into System~\Fw.
+\index{reduction preserving}
 \citet{AbeMat04} discovered a reduction preserving embedding
 of Mendler-style primitive recursion into \Fixw. They mention that
 an embedding of primitive co-recursion is similarly possible (although

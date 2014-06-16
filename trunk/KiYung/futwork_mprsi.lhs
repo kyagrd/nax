@@ -27,6 +27,7 @@ In this section, we speculate about another Mendler-style recursion scheme,
 |mprsi|, motivated by an example similar to the |evalHOAS| function.
 The name |mprsi| stands for
 Mendler-style primitive recursion with a sized index.
+\index{Mendler-style!primitive recursion with a sized index}
 
 %format t1
 %format t2
@@ -108,6 +109,8 @@ whose codomain (|Mu V t2|) is exactly what we want. But, the domain
 is still abstract |(r t1)| rather than being concrete |(Mu V t1)|.
 We are stuck.
 
+\index{abstract operation!cast}
+\index{abstract operation!uncast}
 What additional abstract operation would help us complete the definition of
 |unVal|? We need an abstract operation to cast from |(r t1)| to |(Mu V t1)|
 in a contravariant position.
@@ -134,10 +137,10 @@ To recover the guarantee of termination, we need to restrict the use of
 either |cast| or |uncast|, or both.
 
 Let us see how this non-termination might occur. If we allowed |mprsi1| with
-the naive type signature above, we could write an evaluator
-(similar to |vevalHOAS| but for an untyped HOAS), which does not always terminate.
-This evaluator would diverge for terms with self application. Typed terms
-use the type index to prevent such diverging terms.
+the naive type signature above, we could write an evaluator (similar to
+|vevalHOAS| but for an untyped HOAS), which does not always terminate.
+This evaluator would diverge for terms with self application.
+Typed terms use the type index to prevent such diverging terms.
 
 We walk through the process of defining an untyped HOAS.
 The base structures of the untyped HOAS and its value domain

@@ -11,7 +11,7 @@ the design choices made by functional programming language designers
 and formal reasoning systems designers (\S\ref{sec:intro:motiv}),
 and assert the thesis (\S\ref{sec:intro:thesis}).
 We introduce preliminary concepts of Mendler-style recursion schemes
-and term indexed types (\S\ref{sec:intro:concepts}), highlight
+and term indexed types (\S\ref{sec:intro:concepts}), and highlight
 the contributions of the thesis research (\S\ref{sec:intro:contrib}).
 Lastly, we close this chapter by giving an overview of
 the chapter organization (\S\ref{sec:intro:overview}).
@@ -67,9 +67,10 @@ in the following subsections.
 
 We assume that readers are familiar with \emph{programming}
 in \emph{functional languages} and some basic concepts of the lambda calculus
-(\eg, $\beta$-reduction, normal forms). We also assume that the readers
-understand basic concepts of logic (\eg, axioms, inference, and proofs)
-but not necessary familiar with \emph{formal reasoning systems}.
+(\eg, $\beta$-reduction, normal forms) and type theory (i.e., fmilair with
+describing typing rules in the inference rule form). We also assume that
+the readers understand basic concepts of logic (\eg, axioms, inference, and
+proofs) but not necessary familiar with \emph{formal reasoning systems}.
 
 \subsection{The Curry--Howard correspondence}
 \index{Curry-Howard}
@@ -89,11 +90,12 @@ Once these are established, we can formalize a logic within
 one unified language system by internally witnessing proofs as terms
 (or, programs) since we consider \emph{``propositions as types''}.\footnote{
 	Coq and Agda are based on the Curry-Howard correspondence.}
-In contrast, one needs a meta-language other than the object language for logic,
-which is an extension of lambda calculus with logical constants and connectives,
-for constructing proofs in a more traditional approach, where one represents
+In contrast, in a more traditional approach, where one represents
 \emph{``propositions as terms''},\footnote{
 	HOL family is based on this more traditional approach.}
+one needs a meta-language other than the object language for logic,
+which is an extension of lambda calculus with logical constants
+and connectives, for constructing proofs.
 
 We explain this correspondence with a very simple
 version of intuitionistic natural deduction and
@@ -367,8 +369,9 @@ interpreting propositions (or, types) as sets of well-typed terms.
 Since our scope of research is for reasoning systems, which are based on
 the Curry--Howard correspondence, most of our descriptions will be in terms of
 lambda calculi, without mentioning their corresponding natural deduction
-counterparts. Because of this correspondence, we will use \emph{lambda calculus}
-and \emph{natural deduction system} interchangeably.
+counterparts.
+%% Because of this correspondence, we will use \emph{lambda calculus}
+%% and \emph{natural deduction system} interchangeably.
 
 \index{normalization}
 \index{strong normalization}
@@ -572,8 +575,8 @@ in the logic.\footnote{
         course-of-values recursion, or lexicographic recursion.
         Since we do not consider dependent types, we will only discuss
         those non-dependently typed recursion schemes.}
-The reduction step for a recursion scheme in the calculus follows from
-the Curry--Howard correspondence over the recursive types, just as
+The reduction step for a recursion scheme in the calculus should follow
+from the Curry--Howard correspondence over the recursive types, just as
 the $\beta$-reduction follows from the Curry--Howard correspondence
 over function types.
 
@@ -586,8 +589,8 @@ the other is to restrict the use of datatypes (\ie, elimination rules).
 The former approach, also known as the \emph{conventional}\footnote{
         We adopted the word ``\emph{conventional}'' from the literature
         on Mendler style (\eg, \cite{AbeMat04}).}
-approach, is taken by reasoning systems (\eg, Coq, Agda) and the studies on
-terminating recursion schemes in functional languages following
+approach, is taken by most reasoning systems (\eg, Coq, Agda) and the studies
+on terminating recursion schemes in functional languages following
 the Squiggol school of constructive programming \cite{AoP,hagino87phd,Bir87}.
 The conventional approach restricts the definition of datatypes and
 the key mechanism to check termination of recursion schemes are based on
@@ -610,7 +613,7 @@ which is proven to be strongly normalizing and logically consistent.
 Then, there is no extra theoretical burden to establish
 the Curry--Howard correspondence for datatypes, because datatypes are
 encoded using the basic primitives of the lambda calculus, for which we
-know, the Curry--Howard correspondence already holds. In addition, there is
+know, the Curry--Howard correspondence already hold. In addition, there is
 no need for any extra mechanism, other than type checking, to ensure
 termination of the recursion schemes. We take this non-conventional
 approach in designing our language system.
@@ -1074,8 +1077,8 @@ in a dependent type theory, but one soon realizes that the induction principles
 (or, dependent eliminators) for those datatypes cannot be derived within
 the pure dependent calculi \cite{Geuvers01}.
 So, dependently typed reasoning systems support datatypes as primitives.
-For instance, Coq is based on The Calculus of Inductive Constructions, which
-extends The Calculus of Constructions \cite{CoqHue86} with dependent datatypes
+For instance, Coq is based on the Calculus of Inductive Constructions, which
+extends the Calculus of Constructions \cite{CoqHue86} with dependent datatypes
 and their induction principles.
 
 \index{type!polymorphic}
@@ -1258,11 +1261,12 @@ one for each recursion scheme. Some recursion schemes subsume others
 
 It would have been easy to describe the theory for Nax if we had
 one most powerful recursion scheme that subsumes all the others,
-which leads to a single interpretation of $\mu$. Unfortunately, we know of
-no Mendler-style recursion scheme that subsumes all the other recursion schemes
-in Nax. For instance, iteration (\MIt) can be subsumed by either 
-iteration with a syntactic inverse (\MsfIt) or primitive recursion (\MPr).
-But, there is no known recursion scheme that can subsume both \MsfIt\ and \MPr.
+which leads to a single interpretation of $\mu$. Unfortunately,
+we know of no Mendler-style recursion scheme that subsumes
+all the other recursion schemes in Nax. For instance, iteration (\MIt)
+is subsumed by primitive recursion (\MPr), but \MPr\ does not subsume
+iteration with a syntactic inverse (\MsfIt) or the other way around.
+There is no known recursion scheme that can subsume both \MsfIt\ and \MPr.
 
 We discovered that $\mu$-values, to which \MIt\ can be applied,
 can be considered as a superset of $\breve\mu$-values,
@@ -1284,6 +1288,9 @@ One can extend the kind syntax of arrow kinds in \Fw\ with polarities
 to track whether a type constructor argument is used in
 covariant (positive), contravariant (negative), or
 mixed-variant (both positive and negative) positions.
+It is still an open problem whether it is possible to derive monotonicity
+(\ie, the  existence of a map) for a type constructor from its polarized kind,
+without examining the type constructor definition.
 \index{covariant}
 \index{contravariant}
 \index{mixed-variant}
@@ -1291,9 +1298,6 @@ mixed-variant (both positive and negative) positions.
 \index{negative}
 \index{monotonicity}
 \index{positivity}
-It is still an open problem whether it is possible to derive monotonicity
-(\ie, the  existence of a map) for a type constructor from its polarized kind,
-without examining the type constructor definition.
 
 We identified a useful application for a solution to this open problem.
 \index{Mendler-style}
@@ -1401,7 +1405,7 @@ System \Fi\ extends System \Fw\ with term indices and
 System \Fixi\ extends System \Fixw\ \cite{AbeMat04} with term indices.
 
 We prove both strong normalization and logical consistency of
-these term-indexed calculi using an index erasure property.
+these term-indexed calculi using their index erasure properties.
 The index erasure property of a term-indexed calculus
 projects a typing in the term-index calculi into
 the polymorphic calculus that the term-indexed calculus extends.

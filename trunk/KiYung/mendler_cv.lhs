@@ -58,6 +58,7 @@ We arrange for the combining function to take additional arguments
 
   |mhist0 phi (In0 x) = phi out0 (mhist0 phi) x|
 
+        \index{abstract operation!unroll}
   \item Again we use higher-rank polymorphism to insist that 
         the abstract unrolling function, with type (|r -> f r|),
         the recursive caller function, with type (|r -> a|), and
@@ -114,6 +115,7 @@ the programmer can actually access the functionality of |out0|
 through the abstract unrolling function |out|. The higher-rank types limit
 the use of this abstract unrolling function |out| to values of type |r|.
 
+\index{abstract operation!unroll}
 In a positive recursive datatype, the only functions with domain |r|
 are the abstract unroller, and the recursive caller.
 The programmer can only

@@ -430,6 +430,8 @@ where we introduce a universally quantified type constructor variable.
 
 \subsection{The Equi-recursive type operator $\fix$}
 \label{ssec:fixi:def:equirec}
+\index{fixpoint!equi-recursive}
+\index{fixpoint!iso-recursive}
 \Fixi\ provides the equi-recursive type operator $\fix$.
 The kinding rule ($\fix$) in Figure~\ref{fig:Fixi2} is similar to
 the ($\mu$) rule of System \Fi\ (see Figure~\ref{fig:Fi2} in \S\ref{sec:fi:fi}),
@@ -442,12 +444,13 @@ to which $\fix$ can be applied, is necessary to maintain strong normalization.
 Adding equi-recursive types without restricting the polarity breaks
 strong normalization because it amounts to having both formation and
 elimination of arbitrary iso-recursive types.
-%% TODO we have not explained what equi- and iso- recursive means
 
 Note that there are no explicit term syntax that guides the conversion between
-$\fix F$ and $F(\fix F)$, unlike in iso-recursive systems where $\In$ and
-$\mathsf{unIn}$ are term syntax that explicitly guide rolling
-(from $\mu F$ to $F(\mu F)$) and unrolling (from $F(\mu F)$ to $\mu F$).
+$\fix F$ and $F(\fix F)$, unlike in iso-recursive\footnote{
+	All the other fixpoint type operators, except $\fix$ here,
+	in this dissertation are iso-recursive.}
+systems where $\In$ and $\mathsf{unIn}$ are term syntax that explicitly guide
+rolling (from $\mu F$ to $F(\mu F)$) and unrolling (from $F(\mu F)$ to $\mu F$).
 Since $\fix F=F(\fix F)$ is given definitionally (\ie, by the equality rule
 definition), the type constructor conversion rule ($Conv$) can silently
 roll (from $F(\fix F)$ to $\fix F$) and unroll (from $F(\fix F)$ to $\fix F$)

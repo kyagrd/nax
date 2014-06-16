@@ -3,9 +3,11 @@
 \index{regular datatype}
 \index{datatype!regular}
 In the Mendler-style approach, we define recursive datatypes
-as fixpoints of non-recursive base datatypes.  For example, the following
-are definitions of the natural number type in the general recursion style (left)
-and in the Mendler style (right).
+as fixpoints of non-recursive base datatypes.
+\index{fixpoint}
+\index{base datatype}
+For example, the following are definitions of the natural number type
+in the general recursion style (left) and in the Mendler style (right).
 \begin{center}
 \begin{minipage}{.49\linewidth}
 \begin{code}

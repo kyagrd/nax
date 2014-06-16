@@ -21,9 +21,9 @@ We explore a more expressive style called the Mendler style.
 \index{Mendler style}
 The Mendler-style recursion combinators were
 originally developed in the context of the Nuprl \cite{Con86} type system.
-Nuprl made extensive use of dependent types and higher-rank polymorhpism.
+Nuprl made extensive use of dependent types and higher-rank polymorphism.
 \index{dependent type}
-\index{higher-rank polymorhpism}
+\index{higher-rank polymorphism}
 General type checking in Nuprl was done by interactive theorem proving --
 not by type inference.  The Mendler-style combinators are considerably more
 expressive than the conventional combinators of the Squiggol \cite{AoP} school,
@@ -36,7 +36,7 @@ is summarized in \S\ref{mendler_history}.
 Recently, Mendler-style recursion combinators have been studied
 in the context of modern functional languages with advanced type system
 features, including higher-rank polymorphism and
-generalized algebraic data types.
+generalized algebraic datatypes.
 This chapter extends that work by \vspace*{-.5em}
 \begin{itemize}
 
@@ -108,7 +108,9 @@ The Mendler-style combinators operate on types defined in two levels,
 \ie, two-level types (see \S\ref{ssec:tourRegular}). Two-level types are 
 characterized by splitting the definition of a recursive type into
 a generating functor (or a base datatype) and an explicit application of
-the appropriate datatype fixpoint operator (|Mu|). There exists
+the appropriate datatype fixpoint operator (|Mu|).
+\index{fixpoint}
+There exists
 an infinite series of datatype fixpoint operators for each different kind
 (\eg, |Mu0|, |Mu1|). In this chapter, we illustrate the Mendler-style
 recursion comnbinators only at the two simplest kinds $*$ and $* -> *$.
@@ -229,8 +231,8 @@ which extends System \Fw\ by adding a family of kind-indexed Mendler-style
 primitive recursion combinators. They show that \textsf{MRec} has
 a reduction preserving embedding into a calculus they call \Fixw.
 Then, they show that \Fixw\ is strongly normalizing.
-\index{System Fw@System \Fw}
-\index{System Fixw@System \Fixw}
+\index{System Fw@@System \Fw}
+\index{System Fixw@@System \Fixw}
 
 \index{Mendler-style!iteration}
 Abel, Matthes, and Uustalu \cite{AbeMatUus03,AbeMatUus05} studied
@@ -362,6 +364,7 @@ at kind $*$ and kind $* -> *$}
 \end{landscape}
 }
 
+\index{fixpoint!standard}
 All of our results are summarized in Figures \ref{fig:datafix},
 \ref{fig:rcombty}, and \ref{fig:rcombdef}. In Figure \ref{fig:datafix},
 we define the Mendler-style datatype fixpoint operators (\ie, |Mu0| and |Mu1|).
@@ -396,6 +399,7 @@ We provided examples using \MPr\ and \McvPr\ families in \S\ref{sec:mpr}.
 We discuss the remaining combinators of the inverse augmented fixpoints
 in \S\ref{sec:showHOAS} and \S\ref{sec:evalHOAS}, where we culminate with
 examples involving HOAS.
+\index{fixpoint!inverse augmented}
 We have structured each of the examples into two, side by side, parts.
 On the left, we provide a general recursive version, and
 on the right, a Mendler-style version.

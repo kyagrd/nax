@@ -6,7 +6,7 @@
 %format consv = cons"_{\!"V"}"
 
 \index{GADT}
-\index{generalized algebraic datatype}
+\index{generalized algebraic datatype||see{GADT}}
 \index{datatype!generalized algebraic}
 \index{datatype!GADT}
 \index{datatype!indexed}

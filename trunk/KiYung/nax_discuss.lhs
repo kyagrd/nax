@@ -172,6 +172,7 @@ a specific use of universe subtyping (|* <= BOX|) hard-wired within
 the arrow formation rule. Agda needs a more general notion of
 universe subtyping, since Agda is a dependently typed language
 with stratified universes, which we will shortly explain.
+\index{universe!subtyping}
 
 Agda has countably many stratified type universes for several good reasons.
 When we from a kind arrow |kappa1 -> kappa2| in Agda, the domain |kappa1| and 
@@ -200,6 +201,7 @@ correspond to |*| and |BOX|. So, we write |*| and |BOX| instead of $\star_0$
 and $\star_1$ in the justification of well-formedness of |List Ty -> *|
 in Agda, to make the comparisons align in Figure\;\ref{fig:sortingEx}.
 
+\index{universe!polymorphism}
 In addition to universe subtyping, Agda also supports
 universe polymorphism,\footnote{See 
 \url{http://wiki.portal.chalmers.se/agda/agda.php?n=Main.UniversePolymorphism}.}
@@ -262,7 +264,8 @@ hlist = HCons 3 (HCons True (HCons (1 :. 2 :. Nil) HNil))
 \label{fig:hlist}
 \end{singlespace}
 \end{figure}
-
+\index{nested term index}
+\index{term index!nested}
 Nax supports nested term indices while Haskell's datatype promotion cannot.
 Examples in \S\ref{sec:example} only used rather simple
 indexed datatypes, whose terms indices are of non-indexed types
@@ -294,7 +297,7 @@ and its type is |HList (Int :. Bool :. List Int :. Nil)|.
 
 
 \section{Related Work} \label{sec:related}
-
+\index{singlton type}
 \paragraph{Singleton types{\rm ,}\!} first coined by \citet{Hayashi91},
 have been used in lightweight verification to simulate dependent types
 \cite{XiPfe98,KisSha07}. \citet{SheHooLin05} demonstrated that singleton types
@@ -320,10 +323,12 @@ We think it would be possible to apply similar strategies to Nax, and even
 better, singleton types for already indexed datatypes would be derivable.
 
 \paragraph{The kind arrow |({A}->kappa)|{\rm ,}\!} from a type to a kind,
-predates Nax. Our kind syntax in Figure\;\ref{fig:sorting}, although
-developed independently, happens to coincide with the kind syntax of Deputy
-\cite{ConHarAndGayNec07}, a dependently typed system for low-level
-imperative languages with variable mutation and heap-allocated structure.
+predates Nax.
+\index{kind arrow}
+Our kind syntax in Figure\;\ref{fig:sorting}, although developed independently,
+happens to coincide with the kind syntax of Deputy \cite{ConHarAndGayNec07},
+a dependently typed system for low-level imperative languages with
+variable mutation and heap-allocated structure.
 
 \paragraph{Curly braces in Nax are different from those in Agda or SHE.} ~
 
@@ -339,6 +344,7 @@ types. However, SHE's (abstract) kind syntax is virtually identical to the
 (abstract) kind syntax of datatype promotion, thus quite different from Nax,
 since |{A} :: BOX| in SHE.
 
+\index{kind polymorphism}
 \paragraph{Kind polymorphism} in Nax may be polymorphic over term-index
 variables (|i : A|) and type variables (|alpha : *|), as well as over
 kind variables (|calX : BOX|). That is, polymorphic kinds (or kind schemes)

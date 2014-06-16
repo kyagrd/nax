@@ -1,4 +1,6 @@
 \chapter{System \Fi}\label{ch:fi}
+\index{System Fi@System \Fi}
+\index{polymorphic lambda calculus!System Fi@System \Fi}
 
 \newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
 
@@ -109,26 +111,31 @@ Without going into the details of the formalism, which are given in the
 next section, one sees that such a calculus incorporating term-indexing
 structure needs four additional constructs (see \Fig{Fi} for the
 highlighted extended syntax).
+\index{System Fi@System \Fi!additional constructs}
 \begin{enumerate}
-\item 
+\item
+  \index{kind!type-indexed}
   Type-indexed kinding~($A\to\kappa$), as in $(\texttt{{Nat}\ensuremath{\to}*})$
   in the example above, where the compile-time nature of term-indexing
   will be reflected in the typing rules, enforcing that $A$ be a closed
   type~(rule~$(Ri)$ in \Fig{Fi2}).
 
 \item 
+  \index{term index!abstraction}
   Term-index abstraction~$\lambda i^A.F$~(as
   $\lambda i^{\texttt{{Nat}}}.\cdots$ in the example above) for constructing
   (or introducing) term-indexed kinds (rule~$(\lambda i)$ in \Fig{Fi2}).
 
 \item 
+  \index{term index!application}
   Term-index application~$F\{s\}$ (as $X\{{\tt Z}\}$, $X\{j\}$, and
   $X\{\texttt{S}\;j\}$ in the example above) for destructing (or
   eliminating) term-indexed kinds, where the compile-time nature of
   indexing will be reflected in the typing rules, enforcing that the index be
   statically typed (rule~$(@i)$ in \Fig{Fi2}).
 
-\item 
+\item
+  \index{term index!polymorphism}
   Term-index polymorphism~$\forall i^A.B$~(as
   $\forall j^{\texttt{{Nat}}}.\cdots$ in the example above)
   where the compile-time nature of polymorphic term-indexing

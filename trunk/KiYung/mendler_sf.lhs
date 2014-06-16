@@ -18,7 +18,7 @@ on these encodings, which are translations of negative recursive types
 into positive recursive types.  What we gain by using such encodings must be
 traded against the loss in transparency that such encodings force upon
 the implementation. The natural structure, which were evident
-in the negative data type, become obscured by such encodings.
+in the negative datatype, become obscured by such encodings.
 
 A series of papers \cite{Pat93,MeiHut95,FegShe96,DesPfeSch97,bgb} studied 
 techniques that define recursion schemes directly over negative recursive types
@@ -338,8 +338,8 @@ this time, an abstract inverse.
 \end{code}
   \item For inverse values, return the value inside |Inverse0| as it is.
   \item \index{higher-rank polymorphism}
-        \index{abstract inverse}
-        \index{recursive caller}
+        \index{abstract operation!inverse}
+        \index{abstract operation!recursive call}
         We use higher-rank polymorphism to insist that 
         the abstract inverse function, with type (|a -> r a|),
         the recursive caller function, with type (|r a -> a|), and
@@ -352,8 +352,9 @@ msfcata0  ::  (forall r .  (a -> r a)  ->
 \end{code}
   \item \index{abstract recursive type}
         Note, the abstract recursive type |r| is parameterized by
-        the answer type |a| because the augmented datatype fixpoint |Rec0|
+        the answer type |a| because the inverse augmented fixpoint |Rec0|
         is parameterized by the answer type |a|.
+        \index{fixpoint!inverse augmented}
 
         Also, note, the second argument of |msfcata0|, the object being
         operated on, has the higher-rank type
@@ -430,6 +431,7 @@ application. In the \Fw\ encoding, they could be omitted
 (\ie, |caseSum x f g| simplifies to |x f g|).  But, we choose to write
 in terms of |caseSum| to make the definitions easier to read.
 
+\index{HOAS!string formatting}
 In Figure \ref{fig:HOASshowFw}, we define both an recursive datatype
 for HOAS (|Exp|), and the string formatting function (|showExp|), 
 with these $F_\omega$ encodings, just as we did in \S\ref{ssec:showHOASmsfcata}.
@@ -472,6 +474,7 @@ leads to desired embeddings would be an interesting future work.
 \subsection{Evaluating Simply-Typed Higher-Order Abstract Syntax}
 \label{sec:evalHOAS}
 \index{HOAS!simply-typed}
+\index{HOAS!evaluation}
 \index{evaluator!simply-typed HOAS}
 Surprisingly, we can write an evaluator for a simply-typed HOAS
 in a surprisingly simple manner. In Figure \ref{fig:HOASeval}

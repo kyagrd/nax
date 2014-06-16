@@ -12,11 +12,15 @@ kind polymorphism and kind inference \S\ref{sec:futwork:kindpoly}.
 \input{futwork_mu} %% sec:futwork:mu
 
 \section{Monotonicity from polarized kinds}\label{sec:futwork:mon}
+\index{monotonicity}
+\index{polarized kind}
+\index{kind!polarized}
 We first review the summary of discussions in \S\ref{sec:fixi:cv}
 and then list the future work on monotonicity and polarized kinds.
 
 \subsection*{Summary of the discussions in \S\ref{sec:fixi:cv}}
-\index{Mendler-style}
+\index{Mendler-style!course-of-values recursion}
+\index{System Fixi@System \Fixi}
 In \S\ref{sec:fixi:cv}, we embedded Mendler-style course-of-values recursion
 into System \Fixi\ assuming monotonicity. Recall that kinds are polarized in
 System \Fixi. For instance, $F: p* -> *$ is a type constructor that expects
@@ -29,6 +33,7 @@ which satisfies the desired properties of a functor.
 We can generalizes the concept of ``being a functor''
 to type constructors of arbitrary kinds, and such
 type constructors are called \emph{monotone}.
+\index{monotonicity!witness}
 A \emph{monotonicity witness} is a generalization of $\textit{fmap}_F$,
 which witnesses $F$ being a functor, and its type is called \emph{monotonicity},
 denoted by $\textit{mon}_{\kappa}F$. For example, monotonicity for $F$
@@ -68,14 +73,21 @@ on its first argument, which is the recursive argument.
 We discussed that $\textit{mon}_{p* -> *}F$ is sufficient
 for the embedding of \McvPr\ over non-truly nested datatypes,
 such as powerlists.
+\index{powerlist}
 
 The latter, $\textit{mon}_{p* -> *}F$, requires $F$ to be monotone
 on both arguments (\ie, both the recursive argument and the index argument).
+\index{truly nested datatype}
+\index{datatype!nested}
+\index{bush}
 We discussed that we need this stronger notion of monotonicity
 to embed \McvPr\ over truly nested datatypes, such as bushes,
 whose index involves the recursive argument in its definition.
 
 \subsection*{Future work on deriving monotonicity from polarized kinds.}
+\index{monotonicity}
+\index{polarized kind}
+\index{kind!polarized}
 According to the embedding of $\McvPr_\kappa$ in \S\ref{sec:fixi:cv},
 one needs to witness monotonicity of $F$ to ensure that $\McvPr_\kappa$
 always terminates for $(\mu_\kappa F)$-values. That is, one must show
@@ -105,6 +117,8 @@ for any $F:+(+* -> *) -> (+* -> *)$. Proofs for such conjectures
 at higher kinds are also future work.
 
 \section{Kind polymorphism and kind inference}\label{sec:futwork:kindpoly}
+\index{kind polymorphism}
+\index{kind inference}
 We support rank-1 polymorphism at kind level in our Nax implementation.
 (\eg, \textit{Path} in Figure~\ref{fig:glist} on p\pageref{fig:glist},
       \textit{Env} in Figure~\ref{fig:env} on p\pageref{fig:env}).
@@ -125,13 +139,15 @@ the kind annotation in $\In$, because $\In$ is always followed by a term,
 $\In t$, and we can infer the type of $t$, and we might have
 enough information to infer the kind for $\In$.
 
+\index{kind inference}
+\index{fixpoint derivation}
 We are also working on a new implementation of Nax with better syntax
 that support better kind inference and non-ambiguous fixpoint derivation.
 In our new implementation, the kind is inferred for $\mu$ without
 any annotation. We have not found a good way to completely infer the kind
-for $\In$, but we found out that it is enough to specify the arith of the kind.
+for $\In$, but we found out that it is enough to specify the arity of the kind.
 That is, write $\In_n$ instead of $\In_{[\kappa]}$ where $n$ is the arity of
-$\kappa$. For example, in the new syntax we write $\In_3$ instead of
+$\kappa$. For example, in the new syntax, we write $\In_3$ instead of
 $\In_{[* -> * -> * -> *]}$, $\In_{[* -> (* -> *) -> * -> *]}$, or
 $\In_{[* -> \{\texttt{Nat}\} -> * -> *]}$, which is much more succinct,
 especially for larger arities. Another change to the syntax is on
@@ -141,8 +157,11 @@ to derive fixpoint of $F$. For example, when $F : (* -> *) -> * -> *$,
 we can either take fixpoint of $\mu F : * -> *$, or $\mu (F\;t) : *$
 for some $t : *$. In the current syntax, we simply choose the longest match,
 that is $\mu F : * -> *$. In the new syntax, we change the datatype declaration
-syntax, similar to the syntax of Agda's, to clearly distinguish parameter
-arguments from index arguments. For instance,
+syntax, similar to the syntax of Agda's, to clearly distinguish
+parameter arguments from index arguments.
+\index{parameter}
+\index{index}
+For instance,
 ($\mathbf{data}\;F_1\;r: * -> * \;\mathbf{where} \cdots$) or
 ($\mathbf{data}\;F_0\;t\;r: * \;\mathbf{where} \cdots$), where
 parameter arguments ($t$, $r$) appear on the left of the colon ($:$).

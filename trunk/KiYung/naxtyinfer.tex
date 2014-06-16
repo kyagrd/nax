@@ -10,7 +10,13 @@ the properties of HM that the same property should hold for
 a small subset of Nax, which is structurally similar to HM.
 Then, we will argue that some key new features in Nax, which are
 not present in HM preserves those properties.
+\index{Hindley--Milner}
+\index{type inference}
 
+\index{index transformer}
+\index{pattern matching}
+\index{indexed datatype}
+\index{datatype!indexed}
 The \emph{index transformers}, which are type annotations on
 the pattern matching constructs, plays a key role in inferring types for
 Nax programs involving indexed datatypes. We introduce a small subset of Nax,
@@ -186,6 +192,8 @@ and GADTs (\S\ref{sec:naxTyInfer:gadt}).
 \end{figure}
 
 \paragraph{Declarative typing rules and syntax-directed typing rules.}
+\index{typing rules!declarative}
+\index{typing rules!syntax-directed}
 The typing rules of SmallNax (Figure\;\ref{fig:SmallNax}),
 excluding the rules for datatypes (\rulename{Con}, \rulename{Case},
 \rulename{Alt} in the declarative rules and their corresponding

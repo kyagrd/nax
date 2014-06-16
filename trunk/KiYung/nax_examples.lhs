@@ -5,7 +5,9 @@ In this section, we introduce three examples
 (Figures\;\ref{fig:eval} and \ref{fig:evalCont},
  Figures\;\ref{fig:glist} and \ref{fig:glistCont}, and
  Figures\;\ref{fig:compile} and \ref{fig:compileCont})
-that use term indexed datatypes to enforce program invariants.
+that use term-indexed datatypes to enforce program invariants.
+\index{term-indexed datatype}
+\index{datatype!term-indexed}
 Each example is written in three different languages
 -- like the Rosetta Stone -- Haskell, Nax,  and Agda.
 We have crafted these programs to look as similar as possible,
@@ -231,7 +233,7 @@ In Agda, there is no need to define wrapper datatypes like |Elem| and |ElemV|
 since type level functions are no different from term level functions.
 
 
-\subsection{Stack safe compiler for the expression language}
+\subsection{Stack-safe compiler for the expression language}
 \label{ssec:compile}
 
 \begin{figure}

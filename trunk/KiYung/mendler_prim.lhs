@@ -24,6 +24,8 @@ through primitive recursion (|mprim|) and course-of-values iteration (|mhist|),
 to course-of-values recursion (|mcvpr|).
 We saw |mcata| and |mhist| in the previous sections.
 
+\index{abstract recursive type}
+\index{abstract operation!cast}
 The Mendler-style primitive recursion family (|mprim|), when
 compared to the |mcata| family, has an additional
 abstract operation, which we call |cast|.
@@ -61,6 +63,7 @@ $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \end{figure}
 
 \index{predecessor}
+\index{non-recursive function}
 The primitive recursion family also enables programmers to define
 non-recursive functions, such as a constant time predecessor for
 natural numbers (Figure \ref{fig:constpred}) and a constant time
