@@ -25,7 +25,7 @@ ps: main.ps
 dvi: main.dvi
 
 drop: main.pdf
-	cp $< ~/Dropbox/Public/thesis/draft`date +%Y%M%d`.pdf
+	cp $< ~/Dropbox/Public/thesis/Nax_KiYungAhn_thesis_draft.pdf
 
 ## main.tex: ${LHSSRC}
 ## 	lhs2TeX --poly -v -o main.tex main.lhs

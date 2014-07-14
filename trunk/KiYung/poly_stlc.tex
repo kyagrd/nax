@@ -124,11 +124,11 @@ one must extend the term syntax by providing normal terms (or, constants) for
 those ground types (\eg, \textsf{true} and \textsf{false} for booleans) and
 eliminators (\eg, if-then-else expression for booleans) that can examine
 the normal terms. Later on, we shall see that polymorphic type systems
-such as System \F\ (\S\ref{sec:f}) and \Fw\ (\S\ref{sec:fw}) are expressive
-enough to encode those ground types without introducing them as primitive
-constructs of the calculi. Having just the void type as a ground type
-is enough to motivate polymorphic type systems, without complicating
-the term syntax of the STLC.
+such as System \F\ (\S\ref{sec:f}) and System \Fw\ (\S\ref{sec:fw}) are
+expressive enough to encode those ground types without introducing them
+as primitive constructs of the calculi. Having just the void type as
+a ground type is enough to motivate polymorphic type systems, without
+complicating the term syntax of the STLC.
 
 Typing rules are the rules to derive (or prove) typing judgments.
 A typing judgment $\Gamma |- t : A$ means that the term $t$ has type $A$
@@ -238,7 +238,7 @@ the notation used in the paper by \citet{AbeMat04}, which includes
 a strong normalization proof for an extension of \Fw\ using saturated sets.
 
 The strong normalization proofs for System \F\ (\S\ref{sec:f}) and
-\Fw\ (\S\ref{sec:fw}) in this chapter 
+System \Fw\ (\S\ref{sec:fw}) in this chapter 
 are also based on this strategy using saturated sets. As the languages
 increase in complexity, we gradually
 increase the complexity of the interpretation of types in those systems.
