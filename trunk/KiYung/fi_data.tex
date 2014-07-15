@@ -175,7 +175,6 @@ not expect logical consistency in such systems.
 newtype $\mu_{*}$ (f :: * -> *) = In$_{*}$ (f ($\mu_{*}$ f))
 
 data ListF (a::*) (r::*) = Cons a r | Nil
-
 type List a = $\mu_{*}$ (ListF a)
 cons x xs = In$_{*}$ (Cons x xs)
 nil       = In$_{*}$ Nil
@@ -187,7 +186,6 @@ newtype $\mu_{(*-> *)}$ (f :: (*->*) -> (*->*)) (a::*)
   = In$_{(*-> *)}$ (f (Mu$_{(*-> *)}$ f)) a
 
 data PowlF (r::*->*) (a::*) = PCons a (r(a,a)) | PNil
-
 type Powl a = $\mu_{(*-> *)}$ PowlF a
 pcons x xs = In$_{(*-> *)}$ (PCons x xs)
 pnil       = In$_{(*-> *)}$ PNil
@@ -205,7 +203,6 @@ newtype $\mu_{(\mathtt{Nat}-> *)}$ (f::(Nat->*)->(Nat->*)) {n::Nat}
 data VecF (a::*) (r::Nat->*) {n::Nat} where
   VCons :: a -> r n -> VecF a r {S n}
   VNil  :: VecF a r {Z}
-
 type Vec a {n::Nat} = $\mu_{(\mathtt{Nat}-> *)}$ (VecF a) {n}
 vcons x xs = In$_{(\mathtt{Nat}-> *)}$ (VCons x xs)
 vnil       = In$_{(\mathtt{Nat}-> *)}$ VNil
@@ -248,25 +245,31 @@ and course-of-values recursion.
 \begin{landscape}
 \begin{figure}
 \begin{singlespace}
-\begin{multline*} \text{notation:}\quad
-   \boldsymbol{\l}\mathbb{I}^\kappa.F =
-	\lambda I_1^{K_1}.\cdots.\lambda I_n^{K_n}.F \qquad
-   \boldsymbol{\forall}\mathbb{I}^\kappa.B =
-	\forall I_1^{K_1}.\cdots.\forall I_n^{K_n}.B \qquad
-   F\mathbb{I} = F I_1 \cdots I_n \qquad
-   F \stackrel{\kappa}{\pmb{\pmb{->}}} G =
+\begin{align*}
+\text{notation:}\qquad
+	& \boldsymbol{\l}\mathbb{I}^\kappa.F =
+ 	\lambda I_1^{K_1}.\cdots.\lambda I_n^{K_n}.F
+	\qquad\qquad
+	F\mathbb{I} = F I_1 \cdots I_n \\
+	& \boldsymbol{\forall}\mathbb{I}^\kappa.B =
+ 	\forall I_1^{K_1}.\cdots.\forall I_n^{K_n}.B
+	\qquad\qquad
+	F \stackrel{\kappa}{\pmb{\pmb{->}}} G =
 	\boldsymbol{\forall}\mathbb{I}^\kappa.F\mathbb{I} -> G\mathbb{I} \\
-\begin{array}{lll}
 \text{where}
- 	& \kappa = K_1 -> \cdots -> K_n -> * & \text{and} ~~~
+\end{align*}
+\vspace*{-2em}
+\[\quad
+\begin{array}{lll}
+ 	& \kappa = K_1 -> \cdots -> K_n -> * & \text{and} ~~
  	\text{$I_i$ is an index variable ($i_i$) when $K_i$ is a type,}
  		\\
  	& \mathbb{I}\,=I_1,\;\dots\;\dots\;,\;I_n& \qquad~\qquad
  	\text{a type constructor variable ($X_i$) otherwise
 		(\ie, $K_i=\kappa_i$).}
 \end{array}
-\end{multline*} ~ \vspace*{-5pt}
-\hrule  \vspace*{-2pt}
+\]
+\line(1,0){570}
 \begin{align*}
 &\mu_\kappa &\!\!\!\!\!~:~~& (\kappa -> \kappa) -> \kappa
   \qquad\qquad\qquad\qquad\quad
@@ -276,7 +279,7 @@ and course-of-values recursion.
   	(X_r \karrow{\kappa} X) ->
 	(F X_r \karrow{\kappa} X)) -> X\mathbb{I} \\
 &\mu_{*} &\!\!\!\!\!~:~~& (* -> *) -> * 
- \qquad\qquad\qquad\qquad\quad~
+ \qquad\qquad\qquad\qquad\quad\,
  = \l F^{* -> *}.\phantom{\boldsymbol{\l}\mathbb{I}^\kappa.}
  \forall X^{*}.(\forall {X_r}^{\!\!*}.(X_r -> X) -> (F\,X_r -> X)) -> X \\
 &\mu_{*-> *} &\!\!\!\!\!~:~~& ((* -> *) -> (* -> *)) -> (* -> *) \\
@@ -294,7 +297,7 @@ and course-of-values recursion.
 \mathtt{In}_{\kappa} \,~\,&~~:~ \forall F^{\kappa-> \kappa}.
 	F(\mu_\kappa F) \karrow{\kappa} \mu_\kappa F
 &&=~ \l x_r. \l x_\varphi.x_\varphi\,(\mathtt{mit}_\kappa~x_\varphi)\,x_r
-	\qquad~\qquad~\qquad~\qquad~\quad \\
+	\\
 \mathtt{mit}_\kappa &~~:~ \forall F^{\kappa-> \kappa}.\forall X^\kappa.
 	(\forall {X_r}^{\!\!\kappa}.
 	 (X_r \karrow{\kappa} X) ->
@@ -304,8 +307,8 @@ and course-of-values recursion.
 \end{align*} ~ \vspace*{-10pt}
 \end{singlespace}
 \caption{Embedding of the recursive operators ($\mu_\kappa$),
-	their data constructors ($\mathtt{In}_\kappa$),
-	and the Mendler-style iterators ($\mathtt{mit}_\kappa$) in \Fi.}
+	their data constructors ($\mathtt{In}_\kappa$), and\\
+	the Mendler-style iterators ($\mathtt{mit}_\kappa$) in \Fi.}
 \label{fig:mu}
 \end{figure}
 \end{landscape}

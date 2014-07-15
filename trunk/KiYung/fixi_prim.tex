@@ -55,25 +55,30 @@ well-typed.
 \begin{landscape}
 \begin{figure}
 \begin{singlespace}
-\begin{multline*} \text{notation:}\quad
-   \boldsymbol{\l}\mathbb{I}^\kappa.F =
-	\lambda I_1^{K_1}.\cdots.\lambda I_n^{K_n}.F \qquad
-   \boldsymbol{\forall}\mathbb{I}^\kappa.B =
-	\forall I_1^{K_1}.\cdots.\forall I_n^{K_n}.B \qquad
-   F\mathbb{I} = F I_1 \cdots I_n \qquad
-   F \stackrel{\kappa}{\pmb{\pmb{->}}} G =
+\begin{align*} \text{notation:}\qquad
+	& \boldsymbol{\l}\mathbb{I}^\kappa.F =
+	\lambda I_1^{K_1}.\cdots.\lambda I_n^{K_n}.F
+	\qquad\qquad
+	F\mathbb{I} = F I_1 \cdots I_n \qquad \\
+	& \boldsymbol{\forall}\mathbb{I}^\kappa.B =
+	\forall I_1^{K_1}.\cdots.\forall I_n^{K_n}.B
+	\qquad\qquad
+	F \stackrel{\kappa}{\pmb{\pmb{->}}} G =
 	\boldsymbol{\forall}\mathbb{I}^\kappa.F\mathbb{I} -> G\mathbb{I} \\
-\begin{array}{lll}
 \text{where}
- 	& \kappa = K_1 -> \cdots -> K_n -> * & \text{and} ~~~
+\end{align*}
+\vspace*{-2em}
+\[\qquad\qquad
+\begin{array}{lll}
+ 	& \kappa = K_1 -> \cdots -> K_n -> * & \text{and} ~~
  	\text{$I_i$ is an index variable ($i_i$) when $K_i$ is a type,}
  		\\
  	& \mathbb{I}\,=I_1,\;\dots\;\dots\;,\;I_n& \qquad~\qquad
 		\text{a type constructor variable ($X_i$) otherwise
 			(\ie, $K_n=p_i\kappa_i$).}
 \end{array}
-\end{multline*} ~ \vspace*{-5pt}
-\hrule  \vspace*{-2pt}
+\]
+\line(1,0){590}
 \begin{align*}
 \mu_\kappa &\;:~ 0(0\kappa -> \kappa) -> \kappa \\
 \mu_\kappa &\triangleq
@@ -102,13 +107,13 @@ well-typed.
 \end{align*}
 \end{singlespace}
 \caption{Embedding of the recursive type operators ($\mu_\kappa$),
-	their data constructors ($\In_\kappa$),
-	and the Mendler-style primitive recursors ($\MPr_\kappa$) in \Fixi.}
+	their data constructors ($\In_\kappa$), and\\
+	the Mendler-style primitive recursors ($\MPr_\kappa$) in \Fixi.}
 \label{fig:embedMPr}
 \end{figure}
 
 \begin{figure}
-\begin{singlespace}
+\begin{singlespace}\small
 \[
 \text{The type of $r$ can be expanded by the defintion of $\fix$
 	and the equi-recursive equality rule on $\fix$ as follows:}\]
@@ -161,7 +166,7 @@ well-typed.
 \end{figure}
 
 \begin{figure}
-\begin{singlespace}~\qquad
+\begin{singlespace}\small~\qquad
 Let ~ $\Delta =
 	X_{\!F}^{0(0\kappa-> \kappa)}, \mathbb{I}^\kappa,
 	X^{0\kappa}$ ~ and ~

@@ -3,6 +3,7 @@
 %include mendler/Fac.lhs
 \afterpage{
 \begin{landscape}
+\begin{singlespace}
 \begin{figure}
 $\!\!\!\!\!\!\!\!\!$\mprimDef
 \caption[The Mendler-style primitive recursion and
@@ -12,6 +13,7 @@ $\!\!\!\!\!\!\!\!\!$\mprimDef
           at kinds $*$ and $* -> *$, in comparison with |mcata| and |mhist|.}
 \label{fig:mprim}
 \end{figure}
+\end{singlespace}
 \end{landscape}
 }
 \section{Mendler-style primitive recursion (|mprim|)} \label{sec:mpr}

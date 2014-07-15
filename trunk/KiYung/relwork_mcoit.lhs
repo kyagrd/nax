@@ -14,7 +14,7 @@ import Prelude hiding (head, tail, pred, succ, take)
 \index{co-data}
 Data structures have a natural dual, often called co-data.
 Data is characterized by how it is constructed, and co-data is
-characterized by how it is observed (destructed).
+characterized by how it is observed (i.e., destructed).
 
 Mendler-style recursion schemes generalize (or, dualize) naturally to co-data.
 We call these generalizations Mendler-style co-recursion schemes.
@@ -71,6 +71,7 @@ and second taking the fixpoint with the type operator |Mu0|:
 \begin{code}
 data N r = Zero | Succ r
 type Nat = Mu0 N
+
 zero    = In0 Zero
 succ n  = In0 (Succ n)
 \end{code}
@@ -79,11 +80,12 @@ succ n  = In0 (Succ n)
 \begin{code}
 data L a r = Nil | Cons a r
 type List a = Mu0 (L a)
+
 nil        = In0 Nil
 cons x xs  = In0 (Cons x xs)
 \end{code}
 \end{minipage}
-\end{singlespace}\vspace*{2mm}
+\end{singlespace}\vspace*{2.2mm}
 \noindent
 The constructor functions |zero|, |succ|, |nil|, |cons| are
 ordinary definitions defined in terms of |In0|.
@@ -113,6 +115,7 @@ as follows:
 \begin{code}
 data StreamF a r = SCons a r
 type Stream a = Nu0 (StreamF a)
+
 head  s = case (out0 s) of SCons h _  -> h
 tail  s = case (out0 s) of SCons _ t  -> t
 \end{code}
@@ -123,14 +126,15 @@ Note that we can define destructor functions for streams,
 pattern matching, since we can freely use |out0 :: Nu0 f -> f (Nu0 f)|.
 
 However, without the help of a Mendler-style co-recursion scheme, one cannot
-define a constructor function, such as |scons :: a -> Stream a -> Stream a|,
+define a constructor function, such as
+|scons{-"\,"-} :: {-"\,"-}a -> Stream a -> Stream a|,
 that builds up a new stream from an element and an existing stream. One must
 use Mendler-style co-recursion schemes to construct co-recursive values.
 This limitation flows from the restriction we place on the use of |UnOut0|.
 We can pattern match against a value |(UnOut0 x)| (or freely use
-the function |out0|), but we cannot use |UnOut0| to construct co-data.
+the function |out0|), but we cannot freely use |UnOut0| to construct co-data.
 The last step of constructing co-data (applying |UnOut0|) must be done by
-a Mendler-style co-recursion scheme. Just as the first step of eliminating data
+a Mendler-style co-recursion scheme, just as the first step of eliminating data
 (stripping off |In0|) must be done by a Mendler-style recursion scheme.
 
 As an example of constructing a |Stream|, we define
@@ -139,8 +143,8 @@ builds up a stream starting from a given natural number |n|
 where each element is followed by its successor, as follows:
 \begin{singlespace}
 \begin{code}
-upfrom n = mcoit0 phi n where
-  phi upfrm n = SCons n (upfrm (succ n))
+upfrom n =  mcoit0 phi n where
+              phi upfrm n = SCons n (upfrm (succ n))
 \end{code}
 \end{singlespace}\noindent
 For instance, |upfrom zero| is a stream of all the natural numbers,
@@ -205,8 +209,8 @@ we discussed: no general recursion except to define the (co-)\footnote{
         A word prefixed by `(co-)' refers to the words
         both with and without `(co-)'. That is, (co-)iteration
         refers to both iteration and co-iteration.}fixpoint operators
-themselves (|Mu0|, |Nu0|) and their (co-)recursion schemes (|mit0|,|mcoit0|).
-We also restrict the use of |unIn0| and |unOut0| as described.
+themselves (|Mu0|, |Nu0|) and their (co-)recursion schemes (|mit0|, |mcoit0|).
+We also restrict the use of |unIn0| and |UnOut0| as described.
 
 \citet{matthes98phd} extended System~\F\ with Mendler-style (co-)iteration
 and primitive (co-)recursion, and studied their properties. 
@@ -215,8 +219,9 @@ Mendler-style (co-)iteration into System~\Fw.
 \index{reduction preserving}
 \citet{AbeMat04} discovered a reduction preserving embedding
 of Mendler-style primitive recursion into \Fixw. They mention that
-an embedding of primitive co-recursion is similarly possible (although
-they did not give the embedding in the paper due to space restrictions).
+an embedding of primitive co-recursion is similarly possible.
+%% (although
+%% they did not give the embedding in the paper due to space restrictions).
 
 \citet{UusVen11,UusVen99,UusVen99histo} studied Mendler-style recursion
 schemes in a categorical setting, while the works mentioned in the paragraph

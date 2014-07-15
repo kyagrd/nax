@@ -26,8 +26,8 @@ copy (CV x xs)  = CV x (copy xs)
 switch2 :: Vec p i -> Vec p i
 switch2  NV          =   NV
 switch2  (CV x xs)   =
-          case xs of
-            NV       ->  CV x NV
-            CV y ys  ->  CV y (CV x (switch2 ys))
+  case xs of
+    NV       -> CV x NV
+    CV y ys  -> CV y (CV x (switch2 ys))
 \end{code}
 

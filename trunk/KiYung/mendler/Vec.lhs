@@ -28,9 +28,9 @@ switch2 :: Vec p i -> Vec p i
 switch2 = mhist1 phi where
   phi  ::  (forall i . r i -> V p r i) ->
            (forall i . r i -> Vec p i) -> V p r i -> Vec p i
-  phi out sw2  NV          =   nilv
-  phi out sw2  (CV x xs)   =
-                case out xs of
-                  NV       ->  consv x nilv
-                  CV y ys  ->  consv y (consv x (sw2 ys))
+  phi out sw2 NV          =   nilv
+  phi out sw2 (CV x xs)   =
+       case out xs of
+         NV       -> consv x nilv
+         CV y ys  -> consv y (consv x (sw2 ys))
 \end{code}

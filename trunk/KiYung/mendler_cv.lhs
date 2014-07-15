@@ -210,6 +210,15 @@ parameter of the base datatype (\eg, |r| in |TBase r|), it prevents an
 embedded function with a negative occurrence from flowing into any
 outside terms (especially terms embedding that function).
 
+\begin{figure}
+%include mendler/LoopHisto.lhs
+\caption{An example of a total function |lenFoo|
+         over a negative datatype |Foo| defined with |mcata0|,
+     and a counterexample |loopFoo| illustrating that |mhist0|
+         can diverge for negative datatypes.}
+\label{fig:LoopHisto}
+\end{figure}
+
 Given these restrictions, the astute reader may ask, are types with
 embedded function with negative occurrences good for anything at all?
 Can we ever call such functions?  A simple example which uses an
@@ -226,17 +235,9 @@ The intuition behind the termination of |mcata0| for this negative datatype
 |Foo| is similar to the intuition for positive datatypes.  The embedded function
 |f::r->r| can only apply to the direct subcomponent of its parent, or to its
 sibling, |xs| and its transformed values (\eg, |f xs|, |f (f xs)|, $\ldots$),
-but no larger values that contains |f| itself.  We illustrate a general proof
-on termination of |mcata0| in Figure \ref{fig:proof}. %% \S\ref{sec:proof}.
+but no larger values that contains |f| itself. In \S\ref{sec:proof}, we will
+illustrate a general proof on termination of |mcata0| (see Figure \ref{fig:proof}).
 
-\begin{figure}
-%include mendler/LoopHisto.lhs
-\caption{An example of a total function |lenFoo|
-         over a negative datatype |Foo| defined with |mcata0|,
-     and a counterexample |loopFoo| illustrating that |mhist0|
-         can diverge for negative datatypes.}
-\label{fig:LoopHisto}
-\end{figure}
 \index{counterexample!Mendler-style course-of-values iteration}
 \index{Mendler-style!course-of-values iteration}
 While all functions written in terms of |mcata0| are total, the

@@ -53,7 +53,7 @@ In \Fi, we expect such variables to be statically bound. Dynamically bound
 index variables would require a dependently typed calculus, such as
 the calculus of constructions. To reflect this design choice,
 typing contexts are separated into type level contexts ($\Delta$) and
-term level contexts ($\Gamma$). Type level (static) variables ($X$ , $i$) are
+term level contexts ($\Gamma$). Type level (static) variables ($X$, $i$) are
 bound in $\Delta$ and term (dynamic) variables ($x$) are bound in $\Gamma$.
 Type level variables are either type constructor variables ($X$) or
 term variables to be used as indices ($i$). As a notational convention,
@@ -85,7 +85,7 @@ should have no effect on reduction at the term level.
 Although it is imaginable to formalize \Fi\ with a single typing context
 and distinguish index variables from ordinary term variables using
 more general concepts (\eg, capability, modality), we think that splitting
-the typing context into two parts is the simplest solution.
+the typing context into two parts is the simplest solution for our purposes.
 
 \begin{figure}\begin{singlespace}
 	\small
@@ -409,8 +409,8 @@ well-sorted, or (3) extended by an index binding $i^A$ whose type $A$ is
 well-kinded under the empty type level context at kind $*$.
 This restriction is similar to the one that occurs in the sorting rule ($Ri$)
 for term-indexed arrow kinds (see the paragraph {\bf\textit{Sorting}}).
-The consequence of this is that, in typing contexts and in sorts,
-$A$ must be a closed type (not a type constructor!) without free variables.
+The consequence of this is that, in typing contexts and in sorts, $A$ must be
+a closed type (i.e. nullary type constructor) without free variables.
 
 A term level context $\Gamma$ is well-formed under a type level context
 $\Delta$ when it is either empty or extended by a term variable binding
@@ -430,7 +430,7 @@ extension, $i^A$, in the kinding rule ($\lambda i$).
 \newFi{F\,\{s\}} is the type level index application. In contrast to
 the ordinary type level application ($F\,G$) where the argument ($G$) is
 a type constructor, the argument of an index application ($F\,\{s\}$) is
-a term ($s$). We use the curly bracket notation around an index argument in a type to
+a term ($s$). We use the curly brace notation around an index argument in a type to
 emphasize the transition from ordinary type to term, and to emphasize
 that $s$ is an index term, which is erasable. Index applications eliminate
 indexed arrow kinds by the kinding rule \newFi{(@i)}. Note, we type check
@@ -447,12 +447,12 @@ the formation rule ($\forall$) for ordinary polymorphic types.
 In addition to the rules ($\lambda i$), ($@ i$), and ($\forall i$),
 we need a conversion rule \newFi{(Conv)} at kind level. This is because
 the new extension to the kind syntax $A -> \kappa$ involves types.
-Since kind syntax involves types, we need more than simple structural
-equality over kinds. The new equality over kinds is the usual structural equality
-extended by type constructor equality when comparing indexed arrow kinds
-(see \Fig{eqFi}).
+Since kind syntax involves types, we need more than a simple
+structural equality over kinds. The new equality over kinds is
+the usual structural equality extended by the type constructor equality
+when comparing indexed arrow kinds (see \Fig{eqFi}).
 
-\paragraph{Terms and their typing rules}
+\paragraph{Terms and their typing rules.}
 The term syntax is exactly the same as other Curry-style calculi.
 We write $x$ for ordinary term variables introduced by
 term level abstractions ($\lambda x.t$).

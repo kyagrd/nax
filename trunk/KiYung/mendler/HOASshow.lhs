@@ -19,9 +19,10 @@ vars = [ [i] | i <- ['a'..'z'] ] ++ [ i:show j | j<-[1..], i<-['a'..'z'] ] :: [S
 data Exp_g = Lam_g (Exp_g -> Exp_g) | App_g Exp_g Exp_g | Var_g String
 
 showExp_g :: Exp_g -> String
-showExp_g e = show' e vars where  show' (App_g x y)  = \vs      -> "("++ show' x vs ++" "++ show' y vs ++")"
-                                  show' (Lam_g z)    = \(v:vs)  -> "(\\"++v++"->"++ show' (z (Var_g v)) vs ++")"
-                                  show' (Var_g v)    = \vs      -> v
+showExp_g e = show' e vars
+  where  show' (App_g x y)  = \vs      -> "("++ show' x vs ++" "++ show' y vs ++")"
+         show' (Lam_g z)    = \(v:vs)  -> "(\\"++v++"->"++ show' (z (Var_g v)) vs ++")"
+         show' (Var_g v)    = \vs      -> v
 \end{code}
 }
 %format ExpF_m = ExpF"\!_m"
@@ -60,10 +61,10 @@ lam e    = Roll0 (Lam e)
 app f e  = Roll0 (App f e)
 
 showExp :: Exp -> String
-showExp e = msfcata0  phi e vars where
-                       phi :: (([String] -> String) -> r) -> (r -> ([String] -> String)) -> ExpF r -> ([String] -> String)
-                       phi inv show' (App x y)  = \vs      -> "("++ show' x vs ++" "++ show' y vs ++")"
-                       phi inv show' (Lam z)    = \(v:vs)  -> "(\\"++v++"->"++ show' (z (inv (const v))) vs ++")"
+showExp e = msfcata0  phi e vars
+  where  phi :: (([String] -> String) -> r) -> (r -> ([String] -> String)) -> ExpF r -> ([String] -> String)
+         phi inv show' (App x y)  = \vs      -> "("++ show' x vs ++" "++ show' y vs ++")"
+         phi inv show' (Lam z)    = \(v:vs)  -> "(\\"++v++"->"++ show' (z (inv (const v))) vs ++")"
 \end{code}
 }
 %format k_g = k"_g"

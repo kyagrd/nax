@@ -11,14 +11,16 @@
 %format f_E = f"_{"E"}"
 %format RetD = Ret"_{\!"D"}"
 %format RetE = Ret"_{\!"E"}"
+\begin{singlespace}
 \small
-$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
-\begin{minipage}{.7\textwidth}
+$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
+\begin{minipage}{.52\textwidth}
 %include mendler/MutRecG.lhs
 \end{minipage}
 \begin{minipage}{.4\textwidth}
 %include mendler/MutRec.lhs
 \end{minipage}
+\end{singlespace}
 \caption{Mutual recursion (|extend| and |eval| over |Dec| and |Exp|)
          expressed in terms of |mcata1| over an indexed datatype |DecExpF|}
 \label{fig:mutrec}

@@ -88,11 +88,11 @@ language constructs rather than functions, we believe this annoying burden
 could be lifted.
 
 \begin{figure*}\small
-$\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
-\begin{minipage}{.7\textwidth}
+$\!\!\!\!\!\!\!\!\!$
+\begin{minipage}{.5\textwidth}
 %include mendler/VecG.lhs
 \end{minipage}
-\begin{minipage}{.4\textwidth}
+\begin{minipage}{.43\textwidth}
 %include mendler/Vec.lhs
 \end{minipage}
 \caption{Recursion (|copy|) and course-of-values recursion (|switch2|)

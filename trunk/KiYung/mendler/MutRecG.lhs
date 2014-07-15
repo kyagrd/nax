@@ -26,13 +26,17 @@ data Exp  =  Var Name
 {-""-}
 
 {-""-}
-extend  :: Dec  -> Env -> Env
-extend (Def x e)  = \env -> (x, eval e env) : env
+extend :: Dec -> Env -> Env
+extend  (Def x e)  =
+        \env -> (x, eval e env) : env
 
-eval    :: Exp  -> Env -> Int
-eval (Var x)      = \env -> fromJust (lookup x env)
-eval (Val v)      = \env -> v
-eval (Add e1 e2)  = \env -> eval e1 env + eval e2 env
+eval :: Exp -> Env -> Int
+eval    (Var x)      =
+        \env -> fromJust (lookup x env)
+eval    (Val v)      =
+        \env -> v
+eval    (Add e1 e2)  =
+        \env -> eval e1 env + eval e2 env
 {-""-}
 
 {-""-}

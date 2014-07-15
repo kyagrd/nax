@@ -58,10 +58,12 @@ without getting in each other's way.
 \afterpage{
 \begin{landscape}
 \begin{figure*}
+\begin{singlespace}
 \ExpGFig
 %% \ExpMFig
 \ExpFig
 \varsDef
+\end{singlespace}
 \caption{|msfcata0| example: String formatting function for Higher-Order Abstract Syntax (HOAS)}
 \label{fig:HOASshow}
 \end{figure*}

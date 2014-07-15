@@ -189,7 +189,7 @@ more challenging to define |showExp|, as we shall see in \S\ref{sec:showHOAS}.}
 \begin{code}
 {-"\!\!\!\!\!\!\!\!"-}data Exp = Lam (Exp -> Exp) | App Exp Exp | Var String
 \end{code}\vspace*{-.7em}\\
-We can define a function |showExp :: Exp -> String| that formats
+We can define a function |showExp{-"~"-}:: Exp -> String| that formats
 an HOAS expression into a string.  For example,\vspace*{.3em}
 \begin{code}
 showExp (Lam (\x -> x))             ~> "(\a->a)"

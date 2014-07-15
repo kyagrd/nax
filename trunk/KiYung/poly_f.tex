@@ -8,7 +8,7 @@ System \F\ does not have a dedicated syntax for ground types, such as
 the void type $\iota$ in the STLC. In System \F, we can populate types
 from forall types such as $\forall X.X$. This type is, in fact,
 an encoding of the void type. We shall see that a large class of datatypes
-are encodable in System \F (\S\ref{sec:f:data})
+are encodable in System \F\ (\S\ref{sec:f:data})
 
 Unlike in the STLC, not all types constructed by the type syntax of System \F\
 make sense. Since we have type variables in System \F, we need to
@@ -28,7 +28,7 @@ shown separately in Figure \ref{fig:redf}.
 
 \begin{figure}
 \begin{singlespace}
-\begin{minipage}{.46\textwidth}
+\hspace{-2.5em}\begin{minipage}{.46\textwidth}
         \begin{center}Church style\end{center}
 \def\baselinestretch{0}
 \small
@@ -161,9 +161,9 @@ So, it is implicit in Curry style where types are generalized and instantiated.
 The differences in typing rules and reduction rules between the two styles
 follow from this difference in the term syntax.
 
-The typing rules \rulename{Var}, \rulename{Abs}, and \rulename{App} are
-pretty much the same as in the STLC except that we carry around the kinding context
-($\Delta$) along with the typing context ($\Gamma$). What is new in System \F\
+The typing rules \rulename{Var}, \rulename{Abs}, and \rulename{App} are pretty
+much the same as in the STLC except that we carry around the kinding context
+($\Delta$) along with the typing context ($\Gamma$). What are new in System \F\
 are the typing rules for type abstractions (\rulename{TyAbs}) and
 type applications (\rulename{TyApp}), which enable us to introduce
 forall types and instantiate forall types to a specific type.
@@ -189,7 +189,7 @@ the terms of the Curry-style STLC.
 \label{sec:f:data}
 System \F\ is  powerful enough to encode a fairly large class of datatypes
 within its type system. Encodings of well-known datatypes are listed in
-Table \ref{tbl:dataF}. In System \F, we can encode non-recursive datatypes
+Table \ref{tbl:dataF}. In System~\F, we can encode non-recursive datatypes
 that are either simply-typed (\eg, void, unit, and booleans)
 or parametrized (\eg, pairs and sums).
 More interestingly, we can also encode recursive datatypes
@@ -272,7 +272,14 @@ In System \F,
 these Church encoded terms can be well-typed by encoding the datatype
 as a polymorphic type of System \F, as illustrated in Table \ref{tbl:dataF}.
 Such encodings for datatypes are called impredicative encodings
-since it rely on the impredicative polymorphism of System \F.
+since it rely on the impredicative polymorphism\footnote{
+	In System \F, polymorphic type variables in a polymorphic type can be
+	instantiated with the same polymorpic type itself.
+	This self-referential property is called imrepdicativity.
+	For instance, $\forall X.X -> X$ can be instantiated to
+	$(\forall X.X -> X) -> (\forall X.X -> X)$ where $X$ is
+	instantiated with $\forall X.X -> X$,
+	} of System \F.
 
 Encodings of types, constructors, and eliminators for
 several well-known datatypes are listed in Table \ref{tbl:dataF}.
@@ -446,24 +453,25 @@ $ \inference{\Delta,X;\Gamma |- t : B  & \Delta |- A}
 \end{lemma}
 
 In Curry style, the most interesting case is the \rulename{RedBeta} rule,
-where we use the substitution lemma. The other rules just apply the
-induction hypothesis. There is a small complication
-in the proof, compared to the proof in Church style, since the typing rules
-are not syntax directed. Although we have fewer rules to consider than when
-typing the Church-style System \F. We need to deal with the ambiguity of which rule
-to apply to obtain a typing judgement. The ambiguity is due to the rules
-\rulename{TyAbs} and \rulename{TyApp}.
+where we use the substitution lemma. The other rules just apply
+the induction hypothesis. There is a small complication in the proof,
+compared to the proof in Church style, since the typing rules are
+not syntax directed. Although we have fewer rules to consider than
+the Church-style System \F, we need to deal with the ambiguity of
+which rule to apply to obtain a typing judgement. The ambiguity is
+due to the rules \rulename{TyAbs} and \rulename{TyApp}.
 
 An alternative way to prove subject reduction for the Curry-style System \F\ is
 by translating the subject reduction property of the Curry-style System \F\ into
-the subject reduction property of the Church-style System \F. That is, we extract
-a Church-style term from a typing derivation in Curry style. It is not
-difficult to see that each typing derivation in Curry style corresponds to
-a unique Church-style term, and, that a reduction step in Curry style
-corresponds to one or more reduction steps in Church style.\footnote{
-It is not always one step to one step since the reduction rules
-{\sc RedTyAbs} and {\sc RedTyApp} in Church style correspond to
-zero reduction step in Curry style.}
+the subject reduction property of the Church-style System \F. That is,
+we extract a Church-style term from a typing derivation in Curry style.
+It is not difficult to see that each typing derivation in Curry style
+corresponds to a unique Church-style term, and, that a reduction step
+in Curry style corresponds to one or more reduction steps
+in Church style.\footnote{
+	It is not always one step to one step since the reduction rules
+	{\sc RedTyAbs} and {\sc RedTyApp} in Church style correspond to
+	zero reduction step in Curry style.}
 
 \subsubsection*{Strong Normalization}
 \begin{figure}

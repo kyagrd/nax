@@ -40,11 +40,15 @@ proj_E  f = \x -> case f x of RetE  f_E  -> f_E
 extev :: Mu1 DecExpF i -> Ret i
 extev = mcata1 phi where
   phi :: (forall i . r i -> Ret i) -> DecExpF r i -> Ret i
-  phi f (Def x e)    = RetD  $ \env -> (x, ev e env) : env
+  phi f (Def x e)    =
+        RetD $ \env -> (x, ev e env) : env
                      where ev = proj_E f
-  phi f (Var x)      = RetE  $ \env -> fromJust (lookup x env)
-  phi f (Val v)      = RetE  $ \env -> v
-  phi f (Add e1 e2)  = RetE  $ \env -> ev e1 env + ev e2 env
+  phi f (Var x)      =
+        RetE $\env -> fromJust (lookup x env)
+  phi f (Val v)      =
+        RetE $\env -> v
+  phi f (Add e1 e2)  =
+        RetE $\env -> ev e1 env + ev e2 env
                      where ev = proj_E f
 
 extend  :: Dec  -> Env -> Env

@@ -58,7 +58,7 @@ msimit0 phi (In0 x1) (In0 x2) = phi (msimit0 phi) x1 x2
 \end{singlespace}
 \noindent
 This recursion scheme simplifies function definitions
-that simultaneously iterate over two recursive arguments.
+that simultaneously iterate over two arguments.
 For example, we can define |lessthan :: Nat -> Nat -> Nat|
 and |take :: Nat -> List a -> List a| as follows:
 \begin{singlespace}
@@ -89,11 +89,12 @@ a strongly normalizing typed lambda calculus.
 For both course-of-values iteration (\McvIt) and recursion (\McvPr),
 we have found conterexamples that nontermination is possible
 for negative datatypes. The example that \McvIt\ does not always terminate
-for negative datatypes can be found in Figure~\ref{fig:LoopHisto} in \S\ref{ssec:tourHist0},
-p\pageref{fig:LoopHisto}. We also showed that \McvPr\ can be embedded
-into \Fixi\ (or \Fixw) assuming monotonicity (\S\ref{sec:fixi:cv}).
+for negative datatypes can be found in Figure~\ref{fig:LoopHisto}
+in \S\ref{ssec:tourHist0}, p\pageref{fig:LoopHisto}.
+We also showed that \McvPr\ can be embedded into \Fixi\ (or \Fixw)
+assuming monotonicity (\S\ref{sec:fixi:cv}).
 
-One can imagine simultaneous recursion (|msimpr0|),
+One can imagine simultaneous primitive recursion (|msimpr0|),
 which has additional casting operations, as follows:
 \begin{singlespace}
 \begin{code}
@@ -104,35 +105,39 @@ msimpr0 :: (forall r1 r2  .   (r1 -> r2 -> a)      -- recursive call
 
 msimpr0 phi (In0 x1) (In0 x2) = phi (msimpr0 phi) id id x1 x2
 \end{code}
-\end{singlespace}\noindent
-Extending primitive recursion (|mprim0|), which as has only one casting operation,
-multiple casting operations are needed. One for 
-each of the recursive arguments.
-Here, we formulated |msimpr0| with two recursive arguments, so we have two
-casting operations, whose types are |(r1 -> Mu0 f1)| and |(r2 -> Mu0 f2)|.
+\end{singlespace}
+~\vspace{-1.5em}\\
+To extend primitive recursion (|mprim0|), which has has only
+one casting operation, into simultaneous primitive recursion,
+multiple casting operations are needed -- one for each of recursive arguments.
+Here, we formulated |msimpr0| with two recursive arguments. So, we have
+two casting operations, whose types are |(r1 -> Mu0 f1)| and |(r2 -> Mu0 f2)|.
 
 \subsection{Lexicographic recursion}
 \index{Mendler-style!lexicographic recursion}
 Some recursive functions over multiple recursive values
 justify termination because their arguments decrease at every recursive call
-under a lexicographic ordering.  Note that this different from
+under a lexicographic ordering.  Note that this is different from
 simultaneous iteration where each of the arguments decrease in
 every recursive call. In a lexicographic ordering, some arguments may
 either stay the same (in more significant positions) or even increase
-(in less significant positions) while the other arguments decrease.
+(in less significant positions) while another argument decreases.
 A typical example of lexicographic recursion is the Ackermann function,
 which we can define using general recursion in Haskell as follows:
 %format Nat_g = Nat"_g"
 %format Zero_g = Zero"_g"
 %format Succ_g = Succ"_g"
 %format acker_g = acker"_g"
+\begin{singlespace}
 \begin{code}
 data Nat_g = Zero_g | Succ_g Nat_g
 
 acker_g Zero_g      n           = Succ_g n
 acker_g (Succ_g m)  Zero_g      = Succ_g (acker_g m Zero_g)
 acker_g (Succ_g m)  (Succ_g n)  = acker_g m (acker_g (Succ_g m) n)
-\end{code}~\vspace*{-1.3em}\\
+\end{code}
+\end{singlespace}
+~\vspace*{-1.5em}\\
 Observe that the first argument is more significant than the second.
 In the third equation, the first argument |m| of the outer recursive call
 decreases (\ie, smaller than |(Succ_g m)|) while the second argument
@@ -151,6 +156,7 @@ The following Mendler-style recursion scheme captures the idea of
 lexicographic recursion over two arguments.
 %format mlexpr = "\textbf{mlexpr}"
 %format mlexpr0 = mlexpr"_{*,*}"
+\begin{singlespace}
 \begin{code}
 mlexpr0 :: (forall r1 r2  .   (r1 -> Mu0 f2 -> a)  -- outer recursive call
                           ->  (r2 -> a)            -- inner recursive call
@@ -159,9 +165,11 @@ mlexpr0 :: (forall r1 r2  .   (r1 -> Mu0 f2 -> a)  -- outer recursive call
                           ->  f1 r1 -> f2 r2 -> a) -> Mu0 f1 -> Mu0 f2 -> a
 
 mlexpr0 phi (In0 x1) (In0 x2) = phi (mlexpr0 phi) (mlexpr0 phi (In0 x1)) id id x1 x2 
-\end{code}~\vspace*{-1.3em}\\
+\end{code}
+\end{singlespace}
 \index{Mendler-style!lexicographic recursion}
-\index{abstract operation}
+\index{abstract operation}~\vspace*{-1.5em}\\
+\noindent
 The Mendler-style lexicographic recursion |mlexpr0| is similar to
 the Mendler-style simultaneous recursion |msimpr0| introduced
 in the previous section, but has two abstract operations for
@@ -175,14 +183,16 @@ to be a direct subcomponent by requiring its type to be |r2|.
 Since the inner call assumes that the first argument stays the same,
 the first argument is omitted. Using |mlexpr0|,
 we can define the Ackermann function as follows:
-
+\begin{singlespace}
 \begin{code}
 acker = mlexpr0 phi where
   phi ack ack' cast1 cast2 Zero      Zero      = succ zero
   phi ack ack' cast1 cast2 Zero      (Succ n)  = succ (succ (cast2 n))
   phi ack ack' cast1 cast2 (Succ m)  Zero      = succ (ack m zero)
   phi ack ack' cast1 cast2 (Succ m)  (Succ n)  = ack m (ack' n)
-\end{code}~\vspace*{-1.3em}\\ \indent
+\end{code}
+\end{singlespace}
+~\vspace*{-1.5em}\\ \indent
 The idea for |mlexpr0| originated in a conversation between Tarmo Uustalu
 and Tim Sheard at the TYPES 2013 workshop (not published anywhere else
 at the moment). We strongly believe that |mlexpr0| terminates for all
