@@ -374,14 +374,19 @@ its body can be used \emph{polymorphically}''.
 \subsection{Typing rules for Mendler-style recursion combinators}
 \label{sec:naxTyInfer:rec:rules}
 We design the typing rules for recursion combinators in SmallNax
-(Figure\;\ref{fig:SmallNaxRec}) based on a similar idea to
-what makes HM suitable for type inference. What makes SmallNax, including
-the \rulename{mit} rule, to be suitable for type inference is that
-the \emph{type parameters} of the recursive function argument are
+based on a similar idea to what makes HM suitable for type inference.
+We first discuss a simplified version (with less polymorphism) of
+the typing rule for \MIt\ in Figure\;\ref{fig:SmallNaxRec}. Then,
+we illustrate a more polymorphic version, which is actually used
+in the Nax implementation, in Figure\;\ref{fig:SmallNaxRecGen}.
+
+What makes SmallNax, including the \rulename{mit$'$} rule
+in Figure\;\ref{fig:SmallNaxRec}, to be suitable for type inference is
+that the \emph{type parameters} of the recursive function argument are
 \emph{monomorphic} whereas the \emph{type indices} are \emph{polymorphic}
-inside the body of the recursive function definition. Outside the body,
-the recursive function can be used polymorphically over both type parameters
-and type indices.
+inside the body of the recursive function definition.
+Outside the body, the recursive function can be used polymorphically over
+both type parameters and type indices.
 
 \begin{figure}
 \begin{singlespace}
@@ -399,7 +404,7 @@ $ \inference[\sc mu]{\Delta |- T\,\overline{G} : \kappa -> \kappa}{
 	\Delta |- \mu_\kappa (T\,\overline{G}) : \kappa}
 $ \\ ~ \\
 \textbf{Typing rules}
-\[ \inference[\sc mit]{
+\[ \inference[\sc mit$'$]{
 	\Delta,X_r^\kappa;
 	\Gamma,x:\forall\overline{X^{\kappa'}}.X_r\,\overline{X} -> \psi(\overline{X})
 	|- \varphi^\psi :
@@ -408,7 +413,8 @@ $ \\ ~ \\
 	\forall\overline{X^{\kappa'}}.\mu_\kappa F\,\overline{X} -> \psi(\overline{X}) }
 \]
 \end{singlespace}
-\caption{SmallNax extended with $\mu_\kappa$ and $\MIt_\kappa$}
+\caption{SmallNax extended with $\mu_\kappa$ and $\MIt_\kappa$,
+	using a simplified version of the inference rule for $\MIt_\kappa$}
 \label{fig:SmallNaxRec}
 \end{figure}
 
@@ -426,27 +432,27 @@ $s$ in SmallNax, for the same reason we relaxed the syntax of case expressions
 ($\varphi^\psi$) in SmallNax so that it could be used without
 the scrutinee ($s$) -- we do not need a separate rule for
 the application of Mendler-style iteration combinator.
-The kinding rule \rulename{mu} and the typing rule \rulename{mit} are
+The kinding rule \rulename{mu} and the typing rule \rulename{mit$'$} are
 admissible in System \Fw\ by the embedding of $\mu_\kappa$ and $\mit_\kappa$
 into System \Fw\ discussed in \S\ref{ssec:embedTwoLevel}.
 
-The rule \rulename{mit} is suitable for type inference.
+The rule \rulename{mit$'$} is suitable for type inference.
 Unlike the rule \rulename{Fix-p} in MM, which cannot always determine
 the type scheme ($\sigma$) of the general recursion ($\textbf{fix}\;x.t$),
-the rule \rulename{mit} unambiguously determines the type scheme
-($\forall\overline{X^{\kappa'}}.\mu_\kappa F\,\overline{X} -> \psi(\overline{X})$) of
-the Mendler-style iteration ($\MIt_\kappa\;x\;\varphi^\psi$) from
+the rule \rulename{mit$'$} unambiguously determines the type scheme
+($\forall\overline{X^{\kappa'}}.\mu_\kappa F\,\overline{X} -> \psi(\overline{X})$)
+of the Mendler-style iteration ($\MIt_\kappa\;x\;\varphi^\psi$) from
 the index transformer ($\psi$) -- the number and kinds of universally
 quantified variables ($\forall\overline{X^{\kappa'}}.\cdots$) in the type scheme
 must match with the number and kinds of the arguments to the index transformer.
-The rule \rulename{mit} uniquely determines the type scheme of
+The rule \rulename{mit$'$} uniquely determines the type scheme of
 the Mendler-style iteration, except $F$. The type constructor $F$
-in the rule \rulename{mit} is determined by the rules \rulename{Con},
+in the rule \rulename{mit$'$} is determined by the rules \rulename{Con},
 \rulename{Case}, and \rulename{Alt} in Figure\;\ref{fig:SmallNax}.
 
-We can formulate the syntax-directed counterpart of the rule \rulename{mit}
+We can formulate the syntax-directed counterpart of the rule \rulename{mit$'$}
 as follows:
-\[ \inference[\sc mit$_s$]{
+\[ \inference[\sc mit$'_s$]{
 	\Delta,X_r^\kappa;
 	\Gamma,x:\forall\overline{X^{\kappa'}}.X_r\,\overline{X} -> \psi(\overline{X})
 	|-s \varphi^\psi :
@@ -455,15 +461,51 @@ as follows:
 	\mu_\kappa F\,\overline{G} -> \psi(\overline{G}) }
 \]
 Note that the type $\mu_\kappa F\,\overline{G} -> \psi(\overline{G})$
-in \rulename{mit$_s$} is a generic instance of the type scheme
+in \rulename{mit$'_s$} is a generic instance of the type scheme
 $\forall\overline{X^{\kappa'}}.\mu_\kappa F\,\overline{X} -> \psi(\overline{X})$
-in \rulename{mit}.
-So, the relation between \rulename{mit} and \rulename{mit$_s$} are
+in \rulename{mit$'$}.
+So, the relation between \rulename{mit$'$} and \rulename{mit$'_s$} are
 similar to the relation between \rulename{Case} and \rulename{Case$_s$}.
-Therefore, the declarative typing rules including \rulename{mit$_s$}
+Therefore, the declarative typing rules including \rulename{mit$'_s$}
 is sound and complete with respect to the syntax-directed rules
-including \rulename{mit$_s$}, due to similar reasons why \rulename{Case$_s$}
+including \rulename{mit$'_s$}, due to similar reasons why \rulename{Case$_s$}
 is sound and complete with respect to \rulename{Case}.
+
+We need additional polymprhism in the typing rule for \MIt\ when we have free
+variables in the index transformer ($\psi(\overline{X})$), other than
+the indices ($\overline{X}$) of the argumnet type. For exmaple, consider
+the index transforemr $\{\{t\}\,.\,
+   \texttt{Code}\,\{\textit{ts}\}\,\{\texttt{`cons}\;t\;\textit{ts}\}\}$
+appearing in the definition of the stack-safe compiler (\textit{compile})
+in \S\ref{ssec:compile}. The free varaible (\textit{ts}) should be generalized
+as well as the index ($t$) to infer the type of the \textit{compile} function.
+The type scheme for recursive caller ($x$ in the typing rule for \MIt)
+should be fully genernalized, except for the part of the input type
+up to its parameters. That is, we should generalize both the indicies
+and the free variables of the index transformer. The idea described
+in this paragraph is summarized as the rule \rulename{mit}
+in Figure\;\ref{fig:SmallNaxRecGen}.
+
+\begin{figure}
+\begin{singlespace}
+\centering
+\[ \inference[\sc mit]{
+	\Delta,X_r^\kappa;
+	\Gamma,x:\forall\overline{X'^{\kappa'}}.X_r\,\overline{X} -> \psi(\overline{X})
+	|- \varphi^\psi :
+	\forall\overline{X'^{\kappa'}}.F\,X_r\,\overline{X} -> \psi(\overline{X})
+	}{ \Delta;\Gamma |- \MIt_\kappa\;x\;\varphi^\psi:
+	\forall\overline{X'^{\kappa'}}.\mu_\kappa F\,\overline{X} -> \psi(\overline{X}) }
+\]
+$\begin{array}{rl}
+\text{where}\!& \overline{X'} = \overline{X} \cup \FV(\psi(\overline{X}))
+				\setminus \dom(\Delta) \setminus \FV(\Gamma) \\
+\text{and}\!& \text{each $\kappa'$ is an appropriate kind for each $X'$}
+\end{array}$
+\end{singlespace}
+\caption{A more polymorphic version of the inference rule for $\MIt_\kappa$}
+\label{fig:SmallNaxRecGen}
+\end{figure}
 
 We only discussed Mendler-style iteration, but it is straightforward to
 formulate similar typing rules for other Mendler-style recursion schemes.

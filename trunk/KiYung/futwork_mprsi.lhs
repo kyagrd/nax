@@ -4,19 +4,17 @@
 	 Another Mendler-style recursion scheme for mixed-variant datatypes
 	\footnotemark{} }
 \footnotetext{
-	This section is an extended and revised version of
- 	our extended abstract (without the introduction section) in
-	the TYPES 2013 workshop. We also plan to submit a modified version of
-	this section as a part of the TYPES 2013 post-proceedings draft.}
+	This section is an extended and revised version of our extended abstract
+	(without the introduction section) in the TYPES 2013 workshop.}
 \label{sec:futwork:mprsi}
 
 
 In \S\ref{sec:msf}, we discussed Mendler-style iteration with
 a syntactic inverse, |msfcata|, which is particularly useful for
 defining functions over negative (or mixed-variant) datatypes.
+We demonstrated the usefulness of |msfcata| by defining functions over HOAS:
 \index{datatype!negative}
 \index{datatype!mixed-variant}
-We demonstrated the usefulness of |msfcata| by defining functions over HOAS:
 \begin{itemize}
 \item the string formatting function |showHOAS| for the untyped HOAS using |msfcata0|
 (Figure \ref{fig:HOASshow} on p\pageref{fig:HOASshow}) and
@@ -34,7 +32,7 @@ Mendler-style primitive recursion with a sized index.
 %format e1
 %format e2
 \begin{figure}
-\begin{singlespace}
+\begin{singlespace}\small
 %include mendler/HOASevalV.lhs
 \end{singlespace}
 \caption{Two evaluators for the simply-typed $\lambda$-calculus in HOAS.
@@ -81,22 +79,19 @@ we explain the design of |mprsi| step-by-step.
 Let us try to define |unVal| using |mprim1|, and see where it falls short.
 |mprim1| provides two abstract operations, |cast| and |call|, as you can
 see from its type sigaure:
-\begin{singlespace}
 \begin{code}
 mprim1 :: (forall r i.  (forall i. r i -> Mu1 f i)  -- cast
                     ->  (forall i. r i -> a i)      -- call
                     ->  (f r i -> a i)              ) -> Mu f i -> a i
-\end{code}~\vspace{-1em}
-\end{singlespace}
+\end{code}
 \noindent
 We attempt to define |unVal| using |mprim1| as follows:\vspace{.5em}
-\begin{singlespace}
 \begin{code}
 unVal :: Mu1 V (t1 -> t2) -> (Mu1 V t1 -> Mu1 V t2)
 unVal = mprim1 phi where
   phi cast call (VFun f) = ...
-\end{code}~\vspace{-1em}
-\end{singlespace}\noindent
+\end{code}
+\noindent
 Inside the |phi| function, we have a function |f :: (r t1 -> r t2)| over
 abstract recursive values. We need to cast |f| into a function over
 concrete recursive values |(Mu V t1 -> Mu V t2)|.
@@ -118,7 +113,6 @@ If we had an inverse of cast, |uncast :: (forall i. Mu f i -> r i)|, we can
 complete the definition of |unVal| by composing |uncast|, |f|, and |cast|.
 Observe that |(uncast . f . cast) :: (Mu1 V t1 -> Mu1 V t2)|. Thus, we can
 formulate |mprsi1| with a naive type signature as follows:
-\begin{singlespace}
 \begin{code}
 mprsi1 :: (forall r  i.  (forall i. r i -> Mu1 f i)  -- cast
                      ->  (forall i. Mu1 f i -> r i)  -- uncast
@@ -126,24 +120,21 @@ mprsi1 :: (forall r  i.  (forall i. r i -> Mu1 f i)  -- cast
                      ->  (f r i -> a i)              ) -> Mu f i -> a i
 
 mprsi1 phi (In1 x) = phi id id (mprsi1 phi) x
-\end{code}~\vspace{-1em}
-\end{singlespace}
+\end{code}
+\indent
 Although the type signature above is type correct, it is too powerful.
 The Mendler-style uses types to forbid, as ill-typed,
 non-terminating computations. Having both |cast| and |uncast| supports
 the same ability as freely pattern matching over recursive values,
-which as we showed in introduction can lead to non-termination.
-To recover the guarantee of termination, we need to restrict the use of
-either |cast| or |uncast|, or both.
+which can lead to non-termination. To recover the guarantee of termination,
+we need to restrict the use of either |cast| or |uncast|, or both.
 
 Let us see how this non-termination might occur. If we allowed |mprsi1| with
-the naive type signature above, we could write an evaluator (similar to
-|vevalHOAS| but for an untyped HOAS), which does not always terminate.
-This evaluator would diverge for terms with self application.
-Typed terms use the type index to prevent such diverging terms.
-
+the naive type signature above, we would be able to write an evaluator
+(similar to |vevalHOAS| but for an untyped HOAS), which does not always
+terminate.  This evaluator would diverge for terms with self application.
 We walk through the process of defining an untyped HOAS.
-The base structures of the untyped HOAS and its value domain
+The base structures for the untyped HOAS and its value domain
 can be defined as follows:
 %format ExpF_u = ExpF"_u"
 %format Lam_u = Lam"_u"
@@ -152,22 +143,31 @@ can be defined as follows:
 %format VFun_u = VFun"_u"
 \begin{code}
 data ExpF_u r t = Lam_u (r t -> r t) | App_u (r t) (r t)
+
 data V_u r t = VFun_u (r t -> r t)
 \end{code}
-The structures above represent the untyped HOAS and its value domain.
-Here, the index |t| does not track the types of terms
-but remains constant everywhere.
+Here, the index |t| is bogus, that is, it does not track the type of
+an HOAS expression but remains constant everywhere. Using the naive version
+of |mprsi1| above, we can write an evaluator similar to |vevalHOAS| for
+the untyped HOAS (|Mu1 ExpF ()|) via the value domain (|Mu1 V  ()|),
+which would obviously not terminate for some input.
+
 Why did we believe that |vevalHOAS| always terminates?
 Because it evaluates a well-typed HOAS, whose type is encoded as
-an index |t| of the recursive datatype |(Exp t)|. That is,
+an index |t| in the recursive datatype |(Exp t)|. That is,
 the use of indices as types is the key to the termination property.
 Therefore, our idea is to restrict the use of the abstract operations
-by enforcing constraints over their indices. We allow the use
-of the abstract operations only over abstract values whose indices are
-smaller in size compared to the size of the argument index.
-For the |vevalHOAS| example, we define being smaller as the structural ordering
-over types, that is, |t1 < (t1 -> t2)| and |t2 < (t2 -> t1)|.
-We have two candidates for the type signature of |mprsi1|:\vspace{-2em}
+in |mprsi1| by enforcing constraints over their indices, so that
+we would still be able write |vevalHOAS| for the typed HOAS,
+but would get a type error when we try to write an evaluator for
+the untyped HOAS.
+
+We suggest that some of the abstract operations of |mprsi1| should only be
+applied to the abstract values whose indices are smaller in size compared to
+the size of the argument index. For the |vevalHOAS| example, we define
+being smaller as the structural ordering over types, that is,
+|t1 < (t1 -> t2)| and |t2 < (t2 -> t1)|. We have two candidates for
+the type signature of |mprsi1|:\vspace{-2em}
 \begin{singlespace}
 \begin{itemize}
 \item Candidate 1: restrict uses of both |cast| and |uncast|

@@ -5,9 +5,8 @@ import RecComb
 \end{code}
 \end{comment}
 \begin{code}
-data ExpF r t where
-  Lam :: (r t1 -> r t2) -> ExpF r (t1 -> t2)
-  App :: r (t1 -> t2) -> r t1 -> ExpF r t2
+data ExpF r t where  Lam :: (r t1 -> r t2) -> ExpF r (t1 -> t2)
+                     App :: r (t1 -> t2) -> r t1 -> ExpF r t2
 type Exp' a t = Rec1 ExpF a t
 type Exp t = forall a . Exp' a t
 lam :: (forall a . Exp' a t1 -> Exp' a t2) -> Exp (t1 -> t2)

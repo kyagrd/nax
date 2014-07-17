@@ -30,13 +30,12 @@ and, the datatype promotion in Haskell is closely related to
 \index{universe!subtyping}
 \index{universe!polymorphism}
 
-\begin{figure}[t]
-\hspace*{-10ex} \centering
+\begin{figure}[t]\small
+\hspace*{-4ex} \centering
 \begin{tabular}{ccc}
 \textsc{Haskell} \textcolor{gray}{\texttt{+ DataKinds}} &
 \textsc{Nax} &
 \textsc{Agda} 
-\\
 \\
 |* : BOX| &
 |* : BOX| &
@@ -49,22 +48,26 @@ $\stackrel{\parallel}{|*|}~\,\stackrel{\parallel}{|BOX|}~~\quad\qquad\qquad$
 |kappa ::= * || kappa -> kappa | $\mid$
    \textcolor{magenta}{|{A}|}\,|-> kappa|
 &
-\begin{minipage}{.35\linewidth}\small\centering
-term/type/kind/sort merged into one pseudo-term syntax
+\begin{minipage}{.3\linewidth}\small
+$\begin{smallmatrix}
+\text{term/type/kind/sort merged}\\
+\text{into one pseudo-term syntax}
+\end{smallmatrix}$
 \end{minipage}
-\\~\\
+\\
 \begin{minipage}{.36\linewidth}
 \inference[($->$)]{\Jki |kappa1 : BOX| & \Jki |kappa2 : BOX|}{
      \Jki |kappa1 -> kappa2 : BOX|}
-~\vskip.5ex
+~\vskip.3ex
 \inference[($\uparrow_{|*|}^{|BOX|}$)]{
           \Jty T : |*|^n -> |*| \qquad~~\quad \\
           \Jki |kappa : BOX|~\text{for each}~\kappa\in\overline{\kappa}}{
      \Jki T\,\overline{\kappa} : |BOX|}
-~\vskip.5ex
+~\vskip1ex
 \end{minipage}
 &
 \begin{minipage}{.33\linewidth}
+~\vskip.8ex
 \inference[($->$)]{\Jki |kappa1 : BOX| & \Jki |kappa2 : BOX|}{
         \Jki |kappa1 -> kappa2 : BOX|}
 ~\vskip1ex
@@ -75,6 +78,7 @@ term/type/kind/sort merged into one pseudo-term syntax
 \end{minipage}
 &
 \begin{minipage}{.36\linewidth}
+~\vskip.8ex
 \inference[($->$)]{||- \kappa_1 : \star_i & ||- \kappa_2 : \star_i}{
                    ||- \kappa_1 -> \kappa_2 : \star_i}
 ~\vskip1ex
@@ -82,7 +86,7 @@ term/type/kind/sort merged into one pseudo-term syntax
 ~\\
 \end{minipage}
 \end{tabular}
-\begin{singlespace}
+\begin{singlespace}~\vspace*{-2.5em}
 \caption{Universes, kind syntax, and selected sorting rules
    of Haskell, Nax, and Agda.
    Haskell's and Nax's kind syntax are simplified to exclude kind polymorphism.
@@ -93,6 +97,8 @@ term/type/kind/sort merged into one pseudo-term syntax
 
 \begin{figure}[h!]
 \vskip-3ex
+\hspace*{-3em}
+\begin{minipage}{.9\linewidth}
 \begin{align*}
 \textsc{Nax} & \qquad\quad
   \inference[\tiny(\{\}$->$)]{
@@ -146,6 +152,7 @@ term/type/kind/sort merged into one pseudo-term syntax
             & ||- |* : BOX| }{
     ||- |List Ty -> * : BOX| }
 \end{align*}
+\end{minipage}~
 \caption{Justifications for well-sortedness of the kind |List Ty -> *|
          in Nax, Haskell, Agda}
 \label{fig:sortingEx}
@@ -164,9 +171,9 @@ kinds in Nax always terminate in |*|. For example,\footnote{
 	since |Nat| is obviously a type because it starts with an uppercase.
 	In \S\ref{sec:example}, we omitted curly braces to help readers 
 	compare Nax with other languages.
-	From now on, we will consistently put curly braces in kinds.} \\ $~$
-\quad |* -> * -> *|, \qquad |{Nat} -> {Nat} -> *|, \qquad
-|({Nat} -> *) -> {Nat} -> *|. \\
+	From now on, we will consistently put curly braces in kinds.}
+|* -> * -> *|, |{Nat} -> {Nat} -> *|, and |({Nat} -> *) -> {Nat} -> *|
+are valid kinds in Nax.
 The sorting rule (\raisebox{1pt}{\tiny\{\}}$->$) could be understood as
 a specific use of universe subtyping (|* <= BOX|) hard-wired within
 the arrow formation rule. Agda needs a more general notion of

@@ -37,9 +37,9 @@ our prototype Nax implementation, and Agda 2.3.0.1.
 \label{ssec:eval}
 \index{evaluator!type perserving}
 
-\begin{figure}
+\begin{figure}\small
 \,\;~~\,\qquad\textcolor{gray}{\texttt{GADTs},}\\ \vskip-7ex
-\hspace*{-6ex}
+\hspace*{-1.5ex}
 \begin{minipage}{.48\linewidth}\small
 %include IFL12code/Eval.lhs
 \end{minipage}
@@ -51,8 +51,8 @@ our prototype Nax implementation, and Agda 2.3.0.1.
 \label{fig:eval}
 \end{figure}
 
-\begin{figure}
-\hspace*{-6ex}
+\begin{figure}\small
+\hspace*{-3ex}
 \begin{minipage}{.48\linewidth}\small
 %include IFL12code/Eval.lnax
 \end{minipage}
@@ -108,9 +108,9 @@ a type variable.
 \label{ssec:glist}
 
 \begin{figure}
-\begin{singlespace}
+\begin{singlespace}\small
 \qquad~\,\textcolor{gray}{\texttt{GADTs},} \\ \vskip-5ex
-\hspace*{-10ex}
+\hspace*{-6ex}
 \begin{minipage}{.50\linewidth}\small
 \vskip-2.6ex
 %include IFL12code/GList.lhs
@@ -119,7 +119,7 @@ a type variable.
 %include IFL12code/GList.lnax
 \end{minipage}
 \vskip-4ex ~ \\
-\hspace*{-10ex}
+\hspace*{-6ex}
 \begin{minipage}{.50\linewidth}\small
 %include IFL12code/GListExample.lhs
 \end{minipage}~
@@ -135,7 +135,7 @@ a type variable.
 
 \begin{figure}
 \begin{singlespace}
-\hspace*{-10ex}
+\hspace*{-5ex}
 \begin{minipage}{.55\linewidth}\small \vskip2ex
 %include IFL12code/GList.lnax
 \end{minipage}~
@@ -143,7 +143,7 @@ a type variable.
 %include IFL12code/GList.lagda
 \end{minipage}
 \vskip-4ex ~ \\
-\hspace*{-10ex}
+\hspace*{-5ex}
 \begin{minipage}{.55\linewidth}\small
 %include IFL12code/GListExample.lnax
 \end{minipage}~
@@ -239,7 +239,7 @@ since type level functions are no different from term level functions.
 \begin{figure}
 \textcolor{gray}{\small \texttt{KindSignatures}, \texttt{TypeOperators},}
 \\\vskip-6ex
-\hspace*{-10ex}
+\hspace*{-2ex}
 \begin{minipage}{.50\linewidth}\small
 %include IFL12code/Compile.lhs
 \end{minipage}
@@ -251,7 +251,7 @@ since type level functions are no different from term level functions.
 \end{figure}
 
 \begin{figure}
-\hspace*{-10ex}
+\hspace*{-3ex}
 \begin{minipage}{.55\linewidth}\small
 %include IFL12code/Compile.lnax
 \end{minipage}~
