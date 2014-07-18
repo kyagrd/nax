@@ -178,7 +178,7 @@ take n = mit0 phi n where
 \end{code}
 \end{singlespace}\noindent
 For instance, |(take three (upfrom zero))| produces a list with
-three elements |(cons (one (cons two (cons three nil))))|
+three elements starting from zero |(cons (one (cons two (cons three nil))))|
 where |one = succ zero|, |two = succ one| and |three = succ two|.
 
 Note that the |phi| function is similar in structure

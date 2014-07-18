@@ -296,6 +296,23 @@ kind polymorphism. We strongly believe that rank-1 {\it kind} polymorphism
 for those type constructors should not cause inconsistency,
 but further investigation is needed.
 
+\index{type equality}
+\index{Leibniz equality}
+Nax does not yet have type equality built in. We know that we can encode
+Leibniz equality over both types and terms in System \Fi\ (see \S\ref{Leibniz}).
+We cannot define Leibniz equality as a user defined datatype in Nax, since
+the definition of Leibniz equality needs higher-rank polymorphism. We can,
+of course, have a built-in Leibniz equality as a primitive construct in Nax.
+We know that Leibniz equality over types have been useful in the context of
+higher-order polymorphic lambda calculus \cite{vytiniotis2010parametricity}.
+Leibniz equality over term indices is definable in the same manner
+as Leibniz equality over types, and can be built-in to Nax. However,
+we are not yet sure how useful Leibniz equality over term indices would be,
+since it does not automatically give us induction principles, which are
+usually expected for a more powerful provable equality over terms (\eg,
+proving symmetry of natural number addition). Further studies are needed
+for such a powerful term index equality.
+
 \index{Mendler-style}
 \index{monotonicity}
 Mendler-style course-of-values recursion only terminates

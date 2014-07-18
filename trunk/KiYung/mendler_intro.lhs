@@ -349,14 +349,14 @@ at kind $*$ and kind $* -> *$}
 
 \begin{figure}
 {\small\TypesOfRecursiveCombinators }
-\caption{Type signatures of recursive combinators.
+\caption{Type signatures of recursion combinators.
          Note the heavy use of higher-rank types.}
 \label{fig:rcombty}
 \end{figure}
 
 \begin{figure}
 {\small \DefsOfRecursiveCombinators }
-\caption{Definitions of recursive combinators.
+\caption[Definitions of recursion combinators.]{Definitions of recursion combinators.
   Note identical textual definitions for the same operators at different kinds,
   but with types specialized for that kind.}
 \label{fig:rcombdef}
