@@ -459,7 +459,7 @@ recursive calls, |len|, but the abstract type, |r|, limits its use to
 direct subcomponents, so termination is guaranteed.
 
 \index{direct subcomponent}
-Some recursive functions need to direct access the concrete values of
+Some recursive functions need access to the concrete values of
 the direct subcomponents (of type |Mu[*] T|), in addition to applying
 abstract recursive call on the abstract handles of the direct subcomponents
 (of type |r|). The Mendler-style combinator |MPr| provides a safe,
@@ -479,20 +479,22 @@ and |tail| (over lists) are both defined using |MPr|.
 
 \index{factorial}
 Note how in |factorial| the original input is recovered (in constant time)
-by taking the successor of casting the abstract predecessor, |n|.
+by taking the successor of the concrete predecessor value (|cast n|) obtained by
+casting the abstract predecessor, |n|.
 In the |tail| function, the abstract tail, |ys|, is cast to get the answer,
 and the recursive caller is not even used.
 
-Some recursive functions need direct access, not only to
-the direct subcomponents, but even deeper subcomponents.
-The Mendler-style combinator |McvIt| provides a safe,
+Some recursive functions need access, not only to
+the direct subcomponents, but also to even deeper subcomponents.
+The Mendler-style combinator |McvIt| provides a safe,\footnote{
+	Only for positive datatypes, of course.}
 yet abstract mechanism, to support this.
 \index{Fibonacci}
 The function |fibonacci| is a classic example of this kind of recursion.
-The Mendler |McvIt| provides two abstract operations. The recursive caller
-with type (|r -> ans|) and a projection function with type (|r -> T r|).
-The projection allows the programmer to observe the hidden |T| structure
-inside a value of the abstract recursive type |r|.
+The recursion combinator |McvIt| provides two abstract operations.
+The recursive caller with type (|r -> ans|) and a projection function
+with type (|r -> T r|). The projection allows the programmer to observe
+the hidden |T| structure inside a value of the abstract recursive type |r|.
 In the |fibonacci| function above, we name the projection |out|.
 It is used to observe if the abstract predecessor, |n|, of the input, |x|,
 is either zero, or the successor of the second predecessor, |m|, of |x|.
@@ -516,16 +518,17 @@ the abstract operations in carefully proscribed ways.
 \index{index}
 \index{type!parameter}
 \index{type!index}
-Recall that a type can have both parameters and indices, and that indices
-can be either types or terms. We define three types below each with one or more
-indices. Each example defines a non-recursive type, and then uses derivation to
-define synonyms for its fix point and recursive constructor functions.
-By convention, in each example, the argument that abstracts the recursive
-components is called |r|. By design, arguments appearing before |r| are
-understood to be parameters, and arguments appearing after |r| are understood
-to be indices. To define a recursive type with indices, it is necessary to
-give the argument, |r|, a higher-order kind. That is, |r| should take indices
-as well, since it abstracts over a recursive type which takes indices.
+Recall that a type can have both parameters and indices, and
+that indices can be either types or terms. We define three types below
+each with one or more indices. Each example defines a non-recursive type,
+and then uses fixpoint derivation to define synonyms for its fixpoint and
+constructor functions. By convention, in each example, the argument that
+abstracts the recursive components is called |r|. By design, arguments
+appearing before |r| are understood to be parameters, and arguments
+appearing after |r| are understood to be indices. To define a recursive type
+with indices, it is necessary to give the argument, |r|, a higher-order kind.
+That is, |r| should take indices as well, since it abstracts over
+a recursive type which takes indices.
 \begin{singlespace}
 \begin{code}
 data Nest: (* -> *) -> * -> * where
@@ -558,7 +561,7 @@ universally quantified.
 \index{universally quantified}
 By backquoting |succ|, we indicate that we want terms,
 which are applications of the successor function, but not some universally
-quantified function variable\footnote{In the design of Nax we had a choice.
+quantified variable\footnote{In the design of Nax we had a choice.
 Either, explicitly declare each universally quantified variable, or explicitly
 mark those variables not universally quantified. Since quantification is much
 more common than referring to variables already in scope, the choice was easy.}.
@@ -667,18 +670,15 @@ both the result type, and the type of the recursive caller. If we think of
 an index transformer, like |{a . (a -> Int) -> Int}|, as a function:
 |psi a = (a -> Int) -> Int|, we can succinctly describe the types of
 the abstract operations of |MIt|. In the table below, we put
-the general case on the left, and terms from the |genericSum| example,
+the general case for the general form
+(|MIt{psi} x with {-"\overline{"-}f p{-"_i"-} = e{-"_i}"-}|)
+on the left, and terms from the |genericSum| example,
 that illustrate the general case, on the right.
+{\small
 %{
 %format p_i
 %format e_i
-\vspace*{0.1in}\noindent
-\begin{singlespace}
-\begin{code}
-MIt{psi} x with
-  f p_i = e_i
-\end{code}
-\end{singlespace}
+\noindent
 \begin{tabular}{l||clcl}
 |psi : kappa -> *|               & & |{a . (a -> Int) -> Int}| & : & |* -> *| \\
 |T : (kappa -> *) -> kappa -> *| & & |Nest| & : & |(* -> *) -> * -> *| \\
@@ -687,21 +687,21 @@ MIt{psi} x with
 |p_i : T r a| & & |Fork x|     & : & |Nest r a| \\
 |e_i : psi a| & & |\ f -> f x| & : & |(a -> Int) -> Int| \\
 \end{tabular}
-\vspace*{0.1in}
 %}
+}
+~\vspace*{.5em}\\
 
 The same scheme for |MIt| generalizes to type constructors with term indices,
 and with multiple indices. To illustrate this we give the generic schemes for
 type constructors with 2 or 3 indices. In the table the variables |kappa1|,
 |kappa2|, and |kappa3|, stand for arbitrary kinds (either kinds for types,
-like |*|, or kinds for terms, like |Nat| or |Tag|).
-\begin{center}
+like |*|, or kinds for terms, like |Nat| or |Tag|).\\ \noindent
 %{
 %format p_i
 %format e_i
 \begin{tabular}{l||l}
-\hskip-5em
-\begin{minipage}[l]{.55\linewidth}
+%% \hskip-6em
+\begin{minipage}[l]{.42\linewidth}\small
 \begin{code}
 T    : (kappa1 -> kappa2 -> *) -> (kappa1 -> kappa2 -> *)
 psi  : kappa1 -> kappa2 -> *
@@ -711,9 +711,8 @@ p_i  : T r a b
 e_i  : psi a b
 \end{code}
 \end{minipage}
-
 &
-\begin{minipage}[l]{.45\linewidth}
+\begin{minipage}[l]{.4\linewidth}\small
 \begin{code}
 T    : (kappa1 -> kappa2 -> kappa3 -> *) -> (kappa1 -> kappa2 -> kappa3 -> *)
 psi  : kappa1 -> kappa2 -> kappa3 -> *
@@ -725,14 +724,14 @@ e_i  : psi a b c
 \end{minipage}
 \end{tabular}
 %}
-\end{center}
+~\vspace*{.5em}\\
 \index{index transformation}
 \index{vector}
 The simplest form of index transformation, is where the transformation
 is a constant function. This is the case of the function that computes
-the integer length of a natural-number, length-indexed, list
-(what we called a |Vector|). Independent of the length the result
-is an integer. Such a function has type: |Vector a {n} -> Int|.
+the integer length of a length-indexed list (what we called a |Vector|).
+Independent of the length the result is an integer.
+Such a function has type: |Vector a {n} -> Int|.
 We can write this as follows:
 \begin{singlespace}
 \begin{code}
@@ -742,12 +741,12 @@ vlen x =  MIt{{i} . Int} x with  len Vnil          = 0
 \end{singlespace}
 
 Let's study an example with a more interesting index transformation.
-A term with type (|Proof {E} {n}|), which is synonymous with the type 
+A term with type (|Proof {E} {n}|), which is synonymous with 
 (|Mu[Tag -> Nat -> *] P {E} {n}|), witnesses that the term |n| is even.
 Can we transform such a term into a proof that |n+1| is odd?  We can
 generalize this by writing a function which has both of the types below: \\
-|Proof {E} {n} -> Proof {O} {`succ n}|,  and \\
-|Proof {O} {n} -> Proof {E} {`succ n}|. \\
+\qquad|Proof {E} {n} -> Proof {O} {`succ n}|,  and \\
+\qquad|Proof {O} {n} -> Proof {E} {`succ n}|. \\
 We can capture this dependency by defining the term-level function |flip|,
 and using an |MIt| with the index transformer:
 |{{t} {i} . Proof {`flip t} {`succ i}}|.

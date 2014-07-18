@@ -15,17 +15,17 @@ between those combinators (Figure \ref{fig:cataviahisto})
 \begin{tabular}{llll}
        & positive & negative & example\\\hline
 |cata| & {proof} \cite{hagino87phd} & {undefined} & |len| \S\ref{ssec:convCata} \\
-|mcata0| & {proof Fig.} \ref{fig:proof} &  {proof Fig.} \ref{fig:proof} & |len| {Fig.} \ref{fig:len}\\
-|mhist0| & {proof} \cite{vene00phd} & {no} & |fib| {Fig.} \ref{fig:fib} \\
-|msfcata0| & {proof} \S\ref{App:Fomega} & {proof} \S\ref{App:Fomega} & {|showExp|} {Fig.} \ref{fig:HOASshow} \\
-|msfhist0| & {argument}\S\ref{ssec:tourHist0} & {no} & |loopFoo| {Fig.} \ref{fig:LoopHisto} \\
-|mprim0| & proof \cite{AbeMat04} & proof \cite{AbeMat04} & |factorial| Fig. \ref{fig:fac} \\
-|mcvpr0| & conjecture \S\ref{sec:fixi:cv} & no &  |lucas| Fig. \ref{fig:lucas} \\
-|mcata1| & {proof} \cite{AbeMatUus05} & {proof} \cite{AbeMatUus05} & |bsum| {Fig.} \ref{fig:bsum} \\
-         & & & |extev| {Fig.} \ref{fig:mutrec} \\
-|mhist1| & same as |mcvpr1| & {no} & |switch2| {Fig.} \ref{fig:vec} \\
-|msfcata1| &  {similar} \S\ref{App:Fomega}  & {similar} \S\ref{App:Fomega} & \\
-|msfhist1| & ? &  {no} &  
+|mcata0| & {proof Figure} \ref{fig:proof} &  {proof Figure} \ref{fig:proof} & |len| {Figure} \ref{fig:len}\\
+|mhist0| & {proof} \cite{vene00phd} & {no} & |fib| {Figure} \ref{fig:fib} \\
+|msfcata0| & {proof} \S\ref{App:Fomega} & {proof} \S\ref{App:Fomega} & {|showExp|} {Figure} \ref{fig:HOASshow} \\
+|msfhist0| & {argument}~\S\ref{ssec:tourHist0} & {no} & |loopFoo| {Figure} \ref{fig:LoopHisto} \\
+|mprim0| & proof \cite{AbeMat04} & proof \cite{AbeMat04} & |factorial| Figure \ref{fig:fac} \\
+|mcvpr0| & conjecture \S\ref{sec:fixi:cv} & no &  |lucas| Figure \ref{fig:lucas} \\
+|mcata1| & {proof} \cite{AbeMatUus05} & {proof} \cite{AbeMatUus05} & |bsum| {Figure} \ref{fig:bsum} \\
+         & & & |extev| {Figure} \ref{fig:mutrec} \\
+|mhist1| & {similar} to |mcvpr1| & {no} & |switch2| {Figure} \ref{fig:vec} \\
+|msfcata1| & {similar} to |msfcata0| & {similar} to |msfcata0| & \\
+|msfhist1| & {similar} to |msfhist0| &  {no} &  
 \end{tabular}
 \caption{Termination properties of the Mendler-style recursion combinators}
 \label{tbl:mendlerCombinatorSummary}
