@@ -246,7 +246,7 @@ typing rules of the form $\Delta;\Gamma |-s t : A$, which
 assignees a type to a monomorphic type ($A$), the rule \rulename{Alt$_s$}
 of the form $\Delta;\Gamma |-s^\psi C\overline{x} -> t : \sigma$
 assigns a polymorphic type scheme ($\sigma$). Since \rulename{Alt} and
-\rulename{Alt$_s$} has exactly the samem structure, one caling on $|-$
+\rulename{Alt$_s$} has exactly the same structure, one calling on $|-$
 and the other calling on $|-s$ in their premises, they must be sound
 and complete with respect to each other.
 
@@ -280,7 +280,7 @@ are exactly the same as the typing rules of the Curry-style System \Fw.
 We can show that the rules \rulename{Let} and \rulename{Inst} in SmallNax are
 admissible in System \Fw\ by following virtually the same argument, which
 we used show that the rules \rulename{Let} and \rulename{Inst} in HM are
-admissible in Sytem \F\ (see p\pageref{hm:LetAdmissibleFw} in \S\ref{sec:hm}).
+admissible in System \F\ (see p\pageref{hm:LetAdmissibleFw} in \S\ref{sec:hm}).
 The \rulename{Let} rule in SmallNax corresponds to a consecutive use of
 \rulename{App} and \rulename{Abs} in System \Fw. A single derivation step of
 \rulename{Inst} in SmallNax corresponds to multiple uses of \rulename{TyAbs}
@@ -471,16 +471,16 @@ is sound and complete with respect to the syntax-directed rules
 including \rulename{mit$'_s$}, due to similar reasons why \rulename{Case$_s$}
 is sound and complete with respect to \rulename{Case}.
 
-We need additional polymprhism in the typing rule for \MIt\ when we have free
+We need additional polymorphism in the typing rule for \MIt\ when we have free
 variables in the index transformer ($\psi(\overline{X})$), other than
-the indices ($\overline{X}$) of the argumnet type. For exmaple, consider
-the index transforemr $\{\{t\}\,.\,
+the indices ($\overline{X}$) of the argument type. For exmaple, consider
+the index transformer $\{\{t\}\,.\,
    \texttt{Code}\,\{\textit{ts}\}\,\{\texttt{`cons}\;t\;\textit{ts}\}\}$
 appearing in the definition of the stack-safe compiler (\textit{compile})
-in \S\ref{ssec:compile}. The free varaible (\textit{ts}) should be generalized
+in \S\ref{ssec:compile}. The free variable (\textit{ts}) should be generalized
 as well as the index ($t$) to infer the type of the \textit{compile} function.
 The type scheme for recursive caller ($x$ in the typing rule for \MIt)
-should be fully genernalized, except for the part of the input type
+should be fully generalized, except for the part of the input type
 up to its parameters. That is, we should generalize both the indicies
 and the free variables of the index transformer. The idea described
 in this paragraph is summarized as the rule \rulename{mit}
@@ -512,9 +512,9 @@ formulate similar typing rules for other Mendler-style recursion schemes.
 
 \section{SmallNax with GADTs}
 \label{sec:naxTyInfer:gadt}
-So far in this chapter, we only conisdered those datatypes defined
-by equations.\footnote{A recursive datatype defiend using $\mu_\kappa$
-over non-recursive equatinal datatypes can also be described by
+So far in this chapter, we only considered those datatypes defined
+by equations.\footnote{A recursive datatype defined using $\mu_\kappa$
+over non-recursive equational datatypes can also be described by
 a recursive equation.} Such equational datatypes are either regular
 (\eg, homogeneous lists) or nested (\eg, powerlists, bushes).
 As discussed earlier in \S\ref{sec:naxTyInfer:small}, data constructors
@@ -527,7 +527,7 @@ with existential type variables in their types.
 
 \subsection{Existential type variables}
 \label{sec:naxTyInfer:gadt:ex}
-GADT definitions can introducde \emph{existential type variables}
+GADT definitions can introduce \emph{existential type variables}
 in the types of data constructors. Existential type variables are
 type variables that do not appear in the result type. In fact,
 we have already seen an example of a GADT definition that contain
@@ -613,7 +613,7 @@ a type. \aka\ type universe) defined as a GADT in Haskell:
 \end{singlespace}
 ~\vspace*{-5ex}\\
 There are no existential type variables in the definition of \texttt{Rep}.
-The first type constroctor \texttt{INT} does not have any type variables
+The first type constructor \texttt{INT} does not have any type variables
 in its type. In the other two type constructors \texttt{PAIR} and \texttt{FUN},
 both the type variables \texttt{a} and \texttt{b} appear in their result types
 \texttt{\;Rep~(a,b)\;} and \texttt{\;Rep~(a -> b)\;}. These type variables
@@ -689,7 +689,7 @@ such as \texttt{\{\,(Int,Bool)\;.\;$A$\,\}}, whose argument list
 on the left-hand side of the dot could contain more specific forms
 than just type variables. Formulation of typing rules, which further adjusts
 from the \rulename{Alt} rule (\ref{AltGEx}), and implementation of
-coverage checking considering such index tranformers with
+coverage checking considering such index transformers with
 such constrained input index is left for future work.
 
 %% $\exists^\psi_\Gamma(C)$, the list of generalized existential type variables
