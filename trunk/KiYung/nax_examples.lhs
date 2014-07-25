@@ -33,9 +33,9 @@ at ICFP 2012 (originally written in Agda). All the example code was tested
 in GHC 7.4.1 (should also work in later versions such as GHC 7.6.x),
 our prototype Nax implementation, and Agda 2.3.0.1.
 
-\subsection{Type preserving evaluator for an expression language}
+\subsection{Type-preserving evaluator for an expression language}
 \label{ssec:eval}
-\index{evaluator!type perserving}
+\index{evaluator!type-perserving}
 
 \begin{figure}\small
 \,\;~~\,\qquad\textcolor{gray}{\texttt{GADTs},}\\ \vskip-7ex

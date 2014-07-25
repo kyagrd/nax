@@ -31,7 +31,7 @@ work over two (or more) structures simultaneously.
 \subsection{Simultaneous iteration}
 \index{Mendler-style!simultaneous iteration}
 \citet{UusVen00} studied course-of-value iteration (\aka\ histomorphism)
-and \emph{simultaneous iteration} (\aka\ multimorhpism). They formulate
+and simultaneous iteration (\aka\ multimorhpism). They formulate
 these two recursion schemes in both the conventional and Mendler style.
 They show that the formulations are equivalent provided that the base structures
 for recursive types are functors (\ie, positive). We have already discussed
@@ -79,18 +79,17 @@ take = msimit0 phi where
 \end{singlespace}\noindent
 Note that the |phi| functions above are similar in structure to how one would typically
 define |lessthan| and |take| using general recursion in Haskell. Although
-it is possible to define these functions by multiple nested uses of |mit0|,
-it is certainly not as simple as the definitions above (try it for yourself!).
+it is possible to define these functions using multiple nested uses of |mit0|,
+it is certainly not as simple as the definitions above.
 
 The termination behavior of simultaneous iteration (|msimit|)
 has not been studied when negative datatypes are involved.
-Neither do we know of any studies that have embeded |msimit| into
+Nor do we know of any studies that have embeded |msimit| into
 a strongly normalizing typed lambda calculus.
 For both course-of-values iteration (\McvIt) and recursion (\McvPr),
-we have found conterexamples that nontermination is possible
-for negative datatypes. The example that \McvIt\ does not always terminate
-for negative datatypes can be found in Figure~\ref{fig:LoopHisto}
-in \S\ref{ssec:tourHist0}, p\pageref{fig:LoopHisto}.
+we have found counterexamples that nontermination is possible
+for negative datatypes (see Figure~\ref{fig:LoopHisto}
+in \S\ref{ssec:tourHist0} on p.\pageref{fig:LoopHisto}).
 We also showed that \McvPr\ can be embedded into \Fixi\ (or \Fixw)
 assuming monotonicity (\S\ref{sec:fixi:cv}).
 
@@ -115,13 +114,13 @@ two casting operations, whose types are |(r1 -> Mu0 f1)| and |(r2 -> Mu0 f2)|.
 
 \subsection{Lexicographic recursion}
 \index{Mendler-style!lexicographic recursion}
-Some recursive functions over multiple recursive values
-justify termination because their arguments decrease at every recursive call
-under a lexicographic ordering.  Note that this is different from
-simultaneous iteration where each of the arguments decrease in
-every recursive call. In a lexicographic ordering, some arguments may
-either stay the same (in more significant positions) or even increase
-(in less significant positions) while another argument decreases.
+Some recursive functions over multiple recursive values justify termination
+because their arguments decrease at every recursive call
+under a lexicographic ordering. Note that this is different from
+simultaneous iteration where each of the arguments decreases
+in every recursive call. In a lexicographic ordering, some arguments may
+stay the same (in more-significant positions) or increase
+(in less-significant positions) while another argument decreases.
 A typical example of lexicographic recursion is the Ackermann function,
 which we can define using general recursion in Haskell as follows:
 %format Nat_g = Nat"_g"
@@ -140,7 +139,7 @@ acker_g (Succ_g m)  (Succ_g n)  = acker_g m (acker_g (Succ_g m) n)
 ~\vspace*{-1.5em}\\
 Observe that the first argument is more significant than the second.
 In the third equation, the first argument |m| of the outer recursive call
-decreases (\ie, smaller than |(Succ_g m)|) while the second argument
+decreases (\ie, is smaller than |(Succ_g m)|) while the second argument
 |(acker_g (Succ_g m) n)| may increase (\ie, may be larger than |(Succ_g n)|).
 
 \begin{comment}
@@ -170,19 +169,22 @@ mlexpr0 phi (In0 x1) (In0 x2) = phi (mlexpr0 phi) (mlexpr0 phi (In0 x1)) id id x
 \index{Mendler-style!lexicographic recursion}
 \index{abstract operation}~\vspace*{-1.5em}\\
 \noindent
-The Mendler-style lexicographic recursion |mlexpr0| is similar to
-the Mendler-style simultaneous recursion |msimpr0| introduced
+The Mendler-style lexicographic recursion |mlexpr0|\footnote{
+	The idea for |mlexpr0| originated in a conversation between
+	Tarmo Uustalu and Tim Sheard at the TYPES 2013 workshop
+	(not published anywhere else at the moment). } 
+is similar to the Mendler-style simultaneous recursion |msimpr0| introduced
 in the previous section, but has two abstract operations for
 inner and outer recursion. Note the types of these two recursive calls
 |(r1 -> Mu0 f2 -> a)| and |(r2 -> a)|. The outer recursive call expects
 its first argument to be a direct subcomponent by requiring its type to be |r1|.
 The second argument has type |Mu0 f2|, which means that it could be any value,
-because it is the less significant factor of the lexicographic ordering.
+because it is the less-significant factor of the lexicographic ordering.
 The inner recursive call only expects its second argument
-to be a direct subcomponent by requiring its type to be |r2|.
-Since the inner call assumes that the first argument stays the same,
-the first argument is omitted. Using |mlexpr0|,
-we can define the Ackermann function as follows:
+to be a direct subcomponent by requiring its type is required to be |r2|.
+Since it is assumed that the first argument stays the same
+in the inner call, the first argument is omitted.
+Using |mlexpr0|, we can define the Ackermann function as follows:
 \begin{singlespace}
 \begin{code}
 acker = mlexpr0 phi where
@@ -193,10 +195,8 @@ acker = mlexpr0 phi where
 \end{code}
 \end{singlespace}
 ~\vspace*{-1.5em}\\ \indent
-The idea for |mlexpr0| originated in a conversation between Tarmo Uustalu
-and Tim Sheard at the TYPES 2013 workshop (not published anywhere else
-at the moment). We strongly believe that |mlexpr0| terminates for all
-positive datatypes. The termination behavior for negative (or,
-mixed-variant) datatypes needs further investigation.
+We strongly believe that |mlexpr0| terminates for all
+positive datatypes. The termination behavior for
+negative (or mixed-variant) datatypes needs further investigation.
 
 

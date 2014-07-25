@@ -1,7 +1,7 @@
 \chapter{Future work}\label{ch:futwork}
 \index{Mendler-style}
 We summarize some ongoing and future work in this chapter:
-designing a new Mendler-style recursion scheme
+designing a new Mendler-style recursion scheme that is
 useful for negative datatypes (\S\ref{sec:futwork:mprsi}),
 different fixpoint types (\S\ref{sec:futwork:mu}),
 deriving monotonicity from polarized kinds (\S\ref{sec:futwork:kindpoly}), and
@@ -16,7 +16,7 @@ kind polymorphism and kind inference (\S\ref{sec:futwork:kindpoly}).
 \index{polarized kind}
 \index{kind!polarized}
 We first review the summary of discussions in \S\ref{sec:fixi:cv}
-and then list the future work on monotonicity and polarized kinds.
+and then list future work on monotonicity and polarized kinds.
 
 \subsection*{Summary of the discussions in \S\ref{sec:fixi:cv}}
 \index{Mendler-style!course-of-values recursion}
@@ -38,20 +38,19 @@ A \emph{monotonicity witness} is a generalization of $\textit{fmap}_F$,
 which witnesses $F$ being a functor, and its type is called \emph{monotonicity},
 denoted by $\textit{mon}_{\kappa}F$. For example, monotonicity for $F$
 at kind $*$ is denoted by $mon_{*}F$, thus, $\textit{fmap}_F : mon_{*} F$.
-More generally, when the type constructor has more than one argument,
-there can be more than one notion of monotonicity.
+More generally, when the type constructor $F$ has more than one argument,
+there can be more than one notion of monotonicity for $F$.
 For example, consider $F : p_1\kappa_1 -> p_2\kappa_2 -> *$.
-We say
-that $F$ is monotone on its first argument
-when $(X_1 -> X_2)$ implies $(F X_1 Y -> F X_2 Y)$, and,
+We say that $F$ is monotone on its first argument
+when $(X_1 -> X_2)$ implies $(F X_1 Y -> F X_2 Y)$ and
 that $F$ is monotone on its second argument
 when $(Y_1 -> Y_2)$ implies $(F X Y_1 -> F X Y_2)$.
-One possible notion of monotonicity for $F$ is requiring only the first
-argument to be monotone. Another possible notion is requiring both of
-the arguments to be monotone.
+One possible notion of monotonicity for $F$ is to require only the first
+argument be monotone. Another possible notion is to require both of
+the arguments be monotone.
 
 We discussed in \S\ref{sec:fixi:cv} that there are more than one notion of
-monotonicity witness at hinger kinds. For a non-regular recursive type
+monotonicity witness at higher kinds. For a non-regular recursive type
 ($\mu_{p* -> *} F$), where $F : p_r(p* -> *) -> (p* -> *)$, there are
 two different notions of monotonicity.\vspace*{-1.5em}
 \begin{singlespace}
@@ -75,13 +74,13 @@ for the embedding of \McvPr\ over non-truly nested datatypes,
 such as powerlists.
 \index{powerlist}
 
-The latter, $\textit{mon}_{p* -> *}F$, requires $F$ to be monotone
+The latter, $\textit{mon}'_{p* -> *}F$, requires $F$ to be monotone
 on both arguments (\ie, both the recursive argument and the index argument).
 \index{truly nested datatype}
 \index{datatype!nested}
 \index{bush}
 We discussed that we need this stronger notion of monotonicity
-to embed \McvPr\ over truly nested datatypes, such as bushes,
+in order to embed \McvPr\ over truly nested datatypes, such as bushes,
 whose index involves the recursive argument in its definition.
 
 \subsection*{Future work on deriving monotonicity from polarized kinds.}
@@ -92,11 +91,11 @@ According to the embedding of $\McvPr_\kappa$ in \S\ref{sec:fixi:cv},
 one needs to witness monotonicity of $F$ to ensure that $\McvPr_\kappa$
 always terminates for $(\mu_\kappa F)$-values. That is, one must show
 the existence of $mon_{\kappa}F$ with the desired properties to use
-$\McvPr_\kappa$ with termination guarantee. However, it is not desirable
+$\McvPr_\kappa$ with a termination guarantee. However, it is not desirable
 to require programmers to manually derive $mon_{\kappa}F$ for each $F$.
 It more desirable for the language implementation to automatically
-derive monotonicity witness for $F$. It would be even better if
-the language type system can guarantee existence of monotonicity witness
+derive a monotonicity witness for $F$. It would be even better if
+the language type system can guarantee the existence of a monotonicity witness
 by examining the polarized kind of $F$, rather than actually deriving
 monotonicity for $F$ by examining its definition.
 
@@ -104,7 +103,7 @@ For System \F, it is known that $mon_{*}F$ exists for any positive $F$
 (\ie, $F:+* -> *$ if given a polarized kind) \cite{Mat99}. However,
 it is still an open question whether any $F:+* -> *$ is monotone
 in higher-order polymorphic calculi, such as \Fixi. In \S\ref{sec:fixi:cv},
-We proved that $mon_{*}F$ exists for a certain class of $F:+* -> *$,
+we proved that $mon_{*}F$ exists for a certain class of $F:+* -> *$,
 and proof that $mon_{*}F$ exists for any $F:+* -> *$ in \Fixi\ is
 left for future work.
 
@@ -114,17 +113,17 @@ the other ($\textit{mon'}_{p* -> *}F$) for truly nested datatypes.
 We conjecture that $\textit{mon}_{p* -> *}F$ exists for any non-truly nested
 $F:+(p* -> *) -> (p* -> *)$, and, that $\textit{mon'}_{+* -> *}F$ exists
 for any $F:+(+* -> *) -> (+* -> *)$. Proofs for such conjectures
-at higher kinds are also future work.
+at higher kinds are also reserved for future work.
 
 \section{Kind polymorphism and kind inference}\label{sec:futwork:kindpoly}
 \index{kind polymorphism}
 \index{kind inference}
-We support rank-1 polymorphism at kind level in our Nax implementation.
-(\eg, \textit{Path} in Figure~\ref{fig:glist} on p\pageref{fig:glist},
-      \textit{Env} in Figure~\ref{fig:env} on p\pageref{fig:env}).
+We support rank-1 polymorphism at the kind level in our Nax implementation.
+(\eg, \textit{Path} in Figure~\ref{fig:glist} on page \pageref{fig:glist},
+      \textit{Env} in Figure~\ref{fig:env} on page \pageref{fig:env}).
 However, our theories (System \Fi\ and \Fixi) do not have kind polymorphism.
-We strongly believe that rank-1 polymorphism at kind level do not affect
-normalisation and consistency, but needs further investigation to confirm
+We strongly believe that rank-1 polymorphism at the kind level does not affect
+normalisation and consistency, but it needs further investigation to confirm
 our belief.
 
 In the Nax implementation, types are mostly inferred but kinds are always
@@ -132,17 +131,17 @@ annotated. For example, we must annotate $\kappa$ in $\mu_{[\kappa]}$ and
 $\In_{[\kappa]}$, in addition to the kind annotations in datatype declarations
 ($\mathbf{data}\;F : \kappa\;\mathbf{where} \cdots$).
 We believe we only need kind annotations in datatype declarations.
-We can omit the kind annotations in $\mu$ and because $\mu$ is always
-followed by a type constructor, $\mu F$, and we can always infer
+We can omit the kind annotations in $\mu$ because $\mu$ is always
+followed by a type constructor, $\mu F$; we can always infer
 the kind of $F$. Similarly, we might be able omit or simplify
 the kind annotation in $\In$, because $\In$ is always followed by a term,
-$\In t$, and we can infer the type of $t$, and we might have
+$\In\;t$; we can infer the type of $t$, and we might have
 enough information to infer the kind for $\In$.
 
 \index{kind inference}
 \index{fixpoint derivation}
 We are also working on a new implementation of Nax with better syntax
-that support better kind inference and non-ambiguous fixpoint derivation.
+that supports better kind inference and non-ambiguous fixpoint derivation.
 In our new implementation, the kind is inferred for $\mu$ without
 any annotation. We have not found a good way to completely infer the kind
 for $\In$, but we found out that it is enough to specify the arity of the kind.
@@ -153,14 +152,12 @@ $\In_{[* -> \{\texttt{Nat}\} -> * -> *]}$, which is much more succinct,
 especially for larger arities. Another change to the syntax is on
 the datatype declaration of the GADT form. The syntax in our dissertation
 ($\mathbf{data}\;F : \kappa\;\mathbf{where} \cdots$) can be ambiguous
-to derive fixpoint of $F$. For example, when $F : (* -> *) -> * -> *$,
+for deriving the fixpoint of $F$. For example, when $F : (* -> *) -> * -> *$,
 we can either take fixpoint of $\mu F : * -> *$, or $\mu (F\;t) : *$
 for some $t : *$. In the current syntax, we simply choose the longest match,
 that is $\mu F : * -> *$. In the new syntax, we change the datatype declaration
 syntax, similar to the syntax of Agda's, to clearly distinguish
 parameter arguments from index arguments.
-\index{parameter}
-\index{index}
 For instance,
 ($\mathbf{data}\;F_1\;r: * -> * \;\mathbf{where} \cdots$) or
 ($\mathbf{data}\;F_0\;t\;r: * \;\mathbf{where} \cdots$), where
@@ -168,4 +165,6 @@ parameter arguments ($t$, $r$) appear on the left of the colon ($:$).
 Then, we can derive fixpoints without ambiguity, always on the last
 parameter argument, for instance, we would derive $\mu F_1 : * -> *$
 and $\mu(F_0\;t): *$.
+\index{parameter}
+\index{index}
 

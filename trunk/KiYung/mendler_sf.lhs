@@ -455,7 +455,7 @@ The situation is different from embedding of Mendler-style iteration
 into \Fw, where |Mu0|, |mcata0|, and also |In0| is embedded into \Fw\ (see
 Figure~\ref{fig:proof} in \S\ref{sec:proof}). Then, the embeddings for
 data constructors of recursive types are simply given in terms of |In0| (see
-the embedding of natural numbers in p\pageref{pageNatFw}, \S\ref{sec:proof}).
+the embedding of natural numbers in page \pageref{pageNatFw}, \S\ref{sec:proof}).
 
 Unfortunately, for Mendler-style iteration with syntactic inverses,
 we have not found a way to to factor out |Rec0| as an \Fw-term to reuse it
@@ -585,8 +585,8 @@ a recursive caller, and a base structure.
 The combinators |msfcata1| and |msfhist1| (at kind $* -> *$) generalize
 the combinators |msfcata0| and |msfhist0| (at kind $*$) to combinators 
 on types with a type index. The pattern of generalization is quite evident
-in Figures \ref{fig:rcombty} (p\pageref{fig:rcombty}),
-and \ref{fig:rcombdef} (p\pageref{fig:rcombdef}), and the reader is
+in Figures \ref{fig:rcombty} (p.\pageref{fig:rcombty}),
+and \ref{fig:rcombdef} (p.\pageref{fig:rcombdef}), and the reader is
 encouraged to study those Figures for a complete understanding of
 the results of this chapter.
 

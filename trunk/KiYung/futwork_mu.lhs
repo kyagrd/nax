@@ -30,14 +30,14 @@ We want to establish an isomorphism,\footnote{It is more than an isomorphism
 |Mu0 f| $\simeq$ |(forall a. Rec0 f a)|, between these two fixpoint types,
 because we want the Nax language to have one fixpoint rather than two.
 Naively thinking, there is likely to be a one-to-one mapping between
-the |Mu0|-values and the |Rec0|-values, which do not involve the constructor
+the |Mu0|-values and the |Rec0|-values that do not involve the constructor
 |Inverse0|. Since |Mu0| and |Rec0| look structurally isomorphic to each other
 excuding |Inverse0|, one could expect that the quantification |forall a| in
 |(forall a. Rec0 f a)| would prevent the constructor |Inverse0| from appearing
 in values of type |(forall a. Rec0 f a)|.
 
 To establish an isomorphism between |Mu0| and |Rec0|, we must construct
-two mapping (or, coercion) functions of type |Mu0 f -> (forall a. Rec0 f a)|
+two mapping (or coercion) functions of type |Mu0 f -> (forall a. Rec0 f a)|
 and |(forall a. Rec0 f a) -> Mu0 f| (that are each other's inverse).
 At first glance, we thought it would be easier to find a mapping of type
 |Mu0 f -> (forall a. Rec0 f a)| by replacing all the |In0|s with |Roll0|s.
@@ -108,16 +108,19 @@ msfcata :: (forall r. (a -> r a) -> (r a -> a) -> f (r a) -> a) -> Rec0 f Id a -
 msfcata phi x = caseSum x unId (\ f -> f (phi Id))
 \end{spec}
 \caption{\Fw\ encoding of |msfcata'| in Haskell
-        (see with Figure \ref{fig:proofsf} on p\pageref{fig:proofsf}).}
+        (see with Figure \ref{fig:proofsf} on p.\pageref{fig:proofsf}).}
 \label{fig:msfitFw}
 \end{figure}
 
-Figure \ref{fig:mu2rec} illustrates an incomplete attempt to
-define a mapping the other way. Finding a mapping from
-|(Mu0 E)| to |(forall a. Rec0 E a)| turns out to be difficult
-(perhaps impossible). So, we found a mapping (we call |expr2exp'|)
-from |(Mu0 E)|, \ie |Expr|, to |(Rec0 E Expr)|, \ie, |Exp' Expr|,
-where the formerly universally quantified |a| has been instantiated to |Expr|.
+Figure \ref{fig:mu2rec} illustrates an incomplete attempt to define a mapping
+the other direction. Finding a mapping from |(Mu0 E)| to |(forall a. Rec0 E a)|
+turns out to be difficult (perhaps impossible). Instead, we found
+a possible candidate (|expr2exp'|)\footnote{
+	We ended up using general recursion while defining |expr2exp'|.
+	So, we do not know whether |expr2exp'| is total.
+	}
+for a mapping from |Expr| to (|Exp' Expr|). The codomain (|Exp' Expr|) is
+an instantiation of (|forall a. Exp' a|) where |a| is instantiated to |Expr|.
 To define |expr2exp'|, we need its inverse function
 |exp'2expr :: Exp' Expr -> Expr|, whose implementation is
 structurally identical to |exp2expr| in Figure \ref{fig:rec2mu}, but its type
@@ -137,24 +140,24 @@ We need further investigation on whether |expr2exp'| would always terminate
 and whether it is possible to make it work for |Exp| rather than |Exp' Expr|.
 
 Let us contemplate on why the coercion from |(forall a.Rec0 E a)| to |Mu0 E|
-exists, but the coercion the other way is hard (perhaps impossible) to find.
-We believe that |msfcata0| can express more functions than |mcata0|
+exists, but the coercion the other direction is difficult (perhaps impossible)
+to find. We believe that |msfcata0| can express more functions than |mcata0|
 (e.g., |showHOAS| in Figure\;\ref{fig:HOASshow}). Then, it may be the case
-that values of |(forall a. Rec0 f a)| is in fact more restrictive than
+that values of |(forall a. Rec0 f a)| are in fact more restrictive than
 the values of |(Mu0 f)|. The additional expressiveness of |msfcata0| may be
 a compensation for the restrictions on the value of |(forall a. Rec0 f a)|.
 In summary, we strongly believe that |(forall a. Rec0 f a)| is a subset of
 |(Mu0 f)|. From this observation, we plan to design Nax with two fixpoints
-$\breve\mu$ and $\mu$, recursive values being constructed by data constructors
-are by default as $\breve\mu$-values, and allow upcasting from $\breve\mu$
-to $\mu$ when needed (e.g. when applying |msfcata|).
+($\breve\mu$ and $\mu$) and built-in support for coercion
+from inverse-augmented fixpoint types to standard fixpoint types
+(but not the other direction).
 
 In this section, we discussed what we should consider when using both
-|mcata| and |msfcata| together. For some recursion schemes, it is easy
+|mcata| and |msfcata| together. For some recursion schemes, it is
 quite trivial to establish a theory for using them together. For instance,
-there is no problem using |mpr| together with |mcata| since |mpr| subsumes
-|mcata| -- we can implement |mcata| in terms of |mpr|.
+there is no problem using |mprim| together with |mcata| since |mprim| subsumes
+|mcata| --- we can implement |mcata| in terms of |mprim|.
 However, for some recursion schemes, such as |mprim| and |msfcata|,
 it is not trivial to establish a theory for using them together.
 Developing theories for using such recursion schemes together
-is also important future work.
+is an important future work.
