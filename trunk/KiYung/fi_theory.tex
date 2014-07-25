@@ -215,17 +215,17 @@ For any well-sorted kind $\kappa$ in \Fi,
 $\kappa^\circ$ is a kind in \Fw.
 \end{remark}
 
-\begin{theorem}[index erasure on well-formed type level contexts]
+\begin{theorem}[index erasure on well-formed type-level contexts]
 \label{thm:ierasetyctx}
 \[ \inference{|- \Delta}{|- \Delta^\circ} \]
 \end{theorem}
 \begin{proof}
-	By induction on the derivation for well-formed type level context
+	By induction on the derivation for well-formed type-level context
 	and using Theorem \ref{thm:ierasesorting}.
 \end{proof}
 \begin{remark}
-For any well-formed type level context $\Delta$ in \Fi,
-$\Delta^\circ$ is a well-formed type level context in \Fw.
+For any well-formed type-level context $\Delta$ in \Fi,
+$\Delta^\circ$ is a well-formed type-level context in \Fw.
 \end{remark}
 
 \begin{theorem}[index erasure on kind equality]\label{thm:ierasekindeq}
@@ -396,7 +396,7 @@ discards the index term ($s$) appearing in the index application $(F\;\{s\})$.
 So, there is no need to consider the index terms appearing in the types after
 the erasure.
 
-\begin{theorem}[index erasure on well-formed term level contexts]
+\begin{theorem}[index erasure on well-formed term-level contexts]
 \label{thm:ierasetmctx}
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ} \]
 \end{theorem}
@@ -490,9 +490,9 @@ j^{\mathtt{Void}}.\,\forall X^{\mathtt{Void}\to*}.\, X\s i\to X\s j$,
 this open term %this derivation 
 cannot be closed by rule~$(\forall Ii)$ because of its side
 condition.  This is in stark contrast to what is possible in calculi with
-full type dependency. In System \Fi, the index variables
-in type level context~$\Delta$ cannot appear dynamically at term level.
-Conversely, term variables in the term level context~$\Gamma$ cannot be
+-ull type dependency. In System \Fi, the index variables
+in a type-level context~$\Delta$ cannot appear dynamically at the term-level.
+Conversely, term variables in the term-level context~$\Gamma$ cannot be
 used for instantiation of index polymorphic types (rule $(\forall Ei)$).
 
 %% Similar considerations to the above show that $\LEq_A$ is not symmetric,
@@ -500,7 +500,7 @@ used for instantiation of index polymorphic types (rule $(\forall Ei)$).
 \end{example}
 
 We introduce an index variable selection meta-operation that selects all
-the index variable bindings from the type level context.
+the index variable bindings from the type-level context.
 
 \begin{definition}[index variable selection]
 \[ \cdot^\bullet = \cdot \qquad
@@ -509,7 +509,7 @@ the index variable bindings from the type level context.
 \]
 \end{definition}
 
-\begin{theorem}[index erasure on well-formed term level contexts
+\begin{theorem}[index erasure on well-formed term-level contexts
 		prepended by index variable selection]
 \label{thm:ierasetmctxivs}
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
@@ -593,12 +593,12 @@ recall the ($\forall E i$) rule in Figure \ref{fig:fi}.
 %	                           {\Delta;\Gamma |- t : B[s/i]}
 %\]
 Note that it is still possible to instantiate uninhabited type from
-index variables introduced at type level~(\ie, when $j^\mathtt{Void}\in\Delta$).
+index variables introduced at the type-level~(\ie, when $j^\mathtt{Void}\in\Delta$).
 %%%However, such variables are only introduced within a pathological
 %%%type constructor definition, as in Examples~\ref{PathologicalExample}
 %%%and~\ref{PathologicalExampleContinued}.
 \texttt{Void} type instantiation is localized inside type constructor
-definition.  It is assured that function definitions at term level will
+definition.  It is assured that function definitions at term-level will
 never cause \texttt{Void} type instantiation, even when some of the
 function arguments have uninhabited type.
 
@@ -612,7 +612,7 @@ function arguments have uninhabited type.
 \end{proposition}
 \begin{proof}
 	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
-	Note that $|- \kappa'$ does not involve any type level context.
+	Note that $|- \kappa'$ does not involve any type-level context.
 
 	Therefore, $X$ cannot appear free in $\kappa'$.
 \end{proof}
@@ -625,7 +625,7 @@ function arguments have uninhabited type.
 \end{proposition}
 \begin{proof}
 	By Proposition \ref{prop:wfkind}, $|- \kappa'$.
-	Note that $|- \kappa'$ does not involve any type level context.
+	Note that $|- \kappa'$ does not involve any type-level context.
 	Therefore, $i$ cannot appear free in $\kappa'$.
 \end{proof}
 
@@ -637,7 +637,7 @@ function arguments have uninhabited type.
 \end{proposition}
 \begin{proof}
 	By Proposition \ref{prop:wftype}, $\Delta |- B:*$.
-	Note that $\Delta |- \kappa'$ does not involve any term level context.
+	Note that $\Delta |- \kappa'$ does not involve any term-level context.
 	Therefore, $x$ cannot appear free in $B$.
 \end{proof}
 

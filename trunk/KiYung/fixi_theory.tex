@@ -25,7 +25,7 @@ the definition and the theorems, but omit their proofs.
 We define a meta-operation of index erasure ($\circ$) that
 projects $\Fixi$ types to $\Fixw$ types and another meta-operation ($\bullet$)
 that selects only the index variable bindings ($i^A$) from
-the type level context.
+the type-level context.
 \begin{definition}[index erasure]\label{def:Fixierase}
 \[ \fbox{$\kappa^\circ$}
  ~~~~ ~~
@@ -109,7 +109,7 @@ the proofs of the corresponding theorems in \S\ref{ssec:fi:sn}.
         $\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
 \end{theorem}
 
-\begin{theorem}[index erasure on well-formed type level contexts]
+\begin{theorem}[index erasure on well-formed type-level contexts]
 \label{thm:Fixierasetyctx}
 \[ \inference{|- \Delta}{|- \Delta^\circ} \]
 \end{theorem}
@@ -133,7 +133,7 @@ $
 \label{thm:Fixierasetyconeq}
 \end{theorem}
 
-\begin{theorem}[index erasure on well-formed term level contexts]
+\begin{theorem}[index erasure on well-formed term-level contexts]
 \label{thm:Fixierasetmctx}
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ} \]
 \end{theorem}
@@ -146,7 +146,7 @@ $
 \]
 \end{theorem}
 
-\begin{theorem}[index erasure on well-formed term level contexts
+\begin{theorem}[index erasure on well-formed term-level contexts
                 prepended by index variable selection]
 \label{thm:Fixierasetmctxivs}
 \[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
@@ -333,7 +333,7 @@ for any $F : +* -> *$ such that
 \end{proof}
 
 To illustrate that the \textit{fmap}s derived in the proof above are indeed
-type correct, we provide some examples in Haskell accepted by GHC in
+type-correct, we provide some examples in Haskell accepted by GHC in
 Figure~\ref{fig:deriveFunctor}. In fact, all the \texttt{\small Functor}
 instances in Figure~\ref{fig:deriveFunctor} are automatically derivable
 using the \texttt{\small DeriveFunctor} extension in GHC version 7.4.

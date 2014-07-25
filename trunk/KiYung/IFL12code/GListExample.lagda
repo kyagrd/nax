@@ -12,7 +12,7 @@ nil' = PNil
 cons' : {a : Set} -> a -> List' a -> List' a
 cons' = PCons
 
--- instantiating to a length indexed list
+-- instantiating to a length-indexed list
 
 Vec : Set -> ℕ -> Set
 Vec a n = Path (λ i j -> a) n zero

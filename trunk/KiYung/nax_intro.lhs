@@ -1,5 +1,5 @@
 \section{Introduction}
-During the past decade, the functional programming community achieved
+During the past decade, the functional programming community has achieved
 partial success in their goal of maintaining fine-grained properties
 by only moderately extending functional language type systems
 \cite{CheHin03,CheHin02,Xi03}.
@@ -16,26 +16,26 @@ in the Glasgow Haskell Compiler (GHC) and in OCaml \cite{ManStu09,GarNor11},
 has made the lightweight approach
 widely applicable to everyday functional programming tasks.
 
+\index{datatype promotion}
 Unfortunately, most practical lightweight implementations 
 lack \textbf{logical consistency} and
 \textbf{type inference}. In addition,
 they often lack term indexing, so \textbf{term indices are faked}
-(or, simulated) by additional type structure replicating the requisite term
-structure.
-\index{datatype promotion}
+(or simulated) by using an additional type structure to replicate
+the requisite term structure.
 A recent extension in GHC, datatype promotion \cite{YorWeiCrePeyVytMag12},
 addresses the issue of term indices, but the issues of
-logical consistency and type inference still remain.
+logical consistency and type inference remain.
 
-Nax is a programming language designed to support both type and
-term indexed datatypes, logical consistency, and type inference.
+Nax is a programming language designed to support both type- and
+term-indexed datatypes, logical consistency, and type inference.
 \begin{description}
 \item[$(1)$ Nax is strongly normalizing and logically consistent.]~\\
 Types in Nax can be given logical interpretations as propositions
 and the programs of those types as proofs of those propositions.
-Theories behind strong normalization and logical consistency are
+Theories behind strong normalization and logical consistency include
 Mendler-style recursion \cite{AhnShe11} discussed in Chapter \ref{ch:mendler}
-and the lambda calculi, System \Fi\ and System \Fixi,
+and the lambda calculi, System \Fi, and System \Fixi,
 discussed in Chapters \ref{ch:fi} and \ref{ch:fixi}.
 
 \item[$(2)$ Nax supports Hindley--Milner-style type inference.]~\\
@@ -59,16 +59,16 @@ do not necessarily add verbosity.
 \item[$(4)$ Nax supports term indices within a relatively simple type system.]
 ~\\
 The type system of Nax (\S\ref{ssec:sorting}) is based on a
-two level universe structure, just like Haskell,
+two-level universe structure, just like Haskell,
 yet it allows nested term indices (\S\ref{ssec:sortingEx}) as in languages
 based on a universe structure of countably many levels (\eg, Coq, Agda).
 \end{description}
-The detailed mechanism behind (1) and (2) above are discussed in other chapters.
-In this Chapter, we demonstrate (3) and (4), through a series of examples
+The detailed mechanisms behind (1) and (2) are discussed in other chapters.
+In this chapter, we demonstrate (3) and (4), through a series of examples:
 -- a type-preserving evaluator (\S\ref{ssec:eval}),
 a generic path datatype (\S\ref{ssec:glist}), and
-a stack-safe compiler (\S\ref{ssec:compile}), that programming in Nax 
-is as simple as programming in Haskell or Agda.
+a stack-safe compiler (\S\ref{ssec:compile}). These examples demonstrate
+that programming in Nax can be as succinct as as programming in Haskell or Agda.
 Then, we discuss the key design principles behind indexed datatypes in Nax
 (\S\ref{ssec:sorting}) and its strengths and limitations
 (\S\ref{ssec:sortingEx}).
@@ -77,7 +77,7 @@ Then, we discuss the key design principles behind indexed datatypes in Nax
 \begin{table}
 \vskip-4ex
 \begin{tcolorbox}[boxsep=-1mm]
-\quad The ``|deriving fixpoint T|'' clause following
+\quad The ``|deriving fixpoint T|'' clause after
 |data F : {-"\,\overline{k}"-} -> kappa -> kappa where {-"\cdots"-}|
 automatically derives a recursive type
 synonym |T {-"\,\overline{a}"-} = Mu[kappa](F {-"\,\overline{a}"-}) : kappa|
@@ -107,7 +107,7 @@ recursive types (\eg, |nil| and |cons|).
 \quad
 However, one cannot pattern match against |In[kappa] e| in Nax.
 Instead, Nax provides several well-behaved (\ie, always
-terminating) Mendler-style recursion combinators, such as {\bf mit},
+terminating) Mendler-style recursion combinators such as |MIt|
 that work naturally over $\mu$ types, even with indices. 
 
 \quad 

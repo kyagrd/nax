@@ -532,7 +532,7 @@ the object-language function $f$. The resulting HOAS expression
   |f| and argument |x| to host-language values
         |(ev f)| and |(ev x)|, and uses host-language application
         to compute the resulting value. Note that the host-language application
-        |((ev f) (ev x))| is type correct since
+        |((ev f) (ev x))| is type-correct since
 	|ev f :: a -> b| and |ev x ::  a|,
 	thus the resulting value has type |b|.
 \end{itemize}

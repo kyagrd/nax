@@ -12,7 +12,7 @@ nil' = PNil {-"~"-} :: List' a
 cons' :: a -> List' a -> List' a
 cons' = PCons . MkElem
 
--- instantiating to a length indexed list
+-- instantiating to a length-indexed list
 
 data Nat = Z | S Nat
 

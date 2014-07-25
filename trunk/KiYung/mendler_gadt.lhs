@@ -29,7 +29,7 @@ data Vec p i where
   NV :: Vec p Z
   CV :: p -> Vec p i -> Vec p (S i)
 \end{code}.
-Note, the indices\footnote{The |Z| and |S| used in |Vec| are type level
+Note, the indices\footnote{The |Z| and |S| used in |Vec| are type-level
 representations of natural numbers, which are empty types that are not
 inhabited by any value. They are only intend to be used as indices.
 %% We make this clear so that the reader may not confuse them with

@@ -1,15 +1,15 @@
 \section{Discussion} \label{sec:discuss}
 Indexed types (\eg, |Val| in Figure\;\ref{fig:eval}) are
 classified by kinds (\eg, |Ty -> *|). What do valid kinds look like?
-Sorting rules define kind validity (or, well-sortedness).
-Different programming languages, that support term indices, have
+Sorting rules define kind validity (or well-sortedness).
+Different programming languages that support term indices have
 made different design choices.
 In this section, we compare the sorting rules of Nax with the sorting rules
 of other languages (\S\ref{ssec:sorting}). Then, we
 compare the class of indexed datatypes supported by Nax with
 those supported in other languages (\S\ref{ssec:sortingEx}).
 
-\subsection{Universes, Kinds, and Well-sortedness} \label{ssec:sorting}
+\subsection{Universes, kinds, and well-sortedness} \label{ssec:sorting}
 \index{universe}
 The concrete syntax for kinds appears similar among Haskell, Nax, and Agda.
 For instance, in Figure\;\ref{fig:eval}, the kind |Ty -> *| has exactly the same
@@ -23,8 +23,8 @@ illustrates differences and similarities between the mechanism
 for checking well-sortedness, by comparing the justification for
 the well-sortedness of the kind |List Ty -> *|.
 The important lessons of Figure\;\ref{fig:sortingEx} are
-that the Nax approach is closely related to \emph{universe subtyping} in Agda,
-and, the datatype promotion in Haskell is closely related to
+that the Nax approach is closely related to \emph{universe subtyping} in Agda
+and the datatype promotion in Haskell is closely related to
 \emph{universe polymorphism} in Agda.
 \index{datatype promotion}
 \index{universe!subtyping}
@@ -161,8 +161,8 @@ $\begin{smallmatrix}
 
 In Nax, we may form a kind arrow |{A} -> kappa|
 whenever |A| is a type (\ie, $\Jty |A : *|$). Note that types may only appear
-in the domain (the left-hand-side of the arrow) but not in the codomain 
-(the right-hand-side of the arrow).  Modulo right associativity of arrows
+in the domain (the left-hand side of the arrow) but not in the codomain 
+(the right-hand side of the arrow).  Modulo right associativity of arrows
 (\ie, |kappa1 -> kappa2 -> kappa3| means |kappa1 -> (kappa2 -> kappa3)|),
 kinds in Nax always terminate in |*|. For example,\footnote{
 	The Nax implementation allows programmers to omit curly braces in kinds
@@ -177,23 +177,23 @@ are valid kinds in Nax.
 The sorting rule (\raisebox{1pt}{\tiny\{\}}$->$) could be understood as
 a specific use of universe subtyping (|* <= BOX|) hard-wired within
 the arrow formation rule. Agda needs a more general notion of
-universe subtyping, since Agda is a dependently typed language
+universe subtyping, since it is a dependently typed language
 with stratified universes, which we will shortly explain.
 \index{universe!subtyping}
 
 Agda has countably many stratified type universes for several good reasons.
-When we from a kind arrow |kappa1 -> kappa2| in Agda, the domain |kappa1| and 
-the codomain |kappa2| must be the same universe (or, sort), as specified by
+When we form a kind arrow |kappa1 -> kappa2| in Agda, the domain |kappa1| and 
+the codomain |kappa2| must be the same universe (or sort), as specified by
 the (|->|) rule in Figure\;\ref{fig:sorting}, and the arrow kind also lies in
 the same universe. However, requiring |kappa1|, |kappa2|, and |kappa1 -> kappa2|
 to be in exactly the same universe can cause a lot of code duplication.
 For example, $|List Ty| -> \star_0$ cannot be justified by the (|->|) rule
 since $||- |List Ty| : \star_0$ while $||- \star_0:\star_1$. To work around
-the universe difference, one could define datatypes |List'| and |Ty'|,
+the universe difference, one could define the datatypes |List'| and |Ty'|,
 which are isomorphic to |List| and |Ty|, only at one higher level, such that
-$||- |List' Ty'| : \star_1$. Only then, one can construct
+$||- |List' Ty'| : \star_1$. Only then, can one construct
 $|List' Ty'| -> \star_0$. Furthermore, if one needs to form
-$|List Ty| -> \star_1$ we would need yet another set of
+$|List Ty| -> \star_1$, we would need yet another set of
 duplicate datatypes |List''| and |Ty''| at yet another higher level.
 Universe subtyping provides a remedy to such a code duplication problem
 by allowing objects in a lower universe to be considered as objects
@@ -215,19 +215,19 @@ universe polymorphism,\footnote{See
 which is closely related to datatype promotion. In fact, it is more intuitive to
 understand the datatype promotion in Haskell as a special case of
 universe polymorphism. Since there are only two universes |*| and |BOX|
-in Haskell, we can think of datatypes like |List| and |Ty| are defined
+in Haskell, we can think of datatypes such as |List| and |Ty| being defined
 polymorphically at both |*| and |BOX|. That is, |List : BOX -> BOX| as well as
 |List : * -> *|, and similarly, |Ty : BOX| as well as |Ty : *|.
-So, |List : BOX -> BOX| can be applied to |Ty : BOX| at kind level,
-just as |List : * -> *| can be applied at type level.
+So, |List : BOX -> BOX| can be applied to |Ty : BOX| at the kind-level,
+just as |List : * -> *| can be applied at the type-level.
 
 In summary, Nax provides a new way of forming kind arrows by allowing
-types, which are already fully applied at the type level, as the domain
+types that are already fully applied at the type-level as the domain
 of an arrow.
 On the contrary, Haskell first promotes type constructors (\eg, |List|)
-and their argument types (\eg, |Ty|) to the kind level, and everything else
+and their argument types (\eg, |Ty|) to the kind-level, and everything else
 (application of |List| to |Ty| and kind arrow formation) happens at
-kind level.
+the kind-level.
 
 \subsection{Nested Term Indices and Datatypes Containing Types}
 \label{ssec:sortingEx}
@@ -241,7 +241,7 @@ kind level.
 \vskip-3ex
 \begin{singlespace}
 \caption{Environments of stateful resources
-	indexed by the length indexed list of states}
+	indexed by the length-indexed list of states}
 \label{fig:env}
 \end{singlespace}
 \end{figure}
@@ -273,9 +273,9 @@ hlist = HCons 3 (HCons True (HCons (1 :. 2 :. Nil) HNil))
 \end{figure}
 \index{nested term index}
 \index{term index!nested}
-Nax supports nested term indices while Haskell's datatype promotion cannot.
-Examples in \S\ref{sec:example} only used rather simple
-indexed datatypes, whose terms indices are of non-indexed types
+Nax supports nested term indices, while Haskell's datatype promotion cannot.
+The examples in \S\ref{sec:example} only used rather simple
+indexed datatypes, whose term indices are of non-indexed types
 (\eg, |Nat|, |List Ty|). One can imagine more complex indexed datatypes,
 where some term indices are themselves of term-indexed datatypes.
 Such nested term indices are often useful in dependently typed programming.
@@ -284,7 +284,7 @@ indices in their EDSL implementation for verified resource usage protocols.
 Figure \ref{fig:env} illustrates transcriptions of their environment datatype
 (|Env|), originally written in Idris \cite{Brady11}, into Nax and Agda.
 The datatype |Env| is indexed by a length indexed list (|Vec|), which is again
-indexed by a natural number (|n|). Note that the nested term-index $n$ appears
+indexed by a natural number (|n|). Note that the nested term index $n$ appears
 inside the curly braces nested twice (|{Vec st {n}}|). There is no Haskell
 transcription for |Env| because datatype promotion is limited to datatypes
 without term indices.
@@ -297,7 +297,7 @@ a well-known example\footnote{The |HList| library in Haskell by
 rather than using GADTs and other relatively new extensions.}
 that uses datatypes containing types.
 Note that |HList| is indexed by |List{-"\;"-}*|, which is a promoted list
-whose elements are of kind |*|, that is, element are types.
+whose elements are of kind |*|, that is, the element are types.
 For instance, |hlist| in Figure\;\ref{fig:hlist} contains
 three elements |3 : Int|, |True : Bool|, and |(1 :.2 :. Nil) : List Int|,
 and its type is |HList (Int :. Bool :. List Int :. Nil)|.
@@ -309,8 +309,8 @@ and its type is |HList (Int :. Bool :. List Int :. Nil)|.
 have been used in lightweight verification to simulate dependent types
 \cite{XiPfe98,KisSha07}. \citet{SheHooLin05} demonstrated that singleton types
 can be defined just like any other datatype in Omega \cite{SheardOmega04},
-a language equipped with GADTs and rich kind structure. Nax's universe and
-kind structure is much simpler than Omega's (\eg, no user defined kinds in Nax),
+a language equipped with GADTs and a rich kind structure. Nax's universe and
+kind structure is much simpler than Omega's (\eg, no user-defined kinds in Nax),
 yet singleton types are definable with fewer worries about code duplication
 across different universes. Singleton types are typically indexed by
 the values of their non-singleton counterparts. For example,
@@ -319,11 +319,11 @@ natural numbers (|Nat|).  Note that we can index datatypes by singleton types
 in Nax, while datatype promotion cannot (recall \S\ref{ssec:sortingEx}).
 For instance, |Env'| indexed by |SNat| in Figure\;\ref{fig:env} can better
 simulate the dependently typed version than |Env|, since |Env'| has a direct
-handle on size of the environment at type level, just by referring to
-the |SNat| index, without extra type level computation on the |Vec| index.
+handle on size of the environment at the type-level, just by referring to
+the |SNat| index, without extra type-level computation on the |Vec| index.
 
 \citet{EisWei12}, in the setting of Haskell's datatype promotion,
-automatically derive a singleton type (\eg, singleton natural numbers) and
+automatically derived a singleton type (\eg, singleton natural numbers) and
 its associated functions (\eg, addition over singleton natural numbers) from
 their non-singleton counterparts (\eg, natural numbers and their addition).
 We think it would be possible to apply similar strategies to Nax, and even
@@ -335,13 +335,13 @@ predates Nax.
 Our kind syntax in Figure\;\ref{fig:sorting}, although developed independently,
 happens to coincide with the kind syntax of Deputy \cite{ConHarAndGayNec07},
 a dependently typed system for low-level imperative languages with
-variable mutation and heap-allocated structure.
+variable mutation and a heap allocated structure.
 
 \paragraph{Curly braces in Nax are different from those in Agda or SHE.} ~
 
-In Nax, curly braces mean that things inside them are \emph{erasable} (\ie,
-must still type correct without all the curly braces). Agda's curly braces
-mean that things in them would often be \emph{inferable} so that programmers
+In Nax, curly braces mean that the things inside them are \emph{erasable} (\ie,
+must still type-correct without all the curly braces). Agda's curly braces
+mean that the things in them would often be \emph{inferable} so that programmers
 may omit them.
 
 The concrete syntax for kinds in SHE\footnote{
@@ -352,7 +352,8 @@ types. However, SHE's (abstract) kind syntax is virtually identical to the
 since |{A} :: BOX| in SHE.
 
 \index{kind polymorphism}
-\paragraph{Kind polymorphism} in Nax may be polymorphic over term-index
+\paragraph{Kind polymorphism}\hspace*{-.7ex} in Nax
+may be polymorphic over term-index
 variables (|i : A|) and type variables (|alpha : *|), as well as over
 kind variables (|calX : BOX|). That is, polymorphic kinds (or kind schemes)
 in Nax may be kind polymorphic (|forall calX.kappa|), type polymorphic
@@ -361,30 +362,31 @@ combinations of them (|forall calX alpha i.kappa|). For example, the kinds of
 |P| and |Path| in Figure\;\ref{fig:glist} are polymorphic over the type variable
 |iota: *|.  In contrast, datatype promotion in Haskell only needs to consider
 polymorphic kinds (|forall calX.kappa|) quantified over kind variables
-(|calX : BOX|) since everything is already promoted to the kind level.
+(|calX : BOX|) since everything is already promoted to the kind-level.
 
-In Nax, kind polymorphism is limited to rank-1 since it is well-known that
+In Nax, kind polymorphism is limited to rank-1 since it is well known that
 higher-rank kind polymorphism leads to a paradox
 \cite{hurkens95simplification}.
 %%%% there are several more things to cite according to below,
 %%%% but I can't figure them out except above
 %%%% http://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=4&cad=rja&ved=0CEUQFjAD&url=http%3A%2F%2Fwww.cse.chalmers.se%2Fresearch%2Fgroup%2Flogic%2FTypesSS05%2FExtra%2Fmiquel_sl3.pdf&ei=SkOoULS-Gen-iwKnnYD4DA&usg=AFQjCNEGQtWmZpveVqykzrgpNUBuad7Yjw&sig2=piFq-fSCuWIeL0glaIQ8JA
 In fact, type polymorphism in Nax is limited to rank-1 as well since
-the type inference is based on Hindley-Milner \cite{Milner78}.
+type inference is based on Hindley-Milner \cite{Milner78}.
 
 
-\paragraph{Concoqtion}\hspace*{-.6ex}\cite{FogPasSeiTah07} is an extension of
-MetaOCaml with indexed types. Concoqtion share some similar design principles --
-Hindley--Milner-style type inference and \emph{gradual typing by erasure} over
-(term) indices. Both in Nax and Concoqtion, a program using indexed types must
-still type check within the non-indexed sub-language (OCaml for Concoqtion)
-when all indices are erased from the program. However, indices in Concoqtion
-differ from term indices discussed in this chapter (Nax, datatype promotion, and
-dependently typed languages like Agda). Concoqtion indices are Coq terms rather
-than OCaml terms. Although this obviously leads to code duplication
-between the index world (Coq) and the program world (OCaml), Concoqtion enjoys
-practical benefits of having access to the Coq libraries for reasoning about
-indices. Comparison of Concoqtion and other related systems can be found in
+\paragraph{Concoqtion}\hspace*{-.7ex}\cite{FogPasSeiTah07} is an extension of
+MetaOCaml with indexed types. Concoqtion shares some similar design principles
+--- Hindley--Milner-style type inference and \emph{gradual typing by erasure}
+over (term) indices. Both in Nax and in Concoqtion, a program
+using indexed types must still type check within the non-indexed sub-language
+(OCaml for Concoqtion) when all indices are erased from the program. However,
+indices in Concoqtion differ from the term indices discussed in this chapter
+(Nax, datatype promotion, and dependently typed languages like Agda).
+Concoqtion indices are Coq terms rather than OCaml terms. Although
+this obviously leads to code duplication between the index world (Coq)
+and the program world (OCaml), Concoqtion enjoys practical benefits of
+having access to the Coq libraries for reasoning about indices.
+Comparison of Concoqtion and other related systems can be found in
 the technical report by \citet{PasSieTah06}.
 
 
@@ -394,7 +396,7 @@ In Nax, programmers can enforce program invariants using indexed types,
 without excessive annotations (like functional programming languages)
 while enjoying logical consistency (like dependently typed proof assistants).
 
-There are two approaches that allow term-indices without code duplication at
+There are two approaches that allow term indices without code duplication at
 every universe. \emph{Universe subtyping} is independent of the number of
 universes. Even scaled down to two universes (|*, BOX|), it adds no additional
 restrictions -- term indices can appear at arbitrary depth.
@@ -402,10 +404,10 @@ restrictions -- term indices can appear at arbitrary depth.
 Unless there are countably infinite universes, nested term indices are
 restricted to depth $n-1$ where $n$ is the number of universes.
 
-On the other hand, universe polymorphism can reuse datatypes at term level
-(|List a| where |a: *|) at type-level to contain type elements
-(\eg, |List| |*|), which is beyond universe subtyping. We envision that
-Nax extended with first-class datatype descriptions \cite{DagMcb12} would
-be able express the same concept reflected at term level, so that we would
-have no need for type level datatypes.
+On the other hand, universe polymorphism can reuse datatypes at
+the term-level (|List a| where |a: *|) at the type-level to contain
+type elements (\eg, |List| |*|), which is beyond universe subtyping.
+We envision that Nax extended with first-class datatype descriptions
+\cite{DagMcb12} would be able express the same concept reflected
+at the term level, so that we would have no need for type-level datatypes.
 

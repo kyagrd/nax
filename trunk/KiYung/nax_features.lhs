@@ -6,7 +6,7 @@ to continue further discussions on design principles (Chapter~\ref{ch:nax}) and
 type inference (Chapter~\ref{ch:naxTyInfer}) in the following chapters.
 
 All the examples in this chapter run on our prototype implementation of Nax.
-An example usually consists of several parts.
+An example usually consists of several parts:
 \begin{itemize}
 \item Introducing data definitions to describe the data of interest.
 Recursive data is introduced in two stages. We must be careful to separate
@@ -14,11 +14,11 @@ parameters from indices when using indices to describe static properties of
 data.
 
 \item Introduce type synonyms and constructor functions,
-either by explicit definition, or by automatic fixpoint derivation
+either by explicit definition  or by automatic fixpoint derivation,
 to limit the amount of explicit notation that must be supplied
 by the programmer.
 
-\item Write a series of definitions that describe how the data is to be
+\item Write a series of definitions that describes how the data is to be
 manipulated. Deconstruction of recursive data can only be performed with
 Mendler-style recursion combinators to ensure strong normalization.
 \end{itemize}
@@ -30,7 +30,7 @@ The data declaration can include arguments.
 %% The kind and separation of arguments into parameters and a indices is inferred.
 For example, the three non-recursive datatypes, |Bool|, |Either|, and |Maybe|,
 familiar to many functional programmers, are introduced by declaring
-the kind of the type, and the type of each of the constructors.
+the kind of the type and the type of each of the constructors.
 This is similar to the way {\small GADT}s are introduced in Haskell.
 \begin{singlespace}
 \vspace*{0.1in}\noindent
@@ -74,11 +74,11 @@ Note the kind information (|Bool: *|) declares |Bool| to be a type,
 with two type arguments, and (|Maybe: * -> *|) declares |Maybe| to be
 a type constructor with one type argument.
 
-To introduce a recursive type, we first introduce a non recursive datatype
+To introduce a recursive type, we first introduce a non-recursive datatype
 that uses a parameter where the usual recursive components occur. By design,
 normal parameters of the introduced type are written first (|a| in |L| below)
-and the type argument to stand for the recursive component is written last
-(the |r| of |N|, and the |r| of |L| below).
+and the type argument that stands for the recursive component is written last
+(the |r| of |N| and the |r| of |L| below).
 \begin{singlespace}
 \vspace*{0.1in}\noindent
 \begin{tabular}{l||l}
@@ -117,7 +117,7 @@ non-recursive type constructor. Thus, the traditional natural numbers are typed
 by |Mu[*] N| and the traditional lists with components of type |a| are typed by
 |Mu[*] (L a)|.  Note that the recursive type operator |Mu[kappa]| is itself
 specialized with a kind argument inside square brackets (|[ kappa ]|).
-The recursive type (|Mu[kappa] f|) is well kinded only if the operand |f| has
+The recursive type (|Mu[kappa] f|) is well-kinded only if the operand |f| has
 kind |kappa -> kappa|, in which case the recursive type (|Mu[k] f|) has kind
 |kappa|. Since both |N| and |(L a)| have kind |* -> *|, the recursive types
 |Mu[*] N| and |Mu[*] (L a)| have kind |*|. That is, they are both types,
@@ -127,20 +127,20 @@ not type constructors.
 
 \section{Creating values}
 \index{constructor function}
-Values of a particular datatype are created by use of constructor functions.
-For example |True| and |False| are nullary constructors (or, constants) of
+Values of a particular datatype are created by the use of constructor functions.
+For example, |True| and |False| are nullary constructors (or  constants) of
 type |Bool|. |(Left 4)| is a value of type |(Either Int a)|. Values of
 recursive types (\ie, those values with types such as |(Mu[k] f)| are formed by
-using the special |In[kappa]| constructor expression. Thus |Nil| has type |L a|
+using the special |In[kappa]| constructor expression. Thus, |Nil| has type |L a|
 and |(In[*] Nil)| has type |(Mu[*] (L a))|. In general, applying the operator
 |In[k]| injects a term of type |f(Mu[k] f)| to the recursive type |(Mu[k] f)|.
-Thus a list of |Bool| could be created using the term
+Thus, a list of |Bool| could be created using the term
 |(In[*] (Cons True (In[*] (Cons False  (In[*] Nil)))))|. 
-A general rule of thumb, is to apply |In[k]| to terms of non-recursive type
-to get terms of recursive type. Writing programs using two-level types, and
-recursive injections has definite benefits, but it surely makes programs rather
-annoying to write. Thus, we have provided Nax with a simple but powerful
-synonym (or, macro) facility.
+A general rule of thumb is to apply |In[k]| to terms of non-recursive types
+to get terms of recursive types. Writing programs using two-level types and
+recursive injections has definite benefits, but it certainly makes programs
+rather annoying to write. Thus, we have provided Nax with a simple but powerful
+synonym (or  macro) facility.
 
 \section{Synonyms, constructor functions, and fixpoint derivation}
 \label{macro}
@@ -149,7 +149,6 @@ We may codify that some type is the fixpoint of another, once and for all,
 by introducing a type synonym.
 \index{synonym}
 \index{type!synonym}
-
 \begin{code}
 synonym Nat = Mu[*] N
 synonym List a = Mu[*] (L a)     
@@ -234,13 +233,13 @@ x = cons 3 (cons 2 nil)
 \vskip.5em
 
 \section{Mendler combinators for non-indexed types}
-There are no restrictions on what kind of datatypes can be defined in Nax.
+There are no restrictions on what kinds of datatypes can be defined in Nax.
 There are also no restrictions on the creation of values for those datatypes.
 Values of datatypes are created using data constructors and
 the recursive injection (|In[k]|). To ensure strong normalization,
-analysis (or, elimination, pattern matching) of the constructed values
-has some restrictions. Values of non-recursive types can be freely analysed
-using pattern matching. Values of recursive types must be analysed using
+analysis (or elimination, pattern matching) of the constructed values
+has some restrictions. Values of non-recursive types can be freely analyzed
+using pattern matching. Values of recursive types must be analyzed using
 one of the Mendler-style combinators. By design, we limit pattern matching
 to values of non-recursive types, by {\em not} providing any mechanism to
 match against the recursive injection (|In[k]|).
@@ -273,8 +272,8 @@ unJust0 x =  casei{} x of  Just x   -> x
 \end{tabular}
 \vspace*{.1in}
 \end{singlespace}
-Of course, the |not| function can be also defined as a single clause definition
-using the |case| expression and the |unJust0| function an also be defined
+Of course, the |not| function can also be defined as a single clause definition
+using the |case| expression and the |unJust0| function can also be defined
 as a multi-clause definition.
 
 \index{Mendler-style!recursion combinators}
@@ -282,24 +281,25 @@ Analysis of recursive data is performed by Mendler-style recursion combinators.
 In our implementation, we provide 5 families of Mendler-style combinators:
  |MIt| (fold or catamorphism or iteration),
  |MPr| (primitive recursion),
- |McvIt| (courses-of-values iteration), and
+ |McvIt| (courses-of-values iteration),
  |McvPr| (courses-of-values recursion), and
  |MsfIt| (fold or catamorphism or iteration for recursive types with negative occurrences).
 
 A Mendler-style combinator is written in a manner similar to a case expression.
-A Mendler-style combinator expression contains patterns, and the variables bound in the patterns
-are scoped over a term. This term is executed if the pattern matches. 
+A Mendler-style combinator expression contains patterns, and
+the variables bound in the patterns are scoped over a term.
+This term is executed if the pattern matches. 
 A Mendler-style combinator expression differs from a case expression
 in that it also introduces additional names (or variables) into scope.
 These variables play a role similar in nature to the operations of
-an abstract datatype, and provide additional functionality in addition to
+an abstract datatype and provide additional functionality aside to
 what can be expressed using just case analysis.
 
 For a visual example, compare the |case| expression to the |MIt| expression.
-In the |case|, each {\em clause} following the |of| indicates a possible match
-of the scrutinee |x|. In the |MIt|, each {\em equation} following the |with|,
-binds the variable $\newFi{f}$, and matches the pattern to a value related to
-the scrutinee |x|.
+In the |case| expression, each {\em clause} following the |of| indicates
+a possible match of the scrutinee |x|. In the |MIt| expression,
+each {\em equation} following the |with|, binds the variable $\newFi{f}$,
+and matches the pattern to a value related to the scrutinee |x|.
 
 \begin{singlespace}
 %{
@@ -330,20 +330,20 @@ MIt{} x with  (NEWFI f) (Cons x xs)  =  e1
 The number and type of the additional variables depends upon which family of
 Mendler combinators is used to analyze the scrutinee.  Each equation specifies
 (a potential) computation in an abstract datatype depending on whether
-the pattern matches. For the |MIt| combinator (above) the abstract datatype
-has the following form. The scrutinee, |x| is a value of some recursive type
+the pattern matches. For the |MIt| combinator (above), the abstract datatype
+has the following form. The scrutinee |x| is a value of some recursive type
 |(Mu[*] T)| for a non-recursive type constructor |T|. In each clause,
 the pattern has type |(T r)|, for some abstract type |r|. The additional
-variable introduced ($\newFi{f}$) is an operator over the abstract type, |r|,
+variable introduced ($\newFi{f}$) is an operator over the abstract type |r|
 that can safely manipulate only abstract values of type |r|.
 
 Different Mendler-style combinators are implemented by different abstract types.
 Each abstraction safely describes a class of provably terminating computations 
 over a recursive type. The number (and type) of abstract operations differs from
-one family of Mendler combinators to another. We give descriptions of three
-families of Mendler combinators, their abstractions, and the types of
-the operators within the abstraction, below. In each description, the type
-|ans| represents the result type, when the Mendler combinator is fully applied.
+one family of Mendler combinators to another. Below, we give descriptions of
+three families of Mendler combinators, their abstractions, and the types of
+the operators within the abstraction. In each description, the type
+|ans| represents the result type when the Mendler combinator is fully applied.
 \begin{singlespace}
 %{
 %format p_i
@@ -418,7 +418,6 @@ respectively). The equations at the bottom of each column above provide
 an operational understanding of how each Mendler-style combinator works.
 These can be safely ignored until after we see some examples of
 how a Mendler-style combinator works in practice.
-In Figure~\ref{fig:NaxExampleMendlerCombinatorUses},
 \begin{figure}
 \begin{singlespace}
 \begin{code}
@@ -437,33 +436,35 @@ fibonacci x  = McvIt{} x  with  fib out Zero      =  succ zero
                                                        Succ m  -> fib n + fib m 
 \end{code}
 \end{singlespace}
-\caption{Illustrating the use of Mendler-style recursion combinators
+\caption{Illustrating the use of the Mendler-style recursion combinators
 	provided in Nax by simple examples: |length|, |tail|, |factorial|,
 	and |fibonacci|.}
 \label{fig:NaxExampleMendlerCombinatorUses}
 \end{figure}
-The |length| function uses the simplest kind of recursion where
+In Figure~\ref{fig:NaxExampleMendlerCombinatorUses},
+the |length| function uses the simplest kind of recursion where
 each recursive call is an application to a direct subcomponent of the input.
-Operationally, |length| works as follows. The scrutinee, |y|,
-has type |(Mu[*] (L a))|, and has the form |(In[*] x)|. 
+Operationally, |length| works as follows. The scrutinee |y|
+has type |(Mu[*] (L a))| and has the form |(In[*] x)|. 
 The type of |y| implies that |x| must have the form |Nil| or
 |(Cons x xs)|.  The |MIt| strips off the |In[*]| and matches |x| against
 the |Nil| and |(Cons x xs)| patterns. If the |Nil| pattern matches, then
 |0| is returned. If the |(Cons x xs)| pattern matches, |x| and |xs| are bound.
-The abstract type mechanism gives the pattern |(Cons x xs)| the type |(L a r)|,
-so (|x: a|) and (|xs: r|) for some abstract type |r|. The abstract operation,
-(|len: r -> Int|), can safely be applied to |xs|, obtaining the length of
-the tail of the original list. This value is incremented, and then returned.
-The abstract operation of |MIt| provides a safe way to allow the user to make
-recursive calls, |len|, but the abstract type, |r|, limits its use to
-direct subcomponents, so termination is guaranteed.
+The abstract type mechanism gives the pattern |(Cons x xs)| and
+the type |(L a r)|, so (|x: a|) and (|xs: r|) for some abstract type |r|.
+The abstract operation, (|len: r -> Int|), can safely be applied to |xs|,
+obtaining the length of the tail of the original list. This value is
+incremented and then returned. The abstract operation of |MIt| provides
+a safe way to allow the user to make recursive calls, |len|,
+but the abstract type, |r|, limits its use to direct subcomponents,
+so termination is guaranteed.
 
 \index{direct subcomponent}
 Some recursive functions need access to the concrete values of
 the direct subcomponents (of type |Mu[*] T|), in addition to applying
-abstract recursive call on the abstract handles of the direct subcomponents
+abstract recursive calls on the abstract handles of the direct subcomponents
 (of type |r|). The Mendler-style combinator |MPr| provides a safe,
-yet abstract mechanism, to support this.
+yet abstract mechanism to support this.
 
 \index{abstract operation!recursive call}
 \index{abstract operation!cast}
@@ -480,37 +481,36 @@ and |tail| (over lists) are both defined using |MPr|.
 \index{factorial}
 Note how in |factorial| the original input is recovered (in constant time)
 by taking the successor of the concrete predecessor value (|cast n|) obtained by
-casting the abstract predecessor, |n|.
-In the |tail| function, the abstract tail, |ys|, is cast to get the answer,
+casting the abstract predecessor |n|.
+In the |tail| function, the abstract tail |ys| is cast to get the answer,
 and the recursive caller is not even used.
 
 Some recursive functions need access, not only to
 the direct subcomponents, but also to even deeper subcomponents.
 The Mendler-style combinator |McvIt| provides a safe,\footnote{
 	Only for positive datatypes, of course.}
-yet abstract mechanism, to support this.
+yet abstract mechanism to support this.
 \index{Fibonacci}
 The function |fibonacci| is a classic example of this kind of recursion.
-The recursion combinator |McvIt| provides two abstract operations.
-The recursive caller with type (|r -> ans|) and a projection function
+The recursion combinator |McvIt| provides two abstract operations:
+the recursive caller with type (|r -> ans|) and a projection function
 with type (|r -> T r|). The projection allows the programmer to observe
 the hidden |T| structure inside a value of the abstract recursive type |r|.
 In the |fibonacci| function above, we name the projection |out|.
 It is used to observe if the abstract predecessor, |n|, of the input, |x|,
-is either zero, or the successor of the second predecessor, |m|, of |x|.
-Note how recursive calls are made on the direct predecessor, |n|, and
-the second  predecessor, |m|.
+is either zero, or the successor of the second predecessor |m| of |x|.
+Note how recursive calls are made on the direct predecessor |n| and
+the second predecessor |m|.
 
 Each recursion combinator can be defined by the equation at the bottom of
 its figure.  Each combinator can be given a naive type involving
 the concrete recursive type (|Mu[*] T|), but if we instead give it
 a more abstract type, abstracting values of type (|Mu[*] T|) into some
 unknown abstract type |r|, one can safely guarantee a certain pattern of
-use that insures termination.  
-Informally, if the combinator works for some unknown type |r| it will certainly
-also work for the actual type (|Mu[*] T|), but because it cannot assume that
-|r| has any particular structure, the user is forced to use
-the abstract operations in carefully proscribed ways.
+use that ensures termination. Informally, if the combinator works for some
+unknown type |r|, it will certainly also work for the actual type (|Mu[*] T|),
+but because we cannot assume that |r| has any particular structure;
+the user is forced to use the abstract operations in carefully proscribed ways.
   
 \section{Types with static indices}\label{sec:bg:ixty}
 \index{type!indexed}
@@ -519,14 +519,14 @@ the abstract operations in carefully proscribed ways.
 \index{type!parameter}
 \index{type!index}
 Recall that a type can have both parameters and indices, and
-that indices can be either types or terms. We define three types below
-each with one or more indices. Each example defines a non-recursive type,
+that indices can be either types or terms. We define three types below,
+each with one or more indices. Each example defines a non-recursive type
 and then uses fixpoint derivation to define synonyms for its fixpoint and
 constructor functions. By convention, in each example, the argument that
 abstracts the recursive components is called |r|. By design, arguments
 appearing before |r| are understood to be parameters, and arguments
 appearing after |r| are understood to be indices. To define a recursive type
-with indices, it is necessary to give the argument, |r|, a higher-order kind.
+with indices, it is necessary to give the argument |r| a higher kind.
 That is, |r| should take indices as well, since it abstracts over
 a recursive type which takes indices.
 \begin{singlespace}
@@ -559,12 +559,13 @@ the current environment. Un-backquoted variables are taken to be
 universally quantified.
 \index{backquote}
 \index{universally quantified}
-By backquoting |succ|, we indicate that we want terms,
-which are applications of the successor function, but not some universally
-quantified variable\footnote{In the design of Nax we had a choice.
-Either, explicitly declare each universally quantified variable, or explicitly
-mark those variables not universally quantified. Since quantification is much
-more common than referring to variables already in scope, the choice was easy.}.
+By backquoting |succ|, we indicate that we want terms that are applications of
+the successor function, but not some universally quantified variable\footnote{
+	In the design of Nax, we had a choice.
+	Either explicitly declare each universally quantified variable
+	or explicitly mark those variables not universally quantified.
+	Since quantification is much more common than referring to variables
+	already in scope, the choice was easy.}.
 For non-recursive types without parameters, the kind of the fixpoint is
 the same as the kind of the recursive argument |r|. If the non-recursive type
 has parameters, the kind of the fixpoint will be composed of the parameters
@@ -582,13 +583,13 @@ number of indices     & 1 (type)      & 1 (term)           & 2 (term,term)
 \end{center}
 Recall, indices are used to track static properties about values
 with those types. A well-formed (|PowerTree x|) contains a balanced
-set of parenthesized binary tuples of elements. The index, |x|, describes
-what kind of values are nested in the parentheses. The invariant is that the
+set of parenthesized binary tuples of elements. The index |x| describes
+the type of values nested in the parentheses. The invariant is that the
 number of items nested is always an exact power of 2. A (|Vector a {n}|) is
 a list of elements of type |a|, with length exactly equal to |n|, and
-a (|Proof {E} {n}|) witnesses that the natural number |n| is even, and
+a (|Proof {E} {n}|) witnesses that the natural number |n| is even, while
 a (|Proof {O} {m}|) witnesses that the natural number |m| is odd.
-Some example value with these types are given below.
+Some example values with these types are given below.
 
 \begin{code}
 tree1  : PowerTree Int = tip 3
@@ -602,11 +603,11 @@ p2  : P {E} {succ (succ zero)}  = stepO (stepE base)
 \end{code}
 
 Note that in the types of the terms above, the indices in braces (|{ ... }|)
-are ordinary terms (not types).  In these example we use natural numbers (\eg,
+are ordinary terms (not types).  In these examples, we use natural numbers (\eg,
 |succ (succ zero)|) and elements (|E| and |O|) of the two-valued type |Tag|.
 It is interesting to note that sometimes the terms are of recursive types (\eg,
-|Nat| which is a synonym for |Mu[*] N|), and some are non-recursive types (\eg,
-|Tag|).
+|Nat| which is a synonym for |Mu[*] N|), while some are non-recursive types
+(\eg, |Tag|).
 
 
 \section{Mendler-style combinators for indexed types}
@@ -624,7 +625,7 @@ set is constructed as a balanced binary tree with pairs at the leaves
 (see {\it tree2} and {\it tree3} above).
 The number of integers in the set is an exact power of 2. Consider
 a function that adds up all those integers. One wants a function of type
-(|PowerTree Int -> Int|). One strategy to writing this function is to write
+(|PowerTree Int -> Int|). One strategy for writing this function is to write
 a more general function of type (|PowerTree a -> (a -> Int) -> Int|). In Nax,
 we can do this as follows:
 \begin{singlespace}
@@ -637,16 +638,15 @@ sumTree t = genericSum t (\ x -> x)
 \end{code}
 \end{singlespace}
 \index{type!indexed}
-In general, the type of the result of a function over an indexed type,
+In general, the type of the result of a function over an indexed type
 can depend upon what the index is. Thus, a Mendler-style combinator over a value
-with an indexed type, must be type-specialized to that value's index.
-Different values of the same general type, will have different indices.
+with an indexed type must be type-specialized to that value's index.
+Different values of the same general type will have different indices.
 After all, the role of an index is to witness an invariant about the value,
 and different values might have different invariants.
 Capturing this variation is the role of the clause
 |{a . (a -> Int) -> Int}| following the keyword |MIt|.
-\index{index transformer}
-We call such a clause, an \emph{index transformer}. In the same way
+We call such a clause an \emph{index transformer}. In the same way
 that the type of the result depends upon the index, the type of the different
 components of the abstract datatype implementing the Mendler-style combinator
 also depend upon the index. In fact, everything depends upon the index
@@ -657,23 +657,24 @@ a concrete clause (inside the braces) that describe how the results
 depend upon the index.  To see how the transformer is used, study
 the types of the terms in the following paragraph.
 Can you see the relation between the types and the transformer?
+\index{index transformer}
 
-The scrutinee |t| has type (|PowerTree a|) which is a synonym for
+The scrutinee |t| has type (|PowerTree a|), which is a synonym for
 (|(Mu[* -> *] Nest) a|). The recursive caller |sum| has type
 (|forall a. r a -> (a -> Int) -> Int|), for some abstract type constructor |r|.
-Recall |r| has an index, so it must be a type constructor, not a type. 
+Recall that |r| has an index. So |r| must be a type constructor, not a type. 
 The patterns (|Tip x|) and (|Fork x|) have type (|Nest r a|) and
-the right hand sides of the equations: (|\ f -> f x|) and
-(|\ f -> sum x (\ (a,b) -> f a + f b)|), have type (|(a -> Int) -> Int|).
-Note that the dependency of (|(a -> Int) -> Int|) on the index |a|, appears in
-both the result type, and the type of the recursive caller. If we think of
-an index transformer, like |{a . (a -> Int) -> Int}|, as a function:
+the right-hand sides of the equations (|\ f -> f x|) and
+(|\ f -> sum x (\ (a,b) -> f a + f b)|) have type (|(a -> Int) -> Int|).
+Note that the dependency of (|(a -> Int) -> Int|) on the index |a| appears in
+both the result type and the type of the recursive caller. If we think of
+an index transformer such as |{a . (a -> Int) -> Int}| as a function
 |psi a = (a -> Int) -> Int|, we can succinctly describe the types of
 the abstract operations of |MIt|. In the table below, we put
 the general case for the general form
 (|MIt{psi} x with {-"\overline{"-}f p{-"_i"-} = e{-"_i}"-}|)
-on the left, and terms from the |genericSum| example,
-that illustrate the general case, on the right.
+on the left, and terms from the |genericSum| example
+that illustrate the general case on the right.
 {\small
 %{
 %format p_i
@@ -691,11 +692,11 @@ that illustrate the general case, on the right.
 }
 ~\vspace*{.5em}\\
 
-The same scheme for |MIt| generalizes to type constructors with term indices,
-and with multiple indices. To illustrate this we give the generic schemes for
-type constructors with 2 or 3 indices. In the table the variables |kappa1|,
-|kappa2|, and |kappa3|, stand for arbitrary kinds (either kinds for types,
-like |*|, or kinds for terms, like |Nat| or |Tag|).\\ \noindent
+The same scheme for |MIt| generalizes to type constructors with term indices
+and with multiple indices. To illustrate this, we give the generic schemes for
+type constructors with 2 or 3 indices. In the table, the variables |kappa1|,
+|kappa2|, and |kappa3| stand for arbitrary kinds (either kinds for types
+such as |*| or kinds for terms such as |Nat| or |Tag|).\\ \noindent
 %{
 %format p_i
 %format e_i
@@ -727,12 +728,11 @@ e_i  : psi a b c
 ~\vspace*{.5em}\\
 \index{index transformation}
 \index{vector}
-The simplest form of index transformation, is where the transformation
+The simplest form of index transformation is where the transformation
 is a constant function. This is the case of the function that computes
-the integer length of a length-indexed list (what we called a |Vector|).
-Independent of the length the result is an integer.
-Such a function has type: |Vector a {n} -> Int|.
-We can write this as follows:
+the integer length of a length-indexed list (what we call a |Vector|).
+Independent of the length, the result is an integer.
+Such a function has type |Vector a {n} -> Int|. We can write this as follows:
 \begin{singlespace}
 \begin{code}
 vlen x =  MIt{{i} . Int} x with  len Vnil          = 0
@@ -747,8 +747,8 @@ Can we transform such a term into a proof that |n+1| is odd?  We can
 generalize this by writing a function which has both of the types below: \\
 \qquad|Proof {E} {n} -> Proof {O} {`succ n}|,  and \\
 \qquad|Proof {O} {n} -> Proof {E} {`succ n}|. \\
-We can capture this dependency by defining the term-level function |flip|,
-and using an |MIt| with the index transformer:
+We can capture this dependency by defining the term-level function |flip|
+and using a |MIt| with the index transformer:
 |{{t} {i} . Proof {`flip t} {`succ i}}|.
 \begin{singlespace}
 \begin{code}
@@ -785,11 +785,11 @@ proveEvenOrOdd x =  MIt { {n} . Either (Even {n}) (Odd {n})} x with
 
 \section{Recursive types of unrestricted polarity but restricted elimination}
 \label{sec:bg:recty}
+\index{HOAS}
 In Nax, programmers can define recursive data structures with both positive
 and negative polarity. The classic example is a datatype encoding the syntax
 of $\lambda$-calculus, which uses higher-order abstract syntax (HOAS).
-\index{HOAS}
-Terms in the $\lambda$-calculus are either variables, applications,
+Terms in the $\lambda$-calculus are variables, applications,
 or abstractions. In a HOAS representation, one uses Nax functions
 to encode abstractions. We give a two-level description for
 recursive $\lambda$-calculus |Term|s, by taking the fixpoint of
@@ -806,16 +806,16 @@ apply = abs (\ f -> abs (\ x -> app f x))
 \end{singlespace}
 Note that we don't need to include a constructor for variables,
 as variables are represented by Nax variables, bound by Nax
-functions. For example the lambda term: ($\lambda f . \lambda x . f\; x$)
+functions. For example, the lambda term ($\lambda f . \lambda x . f\; x$)
 is encoded by the Nax term |apply| above.
 
-Note also, the constructor function: |abs: (Term -> Term) -> Term|,
+Note also, the constructor function |abs: (Term -> Term) -> Term|
 introduced by the |deriving fixpoint| clause, has a negative occurrence of
 the type |Term|. In a language with unrestricted analysis, such a type could
 lead to non-terminating computations. The Mendler |MIt| and |MPr| combinators
 limit the analysis of such types in a manner that precludes non-terminating
-computations. The Mendler-style combinator, |McvIt|, is too expressive to
-exclude non-terminating computations, and must be restricted to recursive
+computations. The Mendler-style combinator |McvIt| is too expressive to
+exclude non-terminating computations and must be restricted to recursive
 datatypes with no negative occurrences.
 
 Even though |MIt| and |MPr| allow us to safely operate on values of type |Term|,
@@ -827,7 +827,7 @@ by Sheard and Fegaras \cite{FegShe96}, hence the ``\textbf{sf}'' in the name
 |MsfIt|.  The abstraction supported by |MsfIt| is as follows:\footnote{
 	More precisely, we need to use $\breve{\mu}$, which is different
         from $\mu$, for |MsfIt| (see \S\ref{sec:futwork:mu}).
-	We have not correctly implmented this in our current implmentation,
+	We have not correctly implemented this in our current implementation,
         which we are using to run the examples in this dissertation.
         So, our example here just uses $\mu$ instead of $\breve{\mu}$.
 	But, we are working it the right way in the new implementation.
@@ -862,12 +862,12 @@ e_i  : ans
 
 To use |MsfIt| the inverse allows one to cast an answer into an abstract value.
 To see how this works, study the function that turns a |Term| into a string.
-The strategy is to write an auxiliary function, |showHelp| that takes an extra
+The strategy is to write an auxiliary function |showHelp| that takes an extra
 integer argument. Every time we encounter a lambda abstraction, we create a
-new variable, \texttt{x}$n$ (see the function |new|), where $n$ is the current
+new variable \texttt{x}$n$ (see the function |new|), where $n$ is the current
 value of the integer variable. When we make a recursive call, we increment
 the integer. In the comments (the rest of a line after |--|), we give
-the type of a few terms, including the abstract operations |sh| and |inv|.
+the types of a few terms, including the abstract operations |sh| and |inv|.
 \index{abstract operation}
 \vspace*{-1em}
 \begin{singlespace}
@@ -895,9 +895,9 @@ The final line of the example above illustrates applying |showTerm| to |apply|.
 Recall that |apply = abs (\ f -> abs (\ x -> app f x))|, which is the HOAS
 representation of the $\lambda$-calculus term ($\lambda f . \lambda x . f\; x$).
 
-There are more details behind the |MsfIt| and the fixpoint derivations
-for the datatypes on which |MsfIt| operates on.
-Recall, in Chpater~\ref{ch:mendler}, we desribed in Haskell that
+There are more details behind the |MsfIt| and fixpoint derivations
+for the datatypes on which |MsfIt| operates.
+Recall, in Chapter~\ref{ch:mendler}, we described in Haskell that
 \MsfIt\ operates on recursive values of a fixpoint type ($\breve{\mu}$)
 augmented by a syntactic inverse, while other recursion schemes operate
 on recursive values of a standard fixpoint type ($\mu$).
@@ -906,35 +906,35 @@ For further discussions, see \S\ref{sec:futwork:mu}.
 \section{Lessons from Nax}
 
 Nax is our attempt to build a strongly normalizing, sound and consistent
-logic, based upon Mendler-style recursion combinators. We would like to
+logic based upon Mendler-style recursion combinators. We would like to
 emphasize the lessons we learned along the way.
 
 \begin{itemize}
 \item Writing types as the fixed point of a non-recursive type constructor
 (two-level types) is quite expressive. It supports a wide variety of types
-including the regular types (|Nat| and |List|), nested types (|PowerTree|),
+including regular types (|Nat| and |List|), nested types (|PowerTree|),
 {\small GADT}s (|Vector|), and mutually recursive types (|Even| and |Odd|).
 
-\item Two-level types, while expressive, are a pain to program with (all those
-|Mu[kappa]| and |In[kappa]| annotations), so a strong synonym facility is
-necessary. With syntactic support of synonyms and automatic derivatoin of
-synonyms for recursive types, one hardly notices extra verbosity due to
-the use of two-level types.
+\item Two-level types, while expressive, are difficult to program with
+(all those |Mu[kappa]| and |In[kappa]| annotations), so a strong synonym
+facility is necessary. With syntactic support of synonyms and automatic
+derivation of synonyms for recursive types, one hardly notices extra verbosity
+due to the use of two-level types.
 
 \item The use of term-indexed types allows programmers to write types that
-act as logical relations, and form the basis for reasoning about programs.
-In Chapters \ref{ch:fi} and \ref{ch:fixi}, we have formalized lambda calculi,
+act as logical relations and form the basis for reasoning about programs.
+In Chapters \ref{ch:fi} and \ref{ch:fixi}, we formalized lambda calculi,
 which support term indices.
  
-\item Using Mendler-style combinators is expressive, and with syntactic support
-(the |with| equations of the Mendler combinators), is reasonable easy to use.
+\item Using Mendler-style combinators is expressive and, with syntactic support
+(the |with| equations of the Mendler combinators), easy to use.
 In fact, Nax programs are often no more complicated than
 their Haskell counterparts, except the use of Mendler-style recursion
 combinators instead of general recursion.
 
 \item Type inference is an important feature of a programming language.
 We hope you noticed, apart from index transformers and datatype declarations,
-no type information is supplied in any of the Nax examples
+no type information is supplied in any of the Nax examples.
 Our Nax implementation can reconstruct all other type information.
 
 \item Index transformers are the minimal information needed to extend 

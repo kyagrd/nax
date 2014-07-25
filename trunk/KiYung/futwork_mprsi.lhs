@@ -127,7 +127,7 @@ mprsi1 phi (In1 x) = phi id id (mprsi1 phi) x
 \end{code}
 \end{singlespace}
 \indent
-Although the type signature above is type correct, it is too powerful.
+Although the type signature above is type-correct, it is too powerful.
 The Mendler-style approach uses types to forbid, as ill-typed,
 non-terminating computations. Having both |cast| and |uncast| supports
 the same ability as freely pattern matching over recursive values,

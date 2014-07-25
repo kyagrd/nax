@@ -204,8 +204,8 @@ An {\em evaluation} is a reduction strategy
 (\ie, a certain subset of the reduction relation which computes a value --
 hence the name {\em evaluation}), which is often deterministic.
 In such a setting, type safety is usually defined to be subject reduction
-together with progress -- all well typed terms are either fully evaluated
-(\ie, they are values), or they can take a step to another well typed term.
+together with progress -- all well-typed terms are either fully evaluated
+(\ie, they are values), or they can take a step to another well-typed term.
 However, in a calculus considering reductions of terms to normal forms,
 rather than evaluations to values, type safety is just subject reduction
 since normal terms are irreducible by definition.
@@ -220,7 +220,7 @@ reduction strategy is followed.
 
 To prove strong normalization of the STLC, we use the following proof strategy.
 We first define the set of strongly normalizing terms, which may or may not be
-well typed, and show that all well-typed terms belong to this set.
+well-typed, and show that all well-typed terms belong to this set.
 For each type, we define a distinct set of terms called the interpretation
 of that type. We show that the interpretation of every type
 belongs to the set of normalizing terms.
@@ -438,7 +438,7 @@ the type ($A$) specified by the type annotation.
 \emph{Uniqueness of typing}, described in the first item above,
 holds in the Church-style STLC.  More specifically, given
 a well-formed typing context $\Gamma$ and a term $t$ as input,
-if the term is well typed, that is, $\Gamma |- t : A$ for some type $A$,
+if the term is well-typed, that is, $\Gamma |- t : A$ for some type $A$,
 then that $A$ is the unique such type. We can prove this by induction on
 the derivation of the typing judgment.
 For variables, it trivially holds since the variables appearing in

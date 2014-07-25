@@ -37,7 +37,7 @@ examples that illustrate characteristics of each of the recursion schemes,
 and to provide a semi-formal termination proof for some of them.
 We use Haskell for two purposes.
 
-The first is a type correct syntax and an executable platform for
+The first is a type-correct syntax and an executable platform for
 fast prototyping of examples and experimenting with new ideas. We use
 a certain subset of Haskell that conforms to the Mendler-style conventions.
 The discovery of our new Mendler-style recursion combinator (\MsfIt)
@@ -117,7 +117,7 @@ System~\Fi\ and System~\Fixi. Our term-indexed calculi serve as
 the theoretical basis for the understanding of Mendler-style recursion schemes
 over recursive types with term indices. By embedding Mendler-style recursion
 schemes in our term-indexed calculi, we know that those recursion schemes
-always terminate, because our term indexed calculi are strongly normalizing.
+always terminate, because our term-indexed calculi are strongly normalizing.
 
 System~\Fi\ (Chapter \ref{ch:fi}) extends System~\Fw\ (which supports
 type indices) with term indices. Term indices in System~\Fi\ are 
@@ -169,7 +169,7 @@ an alternative approach (GHC's datatype promotion) of adding
 term indices to a polymorphic language. In the alternative approach,
 types are promoted to kinds (\ie, $\{A\}$ is itself a kind) and
 terms are promoted to types. Our approach has the advantage of
-allowing nested term indices (\ie, term indices can have term indexed type).
+allowing nested term indices (\ie, term indices can have term-indexed type).
 The alternative approach has the advantage of allowing data structures that
 contain types as elements.
 
@@ -266,7 +266,7 @@ but nowhere else.
 %% negative datatypes such as HOAS
 %% datatypes
 %% 
-%% extending Mendler-style over term indexed datatypes.
+%% extending Mendler-style over term-indexed datatypes.
 %% term indexing
 %% 
 %% TODO

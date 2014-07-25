@@ -3,9 +3,9 @@
 \index{polymorphic lambda calculus!System Fw@System \Fw}
 System \Fw\ \cite{Gir72} extends the type syntax of System \F\ with lambda types
 and application types (see Figure \ref{fig:fw}). Lambda types ($\l X^\kappa.F$)
-and application types ($F\;G$), at the type level, are analogous to lambda terms
+and application types ($F\;G$), at the type-level, are analogous to lambda terms
 and applications at the term level. Type constructors are like functions, but
-at the type level. Type constructors are categorized by kinds, just as terms
+at the type-level. Type constructors are categorized by kinds, just as terms
 are categorized by types. Type constructors of kind $*$ are just \emph{types},
 and do not expect any arguments. Type constructors that expect an argument
 have arrow kinds ($\kappa -> \kappa'$). A type constructor of kind
@@ -47,8 +47,8 @@ $\forall X.X$ and $\forall X'.X'$ are considered to be same types in System \F.
 
 \item
 In System \Fw, we expect a richer notion of equality which incorporates
-the notion of $\beta$-equivalence at the type level, since the type syntax of
-System~\Fw\ has the structure of the STLC at the type level.
+the notion of $\beta$-equivalence at the type-level, since the type syntax of
+System~\Fw\ has the structure of the STLC at the type-level.
 For instance, we want $(\lambda X^{*}.X) A = A$. 
 \end{itemize}
 
@@ -67,7 +67,7 @@ and transitivity of equality (\rulename{EqTTrans}).
 The complete syntax, kinding rules, and typing rules of System \Fw\
 are illustrated in Figure \ref{fig:fw}. We consider only
 the Curry-style term syntax for System \Fw. Since lambda binders exist
-at both the term and type levels in System \Fw, we also have a choice of
+at both the term- and the type-levels in System \Fw, we also have a choice of
 either Church style (kind annotations on lambda types) or
 Curry style (no kind annotations on lambda types) for the type syntax.
 We consider only the Church-style type syntax with explicit kind annotations.
@@ -391,7 +391,7 @@ for more of the Haskell examples on recursive datatypes and $\mu$.
 Although recursive datatypes are encodable in System \F\ (\S\ref{sec:f:data}),
 extensions of System \F\ with $\mu$ have been studied %% TODO cite
 since one can reason about the properties of recursive datatypes more
-uniformly by factoring out the recursion at the type level as
+uniformly by factoring out the recursion at the type-level as
 the fixpoint $\mu$. In System \Fw, we can encode $\mu$ using
 higher-kinded type constructors and higher-kinded polymorphism as follows:
 \[

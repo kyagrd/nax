@@ -11,7 +11,7 @@ typical design choices made in functional programming languages
 and formal reasoning systems (\S\ref{sec:intro:motiv}),
 and assert the thesis (\S\ref{sec:intro:thesis}).
 We introduce preliminary concepts of Mendler-style recursion schemes
-and term indexed types (\S\ref{sec:intro:concepts}), and highlight
+and term-indexed types (\S\ref{sec:intro:concepts}), and highlight
 the contributions of the thesis research (\S\ref{sec:intro:contrib}).
 Lastly, we close this chapter by giving an overview of
 the chapter organization (\S\ref{sec:intro:overview}).
@@ -155,12 +155,12 @@ occurrences of $A$ in $\Gamma$ (\eg, $\Gamma = A^{x_1},B^{x_2},A^{x_3}$).
 Note that each typing rule (in the right column) has exactly the same structure
 as its corresponding inference rule (in the left column), except for
 the variables and terms appearing on the left-hand side of the colon
-(\eg, $x$ in $x:A$ and $t$ in $t:A -> B$). So, a type correct term,
+(\eg, $x$ in $x:A$ and $t$ in $t:A -> B$). So, a type-correct term,
 which is justified by the derivation following the typing rules of
 the lambda calculus, captures the structure of its corresponding proof
 by natural deduction. For instance, $(\l x. x)$ is a term that captures
 the structure of a proof for $A -> A$.
-For this reason, such type correct terms in reasoning systems
+For this reason, such type-correct terms in reasoning systems
 are called proof terms, proof objects, or simply proofs.
 
 We explained that proofs and propositions in the natural deduction
@@ -241,7 +241,7 @@ The rules (\rulename{$->_\textsc{I}$}) and (\rulename{$->_\textsc{E}$})
 are introduction and elimination rules for implication ($->$).
 So, we need to show the correspondence between reduction of proofs
 over implication in the natural deduction and reduction over
-type correct terms in the lambda calculus,
+type-correct terms in the lambda calculus,
 in order to establish the Curry--Howard correspondence.
 
 Figure\;\ref{fig:proofreduce} illustrates that
@@ -537,7 +537,7 @@ the Haskell datatype $T$ below would not be admitted in a reasoning system.
 Surprisingly (if you hadn't known), we can encode the well known
 general recursive combinator (\textbf{fix}, \aka\ the \textsf{Y}-combinator)
 using a datatype recursive on a contravariant position (\ie, left-hand side of
-$->$), without using any recursion at the term level.
+$->$), without using any recursion at the term-level.
 Datatypes that are recursive only over covariant\footnote{Type arguments
         without $->$ are by default in covariant positions. Right-hand sides
         of $->$ are covariant, and, a contravariant position of
@@ -676,7 +676,7 @@ datatype definition, accepting only positive datatypes. In addition,
 most functional programing languages have a clear distinction between
 terms and types (\ie, terms do not appear in types). In reasoning systems,
 terms can appear in types to specify fine grained properties involving
-values at term level (\eg, size invariants of data structures).
+values at the term-level (\eg, size invariants of data structures).
 
 This dissertation explores a sweet spot where one can benefit from
 the advantages of both programming languages and formal reasoning systems.
@@ -783,18 +783,18 @@ for the overview of chapter organization).
 %% that type, which is a not in normal form, implies the existence of
 %% a normal proof, which in turn implies that the proposition specified by
 %% the type is indeed true. That is, all provable propositions are valid
-%% (\ie, the logic is sound) when the language is \emph{type preserving}
+%% (\ie, the logic is sound) when the language is \emph{type-preserving}
 %% and \emph{normalizing}.
 %% 
 %% Therefore, useful logical reasoning systems based on the Curry--Howard
 %% correspondence (\eg, Coq, Agda) never support language features that can
 %% lead to diverging terms. For example, in both Coq and Agda,
-%% unrestricted general recursion (at term level) is not supported. 
+%% unrestricted general recursion (at the term-level) is not supported. 
 %% Instead, these logical reasoning systems
 %% often provide principled recursion schemes over recursive types that are
 %% guaranteed to normalize. 
 %% 
-%% Recursive types (\ie, recursion at type level)
+%% Recursive types (\ie, recursion at type-level)
 %% can also lead to diverging terms when they are not restricted carefully.
 %% Many of the conventional logical reasoning systems, based on
 %% Curry--Howard correspondence, restrict recursive types in a way,
@@ -890,13 +890,13 @@ in functional programming languages.
 Just as we can capture the essence of unrestricted general recursion at term
 level, by a fixpoint operator (usually denoted by \textsf{Y} or \textbf{fix}),
 we can capture the essence of recursive types by the
-use of a recursive type operator, $\mu$, at type level. 
+use of a recursive type operator, $\mu$, at the type-level. 
 The rules for the formation {\small($\mu$-form)},
 introduction {\small($\mu$-intro)}, and elimination {\small($\mu$-elim)} of
 the recursive type operator $\mu$ are described in Figure \ref{fig:approaches}.
 We also need a reduction rule {\small(\unIn-\In)}, which relates \In,
 the data constructor for recursive types, and \unIn, the destructor for
-recursive types, at the term level.
+recursive types, at the term-level.
 
 The recursive type operator, $\mu$, as described in Figure \ref{fig:approaches},
 is already powerful enough to express non-terminating programs, even without
@@ -904,7 +904,7 @@ introducing the general recursive {\em term} operator, \textbf{fix},
 to the language. We illustrate this below.\footnote{This is essentially
         the same example we discussed in \S\ref{ssec:intro:scope:datarec},
         but this time using $\mu$.}
-First, here is a short reminder of how a fixpoint at the term level operates.
+First, here is a short reminder of how a fixpoint at the term-level operates.
 The typing rule and the reduction rule for \textbf{fix} can be given as follows:
 \[ \text{typing:}~ \inference{\Gamma |- f : A -> A}{\textbf{fix}\,f : A}
  \qquad\qquad
@@ -966,7 +966,7 @@ the formation rule {\small($\mu$-form$^{+}$)} has an additional condition that
 requires $F$ to be positive. The other rules {\small($\mu$-intro)},
 {\small($\mu$-elim)}, and {\small(\unIn-\In)} remain the same as for
 functional languages. Since we have restricted the recursive types
-at the type level and we do not have general recursion at the term level,
+at the type-level and we do not have general recursion at the term-level,
 the language is indeed normalizing. However, we cannot write
 interesting (\ie, recursive) programs that involve recursive types, nor
 can we reason inductively about those programs, unless we have principled recursion
@@ -1180,8 +1180,8 @@ In Part~\ref{part:Calculi}, we present our new calculi
 \Fi\ (Chapter~\ref{ch:fi}), which extends \Fw\ with term indices, and
 \Fixi\ (Chapter~\ref{ch:fixi}), which extends \Fixw\ with term indices.
 These calculi have an erasure property that states that well-typed terms
-in each calculus are also well typed terms (when erased) in the 
-underlying calculus. For instance, any well typed term in \Fi\ is also
+in each calculus are also well-typed terms (when erased) in the 
+underlying calculus. For instance, any well-typed term in \Fi\ is also
 a well-typed term in \Fw, and there are no additional well-typed terms
 in \Fi\ that are not well-typed in \Fw.
 
@@ -1416,7 +1416,7 @@ The index erasure property of a term-indexed calculus
 projects a typing in the term-index calculi into
 the polymorphic calculus that the term-indexed calculus extends.
 That is, all well-typed terms in \Fi\ and \Fixi\ are
-also well-typed typed terms in \Fw\ and \Fixw.
+also well-typed terms in \Fw\ and \Fixw.
 
 \index{Mendler-style}
 By embedding Mendler-style recursion schemes into our term-indexed

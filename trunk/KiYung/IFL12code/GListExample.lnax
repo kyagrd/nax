@@ -11,7 +11,7 @@ nil' = pNil {-" ~~ "-} -- |: List' a|
 -- |cons' : a -> List' a -> List' a|
 cons' x = pCons (MkElem x)
 
--- instantiating to a length indexed list
+-- instantiating to a length-indexed list
 
 data ElemV : * -> Nat -> Nat -> * where
   MkElemV : a -> ElemV a {`succ n} {n}
