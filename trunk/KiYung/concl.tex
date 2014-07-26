@@ -77,7 +77,7 @@ Chapter \ref{ch:futwork}.
 
 The second aspect, the kinds of datatypes operated on, categorizes
 the indexing structure of the recursive datatype within each family.
-Each family of Mendler-style recursion scheme is a collection of
+Each family of Mendler-style recursion schemes is a collection of
 many recursion combinators, one at each kind. For instance, $\MIt_{*}$
 iterates over regular datatypes with no type index (\ie, $\mu_{*}F$
 where $F : * -> *$), $\MIt_{* -> *}$ iterates over datatypes with
@@ -99,7 +99,7 @@ schemes over term-indexed datatypes, we need to extend kinds. For instance,
 $\MIt_{A -> *}$ where $A$ is a type, which cannot be expressed in System \Fw\ 
 because $A -> *$ is not a valid \Fw-kind. In later chapters, we extend
 Mendler-style recursion schemes over term-indexed datatypes by formalizing
-two term-indexed calculi, which extends System \Fw\ with term indices.
+two term-indexed calculi, which extend System \Fw\ with term indices.
 
 The termination behaviors of Mendler-style recursion schemes can depend on
 the particular recursion scheme. Some recursion schemes (\MIt, \MPr, \MsfIt)
@@ -140,7 +140,7 @@ primitive recursion (\MPr) in System~\Fixi. This follows from
 the embedding of \MPr\ in System~\Fixw. In addition, we discovered
 an embedding of \McvPr\ (although not a reduction preserving embedding)
 in System~\Fixi\ for monotone (or positive) datatypes. Our embedding of
-\McvPr\ motivates more research into the open question of whether
+\McvPr\ motivates more research into the open question of whether a
 monotonicity witness is derivable from the polarized kinds of type constructors.
 
 \paragraph{}
@@ -169,7 +169,7 @@ an alternative approach (GHC's datatype promotion) of adding
 term indices to a polymorphic language. In the alternative approach,
 types are promoted to kinds (\ie, $\{A\}$ is itself a kind) and
 terms are promoted to types. Our approach has the advantage of
-allowing nested term indices (\ie, term indices can have term-indexed type).
+allowing nested term indices (\ie, term indices can have term-indexed types).
 The alternative approach has the advantage of allowing data structures that
 contain types as elements.
 
@@ -192,7 +192,7 @@ Hindley--Milner-style type inference, Nax only allows rank-1 type polymorphism.
 One cannot generally infer types in System \Fi\ or \Fixi\ since they allow
 higher-rank polymorphism. For programs involving only regular (\ie, non-indexed)
 datatypes, type inference is exactly the same as the Hindley--Milner
-type inference, requiring no type annotation. For programs involving
+type inference, requiring no type annotations. For programs involving
 indexed datatypes, we require type annotations on datatype declarations,
 case expressions, and Mendler-style recursion combinators, but nowhere else.
 Our current implementation requires kind annotations on
@@ -240,7 +240,7 @@ our term-indexed calculi.
 The Nax language implementation does not need an extra termination checker
 because termination is type-based. Once the program type checks, we know
 that it terminates because Nax programs can be embedded into
-the term-indexed calculi, which is strongly normalizing.
+the term-indexed calculi, which are strongly normalizing.
 
 In addition, Nax supports a conservative extension of Hindley-Milner
 type inference in the presence of both type- and term-indices.
@@ -303,7 +303,7 @@ Leibniz equality over both types and terms in System \Fi\ (see \S\ref{Leibniz}).
 We cannot define Leibniz equality as a user defined datatype in Nax, since
 the definition of Leibniz equality needs higher-rank polymorphism. We can,
 of course, have a built-in Leibniz equality as a primitive construct in Nax.
-We know that Leibniz equality over types have been useful in the context of
+We know that Leibniz equality over types has been useful in the context of
 higher-order polymorphic lambda calculus \cite{vytiniotis2010parametricity}.
 Leibniz equality over term indices is definable in the same manner
 as Leibniz equality over types, and can be built-in to Nax. However,
