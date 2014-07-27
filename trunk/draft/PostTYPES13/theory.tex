@@ -208,11 +208,11 @@ $(\msfit~\varphi~(f(\inL~y)))$, to values of type $KA$, since we need
 $(\textit{Lam}(\lambda y.\eta(\msfit~\varphi~(f(\inL~y)))))$
 to be of type $F(KA)$. The type of $\varphi$ expects a value of type $F(RA)$
 as its third argument, where $R$ is a polymorphic type variable, which
-instantiates to $K$ in the right-hand side of Equation~\ref{eqn:msfitLam}.
+instantiates to $K$ in the right-hand side of Equation~(\ref{eqn:msfitLam}).
 We use $\inL$ to convert $y : KA$, to a value of $\mu_{*}' F A$
 in order to apply it to $f : \mu_{*}' F A \to \mu_{*}' F A$.
 
-The left-hand side of Equation~\ref{eqn:msfitLam} expands as below,
+The left-hand side of Equation~(\ref{eqn:msfitLam}) expands as below,
 by expanding the definitions of \msfit{*}, $\inR$, $g$, and  $w$:
 \begin{align*}
 \msfit{*}~\varphi~(\textit{lam}~f)
@@ -224,19 +224,21 @@ by expanding the definitions of \msfit{*}, $\inR$, $g$, and  $w$:
 \end{align*}
 where $\psi = (f(\inL~y))~\textit{id}~(\lambda z.\eta(z(\varphi\eta)))$.
 The resulting equation is similar in structure to the right-hand side of
-Equation~\ref{eqn:msfitLam}. Thus, justifying Equation~\ref{eqn:msfitLam}
+Equation~(\ref{eqn:msfitLam}). Thus, justifying Equation~(\ref{eqn:msfitLam})
 amounts to showing the equation below:
 \begin{equation}
 \psi \stackrel{?}{=} \eta(\msfit~\varphi~(f(\inL~y))))
 \label{eqn:msfitPsi}
 \end{equation}
 
-The right-hand side of Equation~\ref{eqn:msfitPsi} expands as follows:
+The right-hand side of Equation~(\ref{eqn:msfitPsi}) expands as follows:
 \[ \eta(\msfit~\varphi~(f(\inL~y)))) = \eta(\inL~\psi~\eta^{-1}~g)
 	= \eta(\eta^{-1}~\psi)
 \]
 We need to show that $\psi=\eta(\eta^{-1}\psi)$, but, unfortunately, we cannot.
-TODO explain section/retraction here??? TODO 
+TODO explain section-retraction pair here??? TODO 
+
+%% http://math.stackexchange.com/questions/73342/is-there-a-name-for-a-section-and-a-retraction-together
 
 \subsection{Equational properties of \msfit{*} over
 	values constructed by \textit{app}}
@@ -254,9 +256,9 @@ since we need $(\textit{App}~(\eta(\msfit{*}~\varphi~r_1))
 					~(\eta(\msfit{*}~\varphi~r_2)))$
 to have type $F(KA)$. The type of $\varphi$ expects a value of type $F(RA)$
 as its third argument, where $R$ is a polymorphic type variable, which
-instantiates to $K$ in the right-hand side of Equation~\ref{eqn:msfitApp}.
+instantiates to $K$ in the right-hand side of Equation~(\ref{eqn:msfitApp}).
 
-The left-hand side of Equation~\ref{eqn:msfitApp} expands as below,
+The left-hand side of Equation~(\ref{eqn:msfitApp}) expands as below,
 by expanding the definitions of \msfit{*}, $\inR$, $g$, and  $h$:
 \begin{align*}
 \msfit{*}~\varphi~(\textit{app}~x~y)
@@ -266,13 +268,13 @@ by expanding the definitions of \msfit{*}, $\inR$, $g$, and  $h$:
      ~(\textit{App}~(\lift~(\varphi\eta)~r_1)~(\lift~(\varphi\eta)~r_2))
 \end{align*}
 The resulting expression is similar in structure to the right-hand side of
-Equation~\ref{eqn:msfitApp}. Thus, justifying Equation~\ref{eqn:msfitApp}
+Equation~(\ref{eqn:msfitApp}). Thus, justifying Equation~(\ref{eqn:msfitApp})
 amounts to showing the equation below:
 \begin{equation}
 \eta(\msfit{*}~\varphi~r) \stackrel{?}{=} \lift~(\varphi\eta)~r
 \label{eqn:msfitLift}
 \end{equation}
-When $r = \inR~z$, Equation~\ref{eqn:msfitLift} is justified as follows:
+When $r = \inR~z$, Equation~(\ref{eqn:msfitLift}) is justified as follows:
 \begin{align*}
 \eta(\msfit{*}~\varphi~(\inR~z))
 &~=~ \eta(\inR~z~\eta^{-1}~g) ~=~ \eta(g~z) ~=~ \eta(z(\varphi\eta)) \\
@@ -280,21 +282,22 @@ When $r = \inR~z$, Equation~\ref{eqn:msfitLift} is justified as follows:
  ~=~ \lift~(\varphi\eta)~(\inR~z)
 \end{align*}
 When $r = \inL~z$,
-The left-hand side of Equation~\ref{eqn:msfitLift} expands as below
+The left-hand side of Equation~(\ref{eqn:msfitLift}) expands as below
 \[ \eta(\msfit{*}~\varphi~r) ~=~\eta(\inL~z~\eta^{-1}~g) = \eta(\eta^{-1}z)
 \]
-and the right-hand side of Equation~\ref{eqn:msfitLift} expands as below
+and the right-hand side of Equation~(\ref{eqn:msfitLift}) expands as below
 \[ \lift~\varphi~(\inL~z)
    ~=~ (\inL~z)~\textit{id}~(\lambda z.\eta(z.(\varphi\eta)))
    ~=~ \textit{id}~z = z
 \]
 We need to show that $\eta(\eta^{-1}z) = z$, but, unfortunately, we cannot.
-TODO explain section/retraction thing here??? TODO
+TODO explain section-retraction pair here??? TODO
+
+%% http://math.stackexchange.com/questions/73342/is-there-a-name-for-a-section-and-a-retraction-together
 
 %% \[ \varphi \mapsto \varphi \mapsto \lambda f . f(\varphi~\textit{id}) \]
 %% 
 %% Section retraction since not same as $\varphi$
-
 
 
 TODO other things: do we need to talk about codensity monad
