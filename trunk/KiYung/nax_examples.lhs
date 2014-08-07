@@ -47,7 +47,7 @@ our prototype Nax implementation, and Agda 2.3.0.1.
 %include IFL12code/Eval.lnax
 \end{minipage}
 \caption{A type-preserving evaluator (|eval|) that evaluates
-	an expression (|Expr|) to a value (|Val|), in Haskell and in Nax}
+	an expression (|Expr|) to a value (|Val|), in Haskell and in Nax.}
 \label{fig:eval}
 \end{figure}
 
@@ -60,7 +60,7 @@ our prototype Nax implementation, and Agda 2.3.0.1.
 %include IFL12code/Eval.lagda
 \end{minipage}
 \caption{A type-preserving evaluator (|eval|) that evaluates
-	an expression (|Expr|) to a value (|Val|), in Nax and in Agda}
+	an expression (|Expr|) to a value (|Val|), in Nax and in Agda.}
 \label{fig:evalCont}
 \end{figure}
 

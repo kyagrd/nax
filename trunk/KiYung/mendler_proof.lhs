@@ -3,10 +3,10 @@
 %include mendler/CataViaHisto.lhs
 %include mendler/Proof.lhs
 
-\section{Properties of the recursion combinators}
+\section{Properties of recursion combinators}
 \label{sec:proof}
 We close this chapter by summarizing the termination properties
-of the Mendler-style recursion combinators
+of Mendler-style recursion combinators
 (Table \ref{tbl:mendlerCombinatorSummary}) and the relationships
 between those combinators (Figure \ref{fig:cataviahisto})
 (\ie, which combinators can be defined in terms of others).
@@ -27,27 +27,27 @@ between those combinators (Figure \ref{fig:cataviahisto})
 |msfcata1| & {similar} to |msfcata0| & {similar} to |msfcata0| & \\
 |msfhist1| & {similar} to |msfhist0| &  {no} &  
 \end{tabular}
-\caption{Termination properties of the Mendler-style recursion combinators}
+\caption{Termination properties of Mendler-style recursion combinators.}
 \label{tbl:mendlerCombinatorSummary}
 \end{table}
 
 \begin{figure}
 \ProofCata
-\caption{\normalsize $F_{\omega}$ encoding of |Mu0| and |mcata0| in Haskell}
+\caption{\normalsize $F_{\omega}$ encoding of |Mu0| and |mcata0| in Haskell.}
 \label{fig:proof}
 \end{figure}
 
 \index{termination!Mendler-style iteration}
 We give a termination proof for the Mendler-style iteration
 (at kind $*$) in Figure~\ref{fig:proof}. The proof takes the form
-of an embedding into \Fw\ which is known to be strongly normalizing.
+of an embedding into \Fw, which is known to be strongly normalizing.
 The proof in Figure~\ref{fig:proof} is adapted from work by \citet{AbeMatUus05}.
-They prove termination of Mendler-style iteration at arbitrary kinds.
+They prove termination of the Mendler-style iteration at arbitrary kinds.
 A proof similar to Figure~\ref{fig:proof} is also given by \citet{vene00phd}.
 
-The definitions given in Figure \ref{fig:proof}, are $F_\omega$ terms,
+The definitions given in Figure \ref{fig:proof} are $F_\omega$ terms,
 but are also legal Haskell terms that execute in GHC. Try the following code
-with the definitions of |Mu0| and |mcata0| from in Figure \ref{fig:proof}.
+with the definitions of |Mu0| and |mcata0| from Figure \ref{fig:proof}.
 They run and return the expected results!\vspace*{-3ex} \label{pageNatFw}
 \begin{center}
 \ProofCataEx
@@ -65,27 +65,27 @@ We show a partial proof that |mcvpr0| terminates for regular positive datatypes
 in \S\ref{sec:fixi:cv}, and we conjecture that |mcvpr|
 terminates for positive datatypes at higher-kinds as well.
 
-\citet{vene00phd} states that we can deduce the termination of
+\citet{vene00phd} stated that we can deduce the termination of
 the Mendler-style course-of-values iteration for positive datatypes from its
-relation to conventional course-of-values iteration, but he does not clearly
+relation to the conventional course-of-values iteration, but he did not clearly
 discuss whether the termination property holds for negative datatypes.
 In our work, we demonstrated that |mhist0| may not terminate
-for negative datatypes by exhibiting the counter-example
+for negative datatypes by exhibiting the counterexample
 (Figure \ref{fig:LoopHisto}) in \S\ref{ssec:tourNegative}.
 
-Figure \ref{fig:cataviahisto} illustrates a well known fact that a standard
+Figure \ref{fig:cataviahisto} illustrates a well-known fact that a standard
 iteration (|mcata|) is a special case of a course-of-values iteration (|mhist|).
 Note that |mcata| is defined in terms of |mhist|
 by ignoring the inverse operation (|out|).
-Similarly, We can define |mcata| in terms of |mprim|, and,
-|mhist| in terms of |mcvpr|, by ignoring the casting operation of
+Similarly, we can define |mcata| in terms of |mprim| and
+|mhist| in terms of |mcvpr| by ignoring the casting operation of
 the primitive recursion families.
 
 %% It is also quite evident that we can define |mcata| in terms of |msfcata|.
 
 \begin{figure}[b]
 \CataViaHisto
-\caption{\normalsize Alternative definition of iteration via course-of-values iteration.}
+\caption{\normalsize Alternative definition of iteration via the course-of-values iteration.}
 \label{fig:cataviahisto}
 \end{figure}
 

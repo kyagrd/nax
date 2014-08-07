@@ -52,7 +52,7 @@ $\unIn_{F} : \mu^{+}_\kappa F \karrow{\kappa} F(\mu^{+}_\kappa F)$
 for the base structure $F:+\kappa -> \kappa$, 
 such that $\unIn_F(\In_F\;t) -->+ t$
 where the reduction is constant regardless of $t$
-(steps may vary between each base structure $F$ though).
+(although steps may vary between each base structure $F$).
 \end{singlespace} \vskip-3.5ex
 \[\text{See Figure \ref{fig:unInExamples} for
 embeddings of unrollers ($\unIn_F$) for
@@ -61,7 +61,7 @@ some well-known positive base structures ($F$).}
 \caption{Embedding of the recursive type operators ($\mu^{+}_\kappa$),
 	the Mendler-style course-of-values recursors
 	($\McvPr_\kappa$), and the roller ($\In_F$) in \Fixi,
-        provided that the embedding of $\unIn_F$ exists}
+        provided that the embedding of $\unIn_F$ exists.}
 \label{fig:embedMcvPr}
 \end{figure}
 
@@ -123,14 +123,14 @@ V \triangleq \l X_a^{*}.\l X^{\texttt{Nat} -> *}.\l i^{\texttt{Nat}}.
 		(\textit{id}\times\textit{id}\times\textit{cast}))
 	\;\texttt{InR})
 \]
-The notation $\exists j^A.B$ is a shorthand for $\exists_A(\l j^A.B)$
+The notation $\exists j^A.B$ is shorthand for $\exists_A(\l j^A.B)$
 where $\exists_A$ is defined in Figure~\ref{fig:fixiNonRecData}.\\
 $\mathtt{Ex_{A}} : \forall F^{A -> *}.\exists_A F$ and
 $\mathtt{Eq_{A}} : \forall i^A.\forall j^A.(i=j)$ are
-the data constructors of the existential type and the equality type.
+the data constructors of the existential and equality types, respectively.
 \[\text{
 See Figure \ref{fig:embedMcvPr} for the embedding of the Mendler-style
-course-of-values recursor ($\McvPr_\kappa$)}
+course-of-values recursor ($\McvPr_\kappa$).}
 \]
 \caption{Embeddings of unroller ($\unIn_F$)
 	for some well-known positive base structures ($F$).}
@@ -141,61 +141,61 @@ course-of-values recursor ($\McvPr_\kappa$)}
 } %%%%%%%%%%%%%%%%%%%%%%% end of afterpage
 
 %%%%%%%%%%%% TODO move this to somewhere else
-To add a new Mendler-style combinator, we need to address several issues:
+To add a new Mendler-style recursion scheme and show its termination,
+we need to address several issues:
 \begin{itemize}
 \item First, we need to add an appropriate type-level fixpoint operator
 	(\eg, $\mu_\kappa$ for primitive recursion)
 that is used to build recursive types. This type-level operation needs to
 capture not only the tying of the recursive knot, but also the compatible
-structure needed to encode the new Mendler operation.
-\item Second, we need to specify the behavior of the new Mendler operation.
-	This means discovering the characteristic equations
-	that the operation should obey
-	(\eg, Haskell definition of Mendler-style combinators
+structure needed to encode the new Mendler-style recursor.
+\item Second, we need to specify the behavior of the new Mendler-style recursor
+	by discovering the characteristic equations it should obey
+	(\eg, Haskell definition of Mendler-style recursor
 	in Chapter~\ref{ch:mendler}).
 \item Third, we need to find an embedding that preserves
 	the characteristic equations in the host calculus
 	(\eg, embedding of $\In_\kappa$ and $\MPr_\kappa$).
-\item In practice, the second and third steps are intimately entwined as
+\item In practice, the second and third issues are intimately entwined as
 the equations and embedding are carefully designed
 (using a Church-style encoding) to achieve the desired result
 (\eg, $\In_\kappa$ is defined in terms of
-	the Mendler-style combinator $\MPr_\kappa$).
+	the Mendler-style recursor $\MPr_\kappa$).
 \end{itemize}
 
-To embed Mendler-style course-of-values recursion, we can follow the steps above
-just ad we did for Mendler-style primitive recursion. In addition, we need
-to embed an unroller $\unIn_F$, which is the key operation to support
-course-of-values recursion. Recall the use of \textit{out} in the Fibonacci
-number example (Figure~\ref{fig:fib}) and the Lucas number example
-(Figure~\ref{fig:lucas}) in Section~\ref{ssec:tourHist0}.
+To embed Mendler-style course-of-values recursion, we can follow
+the steps above just as we did for Mendler-style primitive recursion.
+In addition, we need to embed an unroller $\unIn_F$, the key operation for
+Mendler-style course-of-values recursion. Recall the use of \textit{out} in
+the Fibonacci number example (Figure~\ref{fig:fib}) and the Lucas number
+example (Figure~\ref{fig:lucas}) in Section~\ref{ssec:tourHist0}.
 
-\subsection{The general form for the embedding of course-of-values recursion}
-Figure~\ref{fig:embedMcvPr} and illustrates the embedding of
+\subsection{General form for the embedding of course-of-values recursion}
+Figure~\ref{fig:embedMcvPr} illustrates the embedding of
 a new iso-recursive type operator ($\mu^{+}_\kappa$),
 the Mendler-style course-of-values recursor ($\McvPr_\kappa$),
 and the roller $\In_F$ in \Fixi. Since the embedding of $\In_F$ uses $\unIn_F$,
-we also need embed unroller $\unIn_F$ in order to complete the embedding of
-the roller $\In_F$. Embeddings of $\unIn_F$ are possible for a fairly large
-class of positive base structures. Figure~\ref{fig:unInExamples} illustrates
-some of those unrollers. But, it may not be possible to give an embedding
+we also need to embed the unroller $\unIn_F$ in order to complete the embedding
+of the roller $\In_F$. Embedding $\unIn_F$ is possible for a fairly large class
+of positive base structure $F$. Figure~\ref{fig:unInExamples} illustrates
+some of these unrollers. But, it may not be possible to give an embedding
 of the unroller for some base structures. Recall that not all base structures
-can have well-defined course-of-values recursion that grantee termination
+can have well-defined course-of-values recursion that guarantees termination
 (see Figure~\ref{fig:LoopHisto} in Section~\ref{ssec:tourHist0}).
 
 The embeddings of $\mu^{+}_\kappa$, $\McvPr_\kappa$, and $\In_F$
 for course-of-values recursion (see Figure~\ref{fig:embedMcvPr}) are
 very similar to the embeddings of $\mu_\kappa$, $\MPr_\kappa$, and $\In_\kappa$
-for primitive recursion (see Figure~\ref{fig:embedMPr}), which we discussed
-earlier in the previous section. The definition of
+for primitive recursion (see Figure~\ref{fig:embedMPr}) discussed earlier
+in the previous section. The definition of
 $\McvPr_\kappa \triangleq \l s.\l r.r\,s$ is exactly the same as
-the definition of $\MPr_\kappa$, but only differs in its type signature.
+the definition of $\MPr_\kappa$, only differing in its type signature.
 The definition of $\In_F$ is similar to $\In_\kappa$ but uses the additional
-$\unIn_F$, which implements the abstract unroller. So, the last piece
+$\unIn_F$ that implements the abstract unroller. So, the last piece
 of the puzzle for embedding Mendler-style course-of-values recursion is
 the embedding of $\unIn_F$.
 
-In the following subsections, we will elaborate on how to embed unrollers
+In the following subsections, we elaborate on how to embed unrollers
 ($\unIn_F$) through examples (\S\ref{sec:fixi:cv:unInExamples}), derive
 uniform embeddings of the unrollers generalizing from those examples, and
 discuss whether the embeddings of unrollers satisfy their desired properties.
@@ -205,23 +205,23 @@ discuss whether the embeddings of unrollers satisfy their desired properties.
 Embeddings of unrollers for some well-known positive datatypes
 are illustrated in Figure~\ref{fig:unInExamples}. The general idea is to
 use $\McvPr_\kappa$ to define $\unIn_F$ for the base structure
-$F:+\kappa -> \kappa$ without using the abstract recursive call operation
-but only using the abstract cast operation in order be define constant
-time unrollers. To define an unroller, we map non-recursive
-components ($X_a$) as they are using \textit{id} and map abstract recursive
-components ($X_r$) to concrete recursive components
-($\mu^{+}_\kappa F$) using the abstract \textit{cast} operation provided
-by the $\McvPr_\kappa$ combinator. We can embed unrollers
-for regular datatypes such as natural numbers (the base $N$) and lists
-(the base $L$), type-indexed datatypes such as powerlists (the base $P$),
-and term-indexed datatypes such as vectors (the base $V$) in this way.
+$F:+\kappa -> \kappa$ without using the abstract recursive call operation,
+only using the abstract cast operation to define constant time unrollers.
+To define an unroller, we map non-recursive components ($X_a$) as they use
+\textit{id} and map abstract recursive components ($X_r$)
+to concrete recursive components ($\mu^{+}_\kappa F$) using
+the abstract \textit{cast} operation provided by $\McvPr_\kappa$.
+We can embed unrollers for regular datatypes such as natural numbers
+(base $N$) and lists (base $L$), type-indexed datatypes
+such as powerlists (base $P$), and term-indexed datatypes
+such as vectors (base $V$) in this way.
 The notation for combining functions for tuples are defined as
 $(f \times g) \triangleq \l x.(f\,x,g\,x)$, and $(f\times g\times h)$
 are defined similarly for triples.
 
-\paragraph{Embeding unrollers for regular datatypes:}
+\paragraph{Embedding unrollers for regular datatypes:}
 The embeddings of $\unIn_N$ and $\unIn_{(L A)}$ are self explanatory.
-The embeddings of $\unIn_{(R A)}$ relies on the map function for lists,
+The embedding of $\unIn_{(R A)}$ relies on the map function for lists,
 since the rose tree is indirect datatype where recursive subcomponents
 appear inside the list ($\texttt{List}\,X_r$).
 The $\textit{fmap}_\texttt{List}$ function applies \textit{cast} to each of
@@ -230,20 +230,20 @@ values into a concrete recursive type $\mu_{*}^{+}F$ in order to obtain
 $F(\mu_{*}^{+}F)$ values.
 
 \paragraph{Embedding unrollers for nested datatypes} are no more complicated
-than embedding unrollers for regular datatypes. For instance, the embedding
-of $\unIn_P$ for powerlists is almost identical to the embedding of $\unIn_L$
-for regular lists except the use of $\McvPr_{* -> *}$ instead of $\McvPr_{*}$.
+than embedding unrollers for regular datatypes. For instance, the embedding of
+$\unIn_P$ for powerlists is almost identical to the embedding of $\unIn_L$ for
+regular lists except for the use of $\McvPr_{* -> *}$ instead of $\McvPr_{*}$.
 This is because the cast operation provided by $\McvPr_{* -> *}$ is polymorphic
 over the type index:
 $\textit{cast}:\forall X_i. X_r X_i -> \mu^{+}_{* -> *} X_F X_i$.
 Since unrollers preserve indices, there is no extra work to be done
-other than applying the \textit{cast}. In the embeding of $\unIn_P$,
-the $\texttt{cast}$ function performs an index preserving cast from
+other than toa apply the \textit{cast}. In the embedding of $\unIn_P$,
+the $\texttt{cast}$ function performs an index-preserving cast from
 an abstract recursive type $X_r (X_a\times X_a)$ to the concrete powerlist type 
 $\mu^{+}P (X_a\times X_a)$.
 
-Embedding unrollers for \emph{truly nested datatypes} \cite{AbeMatUus05},
-such as bushes, are similar to embedding unrollers for indirect regular
+Embedding unrollers for \emph{truly nested datatypes} \cite{AbeMatUus05}
+such as bushes are similar to embedding unrollers for indirect regular
 recursive types. Truly nested datatypes are recursive datatypes whose
 indices may involve themselves. Truly nested datatypes are similar to
 indirect recursive types in the sense that a bunch of recursive components
@@ -256,26 +256,26 @@ $(\textit{cast} \circ \textit{fmap}\;\textit{cast})$ in the embedding of
 the unroller $\unIn_R$ for bushes.
 
 \paragraph{Embedding unrollers for indexed datatypes} are no more complicated
-than embedding unrollers for regular datatypes, as well. To embed unrollers
+than embedding unrollers for regular datatypes. To embed unrollers
 for term-indexed datatypes, we would often need existential types
 (Figure~\ref{fig:fixiNonRecData}) and equality types. We can encode
 equality types in \Fixi\ as a Leibniz equality over indices,
 \ie, $(i=j) \triangleq \forall F^{A -> *}.F\{i\} -> F\{j\}$,
 as discussed in \S\ref{Leibniz}. These extra encodings for maintaining
-term-indices does not terribly complicate the embeddings of unrollers,
-since unrollers are index preserving. The embedding of $\unIn_{(V A)}$ for
-length indexed lists are almost identical to the embedding of $\unIn_{(L A)}$
+term-indices do not terribly complicate the embeddings of unrollers,
+as unrollers are index-preserving. The embedding of $\unIn_{(V A)}$ for
+length indexed lists is almost identical to the embedding of $\unIn_{(L A)}$
 for regular lists, except that it has one more \textit{id}. The first
-\textit{id} appearing in $(\textit{id}\times\textit{id}\times\textit{cast})$ is
-for the index equality, to leave the index equality unchanged.
+\textit{id} that appears in $(\textit{id}\times\textit{id}\times\textit{cast})$
+is so that the index equality remain unchanged.
 
 \paragraph{}
-Giving different definitions of $\unIn_F$ for each different $F$ as illustrated
-in Figure~\ref{fig:unInExamples} looks too ad-hoc. So, we will discuss how to
+Giving different definitions of $\unIn_F$ for each different $F$, as illustrated
+in Figure~\ref{fig:unInExamples} appears too ad-hoc. Hence, we discuss how to
 generalize the embeddings of the $\unIn$ operations, assuming that $F$ has
 a notion of a monotone map (\eg, \textit{fmap} for $F:+* ->*$) in the following
-subsection. Later on, in Section~\ref{ssec:fixi:theory:cv}, we will
-reason about what are the conditions for $F$ to have a notion of a monotone map.
+subsection. Later, in Section~\ref{ssec:fixi:theory:cv}, we reason about what
+conditions for $F$ to have a notion of a monotone map.
 
 \begin{figure}
 \begin{singlespace}
@@ -317,7 +317,7 @@ instance Functor (f (Mu1 f)) => Functor (Mu1 f) where
 \end{lstlisting}
 \end{singlespace}
 \caption{$\mu_{*}$, $\McvPr_{*}$, and $\mu_{* -> *}$, $\McvPr_{* -> *}$
-	transcribed into Haskell}
+	transcribed into Haskell.}
 \label{fig:HaskellFunctor1}
 \end{figure}
 
@@ -342,7 +342,7 @@ unInR :: Mu0(R a) -> (R a) (Mu0(R a))
 unInR = mcvpr0 (\ _ cast _ ->  fmap cast)
 \end{lstlisting}
 \caption{Embeddings of $\unIn_N$, $\unIn_{(L A)}$, $\unIn_{(R A)}$
-	transcribed into Haskell}
+	transcribed into Haskell.}
 \label{fig:HaskellunInRegular}
 \end{figure}
 
@@ -376,7 +376,7 @@ unInB = mcvpr1 (\ _ cast _ -> fmap1 cast id)
   --   phi _ cast _ BN = BN
 \end{lstlisting}
 \end{singlespace}
-\caption{Embedding of $\unIn_P$ and $\unIn_B$ transcribed into Haskell}
+\caption{Embedding of $\unIn_P$ and $\unIn_B$ transcribed into Haskell.}
 \label{fig:HaskellunInNested}
 \end{figure}
 
@@ -419,7 +419,7 @@ unInP' = mcvprI1 (\_ cast _ -> fmapI1 cast)
 \end{lstlisting}
 \end{singlespace}
 \caption{Embedding of $\unIn_{(V A)}$ and
-	yet another embedding of $\unIn_P$\\ transcribed into Haskell}
+	another embedding of $\unIn_P$\\ transcribed into Haskell.}
 \label{fig:HaskellunInIndexed}
 \end{figure}
 
@@ -429,8 +429,8 @@ of the unrollers appearing in Figure~\ref{fig:unInExamples} into Haskell
 and observed common patterns among them. These results are summarized
 in Figures~\ref{fig:HaskellFunctor1}, \ref{fig:HaskellunInRegular},
 \ref{fig:HaskellunInNested}, and \ref{fig:HaskellunInIndexed}.
-This excercise of Haskell transcription not only helped us derive
-uniform embeddings of the unrollers, but also helped us recognize
+This Haskell transcription exercise not only helps us derive
+uniform embeddings of the unrollers, but also helps us recognize
 the conditions that the base structures should satisfy in order to
 have an embedding of its unroller in \Fixi.
 
@@ -442,8 +442,8 @@ are uniform: \lstinline$mvcvp0 (\ _ cast _ ->  fmap cast)$.
 This uniform definition relies on the existence of \textit{fmap} over
 the base structures -- note the \lstinline$deriving Functor$
 in the data declarations. In Section~\ref{ssec:fixi:theory:cv},
-we will show that \textit{fmap} exists for any $F:+* -> *$ in \Fixi.
-So, we can derive a uniform embedding for the unroller $\unIn_{*}$
+we show that \textit{fmap} exists for any $F:+* -> *$ in \Fixi.
+Hence, we can derive a uniform embedding for the unroller $\unIn_{*}$
 for any base $F:+* -> *$ as follows:
 \begin{align*}
 \unIn_{*} &: \forall X_F^{+* -> *}.\mu_{*}^{+}X_F -> X_F(\mu_{*}^{+}X_F) \\
@@ -453,30 +453,30 @@ for any base $F:+* -> *$ as follows:
 
 Haskell transcriptions of the unroller embeddings for nested datatypes are
 given in Figure~\ref{fig:HaskellunInNested}. (Haskell definitions of
-\texttt{Mu1}, \texttt{mcvpr1}, \texttt{fmap1'} are given
+\texttt{Mu1}, \texttt{mcvpr1}, and \texttt{fmap1'} are given
 in Figure~\ref{fig:HaskellFunctor1}). Note that the definitions of
 the unrollers \texttt{unInP} for powerlists and \texttt{unInB} for bushes
 are uniform: \lstinline$mvcvp1 (\ _ cast _ ->  fmap1 cast id)$.
 The function \texttt{fmap1} is the rank 2 monotone map for type constructors
-of kind $+(+* -> *) -> (+* -> *)$, which analogous to rank 1 monotone map
-\texttt{fmap} for type constructors of kind $+* -> *$. Or, you can think of 
-the \texttt{Functor1} class as a bifunctor over type constructors of kind
-$+(+* -> *) -> +* -> *$, whose first argument
+of kind $+(+* -> *) -> (+* -> *)$, which is analogous to rank 1 monotone map
+\texttt{fmap} for type constructors of kind $+* -> *$. Alternatively, one can
+think of the \texttt{Functor1} class as a bifunctor over type constructors of
+kind $+(+* -> *) -> +* -> *$, whose first argument
 ($+\underline{(+* -> *)} -> +* -> *$) is a type constructor
 and second argument ($+(+* -> *) -> +\underline{*} -> *$) is a type.
 
-A Haskell transcription of the unroller embedding for the length indexed
+A Haskell transcription of the unroller embedding for the length-indexed
 list datatype, which is a term-indexed datatype, is given
 in Figure~\ref{fig:HaskellunInIndexed}. To give an embedding of
-$\unIn_{(V A)}$, we defined another version of Mendler-style course-of-values
-recursion combinator \texttt{mcvprI1}, which is similar to \texttt{mcvpr1}
+$\unIn_{(V A)}$, we define another version of Mendler-style course-of-values
+recursion combinator \texttt{mcvprI1} similar to \texttt{mcvpr1}
 in Figure~\ref{fig:HaskellFunctor1} but requires the base structure
 to be an instance of the \texttt{FunctorI1} class rather than an instance of
-the \texttt{Functor1} class. The \texttt{FunctorI1} class is more simple than
-the \texttt{Functor1} class since \texttt{FunctorI1} requires only the first
+the \texttt{Functor1} class. The \texttt{FunctorI1} class is simpler than
+the \texttt{Functor1} class because \texttt{FunctorI1} requires only the first
 argument to be monotone while \texttt{Functor1} requires both the first and
-the second argument to be monotone -- this is evident when you compare
-the types of thier member functions \texttt{fmap1} and \texttt{fmapI1}
+second arguments to be monotone -- this is evident when comparing
+the types of their member functions \texttt{fmap1} and \texttt{fmapI1}
 side-by-side:
 \begin{lstlisting}
     fmap1  :: (Functor f, Functor1 h) =>
@@ -484,53 +484,53 @@ side-by-side:
     fmapI1 :: FunctorI1 h =>
               (forall i. f i -> g i)           -> h f a -> h g a
 \end{lstlisting}
-Note that there fmapI1 does not have the extra \texttt{Functor}
+Here, \texttt{fmapI1} does not have the extra \texttt{Functor}
 requirement since it does not require the second argument type
 to be monotone. The function \texttt{fmapI1} only transforms the first type
-constructor argument and preserves the second argument (which may be
+constructor argument, preserving the second argument (which may be
 a type index or a term index), while \texttt{fmap1} is able to transform
-both the first and the second arugment. For term-indexed datatypes,
+both the first and second arguments. For term-indexed datatypes,
 \texttt{fmapI1} is enough to construct embeddings of the unrollers,
 since there is no need to transform indices -- recall that term-indices
-do not appear at value level, so no values to transform in the first place.
-And even if we had such values, we do not need to transform them anyway
-since unrollers are index preserving by definition.
+do not appear at value level. Hence, there are no values to transform
+in the first place. Furthermore, even if we had such values, we need not
+transform them anyway because unrollers are index-preserving by definition.
 Thus, in the type signature of \texttt{mcvprI1}, we need not reqire
 the abstract recursive structure \texttt{r} to be a \texttt{Functor},
 unlike in the type signature of \texttt{mcvpr1} where we did require
-\texttt{Functor r}. The embedding of $\unIn_{(V A)}$ has the shape
-you would expect: \lstinline$mcvprI1 (\_ cast _ ->  fmapI1 cast)$.
+\texttt{Functor r}. The embedding of $\unIn_{(V A)}$ has the  expected shape:
+\lstinline$mcvprI1 (\_ cast _ ->  fmapI1 cast)$.
 
 Interestingly, we can give yet another
 Haskell transcription of $\unIn_P$ in terms of \texttt{mcvprI1}
-(see \texttt{unInP'} in Figure~\ref{fig:HaskellunInIndexed}),
-rather than in terms of \texttt{mcvpr1}. This is because we did not
+(see \texttt{unInP'} in Figure~\ref{fig:HaskellunInIndexed})
+rather than in terms of \texttt{mcvpr1}. This is because we do not
 really need the ability to transform type indices to embed unrollers
 for powerlists. However, for truly nested datatypes such as bushes,
-this alternative is not possible. Recall that we did need to
+this alternative is not possible. Recall that we do need to
 transform indices from abstract recursive type to concrete recursive type
-to embed $\unIn_B$, because bushes were indexed by its own structure.
+to embed $\unIn_B$ because a bush is indexed by its own structure.
 In summary, unroller embeddings for indexed datatypes, regardless of
-term-indexed or type-indexed, without requiring indices to be monotone
-unless the datatype is truley nested. For truly nested datatype,
-we do have to require indices to be monotone as well as the recursive
-type constructor itself, in order to embed their unrollers. We can have
-a good approximation of this idea by the type system due to the polirzed kinds
-in \Fixi. We conjecture that all base structures of kind $+(+* -> *) -> +* -> *$
+term-indexed or type-indexed, do not require indices to be monotone
+unless the datatype is truley nested. For truly nested datatypes,
+we must require indices as well as the recursive type constructor itself
+to be monotone in order to embed their unrollers. We can have
+a good approximation of this idea using with polarized kinds in \Fixi.
+We conjecture that all base structures of kind $+(+* -> *) -> +* -> *$
 are instances of \texttt{Functor1}, while all base structures of kind
-$+(0* -> *) -> 0* -> *$ are instances of \texttt{Functor1}. We will
-discuss this more formally in Section~\ref{ssec:fixi:theory:cv}.
+$+(0* -> *) -> 0* -> *$ are instances of \texttt{Functor1}. We discuss this
+more formally in Section~\ref{ssec:fixi:theory:cv}.
 
-\subsection{Properties of the unrollers}
-We expect two properties to hold for the embeddings of the unrollers.
+\subsection{Properties of unrollers}
+We expect two properties to hold for the unroller embeddings.
 First, $\unIn_F$ must be a left identity of $\In_\kappa$.
 That is, $\unIn_F(\In_\kappa t) -->+ t$ for any term $t$.
-Second, $\unIn_F$ should be a constant time operation regardless of its
-argument being supplied. That is, $\unIn_F(\In_\kappa t) -->+ t$ takes
+Second, $\unIn_F$ should be a constant time operation, regardless of its
+supplied argument. That is, $\unIn_F(\In_\kappa t) -->+ t$ takes
 constant steps independent of $t$ (but may vary between differrent $F$s).
-One bad news is that some embeddings of the unrollers illustrated in
-Figure~\ref{fig:unInExamples} are not constant time. However, the good news is
-that we can safely optimized them into constant time functions due to
+One difficulty is that some embeddings of the unrollers illustrated in
+Figure~\ref{fig:unInExamples} are not constant time. However, we can
+safely optimize them into constant time functions because of
 the metatheoretic property of $\McvPr_\kappa$ and $\textit{fmap}$:
 \begin{itemize}
 \item The \textit{cast} operation of $\McvPr_\kappa$
@@ -547,14 +547,13 @@ For instance, $\unIn_{(R A)}$ for the rose tree datatype, which is an
 \emph{indirect recursive datatype}, are not constant time. The map function
 for lists $\textit{fmap}_\textit{List}$ appearing in the definition
 of $\unIn_{(R A)}$ is obviously not a constant time function. That is,
-we traverse the list inside a rose tree to to \textit{cast} each element of
-the list. Thus, $\unIn_{(R A)}$ is linear to the length of the list apparing
+we traverse the list inside a rose tree to \textit{cast} each element of
+the list. Thus, $\unIn_{(R A)}$ is linear to the length of the list appearing
 in the rose tree. We can safely optimize $\unIn_{(R A)}$ into a constant time
 operation by optimizing $(\textit{fmap}_\texttt{List}\;\textit{cast})$
-into the identity function $\textit{id}$. This optimization is safe due to
-the property of \textit{cast} being implemented by \textit{id}
-and the property of $(\textit{fmap}\;\textit{id})$ being
-equivalent to $\textit{id}$.
+into the identity function $\textit{id}$. This optimization is safe because
+the property of \textit{cast} is implemented by \textit{id} and the property of
+$(\textit{fmap}\;\textit{id})$ is equivalent to $\textit{id}$.
 However, this does not mean we have a constant time embedding of $\unIn_{(R A)}$
 within \Fixi, since the optimized term is not type-correct.
 The identity function $\textit{id}\triangleq \l x.x$ cannot be given
@@ -566,22 +565,22 @@ For similar reasons, $\unIn_B$ for the bush datatype, which is a
 due to the use of $\textit{fmap}\;\textit{cast} :
 			(X_r(X_r\,X_a)) -> (X_r(\mu^{+}_{* -> *}B\,X_a))$,
 which traverses the outer $X_r$ structure (an abstract bush) to cast each
-elelemt from $(X_r\,X_a)$ to $(\mu^{+}_{* -> *}B\,X_a)$. But this time,
-there is yet another subtlety before worrying about the embedding of
-$\unIn_B$ not being constant time. Note, we boldly assumed that
-the abstract recursive type $X_r$ has an \textit{fmap} operation
+element from $(X_r\,X_a)$ to $(\mu^{+}_{* -> *}B\,X_a)$. However, in this case,
+there is yet another subtlety that must be addressed before we can address
+the embedding of $\unIn_B$ not being constant time. Note that we boldly assumed
+that the abstract recursive type $X_r$ has an \textit{fmap} operation
 (specified by \texttt{{\bf\ttfamily Functor} r} in the Haskell transcription).
 Previously, in the embedding of $\unIn_R$ for the rose tree, we relied on
 a property of a specific instance of \textit{fmap} for \texttt{List},
-which is a well known type to have \textit{fmap} and indeed equipped with
-it desired property. In case of $\unIn_B$, we cannot assume anything but
-the kind of $X_r : +* -> *$ since it is abstract. So, we should rely on
+which is a type well known to have \textit{fmap} and is indeed equipped with
+the desired property. In the case of $\unIn_B$, we cannot assume anything but
+the kind of $X_r : +* -> *$ because it is abstract. Hence, we should rely on
 a more general property that \textit{fmap} is well-defined for any
-type constructors of kind $+* -> *$ in \Fixi. We will discuss this
+type constructors of kind $+* -> *$ in \Fixi. We discuss this
 general property of \textit{fmap} in Section~\ref{ssec:fixi:theory:cv}.
 
 Lastly, we can even further optimize the unrollers based on the observtion
-made in the previous subsection that all unroller embeddings have uniform shape
+made in the previous subsection that all unroller embeddings have uniform shape:
 \[
 \McvPr_\kappa (\l\_.\l cast.\l\_.\;
 	\underline{\textit{fmap}??~\textit{cast}~\textit{id}\cdots\textit{id}}
@@ -591,11 +590,11 @@ where the underlined part can be optimized to the identity function \textit{id}.
 
 It is important to note that embeddings of the Mendler-style course-of-values
 primitive recursion rely on the existence of unrollers. However, we have not
-formally proved its existence of unrollers in general. We only conjecture and
+formally proved the existence of unrollers in general. We only conjecture and
 strongly believe that unrollers exist for recursive types whose kinds are
-decorated with enough positive polarity. Clarifying these issues will be
-an interesting future work. Some preliminary ideas are elaborated in
-\S\ref{ssec:fixi:theory:cv}.
+decorated with sufficient positive polarity. Clarifying these issues will be
+an interesting direction for future work. Some preliminary ideas are
+elaborated in \S\ref{ssec:fixi:theory:cv}.
 
 % Embeddings of unrollers for term-indexed datatypes (\eg, vectors)
 % are intuitively more simple than type-indexed datatypes (\eg, powerlists,

@@ -54,7 +54,7 @@ is true when given a proof of $A$, are very similar:
 \end{minipage}
 \end{singlespace}
 \end{center}\vspace*{.5em}
-\index{Curry-Howard}
+\index{Curry--Howard}
 Such similarities are not accidental but intended by the design of
 reasoning systems, based on the observation that proofs corresponds
 to programs and propositions corresponds to types. This observation
@@ -71,7 +71,7 @@ We also assume that the readers understand basic concepts of logic
 formal reasoning systems.
 
 \subsection{The Curry--Howard correspondence}
-\index{Curry-Howard}
+\index{Curry--Howard}
 In late 1960s, \citet{Howard69} observed that intuitionistic natural deduction,
 which is a proof system of a formal logic, and a typed lambda calculus,
 which is a model of computation, are directly related. This relation,
@@ -87,7 +87,7 @@ known as the Curry--Howard correspondence, is established as follows:
 Once these are established, we can formalize the logic within
 one unified language system by internally witnessing proofs as terms
 (or, programs) since we consider \emph{``propositions as types''}.\footnote{
-	Coq and Agda are based on the Curry-Howard correspondence.}
+	Coq and Agda are based on the Curry--Howard correspondence.}
 In contrast, in a more traditional approach, where one represents
 \emph{``propositions as terms''},\footnote{
 	HOL family is based on this more traditional approach.}
@@ -97,7 +97,7 @@ and connectives, for constructing proofs.
 
 We explain this correspondence with a very simple
 version of intuitionistic natural deduction and
-a simply-typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
+a simply typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
         Readers who are familiar with the literature on natural deduction
         might notice that the left column in Figure\;\ref{fig:nd} is not in
         the same style as the natural deduction formalized by
@@ -125,7 +125,7 @@ There are many variations of formal logic based on natural deduction
 (and also their corresponding typed lambda calculi) depending on
 the set of logical connectives, constants, and quantifiers they support.
 We illustrate a intuitionistic natural deduction with implication ($->$) and
-falsity ($\bot$), and, its corresponding simply-typed lambda calculus (STLC)
+falsity ($\bot$), and, its corresponding simply typed lambda calculus (STLC)
 in Figure\;\ref{fig:nd}. The implication and the falsity in natural deduction
 correspond to the function type ($->$) and the void type ($\bot$) in the STLC.
 In the inference rules (\rulename{Ax}) and (\rulename{$->_\textsc{I}$}),
@@ -148,7 +148,7 @@ occurrences of $A$ in $\Gamma$ (\eg, $\Gamma = A^{x_1},B^{x_2},A^{x_3}$).
 \end{array}
 \]
 \caption{Intuitionistic natural deduction with implication and falsity,
-        and its corresponding simply-typed lambda calculus.}
+        and its corresponding simply typed lambda calculus.}
 \label{fig:nd}
 \end{figure}
 
@@ -477,7 +477,7 @@ as well as type arguments
 \end{tabular}
 \end{singlespace}
 \caption{Comparison of datatypes in functional languages
-        and datatypes reasoning systems}
+        and datatypes reasoning systems.}
 \label{fig:datadiff}
 \end{figure}
 
@@ -863,10 +863,10 @@ for the overview of chapter organization).
 }
 \end{tabular} }
 \caption{Two different approaches to terminating recursion schemes
-         (in contrast to unrestricted general recursion in functional languages)}
+         (in contrast to unrestricted general recursion in functional languages).}
 \label{fig:approaches}
 \end{figure}
-\index{Curry-Howard}
+\index{Curry--Howard}
 \index{normalization}
 Logical reasoning systems establish
 the Curry--Howard correspondence assuming normalization.
@@ -1003,7 +1003,7 @@ You can think of the rule {\small(\MIt)} as replacing both the elimination rule
 \label{sec:intro:concepts:mendler}
 \index{Mendler-style}
 We choose to base our approach to the design of a seamless synthesis of both
-logical reasoning and programming on the Mendler style. It restricts
+logical reasoning and programming on Mendler style. It restricts
 the elimination (\ie, pattern matching) over values of recursive types,
 rather than restricting the formation (\ie, datatype definition) of
 recursive types (a more conventional approach). The impact of
@@ -1030,7 +1030,7 @@ interpreted as a proposition, describes the property of the program.
 Since the Mendler-style approach does not restrict recursive datatype
 definitions, we can directly refer to the types of programs that use
 negative recursive datatypes. One may object that it is possible to
-indirectly model negative recursive types in the conventional style,
+indirectly model negative recursive types in conventional style,
 via alternative equivalent encodings, which map negative recursive types
 into positive ones. But, such encodings do not align with our motivation
 towards a seamless unified system for both programming and reasoning.
@@ -1039,9 +1039,9 @@ programs just to reason about them. If the change is unavoidable, it should
 be kept small. That is, the changed program should syntactically resemble
 the original program, which the programmer would usually write in
 functional programming languages. In Chapter~\ref{ch:mendler},
-we show a number of example programs written in the Mendler style
+we show a number of example programs written in Mendler style
 that look closer to the programs written using general recursion
-than the programs written in the conventional style.
+than the programs written in conventional style.
 
 \subsection{Term-indexed types, type inference, and datatypes}
 \label{sec:intro:concepts:indexed}
@@ -1126,7 +1126,7 @@ This dissertation makes contributions in several areas.
 \item[4.] It identifies several interesting open problems related to the three areas above.
 \end{itemize}
 
-\subsection{Contributions related to the Mendler style}
+\subsection{Contributions related to Mendler style}
 \index{Mendler-style}
 We organize a hierarchy of Mendler-style recursion schemes in two dimensions.
 The first dimension is the abstract operations they support. For instance,
@@ -1154,10 +1154,10 @@ This is another important area of our contribution.
 
 We provide examples that illustrate when each recursion scheme is useful
 in Chapter \ref{ch:mendler}. The most interesting example among them is
-the type-preserving evaluator for a simply-typed Higher-Order Abstract Syntax
+the type-preserving evaluator for a simply typed Higher-Order Abstract Syntax
 (HOAS) (\S\ref{sec:evalHOAS}), which involves negative datatypes with indices.
 This example is our novel discovery, which reports that
-a type-preserving evaluator for a simply-typed HOAS can be expressed within \Fw.
+a type-preserving evaluator for a simply typed HOAS can be expressed within \Fw.
 
 In addition, we develop a better understanding of some existing
 Mendler-style recursion schemes. For instance, the existence of
@@ -1339,7 +1339,7 @@ the organization of key concepts throughout the dissertation.
 
 \begin{figure}
 \input{intro_figoverview}
-\caption{Summary on how key concepts are related}
+\caption{Summary on how key concepts are related.}
 \label{fig:overview}
 \end{figure}
 
@@ -1347,7 +1347,7 @@ the organization of key concepts throughout the dissertation.
 comprises Chapter \ref{ch:intro} (which you are currently reading)
 and Chapter \ref{ch:poly} which 
 reviews the theory of several well-known typed lambda calculi:
-the simply-typed lambda calculus (STLC) (\S\ref{sec:stlc}),
+the simply typed lambda calculus (STLC) (\S\ref{sec:stlc}),
 System \F\ (\S\ref{sec:f}),
 System \Fw\ (\S\ref{sec:fw}), and
 the Hindley--Milner type system (\S\ref{sec:hm}).
@@ -1378,7 +1378,7 @@ Later in Part~\ref{part:Nax} Chapter \ref{ch:naxTyInfer},
 we formulate a conservative extension of HM, which restricts
 the term-indexed calculus System \Fi\ (Chapter \ref{ch:fi}) in a similar manner.
 
-\paragraph{Part \ref{part:Mendler} (the Mendler style)}\hspace{-1em}
+\paragraph{Part \ref{part:Mendler} (Mendler style)}\hspace{-1em}
 \index{Mendler-style}
 introduces
 the concept of Mendler-style recursion schemes (Chapter \ref{ch:mendler})

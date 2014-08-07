@@ -118,7 +118,7 @@ using the information in the index transformer
 {\tiny |{ {i} {j} . T2 {j} {i} }|}.
 \end{tcolorbox}
 \caption{\textsc{Nax} features:
-	|deriving fixpoint|, |synonym|, $\mu$, {\tt In}, and {\bf mcata}}
+	|deriving fixpoint|, |synonym|, $\mu$, {\tt In}, and {\bf mcata}.}
 \vskip-4ex
 \label{tbl:naxfeatures}
 \end{table}

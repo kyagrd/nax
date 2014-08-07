@@ -55,9 +55,9 @@ showExp_m e = mcata0 phi e vars
 data ExpF r = Lam (r -> r) | App r r
 type Exp' a = Rec0 ExpF a
 type Exp = forall a . Exp' a
--- lam :: (forall Exp' a -> Exp' a) -> Exp
+-- |lam :: (forall a. Exp' a -> Exp' a) -> Exp|
 lam e    = Roll0 (Lam e)
--- app :: Exp -> Exp -> Exp
+-- |app :: Exp -> Exp -> Exp|
 app f e  = Roll0 (App f e)
 
 showExp :: Exp -> String

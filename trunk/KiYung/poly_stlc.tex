@@ -1,4 +1,4 @@
-\section{The simply-typed lambda calculus}\label{sec:stlc}
+\section{The simply typed lambda calculus}\label{sec:stlc}
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
@@ -80,16 +80,16 @@ A,B ::= &~ A -> B \\
 \end{align*}
 \end{minipage}
 ~\\
-\caption{Simply-typed lambda calculus in Church style and Curry style}
+\caption{Simply typed lambda calculus in Church style and Curry style}
 \label{fig:stlc}
 \end{singlespace}
 \end{figure}
-\index{lambda calculus!simply-typed}
-\index{simply-typed lambda calculus|see{STLC}}
+\index{lambda calculus!simply typed}
+\index{simply typed lambda calculus|see{STLC}}
 \index{STLC}
-We illustrate two styles of the simply-typed lambda calculus (STLC)
-in Figure~\ref{fig:stlc}. The left column of the figure describes
-the Church style and the right column describes the Curry style.
+We illustrate two styles of the simply typed lambda calculus (STLC)
+in Figure~\ref{fig:stlc}. The left column of the figure illustrates
+the Church-style STLC and the right column illustrates the Curry-style STLC.
 \index{Curry style}
 \index{Church style}
 
@@ -117,16 +117,16 @@ of type $\iota$. It is only possible to construct terms of type $\iota$ when
 we have a bound variable, whose type is either $\iota$ or an arrow type that
 eventually returns $\iota$, in the typing context.
 
-When people use the STLC to model a programming language (with simple types),
-they usually provide a richer set of ground types than just the void type alone
-(\eg, unit, boolean, natural numbers). In such versions of the STLC, 
+When using the STLC to model a programming language (with simple types),
+a richer set of ground types (\eg, unit, boolean, natural numbers),
+rather than the void type alone, are provided. In such versions of the STLC, 
 one must extend the term syntax by providing normal terms (or, constants) for
 those ground types (\eg, \textsf{true} and \textsf{false} for booleans) and
 eliminators (\eg, if-then-else expression for booleans) that can examine
 the normal terms. Later on, we shall see that polymorphic type systems
 such as System \F\ (\S\ref{sec:f}) and System \Fw\ (\S\ref{sec:fw}) are
 expressive enough to encode those ground types without introducing them
-as primitive constructs of the calculi. Having just the void type as
+as primitive constructs of the calculi. Having the void type as
 a ground type is enough to motivate polymorphic type systems, without
 complicating the term syntax of the STLC.
 
@@ -135,9 +135,9 @@ A typing judgment $\Gamma |- t : A$ means that the term $t$ has type $A$
 under the typing context $\Gamma$. We say $t$ is well-typed
 (or, $t$ is a well-typed term) under $\Gamma$ when we can derive (or prove)
 a typing judgment $\Gamma |- t : A$ for some $A$ according to the typing rules.
-There are just three typing rules --
+There are just three typing rules ---
 one typing rule for each item of the term syntax.
-Therefore, the typing rules of the STLC are syntax directed in both styles.
+Therefore, the typing rules of the STLC are syntax-directed in both styles.
 That is, there is exactly one rule to choose for the typing derivation
 by examining the shape of the term.
  
@@ -154,19 +154,19 @@ in the application $(t\;\;s)$, one may apply either of the two rules
 \rulename{RedApp1} and \rulename{RedApp2}.
 
 \paragraph{}
-We first discuss two important properties of the STLC
-(subject reduction and strong normalization) which hold
+We first discuss two important properties of the STLC,
+subject reduction and strong normalization, hold
 in both Curry style and Church style (\S\ref{sec:stlc:srsn}).
 Then, we motivate the discussion of polymorphic type systems
 by reviewing the limitations of the STLC (\S\ref{sec:stlc:topoly}).
 
 \subsection{Strong normalization}\label{sec:stlc:srsn}
 \index{strong normalization}
-We discuss two important properties of the STLC, which hold in both
-the Church style and the Curry style -- \emph{subject reduction} (\aka\
-type preservation) and \emph{strong normalization}.
 \index{subject reduction}
 \index{type preservation}
+We discuss two important properties of the STLC, which hold in
+both Church style and Curry style --- \emph{subject reduction}
+(\aka\ type preservation) and \emph{strong normalization}.
 Since we focus on strong normalization, we will be rather brief on
 the proof of subject reduction and elaborate in more detail on
 the proof of strong normalization.
@@ -184,7 +184,7 @@ the other rules is simply done by applying the induction hypothesis.
 Proving the \rulename{RedBeta} rule amounts to proving the substitution lemma:
 \begin{lemma}[substitution]
 $ \inference{\Gamma,x:A |- t : B  & \Gamma |- s : A}{\Gamma |- t[s/x] : B} $
-\end{lemma}
+\end{lemma}\noindent
 Proof of the substitution lemma is a straightforward induction on
 the derivation of the typing judgement.
 
@@ -193,18 +193,18 @@ they usually consider another property called \emph{progress},
 which states that well-typed terms are either {\em values} or
 can take an evaluation step. 
 Values are terms that meet certain syntactic criteria, \ie, those terms
-that are meant to represent ``final answers", \ie, terms that
-are done evaluating. We do not further discuss progress in this dissertation.
+that are meant to represent ``final answers", or terms that are
+done evaluating. We do not further discuss progress in this dissertation.
 
 \index{evaluation}
 \index{normalization}
 \index{progress}
 \index{type safety}
 An {\em evaluation} is a reduction strategy
-(\ie, a certain subset of the reduction relation which computes a value --
+(\ie, a certain subset of the reduction relation which computes a value,
 hence the name {\em evaluation}), which is often deterministic.
 In such a setting, type safety is usually defined to be subject reduction
-together with progress -- all well-typed terms are either fully evaluated
+together with progress --- all well-typed terms are either fully evaluated
 (\ie, they are values), or they can take a step to another well-typed term.
 However, in a calculus considering reductions of terms to normal forms,
 rather than evaluations to values, type safety is just subject reduction
@@ -212,8 +212,8 @@ since normal terms are irreducible by definition.
 
 \paragraph{Strong normalization.} 
 \index{strong normalization!STLC}
-When we consider terms of the STLC as proofs in a propositional logic,
-using the Curry-Howard correspondence, strong normalization
+When we consider terms of the STLC as proofs in a propositional logic
+using the Curry--Howard correspondence, strong normalization
 is another important property of the STLC. Strong normalization states
 that every well-typed term reduces to a normal form, no matter what
 reduction strategy is followed.
@@ -227,21 +227,21 @@ belongs to the set of normalizing terms.
 
 The discussion below on strong normalization uses the
 Curry-style term syntax, but this proof strategy also works well
-for the Church-style STLC\footnote{This proof strategy generalizes well
+for the Church-style STLC.\footnote{This proof strategy generalizes well
         to more complicated systems such as System~\F, System~\Fw, and
-        even for dependently typed calculi such as
-        the Calculus of Constructions\cite{Geuvers94}.}.
+        even to dependently typed calculi such as
+        the Calculus of Constructions\cite{Geuvers94}.}
 In fact, this strategy originates from Girard's strong normalization proof
 for System \F\ using reducibility candidates \cite{Gir71}, and later rephrased
-using Tait's saturated sets \cite{Tait75}. In particular, I adopt
+using Tait's saturated sets \cite{Tait75}. In particular, we adopt
 the notation used in the paper by \citet{AbeMat04}, which includes
 a strong normalization proof for an extension of \Fw\ using saturated sets.
 
 The strong normalization proofs for System \F\ (\S\ref{sec:f}) and
 System \Fw\ (\S\ref{sec:fw}) in this chapter 
-are also based on this strategy using saturated sets. As the languages
-increase in complexity, we gradually
-increase the complexity of the interpretation of types in those systems.
+are also based on this strategy using saturated sets. As the language
+increases in complexity, we gradually increase the complexity of
+the interpretation of types in those systems.
 \index{interpretation!type}
 
 \index{normalizing terms}
@@ -357,7 +357,7 @@ We prove this by induction on the typing derivation ($\Gamma|- t:A$).
 For variables, it is trivial to show that
 $ \inference{\Gamma |- x:A & \rho \in [|\Gamma|]}{[|x|]_\rho \in [|A|]} $.
 
-Due to the \rulename{Var} rule, we know that $x:A \in \Gamma$.
+Because of the \rulename{Var} rule, we know that $x:A \in \Gamma$.
 So, $[|x|]_\rho =\rho(x)\in[|\Gamma(x)|] = [|A|]$.
 
 \paragraph{}
@@ -633,11 +633,11 @@ such as the identity function $(\l x.x)$. That is, when we have a variable
 $x_\textsf{id}$ that stands for $(\l x.x)$ and have a context $\Gamma$
 such that $x_\textsf{id}:A -> A \in \Gamma$ for some $A$, we cannot apply
 this $x_\textsf{id}$ to arguments of differing types within the same context
-$\Gamma$. Due to this limitation, most typed functional languages are based on
-a polymorphic lambda calculus, which has richer notion of types than the STLC.
-Polymorphic lambda calculi supports polymorphic types, such as
-$\forall X.X -> X$ for the type of the identity function, which captures
-the idea that the type variable $X$ can be instantiated to any type you need,
+$\Gamma$. Bucause of this limitation, most typed functional languages are
+based on a polymorphic lambda calculus, which has a richer notion of types than
+the STLC. Polymorphic lambda calculi supports polymorphic types, such as
+$\forall X.X -> X$ for the type of the identity function, which capture
+the idea that the type variable $X$ can be instantiated to any type,
 in each occurrence of the identity function ($x_\textsf{id}$).
 We will introduce several well-known polymorphic lambda calculi and
 discuss their properties in the following subsections.

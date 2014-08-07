@@ -15,18 +15,16 @@
 \index{datatype!nested}
 The datatypes |Nat| and |List|, defined in \S\ref{ssec:tourRegular}, 
 are regular datatypes.  Non-recursive datatypes (\eg, |Bool|) and
-recursive datatypes without any type arguments (\eg, |Nat|)
-are always regular.  Among the recursive datatypes with type arguments,
-those datatypes where all of the recursive occurrence on the right-hand side
-have exactly the same type argument as the left-hand side (in the same order)
-are considered regular.  For example, the list datatype
-%% \begin{code}
-$\,$ |data List p = N || C p (List p)| $\,$
-%% \end{code}
-is regular since |(List p)| appearing on right-hand side takes exactly the same
-argument |p| as the |(List p)| in the left-hand side (|data List p = |$\,\ldots$).
+recursive datatypes without any type arguments (\eg, |Nat|) are always regular.
+Among the recursive datatypes with type arguments, those datatypes where
+all of the recursive occurrences on the right-hand side have
+exactly the same type argument as those on the left-hand side
+(in the same order) are considered regular. For example, the list datatype
+$\,$ |data List p = N || C p (List p)| $\,$ is regular since |(List p)|
+appearing on right-hand side takes exactly the same
+argument |p| as |(List p)| on the left-hand side (|data List p = |$\,\ldots$).
 
-Note, every concrete {\em instantiation} of the list datatype has an equivalent
+Note every concrete {\em instantiation} of the list datatype has an equivalent
 non-parameterized datatype definition.
 For instance, |List Bool| is equivalent to the following datatype:
 %format ListBool = List"_{"Bool"}"
@@ -35,22 +33,22 @@ For instance, |List Bool| is equivalent to the following datatype:
 \begin{code}
 data ListBool = NBool | CBool Bool ListBool
 \end{code}
-This {em instantiation} property does {\em not} hold for nested datatypes.
+This instantiation property does {\em not} hold for nested datatypes.
 
 Type arguments that never change in any recursive occurrences
 in a datatype definition are called \emph{type parameters}.
 Type arguments that do change are called \emph{type indices}.
 Datatypes with only type parameters are always regular.
 Nested datatypes \cite{BirMee98} are non-regular datatypes where
-type arguments in some of the recursive occurrences in the recursive
-datatype equation differ from the left-hand side of the datatype equation.
+type arguments in some of the recursive occurrences in the recursive datatype
+equation differ from those on the left-hand side of the datatype equation.
 
 Such types can be expressed in Haskell and ML without using GADT extensions.
 We introduce two well-known examples of nested datatypes, powerlists and bushes.
-functions that sum up the elements in those datat structures
+Functions that sum up the elements in those data structures
 (Figure \ref{fig:psum} and Figure \ref{fig:bsum}). Nested datatypes require us
 to move from rank-0 Mendler combinators to rank-1 Mendler combinators.\footnote{
-	The rank of a kined is defined by the equations $\textrm{rank}(*)=0$
+	The rank of a kind is defined by these equations: $\textrm{rank}(*)=0$
 	and $\textrm{rank}(\kappa -> \kappa') =
 	\textrm{max}(1+\textrm{rank}(\kappa),\textrm{rank}(\kappa'))$.
 	Rank-0 Mendler combinators work on recursive types of kind $*$,
@@ -74,7 +72,7 @@ The type argument |(i,i)| for |Powl| occurring on the right-hand side is
 different from |i| appearing on the left-hand side.  Type arguments that
 occur in variation on the right-hand side, like |i|, are type indices.
 
-This single datatype equation for |Powl| relates a family of datatypes:
+This single datatype equation for |Powl| relates to a family of datatypes:
 the tail of an |i|-powerlist is a |(i,i)|-powerlist,
 its tail is a |((i,i),(i,i))|-powerlist, and so on.
 More concretely,
@@ -87,10 +85,10 @@ The tail of |ps| is |ps'|, and the tail of |ps'| is |ps''|.
 Note that the shape of elements includes deeper nested pairs
 as the type indices become more deeply nested.
 
-On the left-hand side of Figure \ref{fig:psum}
+On the left-hand side of Figure \ref{fig:psum},
 we define a function that sums up all the nested elements in a powerlist
-using the general recursion style. This function takes 2 parameters:
-a function that turns elements into integers, and the powerlist itself.
+using general recursion style. This function takes 2 parameters:
+a function that turns elements into integers and the powerlist itself.
 The key part in the definition of |psum| is constructing the function
 |(\(x,y)->f x+f y) :: (i,i) -> Int|. We must construct this function,
 on the fly, in order to make the recursive call of |psum| on its tail
@@ -138,7 +136,7 @@ Using |sumP|, we can sum up |ps| defined above: |sumP ps ~> 28|.
 \end{figure}
 \end{landscape}
 
-Before discussing the Mendler style version, let us take a look at yet another
+Before discussing the Mendler-style version, let us take a look at yet another
 general recursive version of the function |psum'|, which explicitly wraps up
 the answer values of type |(i->Int) -> Int| inside the newtype |Ret i|.
 The relations between the plain vanilla version and the wrapped up version
@@ -147,11 +145,11 @@ are simply:
        psum  = unRet .  psum'
 Ret .  psum  =          psum'
 \end{code}
-The wrapped up version |psum'| has the same structure as the Mendler style
+The wrapped up version |psum'| has the same structure as the Mendler-style
 version |psumm| found on the right-hand side of Figure \ref{fig:psum}.
 The wrapping of the answer type is for purely technical reasons:
 to avoid the need for higher-order unification.
-If we were to work with the unwrapped answer type in the Mendler style,
+If we were to work with the unwrapped answer type in Mendler style,
 the type system would need to unify (|a i|) with (|(i->Int) -> Int|),
 which is a higher-order unification, whereas unifying (|a i|) with
 the wrapped answer type (|Ret i|) is first-order.
@@ -159,7 +157,7 @@ The type inference algorithm of Haskell (and most other languages)
 does not support higher-order unification.\footnote{We may avoid higher-order
 unification, either by making the Mendler-style combinators language constructs
 (rather than functions) so that the type system treats them with specialized
-typing rules; or by providing a version of the combinators with syntactic
+typing rules or by providing a version of the combinators with syntactic
 Kan-extension as in \cite{AbeMatUus05}.}
 
 The summation function for powerlists in Mendler style is illustrated
@@ -173,21 +171,21 @@ the recursive datatype, we use |mcata1|, the Mendler-style iteration
 combinator at kind $* -> *$, to define the function |psumm|.
 \index{Mendler-style!iteration}
 
-The beauty of the Mendler style approach is that the implementation of
-the recursion combinators for higher-ranks (or, higher-kinds) are
-\emph{exactly the same} as their kind $*$ counterparts.
+The beauty of the Mendler-style approach is that the implementations of
+the recursion combinators for higher-ranks (or higher-kinds) are
+\emph{exactly the same} as those for their kind $*$ counterparts.
 The definitions differ only in their type signatures.
 As you can see in Figures \ref{fig:rcombty} and \ref{fig:rcombdef},
 |mcata1| has a richer type than |mcata0|, but their implementations
 are \emph{exactly the same}! This is not the case for the conventional approach.
 The definition of |cata| won't generalize to nested datatypes in a trivial way.
-There has been several approaches \cite{BirPat99,MarGibBay04,Hin00}
+There have been several approaches \cite{BirPat99,MarGibBay04,Hin00}
 to extend folds or catamorphisms for nested datatypes
 in the conventional setting.
 \index{conventional!nested datatype}
 
 \index{bush}
-We can also define a summation function for bushs in a similar way
+We can also define a summation function for bushes in a similar way
 as the summation function for powerlists.
 The bush datatype is defined as below (also in Figure \ref{fig:bsum}):
 \begin{code}
@@ -196,31 +194,31 @@ data Bush  i = NB  | CB i (Bush (Bush i))
 The type argument |i| for |Bush| is a type index, since
 the type argument |(Bush i)| occurring on the right-hand side is
 different from |i| appearing on the left-hand side.  What is intriguing
-about |Bush| is that the variation on the type index involves itself.
-\citet{Mat09} calls such datatypes, like |Bush|, \emph{truly nested datatypes}.
+about |Bush| is that the variation of the type index involves itself.
+\citet{Mat09} calls such datatypes as |Bush|, \emph{truly nested datatypes}.
+Here are some examples of bush values:
 \index{datatype!truly nested}
 \index{truly nested datatype}
-Here are some examples of bush values:
 \begin{code}
 bs    = CB 1 bs'           :: Bush Int
 bs'   = CB (CB 2 NB) bs''  :: Bush (Bush Int)
 bs''                       :: Bush (Bush (Bush Int))
 bs''  = CB (CB (CB 3 NB) (CB (CB (CB 4 NB) NB) NB)) NB
 \end{code}
-The tail of |bs| is |bs'|, and the tail of |bs'| is |bs''|.
+The tail of |bs| is |bs'| and the tail of |bs'| is |bs''|.
 Note that the shape of the elements becomes more deeply nested as we
-move towards latter elements. More interestingly, the element type of
+move towards the latter elements. More interestingly, the element type of
 the bush becomes nested by the bush type itself.
 
 We can define a function that sums up all the nested elements in a bush.
-Let us first take a look at the function |bsum| in the general recursion style,
+Let us first take a look at the function |bsum| in general recursion style,
 on the left-hand side of Figure \ref{fig:bsum}.
 This function takes 2 parameters: a bush to sum up and a function that
 turns elements into integers.  The key part in the definition of |bsum| is
 constructing the function |(\ys->bsum ys f) :: Bush i -> Int|.  We must
 construct this function, on the fly, in order to make the recursive call of
 |bsum| on its tail |xs :: Bush (Bush i)|.  Without this function,
-the recursive call wouldn't know how to sum up bushed elements.
+the recursive call wouldn't know how to sum up the bushed elements.
 %% Note this kind of recursive call is an instance of polymorphic recursion.
 
 We can specialize |bsum|, for instance, for integer bushes as follows
@@ -232,7 +230,7 @@ sumB xs = bsum xs id
 Using |sumB|, we can sum up |bs| defined above: |sumB bs ~> 10|.
 
 Before discussing the Mendler-style version, let us take a look at yet another
-general recursive version of the function |bsum'|, which explicitly wraps up
+general recursive version of the function |bsum'| that explicitly wraps up
 the answer values of type |(i->Int) -> Int| inside the newtype |Ret i|.
 The relations between the plain vanilla version and the wrapped up version
 are simply:
@@ -240,21 +238,21 @@ are simply:
        bsum  = unRet .  bsum'
 Ret .  bsum  =          bsum'
 \end{code}
-The wrapped up version |bsum'| has the same structure as the Mendler style
+The wrapped up version |bsum'| has the same structure as the Mendler-style
 version |bsumm| found on the right-hand side of Figure \ref{fig:bsum}.
 In Mendler style, we define the datatype |Bush| as a fixpoint (|Mu1|) of
-the base |BushF| and define |bsumm| in terms of |mcata1|, similarly to
+the base |BushF| and define |bsumm| in terms of |mcata1|, similar to
 the definition of the summation function for powerlists in Mendler style.
 
 The type argument |i| in both |Powl i| and |Bush i| is a type index that
 forces us to choose the fixpoint on kind $* -> *$ (and its related recursion
-combinators). Note, in the definition of the base types |PowlF| and 
-type |BushF|, we place the index |i| after the type argument |r| for
-the recursion points. This is the convention we use. We always write
-parameters (|p|), before the recursion point argument (|r|), followed by
-indices (|i|).  Figure \ref{fig:vec}, which we will shortly discuss
-in \S\ref{ssec:tourIndexed}, contains an example where there are both
-type parameters and type indices in a datatype (|Vec p i|). 
+combinators). Note in the definition of the base types |PowlF| and |BushF|,
+we place the index |i| after the type argument |r| for the recursion points.
+This is the convention we use. We always write parameters (|p|),
+before the recursion point argument (|r|), followed by indices (|i|).
+Figure \ref{fig:vec}, which we will shortly discuss in \S\ref{ssec:tourIndexed},
+contains an example where there are both type parameters and type indices
+in a datatype (|Vec p i|). 
 \index{type parameter}
 \index{type index}
 \index{type!parameter}

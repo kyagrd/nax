@@ -51,7 +51,7 @@ term indices (\S\ref{Leibniz}).
 				  \mathtt{inr}~x' -> x_2\;x'\})
 \end{align*}~\vspace*{-10pt}
 \end{singlespace}
-\caption{Embedding non-recursive datatypes}
+\caption{Embedding non-recursive datatypes.}
 \label{fig:churchnonrec}
 \end{figure}
 \begin{figure}
@@ -96,28 +96,28 @@ term indices (\S\ref{Leibniz}).
 & &\!\!\!\!\!=~& \l x.\l x_c. \l x_n.x\;x_c\,x_n
 \end{align*} ~\vspace*{-14pt}
 \end{singlespace}
-\caption{Embedding recursive datatypes}
+\caption{Embedding recursive datatypes.}
 \label{fig:churchrec}
 \end{figure}
 \citet{Church33} invented an embedding of the natural numbers into
-the untyped $\lambda$-calculus, which he used to argue
-that the $\lambda$-calculus was expressive enough for the foundation of
+the untyped $\lambda$-calculus, which he used to argue that
+the $\lambda$-calculus was expressive enough for the foundation of
 logic and arithmetic. Church encoded the data constructors of natural numbers,
 successor and zero, as higher-order functions,
 $\mathtt{succ}=\l x.\l x_s.\l x_z.x_s(x\,x_s x_z)$ and
 $\mathtt{zero}=\l x_s.\l x_z.x_z$.
-The heart of the Church encoding is that a value is encoded as
+The key concept of the Church encoding is that a value is encoded as
 an elimination function. The bound variables $x_s$ and $x_z$
-(of both $\mathtt{succ}$ and $\mathtt{zero}$) stand for the operations
-needed to eliminate the successor case and the zero case respectively.
-The Church encodings of successor states: to eliminate $\mathtt{succ}\,x$,
-``apply $x_s$ to the elimination of the predecessor $(x\,x_s x_z)$'';
-and, to eliminate $\mathtt{zero}$, just ``return $x_z$". Since values {\it are}
-elimination functions, the eliminator can be defined as applying the value
-itself to the needed operations, one for each of the data constructors.
-For instance, we can define an eliminator for the natural numbers as
-$\mathtt{elim_{Nat}}=\l x.\l x_s.\l x_z.x\,x_s x_z$.
-This is just an $\eta$-expansion of the identity function $\l x.x$.
+(in $\mathtt{succ}$ and $\mathtt{zero}$) denote the operations
+needed to eliminate the successor and zero cases respectively.
+The Church encodings of successor states that to eliminate $\mathtt{succ}\,x$,
+one must ``apply $x_s$ to the elimination of the predecessor $(x\,x_s x_z)$'',
+and, to eliminate $\mathtt{zero}$, one may simply ``return $x_z$''.
+Since values {\it are} elimination functions, the eliminator can be defined as
+an application of the value itself to the needed operations, one for each of
+the data constructors. For instance, we can define an eliminator for
+the natural numbers as $\mathtt{elim_{Nat}}=\l x.\l x_s.\l x_z.x\,x_s x_z$.
+This is simply an $\eta$-expansion of the identity function $\l x.x$.
 The Church encoded natural numbers are typable in polymorphic $\lambda$-calculi,
 such as System \Fw, as follows:\vspace*{-1ex}
 \begin{align*}
@@ -139,35 +139,35 @@ Note that the term encodings for the constructors and eliminators of
 the list-like datatypes in Figure\;\ref{fig:churchrec} are exactly the same.
 For instance, the term encodings for \texttt{nil}, \texttt{pnil}, and
 \texttt{vnil} are all the same term: $\l x_s.\l x_z.x_z$. The term encodings
-for nil and cons capture the linear nature of lists, so they are the same for
-all list like structures. But, their types differ, capturing different
-invariants about lists, for example, shape of the elements ({\tt Powl}) and
-length of the list ({\tt Vec}).
+for nil and cons capture the linear nature of lists, hence they are the same for
+all list-like structures. However, their types differ, capturing different
+invariants, for example, element shape ({\tt Powl}) and list length ({\tt Vec}).
 
 \subsection{Embedding recursive datatypes as two-level types}
 \label{ssec:embedTwoLevel}
 We can divide a recursive datatype definition into two parts --
 a recursive type operator and a base structure. The operator ``weaves" recursion
-into the datatype definition, and the base structure describes
-its shape (\ie, number of data constructors and their types).
+into the datatype definition and the base structure describes
+its shape (\ie, the number of data constructors and their types).
 One can program with two-level types in any functional language that supports
-higher-order polymorphism\footnote{\aka\ higher-kinded polymorphism,
-	or type-constructor polymorphism}, such as Haskell. 
-In Figure \ref{fig:twoleveltypes}, we illustrate this by giving an example of a two level definition
-for ordinary lists (all the other types in this paper have similar definitions).
+higher-order polymorphism\footnote{
+	This is also known as higher-kinded polymorphism,
+	or type-constructor polymorphism} such as Haskell. 
+In Figure \ref{fig:twoleveltypes}, we illustrate this with an example of
+a two-level definition for ordinary lists (all the other types in this paper
+have similar definitions).
 
 The use of two-level types has been recognized as
-a useful functional programming pearl \cite{Sheard04}, since two-level types
-separate the two concerns of (1) recursion on recursive sub components
-and (2) handling different cases (by pattern matching over the shape of the (non-recursive) base structure).
-An advantage of such an approach, is that a single eliminator can be defined once for
-all datatypes of the same kind. For example, the function $\mathtt{mit}_\kappa$ describes
-Mendler-style iteration\footnote{An iteration is a principled recursion
-	scheme guaranteed to terminate for any well-founded input.
-	Also known as fold, or catamorphism.} for the recursive types
-defined by $\mu_\kappa$. Although it is possible to write programs using two level datatypes
-in a general purpose functional language, one could
-not expect logical consistency in such systems.
+a useful functional programming pearl \cite{Sheard04} because two-level types
+separate the two concerns of (1) recursion on recursive subcomponents and
+(2) handling different cases by pattern matching over the shape of the
+(non-recursive) base structure.  An advantage of such an approach is that
+a single eliminator can be defined once for all datatypes of the same kind.
+For example, the function $\mathtt{mit}_\kappa$ describes
+Mendler-style iteration (\aka, fold, or catamorphism) for the recursive types
+defined by $\mu_\kappa$. Although it is possible to write programs
+using two level datatypes in a general purpose functional language,
+one could not expect logical consistency in such systems.
 
 \begin{figure}\vspace*{-8pt}
 \begin{singlespace}
@@ -212,7 +212,7 @@ mit$_{(\mathtt{Nat}-> *)}$::($\forall$ r n.($\forall$n.r{n}->x{n})->f r {n}->x{n
 mit$_{(\mathtt{Nat}-> *)}$ phi (In$_{(\mathtt{Nat}-> *)}$ z) = phi (mit$_{(\mathtt{Nat}-> *)}$ phi) z
 \end{lstlisting}
 \end{singlespace}
-\caption{2-level types and their Mendler-style iterators in Haskell}
+\caption{Two-level types and their Mendler-style iterators in Haskell.}
 \label{fig:twoleveltypes}
 \end{figure}
 
@@ -227,19 +227,18 @@ used in Figure \ref{fig:twoleveltypes}. These embeddings support the embedding
 of arbitrary type- and term-indexed recursive datatypes into System \Fi.
 Thus we can reason about these datatypes in a logically consistent calculus.
 
-However, it is important to note that there does not exist an embedding of the
-arbitrary destruction of (or, pattern matching away) the $\mathtt{In}_\kappa$
-constructor. It is known that combining arbitrary recursive datatypes with
-the ability to destruct (or, unroll) their values is powerful enough
-to define non-terminating computations in a type safe way, leading to
+However, it is important to note that there does not exist an embedding that
+arbitrarily destructs (\ie, pattern matches away) the $\mathtt{In}_\kappa$
+constructor. It is known that combining arbitrary recursive datatypes
+with the ability to destruct (or unroll) their values is powerful enough
+to define non-terminating computations in a type-safe way, leading to
 logical inconsistency. Some systems maintain consistency by restricting
 which recursive datatypes can be defined, but allow arbitrary unrolling.
-In Mendler style, one can define any datatype, but restrict unrolling
-of recursive values only within Mendler-style recursion combinators.
-Such datatypes and Mendler-style recursion combinators are embeddable
-in \Fi\ (and some in \Fixi). The family of Mendler-style recursion schemes
-are quite expressive, capturing at least iteration, primitive recursion,
-and course-of-values recursion.
+In Mendler style, one can define any datatype, but unrolling recursive values
+is restricted to Mendler-style recursion combinators. Such datatypes and
+Mendler-style recursion combinators are embeddable in \Fi\ (and some in \Fixi).
+The family of Mendler-style recursion schemes are quite expressive, capturing
+at least iteration, primitive recursion, and course-of-values recursion.
 
 \afterpage{
 \begin{landscape}
@@ -316,7 +315,7 @@ and course-of-values recursion.
 
 \begin{singlespace}
 \begin{example}
-The datatype of \mbox{$\lambda$-terms} in context 
+Datatype of \mbox{$\lambda$-terms} in context 
 \begin{verbatim}
 data Lam ( C: Nat -> * ) { i: Nat } where
   LVar : C{i} -> Lam{i}
@@ -369,7 +368,7 @@ This is encoded as
 \subsection{Leibniz index equality}
 \label{Leibniz}
 \index{Leibniz equality}
-The quantification over type-indexed kinding available in System~\Fi\
+The quantification over type-indexed arrow kind available in System~\Fi\
 allows the definition of \emph{Leibniz-equality type} constructor
 $\LEq_A: A\to A\to *$ on closed types~$A$, defined as follows:
 \[ \LEq_A \triangleq
@@ -405,7 +404,7 @@ inhabited:
 \end{array}\]
 In addition to the above,
 one also has the inhabitation of the following type:\footnote{
-	Intuitively, this is obvious since we can swap the order of
+	Intuitively, this is obvious, since we can swap the order of
 	consecutive universal quantification over indices.  That is,
 	from $(\forall i^A.\,\forall j^A.\cdots)$
 	to $(\forall j^A.\,\forall i^A.\cdots)$.}
@@ -426,7 +425,7 @@ Hence Leibniz equality is a congruence.
 
 In applications, the types~$\LEq_A$ are useful in constraining the
 term-indexing of datatypes. %as parameterised by coercions.  
-A general such construction is given by the type constructors $\Ran_{A,B}:
+A general construction is given by the type constructors $\Ran_{A,B}:
 (A\to B) \to (A\to*) \to B\to *$.  These are defined as 
 \[
 \Ran_{A,B}
@@ -439,7 +438,7 @@ A general such construction is given by the type constructors $\Ran_{A,B}:
 	  \to X\s i
 \]
 %for closed types~$A$ and $B$, 
-and are in spirit right Kan extensions, a notion that is being extensively
+and are, in spirit, right Kan extensions, a notion that is extensively
 used in programming,~\eg~\cite{AbeMatUus05,JohannGhani08}. %,Hinze}.  .  
 \index{Kan extension!right}
 
@@ -459,7 +458,7 @@ used in programming,~\eg~\cite{AbeMatUus05,JohannGhani08}. %,Hinze}.  .
 %%is inhabited by a retraction.)
 %
 One of their usefulness comes from the fact that the following type
-is inhabited by a section
+is inhabited by a section:
 \[%\l h.\,\l y.\,\l g.\, h(g\, y):
 \forall Y^{B\to*}\!.\,\forall X^{A\to*}\!.\,\forall f^{A\to B}\!.\,
 \big(\forall i^A\!.\,Y\s{f\,i}\to X\s i\big)
@@ -468,7 +467,7 @@ is inhabited by a section
 \]
 This allows one to represent functions from input datatypes with
 constrained indices as plain indexed functions, and vice versa.  For
-instance, by means of the iterators of the previous section one can define
+instance, by means of the iterators of the previous section, one can define
 a vector tail function of type 
 \[
 \forall X^{*}.\,\forall j^{\mathtt{Nat}}.\,\mathtt{Vec}\, X\, \s j \to
@@ -510,11 +509,11 @@ and then retract it to one of type
 \index{Kan extension!left}
 Type constructors ${\Lan_{A,B}:(A\to B)\to (A\to*)\to B\to *}$, which are
 in spirit left Kan extensions, permit the encoding of functions of type
-$(\forall i^{A}.\, F\s i\to G\s{t\,i})$, for ${F:A\to*}$, ${G:B\to*}$, and
+$(\forall i^{A}.\, F\s i\to G\s{t\,i})$ for ${F:A\to*}$, ${G:B\to*}$, and
 ${t:A\to B}$, as functions of type
 \[ \forall j^{B}.\, (\Lan_{A,B}\s t F)\s j\to G\s{j}\; .\]
 Left Kan extensions are dual to right Kan extensions, but
-to define them as such one needs existential and product types.
+to define them as such, one needs existential and product types.
 In formalisms without them, these have to be encoded.
 This can be done as follows: 
 \[
@@ -550,5 +549,5 @@ type constructor $\mathtt{Lan}_{A,A\times A}\s{\l x.\,\mathtt{pair}\,x\,x}$
 embeds arrays of types into matrices along the diagonal; while the type
 constructors $\mathtt{Lan}_{A\times A,A}\s{\mathtt{fst}}$ and
 $\mathtt{Lan}_{A\times A,A}\s{\mathtt{snd}}$ respectively encapsulate matrices
-of types as arrays by columns and by rows.
+of types as arrays by columns and rows.
 

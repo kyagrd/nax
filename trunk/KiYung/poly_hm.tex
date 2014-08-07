@@ -1,4 +1,4 @@
-\section{The Hindley-Milner type system} \label{sec:hm}
+\section{The Hindley--Milner type system} \label{sec:hm}
 \index{Hindley--Milner}
 \citet{Hindley69} demonstrated the existence of a unique principal type scheme
 for every object in a combinatory logic. \citet{Milner78} rediscovered this fact
@@ -9,8 +9,8 @@ type scheme (\aka\ principal type scheme) for a Curry-style lambda term.
 \citet{Damas85} (a student of Milner) published detailed theories about
 Milner's polymorphic lambda calculus and the type inference algorithm $W$.
 This type system for Milner's polymorphic lambda calculus \cite{Milner78,DamMil82,Damas85}
-is also known as the Hindley-Milner type system (HM),
-the Damas-Hindley-Milner type system (DHM), or let-polymorphic type system.
+is also known as the Hindley--Milner type system (HM),
+the Damas--Hindley--Milner type system (DHM), or let-polymorphic type system.
 \index{polymorphic lambda calculus!Milner's}
 \index{let-polymorphic}
 \index{type inference}
@@ -18,7 +18,7 @@ the Damas-Hindley-Milner type system (DHM), or let-polymorphic type system.
 The syntax of Milner's polymorphic lambda calculus and its typing rules
 are illustrated in Figure \ref{fig:hm}. The type inference algorithm $W$
 is illustrated in Figure \ref{fig:algW}. We discuss each of these
-figures separately -- the syntax in
+figures separately --- the syntax in
 \S\ref{sec:hm:syntax}, the typing rules in \S\ref{sec:hm:dectyrule} and
 \S\ref{sec:hm:syntyrule}, and the inference algorithm in \S\ref{sec:hm:W}.
 We provide two equivalent sets of typing rules (we prove this in \S\ref{sec:hm:syntyrule}).
@@ -90,19 +90,20 @@ $\!\!\!\!\!\!\!\!\!\!$
                      {\Gamma |- t : \forall X.\sigma} ~ (X \notin\FV(\Gamma))
 \end{align*}
 \end{singlespace}
-\caption{Milner's polymorphic lambda calculus}
+\caption{Milner's polymorphic lambda calculus.}
 \label{fig:hm}
 \end{figure}
 
 \subsection{Syntax}\label{sec:hm:syntax}
-The syntax of terms include the usual Curry-style terms
+The syntax of terms includes the usual Curry-style terms
 ($x$, $\l x.t$, and $t\;s$) and let-terms ($\<let> x=s \<in> t$).
 A let term, $\<let> x=s \<in> t$, is semantically equivalent to
 $(\l x.t)\,s$. That is, $\<let> x=s \<in> t$ is a syntactic sugar
-for $(\l x.t)\,s$ when we think about reduction\footnote{The reduction rules for
-        for the terms of HM are exactly the same as the reduction rules for
+for $(\l x.t)\,s$ when we think about reduction.\footnote{
+	The reduction rules for
+        the terms of HM are exactly the same as the reduction rules for
         Curry-style terms in the previous sections, once we desugar
-        all the let terms.}.
+        all the let terms.}
 However, a let-term ($\<let> x=s \<in> t$) is assigned
 a significantly different type than its sematic equivalent ($(\l x.t)\,s$).
 The typing rules support the introduction of
@@ -114,7 +115,7 @@ we explain the typing rules.
 
 \index{monotype}
 \index{polytype}
-The syntax of types (or, monotypes) include all the types in the STLC
+The syntax of types (or, monotypes) includes all the types in the STLC
 ($A -> B$ and $\iota$) and type variables ($X$).
 The syntax of type schemes (or, polytypes) are similar to
 the polymorphic types of System \F, but universal quantification must appear
@@ -126,7 +127,7 @@ its associated type scheme ($x:\sigma$).
 The ordering between two type schemes $\sigma \sqsubseteq \sigma'$,
 defined in Figure \ref{fig:hm}, means that $\sigma$ is more general
 than or equivalent to $\sigma'$. The ordering relation $\sqsubseteq$
-comes from \citet{DamMil82}, and is also known as generic instantiation --
+comes from \citet{DamMil82}, and is also known as generic instantiation ---
 $\sigma'$ is called a generic instance of $\sigma$
 when $\sigma \sqsubseteq \sigma'$. The shorthand notation
 $\forall X_1\dots X_n.A$ stands for consecutive universal quantification
@@ -204,9 +205,9 @@ the monomorphic identity function over endofunctions,
 to either \textit{square} or \textit{revstr} (as we do below),
 as long as we do not try to apply $\textit{Id}_{->}^{\,\textit{mon}}$ to both
 of them in the same program.\footnote{A program is just a term, but it sounds
-like a more practical example.} For example, note the different types
-for each application, and consider the different type that $\textit{Id}_{->}^{\,\textit{mon}}$
-must have inside each term.
+like a more practical example.} For example, we note the different types
+for each application, and consider the different type that
+$\textit{Id}_{->}^{\,\textit{mon}}$ must have inside each term.
 \[ \Gamma |-
         (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{square}) :
         \texttt{int} -> \texttt{int}
@@ -215,7 +216,7 @@ must have inside each term.
         (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{revstr}) :
         \texttt{string} -> \texttt{string}
 \]
-It is impossible to derive a type for a program which applies
+It is impossible to derive a type for a program that applies
 $\textit{Id}_{->}^{\,\textit{mon}}$ to both \textit{square} and \textit{revstr} 
 in one program, since there is no solution for the inconsistent equations
 $X'=\mathtt{int}$ and $X'=\mathtt{string}$.
@@ -267,19 +268,21 @@ This is expected since terms of HM are Curry style. Recall that
 the uniqueness of typing does not hold for lambda calculi with
 Curry-style terms.
 
-The first three declarative rules in Figure \ref{fig:hm}:
-\rulename{Var}, \rulename{Abs}, and \rulename{App} are
-fairly standard. The \rulename{Var} rule deduces the type scheme of
+The first three declarative rules
+-- \rulename{Var}, \rulename{Abs}, and \rulename{App} --
+in Figure \ref{fig:hm} are fairly standard.
+The \rulename{Var} rule deduces the type scheme of
 a variable according to the type scheme binding of the variable in
 the typing context. Note that the type schemes deduced by the rules
 \rulename{Abs} and \rulename{App} are restricted to the form of
 (mono)types\footnote{Recall that (mono)types are subset of type schemes.}
 since the domain and range of function ($\rightarrow$) types are restricted to (mono)types.
 
+%%%%% TODO TODO TODO more about this later <- fix ... we discuss this in ...
 The \rulename{Let} rule can introduce polymorphic type schemes into
-the typing context (more about this later). The most interesting rules
-are the \rulename{Inst} rule and the \rulename{Gen}  rule. Let's consider
-these one at a time.
+the typing context (we discuss more about this shortly, in the next page).
+The most interesting rules are the \rulename{Inst} rule and
+the \rulename{Gen} rule. %% Let's consider these one at a time.
 
 \begin{itemize}
 
@@ -398,11 +401,11 @@ in the \rulename{Inst} rule above can be understood as having two phases:
 instantiation from $\sigma$ to $A[B_1/X_1]\cdots[B_n/X_n]$ and
 generalization from $A[B_1/X_1]\cdots[B_n/X_n]$ to $\sigma'$.
 The instantiation phase, from $\forall.X_1\dots X_n.A$ to $A[B_1/X_1]\cdots[B_n/X_n]$,
-can be broken down to $n$ small steps of instantiation --
+can be broken down to $n$ small steps of instantiation ---
 each step instantiates one of the quantified variables ($X_1\dots X_n$).
 The generalization phase, from $A[B_1/X_1]\cdots[B_n/X_n]$ to
 $\forall X_1'\dots X_m'.A[B_1/X_1]\cdots[B_n/X_n]$, can be broken down into
-$m$ small steps of generalization -- each step universally quantifies one
+$m$ small steps of generalization --- each step universally quantifies one
 of the newly introduced variables ($X_1'\dots X_m$) from the instantiation phase.
 The Curry-style System \F\ has rules, which correspond exactly to these 
 small steps (see Figure \ref{fig:f} in \S\ref{sec:f}).
@@ -449,8 +452,8 @@ are only necessary at the \rulename{Var} and \rulename{Let} rules, respectively.
 That is, we only need to apply the \rulename{Inst} rule to the conclusion of
 the \rulename{Var} rule, and, we only need to apply the \rulename{Gen} rule to
 the first premise ($\Gamma |- s:\sigma$) of the \rulename{Let} rule.
-The \rulename{Var$_s$} rule can be understood as a merging of the
-\rulename{Var} and the \rulename{Inst} into one rule.
+The \rulename{Var$_s$} rule can be understood as a merging of
+\rulename{Var} and \rulename{Inst} into one rule.
 The \rulename{Abs$_s$} rule and the \rulename{App$_s$} rule remain the same as
 their counterparts in the declarative typing rules.
 The \rulename{Let$_s$} rule can be understood as a merging of
@@ -468,7 +471,7 @@ The syntax-directed typing rules are sound (Theorem \ref{thm:sdHMsound})
 and complete (Theorem \ref{thm:sdHMcomplete}) with respect to
 the declarative typing rules.
 
-We will just sketch the key ideas for the proof of the soundness of $|-s$
+We will simply sketch the key ideas for the proof of the soundness of $|-s$
 since the soundness is rather obvious. All we need to do is transform
 any given derivation for $|-s$ into a derivation for $|-$, which is
 straightforward.
@@ -477,16 +480,16 @@ $ \inference{\Gamma |-s t : A}{\Gamma |- t : A} $
 \label{thm:sdHMsound}
 \end{theorem}
 \begin{proof}
-Recall that the \rulename{Var$_s$} rule can be understood as a merge of
+Recall that the \rulename{Var$_s$} rule can be understood as a merging of
 \rulename{Var} and \rulename{Inst}. Thus, we can transform any derivation
-step using \rulename{Var$_s$} rule into two steps of derivation using
-the \rulename{Var} rule, and then applying the \rulename{Inst} rule
+step using the \rulename{Var$_s$} rule into two steps of derivation: using
+the \rulename{Var} rule and then applying the \rulename{Inst} rule
 to the conclusion of the \rulename{Var} rule.
 
 The \rulename{Abs$_s$} rule and the \rulename{App$_s$} rules are mapped
 to the \rulename{Abs} rule and the \rulename{App} rule, respectively.
 
-Recall that the \rulename{Let$_s$} rule can be understood as a merge of
+Recall that the \rulename{Let$_s$} rule can be understood as a merging of
 \rulename{Let} and \rulename{Gen}. We can transform any derivation step
 using the \rulename{Let$_s$} rule into a series of \rulename{Gen} rules
 applied to the first premise of the \rulename{Let} rule, and then applying
@@ -498,8 +501,9 @@ in the \rulename{Gen} rule holds.
 \end{proof}
 
 The completeness of $|-s$ is stated below.
-Note that the completeness of $|-s$ must be stated in terms of generalization closure and
-the type scheme ordering relation ($\overline{\Gamma}(A)\sqsubseteq\sigma$),
+Note that the completeness of $|-s$ must be stated
+in terms of generalization closure and of
+the type scheme ordering relation ($\overline{\Gamma}(A)\sqsubseteq\sigma$)
 since the syntax-directed rules can only deduce types, not type schemes.
 The syntax-directed rule $|-s$ is complete in the sense that for any given term
 we can always deduce a type $A$ such that the closure of $A$ is more general
@@ -513,7 +517,8 @@ $ \inference
 \end{theorem}
 \begin{proof}
 We prove this by induction on the derivation of $\Gamma |- t : \sigma$.
-Let us consider the cases by the last rule applied (\ie, root of the derivation).
+Let us consider the cases by the last rule applied
+(\ie, root of the derivation).
 
 When the last rule is \rulename{Var}, we know that $x:\sigma \in \Gamma$.
 We choose $A$ in the \rulename{Var$_s$} rule to be an instance of $\sigma$,
@@ -526,9 +531,9 @@ If $X\in\FV(\Gamma)$, then
 $\overline{\Gamma}(A) = \forall X_1'.\forall X_2'.X_1' -> X_2' -> X$,
 which is $\alpha$-equivalent to $\sigma$, therefore,
 $\overline{\Gamma}(A)\sqsubseteq\sigma$.
-Otherwise, if $X\notin\FV(\Gamma)$,
-$\overline{\Gamma}(A) = \forall X_1'.\forall X_2'.\forall X.X_1' -> X_2' -> X$,
-and $\overline{\Gamma}(A)\sqsubseteq\sigma$ still holds.
+Otherwise, if $X\notin\FV(\Gamma)$, then
+$\overline{\Gamma}(A) = \forall X_1'.\forall X_2'.\forall X.X_1' -> X_2' -> X$;
+so, $\overline{\Gamma}(A)\sqsubseteq\sigma$ still holds.
 
 When the last rule is \rulename{Abs}, it is straightforward by induction.
 
@@ -539,7 +544,7 @@ $A'$ and $B'$ such that
 $\Gamma |-s s : A' \land \overline{\Gamma}(A') \sqsubseteq \sigma$ and
 $\Gamma,x:\sigma |-s t : B' \land
         \overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
-We would be done with the case for \rulename{Let} if we could show that
+The case for \rulename{Let} would be complete if we could show that
 $\Gamma,x:\overline{\Gamma}(A') |-s t : B' \land
         \overline{\Gamma,x:\overline{\Gamma}(A')}(B') \sqsubseteq B$.
 Instead we can only show $\Gamma,x:\sigma |-s t : B' \land
@@ -579,16 +584,16 @@ there exists $x:\sigma'\in\Gamma'$ such that $\sigma'\sqsubseteq\sigma$.
 \end{lemma}
 \begin{proof}
 This is an intuitively obvious property since assuming
-more general type schemes for variables only make
-it possible to deduce all the judgments of $|-s$ and more, but no less,
+more general type schemes for variables only makes it possible
+to deduce all the judgments of $|-s$ and more, but no less,
 by transitivity of $\sqsubseteq$ over type schemes.
-We will just give a proof for the base case, the \rulename{Var} rule,
+We will simply give a proof for the base case, the \rulename{Var} rule,
 which illustrates this intuition.
-Other cases ore straightforward by induction on the derivation of $|-s$.
+Other cases are straightforward by induction on the derivation of $|-s$.
 
 When $\Gamma |-s x : A$, we know that there exists
 $x,\sigma'\in\Gamma'$ such that $\sigma'\sqsubseteq\sigma$.
-By \rulename{Var$_s$} rule, we can deduce any $A'$ for $x$
+By the \rulename{Var$_s$} rule, we can deduce any $A'$ for $x$
 such that $\Gamma' |-s x : A'$ and $\sigma'\sqsubseteq A'$.
 By transitivity of $\sqsubseteq$, $\sigma' \sqsubseteq \sigma \sqsubseteq A$.
 Therefore, $\Gamma' |-s x : A$.
@@ -604,8 +609,8 @@ for any $A$.
 \end{lemma}
 \begin{proof}
 It is obvious once we observe that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
-To show that this, it suffices to show that ($\subseteq$) relation holds
-pointwise on the type schemes in the context That is,
+To show this, it suffices to show that ($\subseteq$) relation holds
+pointwise on the type schemes in the context. That is,
 $\FV(\sigma')\sqsubseteq\FV(\sigma)$ when $x:\sigma' \in \Gamma'$
 and $x:\sigma \in \Gamma$. Note that $\dom(\Gamma')=\dom(\Gamma)$
 by definition of $\sqsubseteq$ over contexts.
@@ -613,7 +618,7 @@ From the assumption $\Gamma' \sqsubseteq \Gamma$, we know that
 $\sigma'\sqsubseteq\sigma$ when $x:\sigma' \in \Gamma'$
 and $x:\sigma \in \Gamma$. Thus, we only need to show that
 $\sigma' \sqsubseteq \sigma$ implies $\FV(\sigma') \subseteq \FV(\sigma)$,
-which is not difficult to observe by definition of $\sqsubseteq$ over
+which is not difficult to observe from the definition of $\sqsubseteq$ over
 type schemes (\rulename{GenInst} in Figure \ref{fig:hm}).
 \end{proof}
 
@@ -667,7 +672,7 @@ is defined as $(S_2\circ S_1)A = S_2(S_1(A))$.
         {W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)}
 \]
 \end{singlespace}
-\caption{The type inference algorithm $W$}
+\caption{The type inference algorithm $W$.}
 \label{fig:algW}
 \end{figure}
 

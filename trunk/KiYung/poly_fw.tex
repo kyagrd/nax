@@ -18,19 +18,19 @@ while $F$ and $G$ stand for type constructors or arbitrary kinds.
 
 We can think of System \F\ as a restriction of System \Fw, where we only
 allow types of kind $*$. That is, all the type variables appearing in
-well-kinded types in System \F\ are of the star kind. Since there exists only
-one kind ($*$) in System \F, the kinding rules of System \F\ only need to make
-sure that type variables are bound in the context.
+well-kinded types in System \F\ are of kind $*$. Since there exists only
+one kind ($*$) in System \F, the kinding rules of System \F\ only needs to
+ensure that type variables are bound in the context.
 
 Since the kind structure of System \Fw\ is richer than the kind structure of
 System~\F, we need to keep track of the kind of the type variables in
 the kinding context ($\Delta$). So, the kinding context is extended by
 a type variable annotated by its kind ($X^\kappa$). The kinding rules of
-System \Fw\ keep track of the kinds of type constructors as well as making
-sure that the type variables are bound in $\Delta$.
+System \Fw\ keep track of the kinds of type constructors as well as ensuring
+that the type variables are bound in $\Delta$.
 
-The kinding rules, for the type syntax inherited from System \F:
-\rulename{TVar}, \rulename{TArr}, \rulename{TAll} are similar to
+The kinding rules - \rulename{TVar}, \rulename{TArr}, and \rulename{TAll}
+- for the type syntax inherited from System \F\ are similar to
 their counterparts in System \F, except for this additional kinding annotation.
 The kinding rules \rulename{TLam} and \rulename{TApp} state when the extensions
 (lambda types and application types) to System \F\ are well-kinded.
@@ -59,17 +59,17 @@ Other rules describe the structural nature of equality (\rulename{EqTVar},
 \rulename{EqTArr}, \rulename{EqTAll}, \rulename{EqTLam}, \rulename{EqTApp})
 and transitivity of equality (\rulename{EqTTrans}).
 
-%% syntax directed formalism???
+%% syntax-directed formalism???
 %% http://pauillac.inria.fr/~herbelin/talks/cic.ps
 %% there is a slide the refers to other paper and say that CIC is okay
 %% since CIC is full. Is Fw also?
 
-The complete syntax, kinding rules, and typing rules of System \Fw\
-are illustrated in Figure \ref{fig:fw}. We consider only
-the Curry-style term syntax for System \Fw. Since lambda binders exist
-at both the term- and the type-levels in System \Fw, we also have a choice of
-either Church style (kind annotations on lambda types) or
-Curry style (no kind annotations on lambda types) for the type syntax.
+The syntax, kinding rules, and typing rules of System \Fw\ are
+illustrated in Figure \ref{fig:fw}. We consider only the Curry-style
+term syntax for System \Fw. Since lambda binders exist at both
+the term- and the type-levels in System \Fw, we also have a choice of
+either Church style (kind annotations on lambda types)
+or Curry style (no kind annotations on lambda types) for the type syntax.
 We consider only the Church-style type syntax with explicit kind annotations.
 
 The reduction rules of System \Fw\ are almost identical
@@ -146,7 +146,7 @@ only on the structure of terms, usually ignoring types.
 &&\inference[\sc RedApp2]{s --> s'}{t~s --> t~s'} \\
 \end{align*}
 
-\caption{Syntax, kinding rules, typing rules and reduction rules for System \Fw}
+\caption{Syntax, kinding rules, typing rules, and reduction rules for System \Fw.}
 \label{fig:fw}
 \end{singlespace}
 \end{figure}
@@ -174,7 +174,7 @@ $\inference[\sc EqTApp]
 $\inference[\sc EqTTrans]
         {\Delta |- F=F' : \kappa & \Delta |- F'=F'' : \kappa}
         {\Delta |- F=F'' : \kappa'} $
-\caption{Type constructor equality rules for System \Fw}
+\caption{Type constructor equality rules for System \Fw.}
 \label{fig:eqtyfw}
 \end{figure}
 
@@ -265,13 +265,13 @@ type constructors} are type constructors that expect type constructors
 as their arguments.
 \end{itemize}
 
-In fact we combine these two to define 
+In fact, we combine these two to define 
 a family of kind-indexed recursive type operators $\mu_\kappa$ using both
 higher-kinded type constructors and higher-kinded polymorphism.
 
 
 
-\paragraph{Type constructors for polymorphic datatypes} expect
+\paragraph{Type constructors for polymorphic datatypes}\!\!\! expect
 other types as arguments to produce a datatype. We can encode these 
 type constructors in System \Fw. For example, the shorthand notations
 (or, type synonyms) in \S\ref{sec:f:data}, such as $(\times)$ for pair types
@@ -292,12 +292,12 @@ for the polymorphic list datatype:
         &:~ * -> *
 \end{align*}
 In System \F, type constructors, such as $(\times)$, $(+)$, and
-\textit{List} are meta-level concepts (or, shorthand notations, macros)
+\textit{List}, are meta-level concepts (or, shorthand notations, macros)
 that cannot be encoded within the type system of System \F.
 In System \Fw, these datatype constructors are encodable as type constructors,
 which are ordinary constructs of System \Fw.
 
-\paragraph{Higher-kinded datatype constructors} that expect
+\paragraph{Higher-kinded datatype constructors}\!\!\! that expect
 not only types but also type constructors of arbitrary kinds as arguments
 are encodable in System \Fw\ as well. For example, we can encode
 \textit{Flip}, which flips the order of the first and second arguments of
@@ -311,9 +311,9 @@ and \textit{Comp}, which composes two unary type constructors
                      &:\;& (* -> *) -> (* -> *) -> * -> *
 \end{align*}
 
-\paragraph{Higher-kinded polymorphism} is the ability universally quantify
-over type constructors as well as types. That is, we can have
-$\forall X^\kappa.B$ where $\kappa$ is not the star kind.
+\paragraph{Higher-kinded polymorphism}\!\!\! is the ability
+to universally quantify over type constructors as well as types.
+That is, we can have $\forall X^\kappa.B$ where $\kappa$ is not kind $*$.
 We can encode \emph{non-regular (recursive) datatypes} in System \Fw\ using
 higher-kinded polymorphism.
 
@@ -337,7 +337,7 @@ an integer (\eg, $1$), then the second element must be a pair of integers
 datatype with three elements as: $[1,\,(2,3),\,((4,5),(6,7))]$.
 This is a representative example of a non-regular datatype called powerlists.
 Such datatypes are also called \emph{nested datatypes} %% TODO cite
-since the the type constructor is applied to ever increasing complex arguments
+since the type constructor is applied to ever-increasing complex arguments
 (here they are nested, but one can imagine even richer kinds of complexity)
 as we step further inside the recursive components.
 \index{powerlist}
@@ -381,12 +381,12 @@ Let us write down the desired property of $\mu$ for $\textit{Nat}$.
 \textit{Nat} &= (\l X_r^{*}.X_r + \textit{Unit})\,\textit{Nat} \\
 \textit{Nat} &= \textit{Nat}\, + \textit{Unit}
 \end{align*}
-Note, the simplified last equation looks very similar to
+The simplified last equation looks very similar to
 the recursive datatype definitions for unary natural numbers
 in functional languages, such as Haskell: \[ \qquad\qquad
 \textbf{data}~\textit{Nat} = \texttt{Succ}~\textit{Nat}\,\mid\,\texttt{Zero} \]
 See Chapter \ref{ch:mendler}
-for more of the Haskell examples on recursive datatypes and $\mu$.
+for more Haskell examples on recursive datatypes and $\mu$.
 
 Although recursive datatypes are encodable in System \F\ (\S\ref{sec:f:data}),
 extensions of System \F\ with $\mu$ have been studied %% TODO cite
@@ -422,15 +422,15 @@ with a new variable $X_r$:
 \end{align*}
 Recall that
 $X_r +\textit{Unit} = \forall X^{*} . (X_r -> X) -> (\textit{Unit} -> X) -> X$.
-Recall that the idea behind the impredicative encoding is that we can eliminate
-an object of the datatype into an arbitrary result type $X$. If we are to
-encode datatypes constructed by $\mu$, we apply this idea of
+Also, recall that the idea behind the impredicative encoding is that
+we can eliminate an object of the datatype into an arbitrary result type $X$.
+If we are to encode datatypes constructed by $\mu$, we apply this idea of
 impredicative encoding in two layers: for the base structure and for $\mu$.
-We already know how to encode the base structure: with the encoding above,
-we can eliminate to an arbitrary result type $X$. For $\mu$, we introduce
-yet another variable $X'$ so that we can eliminate to an arbitrary result
-type $X'$. Thus, the encoding for natural number type constructed using $\mu$
-would be of the following form:
+We already know how to encode the base structure; with the encoding above,
+we can eliminate in order to obtain an arbitrary result type $X$. For $\mu$,
+we introduce yet another variable $X'$ so that we can eliminate in order to
+obtain an arbitrary result type $X'$. Thus, the encoding for
+the natural number type constructed using $\mu$ would be of the following form:
 \[ \forall X'^{*}.(\;\dots\;\dots\;\dots\;\dots\;\dots (X_r + \textit{Unit}) -> X') -> X' \]
 Since the recursive type contains the base structure, we would be able to
 eliminate the recursive type, given that we know how to eliminate
@@ -480,7 +480,7 @@ as follows (\cf\ \textit{List}).
                         (X_a\times X(X_a\times X_a)) + \textit{Unit}) \\
 \textit{List} &= \l X_a^{*}.\mu_{*}(\l X^{*}.(X_a\times X) + \textit{Unit})
 \end{align*}
-Note the difference where $X_a$ is bound in the definitions of \textit{Powl}
+Note the difference on where $X_a$ is bound in the definitions of \textit{Powl}
 and \textit{List}. The encodings of $\mu_{*}$ and $\mu_{*-> *}$ in System \Fw\ 
 are shown below:
 \begin{align*}
@@ -506,13 +506,13 @@ is as follows:
  \big) -> X'\,\vec{X}
 \end{align*}
 where $\vec{X}$ denotes a sequence of $n$ variables
-such that $n=0$ when $\kappa = *$, otherwise, $n = |\vec{\kappa}|$ when
+such that $n=0$ when $\kappa = *$; otherwise, $n = |\vec{\kappa}|$ when
 $\kappa = \vec{\kappa} -> * = \kappa_1 -> \cdots -> \kappa_n -> *$.\footnote{
         $\kappa$ always end up with $*$ when it is an arrow kind
         since $->$ is right associative by convention.}
 That is, we can simply erase all the $\l \vec{X}^{\vec{\kappa}}$,
 $\forall \vec{X}^{\vec{\kappa}}$, and $\vec{X}$ from above when
-$\kappa = *$, otherwise, $\l \vec{X}^{\vec{\kappa}}$ stands for
+$\kappa = *$; otherwise, $\l \vec{X}^{\vec{\kappa}}$ stands for
 $\l X_1^{\kappa_1}.\cdots.\l X_n^{\kappa_n}$,
 $\forall \vec{X}^{\vec{\kappa}}$ stands for
 $\forall X_1^{\kappa_1}.\cdots.\forall X_n^{\kappa_n}$,
@@ -526,7 +526,7 @@ exactly the same as for $\In$ and $\MIt$ for the star kind:
 \[ \In_\kappa = \l x_r. \l x_\varphi.x_\varphi\,(\MIt~x_\varphi)\,x_r
 \qquad\qquad \MIt_\kappa = \l x_\varphi.\l x_r.x_r\,x_\varphi \]
 These ($\mu_\kappa$, $\In_\kappa$, and $\MIt_\kappa$) are, in fact,
-encodings for Mendler-style iteration in \Fw, which will discussed in
+encodings for Mendler-style iteration in \Fw, which will be discussed in
 \S\ref{sec:fi:data}.
 \index{Mendler-style}
 
@@ -583,7 +583,7 @@ $\inference{\Delta;\Gamma |- t : A  & t --> t'}{\Delta;\Gamma |- t' : A}$
 \end{description}
 \caption[Interpretation of System \Fw\ for proving strong normalization]
         {Interpretation of type constructors, kinding and typing contexts,
-                and terms of System \Fw\ for the proof of strong normalization}
+                and terms of System \Fw\ for the proof of strong normalization.}
 \label{fig:interpFw}
 \end{singlespace}
 \end{figure}
@@ -619,7 +619,7 @@ as follows:
 \end{itemize}
 It is easy to see that $(\SAT_\kappa,\sqsubseteq_\kappa)$ forms
 a complete lattice by induction on $\kappa$. For kind $\star$,
-it is obvious since we already know that $(\SAT,\subseteq)$ forms
+this is obvious since we already know that $(\SAT,\subseteq)$ forms
 a complete lattice. For an arrow kind $\kappa -> \kappa'$, we know that
 $(\SAT_{\kappa'},\sqsubseteq_{\kappa})$ forms a complete lattice by induction.
 It is easy to see that for every two element $\mathcal{F}_1, \mathcal{F}_2
@@ -634,11 +634,11 @@ It is easy to see that for every two element $\mathcal{F}_1, \mathcal{F}_2
    \mathcal{F}_1(\mathcal{G}) \vee \mathcal{F}_2(\mathcal{G})
         ~\text{for all}~\mathcal{G}\in\SAT_\kappa
 \end{align*}
-The top and bottom elements at an arrow kind $\bot_{\kappa -> \kappa'}$
+The top and bottom elements of an arrow kind $\bot_{\kappa -> \kappa'}$
 are also defined pointwisely. Let $\bot_{\kappa -> \kappa'}$ be
-the constant function that that always return $\bot_{\kappa'}$
+the constant function that always returns $\bot_{\kappa'}$
 (the bottom element at $\kappa'$, and, let $\top_{\kappa -> \kappa'}$ be
-the constant function that that always return $\top_{\kappa'}$
+the constant function that always returns $\top_{\kappa'}$
 (the top element of the lattice at $\kappa'$). It is easy to see that
 $\bot_{\kappa -> \kappa'}$ and $\top_{\kappa -> \kappa'}$
 are the bottom and top elements at kind $\kappa -> \kappa'$
@@ -647,7 +647,7 @@ by definition of $\sqsubseteq_{\kappa -> \kappa'}$.
 \index{interpretation!System Fw@System \Fw}
 \index{interpretation!kind}
 \index{interpretation!type constructor}
-Then, we can give interpretation of kind $\kappa$ as $\SAT_\kappa$.
+Then, we can give an interpretation of kind $\kappa$ as $\SAT_\kappa$.
 That is, $[| \kappa |] = \SAT_\kappa$. An interpretation of a type constructor
 of kind $\kappa$ should be a member of $[| \kappa |]$, \ie, $\SAT_\kappa$.
 The interpretation of kinds, type constructors, contexts, and
@@ -695,7 +695,7 @@ That is,
         \quad \text{for all}~\mathcal{F}\in[|\kappa|] \]
 From $X\notin\FV(\Gamma)$, we know that
 $[|t|]_{\xi[X\mapsto\mathcal{F}];\rho} = [|t|]_{\xi;\rho}$
-because $\rho$ is independent of what $X$ maps to.
+because $\rho$ is independent of that to which $X$ maps to.
 So, we know that
 \[ [|t|]_{\xi;\rho} \in [|B|]_{\xi[X\mapsto\mathcal{F}]}
         \quad \text{for all}~\mathcal{F}\in[|\kappa|] \]
@@ -769,7 +769,7 @@ to the premises, we know that
 Since it should hold for arbitrary $\xi'$, it should also hold for
 a particular $\xi'$ such that $\xi'=\xi[X\mapsto\mathcal{G}]$
 for any $\mathcal{G} \in [|\kappa|]$. Therefore, we can rewrite
-the left-hand side of the conclusion, which what we wanted to show,
+the left-hand side of the conclusion, which is what we wanted to show,
 into the right-hand side as follows:
 \begin{align*}
 [| (\l X^\kappa.F)\;G |]_\xi
@@ -780,14 +780,14 @@ into the right-hand side as follows:
 \end{align*}
 \end{proof}
 
-System \Fw\ has a richer kind structure than System \F, which only has one and
-the only the star kind. So, the interpretation of type constructors would only
-be well-defined when the type constructors are well-kinded. For example,
-the interpretation of a type constructor application $[|F~G|]_\xi$
-would only make sense when $[|F|]_\xi\in[|\kappa -> \kappa'|]$
-and $[|G|]_\xi\in[|\kappa|]$ for some $\kappa$ and $\kappa'$.
+System \Fw\ has a richer kind structure than System \F, which has kind ($*$)
+only. So, the interpretation of type constructors would only be well-defined
+when the type constructors are well-kinded. For example, the interpretation of
+a type constructor application $[|F~G|]_\xi$ would only make sense
+when $[|F|]_\xi\in[|\kappa -> \kappa'|]$ and
+$[|G|]_\xi\in[|\kappa|]$ for some $\kappa$ and $\kappa'$.
 The soundness of kinding lemma below states the property that
-well-kinded type constructors indeed have well-defined interpretation.
+well-kinded type constructors indeed have a well-defined interpretation.
 \begin{lemma}[soundness of kinding]  \label{lem:fw:soundki}
 $ \inference{\Delta |- F : \kappa & \xi\in[|\Delta|]}{[|F|]_\xi\in[|\kappa|]} $
 \end{lemma}

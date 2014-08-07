@@ -3,31 +3,35 @@ In this chapter, we explore a family of terminating recursion combinators
 of Mendler style. These combinators behave well over a wide class of
 recursive datatypes. This chapter is a revised and extended version of
 the conference paper by \citet{AhnShe11}. Here, the names of Mendler-style
-recursion combinators are different from the paper to make the names
+recursion combinators are different from those in the paper to make the names
 consistent throughout the dissertation: \MIt, \MsfIt, \McvIt, and
 \MsfcvIt\ correspond to \textit{mcata}, \textit{msfcata}, \textit{mhist},
 and \textit{msfhist} in the paper. In addition, we introduce several
 more families of recursion combinators (\MPr, \McvIt, \McvPr)
 and a new example using \MsfIt\ over an indexed datatype,\footnote{
-	The type signature of $\MsfIt_{* -> *}$ is different
-	from the type signature of $\textit{msfcata1}$ in the paper. 
-	\textit{msfcata1} does type check but rather useless.
-	Here, we gave a more flexible type signature
-	so that we can write useful examples.}
+	The type signature of $\MsfIt_{* -> *}$ and the definition
+	of the $\breve\mu_{* -> *}$ datatype is different from
+	the type signature of $\textit{msfcata1}$ and
+	the definition of $\breve\mu_{* -> *}$ datatype in the paper. 
+	\textit{msfcata1} does type check but its type sigature was
+	too restrictive to write any useful examples.
+	Here, we give a more flexible type signature and defintion
+	for $\MsfIt_{* -> *}$ and $\breve\mu_{* -> *}$ so that
+	we can write useful examples with them.}
 which are not present in the conference paper.
 
 \index{Mendler-style!recursion combinators}
 \index{Mendler-style!combinators}
-This chapter gives the reader an intuitive understanding of the Mendler-style
+This chapter gives the reader an intuitive understanding of Mendler-style
 recursion combinators, rather than providing a rigorous formulation of
-the theories behind the Mendler style. The discussions in this chapter
+the theories behind Mendler style. The discussions in this chapter
 are guided by a series of examples (and some semi-formal proofs) written
 in a certain style of Haskell, which assumes certain conventions
 (see \S\ref{sec:intro}).  Haskell is a \emph{real world}
 functional programming language \cite{OSullivan08}, which admits
 a certain level of formality since it is a pure functional language.
 More rigorous formulations of the background theory used to formalize
-the Mendler style will come in the following chapters
+Mendler style will come in the following chapters
 (Chapter~\ref{ch:fi} and Chapter~\ref{ch:fixi}).
 
 \input{mendler_intro}
@@ -58,7 +62,7 @@ the Mendler style will come in the following chapters
 %% 
 %% Despite, not having a completed theory to support the translation of GADTs,
 %% we have identified many examples \cite{AhnShe11}. Including examples
-%% that use term indices to exploit the Curry-Howard isomorphism, and
+%% that use term indices to exploit the Curry--Howard isomorphism, and
 %% examples of mutual recursion (between types) encoded in terms of GADTs.
 %% 
 %% In general, we have pushed the boundaries of what is known about

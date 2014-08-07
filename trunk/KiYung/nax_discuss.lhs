@@ -154,7 +154,7 @@ $\begin{smallmatrix}
 \end{align*}
 \end{minipage}~
 \caption{Justifications for well-sortedness of the kind |List Ty -> *|
-         in Nax, Haskell, Agda}
+         in Nax, Haskell, Agda.}
 \label{fig:sortingEx}
 \end{figure}
 
@@ -241,7 +241,7 @@ the kind-level.
 \vskip-3ex
 \begin{singlespace}
 \caption{Environments of stateful resources
-	indexed by the length-indexed list of states}
+	indexed by the length-indexed list of states.}
 \label{fig:env}
 \end{singlespace}
 \end{figure}

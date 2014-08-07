@@ -1,5 +1,5 @@
 \section{Metatheory of \Fixi} \label{sec:fixi:theory}
-Recall we extended \Fixw\ to \Fixi\ to support primitive recursion and
+Recall that we extended \Fixw\ to \Fixi\ to support primitive recursion and
 course-of-values recursion. In this section, we show strong normalization and
 logical consistency of \Fixi. We also give a partial proof of
 the syntactic conditions necessary for well-behaved course-of-values recursion.
@@ -10,15 +10,15 @@ We can prove strong normalization of \Fixi\ by the following strategy.
 \begin{itemize}
 \item Define a notion of index erasure that
 	projects \Fixi\ types to \Fixw\ types.
-\item Show that every well-typed \Fixi term a well-typed \Fixw term
+\item Show that every well-typed \Fixi\ term is a well-typed \Fixw term
 	by index erasure.
-\item Since \Fixw\ is strongly normalizing \cite{AbeMat04}, the
-	\Fixi\ is strongly normalizing of \Fixi.
+\item \Fixi\ inherits strongly normalization from \Fixw
+	 because \Fixw\ is strongly normalizing \cite{AbeMat04}.
 \end{itemize}
 
 \index{index erasure}
-The definition of the index erasure operation for \Fixi, and the proofs of
-the related theorems are virtually the same as their counterparts
+The definition of the index erasure operation for System \Fixi\ and
+the proofs of the related theorems are virtually the same as their counterparts
 in System \Fi\ (see \S\ref{sec:fi:theory}). So, we simply illustrate
 the definition and the theorems, but omit their proofs.
 
@@ -164,14 +164,14 @@ As stated in the introduction to this section, strong normalization is a direct
 consequence of the erasure theorems above.
 
 \paragraph{Logical consistency:}
-We show logical consistency of \Fixi\ by showing that the void type
+We show the logical consistency of \Fixi\ by showing that the void type
 $\forall X^{*}.X$ is uninhabited. By index erasure, we know that
 that the set of terms that inhabit a \Fixi-type is a subset of
 the set of terms that inhabit the corresponding (erased) \Fixw-type.
 Thus, if $\forall X^{*}.X$ is uninhabited in \Fixw\ then 
 $\forall X^{*}.X$ is uninhabited in \Fixi. \citet{AbeMat04} gives
-a saturated set interpretation for the type constructors in \Fixw,
-which is similar to the interpretation given in \S\ref{sec:fw:srsn} for
+a saturated set interpretation for the type constructors in \Fixw\ 
+that is similar to the interpretation given in \S\ref{sec:fw:srsn} for
 \Fw\ type constructors. The void type $\forall X^{*}.X$ is obviously
 uninhabited (by any closed term) according to this interpretation. That is, no 
 strongly-normalizing, closed term inhabits $\forall X^{*}.X$.
@@ -182,14 +182,14 @@ strongly-normalizing, closed term inhabits $\forall X^{*}.X$.
         = \bigcap_{\mathcal{A}\in[| * |]} \mathcal{A} = \bot
 \end{align*}
 The minimal saturated set $\bot$ of $\SAT$, which is saturated from
-the empty set, does not have any closed term. See \S\ref{sec:stlc:srsn}
+the empty set, does not have any closed terms. See \S\ref{sec:stlc:srsn}
 for the definition of saturated sets.
 
 \subsection{Syntactic conditions for well-behaved course-of-values recursion}
 \label{ssec:fixi:theory:cv}
 In \S\ref{sec:fixi:cv}, we embedded Mendler-style course-of-values
 recursion (\McvPr) in \Fixi\ for the base structures ($F$)
-that have maps ($\textit{fmap}_F$), which are also known as
+that have maps ($\textit{fmap}_F$), also known as
 \emph{monotonicity witnesses} \cite{Mat98,Mat99}. The theoretical development of
 the termination of \McvPr\ by assuming the existence of maps is elegant, since
 it does not require ad-hoc syntactic restrictions on the formation of types.
@@ -197,15 +197,16 @@ However, in a language implementation, it is not desirable to require users to
 manually witness $\textit{fmap}_F$ every time they need to convince
 the type system that \McvPr\ is well-defined over $F$.
 
-It would be very convenient if we can categorize type constructors of \Fixi\ that
-have maps by analyzing their polarized kinds. Then, for any type constructor $F$
-whose kind meets certain criteria, users can immediately assume the existence
-of $\textit{fmap}_F$ and that \McvPr\ always terminates for $F$.
+It would be very convenient if we could categorize type constructors of
+\Fixi\ that have maps by analyzing their polarized kinds. As a consequence,
+for any type constructor $F$ whose kind meets certain criteria, users can
+immediately assume the existence of $\textit{fmap}_F$ and that \McvPr\ always
+terminates for $F$.
 
 For instance, we conjecture that any $F: +* -> *$ should have a map, as in
 Conjecture \ref{conj:fixi:fmap} below. In this thesis, we only show that this
-conjecture holds for simple cases (Proposition \ref{prop:fixi:fmapBaseCase}),
-but still encompassing a broad range of types.
+conjecture holds for simple cases (Proposition \ref{prop:fixi:fmapBaseCase})
+while still encompassing a broad range of types.
 The complete proof is left for future work.
 \citet{Mat99} showed that positive inductive types, in the context of System \F,
 are monotone (\ie, map exists), but it has not yet been studied
@@ -231,12 +232,12 @@ $\unIn_F : \mu^{+}{*} F -> F(\mu^{+}{*} F)$ such that
 $\unIn_F (\In_F\;t) -->+ t$.
 \end{conjecture}
 \begin{proof}
-Since we know that $\textit{fmap}_F$ exists by Conjecture~\ref{conj:fixi:fmap},
-we can define
+Because we know that $\textit{fmap}_F$ exists
+by Conjecture~\ref{conj:fixi:fmap}, we can define
 \[ \unIn_F = \McvPr_{*}\;
             (\l\_.\l\textit{cast}.\l\_.\l x.\textit{fmap}_F\;\textit{cast}\;x)
 \]
-Since we know that $\textit{fmap}_F\;\textit{id}\;x -->+ x$,
+Because we know that $\textit{fmap}_F\;\textit{id}\;x -->+ x$,
 we can show that the unroller $\unIn_F$ has the desired property
 $\quad \unIn_F (\In_F\;t) -->+ \textit{fmap}_F\;\textit{id}\;t -->+ t $.
 \end{proof}
@@ -260,22 +261,23 @@ for any $F : +* -> *$ such that
 \begin{proof}
         We can derive $\textit{fmap}_F$ from the structure of $F$.
         Since $F$ has kind $+* -> *$, it must be a lambda abstraction
-        ($\l Z^{+*}.B$) or an some kind of application 
+        ($\l Z^{+*}.B$), some kind of application 
         (a normal application, $F'\,G$, or an index application $F'\{s\}$),
         or a variable of kind $+* -> *$.
         No other way of forming $F$ can have kind $+* -> *$.
         
         We also assume that $F$ is in normal form, so if $F$ were an application
-        then $F'$ must be a variable with an arrow kind. But we have assumed that
-        all variables have kind $*$. $F$ cannot be a variable since we have
-        assumed that $F$ is a value with no free variables, thus $F$ must have the form $\l Z^{+*}.B$. We
-        proceed by analyzing the structure of $B$.
+        then $F'$ must be a variable with an arrow kind. However, we have
+	assumed that all variables have kind $*$. Hence, $F$ cannot be
+	a variable since we have assumed that $F$ is a value with
+	no free variables, thus $F$ must have the form $\l Z^{+*}.B$.
+	We proceed by analyzing the structure of $B$.
  
 \begin{itemize}
 \item[case]($Z\notin \FV(B)$, \ie, $F$ is a constant function.)
         $ \textit{fmap}_{(\l Z^{+*}. B)} = \l \_ . \l x. x $
 
-        Since $F\;X = F\;Y = B$, we just return the identity function on $B$.
+        Since $F\;X = F\;Y = B$, we simply return the identity function on $B$.
 
 \item[case]($F \triangleq \l Z^{+*}. Z$. \ie, $F$ is the identity.)
         $ \textit{fmap}_{(\l Z^{+*}. Z)} = \l z . z $
@@ -289,11 +291,12 @@ for any $F : +* -> *$ such that
         = \textit{fmap}_{(\l Z^{+*}.B_1)} \]\vskip-2ex
         Here, we need to find an \textit{fmap}
         that works for any valuation of $X_1$.
-        That is, an \textit{fmap} that works for $\l Z^{+*}. B_1[V/X_1]$
-        for an arbitrary value $V$. Since values are closed, $v$
-        cannot contain free variables, including $Z$. Since $v$
-        is completely independent of $Z$, the value $V$ cannot make any
-        difference to the derived \textit{fmap}. So we simply ignore $X_1$.
+        That is, we must find an \textit{fmap} that works for
+	$\l Z^{+*}. B_1[V/X_1]$ for an arbitrary value $V$.
+	Since values are closed, $v$ cannot contain free variables
+	including $Z$. Since $v$ is completely independent of $Z$,
+	the value $V$ cannot make any difference to the derived \textit{fmap}.
+	Hence, we simply ignore $X_1$.
 
 \item[case]($F \triangleq \l Z^{+*}. A -> B_1$, \ie, $B$ is a function.)
 
@@ -378,49 +381,48 @@ instance Functor F6 where
 \end{lstlisting}
 \end{singlespace}
 \caption{Haskell code example to illustrate well-typedness of \textit{fmap}s
-        derived in the proof of Proposition \ref{prop:fixi:fmapBaseCase}}
+        derived in the proof of Proposition \ref{prop:fixi:fmapBaseCase}.}
 \label{fig:deriveFunctor}
 \end{figure}
 
-Recall we are proving a simplified version of the conjecture we want with
-several simplifying assumptions: $F$ is a non-recursive closed value, and
+Recall that we are proving a simplified version of the desired conjecture with
+several simplifying assumptions: $F$ is a non-recursive closed value and
 bound variables introduced in $F$ have kind $*$. Let us now generalize
 the latter restriction by allowing type constructor variables of kind $p* -> *$
 as well as type variables of kind $*$. There are three possibilities for
 $X:p* -> *$. Note that the variable $X$ would be used as the function part of
-an application, like $X\,G$, within the type $B$.
+an application, like $X\,G$, within type $B$.
 \begin{itemize}
 \item[case]($X : +* -> *$)
-        By induction\footnote{
+        By induction,\footnote{
                 We need to make sure that this is a well-founded induction.
-                It may be a coinductive proof.},
-        there exist a map for any valuation of $X$.
+                It may be a coinductive proof.}
+        there exists a map for any valuation of $X$.
         So, we denote that map as $\textit{fmap}_{X}$.
-        Then the map for $\l Z^{+*}.X\,G$ is
+        The map for $\l Z^{+*}.X\,G$ is
         \[ \textit{fmap}_{(\l Z^{+*}.X\,G)} =
                 \textit{fmap}_{X} \circ\, \textit{fmap}_{(\l Z^{+*}.G)} \]
-        Note that $\textit{fmap}_{X}$ is not fixed until it gets
-        instantiated, but we know for sure that it exists for any
-        valuation.
+        Note that $\textit{fmap}_{X}$ is not fixed until it is instantiated,
+	however, we definitely know that it exists for any valuation.
 
 \item[case]($X : -* -> *$)
         According to the ($@$) rule applied to $X\;G$, the argument $G$ should be well-kinded under $-\Delta$.
         Note that $Z^{-*}\in-\Delta$ since $Z^{+*}\in \Delta$.
-        So, $Z$ cannot appear in positive positions in $G$ but only in
-        negative positions (\eg, $G \triangleq Z -> G'$).
+        So, $Z$ cannot appear in positive positions in $G$.
+	It can only appear in negative positions (\eg, $G \triangleq Z -> G'$).
         Any valuation of $X$ will have the form of $\l X_1^{-*}.B_1$
-        where $X_1$ appears in negative positions.
-        Then, $(\l X_1^{-*}.B_1)G = B_1[G/X_1]$ by a single step reduction.
+        where $X_1$ appears in negative positions. As a consequence,
+        $(\l X_1^{-*}.B_1)G = B_1[G/X_1]$ by a single step reduction.
         Note that $B_1[G/X_1]$ must be in normal form. Since $G$ has kind $*$
         (it cannot be a lambda), substitution of $X_1$ with $G$ cannot
         introduce a new redex. Since $G$ is substituted only into
-        negative positions, any $Z$ occurring in negative position in $G$
-        become positive positions in the substituted type.
+        negative positions, any $Z$ occurring in a negative position in $G$
+        become a positive position in the substituted type.
         Thus, $\l Z^{+*}.B_1[G/X_1] : +* -> *$.
-        So, by induction\footnote{
+        Hence, by induction,\footnote{
                 We need to make sure that this is a well-founded induction.
-                It may be a codinductive proof.},
-        there exists a map for any valuation of $X$,
+                It may be a coinductive proof.}
+        there exists a map for any valuation of $X$
         since we can derive $\textit{fmap}_{(\l Z^{+*}.B_1[G/X_1])}$.
 
 \item[case]($X : 0* -> *$)
@@ -431,7 +433,7 @@ an application, like $X\,G$, within the type $B$.
         Since $Z\notin\FV(X\,G)$, we simply return the identity function
         as the map for $\l Z^{+*}.X\,G$.
 \end{itemize}
-In addition, having $X : A -> *$ won't make a difference since $X\{s\}$
+In addition, having $X : A -> *$ does not make a difference since $X\{s\}$
 cannot have $Z$ either. Once we know that we can derive maps in the presence
 of type constructor variables with single argument, it is easy to generalize
 this to arbitrary rank-1 kinded type constructor variables
@@ -439,14 +441,14 @@ this to arbitrary rank-1 kinded type constructor variables
 
 To complete the proof of Conjecture \ref{conj:fixi:fmap}, we need to
 consider the equi-recursive type operator ($\fix$) and type constructor
-variables of kind higher than rank-1. Considering $\fix$ makes the proof harder
+variables of kind higher than rank 1. Considering $\fix$ makes the proof harder
 since it becomes less obvious what ``normal form'' of a type constructor means.
 Recall that $(\fix\,F_1)$ expands to $F_1(\fix\,F_1)$.  When $F_1$ is
-a lambda abstraction, the expansion of $\fix$ introduces a new redex.
-We hope to complete the proof in the future.
+a lambda abstraction, the expansion of $\fix$ introduces a new redex
+at the type level. We hope to complete this proof in the future.
 
 Once we have completed the proof of Conjecture \ref{conj:fixi:fmap},
-the next step is prove a similar conjecture for higher kinds.
+the next step is prove a similar conjecture for higher kinds
 (recall \texttt{fmap1} in \S\ref{sec:fixi:cv:unInExamples}).
 For instance, we conjecture that maps exist for type constructors
 of kind $+(+* -> *) -> (+* -> *)$.

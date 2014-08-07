@@ -12,18 +12,18 @@ It is fairly well known that there cannot be a reduction-preserving embedding
 of primitive recursion\footnote{
 	Although we can define primitive recursion for positive datatypes
 	in terms of iteration, which is embeddable in System \F, such an
-	embedding would not reduction-preserving. That is, it will take
+	embedding would not be reduction-preserving. That is, it would require
 	more reduction steps than the usual definition of primitive recursion.}
 in System \F. A proof of this is outlined in the paper 
-{\it Induction is not derivable in second-order dependent type theory}
-\cite{Geuvers01}. For similar reasons, researchers strongly believed that
+\textit{Induction is not derivable in second-order dependent type theory}
+\cite{Geuvers01}. For similar reasons, researchers strongly believe that
 there is no reduction-preserving embedding of primitive recursion 
 in System \Fw. Fortunately, all hope is not lost for finding
 a reduction preserving embedding in a relatively simple calculus. 
-\citet{AbeMat04} have designed \Fixw, which is a simple extension of \Fw,
-which embeds primitive recursion with the desired reduction behavior.
-Their embedding relies on a novel use of the following extensions to \Fw,
-polarized kinds and an equi-recursive fixpoint type operator,
+\citet{AbeMat04} have designed \Fixw, an extension of \Fw,
+that embeds primitive recursion with the desired reduction behavior.
+Their embedding relies on a novel use of the two extensions to \Fw\ --
+polarized kinds and an equi-recursive fixpoint type operator --
 in order to define primitive recursion within \Fixw.
 \index{fixpoint!equi-recursive}
 
@@ -39,9 +39,9 @@ its differences from \Fi. Readers may refer back to Chapter \ref{ch:fi}
 for those details that remain unchanged from System~\Fi.
 
 We describe syntax and typing rules (\S\ref{sec:fixi:def}),
-we illustrate embeddings of primitive recursion (\S\ref{sec:fixi:data})
-and we discuss embeddings of course-of-values recursion (\S\ref{sec:fixi:cv}).
-Lastly, we discuss the metatheory of \Fixi\ (\S\ref{sec:fixi:theory}).
+illustrate embeddings of primitive recursion (\S\ref{sec:fixi:data}),
+and discuss embeddings of course-of-values recursion (\S\ref{sec:fixi:cv}).
+Finally, we discuss the metatheory of \Fixi\ (\S\ref{sec:fixi:theory}).
 
 \input{fixi_fixi} %% \label{sec:fixi:def}
 

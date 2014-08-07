@@ -1,24 +1,24 @@
 \section{System \Fixi} \label{sec:fixi:def}
 The syntax and rules of System~\Fi\ are described in
 Figures \ref{fig:Fixi}, \ref{fig:Fixi2} and~\ref{fig:eqFixi}.
-The extensions new to System~\Fixi, which are not original part of
+The extensions new to System~\Fixi\ that are not original parts of
 either System~\Fw\ or System~\Fixw\ are highlighted by either
-\dbox{dashed boxes} or \newFi{\text{grey boxes}}.
+\dbox{dashed boxes} or \newFi{\text{grey boxes}}, respectively.
 
-The extensions, which are not originally part of System~\Fixw, are highlighted
-by \newFi{\text{grey boxes}}. Those extensions in grey boxes are to support
-term indexing.  Eliding all the grey boxes from Figures~\ref{fig:Fixi},
-\ref{fig:Fixi2} and~\ref{fig:eqFixi},
-one obtains a version of System~\Fixw\ with typing contexts separated into
-two parts.\footnote{The original description of \Fixw \cite{AbeMat04} has
-one combined typing context.}
+The extensions that not originally part of System~\Fixw\ are highlighted
+by \newFi{\text{grey boxes}}. Those extensions support term indexing.
+Eliding all the grey boxes from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2},
+and~\ref{fig:eqFixi}, one obtains a version of System~\Fixw\ with
+typing contexts separated into two parts.\footnote{
+	The original description of \Fixw \cite{AbeMat04} has
+	one combined typing context.}
 
-The extensions, which are not originally part of System \Fw\ but
-present in System~\Fixw, are highlighted by \dbox{dashed boxes}.
-Those extensions in dashed boxes are to support equi-recursive types. 
-Eliding all the dashed boxes, as well as all the grey boxes,
-from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2} and~\ref{fig:eqFixi}, one obtains
-the Curry-style System \Fw\ with typing contexts separated into two parts.
+The extensions that are not originally part of System \Fw\ but
+present in System~\Fixw\ are highlighted by \dbox{dashed boxes}.
+Those extensions support equi-recursive types. Eliding all the dashed boxes,
+as well as all the grey boxes, from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2},
+and~\ref{fig:eqFixi}, one obtains the Curry-style System \Fw\ with
+typing contexts separated into two parts.
 
 
 \begin{figure}\begin{singlespace}
@@ -75,7 +75,7 @@ the Curry-style System \Fw\ with typing contexts separated into two parts.
 \]
 ~\\
 \end{singlespace}
-\caption{Syntax and Reduction rules of \Fixi}
+\caption{Syntax and Reduction rules of \Fixi.}
 \label{fig:Fixi}
 \end{figure}
 
@@ -197,7 +197,7 @@ $
                      \Delta;\Gamma |- t : B}
 \]
 \end{singlespace}
-\caption{Sorting, Kinding, and Typing rules of \Fixi}
+\caption{Sorting, Kinding, and Typing rules of \Fixi.}
 \label{fig:Fixi2}
 \end{figure}
 
@@ -316,12 +316,12 @@ $\qquad \dbox{$
               \Delta;\Gamma |- t=t'':A}
 \]
 \end{singlespace}
-\caption{Equality rules of \Fixi}
+\caption{Equality rules of \Fixi.}
 \label{fig:eqFixi}
 \end{figure}
 
 The grey-boxed extensions for term-indexing are essentially the same as
-those grey-boxed extensions in System \Fi\ (\S\ref{sec:fi:fi}). So, we will
+those grey-boxed extensions in System \Fi\ (\S\ref{sec:fi:fi}). Hence, we will
 only focus our description on the dashed-box extensions regarding polarities
 (\S\ref{ssec:fixi:def:polarity}) and equi-recursive types
 (\S\ref{ssec:fixi:def:equirec}).
@@ -331,13 +331,13 @@ Polarities track how type constructor variables are used.
 A polarity ($p$) is either covariant ($+$), contravariant ($-$), or
 avariant ($0$). When a type variable is bound, its polarity is 
 made explicit both at its binding site, and in the context.
-The avariant polarity ($0$) means a variable can be used both
+The avariant polarity ($0$) means that a variable can be used both
 covariantly and contravariantly\footnote{
-	the notation ``invariant'' is sometimes used (see \cite{AbeMat04}),
+	The word ``invariant'' is sometimes used (see \cite{AbeMat04}),
 	but we think this notation is quite misleading,
-	since $0$ means that the system \emph{does not care} about
-	that variable's polarity, rather than maintaining some
-	unchanging set of properties about the variable's polarities.}
+	The polarity $0$ means that the system \emph{does not care} about
+	that variable's polarity, rather than indicating some
+	unchanging set of properties about the variable's polarity.}
 We prefix a kind  by a polarity (\ie, $p\kappa$) to specify the variable's
 kind and polarity. For example,
 \[
@@ -352,33 +352,33 @@ X^{0*} |- \!\!\! & X\phantom{_.} -> X\phantom{_2} : *
 \]
 Note that we can replace $+$ and $-$ in the first example with $0$
 as in the second example, since the variables of avariant polarity can be used
-in any position, that is both in covariant position and contravariant position.
+in any position that is both in a covariant and contravariant position.
 In the third example, the polarity of $X$ can be neither $+$ nor $-$, but must
 must be $0$, since $X$ appears in both covariant and contravariant positions.
 
 \paragraph{Syntax using polarized kinds:}
-The kind syntax are polarized. That is, the domain kind ($\kappa$) of
+The kind syntax is polarized. That is, the domain kind ($\kappa$) of
 an arrow kind ($p\kappa -> \kappa'$) must be prefixed by its polarity ($p$).
-A type abstractions ($\l X^{p\kappa}.F$) in the type syntax are annotated by
+Type abstractions ($\l X^{p\kappa}.F$) in the type syntax are annotated by
 polarity-prefixed kinds ($p\kappa$). Type constructor variables ($X$) bound
-in the type-level contexts ($\Delta$) are annotated by polarity-prefixed kinds
-($p\kappa$), likewise. Note the syntax for extending the type-level context
-$\Delta,X^{p\kappa}$ in Figure~\ref{fig:Fixi}. The kinding rule ($\lambda$)
-make use of all these three uses of polarized kinds -- in type abstractions,
-in kind arrows, and in type-level contexts.
+in the type-level contexts ($\Delta$) are likewise annotated by
+polarity-prefixed kinds ($p\kappa$). Note the syntax for extending
+the type-level context $\Delta,X^{p\kappa}$ in Figure~\ref{fig:Fixi}.
+The kinding rule ($\lambda$) exploits all these three uses of polarized kinds
+-- in type abstractions, in kind arrows, and in type-level contexts.
 
 \paragraph{Polarity operation on type-level context ($p\Delta$):}
 The kinding judgment $\Delta |- F : \kappa$ assumes that $F$ is in covariant
 positions. This is why the ($Var$) rule requires the polarity of $X$ to be
-either $+$ or $0$, but not $-$. To judge well-kindedness of type constructors
+either $+$ or $0$ but not $-$. To judge well-kindedness of type constructors
 in contravariant positions (\eg, $A$ in $A -> B$), we should invert
 the polarities of all the type constructor variables in the context.
-This idea of inverting polarities in the context is captured by $-\Delta$
+This idea of inverting polarities in the context is captured by the $-\Delta$
 operation in the kinding rule ($->$). More generally, the well-kindedness $F$
 expected to be used as $p$-polarity can be determined by the judgement
 $p\Delta |- F : \kappa$, where $p\Delta$ operation is defined as:
 \begin{itemize}
-	\item when $p$ is either $+$ or $-$,\vspace*{-2ex}
+	\item when $p$ is either $+$ or $-$\vspace*{-2ex}
 		\[
 		\begin{array}{lcl}
 		p~\cdot &=& \cdot \\
@@ -393,7 +393,7 @@ $p\Delta |- F : \kappa$, where $p\Delta$ operation is defined as:
 		- 0  & = & 0
 		\end{smallmatrix}\right)
 	\]
-	\item when $p=0$,\vspace*{-2ex}
+	\item when $p=0$\vspace*{-2ex}
 		\[
 		\begin{array}{lcl}
 		0~\cdot &=& \cdot \\
@@ -407,58 +407,59 @@ Note the use of $p\Delta$ operation in the kinding rule ($@$) in order to
 determine the well-kindedness of $G$ expected to be used as $p$-polarity
 by the type constructor $F : p\kappa -> \kappa'$ being applied to $G$.
 
-\paragraph{Where polarities are irrelevant (or, avariant):}
-Polarities are irrelevant (or, avariant) for universally quantified variables,
-indices, and in the typing rules. This is because the sole purpose of tracking 
-polarities in \Fixi\ is to make sure that we only take the equi-recursive
-fixpoint over covariant type constructors, as in the kinding rule ($\mu$).
+\paragraph{Where polarities are irrelevant (\ie, avariant):}
+Polarities are irrelevant (\ie, avariant) for universally quantified variables
+and indices as well as in the typing rules. This is because the sole purpose
+of tracking polarities in \Fixi\ is to ensure that we only take
+the equi-recursive fixpoint over covariant type constructors, as in
+the kinding rule ($\mu$).
 Note that we can only take fixpoints over type constructors of covariant
-arrow kinds whose domain and codomain coincides ($+\kappa -> \kappa$).
-We can never take fixpoints over forall types (or, universal quantification)
-and type constructor expecting an index because they are not of arrow kinds.
-Forall types are always of kind $*$ and type constructors expecting an index
+arrow kinds whose domain and codomain coincide ($+\kappa -> \kappa$).
+We can never take fixpoints over forall types (or universal quantification)
+and type constructor that expect an index because they are not of arrow kinds.
+Forall types are always of kind $*$ and type constructors that expect an index
 are of arrow kinds ($A -> \kappa$). So, we give universally quantified variables
 avariant polarity ($X^{0\kappa}$ in the ($\forall$) rule) and nullify polarities
 when type checking indices ($0\Delta$ in the ($@i$) rule). For similar reasons,
 we assume that type-level contexts are nullified in the typing rules;
 note $0\Delta$ in the well-formedness condition for $\Delta |- \Gamma$
 in Figure~\ref{fig:Fixi2}. That is, we always type check under nullified
-type-level context for all terms in general, as well as indices appearing
+type-level context for all terms in general as well as for indices appearing
 in type applications. As a result, the typing rules of \Fixi\ have no dashed-box
 extensions except for $X^{0\kappa}$ in the generalization rule ($\forall$$I$)
 where we introduce a universally quantified type constructor variable.
 
-\subsection{The Equi-recursive type operator $\fix$}
+\subsection{Equi-recursive type operator $\fix$}
 \label{ssec:fixi:def:equirec}
 \index{fixpoint!equi-recursive}
 \index{fixpoint!iso-recursive}
 \Fixi\ provides the equi-recursive type operator $\fix$.
 The kinding rule ($\fix$) in Figure~\ref{fig:Fixi2} is similar to
 the ($\mu$) rule of System \Fi\ (see Figure~\ref{fig:Fi2} in \S\ref{sec:fi:fi}),
-but requires base structure $F$ to be covariant (or, positive), \ie,
-$F : +\kappa -> \kappa$. This restriction on the polarity of $F$ is due to
-the equi-recursive nature of $\fix$, \ie, $\fix F=F(\fix F)$, which is
+but requires base structure $F$ to be covariant (or positive), that is,
+$F : +\kappa -> \kappa$. This restriction on the polarity of $F$ is caused by
+the equi-recursive nature of $\fix$, that is, $\fix F=F(\fix F)$, 
 described by the first type constructor equality rule inside a dashed box
 in Figure~\ref{fig:eqFixi}. Restricting the polarity of the base structure,
 to which $\fix$ can be applied, is necessary to maintain strong normalization.
 Adding equi-recursive types without restricting the polarity breaks
-strong normalization because it amounts to having both formation and
+the strong normalization because it amounts to having both formation and
 elimination of arbitrary iso-recursive types.
 
-Note that there are no explicit term syntax that guides the conversion between
+Note that there is no explicit term syntax that guides the conversion between
 $\fix F$ and $F(\fix F)$, unlike in iso-recursive\footnote{
-	All the other fixpoint type operators, except $\fix$ here,
-	in this dissertation are iso-recursive.}
-systems where $\In$ and $\mathsf{unIn}$ are term syntax that explicitly guide
+	In this dissertation, all the other fixpoint type operators
+	except $\fix$ are iso-recursive.}
+systems where $\In$ and $\mathsf{unIn}$ are term syntaxes that explicitly guide
 rolling (from $\mu F$ to $F(\mu F)$) and unrolling (from $F(\mu F)$ to $\mu F$).
-Since $\fix F=F(\fix F)$ is given definitionally (\ie, by the equality rule
+Because $\fix F=F(\fix F)$ is given definitionally (\ie, by the equality rule
 definition), the type constructor conversion rule ($Conv$) can silently
 roll (from $F(\fix F)$ to $\fix F$) and unroll (from $F(\fix F)$ to $\fix F$)
 the recursive types, just as it can silently $\beta$-convert type constructors.
 
-In the following section, we will review how iso-recursive type operator
+In the following section, we review how iso-recursive type operator
 $\mu_\kappa$ and its $\In_\kappa$ constructor, which is well-behaved
-(\ie, strongly normalize) for base structures of arbitrary polarity,
-can be embedded into \Fixi\ being defined in terms of the equi-recursive
-type operator $\fix$, which is only well-behaved for covariant base structures.
+(\ie, strongly normalizes) for base structures of arbitrary polarity,
+can be embedded into \Fixi\ defined in terms of the equi-recursive
+type operator $\fix$ that is only well-behaved for covariant base structures.
 

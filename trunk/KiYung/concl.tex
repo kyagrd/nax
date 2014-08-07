@@ -89,8 +89,8 @@ of datatypes they operate on. That is, the definition of $\MIt_{\kappa}$ is
 identical regardless of $\kappa$, only its type signatures depends on $\kappa$.
 Uniform definitions, regardless of indexing structure, is one of the advantages
 of Mendler style over conventional (or, Squiggol) style. This advantage allowed
-us to discover that simply-typed Higher-Order Abstract Syntax (HOAS) evaluation
-can be expressed within System \Fw. We were able to write a simply-typed HOAS
+us to discover that simply typed Higher-Order Abstract Syntax (HOAS) evaluation
+can be expressed within System \Fw. We were able to write a simply typed HOAS
 evaluator using $\MsfIt_{* -> *}$.
 
 The indexing structure discussed in Chapter \ref{ch:mendler} is restricted to
@@ -105,11 +105,11 @@ The termination behaviors of Mendler-style recursion schemes can depend on
 the particular recursion scheme. Some recursion schemes (\MIt, \MPr, \MsfIt)
 terminate for arbitrary datatypes, while others (\McvPr, \McvIt) only terminate
 for positive (or, monotone) datatypes. One of our contributions to the study of
-the Mendler style is finding a counterexample for the termination of
+endler style is finding a counterexample for the termination of
 course-of-values iteration (and also recursion) over negative datatypes.
 In Chapter \ref{ch:fixi}, we discuss how to embed \McvPr\ into
 a strongly normalizing calculi, which is another original contribution to
-the study of the Mendler style.
+the study of Mendler style.
 
 \paragraph{}
 Chapters \ref{ch:fi} and \ref{ch:fixi} present two term-indexed calculi,
@@ -203,7 +203,7 @@ the fixpoint type operator ($\mu_{[\kappa]}$) and its constructor
 Chapter \ref{ch:relwork} discusses five categories of related work:
 Mendler-style co-recursion schemes for possibly infinite structures,
 Mendler-style recursion schemes over multiple recursive values,
-dependently typed Mendler-style induction, sized-types and the Mendler style,
+dependently typed Mendler-style induction, sized-types and Mendler style,
 and comparison of our approach to logical frameworks.
 
 Chapter \ref{ch:futwork} summarizes some ongoing and future work.
@@ -222,9 +222,9 @@ path between convenient programming and strong guarantees of program invariants,
 while taking advantages of the strong points of both. Our language, Nax, is
 based on a small theory and admits a simple implementation framework.
 
-Our investigations into the Mendler style uncovered two new aspects.
+Our investigations into Mendler style uncovered two new aspects.
 First, we discovered a useful recursion scheme (\MsfIt) for negative datatypes
-The discovery of \MsfIt\ lead to the novel discovery that simply-typed HOAS
+The discovery of \MsfIt\ lead to the novel discovery that simply typed HOAS
 evaluation is expressible within System \Fw. Second, we generalized
 Mendler-style recursion schemes over term-indexed datatypes.
 Generalization over term-indexed datatypes are established by

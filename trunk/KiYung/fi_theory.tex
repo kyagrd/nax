@@ -5,13 +5,13 @@ yet is more expressive because of the addition of term-indexed types.
 We show some basic well-formedness properties for
 the judgments of \Fi\ in \S\ref{ssec:fi:wf}.
 We prove erasure properties of \Fi, which captures the idea that indices are
-erasable since they are irrelevant for reduction in \S\ref{ssec:fi:erasure}.
+erasable because they are irrelevant for reduction in \S\ref{ssec:fi:erasure}.
 We show strong normalization, logical consistence, and subject reduction for
 \Fi\ by reasoning about well-known calculi related to \Fi\ in \S\ref{ssec:fi:sn}.
 
 \subsection{Well-formedness properties and substitution lemmas}
 \label{ssec:fi:wf}
-We want to show that kinding and typing derivations give
+We need to show that kinding and typing derivations give
 well-formed results under well-formed contexts. That is,
 kinding derivations ($\Delta |- F : \kappa$) result in well-sorted kinds
 ($|- \kappa$) under well-formed type-level contexts ($|- \Delta$)
@@ -33,17 +33,16 @@ $ \inference*{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}{
 \end{proposition}
 
 We can prove these well-formedness properties
-by induction over the judgment, and using 
+by induction over the judgment and using 
 the well-formness lemmas on equalities
 (Lemmas~\ref{lem:wfeqkind}, \ref{lem:wfeqtype}, and \ref{lem:wfeqterm})
-and the substitution lemma (Lemma~\ref{lem:subst}).
-The proof for Propositions \ref{prop:wfkind} and \ref{prop:wftype}
-are mutually inductive.  So, we prove these two propositions
+and substitution lemma (Lemma~\ref{lem:subst}).
+The proofs for Propositions \ref{prop:wfkind} and \ref{prop:wftype}
+are mutually inductive. Hence, we prove these two propositions
 at the same time, using a combined judgment $J$,
 which is either a kinding judgment or a typing judgment
 (\ie, $J ::= \Delta |- F : \kappa \mid \Delta;\Gamma |- t : A$).
-See Appendix \ref{app:proofsFi} for the detailed proofs of the
-two propositions above.
+See Appendix \ref{app:proofsFi} for the detailed proofs.
 
 \begin{lemma}[kind equality is well-sorted]\label{lem:wfeqkind}
 $ \inference{|- \kappa = \kappa':\square}
@@ -51,7 +50,7 @@ $ \inference{|- \kappa = \kappa':\square}
 \end{lemma}
 \begin{proof}
 	By induction on the derivation of kind equality
-	and using the sorting rules.
+	and by the sorting rules.
 \end{proof}
 
 \begin{lemma}[type constructor equality is well-kinded]\label{lem:wfeqtype}
@@ -61,7 +60,7 @@ $ \inference{|- \kappa = \kappa':\square}
 \end{lemma}
 \begin{proof}
 	By induction on the derivation of type constructor equality
-	and using the kinding rules.
+	and by the kinding rules.
 	Also use the type substitution lemma
 	(Lemma~\ref{lem:subst}(\ref{lem:tysubst}))
 	and the index substitution lemma
@@ -75,7 +74,7 @@ $ \inference{|- \kappa = \kappa':\square}
 \end{lemma}
 \begin{proof}
 	By induction on the derivation of term equality
-	and using the typing rules.
+	and by the typing rules.
 	Also use the term substitution lemma
 	(Lemma~\ref{lem:subst}(\ref{lem:tmsubst})).
 \end{proof}
@@ -84,13 +83,11 @@ The proofs for the three lemmas above are straightforward
 once we have dealt with the interesting cases for the equality rules
 involving substitution. We can prove those interesting cases
 by applying the substitution lemmas. The other cases fall into two
-categories: firstly, the equality rules following the same structure of
-the sorting, kinding, and typing rules; and secondly, the reflexive
-rules and the transitive rules. The proof for the equality rules
-following the same structure of the sorting, kinding, and typing rules
-can be proved by induction and applying the corresponding
-sorting, kinding, and typing rules. The proof for the reflexive rules
-and the transitive rules can be proved simply by induction.
+categories: first, the equality rules that follow the same structure as
+the sorting, kinding, and typing rules; and second, the reflexive rules
+and the transitive rules. The proof for the first category can be proved
+by induction and applying the corresponding sorting, kinding, and typing rules.
+The proof for the second category can be proved simply by induction.
 
 \begin{lemma}[substitution]\mbox{}\\[-3mm]
 \label{lem:subst}
@@ -122,7 +119,7 @@ $ \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}
 %\end{lemma}
 \end{enumerate}
 \end{lemma}
-The substitution lemma is fairly standard, comparable to substitution lemmas
+The substitution lemma is fairly standard and comparable to substitution lemmas
 in other well-known systems such as \Fw\ or ICC.
 
 \subsection{Erasure properties}
@@ -195,7 +192,7 @@ indexing invariants while retaining the type structure.
 %
 This is clearly seen for the vector type constructor~$\mathtt{Vec}$ whose
 index erasure is the list type constructor~$\mathtt{List}$,
-see~\Fig{churchrec}.
+as in \Fig{churchrec}.
 %
 One can however build pathological examples.  For instance, the
 type $\mathtt P_A \triangleq \forall i^A.\,\forall j^A.\, \LEq_A\s i \s j$
@@ -221,7 +218,7 @@ $\kappa^\circ$ is a kind in \Fw.
 \end{theorem}
 \begin{proof}
 	By induction on the derivation for well-formed type-level context
-	and using Theorem \ref{thm:ierasesorting}.
+	and by Theorem \ref{thm:ierasesorting}.
 \end{proof}
 \begin{remark}
 For any well-formed type-level context $\Delta$ in \Fi,
@@ -241,12 +238,12 @@ For any well-sorted kind equality $|- \kappa=\kappa':\square$ in \Fi,
 $|- \kappa^\circ=\kappa'^\circ:\square$ is a well-sorted kind equality in \Fw.
 \end{remark}
 
-The three theorems above on kinds are rather simple to prove since there is
-no need to consider mutual recursion in the definition of kinds due to
-the erasure operation on kinds. Recall that the erasure operation on kinds
-discards the type ($A$) appearing in the index arrow type ($A -> \kappa$).
+The three theorems above on kinds are rather simple to prove as there is
+no need to consider mutual recursion in the definition of kinds because of
+the erasure operation on kinds. Recall that this operation discards
+the type ($A$) appearing in the index arrow type ($A -> \kappa$).
 So, there is no need to consider the types appearing in kinds
-and the index terms appearing in those types, after the erasure.\\
+and the index terms appearing in those types after the erasure.\\
 
 \begin{theorem}[index erasure on well-kinded type constructors]
 \label{thm:ierasekinding}
@@ -301,7 +298,7 @@ and the index terms appearing in those types, after the erasure.\\
 	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$
 	by Definition \ref{def:ierase}.
 
-	Using Theorem \ref{thm:ierasesorting}, we know that
+	From Theorem \ref{thm:ierasesorting}, we know that
 	$|- \kappa^\circ : \square$.
 
 	By induction we know that
@@ -310,7 +307,7 @@ and the index terms appearing in those types, after the erasure.\\
 	$\Delta^\circ,X^{\kappa^\circ} |- B^\circ : *$
 	by Definition \ref{def:ierase}.
 
-	Using the kinding rule ($\forall$), we get exactly
+	From the kinding rule ($\forall$), we get exactly
 	what we need to show:
 	$\Delta^\circ |- \forall X^{\kappa^\circ}.B^\circ : *$.
 
@@ -335,10 +332,10 @@ and the index terms appearing in those types, after the erasure.\\
 \end{theorem}\begin{proof}
 By induction on the derivation of type constructor equality.
 
-Most of the cases are done by applying the induction hypothesis
+Most cases are proven by applying the induction hypothesis
 and sometimes using Proposition \ref{prop:wfkind}.
 
-The only interesting cases, which are worth elaborating on, are the
+The only interesting cases that are worth elaborating are the
 equality rules involving substitution.  There are two such rules.
 
 \paragraph{}
@@ -365,7 +362,7 @@ Using the very same equality rule of this case,\\ we get
 $\Delta^\circ |- (\lambda X^{\kappa^\circ} F^\circ) G^\circ =
 F^\circ[G^\circ/X] : \kappa'^\circ$.
 
-All we need to check is $(F[G/X])^\circ = F^\circ[G^\circ/X]$,
+We only need to check is $(F[G/X])^\circ = F^\circ[G^\circ/X]$,
 which is easy to see.
 
 \paragraph{}
@@ -377,11 +374,11 @@ By induction we know that $\Delta^\circ |- F^\circ : \kappa^\circ$.
 The erasure of the left hand side of the equality is\\
 $((\lambda i^A.F)\,\{s\})^\circ = (\lambda i^A.F)^\circ = F^\circ$.
 
-All we need to show is $(F[s/i])^\circ = F^\circ$, which is obvious
-since index variables can only occur in index terms and index terms
-are always erased. Recall the index erasure over type constructors in
-Definition \ref{def:ierase}; in particular, $(\lambda i^A.F)^\circ=F^\circ$,
-$(F\{s\})^\circ=F^\circ$, and $(\forall i^A.B)^\circ=B^\circ$.
+We only need to show is $(F[s/i])^\circ = F^\circ$, which is obvious
+since index variables can only occur in index terms that are always erased.
+Recall the index erasure over type constructors in Definition \ref{def:ierase},
+in particular, $(\lambda i^A.F)^\circ=F^\circ$, $(F\{s\})^\circ=F^\circ$, and
+$(\forall i^A.B)^\circ=B^\circ$.
 \end{proof}
 \begin{remark}
 For any well-kinded type constructor equality $\Delta |- F=F':\kappa$ in \Fi,
@@ -389,8 +386,8 @@ $\Delta^\circ|- F^\circ=F'^\circ:\kappa^\circ$ is
 a well-kinded type constructor equality in \Fw.
 \end{remark}
 
-The proofs for the two theorems above on type constructors need not consider
-mutual recursion in the definition of type constructors due to
+The proofs for the two theorems on type constructors above need not consider
+mutual recursion in the type constructor definition because of
 the erasure operation. Recall that the erasure operation on type constructors
 discards the index term ($s$) appearing in the index application $(F\;\{s\})$.
 So, there is no need to consider the index terms appearing in the types after
@@ -404,8 +401,8 @@ the erasure.
 By induction on $\Gamma$.
 \begin{itemize}
 \item[case] ($\Gamma=\cdot$) It trivially holds.
-\item[case] ($\Gamma = \Gamma',x:A$),
-we know that  $\Delta |- \Gamma'$ and $\Delta |- A:*$
+\item[case] ($\Gamma = \Gamma',x:A$)
+We know that  $\Delta |- \Gamma'$ and $\Delta |- A:*$
 by the well-formedness rules
 and that $\Delta^\circ |- \Gamma'^\circ$ by induction.
 
@@ -416,7 +413,7 @@ We know that $\Delta^\circ |- \Gamma'^\circ,x:A^\circ$
 from $\Delta^\circ |- \Gamma'^\circ$ and $\Delta^\circ |- A^\circ :*$
 by the well-formedness rules.
 
-Since $\Gamma'^\circ,x:A^\circ = (\Gamma',x:A)^\circ = \Gamma^\circ$
+Because $\Gamma'^\circ,x:A^\circ = (\Gamma',x:A)^\circ = \Gamma^\circ$
 by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 \end{itemize}\vspace*{-10pt}
 \end{proof}
@@ -431,16 +428,16 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 \begin{proof} By induction on the typing derivation.
 	Interesting cases are the index related rules ($:i$), ($\forall Ii$),
 	and ($\forall Ei$). Proofs for the other cases are straightforward
-	by induction and applying other erasure theorems corresponding to
+	by induction and application of other erasure theorems corresponding to
 	the judgment forms.
 \begin{itemize}
 \item[case] ($:$)
 	By Theorem \ref{thm:ierasetmctx}, we know that
 	$\Delta^\circ|- \Gamma^\circ$ when $\Delta|- \Gamma$.
-	By definition of erasure on term-level context, we know that
+	By the definition of erasure in term-level context, we know that
 	$(x:A^\circ) \in \Gamma^\circ$ when $(x:A) \in \Gamma$.
 \item[case] ($:i$)
-	Vacuously true since $t$ does not contain any index variables
+	Vacuously true because $t$ does not contain any index variables
         (\ie, $\dom(\Delta)\cap\FV(t) = \emptyset$).
 \item[case] ($->$$I$)
 	By Theorem \ref{thm:ierasekinding}, we know that $\cdot |- A^\circ:*$.
@@ -467,10 +464,10 @@ by definition, we know that $\Delta^\circ |- \Gamma^\circ$.
 \item[case] ($\forall Ii$)
 	By Theorem \ref{thm:ierasekinding}, we know that $\cdot |- A^\circ:*$.
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
-	which is what we want since $(\forall i^A.B)^\circ = B^\circ$.
+	which is what is required since $(\forall i^A.B)^\circ = B^\circ$.
 \item[case] ($\forall Ei$)
 	By induction, we know that $\Delta^\circ;\Gamma^\circ |- t : B^\circ$,
-	which is what we want since $(B[s/i])^\circ = B^\circ$.
+	which is what is required since $(B[s/i])^\circ = B^\circ$.
 \item[case] ($=$)
 	By Theorem \ref{thm:ierasetyconeq} and induction.
 \end{itemize}\qedhere
@@ -483,7 +480,7 @@ to have both $t:\mathtt P_A$ and $t:(\mathtt P_A)^\circ=\mathtt{Unit}$.
 It follows as a corollary that the implication of
 Theorem~\ref{thm:ierasetypingifree} does not admit a converse.
 
-In this context for $A=\mathtt{Void}$, note that even though one has
+In this context, for $A=\mathtt{Void}$, note that even though one has
 %the open typing 
 $i^\mathtt{Void};\cdot\vdash\lambda x.\,i:\forall
 j^{\mathtt{Void}}.\,\forall X^{\mathtt{Void}\to*}.\, X\s i\to X\s j$, 
@@ -516,7 +513,7 @@ the index variable bindings from the type-level context.
 \]
 \end{theorem}
 \begin{proof}
-Straightforward by Theorem \ref{thm:ierasetmctx} and the typing rule ($:i$).
+Straightforward, by Theorem \ref{thm:ierasetmctx} and the typing rule ($:i$).
 \end{proof}
 
 The following result is the appropriate version of
@@ -531,10 +528,10 @@ Theorem~\ref{thm:ierasetypingifree} without the side condition therein.
 \begin{proof}
 	The proof is almost the same as that of
 	Theorem~\ref{thm:ierasetypingifree}, except for the ($:i$) case.
-	The proof for the rule~($:i$) case is easy
-	since $(i:A) \in \Delta^\bullet$ when $i^A \in \Delta$ by definition of
-	the index variable selection operation. The indices from $\Delta$
-	being prepended to $\Gamma$ do not affect the proof for the other cases.
+	The proof for the rule~($:i$) case is easy because
+	$(i:A) \in \Delta^\bullet$ when $i^A \in \Delta$ by definition of
+	the index variable selection operation. Prepending indices to $\Gamma$
+	that come from $\Delta$ do not affect the proof for the other cases.
 \end{proof}
 
 %% \begin{theorem}[index erasure on term equality]
@@ -549,15 +546,15 @@ Theorem~\ref{thm:ierasetypingifree} without the side condition therein.
 Strong normalization is a corollary of the erasure property since we know that
 System~\Fw\ is strongly normalizing.
 
-Logical consistency is immediate since
+Logical consistency is immediate because
 System~\Fi\ is a strict subset of the \emph{restricted implicit calculus}
 \cite{Miquel00}, which is in turn a restriction of ICC~\cite{Miquel01}.
 Subject reduction is also immediate for the same reason.
 %% \marginpar{\framebox{\bf\em State these results formally in a theorem?}}
 
-We can also give a more direct proof of logical consistency by shoing that
-the void type $\forall X^{*}.X$ is uninhabited in \Fi. By type erasure
-no more terms inhabit \Fi-types than the corresponding \Fw-types.
+We can also give a more direct proof of logical consistency by showing that
+the void type $\forall X^{*}.X$ is uninhabited in \Fi. By type erasure,
+no terms inhabit \Fi-types other than the corresponding \Fw-types.
 Since we already know that the void type $\forall X^{*}.X$
 is uninhabited in \Fw, it must be the case that the void type
 is uninhabited in \Fi.

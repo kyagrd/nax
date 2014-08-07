@@ -18,7 +18,7 @@ We demonstrated the usefulness of |msfcata| by defining functions over HOAS:
 \begin{itemize}
 \item the string formatting function |showHOAS| for the untyped HOAS using |msfcata0|
 (Figure \ref{fig:HOASshow} on p.\pageref{fig:HOASshow}) and
-\item the type-preserving evaluator |evalHOAS| for the simply-typed HOAS
+\item the type-preserving evaluator |evalHOAS| for the simply typed HOAS
 using |msfcata1| (Figure \ref{fig:HOASeval} on p.\pageref{fig:HOASeval}).
 \end{itemize}
 In this section, we speculate about another Mendler-style recursion scheme,
@@ -35,7 +35,7 @@ Mendler-style primitive recursion with a sized index.
 \begin{singlespace}\small
 %include mendler/HOASevalV.lhs
 \end{singlespace}
-\caption{Two evaluators for the simply-typed $\lambda$-calculus in HOAS.
+\caption{Two evaluators for the simply typed $\lambda$-calculus in HOAS.
          One uses a native (Haskell) value domain (|evalHOAS|), the
          other uses a user-defined value domain (|vevalHOAS|).}
 \label{fig:HOASevalV}
@@ -63,7 +63,7 @@ in structure to the corresponding equation in the definition of |evalHOAS|.
 However, the use of |unVal| is problematic. In particular, the definition of
 |unVal| relies on pattern matching against |In1|. Recall that one cannot
 freely pattern match against a recursive value in Mendler style.
-Recursive values must be analyzed (or, eliminated) by using Mendler-style
+Recursive values must be analyzed (or eliminated) by using Mendler-style
 recursion schemes. It is not a problem to use |unId| in the definition of
 |evalHOAS| because |Id| is non-recursive.
 
@@ -151,6 +151,8 @@ data ExpF_u r t = Lam_u (r t -> r t) | App_u (r t) (r t)
 
 data V_u r t = VFun_u (r t -> r t)
 \end{code}
+Fixpoints of the structures above represent the untyped HOAS and
+its value domain. 
 Here, the index |t| is bogus; that is, it does not track the type of
 an HOAS expression but remains constant everywhere. Using the naive version
 of |mprsi1| above, we can write an evaluator similar to |vevalHOAS| for

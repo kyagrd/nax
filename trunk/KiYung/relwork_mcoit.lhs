@@ -56,7 +56,7 @@ mit0 phi x = phi (mit0 phi) (unIn0 x)
 \end{code}
 \end{singlespace}
 \caption{A Haskell transcription of Mendler-style co-iteration (\McoIt)
-         in comparison to Mendler-style iteration (\MIt) at kind |*|}
+         in comparison to Mendler-style iteration (\MIt) at kind |*|.}
 \label{fig:mcoit0}
 \end{figure}
 

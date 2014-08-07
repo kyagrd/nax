@@ -18,8 +18,8 @@ $\!\!\!\!\!\!\!\!\!$\mprimDef
 }
 \section{Mendler-style primitive recursion (|mprim|)} \label{sec:mpr}
 \index{Mendler-style!primitive recursion}
-In Figure \ref{fig:mprim} we list a type declaration and a 
-defining equation for several families of Mendler-style recursion combinators.
+In Figure \ref{fig:mprim}, we list type declarations and defining equations of
+several families of the Mendler-style recursion combinators.
 We give two versions for each family, one at kind $*$ and one at kind $* -> *$.
 The families of combinators increase in complexity from iteration (|mcata|),
 through primitive recursion (|mprim|) and course-of-values iteration (|mhist|),
@@ -41,7 +41,7 @@ an additional |cast| operation.
 
 Since |mprim| has an additional abstract operation, when compared to |mcata|,
 it can express all the functions expressible with |mcata|. In some programs,
-the additional |cast| operation, can increase the efficiency of the program
+the additional |cast| operation can increase the efficiency of the program
 by supporting constant time access to the concrete value of the
 recursive component.
 
@@ -51,7 +51,7 @@ A typical example of primitive recursion is the factorial function.
 Figure \ref{fig:fac} illustrates the general recursive version (right) and
 the Mendler-style version (left) of the factorial function, where
 |times :: Nat -> Nat -> Nat| is the usual multiplication operation on
-natural numbers. Note, the definition of |phi| in the Mendler-style is
+natural numbers. Note the definition of |phi| in Mendler style is
 similar to the definition of |fac| in the general recursive version,
 except that it uses the explicit |cast| to convert from an abstract value
 (|n:r|) to a concrete value (|cast n : Nat|).
@@ -60,7 +60,7 @@ except that it uses the explicit |cast| to convert from an abstract value
 $\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!$
 \begin{minipage}{.5\linewidth}\small \ExFacG \end{minipage}
 \begin{minipage}{.6\linewidth}\small \ExFac \end{minipage}
-\caption{|mprim0| example: factorial function}
+\caption{|mprim0| example: factorial function.}
 \label{fig:fac}
 \end{figure}
 
@@ -81,7 +81,7 @@ will be linear in the size of the input rather than being constant.
 \begin{figure}[p]
 \begin{minipage}{.5\linewidth}\small \ExPredG \end{minipage}
 \begin{minipage}{.6\linewidth}\small \ExConstPred \end{minipage}
-\caption{|mprim0| example (non-recursive): a constant time predecessor}
+\caption{|mprim0| example (non-recursive): a constant time predecessor.}
 \label{fig:constpred}
 \end{figure}
 
@@ -89,7 +89,7 @@ will be linear in the size of the input rather than being constant.
 \begin{minipage}{.5\linewidth}\small \ExTailG \end{minipage}
 \begin{minipage}{.6\linewidth}\small \ExConstTail \end{minipage}
 \caption{|mprim0| example (non-recursive):
-         a constant time tail function for lists}
+         a constant time tail function for lists.}
 \label{fig:consttail}
 \end{figure}
 
@@ -122,7 +122,7 @@ fib (n+2)  = fib (n+1)  + fib n
 luc (n+2)  = luc (n+1)  + luc n + n
 \end{code}
 Note the trailing ``$\cdots+\,$|n|'' in the recurrence relation for |luc|.
-We need the ability of course-of-values recursion because $n$ is
+We need the ability of the course-of-values recursion because $n$ is
 a deep recursive component of $n+2$ (\ie, $n$ is the predecessor of
 the predecessor of $n+2$). We need primitive recursion, since we not
 only perform a recursive call over $n$ ($\cdots+\,$|luc n|$\,+\cdots$),
@@ -147,7 +147,7 @@ As we mentioned in \S\ref{mendler_history}, the termination properties of
 Mendler-style primitive recursion can be shown by embedding |mprim| into
 \Fixw\ \cite{AbeMat04} (also described in Section \ref{sec:fixi:data}).
 Additionally, we discovered how to embed |mcvpr| within \Fixw.
-However, our embedding of |mcvpr| into \Fixw\ (or, \Fixi) is not
+However, our embedding of |mcvpr| into \Fixw\ (or \Fixi) is not
 reduction preserving. We will explain the details of the embedding
 of |mcvpr| into \Fixw\ in Section \ref{sec:fixi:cv}.
 
