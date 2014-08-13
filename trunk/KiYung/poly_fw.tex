@@ -681,8 +681,7 @@ Let us elaborate on the three cases of
 \paragraph{Case (\rulename{TyAbs})}
 We need to show that
 $ \inference{\Delta;\Gamma |- t : \forall X.B & \xi;\rho\in[|\Delta;\Gamma|]}
-        {[|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_\xi} $
-
+        {[|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_\xi} $ \\
 By induction, we know that
 \[ \inference{\Delta,X^\kappa;\Gamma |- t:B & \xi';\rho'\in[|\Delta,X;\Gamma|]}
         {[|t|]_{\xi';\rho'} \in [|B|]_{\xi'}} ~
@@ -710,13 +709,13 @@ By set theoretic definition, this is exactly what we wanted to show:
 We need to show that
 $ \inference{\Delta;\Gamma |- t : B[G/X] & \xi;\rho\in[|\Delta;\Gamma|]}
         {[|t|]_{\xi;\rho} \in [|B[G/X]|]_\xi} $.
-
+\vspace*{.3em} \\
 By induction, we know that
 $ \inference
         { \Delta;\Gamma |- t : \forall X^\kappa.B
         & \xi';\rho'\in[|\Delta;\Gamma|] }
         {[|t|]_{\xi';\rho'} \in [|\forall X^\kappa.B|]_{\xi'}} $.
-
+\vspace*{.3em} \\
 Since this holds for all $\xi';\rho' \in [|\Delta,\Gamma|]$,
 it also holds for $\xi'=\xi$ and $\rho'=\rho$. Then, we are done:
 $ [|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_{\xi}
@@ -727,13 +726,12 @@ $ [|t|]_{\xi;\rho} \in [|\forall X^\kappa.B|]_{\xi}
 We need to show that
 $ \inference{\Delta;\Gamma |- t : A' & \xi;\rho\in[|\Delta;\Gamma|]}
         {[|t|]_{\xi;\rho} \in [|A'|]_\xi} $
-
+\vspace*{.3em} \\
 By induction we know that 
 $ \inference{\Delta;\Gamma |- t : A & \xi;\rho\in[|\Delta;\Gamma|]}
         {[|t|]_{\xi;\rho} \in [|A|]_\xi} $
-
+\vspace*{.3em} \\
 If we can show that $[|A|]_\xi = [|A'|]_\xi$, we are done.
-
 To show that $[|A|]_\xi = [|A'|]_\xi$,
 we use the soundness of type constructor equality lemma
 (Lemma \ref{lem:fw:soundtyeq}).
@@ -807,14 +805,14 @@ when $X^\kappa \in [|\Delta|]$.
 We need to show that
 $ \inference{\Delta |- \forall X^\kappa.B:* & \xi\in[|\Delta|]}
         {[|\forall X^\kappa.B|]_\xi\in[|*|]} $.
-
+\vspace*{.3em} \\
 By induction, we know that
 $ \inference{\Delta,X^\kappa |- B:* & \xi'\in[|\Delta,X^\kappa|]}
         {[|B|]_{\xi'} \in [|*|]} $.
-
+\vspace*{.3em} \\
 Since it should hold for any $\xi'$, it also holds for
 $\xi'=\xi[X\mapsto\mathcal{G}]$ for any $\mathcal{G}\in[|\kappa|]$.
-
+\vspace*{.3em} \\
 Therefore,
 $  [|\forall X^\kappa.B|]_\xi
  = \bigcap_{\mathcal{G}\in[|\kappa|]}[|B|]_{\xi[X\mapsto\mathcal{G}]}\in[|*|] $.
@@ -823,11 +821,11 @@ $  [|\forall X^\kappa.B|]_\xi
 We need to show that
 $ \inference{\Delta |- \l X^\kappa.B:* & \xi\in[|\Delta|]}
         {[|\forall X.B|]_\xi\in[|*|]} $.
-
+\vspace*{.3em} \\
 By induction, we know that 
 $ \inference{\Delta,X^\kappa |- F:\kappa' & \xi'\in[|\Delta,X^\kappa|]}
         {[|F|]_{\xi'} \in [|\kappa'|]} $.
-
+\vspace*{.3em} \\
 Since it should hold for any $\xi$, it also holds for
 $\xi'=\xi[X\mapsto\mathcal{G}]$ for any $\mathcal{G}\in[|\kappa|]$.
 

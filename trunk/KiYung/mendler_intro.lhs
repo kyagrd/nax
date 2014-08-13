@@ -180,13 +180,11 @@ A Haskell datatype definition for this can be found at\\$~~~$
 {\small \url{http://lists.seas.upenn.edu/pipermail/types-list/2004/000267.html}}}).
 \index{HOAS}
 One of the classic examples is HOAS \cite{Church40,PfeEll88}.
- A non-standard definition of HOAS in Haskell is:\footnote{
+A non-standard definition of HOAS in Haskell is:\footnote{
+The datatype |Exp| here is a HOAS-like structure specialized to |String| type.
 The standard definition of HOAS, which omits the |Var| constructor, makes it
 more challenging to define |showExp|, as we shall see in \S\ref{sec:showHOAS}.}
-\vspace*{.3em}
-\begin{code}
-{-"\!\!\!\!\!\!\!\!"-}data Exp = Lam (Exp -> Exp) | App Exp Exp | Var String
-\end{code}\vspace*{-.7em}\\
+|data Exp = Lam (Exp -> Exp) || App Exp Exp || Var String|.
 We can define a function |showExp{-"~"-}:: Exp -> String| that formats
 an HOAS expression into a string.  For example,\vspace*{.3em}
 \begin{code}
@@ -265,7 +263,7 @@ positive recursive types possibly with type indices (but not term-indices).
 Recently, we developed several new contributions to the study of
 the Mendler-style recursion schemes \cite{AhnShe11}.\footnote{
 	This chapter is a revised and extended version of this ICFP paper.}
-These contributions fall into three broad categories:
+These contributions fall into three broad categories:\vspace*{-.5em}
 \begin{itemize}
 \item discovered a new family of Mendler-style recursion combinators
  (\S\ref{sec:msf}), which normalizes for negative recursive types and

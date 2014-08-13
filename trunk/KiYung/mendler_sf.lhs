@@ -1,5 +1,5 @@
 %include includelhs2tex.lhs
-\section{Mendler-style iteration with syntactic inverses (|msfcata|)}
+\section{Mendler-style iteration with syntactic inverses}
 \label{sec:msf}
 \index{Mendler-style!iteration with syntactic inverses}
 While it is known that iteration and primitive recursion terminate for all types

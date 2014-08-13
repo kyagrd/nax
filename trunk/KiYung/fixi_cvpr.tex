@@ -225,7 +225,7 @@ The embedding of $\unIn_{(R A)}$ relies on the map function for lists,
 since the rose tree is indirect datatype where recursive subcomponents
 appear inside the list ($\texttt{List}\,X_r$).
 The $\textit{fmap}_\texttt{List}$ function applies \textit{cast} to each of
-the the abstract recursive subcomponents of type $X_r$ inside $F\;X_r$
+the abstract recursive subcomponents of type $X_r$ inside $F\;X_r$
 values into a concrete recursive type $\mu_{*}^{+}F$ in order to obtain
 $F(\mu_{*}^{+}F)$ values.
 
@@ -495,7 +495,7 @@ since there is no need to transform indices -- recall that term-indices
 do not appear at value level. Hence, there are no values to transform
 in the first place. Furthermore, even if we had such values, we need not
 transform them anyway because unrollers are index-preserving by definition.
-Thus, in the type signature of \texttt{mcvprI1}, we need not reqire
+Thus, in the type signature of \texttt{mcvprI1}, we need not require
 the abstract recursive structure \texttt{r} to be a \texttt{Functor},
 unlike in the type signature of \texttt{mcvpr1} where we did require
 \texttt{Functor r}. The embedding of $\unIn_{(V A)}$ has the  expected shape:
@@ -512,7 +512,7 @@ transform indices from abstract recursive type to concrete recursive type
 to embed $\unIn_B$ because a bush is indexed by its own structure.
 In summary, unroller embeddings for indexed datatypes, regardless of
 term-indexed or type-indexed, do not require indices to be monotone
-unless the datatype is truley nested. For truly nested datatypes,
+unless the datatype is truly nested. For truly nested datatypes,
 we must require indices as well as the recursive type constructor itself
 to be monotone in order to embed their unrollers. We can have
 a good approximation of this idea using with polarized kinds in \Fixi.

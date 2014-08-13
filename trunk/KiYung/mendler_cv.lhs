@@ -1,5 +1,5 @@
 %include includelhs2tex.lhs
-\section{Mendler-style course-of-values iteration (|mhist|) for regular datatypes}
+\section{Mendler-style course-of-values iteration for regular datatypes}
 \label{ssec:tourHist0}
 \index{Mendler-style!course-of-values iteration}
 Some computations are not easily expressible by iteration,
@@ -151,7 +151,7 @@ why the |mhist| family fails to guarantee termination for negative datatypes
 while the |mcata| family guarantees termination for arbitrary datatypes
 including negative datatypes.
 
-\section{Properties of |mcata| and |mhist| for negative datatypes}
+\section{Mendler-style iteration and course-of-values iteration over negative datatypes}
 \label{ssec:tourNegative}
 \index{datatype!negative}
 Let us revisit the negative recursive datatype |T|

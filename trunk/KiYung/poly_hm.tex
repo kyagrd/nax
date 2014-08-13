@@ -105,7 +105,7 @@ for $(\l x.t)\,s$ when we think about reduction.\footnote{
         Curry-style terms in the previous sections, once we desugar
         all the let terms.}
 However, a let-term ($\<let> x=s \<in> t$) is assigned
-a significantly different type than its sematic equivalent ($(\l x.t)\,s$).
+a significantly different type than its semantic equivalent ($(\l x.t)\,s$).
 The typing rules support the introduction of
 a polymorphic type scheme for $x$ into the typing context when typing the let-term's
 body $t$. We will discuss many
@@ -416,23 +416,28 @@ consecutive applications of the \rulename{TyApp} rule followed by
 consecutive applications of the \rulename{TyAbs} rule in System \F, as below:
 {\small
 \begin{align*}
-& \inference[\sc TyApp]
+& \!\!\!\!\!\!\!\!\!\!\!
+	\inference[\sc TyApp]
         {\Delta;\Gamma |- t : \forall X_1\dots X_n.A & \Delta |- \forall X_1\dots X_n.A}
         {\Delta;\Gamma |- t : \forall X_2\dots X_n.A[B_1/X_1]
         \qquad\qquad\quad~~} \\
-& \inference[\sc TyApp]
+& \!\!\!\!\!\!\!\!\!\!\!
+	\inference[\sc TyApp]
         { \qquad\qquad \vdots \qquad\qquad\qquad\qquad\qquad \quad
         & \Delta |- \forall X_n.A[B_1/X_1]\cdots[B_{n-1}/X_{n-1}]
         }
         { \Delta;\Gamma |- t : A[B_1/X_1]\cdots[B_n/X_n] \qquad \qquad
          \qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
         } \\
-& \inference[\sc TyAbs]
+& \!\!\!\!\!\!\!\!\!\!\!
+	\inference[\sc TyAbs]
         {}
         {\Delta;\Gamma |- t : \forall X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
         (X_m'\notin\FV(A[B_1/X_1]\cdots[B_n/X_n])) \\
-& \qquad\qquad\qquad\qquad\qquad \vdots \\
-& \inference[\sc TyAbs]
+& \!\!\!\!\!\!\!\!\!\!\!
+	\qquad\qquad\qquad\qquad\qquad \vdots \\
+& \!\!\!\!\!\!\!\!\!\!\!
+	\inference[\sc TyAbs]
         {\Delta;\Gamma |- t : \forall X_2'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
         {\Delta;\Gamma |- t : \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
         (X_1'\notin\FV\left(\begin{smallmatrix}\forall X_2'\dots X_m'.\\A[B_1/X_1]\cdots[B_n/X_n]\end{smallmatrix}\right))

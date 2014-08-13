@@ -144,7 +144,7 @@ exotic datatypes such as nested datatypes and GADTs.
 
 
 
-\section{Mendler-style iteration (|mcata|) for regular datatypes}
+\section{Mendler-style iteration for regular datatypes}
 \label{ssec:tourCata0}
 \index{Mendler-style!iteration}
 The Mendler-style iteration combinator |mcata0| lifts the restriction that the
