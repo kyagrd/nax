@@ -18,7 +18,7 @@ We demonstrated the usefulness of |msfcata| by defining functions over HOAS:
 \begin{itemize}
 \item the string formatting function |showHOAS| for the untyped HOAS using |msfcata0|
 (Figure \ref{fig:HOASshow} on p.\pageref{fig:HOASshow}) and
-\item the type-preserving evaluator |evalHOAS| for the simply typed HOAS
+\item the type-preserving evaluator |evalHOAS| for the simply-typed HOAS
 using |msfcata1| (Figure \ref{fig:HOASeval} on p.\pageref{fig:HOASeval}).
 \end{itemize}
 In this section, we speculate about another Mendler-style recursion scheme,
@@ -35,7 +35,7 @@ Mendler-style primitive recursion with a sized index.
 \begin{singlespace}\small
 %include mendler/HOASevalV.lhs
 \end{singlespace}
-\caption{Two evaluators for the simply typed $\lambda$-calculus in HOAS.
+\caption{Two evaluators for the simply-typed $\lambda$-calculus in HOAS.
          One uses a native (Haskell) value domain (|evalHOAS|), the
          other uses a user-defined value domain (|vevalHOAS|).}
 \label{fig:HOASevalV}

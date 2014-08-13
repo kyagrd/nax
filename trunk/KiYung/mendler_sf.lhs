@@ -475,16 +475,16 @@ leads to desired the embeddings would be interesting future work.
 
 \subsection{Evaluating Simply Typed HOAS}
 \label{sec:evalHOAS}
-\index{HOAS!simply typed}
+\index{HOAS!simply-typed}
 \index{HOAS!evaluation}
-\index{evaluator!simply typed HOAS}
-We can write an evaluator for a simply typed HOAS
+\index{evaluator!simply-typed HOAS}
+We can write an evaluator for a simply-typed HOAS
 in a surprisingly simple manner as in Figure \ref{fig:HOASeval},
 using the Mendler-style iteration with syntactic inverses.
 
 \index{indexed datatype}
 \index{datatype!indexed}
-We first define the simply typed HOAS as a recursive indexed datatype
+We first define the simply-typed HOAS as a recursive indexed datatype
 |Exp :: * -> *|. We take the fixpoint using |Rec1| (the fixpoint 
 operation that supports a syntactic inverse). This fixpoint is taken over
 a non-recursive base structure (|ExpF :: (* -> *) -> (* -> *)|).
@@ -500,7 +500,7 @@ untyped HOAS formatting example in Figure \ref{fig:HOASshow}.
 
 \begin{figure}
 %include mendler/HOASeval.lhs
-\caption{|msfcata1| example: an evaluator for the simply typed HOAS.}
+\caption{|msfcata1| example: an evaluator for the simply-typed HOAS.}
 \label{fig:HOASeval}
 \end{figure}
 

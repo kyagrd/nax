@@ -48,7 +48,7 @@ the inverse trick (|msfcata|) (\S\ref{sec:showHOAS}),
 which was first described by \citet{FegShe96}
 and later refined by \citet{bgb} in conventional style,
 \item[$\bigstar\!\!$] Using |msfcata| over an indexed datatype
-to evaluate a simply typed HOAS (\S\ref{sec:evalHOAS}), which clearly
+to evaluate a simply-typed HOAS (\S\ref{sec:evalHOAS}), which clearly
 exemplifies the advantages of Mendler style over conventional style,
 \vspace*{-.2em}
 \item Providing an intuitive explanation of why Mendler-style iteration
@@ -325,7 +325,7 @@ in terms of computability, but often lead to more efficient implementations.
 In \S\ref{sec:msf}, we introduce a new Mendler-style family (|msfcata|),
 which we discovered, and illustrate its expressiveness over negative datatypes
 by presenting the case study on formatting HOAS (\S\ref{sec:showHOAS})
-and evaluating simply typed HOAS (\S\ref{sec:evalHOAS})
+and evaluating simply-typed HOAS (\S\ref{sec:evalHOAS})
 
 Finally, we summarize the properties of Mendler-style recursion combinators
 in \S\ref{sec:proof}. %% and extrapolate on other possible recursion combinators.

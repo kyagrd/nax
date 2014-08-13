@@ -9,7 +9,6 @@
 %% \usepackage{pxfonts}
 %% \usepackage{eulervm}
 \usepackage{lmodern}
-\usepackage[backref]{hyperref}
 \usepackage[sort&compress,square,comma,numbers,longnamesfirst]{natbib}
 \usepackage{semantic}
 \usepackage[hang]{caption}
@@ -29,7 +28,10 @@
 \usepackage[normal]{subfigure}
 \usepackage[all]{xy}
 \usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
 \usepackage{makeidx}
+% \usepackage[backref]{hyperref}
+\usepackage{hyperref}
 
 \usepackage{mylhs2tex}
 
@@ -37,6 +39,11 @@
 
 \definecolor{grey}{rgb}{0.8,0.8,0.8}
 \definecolor{gray}{rgb}{0.57,0.57,0.57}
+
+\setlist{partopsep=-3em}
+\setlist{topsep=-3em}
+\setlist{parsep=-2em}
+\setlist{itemsep=-.2em}
 
 \newcommand{\KYA}[1]{\textcolor{blue}{#1 -- Ki Yung}}
 \newcommand{\TS}[1]{\textcolor{red}{#1 -- Tim}}
@@ -138,7 +145,7 @@
 %% \renewcommand\qedsymbol{$\blacksquare$}
 
 \begin{document}
-\title{The Nax language \\
+\title{The Nax language:\\
        unifying functional programming and logical reasoning in a language\\
        based on Mendler-style recursion schemes and term-indexed types}
 \titleline{The Nax language}
@@ -165,33 +172,34 @@
 \titlep
 \prefatory
 \prefacesection{Abstract}
-\vskip-3ex
+\vskip-5.5ex
 $~~~~~~$Two major applications of lambda calculi in computer science are
 functional programming languages and mechanized reasoning systems
-(or, proof assistants). By the Curry--Howard correspondence, it is possible,
-in principle, to design a unified language based on a typed lambda calculus for
-both logical reasoning and programming. However, different requirements for
-programming languages and reasoning systems makes it difficult to design such
-a unified language useful for both purposes. Programming languages usually
-extend lambda calculi with programming friendly features
-(\eg, recursive datatypes, general recursion) for the flexibility to
+(or, proof assistants). According to the Curry--Howard correspondence,
+it is possible, in principle, to design a unified language based on
+a typed lambda calculus for both logical reasoning and programming.
+However, the different requirements of programming languages and
+reasoning systems make it difficult to design such a unified language
+useful for both purposes. Programming languages usually
+extend lambda calculi with programming-friendly features
+(\eg, recursive datatypes, general recursion) for supporting the flexibility to
 model various computations, while sacrificing logical consistency.
 Logical reasoning systems usually extend lambda calculi with
-logic friendly features (\eg, induction principles, dependent types)
+logic-friendly features (\eg, induction principles, dependent types)
 for paradox-free inference over fine-grained properties,
 while being more restrictive in modeling computations.
 
-In this dissertation, we design and implement a language called Nax,
-which balances between the benefits of the both. Nax accepts
-all recursive datatypes, allowing the same flexibility of defining
-recursive datatypes in functional languages. Nax supports
+In this dissertation, we design and implement a language called Nax
+that balances between the benefits of both. Nax accepts
+all recursive datatypes, thus, allowing the same flexibility of defining
+recursive datatypes as functional languages. Nax supports
 a number of Mendler-style recursion schemes that can express various kinds of
 recursive computations and also grantee termination. Nax supports
-term-indexed types to enable specifications of fine-grained properties.
+term-indexed types to support specifications of fine-grained properties.
 In addition, Nax supports a conservative extension of
 Hindley--Milner type inference.
 
-Theoretical contributions of this dissertation are the theories for
+The theoretical contributions of this dissertation include theories for
 Mendler-style recursion schemes and term-indexed types, which we
 developed to establish strong normalization and logical consistency of Nax.
 
@@ -235,7 +243,7 @@ out in the evenings.
 %% END PART3
 
 %% BEGIN PART4
-\part{The Nax Language}\label{part:Nax}
+\part{Nax Language}\label{part:Nax}
 \include{nax}     %% The Nax language                      {ch:nax}
 %%%% \include{casestd} %% Case studies                          {ch:casestd}
 %% END PART4

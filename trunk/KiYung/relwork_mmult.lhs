@@ -50,18 +50,15 @@ over two recursive values, which can be transcribed into Haskell as follows:
 %format f2
 %format x1
 %format x2
-\begin{singlespace}
 \begin{code}
 msimit0 :: (forall r1 r2. (r1 -> r2 -> a) -> f1 r1 -> f2 r2 -> a) -> Mu0 f1 -> Mu0 f2 -> a
 msimit0 phi (In0 x1) (In0 x2) = phi (msimit0 phi) x1 x2
 \end{code}
-\end{singlespace}
 \noindent
 This recursion scheme simplifies function definitions
 that simultaneously iterate over two arguments.
 For example, we can define |lessthan :: Nat -> Nat -> Nat|
 and |take :: Nat -> List a -> List a| as follows:
-\begin{singlespace}
 \begin{code}
 lessthan :: Nat -> Nat -> Bool
 lessthan = msimit0 phi where
@@ -76,7 +73,7 @@ take = msimit0 phi where
   phi tk (Succ _)  Nil          = nil
   phi tk (Succ n)  (Cons x xs)  = cons x (tk n xs)
 \end{code}
-\end{singlespace}\noindent
+\noindent
 Note that the |phi| functions above are similar in structure to how one would typically
 define |lessthan| and |take| using general recursion in Haskell. Although
 it is possible to define these functions using multiple nested uses of |mit0|,
@@ -95,7 +92,6 @@ assuming monotonicity (\S\ref{sec:fixi:cv}).
 
 One can imagine simultaneous primitive recursion (|msimpr0|),
 which has additional casting operations, as follows:
-\begin{singlespace}
 \begin{code}
 msimpr0 :: (forall r1 r2  .   (r1 -> r2 -> a)      -- recursive call
                           ->  (r1 -> Mu0 f1)       -- cast1
@@ -103,9 +99,7 @@ msimpr0 :: (forall r1 r2  .   (r1 -> r2 -> a)      -- recursive call
                           ->  f1 r1 -> f2 r2 -> a) -> Mu0 f1 -> Mu0 f2 -> a
 
 msimpr0 phi (In0 x1) (In0 x2) = phi (msimpr0 phi) id id x1 x2
-\end{code}
-\end{singlespace}
-~\vspace{-1.5em}\\
+\end{code}\noindent
 To extend primitive recursion (|mprim0|), which has has only
 one casting operation, into simultaneous primitive recursion,
 multiple casting operations are needed -- one for each of recursive arguments.

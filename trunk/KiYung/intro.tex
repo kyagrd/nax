@@ -2,18 +2,18 @@
 
 In this dissertation, we contribute to answering the question:
 ``how does one build a seamless system where programmers can both
-write (functional) programs and formally reason about those programs''.
+write (functional) programs and formally reason about those programs?''
 We set the scope of our research by clarifying what we mean by
 \emph{programming} and \emph{formal reasoning}, and
 how they are related (\S\ref{sec:intro:scope}).
-We motivate our research by describing the gap between
+We outline the motivations our research by describing the gap between
 typical design choices made in functional programming languages
 and formal reasoning systems (\S\ref{sec:intro:motiv}),
 and assert the thesis (\S\ref{sec:intro:thesis}).
-We introduce preliminary concepts of Mendler-style recursion schemes
+We introduce the preliminary concepts of Mendler-style recursion schemes
 and term-indexed types (\S\ref{sec:intro:concepts}), and highlight
-the contributions of the thesis research (\S\ref{sec:intro:contrib}).
-Lastly, we close this chapter by giving an overview of
+the contributions of this dissertation (\S\ref{sec:intro:contrib}).
+We close this chapter by providing an overview of
 the chapter organization (\S\ref{sec:intro:overview}).
 
 \section{Programming and Formal Reasoning}\label{sec:intro:scope}
@@ -21,16 +21,16 @@ the chapter organization (\S\ref{sec:intro:overview}).
 In this dissertation, \emph{programming} refers to writing programs in
 modern functional programming languages (\eg, Haskell, ML) that support
 (recursive) datatypes, higher-order functions, (parametric) polymorphism,
-and type inference. When we say \emph{functional programming languages},
+and type inference. When we refer to \emph{functional programming languages},
 \emph{functional languages}, or \emph{programming languages},
-we mean such languages. We do not consider, so called, dynamically typed
+we mean such languages. We do not consider so-called dynamically typed
 functional languages (\eg, Lisp, Erlang) in this dissertation.
 
-\emph{Formal reasoning}, or \emph{logical reasoning},
-refers to constructing proofs with depend\-ently-typed formal reasoning systems
+\emph{Formal reasoning} or \emph{logical reasoning} refers to the construction
+of proofs with dependently-typed formal reasoning systems
 (\eg, Coq, Agda) that support (inductive) datatypes, higher-order functions,
 polymorphism (\ie, type arguments to type constructors), and
-dependent types (\ie, term arguments to type constructors). When we say
+dependent types (\ie, term arguments to type constructors). In referring to
 \emph{formal reasoning systems}, \emph{logical reasoning systems},
 or, simply \emph{reasoning systems}, we mean such systems.
 
@@ -38,7 +38,7 @@ Functional languages and reasoning systems are closely related.
 Proofs in reasoning systems are similar in structure to programs
 in functional languages. For example, the Haskell program \textit{id},
 which computes a value of type $A$ when given a value of type $A$,
-and, the Agda proof \textit{id}, which proves that the proposition $A$
+and, the Agda proof \textit{id}, which proves that proposition $A$
 is true when given a proof of $A$, are very similar:
 \begin{center}
 \begin{singlespace}
@@ -56,60 +56,60 @@ is true when given a proof of $A$, are very similar:
 \end{center}\vspace*{.5em}
 \index{Curry--Howard}
 Such similarities are not accidental but intended by the design of
-reasoning systems, based on the observation that proofs corresponds
-to programs and propositions corresponds to types. This observation
-is known as the Curry--Howard correspondence \cite{Howard69}.
-We explain some of the preliminary concepts necessary to understand
-the Curry--Howard correspondence in the following subsections.
+reasoning systems, based on the observation that proofs correspond to
+programs and propositions correspond to types. This observation
+is called the Curry--Howard correspondence \cite{Howard69}.
+In the following subsections, we explain a few preliminary concepts
+necessary for understanding the Curry--Howard correspondence
 
 We assume that readers are familiar with programming
 in functional languages, basic concepts of lambda calculi
 (\eg, $\beta$-reduction, normal forms) and type theory
 (i.e., familiar with describing typing rules in the inference rule format).
-We also assume that the readers understand basic concepts of logic
-(\eg, axioms, inference, and proofs) but not necessary familiar with
+Moreover, we assume that the readers understand basic concepts of logic
+(\eg, axioms, inference, and proofs) but are not necessarily familiar with
 formal reasoning systems.
 
 \subsection{The Curry--Howard correspondence}
 \index{Curry--Howard}
-In late 1960s, \citet{Howard69} observed that intuitionistic natural deduction,
-which is a proof system of a formal logic, and a typed lambda calculus,
-which is a model of computation, are directly related. This relation,
-known as the Curry--Howard correspondence, is established as follows:
+In the late 1960s, \citet{Howard69} observed that intuitionistic
+natural deduction, which is a proof system for a formal logic,
+and a typed lambda calculus, which is a model of computation,
+are directly related. This relationship, known as
+the Curry--Howard correspondence, is established as follows:
 \begin{itemize}
 \item A proposition in natural deduction corresponds to
-        a type in the lambda calculus.
-\item A proof for the proposition corresponds to
-        a term of that type.
+        a type in lambda calculus.
+\item A proof for a proposition corresponds to a term of that type.
 \item Simplification of proofs corresponds to computation,
         that is, simplification of terms.
 \end{itemize}
 Once these are established, we can formalize the logic within
 one unified language system by internally witnessing proofs as terms
-(or, programs) since we consider \emph{``propositions as types''}.\footnote{
+(or, programs) because we consider \emph{``propositions as types''}.\footnote{
 	Coq and Agda are based on the Curry--Howard correspondence.}
 In contrast, in a more traditional approach, where one represents
 \emph{``propositions as terms''},\footnote{
 	HOL family is based on this more traditional approach.}
 one needs a meta-language other than the object language for logic,
 which is an extension of lambda calculus with logical constants
-and connectives, for constructing proofs.
+and connectives, in order to construct proofs.
 
 We explain this correspondence with a very simple
 version of intuitionistic natural deduction and
-a simply typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
+a simply-typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
         Readers who are familiar with the literature on natural deduction
         might notice that the left column in Figure\;\ref{fig:nd} is not in
         the same style as the natural deduction formalized by
         \citet{Gentzen35,Gentzen69}. It has styles similar to
-        both natural deduction and the sequent calculus. The context $\Gamma$
-        is part of the judgement syntax as in the sequent calculus. Instead
-        of syntactic structural rules (like weakening,
-        contraction, permutation) of the sequent calculus, we simply rely on
+        both natural deduction and sequent calculus. The context $\Gamma$
+        is part of the judgement syntax as in sequent calculus. Instead
+        of the syntactic structural rules (such as weakening,
+        contraction, permutation) of sequent calculus, we simply rely on
         $A^x \in \Gamma$ to use the hypothetical propositions from $\Gamma$.
         We choose to formalize natural deduction this way to emphasize
         the structural similarities to the typical formalization
-        of typing rules for the lambda calculi.
+        of typing rules of lambda calculi.
 
 	Traditionally, in \emph{Hilbert-style deduction}, a logic is formalized
 	by a minimal set of inference rules (\eg, modus ponens
@@ -117,19 +117,20 @@ a simply typed lambda calculus (Figure\;\ref{fig:nd}).\footnote{
 	and a set of axiom schemes (\eg, $A -> A$ and $A -> (B -> A)$ where
 	the meta-variables $A$ and $B$ can be instantiated to arbitrary
 	propositions).
-	\emph{Natural deduction}, on the other hand, is another style of
-	formalizing logic mostly by a set of inference rules and a minimal
-	(often empty) set of axiom schemes.
+	\emph{Natural deduction}, in contrast, is another style of
+	formalizing logic mostly by using a set of inference rules and
+	a minimal (often empty) set of axiom schemes.
 	}
 There are many variations of formal logic based on natural deduction
-(and also their corresponding typed lambda calculi) depending on
+(and their corresponding typed lambda calculi) depending on
 the set of logical connectives, constants, and quantifiers they support.
-We illustrate a intuitionistic natural deduction with implication ($->$) and
-falsity ($\bot$), and, its corresponding simply typed lambda calculus (STLC)
-in Figure\;\ref{fig:nd}. The implication and the falsity in natural deduction
-correspond to the function type ($->$) and the void type ($\bot$) in the STLC.
+We show an example of intuitionistic natural deduction with
+implication ($->$) and falsity ($\bot$), as well as its corresponding
+simply-typed lambda calculus (STLC) in Figure\;\ref{fig:nd}.
+The implication and the falsity in natural deduction
+correspond to the function type ($->$) and the void type ($\bot$) in STLC.
 In the inference rules (\rulename{Ax}) and (\rulename{$->_\textsc{I}$}),
-$x$ on $A^x$ is a meta-tag to distinguish between possibly multiple
+$x$ on $A^x$ is a meta-tag for distinguishing between multiple possible
 occurrences of $A$ in $\Gamma$ (\eg, $\Gamma = A^{x_1},B^{x_2},A^{x_3}$).
 
 \begin{figure}
@@ -148,27 +149,26 @@ occurrences of $A$ in $\Gamma$ (\eg, $\Gamma = A^{x_1},B^{x_2},A^{x_3}$).
 \end{array}
 \]
 \caption{Intuitionistic natural deduction with implication and falsity,
-        and its corresponding simply typed lambda calculus.}
+        and its corresponding simply-typed lambda calculus.}
 \label{fig:nd}
 \end{figure}
 
 Note that each typing rule (in the right column) has exactly the same structure
-as its corresponding inference rule (in the left column), except for
+as its corresponding inference rule (in the left column), with the exception of
 the variables and terms appearing on the left-hand side of the colon
-(\eg, $x$ in $x:A$ and $t$ in $t:A -> B$). So, a type-correct term,
+(\eg, $x$ in $x:A$ and $t$ in $t:A -> B$). Therefore, a type-correct term,
 which is justified by the derivation following the typing rules of
-the lambda calculus, captures the structure of its corresponding proof
+lambda calculus, captures the structure of its corresponding proof
 by natural deduction. For instance, $(\l x. x)$ is a term that captures
-the structure of a proof for $A -> A$.
-For this reason, such type-correct terms in reasoning systems
-are called proof terms, proof objects, or simply proofs.
+the structure of a proof for $A -> A$. For this reason, such type-correct terms
+are called proof terms, proof objects, or simply proofs in reasoning systems.
 
-We explained that proofs and propositions in the natural deduction
-correspond to terms and types in the lambda calculus. Lastly,
+We explained that proofs and propositions in natural deduction
+correspond to terms and types in lambda calculus. Lastly,
 we need to show the correspondence between simplification of proofs
 and simplification of terms (\ie, computation) in order to establish
-the Curry--Howard correspondence between the natural deduction
-and the lambda calculus.
+the Curry--Howard correspondence between natural deduction
+and lambda calculus.
 
 There can be multiple proofs for the same proposition, and,
 correspondingly, there can be more than one term of the same type.
@@ -176,7 +176,7 @@ Some of these terms are closely related while others are rather independent.
 For example, $\l x_1.\l x_2.x_1$ and $\l x_1.\l x_2.x_2$ are rather 
 independent terms that inhabit the same type $A -> A -> A$.
 The typing derivations for these terms (right column) and
-its corresponding proofs (left column) are illustrated in
+their corresponding proofs (left column) are illustrated in
 Figure\;\ref{fig:proofAAA}.
 \begin{figure}
 \[\setpremisesend{.1em}
@@ -222,23 +222,22 @@ Figure\;\ref{fig:proofAAA}.
         {|- \l x_1.\l x_2.x_2 : A -> A -> A }
 \]
 \caption{Typing derivations (right) for terms of type $A -> A -> A$
-	 in the STLC and their corresponding proofs (left) in
-         the natural deduction.}
+	 in STLC and their corresponding proofs (left) in natural deduction.}
 \label{fig:proofAAA}
 \end{figure}
 
 On the other hand, there are closely related terms of the same type.
 For example, $(\l x_1.x_2) x_3$ reduces to $x_2$ by a $\beta$-reduction step
-(\ie, $(\l x_1.x_2) x_3 -->_\beta x_2$). A term like $x_2$, which does not
+(\ie, $(\l x_1.x_2) x_3 -->_\beta x_2$). A term such as $x_2$, which cannot
 ($\beta$-)reduce any further, is called a ($\beta$-)\emph{normal form} or
 a ($\beta$-)\emph{normal term}. \citet{Pra65} established a notion of
 reduction and normalization for natural deduction. One can reduce a proof
-when there is a consecutive use of introduction and elimination rules.
+when there are consecutive uses of introduction and elimination rules.
 An introduction rule introduces a certain form of proposition
 in the conclusion (below the horizontal bar), and, an elimination rule
 uses propositions of that form in the premises (above the horizontal bar).
 The rules (\rulename{$->_\textsc{I}$}) and (\rulename{$->_\textsc{E}$})
-are introduction and elimination rules for implication ($->$).
+are introduction and elimination rules, respectively, for implication ($->$).
 So, we need to show the correspondence between reduction of proofs
 over implication in the natural deduction and reduction over
 type-correct terms in the lambda calculus,
@@ -253,11 +252,11 @@ corresponds to the $\beta$-reduction of well-typed terms.\footnote{
         (\ie, $(\l x. t\;x) -->_\eta t$ where $x$ does not appear free in $t$).
         In this dissertation, we only consider $\beta$-reduction.}
 To reduce the proof, we replace the uses of $A^x$ in the premise of
-$(->_\textsc{I})^x$ with the derivations $D'$, which deduces $A$ from
+$(->_\textsc{I})^x$ with derivation $D'$, which deduces $A$ from
 the original context $\Gamma$, so that we can remove $A^x$ from
 the left-hand sides of the turnstile ($|-$) throughout the proof.
 The change of subscripts from $\mathcal{D}_{[\Gamma,A^x]}$ to
-$\mathcal{D}_{[\Gamma]}$, before and after the reduction,
+$\mathcal{D}_{[\Gamma]}$ before and after the reduction
 denotes that we consistently remove $A^x$ from the context
 (\ie, left-hand sides of $|-$). We leave it as an exercise for
 the readers to construct a corresponding proof for the reduction
@@ -324,29 +323,29 @@ Reduction of a well-typed term along with its typing derivation:
 
 We illustrated the Curry--Howard correspondence between
 a minimal intuitionistic logic and its corresponding lambda calculus
-In Figure\;\ref{fig:nd}. That is, a proposition, its proof, and
-simplification of proofs (or, proof reduction) corresponds to
-a term, its type, and simplification of terms (or, computation).
-The first and second pieces of the correspondence, a proposition and
-its proof corresponding to a term and its type, is quite obvious from
-the structural similarity between the inference rules and the typing rules.
-The last piece of the correspondence, between proof reduction and computation,
-needs further analysis on the introduction and elimination rules.
+in Figure\;\ref{fig:nd}. That is, a proposition, its proof, and
+simplification of proofs (or proof reduction) correspond to
+a term, its type, and simplification of terms (or, computation), respectively.
+The first and second pieces of the correspondence --- a proposition and
+its proof corresponding to a term and its type --- are quite evident from
+the structural similarity between inference rules and typing rules.
+The last piece of the correspondence between proof reduction and computation
+needs further analysis of the introduction and elimination rules.
 We illustrated the correspondence between proof reduction over implication and
-$\beta$-reduction, which describes the computation over function applications,
+$\beta$-reduction, which describes computation over function applications,
 in Figure \ref{fig:proofreduce}. The correspondence between
-the proof reduction over falsity and the computation over the void type
+proof reduction over falsity and computation over the void type
 hold vacuously. There is no proof reduction and computation over $\bot$
-since it lacks the introduction rule -- it only has the elimination rule
+because it lacks the introduction rule --- it only has the elimination rule
 (\rulename{$\bot_\textsc{E}$}).
 
 \subsection{Logical consistency and strong normalization}
 \index{consistent}
 \index{logical consistency}
 A logic is \emph{consistent} when not all propositions are provable.
-This property, \emph{logical consistency}, is absolutely necessary for
-a logic to be meaningful, that is, to be able to justify true propositions
-and refute false propositions. A standard way to show logical consistency
+\emph{Logical consistency}, is absolutely necessary for a logic
+to be meaningful, that is, to be able to justify true propositions
+and refute false propositions. A standard way of showing logical consistency
 is to find a sound model\footnote{In this dissertation, we mean \emph{logic}
         in a proof theoretic sense. A model is sound with respect to logic
         described by a proof system when any provable proposition
@@ -358,28 +357,29 @@ For instance, to show that the logic described in Figure\;\ref{fig:nd}
 is consistent, we would construct a sound model such that the meaning of $\bot$
 is a falsity value. Using the Curry--Howard correspondence, we can construct
 a model for the logic using the syntactic structure of its corresponding
-lambda calculus. For instance, we can define the interpretation $[|A|]$ for
-the proposition $A$ as the set of terms of type $A$ in the lambda calculus.
-In a model following such interpretations, empty set would be the falsity value.
-Then, we can show that there exists no closed terms in $[|\bot|]$,
-which implies that $|- \bot$ cannot be proved. In Chapter\;\ref{ch:poly},
-we construct models for several lambda calculi based on this idea of
-interpreting propositions (or, types) as sets of well-typed terms.
-Since the scope of our research is for reasoning systems, which are based on
-the Curry--Howard correspondence, most of our descriptions will be in terms of
-lambda calculi, without mentioning their corresponding natural deduction
-counterparts.
+lambda calculus. For instance, we can define interpretation $[|A|]$ for
+proposition $A$ as the set of terms of type $A$ in lambda calculus.
+In a model following such interpretations, the empty set would be
+the falsity value.  Then, we can show that there exist no closed terms
+in $[|\bot|]$, which implies that $|- \bot$ cannot be proved.
+In Chapter\;\ref{ch:poly}, we construct models for several lambda calculi
+based on this idea of interpreting propositions (or, types) as sets of
+well-typed terms. Given that the scope of our research includes
+reasoning systems that are based on the Curry--Howard correspondence,
+most of our descriptions will be in terms of lambda calculi, without
+mentioning their corresponding natural deduction counterparts.
 %% Because of this correspondence, we will use \emph{lambda calculus}
 %% and \emph{natural deduction system} interchangeably.
 
 \index{normalization}
 \index{strong normalization}
-Construction of such models typically assume strong normalization of
-the lambda calculus.\footnote{Strong normalization is a property that
-all well-typed terms reduce to their normal form regardless of
-the reduction strategy (\ie, choice of which redex to reduce first).}
-In the models we construct in Chapter\;\ref{ch:poly},
-the interpretation $[| A |]$ for the type $A$ is inductively defined as follows:
+In the construction of such models of lambda calculus, we typically assume
+strong normalization.\footnote{
+	Strong normalization is a property that
+	all well-typed terms reduce to their normal form regardless of
+	the reduction strategy (\ie, choice of which redex to reduce first).}
+	In the models we construct in Chapter\;\ref{ch:poly},
+the interpretation $[| A |]$ for type $A$ is inductively defined as follows:
 \begin{itemize}
         \item Base case: normal forms of type $A$ are in $[| A |]$
         \item Inductive case: if $t' \in [| A |]$ and $t -->_\beta t'$
@@ -388,16 +388,16 @@ the interpretation $[| A |]$ for the type $A$ is inductively defined as follows:
 That is, interpretations of types are ($\beta$-)equivalence classes of their
 well-typed normal forms.
 We show that each of the calculi in Chapter\;\ref{ch:poly} are
-logically consistent by showing that there is no closed term
+logically consistent by demonstrating that there is no closed term
 in the interpretation of the void type.
 %% (\ie, $\iota$ in the STLC (\S\ref{sec:stlc}) and $\forall a.a$ in
 %% the polymorphic lambda calculi (\S\ref{sec:f},\S\ref{sec:fw})).
 
 When we admit diverging (or, non-terminating) terms in a lambda calculus,
-the definition for interpretations of types would become more complicated,
-and we cannot establish the Curry--Howard correspondence, because those
+the definition of type interpretations becomes more complicated and
+we cannot establish the Curry--Howard correspondence, because those
 diverging terms cannot be considered as proofs in general. In fact,
-it is well-known that functional languages are logically inconsistent,
+it is well-known that functional languages are logically inconsistent
 if we try to view diverging terms (\ie, non-terminating programs)
 in functional languages as proofs using a naive Curry--Howard correspondence.
 For example, the non-terminating program defined as
@@ -405,10 +405,10 @@ $\textit{loop} = \textit{loop}$ in Haskell can inhabit arbitrary types
 (even $\forall a.a$, which is the polymorphic encoding of the void type).
 Intuitively, such non-terminating programs correspond to logical fallacies of
 circular reasoning (\ie, arguing something by assuming the same thing).
-For this reason, reasoning systems are designed to be strongly normalizing,
-unlike functional languages. We also limit the scope of our research to
-strongly normalizing languages since one of the design goals for our language
-system is logically consistency under the Curry--Howard correspondence.
+Therefore, reasoning systems are designed to be strongly normalizing,
+unlike functional languages. Moreover, we limit the scope of our research to
+strongly normalizing languages because one of the design goals of our language
+system is achieving logical consistency under the Curry--Howard correspondence.
 
 %% \footnote{
 %%      There are some recent studies (\eg, \cite{BauSto09})
@@ -420,15 +420,14 @@ system is logically consistency under the Curry--Howard correspondence.
 
 \subsection{Datatypes and recursion schemes}
 \label{ssec:intro:scope:datarec}
-Both functional languages and reasoning systems support many other
-language constructs than those supported by the lambda calculus
-in Figure\;\ref{fig:nd}. Among those constructs, datatypes and
-recursion are the most common and the most essential.
-Datatype definitions in both programming languages and reasoning systems
-have the form of disjoint sums (over several data constructors) of products
-(of the argument types for each data constructor). For example, in Haskell,
-we can define a datatype (\textit{Diagram}) that defines a diagram,
-which is either empty (\textit{Empty}),
+Both functional languages and reasoning systems support other
+language constructs in addition to those supported by the lambda calculus.
+Among those constructs, datatypes and recursion are the most common and
+the most essential. Datatype definitions in both programming languages and
+reasoning systems have the form of disjoint sums (over several data
+constructors) of products (of the argument types for each data constructor).
+For example, in Haskell, we can define a datatype (\textit{Diagram})
+that defines a diagram, which is either empty (\textit{Empty}),
 a point (\textit{Point}) defined by a single coordinate,
 a line segment (\textit{LineSeg}) defined by two coordinates, or
 a triangle (\textit{Triangle}) defined by three coordinates, as follows:
@@ -436,7 +435,7 @@ a triangle (\textit{Triangle}) defined by three coordinates, as follows:
 %%         We can also define \textit{Coord} as a non-recursive datatype
 %%         and understand it as a product of numbers, but here, you can just
 %%         consider \textit{Coord} given as primitive type for simplicity.}
-\vspace*{-4em}
+\vspace*{-2em}
 \begin{singlespace}
 \begin{verbatim}
   data Diagram = Empty
@@ -445,17 +444,17 @@ a triangle (\textit{Triangle}) defined by three coordinates, as follows:
                | Triangle Coord Coord Coord
 \end{verbatim}
 \end{singlespace}~\vspace*{-2.5em}\\
-In type theory, we can understand the datatype above as a sum of products
+In type theory, we can understand the above datatype as a sum of products
 \[ \textit{Diagram} ~ \triangleq ~
         \textit{Unit} + \textit{Coord} + (\textit{Coord} \times \textit{Coord})
         + (\textit{Coord} \times \textit{Coord} \times \textit{Coord}) \]
 where $+$ and $\times$ are binary operators for sums and products and
 \textit{Unit} is the identity for products. Non-recursive datatypes, excluding
 dependent types (\ie, types indexed by terms), in reasoning systems can be
-understood in the same way.
+understood in the same manner.
 It is well-known that the Curry--Howard correspondence holds between
-the type operators, sum ($+$) and product ($\times$), and
-the logical connectives, disjunction ($\lor$) and conjunction ($\land$).
+type operators, sum ($+$), and product ($\times$), and,
+the logical connectives, disjunction ($\lor$), and conjunction ($\land$),
 
 \begin{figure}
 \begin{singlespace}
@@ -468,7 +467,7 @@ Datatypes in reasoning systems
 Datatypes may involve diverging computations         
 (\eg, functions defined by general recursion)
 &
-The Curry--Howard correspondence must holds for all datatypes
+Curry--Howard correspondence must holds for all datatypes
 \\ \hline
 Type constructors may have type arguments
 &
@@ -477,13 +476,13 @@ as well as type arguments
 \end{tabular}
 \end{singlespace}
 \caption{Comparison of datatypes in functional languages
-        and datatypes reasoning systems.}
+        and datatypes in reasoning systems.}
 \label{fig:datadiff}
 \end{figure}
 
-We summarized the different characteristics between the datatypes
-in functional languages and the datatypes in reasoning systems
-in Figure\;\ref{fig:datadiff}. Our approach on datatypes is to find
+In Figure\;\ref{fig:datadiff}, we summarize the different characteristics
+between the datatypes in functional languages and
+the datatypes in reasoning systems. Our approach on datatypes is to find
 a common middle ground balancing between the desired properties of
 functional languages (few restrictions on datatype definitions) and
 reasoning systems (logical consistency, term indices).
@@ -491,7 +490,7 @@ When we exclude general recursion from functional languages and
 exclude dependent types from reasoning systems, non-recursive datatypes
 in functional languages and reasoning systems coincide.
 However, for datatypes that are defined recursively (or inductively),
-the situation is more subtle -- they do not coincide even when
+the situation is more subtle --- they do not coincide even when
 we disregard general recursion and dependent types.
 
 \index{datatype!recursive}
@@ -507,7 +506,7 @@ Any syntactically valid\footnote{
         For those who are not familiar with the use of kinds in type systems, 
         we discuss them in later chapters, such as
         in \S\ref{sec:fw} where we describe System \Fw.}
-datatype definition is admitted as a valid type. On the other hand,
+datatype definition is admitted as a valid type. In contrast,
 inductive datatypes in reasoning systems have additional restrictions.
 Only those datatypes for which the Curry--Howard correspondence hold are
 admitted. Some recursive datatypes, admitted as valid in functional languages,
@@ -535,24 +534,24 @@ the Haskell datatype $T$ below would not be admitted in a reasoning system.
 \index{covariant}
 \index{contravariant}\noindent
 Surprisingly (if you hadn't known), we can encode the well known
-general recursive combinator (\textbf{fix}, \aka\ the \textsf{Y}-combinator)
+general recursive combinator \textbf{fix} (\aka\ \textsf{Y}-combinator)
 using a datatype recursive on a contravariant position (\ie, left-hand side of
 $->$), without using any recursion at the term-level.
 Datatypes that are recursive only over covariant\footnote{Type arguments
         without $->$ are by default in covariant positions. Right-hand sides
-        of $->$ are covariant, and, a contravariant position of
+        of $->$ are covariant and a contravariant position of
         a contravariant position (\eg, $A$ in $(A -> B) -> B$) is
-        also covariant.}
+        covariant as well.}
 positions are called \emph{positive datatypes}, and, datatypes that
 are recursive over one or more contravariant positions are called
 \emph{negative datatypes}. Negative datatypes are not admitted
-in reasoning systems since they might cause non-termination,
+in reasoning systems because they might cause non-termination,
 as illustrated above. Recall that the Curry--Howard correspondence
 is established only when proofs are normalizing.
 \index{datatype!positive}
 \index{datatype!negative}
 
-A process for the design of reasoning systems can be summarized as follows: 
+A process for designing reasoning systems can be summarized as follows: 
 start from a strongly normalizing and logically consistent calculus,
 add language extensions, and then theoretically justify that those extensions
 do not break normalization and consistency. Datatypes and their recursion
@@ -564,21 +563,21 @@ schemes are one of the most common and significant extensions.
 % a model including interpretations for datatypes and their recursion schemes,
 % which is more complex than the model for the lambda calculus without datatypes.
 Each recursive datatype admitted under the Curry--Howard correspondence
-comes with a recursion scheme in the calculus, or, an induction principle
+comes with a recursion scheme in the calculus or an induction principle
 in the logic.\footnote{
         Induction principles provided in reasoning systems are
-        dependently typed. Disregarding dependent types, these
+        dependently-typed. Disregarding dependent types, these
         induction principles are computationally equivalent to
         recursion schemes such as primitive recursion,
         course-of-values recursion, or lexicographic recursion.
         Since we do not consider dependent types, we will only discuss
-        those non-dependently typed recursion schemes.}
+        those non-dependently-typed recursion schemes.}
 The reduction step for a recursion scheme in the calculus should follow
 from the Curry--Howard correspondence over the recursive types, just as
-the $\beta$-reduction follows from the Curry--Howard correspondence
+$\beta$-reduction follows from the Curry--Howard correspondence
 over function types.
 
-There are two ways of ensuring normalization for datatypes and
+There are two approaches for ensuring normalization of datatypes and
 their recursion schemes. One is to restrict datatype definitions
 (\ie, formation rules) and the other is to restrict the use of datatypes
 (\ie, elimination rules).
@@ -588,38 +587,38 @@ their recursion schemes. One is to restrict datatype definitions
 The former approach, also known as the \emph{conventional}\footnote{
         We adopted the word ``\emph{conventional}'' from the literature
         on Mendler style (\eg, \cite{AbeMat04}).}
-approach, is taken by most reasoning systems (\eg, Coq, Agda) and the studies
+approach, is used in most reasoning systems (\eg, Coq, Agda) and studies
 on terminating recursion schemes in functional languages following
 the Squiggol school of constructive programming \cite{AoP,hagino87phd,Bir87}.
 The conventional approach restricts the definition of datatypes and
-the key mechanism to check termination of recursion schemes are based on
+the key mechanisms of checking termination of recursion schemes are based on
 size decreasing arguments in an untyped setting. We rely on the assumption
 that recursive values contained inside a data constructor are always
-smaller than the value which contains them. This assumption holds due to
-the positivity restriction put on datatype definitions. However, measuring
+smaller than the value which contains them. This assumption holds because of
+the positivity restriction on datatype definitions. However, measuring
 size by structural containment does not always hold for negative datatypes.
 
 \index{Mendler-style}
 \index{non-conventional}
 The latter non-conventional approach, known as the \emph{Mendler-style}
-approach, puts no restrictions on the definition of datatypes, but instead,
+approach, puts no restrictions on datatype definitions, but instead,
 carefully restricts the use of data values. In particular, the decomposition
-(\ie, elimination, or, pattern matching) of recursive values are restricted.
+(\ie, elimination, or, pattern matching) of recursive values is restricted.
 In this approach, theoretical development for termination of recursion schemes
 is type based. Instead of treating datatypes as primitive language constructs,
 datatypes and their recursion schemes are embedded into a typed lambda calculus,
 which is proven to be strongly normalizing and logically consistent.
-Then, there is no extra theoretical burden to establish
-the Curry--Howard correspondence for datatypes, because datatypes are encoded
-using the basic primitives of the lambda calculus, for which we know,
-the Curry--Howard correspondence already hold. In addition, there is no need
+Then, there is no extra theoretical burden for establishing
+the Curry--Howard correspondence for datatypes because the datatypes are
+encoded using the basic primitives of the lambda calculus, for which we already
+know that the Curry--Howard correspondence hold.s In addition, there is no need
 for any extra mechanism, other than type checking, to ensure termination of
-the recursion schemes. We take this non-conventional approach for our language
+the recursion schemes. We adopt this non-conventional approach for our language
 system design.
 
-Further details on the conventional approach and the Mendler-style approach
+Further details on conventional approach and Mendler-style approach
 for terminating recursion schemes are discussed in \S\ref{sec:intro:concepts}
-and in Chapter\;\ref{ch:mendler}. From now on, we develop our discussions
+and Chapter\;\ref{ch:mendler}. From now on, we develop our discussions
 from the perspective of recursive datatypes. That is, when we need to describe
 inductive datatypes, we consider them as recursive datatypes with additional
 restrictions on their formation.
@@ -631,13 +630,13 @@ one can both write programs (\ie, model computation) and formally reason about
 (\ie, construct proofs of) the properties (\ie, types) of those programs.
 
 However, building a practical system that unifies programming and
-formal reasoning, based on the Curry--Howard correspondence, is still
+formal reasoning based on the Curry--Howard correspondence remails
 an open research problem. The gap between the conflicting design goals of
 typed functional programming languages, such as ML and Haskell, and
 formal reasoning systems, such as Coq and Agda, is still wide.
 As discussed in the previous section, one of the difficulties is
-that datatypes admitted in functional languages and in reasoning systems
-do not completely coincide.
+that datatypes admitted in functional languages and those admitted
+in reasoning systems do not coincide completely.
 
 \begin{itemize}
 
@@ -646,7 +645,7 @@ Programming languages are designed to achieve computational expressiveness,
 for which they often sacrifice logical consistency.
 Programmers should be able to conveniently express all possible computations,
 regardless of whether those computations have a logical interpretation
-(by the Curry--Howard correspondence) or not.
+(by the Curry--Howard correspondence).
 
 \item
 Formal reasoning systems are designed to achieve logical consistency,
@@ -654,44 +653,43 @@ for which they often sacrifice computational expressiveness.
 Users expect that it is only possible to prove true propositions
 but impossible to prove falsity. They are willing to live with
 the difficultly (or even inability) to express certain computations
-within the reasoning system in order to achieve logical consistency.
+within the reasoning system for achieving logical consistency.
 
 \end{itemize}
 
-As a result, the recursion schemes of programming languages and
+Consequently, the recursion schemes of programming languages and
 formal reasoning systems differ considerably.
 Programming languages provide unrestricted general recursion
 to conveniently express computations that may or may not terminate.
 Formal reasoning systems provide induction principles for sound reasoning,
-or, in the computational view, principled recursion schemes that can only
-express terminating computation.
+or, from the computational viewpoint, principled recursion schemes that can only
+express terminating computations.
 
 The two different design goals for programming languages and reasoning systems
 are reflected in the design of their type systems, especially regarding
 datatypes and recursion schemes. Programming languages place few restrictions
-on the definition of new datatypes. Programmers can express computations over
-a wide variety of datatypes. In reasoning systems, which are based on
-the conventional approach, additional restrictions are enforced on
-datatype definition, accepting only positive datatypes. In addition,
-most functional programing languages have a clear distinction between
+on the definition of datatypes. Programmers can express computations over
+a wide variety of datatypes. In reasoning systems based on
+conventional approach, additional restrictions are enforced on
+datatype definition --- only positive datatypes are accepted. In addition,
+most functional programing languages have a clearly distinguish between
 terms and types (\ie, terms do not appear in types). In reasoning systems,
-terms can appear in types to specify fine grained properties involving
+terms can appear in types for specifying fine-grained properties involving
 values at the term-level (\eg, size invariants of data structures).
 
 This dissertation explores a sweet spot where one can benefit from
 the advantages of both programming languages and formal reasoning systems.
-That is, we design a unified language system, called Nax, which is
+That is, we design a unified language system called Nax that is
 logically consistent while being able to conveniently express
 many useful computations. We do this by placing few restrictions
 on datatype definitions, as is done in programming languages, but also
-provide a rich set of non-conventional recursion schemes
-(or, induction principles) that always terminate.
+provide a rich set of non-conventional recursion schemes that always terminate.
 These non-conventional recursion schemes are known as
-\emph{the Mendler-style recursion schemes}.\footnote{
+\emph{Mendler-style recursion schemes}.\footnote{
 	We introduce the concepts of conventional and
 	non-conventional recursion schemes in \S\ref{sec:intro:concepts}.}
 Another major design choice in Nax is supporting (non-dependent)
-\emph{term indices} in types, a middle ground, which sits between
+\emph{term indices} in types, a middle ground between
 polymorphic types and dependent types.
 
 In the following section, we clarify what we mean by the sweet spot between
@@ -701,8 +699,8 @@ programming languages and reasoning systems, and assert the thesis.
 %% the goal of combining programming languages and reasoning systems.
 
 \section{Thesis}\label{sec:intro:thesis}
-We characterize the sweet spot of the language design for unifying
-programming and reasoning by these four features:
+We characterize the sweet spot of language design for unifying programming
+and reasoning by supporting the following four features:
 %% Whatever design choices we make, the sweet spot should have
 %% the following features.
 \begin{enumerate}[(1)]
@@ -714,11 +712,11 @@ programming and reasoning by these four features:
 
  \item \textbf{An expressive logic} that can specify
          fine-grained program properties using types,
-         and terms that witness proofs of these properties 
-         (the Curry--Howard correspondence),
+         and terms that witness the proofs of these properties 
+         (Curry--Howard correspondence),
 
- \item \textbf{A small theory} based upon a minimal foundational calculus
-         that is expressive enough to support the programming features,
+ \item \textbf{A small theory} based on a minimal foundational calculus
+         that is expressive enough to support programming features,
          expressive enough to embed propositions and proofs about programs,
          and logically consistent to avoid paradoxical proofs in the logic, and
 
@@ -733,24 +731,24 @@ features.
 
 The following chapters support the thesis as follows:
 Mendler-style recursion schemes support (1) because they are based on
-parametric polymorphism and well-defined over a wide range of datatypes.
+parametric polymorphism and are well-defined over a wide range of datatypes.
 Term-indexed types support (2), because they can statically track
 program properties. For instance the size of data structures can
 be tracked by using a natural number term in their types.
-To support (3), we design several foundational calculi, each which extends
+To support (3), we design several foundational calculi, each of which extends
 a well known polymorphic lambda calculus with term-indexed types.
-Mendler-style recursion schemes also support (4) because their
-termination is type-based -- no need for an auxiliary termination checker.
+Moreover, Mendler-style recursion schemes support (4) because their
+termination is type-based --- no need for an auxiliary termination checker.
 
 \section{Mendler-style recursion and term-indexed types}
 \label{sec:intro:concepts}
 \index{Mendler-style}
-We give summaries of the preliminary concepts on
+We summarize the preliminary concepts of
 Mendler-style recursion schemes (\S\ref{sec:intro:concepts:mendler})
 and term-indexed types (\S\ref{sec:intro:concepts:indexed}).
-Further details and the historical background on each of these concepts
+Further details and the historical background of each of these concepts
 appears in subsequent chapters (see \S\ref{sec:intro:overview}
-for the overview of chapter organization).
+for an overview of chapter organization).
 
 %% \subsection{The Curry--Howard correspondence and Normalization}
 %% \label{sec:intro:concepts:CH}
@@ -863,22 +861,22 @@ for the overview of chapter organization).
 }
 \end{tabular} }
 \caption{Two different approaches to terminating recursion schemes
-         (in contrast to unrestricted general recursion in functional languages).}
+      (in contrast to unrestricted general recursion in functional languages).}
 \label{fig:approaches}
 \end{figure}
 \index{Curry--Howard}
 \index{normalization}
 Logical reasoning systems establish
 the Curry--Howard correspondence assuming normalization.
-So, one challenge to the successful design of reasoning systems
+So, one challenge in the successful design of reasoning systems
 is how to restrict recursion so that all well-typed terms have normal forms.
-There are two different design choices illustrated
+The two different design choices to this end are shown
 in Figure~\ref{fig:approaches}, in contrast to
 the unrestricted general recursion in functional languages.
 The conventional approach restricts the formation of recursive types
-(\ie, the restriction is in datatype definition), and
+(\ie, the restriction is in datatype definition), whereas
 the Mendler-style approach restricts the elimination of the values of
-recursive types (\ie, the restriction is in pattern matching).
+recursive types (\ie, restrict pattern matching).
 \index{Mendler-style}
 
 \paragraph{Recursive types in functional programming languages.}
@@ -887,30 +885,33 @@ in functional programming languages.
 %% Since functional languages
 %% are not expected to be normalizing, restrictions are few.
 
-Just as we can capture the essence of unrestricted general recursion at term
-level, by a fixpoint operator (usually denoted by \textsf{Y} or \textbf{fix}),
-we can capture the essence of recursive types by the
-use of a recursive type operator, $\mu$, at the type-level. 
+\index{fixpoint}
+\index{fixpoint!type}
+\index{fixpoint!term}
+Just as we can capture the essence of unrestricted general recursion
+at the term level by using a fixpoint operator (usually denoted by \textsf{Y}
+or \textbf{fix}), we can capture the essence of recursive types by the
+using a recursive type operator $\mu$ at the type-level. 
 The rules for the formation {\small($\mu$-form)},
 introduction {\small($\mu$-intro)}, and elimination {\small($\mu$-elim)} of
 the recursive type operator $\mu$ are described in Figure \ref{fig:approaches}.
-We also need a reduction rule {\small(\unIn-\In)}, which relates \In,
+We also need a reduction rule {\small(\unIn-\In)} that relates \In,
 the data constructor for recursive types, and \unIn, the destructor for
 recursive types, at the term-level.
 
-The recursive type operator, $\mu$, as described in Figure \ref{fig:approaches},
+The recursive type operator $\mu$ described in Figure \ref{fig:approaches},
 is already powerful enough to express non-terminating programs, even without
-introducing the general recursive {\em term} operator, \textbf{fix},
-to the language. We illustrate this below.\footnote{This is essentially
+introducing the general recursive {\em term} operator \textbf{fix}
+into the language. We illustrate this below.\footnote{This is essentially
         the same example we discussed in \S\ref{ssec:intro:scope:datarec},
         but this time using $\mu$.}
-First, here is a short reminder of how a fixpoint at the term-level operates.
+First, here is a short reminder of how a fixpoint at the term-level works.
 The typing rule and the reduction rule for \textbf{fix} can be given as follows:
 \[ \text{typing:}~ \inference{\Gamma |- f : A -> A}{\textbf{fix}\,f : A}
  \qquad\qquad
    \text{reduction}:~ \textbf{fix}\,f \rightsquigarrow f(\textbf{fix}\,f)
 \]
-We can actually implement \textbf{fix}, using $\mu$, as follows
+We can actually implement \textbf{fix} using $\mu$ as follows
 (using Haskell-like syntax):
 \begin{align*}
 & \textbf{data}~T\;a\;r = C\;(r -> a) \quad
@@ -930,42 +931,41 @@ We can actually implement \textbf{fix}, using $\mu$, as follows
 Thus, we need to alter the rules for $\mu$ in someways to guarantee termination.
 One way is to restrict the rule {\small $\mu$-form} and
 the other way is to restrict the rule {\small $\mu$-elim}.
-Once we decide on which rule to put restrictions, the design of
-principled recursion combinators (\eg, \It\ for the former
-and \MIt\ for the latter) follows from that choice.
+The design of principled recursion combinators (\eg, \It\ for the former
+and \MIt\ for the latter) follows from the choice of the rule to restrict..
 
 \paragraph{Positive (recursive) datatypes and negative (recursive) datatypes.}
 \index{datatype!positive}
 \index{datatype!negative}
-Positive datatypes have recursion only in covariant positions.
+Positive datatypes are recursive on only covariant positions.
 For example, $\mu\,T_2$, where $\textbf{data}\;T_2 \; r = C_2\,(Bool -> r)$,
 is a positive datatype since the recursive argument $r$ in
-the base structure $T_2$ only appears in the covariant position.
+the base structure $T_2$ appears only in the covariant position.
 Recursive datatypes that have no function arguments are by default
 positive datatypes. For instance, the natural number datatype $\mu\,N$,
 where $\textbf{data}\,N\,r=S\,r \mid Z$, is a positive datatype.
 
 Negative datatypes have recursion in contravariant positions.
 Note that $\mu(T\;a)$ in the example above is a negative datatype
-since the recursive argument $r$ in the base structure $T$ appears
+because the recursive argument $r$ in the base structure $T$ appears
 in the contravariant position. Another example of a negative datatype is
-$\mu\,T'$, where $\textbf{data}\;T'\;r = C'\,(r -> r)$, since $r$ in $T'$
+$\mu\,T'$, where $\textbf{data}\;T'\;r = C'\,(r -> r)$ because $r$ in $T'$
 appears in both contravariant and covariant positions.
-We say that $r$ is in a negative position, since $(r -> a)$ is analogous to
+We say that $r$ is in a negative position because $(r -> a)$ is analogous to
 $(\neg r \land a)$ when we think of $->$ as a logical implication.
 
 
-\paragraph{Recursive types in the conventional approach.}
+\paragraph{Recursive types in conventional approach.}
 \index{conventional}
-In the conventional approach, the formation (\ie, datatype definition) of
+In conventional approach, the formation (\ie, datatype definition) of
 recursive types is restricted, but arbitrary elimination (\ie, pattern matching)
 over the values of recursive types is allowed. In particular, the formation of
 negative recursive types is restricted. Only positive recursive types are
 supported. Thus, in Figure \ref{fig:approaches}, we have a restricted version of
-the formation rule {\small($\mu$-form$^{+}$)} has an additional condition that
-requires $F$ to be positive. The other rules {\small($\mu$-intro)},
-{\small($\mu$-elim)}, and {\small(\unIn-\In)} remain the same as for
-functional languages. Since we have restricted the recursive types
+the formation rule {\small($\mu$-form$^{+}$)} with an additional condition that
+$F$ should be positive. The other rules {\small($\mu$-intro)},
+{\small($\mu$-elim)}, and {\small(\unIn-\In)} remain the same as in
+functional languages. Because we have restricted the recursive types
 at the type-level and we do not have general recursion at the term-level,
 the language is indeed normalizing. However, we cannot write
 interesting (\ie, recursive) programs that involve recursive types, nor
@@ -976,103 +976,103 @@ iteration (\aka\ catamorphism). The typing rules for the conventional iteration
 rule {\small(\It)} and the reduction rule {\small(\It-\In)} for \It\,
 in addition to the rules for the recursive type operator $\mu$.
 
-\paragraph{Recursive types in the Mendler-style approach.}
+\paragraph{Recursive types in Mendler-style approach.}
 \index{Mendler-style}
-In the Mendler-style approach, we allow arbitrary formation
+In Mendler-style approach, we allow arbitrary formation
 (\ie, datatype definition) of recursive types, but we restrict
 the elimination (\ie, pattern matching) over the values of recursive types. 
-The formation rule {\small($\mu$-form)} remains the same as for
+The formation rule {\small($\mu$-form)} remains the same as that for
 functional languages. That is, we can define arbitrary recursive types,
 both positive and negative. However, we no longer have the elimination rule
-{\small($\mu$-elim)}. That is, we are not allowed to pattern match over
+{\small($\mu$-elim)}. That is, we are not allowed to pattern match against
 the values of recursive types freely, as we do for values of
 non-recursive datatypes using case expressions. We can only pattern match over
-the values of recursive types through the Mendler-style recursion combinators.
+the values of recursive types using Mendler-style recursion combinators.
 The rules for the Mendler-style iteration combinator \MIt\ are illustrated
 in Figure \ref{fig:approaches}.
-Note, there are no rules for \unIn\ in the Mendler-style approach.
+Note that there are no rules for \unIn\ in the Mendler-style approach.
 The typing rule {\small($\mu$-elim)} is replaced by {\small(\MIt)} and
 the reduction rule {\small(\unIn-\In)} is replaced by {\small(\MIt-\In)}.
 More precisely, the typing rule {\small \MIt} is both an elimination rule
 for recursive types and a typing rule for the Mendler-style iterator.
 You can think of the rule {\small(\MIt)} as replacing both the elimination rule
 {\small($\mu$-elim)} and the typing rule for conventional iteration
-{\small(\It)}, but in a safe way that guarantees normalization.
+{\small(\It)}, but in a safe manner that guarantees normalization.
 
-\subsection{Justification of the Mendler-style as a design choice.}
+\subsection{Justification of Mendler style as a design choice.}
 \label{sec:intro:concepts:mendler}
 \index{Mendler-style}
 We choose to base our approach to the design of a seamless synthesis of both
 logical reasoning and programming on Mendler style. It restricts
-the elimination (\ie, pattern matching) over values of recursive types,
+elimination (\ie, pattern matching) over values of recursive types
 rather than restricting the formation (\ie, datatype definition) of
-recursive types (a more conventional approach). The impact of
-this design choice is that it enables our language system to include
+recursive types (a more conventional approach). 
+This design choice enables our language system to include
 all datatype definitions that are used in functional programming languages.
 
 Functional programming promotes ``functions as first class values''.
-It is natural to both pass functions as arguments and to embed functions
+It is natural for both pass functions as arguments and embedding functions
 into (recursive) datatypes. There exist many interesting and useful examples
 in functional programming involving negative datatypes. In \S\ref{sec:msf},
 we illustrate that the Mendler-style recursion scheme, which we discovered,
-can express interesting examples involving negative datatypes.
+can be used for expressing interesting examples involving negative datatypes.
 
 Recall that the motivation of this thesis research is to search for
-an answer to ``how does one build a seamless system where programmers
-can both write programs and formally reason about those programs''.
-The Mendler style is a promising approach because all the recursive types
-(both positive and negative) are definable and the recursion schemes over
-those types are normalizing.
+an answer to the question ``how does one build a seamless system
+where programmers can both write programs and formally reason about
+those programs?'' Mendler style is a promising approach because all
+recursive types (both positive and negative) are definable and
+the recursion schemes over those types are normalizing.
 
 Under the Curry--Howard correspondence, to formally reason about a program,
-the logic needs to refer to the type of the program, since the type,
-interpreted as a proposition, describes the property of the program.
+the logic needs to refer to the type of the program because the type
+interpreted as a proposition describes the property of the program.
 Since the Mendler-style approach does not restrict recursive datatype
 definitions, we can directly refer to the types of programs that use
 negative recursive datatypes. One may object that it is possible to
 indirectly model negative recursive types in conventional style,
 via alternative equivalent encodings, which map negative recursive types
 into positive ones. But, such encodings do not align with our motivation
-towards a seamless unified system for both programming and reasoning.
+towards a seamless unified system for both programming and reasoning. %% TODO footnote we have some recent updates on Mendler-style iteration over PHOAS
 It is undesirable to require programmers to significantly change their
 programs just to reason about them. If the change is unavoidable, it should
 be kept small. That is, the changed program should syntactically resemble
-the original program, which the programmer would usually write in
+the original program, which programmers usually write in
 functional programming languages. In Chapter~\ref{ch:mendler},
 we show a number of example programs written in Mendler style
-that look closer to the programs written using general recursion
-than the programs written in conventional style.
+that look closer to programs written using general recursion
+than programs written in conventional style.
 
 \subsection{Term-indexed types, type inference, and datatypes}
 \label{sec:intro:concepts:indexed}
-One of the most frequently asked questions about our design choices for Nax,
-regarding term-indexed types, is ``why not dependent types?". Our answer
-is that a moderate extension to the polymorphic calculus is a better candidate
-than a dependently typed calculus as the basis for a practical programming
-system.  Language designs based on indexed types can
-benefit from existing compiler technology and type inference algorithms
-for functional programming languages. In addition, theories for
+One of the most frequently asked questions about our design choices for Nax
+regarding term-indexed types, is ``why not dependent types?" Our answer
+is that a moderate extension of the polymorphic calculus is a better candidate
+than a dependently-typed calculus as the basis for a practical programming
+system. Language designs based on indexed types can benefit from
+existing compiler technology and type inference algorithms for
+functional programming languages. In addition, theories for
 term-indexed datatypes are simpler than theories for full-fledged
-dependent datatypes, because term-indexed datatypes can be encoded as
+dependent datatypes because term-indexed datatypes can be encoded as
 functions (using Church-like encodings).
 
 The implementation technology for functional programming languages based on
-polymorphic calculi is quite mature. There exist industrial
-strength implementations, such as the Glasgow Haskell Compiler (GHC),
+polymorphic calculi is quite mature. There exist industrial-strength
+implementations such as the Glasgow Haskell Compiler (GHC),
 whose intermediate core language is an extension of \Fw.
 Our term-indexed calculi described in Part~\ref{part:Calculi} are closely
 related to \Fw\ by an index-erasure property. The hope is that
 our implementation can benefit from these technologies.
 
 Type inference algorithms for functional programming languages are often
-based on certain restrictions of the Curry-style polymorphic lambda calculi.
+based on certain restrictions of Curry-style polymorphic lambda calculi.
 These restrictions are designed to avoid higher-order unification during
 type inference. We develop a conservative extension of Hindley--Milner
 type inference for Nax (Chapter~\ref{ch:naxTyInfer}). This is possible
 because Nax is based on our term-indexed calculi (Part~\ref{part:Calculi}).
-Dependently typed languages, on the other hand, are often based on
+Dependently-typed languages, however, are often based on
 bidirectional type checking, which requires annotations on top level
-definitions, unlike Hindley--Milner type inference.
+definitions, unlike the Hindley--Milner type inference.
 
 \index{type!dependent}
 \index{dependent type}
@@ -1082,7 +1082,7 @@ constructs with axioms, rather than as functional encodings
 in a dependent type theory, but one soon realizes that the induction principles
 (or, dependent eliminators) for those datatypes cannot be derived within
 the pure dependent calculi \cite{Geuvers01}.
-So, dependently typed reasoning systems support datatypes as primitives.
+So, dependently-typed reasoning systems support datatypes as primitives.
 For instance, Coq is based on the Calculus of Inductive Constructions, which
 extends the Calculus of Constructions \cite{CoqHue86} with dependent datatypes
 and their induction principles.
@@ -1091,23 +1091,23 @@ and their induction principles.
 \index{polymorphic type}
 In contrast, in polymorphic type theories, all imaginable datatypes
 within the calculi have functional encodings (\eg, Church encodings).
-For instance, \Fw\ need not introduce datatypes as primitive constructs,
-since \Fw\ can embed all imaginable datatypes, including non-regular
+For instance, \Fw\ need not introduce datatypes as primitive constructs
+since \Fw\ can embed all imaginable datatypes including non-regular
 recursive datatypes with type indices. 
 
 \index{Mendler-style}
-Another reason to use term-indexed calculi, rather than dependent type theories,
+Another reason to use term-indexed calculi over dependent type theories
 is to extend the application of Mendler-style recursion schemes,
 which are well-understood in the context of \Fw.
 Researchers have thought about (though not published)\footnote{
      Tarmo Uustalu described this on a whiteboard
      when we met with him at the University of Cambridge in 2011.
      We discuss this in the related work chapter (\S\ref{sec:relwork:dep}).}
-a dependently typed Mendler-style primitive recursion, which is well-defined
+a dependently-typed Mendler-style primitive recursion that is well-defined
 for positive datatypes (\ie, datatypes that have a map) but not for
-negative (or, mixed-variant) datatypes. In our term-indexed calculi,
+negative (or mixed-variant) datatypes. In our term-indexed calculi,
 we can embed Mendler-style recursion schemes (just as we embedded them in \Fw)
-that are also well-defined for negative datatypes.
+that are well-defined for negative datatypes as well.
 
 \section{Contributions}\label{sec:intro:contrib}
 This dissertation makes contributions in several areas.
@@ -1123,7 +1123,8 @@ This dissertation makes contributions in several areas.
         \emph{in the sweet spot} between programming and logical reasoning
         (Part~\ref{part:Nax}), and
 
-\item[4.] It identifies several interesting open problems related to the three areas above.
+\item[4.] It identifies several interesting open problems
+	related to the three aforementioned areas.
 \end{itemize}
 
 \subsection{Contributions related to Mendler style}
@@ -1131,8 +1132,8 @@ This dissertation makes contributions in several areas.
 We organize a hierarchy of Mendler-style recursion schemes in two dimensions.
 The first dimension is the abstract operations they support. For instance,
 the Mendler-style iteration (\MIt) supports a single abstract operation,
-the recursive call. All the other Mendler-style recursion schemes
-support the recursive call and an additional set of abstract operations. 
+the recursive call. All other Mendler-style recursion schemes support
+the recursive call and an additional set of abstract operations. 
 The second dimension is over the kind of the datatypes they operate over.
 For example, \texttt{Nat} has kind $*$, while \texttt{Vec}
 has kind $* -> \mathtt{Nat} -> *$. Each recursion scheme is actually a
@@ -1143,30 +1144,30 @@ We expand the realm of Mendler-style recursion schemes in several ways.
 First, we report on a new recursion scheme $\MsfIt$, which is useful
 for negative datatypes.  Second, we study the termination behaviors
 of Mendler-style recursion schemes. Some recursion schemes (\eg, \MIt, \MsfIt)
-always terminate for any recursive type, while others (\eg, \McvPr) only
-terminate for certain classes of recursive types. Third, we extend
+always terminate for any recursive type, whereas others (\eg, \McvPr) 
+terminate only for certain classes of recursive types. Third, we extend
 all Mendler-style recursion schemes to be expressive over term-indexed types.
 The Mendler style has been studied in the context of \Fw\ (and several
 extensions) which can express \emph{type}-indexed types. To extend Mendler-style
 recursion schemes to be expressive over \emph{term}-indexed types, we report on
 several theories for calculi (\Fi\ and \Fixi) that support term indices.
-This is another important area of our contribution.
+This is another important facet of our contribution.
 
-We provide examples that illustrate when each recursion scheme is useful
-in Chapter \ref{ch:mendler}. The most interesting example among them is
-the type-preserving evaluator for a simply typed Higher-Order Abstract Syntax
-(HOAS) (\S\ref{sec:evalHOAS}), which involves negative datatypes with indices.
+We provide examples that illustrate scenarios in which each recursion scheme is
+useful in Chapter \ref{ch:mendler}. The most interesting example among them is
+the type-preserving evaluator for a simply-typed Higher-Order Abstract Syntax
+(HOAS) in \S\ref{sec:evalHOAS}, which involves negative datatypes with indices.
 This example is our novel discovery, which reports that
-a type-preserving evaluator for a simply typed HOAS can be expressed within \Fw.
+a type-preserving evaluator for a simply-typed HOAS can be expressed within \Fw.
 
 In addition, we develop a better understanding of some existing
 Mendler-style recursion schemes. For instance, the existence of
 Mendler-style course-of-values recursion (\McvPr) is reported
-in the literature, but the calculus that can embed \McvPr\ was unknown.
+in the literature, but the calculus that can embed \McvPr\ was unknown hitherto.
 We embed Mendler-style course-of-values recursion into \Fixi\ 
-(or into \Fixw\ \cite{AbeMat04}, when we do not consider term-indices).
+(or into \Fixw\ \cite{AbeMat04} when we do not consider term-indices).
 
-\subsection{Contributions to the theory of Term-Indexed Types}
+\subsection{Contributions to the theory of term-indexed types}
 \index{Mendler-style}
 Mendler-style recursion schemes have been studied in the context of
 polymorphic lambda calculi. For instance, \citet{AbeMatUus03} embedded 
@@ -1174,26 +1175,27 @@ Mendler-style iteration (\MIt) into \Fw\ and \citet{AbeMat04} embedded
 Mendler-style primitive recursion (\MPr) into \Fixw. These calculi
 support type-indexed types.
 
-To extend the realm of Mendler-style recursion schemes to include
+To extend the realm of Mendler-style recursion schemes in order to include
 term-indexed types, we extended \Fw\ and \Fixw\ to support term indices.
 In Part~\ref{part:Calculi}, we present our new calculi
-\Fi\ (Chapter~\ref{ch:fi}), which extends \Fw\ with term indices, and
-\Fixi\ (Chapter~\ref{ch:fixi}), which extends \Fixw\ with term indices.
+\Fi\ (Chapter~\ref{ch:fi}) that extends \Fw\ with term indices, and
+\Fixi\ (Chapter~\ref{ch:fixi}) that extends \Fixw\ with term indices.
 These calculi have an erasure property that states that well-typed terms
 in each calculus are also well-typed terms (when erased) in the 
 underlying calculus. For instance, any well-typed term in \Fi\ is also
 a well-typed term in \Fw, and there are no additional well-typed terms
 in \Fi\ that are not well-typed in \Fw.
 
-Our new calculi, \Fi\ and \Fixi, are strongly normalizing and
-logically consistent. We show strong normalization and logical consistency
-using the erasure properties. That is, strong normalization and
-logical consistency of \Fi\ and \Fixi\ are inherited from \Fw\ and \Fixw.
-Since \Fi\ and \Fixi\ are strongly normalizing and logically  consistent,
-the Mendler-style recursion schemes that can be embedded into these calculi
-are adequate for logical reasoning as well as programming.
+Our new calculi \Fi\ and \Fixi are strongly normalizing and
+logically consistent as we show by using the erasure properties.
+That is, the strong normalization and logical consistency of
+\Fi\ and \Fixi\ are inherited from \Fw\ and \Fixw.
+Since \Fi\ and \Fixi\ are strongly normalizing and
+logically consistent, Mendler-style recursion schemes
+that can be embedded into these calculi are adequate
+for logical reasoning as well as for programming.
 
-\subsection{Contributions in the design of the Nax language}
+\subsection{Contributions towards the Nax language design}
 We design and implement a prototypical language Nax that explores
 the sweet spot between programming oriented systems and logic oriented systems.
 The language features supported by Nax provide the advantages
@@ -1205,54 +1207,54 @@ We designed Nax so that its foundational theory and
 implementation framework could be kept simple.
 \index{Mendler-style}
 
-Term- and type-indexed datatypes can express fine grained program properties
-via the Curry--Howard correspondence, as in logic oriented systems. Although
+Term- and type-indexed datatypes can express fine-grained program properties
+via the Curry--Howard correspondence, as in logic-oriented systems. Although
 not as flexible as full-fledged dependent types, indexed datatypes can
-still express program invariants, such as stack-safe compilation
-(\S\ref{sec:example}), and size invariants on data structures.
-Index types can simulate much of what
-dependent types can do using singleton types. Since Nax has only erasable
-indices, the foundational theory can be kept simple, and it supports
+still express program invariants such as stack-safe compilation
+(\S\ref{sec:example}) and size invariants on data structures.
+Index types can simulate much of what dependent types can do using
+singleton types. Given that Nax has only erasable indices,
+the foundational theory can be kept simple, and it supports
 features that have the advantages of programming oriented systems 
 (\eg, type inference, arbitrary recursive datatypes).
 
-Adopting Mendler style provides merits of both programming oriented systems
+Adopting Mendler style provides the merits of both programming oriented systems
 and logic oriented systems. Since Mendler style is elimination based, one can
 define all recursive datatypes usually supported in functional programming
-languages. In addition, the programs written using Mendler-style recursion
+languages. In addition, programs written using Mendler-style recursion
 combinators look more similar to the programs written using general recursion
-than programs written in Squiggol style.
-Since Nax supports only the well-behaved (\ie, strongly normalizing)
-Mendler-style recursion combinators, it is safe to construct proofs using them.
-In addition, Mendler-style recursion combinators are naturally well-defined
-over indexed datatypes, which are essential to express fine-grained program
-properties. Mendler style provides type based termination, that is, termination
-is a by-product of type checking. Thus, it makes the implementation framework
-simple since we do not need extra termination checking algorithms.
+programs written in the Squiggol style. Because Nax supports only well-behaved
+(\ie, strongly normalizing) Mendler-style recursion combinators, it is safe to
+construct proofs using them. In addition, Mendler-style recursion combinators
+are naturally well-defined over indexed datatypes, which are essential to
+express fine-grained program properties. Mendler style provides type
+based termination, that is, termination is a by-product of type checking.
+Thus, it makes the implementation framework simple since we do not need
+extra termination checking algorithms.
 
-Hindley--Milner-style type inference is familiar to functional programmers.
+The Hindley--Milner-style type inference is familiar to functional programmers.
 Nax can infer types for all programs that involve only regular datatypes,
 which are already inferable in Hindley--Milner, without any type annotation.
 Nax requires programs involving indexed datatypes to annotate their eliminators
-by index transformers, which specify the relation between the input type index
-and the result type. Eliminators of non-recursive datatypes are case expressions
-and eliminators of recursive datatypes are Mendler-style recursion combinators.
+by index transformers, which specify the relationship between the input type
+index and the result type. Eliminators of non-recursive datatypes are
+case expressions and eliminators of recursive datatypes are
+Mendler-style recursion combinators.
 
 \subsection{Contributions identifying open problems}
 We identify several open problems alongside the contributions mentioned
-in previews subsections. We will discuss the details of these open problems
-in the future work chapter (Chapter \ref{ch:futwork}).
-Here, we briefly introduce two of them.
+in the previews subsections. We discuss the details of these open problems
+in Chapter \ref{ch:futwork}. Here, we briefly introduce two of them.
 
 \paragraph{Handling different interpretations of $\mu$ in one language system:}
-Nax provides multiple recursion schemes (or, induction principles) used
-to describe different kinds of recursive computations over recursive datatypes.
+Nax provides multiple recursion schemes used for
+describing different kinds of recursive computations over recursive datatypes.
 These recursion schemes are all motivated by concrete examples, which explains
 the need for multiple schemes. It is more convenient to express various kinds of
-recursive computations in Nax, by choosing a recursion scheme that fits
-the structure of the computation, than in those systems that provide
-only one induction scheme. However, there is theoretical difficulty
-handling multiple interpretations of the recursive type operator $\mu$
+recursive computations in Nax by choosing a recursion scheme that fits
+the structure of the computation, than in systems that provide
+only one induction scheme. However, there is a theoretical difficulty
+of handling multiple interpretations of the recursive type operator
 in one language system.
 
 \index{Mendler-style}
@@ -1266,12 +1268,12 @@ one for each recursion scheme. Some recursion schemes subsume others
 (\ie, the more expressive one can simulate the other).
 
 It would have been easy to describe the theory for Nax if we had
-one most powerful recursion scheme that subsumes all the others,
-which leads to a single interpretation of $\mu$. Unfortunately,
+one most powerful recursion scheme that subsumes all the others;
+then it would lead to a single interpretation of $\mu$. Unfortunately,
 we know of no Mendler-style recursion scheme that subsumes
-all the other recursion schemes in Nax. For instance, iteration (\MIt)
-is subsumed by primitive recursion (\MPr), but \MPr\ does not subsume
-iteration with a syntactic inverse (\MsfIt) or the other way around.
+all other recursion schemes we hope to support in Nax. For instance,
+iteration (\MIt) is subsumed by primitive recursion (\MPr), but \MPr\ does
+not subsume iteration with a syntactic inverse (\MsfIt) or vice versa.
 There is no known recursion scheme that can subsume both \MsfIt\ and \MPr.
 
 We discovered that $\mu$-values, to which \MIt\ can be applied,
@@ -1294,9 +1296,9 @@ One can extend the kind syntax of arrow kinds in \Fw\ with polarities
 to track whether a type constructor argument is used in
 covariant (positive), contravariant (negative), or
 mixed-variant (both positive and negative) positions.
-It is still an open problem whether it is possible to derive monotonicity
-(\ie, the  existence of a map) for a type constructor from its polarized kind,
-without examining the type constructor definition.
+Whether it is possible to derive monotonicity (\ie, the  existence of a map)
+for a type constructor from its polarized kind, without examining
+the type constructor definition remains an open problem.
 \index{covariant}
 \index{contravariant}
 \index{mixed-variant}
@@ -1318,36 +1320,35 @@ categorize datatypes that have maps from their polarized kinds,
 this burden can be alleviated.
 
 \section{Chapter organization}\label{sec:intro:overview}
-This dissertation consist of five parts:
-\begin{itemize}
-\item Part \ref{part:Prelude} (Prelude),
-\item Part \ref{part:Mendler} (The Mendler style),
-\item Part \ref{part:Calculi} (Term-indexed lambda calculi),
-\item Part \ref{part:Nax} (The Nax language), and
-\item Part \ref{part:Postlude} (Postlude).
-\end{itemize}
+This dissertation consists of five parts:
+Part~\ref{part:Prelude} (Prelude),
+Part~\ref{part:Mendler} (Mendler style),
+Part~\ref{part:Calculi} (Term-indexed $\lambda$-calculi),
+Part~\ref{part:Nax} (Nax language), and
+Part~\ref{part:Postlude} (Postlude).
 The three parts in the middle describe the three steps of our approach. 
 First, we explore new ideas about
-Mendler-style recursion schemes driven from concrete examples
+Mendler-style recursion schemes driven by concrete examples
 using Haskell (with some GHC extensions). Second, we develop
 theories (\ie, lambda calculi) for term-indexed datatypes to prove that
 the Mendler-style recursion schemes are well-defined over indexed datatypes
 and have the expected termination behavior. Third, we design a language system
-with practical features that implements our ideas and is based on the
-theory we have developed. Figure~\ref{fig:overview} summarizes
+with practical features, which implements our ideas and is based on the
+theory we developed. Figure~\ref{fig:overview} summarizes
 the organization of key concepts throughout the dissertation.
 
 \begin{figure}
 \input{intro_figoverview}
-\caption{Summary on how key concepts are related.}
+\caption{Summary of the relationships among key concepts.}
 \label{fig:overview}
 \end{figure}
+
 
 \paragraph{Part \ref{part:Prelude} (Prelude)}\hspace{-1em} 
 comprises Chapter \ref{ch:intro} (which you are currently reading)
 and Chapter \ref{ch:poly} which 
 reviews the theory of several well-known typed lambda calculi:
-the simply typed lambda calculus (STLC) (\S\ref{sec:stlc}),
+the simply-typed lambda calculus (STLC) (\S\ref{sec:stlc}),
 System \F\ (\S\ref{sec:f}),
 System \Fw\ (\S\ref{sec:fw}), and
 the Hindley--Milner type system (\S\ref{sec:hm}).
@@ -1357,7 +1358,7 @@ In Sections \ref{sec:stlc}-\ref{sec:fw}, we review strong normalization proofs
 STLC (no polymorphism), System \F\ (polymorphism over types), and
 System \Fw\ (polymorphism over type constructors).
 
-The later proofs each extend the normalization proof of the previous calculus.
+Each proof extends the normalization proof of the previous calculus.
 We will use the strong normalization of System \Fw\ to show that
 our term-indexed lambda calculi in Part \ref{part:Calculi} are
 strongly normalizing. Readers familiar with strong normalization proofs
@@ -1367,7 +1368,7 @@ System \F\ and \Fw: (1) terms are in Curry style and
 (2) typing contexts are divided into two parts
     (one for type variables and the other for term variables).
 This choice prepares readers for our formalization of the term-indexed calculi
-in Part \ref{part:Calculi}, which have Curry-style terms and
+in Part \ref{part:Calculi}, which involves Curry-style terms and
 typing contexts divided into two parts.
 
 In \S\ref{sec:hm}, we review the type inference algorithm for
@@ -1378,43 +1379,44 @@ Later in Part~\ref{part:Nax} Chapter \ref{ch:naxTyInfer},
 we formulate a conservative extension of HM, which restricts
 the term-indexed calculus System \Fi\ (Chapter \ref{ch:fi}) in a similar manner.
 
-\paragraph{Part \ref{part:Mendler} (Mendler style)}\hspace{-1em}
+
 \index{Mendler-style}
+\paragraph{Part \ref{part:Mendler} (Mendler style)}\hspace*{-.7em}
 introduces
 the concept of Mendler-style recursion schemes (Chapter \ref{ch:mendler})
 using examples written in Haskell (with some GHC extensions). The readers
 of Chapter \ref{ch:mendler} need no background knowledge
 on typed lambda calculi but only some familiarity with functional programming.
 We explain the concepts of a number of Mendler-style recursion schemes,
-their termination properties, and how one recursion scheme is related to
-another. We also provide semi-formal proofs of termination for some of
+their termination properties, and the relationships among the recursion schemes.
+We also provide semi-formal proofs of termination for some of
 the recursion schemes (\MIt\ and \MsfIt) by embedding them into
 the \Fw\ fragment of Haskell. More formal and general proofs,
 by embedding the schemes into our term-indexed lambda calculi,
-come later in Part~\ref{part:Calculi}.
+are given later in Part~\ref{part:Calculi}.
 
-The Mendler-style recursion schemes discussed in Chapter \ref{ch:mendler}
+Mendler-style recursion schemes discussed in Chapter~\ref{ch:mendler}
 include iteration (\MIt), iteration with syntactic inverse (\MsfIt),
 primitive recursion (\MPr), course-of-values iteration (\McvIt),
 and course-of-values recursion (\McvPr). Of these, \MsfIt\ was discovered
 while writing this dissertation.
-There are even more Mendler-style recursion schemes, which are not
-discussed in Chapter \ref{ch:mendler} -- we give pointers to them in our
-related work chapter (Chapter \ref{ch:relwork} of Part \ref{part:Postlude}).
+There are more Mendler-style recursion schemes that are not discussed
+in Chapter~\ref{ch:mendler} --- we give pointers to them in our
+related work chapter (Chapter~\ref{ch:relwork} of Part~\ref{part:Postlude}).
 
 \paragraph{Part \ref{part:Calculi} (term-indexed lambda calculi)}\hspace{-1em}
-develops theories for term-indexed types. We formalize two term-indexed
-lambda calculi, which extends their underlying polymorphic calculi that
-support type indices only.
-System \Fi\ (Chapter \ref{ch:fi}) extends System \Fw\ with term indices and
-System \Fixi\ (Chapter \ref{ch:fixi}) extends System \Fixw\ \cite{AbeMat04}
+describes the developments of theories for term-indexed types.
+We formalize two term-indexed lambda calculi, which extends
+their underlying polymorphic calculi that support type indices only.
+System \Fi\ (Chapter~\ref{ch:fi}) extends System \Fw\ with term indices and
+System \Fixi\ (Chapter~\ref{ch:fixi}) extends System \Fixw\ \cite{AbeMat04}
 with term indices.
 
-We prove both strong normalization and logical consistency of
-these term-indexed calculi using their index erasure properties.
+We prove these term-indexed calculi to be strong normalizing and
+logical consistent of using their index erasure properties.
 The index erasure property of a term-indexed calculus
-projects a typing in the term-index calculi into
-the polymorphic calculus that the term-indexed calculus extends.
+projects a typing in the term-index calculi into its underlying
+polymorphic calculus from which the term-indexed calculus extends.
 That is, all well-typed terms in \Fi\ and \Fixi\ are
 also well-typed terms in \Fw\ and \Fixw.
 
@@ -1430,18 +1432,18 @@ three chapters.
 First, we introduce the features of Nax (Chapter \ref{ch:naxFeatures})
 in a tutorial format using small Nax code snippets as examples.
 Next, we discuss the design principles of the type system (Chapter \ref{ch:nax})
-by comparing it to two other systems: Haskell's datatype promotion and Agda.
+by comparing it with two other systems: Haskell's datatype promotion and Agda.
 In Chapter \ref{ch:nax} we develop
 larger and more practical examples,
-a type-preserving interpreter and a stack safe compiler.
+a type-preserving interpreter and a stack-safe compiler.
 Lastly, we discuss type inference in Nax (Chapter \ref{ch:naxTyInfer}),
 which is a conservative extension of the Hindley--Milner type system (HM).
 That is, any program whose type is inferable in HM, can also have its type
 inferred in Nax without any annotation. Programs involving
 term- or type-indexed datatypes, which are not supported in HM, need
-some annotation to infer their types in Nax. These annotations are only
-required on three syntactic entities (datatype declarations, case expressions,
-and Mendler-style recursion combinators).
+some annotation for their types to be inferred in Nax. These annotations
+are only required on three syntactic entities (datatype declarations,
+case expressions, and Mendler-style recursion combinators).
 \index{Mendler-style}
 
 \paragraph{Part \ref{part:Postlude} (Postlude)}\hspace{-1em} closes

@@ -41,7 +41,7 @@ discussed in Chapters \ref{ch:fi} and \ref{ch:fixi}.
 \item[$(2)$ Nax supports Hindley--Milner-style type inference.]~\\
 Nax needs few type annotations. In particular,
 annotations for top-level functions, which are usually
-required for bidirectional type checking in dependently typed languages,
+required for bidirectional type checking in dependently-typed languages,
 are unnecessary.
 Type annotations are only required when introducing GADTs and as
 index transformers attached to pattern matching constructs

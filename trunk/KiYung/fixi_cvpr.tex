@@ -563,7 +563,7 @@ the same type as $(\textit{fmap}_\texttt{List}\;\textit{id}) :
 For similar reasons, $\unIn_B$ for the bush datatype, which is a
 \emph{truly nested datatype}, is not constant time either
 due to the use of $\textit{fmap}\;\textit{cast} :
-			(X_r(X_r\,X_a)) -> (X_r(\mu^{+}_{* -> *}B\,X_a))$,
+			X_r(X_rX_a) -> X_r(\mu^{+}_{* -> *}B X_a)$,
 which traverses the outer $X_r$ structure (an abstract bush) to cast each
 element from $(X_r\,X_a)$ to $(\mu^{+}_{* -> *}B\,X_a)$. However, in this case,
 there is yet another subtlety that must be addressed before we can address
@@ -579,7 +579,7 @@ a more general property that \textit{fmap} is well-defined for any
 type constructors of kind $+* -> *$ in \Fixi. We discuss this
 general property of \textit{fmap} in Section~\ref{ssec:fixi:theory:cv}.
 
-Lastly, we can even further optimize the unrollers based on the observtion
+Lastly, we can even further optimize the unrollers based on the observation
 made in the previous subsection that all unroller embeddings have uniform shape:
 \[
 \McvPr_\kappa (\l\_.\l cast.\l\_.\;

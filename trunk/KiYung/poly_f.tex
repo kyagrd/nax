@@ -254,7 +254,7 @@ lists
                         (\textit{foldr} $x_z$ $x_c$ $x$ in Haskell)
         \\\hline
 \end{tabular}
-\caption{Church encodings of regular datatypes can be well-typed in System \F.}
+\caption{Church encodings of regular datatypes can be well-typed in System~\F.}
 \label{tbl:dataF}
 \end{table}
 
@@ -268,6 +268,7 @@ based on similar ideas are called Church encodings. Church encodings were
 developed for the untyped $\lambda$-calculus. They cannot be 
 well-typed in the STLC.
 
+\index{polymorphism!impredicative}
 In System \F,
 these Church-encoded terms can be well-typed by encoding the datatype
 as a polymorphic type of System \F, as illustrated in Table \ref{tbl:dataF}.
@@ -282,7 +283,7 @@ since they rely on the impredicative polymorphism\footnote{
 	} of System \F.
 
 Encodings of types, constructors, and eliminators for
-several well-known datatypes are listed in Table \ref{tbl:dataF}.
+well-known datatypes are listed in Table \ref{tbl:dataF}.
 We use the Curry-style System \F\ since the constructors and the eliminators
 are exactly the same as the Church encodings in the untyped lambda calculus.
 If we were to use the Church-style System \F, we would need to adjust
@@ -326,7 +327,7 @@ as described in Figure \ref{tbl:dataF}.
 
 We can deduce the number of constructors for a datatype and the types
 of those constructors from the impredicative encoding of the datatype.
-The general form for the encodings of the simply typed datatypes is:
+The general form for the encodings of the simply-typed datatypes is:
 \[D = \forall X. A_1 -> \cdots -> A_n -> X
         \qquad\text{where}~~ A_i = A_{i1} -> \cdots -> A_{ik} -> X \]
 From the encoding of type above, we can deduce the following facts:
@@ -374,7 +375,7 @@ iterators or folds.
 
 The impredicative encoding of a datatype specifies what is needed to eliminate
 an object of the datatype. Recall the general form for the encodings of
-the simply typed datatypes:
+the simply-typed datatypes:
 \[D = \forall X. A_1 -> \cdots -> A_n -> X
         \qquad\text{where}~~ A_i = A_{i1} -> \cdots -> A_{ik} -> X \]
 We can understand this encoding as follows:
@@ -470,8 +471,9 @@ It is not difficult to see that each typing derivation in Curry style
 corresponds to a unique Church-style term, and, that a reduction step
 in Curry style corresponds to one or more reduction steps
 in Church style.\footnote{
-	The corresponds of reduction steps is not always one step to one step
-	since the reduction rules {\sc RedTyAbs} and {\sc RedTyApp}
+	This correspondence between reduction steps in two styles
+	is not always one step to one step. For instance,
+	the reduction rules {\sc RedTyAbs} and {\sc RedTyApp}
 	in Church style correspond to zero reduction step in Curry style.}
 
 \subsubsection*{Strong Normalization}
@@ -541,7 +543,7 @@ We prove by induction on the typing derivation ($\Delta;\Gamma|- t:A$).
 It is trivial to show that
 $ \inference{\Delta;\Gamma |- x:A & \xi;\rho \in [|\Delta;\Gamma|]}
         {[|x|]_{\xi;\rho} \in [|A|]_\xi} $.
-
+\vspace{.2em}\\
 We know that $x:A \in \Gamma$ from the \rulename{Var} rule.
 So, $[|x|]_{\xi;\rho} =\rho(x)\in[|\Gamma(x)|]_\xi = [|A|]_\xi$.
 
@@ -549,11 +551,11 @@ So, $[|x|]_{\xi;\rho} =\rho(x)\in[|\Gamma(x)|]_\xi = [|A|]_\xi$.
 We need to show that
 $ \inference{\Delta;\Gamma |- \l x.t : A -> B & \xi;\rho \in [|\Delta;\Gamma|]}
         {[|\l x.t|]_{\xi;\rho} \in [|A -> B|]_\xi} $.
-
+\vspace{.3em}\\
 By induction, we know that
 $ \inference{\Delta;\Gamma,x:A |- t : B & \xi';\rho' \in [|\Delta;\Gamma,x:A|]}
              {[|t|]_{\xi';\rho'} \in [|B|]_\xi} $.
-
+\vspace{.3em}\\
 Since this holds for all $\xi';\rho' \in [|\Delta;\Gamma,x:A|]$, it also holds
 for particular $\xi';\rho'$ such that $\xi'=\xi$ and
 $\rho' = \rho[x \mapsto s]$ for any $s \in [|A|]_\xi' = [|A|]_\xi$.
@@ -609,16 +611,18 @@ By set theoretic definition, this is exactly what we wanted to show:
 We need to show that
 $ \inference{\Delta;\Gamma |- t : B[A/X] & \xi;\rho\in[|\Delta;\Gamma|]}
         {[|t|]_{\xi;\rho} \in [|B[A/X]|]_\xi} $
-
+\vspace{.3em}\\
 By induction, we know that
 $ \inference{\Delta;\Gamma |- t : \forall X.B & \xi';\rho'\in[|\Delta;\Gamma|]}
         {[|t|]_{\xi';\rho'} \in [|\forall X.B|]_{\xi'}} $.
-
+\vspace{.3em}\\
 Since this holds for all $\xi';\rho' \in [|\Delta,\Gamma|]$,
-it also holds for $\xi'=\xi$ and $\rho'=\rho$. Thus,
-\[ [|t|]_{\xi;\rho} \in [|\forall X.B|]_{\xi}
+it also holds for $\xi'=\xi$ and $\rho'=\rho$.
+\vspace{.3em}\\
+Thus,
+$ [|t|]_{\xi;\rho} \in [|\forall X.B|]_{\xi}
         = \bigcap_{\mathcal{A}\in\SAT} [|B|]_{\xi[X\mapsto\mathcal{A}]}
-	\subseteq [|B|]_{\xi[X\mapsto[|A|]_\xi]} = [|B[A/X]|]_\xi \].
+	\subseteq [|B|]_{\xi[X\mapsto[|A|]_\xi]} = [|B[A/X]|]_\xi $.\\
 \end{proof}
 
 \begin{corollary}[strong normalization]

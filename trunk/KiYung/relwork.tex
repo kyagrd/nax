@@ -4,7 +4,7 @@ discussed in previous chapters (\S\ref{sec:intro} and \S\ref{sec:related}).
 We discuss five categories of related work:
 Mendler-style co-recursion schemes over co-data (\S\ref{sec:relwork:co}),
 Mendler-style recursion schemes over multiple values (\S\ref{sec:relwork:mult}),
-dependently typed Mendler-style induction (\S\ref{sec:relwork:dep}), 
+dependently-typed Mendler-style induction (\S\ref{sec:relwork:dep}), 
 the use of sized-types to explain the termination of Mendler-style
 recursion schemes (\S\ref{sec:relwork:sized}), and the comparison of
 our Mendler-style approach to logical frameworks (\S\ref{sec:relwork:LF}).
@@ -22,7 +22,7 @@ our Mendler-style approach to logical frameworks (\S\ref{sec:relwork:LF}).
 \index{Mendler-style!induction}
 \index{regular datatype}
 \index{datatype!regular}
-The dependently typed version of primitive recursion is called induction.
+The dependently-typed version of primitive recursion is called induction.
 We formulate Mendler-style induction over regular datatypes as follows.
 \vspace*{-2em}
 \begin{singlespace}
@@ -367,8 +367,8 @@ as much as possible. For instance, the termination checker of Delphin is
 based on lexicographic subterm ordering, which is also the case in Twelf.
 
 Although Delphin and Beluga do support higher-order functions,
-they do not support polymorphism. That is, one can only write
-monomorphic (possibly dependently typed) functions. Recall that,
+they do not support polymorphism, but only dependent types by term indexing.
+That is, one can only write monomorphic functions. Recall that,
 in $\lambda\Pi$, one can only index type families by terms, not types.
 Indexing by types would support polymorphism.
 This is inconvenient for programming higher-order functions,

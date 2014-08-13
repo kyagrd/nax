@@ -1,18 +1,19 @@
 \chapter{System \Fixi}\label{ch:fixi}
 \index{System Fixi@System \Fixi}
 \index{polymorphic lambda calculus!System Fixi@System \Fixi}
-In this chapter, we investigate how the framework we have developed
-needs to be extended to handle Mendler-style operators that support
-primitive recursion. Recall that a primitive recursive operator supplies
-access to immediate subterms as well as the value of recursive calls over
-those subterms. The factorial function is the classic example of
-a primitive recursive function.
+In this chapter, we investigate how System \Fw\ needs to be extended
+in order to prove termination of the Mendler-style primitive recursion
+(\MsfIt{}) by a reduction preserving embedding. Recall that \MsfIt{}
+supplies access to immediate subterms as well as the value of recursive calls
+over those subterms. The factorial function is the classic example of
+a computation described by primitive recursion that cannot be simulated
+efficiently by iteration.
 
-It is fairly well known that there cannot be a reduction-preserving embedding
+It is fairly well known that there cannot be a reduction preserving embedding
 of primitive recursion\footnote{
 	Although we can define primitive recursion for positive datatypes
 	in terms of iteration, which is embeddable in System \F, such an
-	embedding would not be reduction-preserving. That is, it would require
+	embedding would not be reduction preserving. That is, it would require
 	more reduction steps than the usual definition of primitive recursion.}
 in System \F. A proof of this is outlined in the paper 
 \textit{Induction is not derivable in second-order dependent type theory}
@@ -27,7 +28,7 @@ polarized kinds and an equi-recursive fixpoint type operator --
 in order to define primitive recursion within \Fixw.
 \index{fixpoint!equi-recursive}
 
-As a natural extension of these ideas, in this chapter we present \Fixi,
+As a natural extension of these ideas, we present \Fixi,
 an extension of \Fixw\ with erasable term-indices, that embeds
 primitive recursion over term-indexed datatypes as well as
 type-indexed datatypes and regular datatypes.

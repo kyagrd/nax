@@ -38,7 +38,7 @@ annotated by kinds ($\lambda X^\kappa.F$). Choosing type constructors
 to be Church style makes the kind of
 a type constructor visually explicit. The choice of style for type constructors
 is not as crucial as the choice of style for terms because the syntax and
-kinding rules at the type-level are essentially a simply typed lambda calculus.
+kinding rules at the type-level are essentially a simply-typed lambda calculus.
 Annotating the type-level abstractions with kinds makes the kinds
 explicit in the type syntax. Because \Fi\ is essentially an extension of \Fw\
 with a new kind formation rule, making kinds explicit is a pedagogical
@@ -51,7 +51,7 @@ In a language with term indices, terms appear in types (\eg, the length index
 $(n+m)$ in the type $\textit{Vec}\;\textit{Nat}\;\{n+m\}$).
 Such terms contain variables and the binding sites of these variables matter.
 In \Fi, we expect such variables to be statically bound. Dynamically bound
-index variables would require a dependently typed calculus such as
+index variables would require a dependently-typed calculus such as
 the calculus of constructions. To reflect this design choice,
 typing contexts are separated into type-level contexts ($\Delta$) and
 term-level contexts ($\Gamma$). Type level (static) variables ($X$, $i$) are
@@ -480,7 +480,7 @@ dependent type theories. The rule ($\forall I$) for ordinary
 type generalization does not need such an additional side condition
 because type variables cannot appear in the syntax of terms.
 The side conditions on generalization rules for polymorphism are fairly standard
-in dependently typed languages supporting distinctions between polymorphism
+in dependently-typed languages supporting distinctions between polymorphism
 (\ie, erasable arguments) and dependent functions (\eg, IPTS\cite{LingerS08},
 ICC\cite{Miquel01}).
 

@@ -177,7 +177,7 @@ are valid kinds in Nax.
 The sorting rule (\raisebox{1pt}{\tiny\{\}}$->$) could be understood as
 a specific use of universe subtyping (|* <= BOX|) hard-wired within
 the arrow formation rule. Agda needs a more general notion of
-universe subtyping, since it is a dependently typed language
+universe subtyping, since it is a dependently-typed language
 with stratified universes, which we will shortly explain.
 \index{universe!subtyping}
 
@@ -278,7 +278,7 @@ The examples in \S\ref{sec:example} only used rather simple
 indexed datatypes, whose term indices are of non-indexed types
 (\eg, |Nat|, |List Ty|). One can imagine more complex indexed datatypes,
 where some term indices are themselves of term-indexed datatypes.
-Such nested term indices are often useful in dependently typed programming.
+Such nested term indices are often useful in dependently-typed programming.
 For instance, \citet{BraHam10} used an environment datatype with nested term
 indices in their EDSL implementation for verified resource usage protocols.
 Figure \ref{fig:env} illustrates transcriptions of their environment datatype
@@ -318,7 +318,7 @@ in Figure\;\ref{fig:env}, singleton natural numbers (|SNat|) are indexed by
 natural numbers (|Nat|).  Note that we can index datatypes by singleton types
 in Nax, while datatype promotion cannot (recall \S\ref{ssec:sortingEx}).
 For instance, |Env'| indexed by |SNat| in Figure\;\ref{fig:env} can better
-simulate the dependently typed version than |Env|, since |Env'| has a direct
+simulate the dependently-typed version than |Env|, since |Env'| has a direct
 handle on size of the environment at the type-level, just by referring to
 the |SNat| index, without extra type-level computation on the |Vec| index.
 
@@ -334,7 +334,7 @@ predates Nax.
 \index{kind arrow}
 Our kind syntax in Figure\;\ref{fig:sorting}, although developed independently,
 happens to coincide with the kind syntax of Deputy \cite{ConHarAndGayNec07},
-a dependently typed system for low-level imperative languages with
+a dependently-typed system for low-level imperative languages with
 variable mutation and a heap allocated structure.
 
 \paragraph{Curly braces in Nax are different from those in Agda or SHE.} ~
@@ -381,7 +381,7 @@ over (term) indices. Both in Nax and in Concoqtion, a program
 using indexed types must still type check within the non-indexed sub-language
 (OCaml for Concoqtion) when all indices are erased from the program. However,
 indices in Concoqtion differ from the term indices discussed in this chapter
-(Nax, datatype promotion, and dependently typed languages like Agda).
+(Nax, datatype promotion, and dependently-typed languages like Agda).
 Concoqtion indices are Coq terms rather than OCaml terms. Although
 this obviously leads to code duplication between the index world (Coq)
 and the program world (OCaml), Concoqtion enjoys practical benefits of
@@ -394,7 +394,7 @@ the technical report by \citet{PasSieTah06}.
 \section{Summary and Future Work}
 In Nax, programmers can enforce program invariants using indexed types,
 without excessive annotations (like functional programming languages)
-while enjoying logical consistency (like dependently typed proof assistants).
+while enjoying logical consistency (like dependently-typed proof assistants).
 
 There are two approaches that allow term indices without code duplication at
 every universe. \emph{Universe subtyping} is independent of the number of

@@ -1,4 +1,4 @@
-\section{The simply typed lambda calculus}\label{sec:stlc}
+\section{Simply-typed lambda calculus}\label{sec:stlc}
 \begin{figure}
 \begin{singlespace}
 \begin{minipage}{.46\textwidth}
@@ -80,14 +80,14 @@ A,B ::= &~ A -> B \\
 \end{align*}
 \end{minipage}
 ~\\
-\caption{Simply typed lambda calculus in Church style and Curry style}
+\caption{Simply-typed lambda calculus in Church style and Curry style}
 \label{fig:stlc}
 \end{singlespace}
 \end{figure}
-\index{lambda calculus!simply typed}
-\index{simply typed lambda calculus|see{STLC}}
+\index{lambda calculus!simply-typed}
+\index{simply-typed lambda calculus|see{STLC}}
 \index{STLC}
-We illustrate two styles of the simply typed lambda calculus (STLC)
+We illustrate two styles of the simply-typed lambda calculus (STLC)
 in Figure~\ref{fig:stlc}. The left column of the figure illustrates
 the Church-style STLC and the right column illustrates the Curry-style STLC.
 \index{Curry style}
@@ -229,7 +229,7 @@ The discussion below on strong normalization uses the
 Curry-style term syntax, but this proof strategy also works well
 for the Church-style STLC.\footnote{This proof strategy generalizes well
         to more complicated systems such as System~\F, System~\Fw, and
-        even to dependently typed calculi such as
+        even to dependently-typed calculi such as
         the Calculus of Constructions\cite{Geuvers94}.}
 In fact, this strategy originates from Girard's strong normalization proof
 for System \F\ using reducibility candidates \cite{Gir71}, and later rephrased
@@ -323,7 +323,6 @@ when both $\mathcal{A}$ and $\mathcal{B}$ are saturated \cite{Tait75}.
          for the proof of strong normalization}
 \label{fig:interpSTLC}
 \end{singlespace}
-\vspace*{.5em}\hrule
 \end{figure}
 
 \index{interpretation!STLC}
@@ -356,15 +355,15 @@ We prove this by induction on the typing derivation ($\Gamma|- t:A$).
 \paragraph{}
 For variables, it is trivial to show that
 $ \inference{\Gamma |- x:A & \rho \in [|\Gamma|]}{[|x|]_\rho \in [|A|]} $.
-
-Because of the \rulename{Var} rule, we know that $x:A \in \Gamma$.
-So, $[|x|]_\rho =\rho(x)\in[|\Gamma(x)|] = [|A|]$.
+\vspace{.2em}\\
+Because of the \rulename{Var} rule, $x:A \in \Gamma$.
+Thus, $[|x|]_\rho =\rho(x)\in[|\Gamma(x)|] = [|A|]$.
 
 \paragraph{}
 For abstractions, we need to show that
 $ \inference{\Gamma |- \l x.t : A -> B & \rho \in [|\Gamma|]}
              {[|\l x.t|]_\rho \in [|A -> B|]} $.
-
+\vspace{.2em} \\
 Since $[|\l x.t|]_\rho = \l x.[|t|]_\rho$ and
 $[|A -> B|] = \{ t\in \SN \mid t~s\in[|B|]~\text{for all}~s\in[|A|] \}$,
 what we need to show is equivalent to the following:
@@ -375,7 +374,7 @@ what we need to show is equivalent to the following:
 By induction, we know that:
 $ \inference{\Gamma,x:A |- t : B & \rho' \in [|\Gamma,x:A|]}
              {[|t|]_{\rho'} \in [|B|]} $.
-
+\vspace{.2em} \\
 Since this holds for all $\rho' \in [|\Gamma,x:A|]$, it also holds
 for a particular $\rho'$, where $\rho' = \rho[x \mapsto s]$ for any $s \in [|A|]$.
 So, $[|t|]_{\rho[x\mapsto s]} = ([|t|]_\rho)[s/x]\in[|B|]$ for any $s\in[|A|]$.
@@ -387,15 +386,13 @@ $\l x.[|t|]_\rho\in\{t\in \SN \mid t~s\in[|B|] ~\text{for all}~ s\in[|A|]\}$.
 
 \paragraph{}
 For applications, we need to show that
-$ \inference{\Gamma |- t~s : B & \rho\in[|\Gamma|]}{[|t~s|]_\rho \in [|B|]} $.
-
+$ \inference{\Gamma |- t~s : B & \rho\in[|\Gamma|]}{[|t~s|]_\rho \in [|B|]} $.\\
 By induction we know that
-$
+\[
 \inference{\Gamma |- t : A -> B & \rho\in[|\Gamma|]}{[|t|]_\rho \in [|A -> B|]}
 \qquad
 \inference{\Gamma |- s : A & \rho\in[|\Gamma|]}{[|s|]_\rho \in [|A|]}
-$.
-
+\]
 Then, it is straightforward to see that $[|t~s|]_\rho\in[|B|]$
 by definition of $[|A -> B|]$.\\
 \end{proof}

@@ -85,7 +85,7 @@ nil        = In0 Nil
 cons x xs  = In0 (Cons x xs)
 \end{code}
 \end{minipage}
-\end{singlespace}\vspace*{2.2mm}
+\end{singlespace}\vspace*{3mm}
 \noindent
 The constructor functions |zero|, |succ|, |nil|, and |cons| are
 ordinary definitions defined in terms of |In0|.
@@ -115,7 +115,7 @@ as follows:
 \begin{code}
 data StreamF a r = SCons a r
 type Stream a = Nu0 (StreamF a)
-
+{-""-}
 head  s = case (out0 s) of SCons h _  -> h
 tail  s = case (out0 s) of SCons _ t  -> t
 \end{code}
@@ -193,8 +193,10 @@ over |L|, sharing the same base structure with |List|, as follows:
 \begin{singlespace}
 \begin{code}
 type Stream' a = Nu0 (L a)
+{-""-}
 head'  s = case out0 s of  Nil       -> Nothing
                            Cons h _  -> Just h
+{-""-}
 tail'  s = case out0 s of  Nil       -> Nothing
                            Cons _ t  -> Just t
 \end{code}
@@ -202,7 +204,7 @@ tail'  s = case out0 s of  Nil       -> Nothing
 Here, the destructors |head'| and |tail'| become slightly more complicated
 because |Stream'| can be finite, terminating in |Nil|. 
 
-Due to laziness, datatypes in Haskell have characteristics of
+Because of laziness, datatypes in Haskell have characteristics of
 both recursive and co-recursive datatypes. However, when we use Haskell
 to explain Mendler-style concepts, we always distinguish recursive and
 co-recursive datatypes by adhering to the conventions we discussed:
