@@ -109,7 +109,7 @@ Co-recursive datatypes are defined as the co-fixpoint |Nu0| of (non-recursive)
 base structures. For example, infinite streams are
 defined as a co-recursive datatype
 as follows:
-\index{dataype!co-recursive}
+\index{datatype!co-recursive}
 \index{co-recursive datatype}
 \begin{singlespace}
 \begin{code}

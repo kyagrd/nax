@@ -90,7 +90,7 @@ the conventional iteration combinator |cata|:\\
 This is necessary because |cata| is defined in terms of |fmap|, which is
 a method of the |Functor| class:\\
 \hspace*{.1in} |cata phi (In0 x) = phi (fmap (cata phi) x)| \hspace*{.1in}  (Figure \ref{fig:rcombdef}).\\
-\index{combining funciton}
+\index{combining function}
 The combinator |cata| takes a combining function |phi :: f a -> a|, which
 assumes the recursive subcomponents (\eg, tail of the list) have already been
 turned into a value of answer type (|a|) and combines the overall result.

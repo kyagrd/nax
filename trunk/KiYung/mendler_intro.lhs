@@ -337,7 +337,7 @@ in \S\ref{sec:proof}. %% and extrapolate on other possible recursion combinators
 \begin{figure}
 \DataFix
 \caption{Standard (|Mu|) and inverse-augmented (|Rec|) datatype fixpoints
-at kind $*$ and kind $* -> *$.}
+at kinds $*$ and $* -> *$.}
 \label{fig:datafix}
 \end{figure}
 
@@ -395,7 +395,7 @@ We provide examples using the \MPr\ and \McvPr\ families in \S\ref{sec:mpr}.
 We discuss the remaining combinators of the inverse-augmented fixpoints
 in \S\ref{sec:showHOAS} and \S\ref{sec:evalHOAS}, where we culminate with
 examples involving HOAS.
-\index{fixpoint!inverse augmented}
+\index{fixpoint!inverse-augmented}
 We have structured each of the examples into two, side by side, parts.
 On the left, we provide a general recursive version and
 on the right, a Mendler-style version.

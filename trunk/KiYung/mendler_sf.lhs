@@ -356,7 +356,7 @@ msfcata0  ::  (forall r .  (a -> r a)  ->
         Note the abstract recursive type |r| is parameterized by
         the answer type |a| because the inverse-augmented fixpoint |Rec0|
         is parameterized by the answer type |a|.
-        \index{fixpoint!inverse augmented}
+        \index{fixpoint!inverse-augmented}
 
         Also, note the second argument of |msfcata0|, the object being
         operated on, has the higher-rank type
