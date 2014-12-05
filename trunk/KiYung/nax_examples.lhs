@@ -53,10 +53,10 @@ our prototype Nax implementation, and Agda 2.3.0.1.
 
 \begin{figure}\small
 \hspace*{-3ex}
-\begin{minipage}{.48\linewidth}\small
+\begin{minipage}{.60\linewidth}\small
 %include IFL12code/Eval.lnax
 \end{minipage}
-\begin{minipage}{.6\linewidth}\small
+\begin{minipage}{.35\linewidth}\small
 %include IFL12code/Eval.lagda
 \end{minipage}
 \caption{A type-preserving evaluator (|eval|) that evaluates
@@ -135,19 +135,19 @@ a type variable.
 
 \begin{figure}
 \begin{singlespace}
-\hspace*{-5ex}
-\begin{minipage}{.55\linewidth}\small \vskip2ex
+\hspace*{-6ex}
+\begin{minipage}{.60\linewidth}\small \vskip2ex
 %include IFL12code/GList.lnax
 \end{minipage}~
-\begin{minipage}{.48\linewidth}\small
+\begin{minipage}{.40\linewidth}\small
 %include IFL12code/GList.lagda
 \end{minipage}
 \vskip-4ex ~ \\
-\hspace*{-5ex}
-\begin{minipage}{.55\linewidth}\small
+\hspace*{-6ex}
+\begin{minipage}{.60\linewidth}\small
 %include IFL12code/GListExample.lnax
 \end{minipage}~
-\begin{minipage}{.48\linewidth}\small
+\begin{minipage}{.40\linewidth}\small
 %include IFL12code/GListExample.lagda
 \end{minipage}
 \end{singlespace}

@@ -1,14 +1,14 @@
 \section{System \Fixi} \label{sec:fixi:def}
 The syntax and rules of System~\Fi\ are described in
-Figures \ref{fig:Fixi}, \ref{fig:Fixi2} and~\ref{fig:eqFixi}.
+Figures \ref{fig:Fixi}, \ref{fig:Fixi2}, \ref{fig:eqFixi}, and~\ref{fig:eqFixi2}.
 The extensions new to System~\Fixi\ that are not original parts of
 either System~\Fw\ or System~\Fixw\ are highlighted by either
 \dbox{dashed boxes} or \newFi{\text{grey boxes}}, respectively.
 
 The extensions that not originally part of System~\Fixw\ are highlighted
 by \newFi{\text{grey boxes}}. Those extensions support term indexing.
-Eliding all the grey boxes from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2},
-and~\ref{fig:eqFixi}, one obtains a version of System~\Fixw\ with
+Eliding all the grey boxes from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2}, \ref{fig:eqFixi},
+and~\ref{fig:eqFixi2}, one obtains a version of System~\Fixw\ with
 typing contexts separated into two parts.\footnote{
 	The original description of \Fixw \cite{AbeMat04} has
 	one combined typing context.}
@@ -16,8 +16,8 @@ typing contexts separated into two parts.\footnote{
 The extensions that are not originally part of System \Fw\ but
 present in System~\Fixw\ are highlighted by \dbox{dashed boxes}.
 Those extensions support equi-recursive types. Eliding all the dashed boxes,
-as well as all the grey boxes, from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2},
-and~\ref{fig:eqFixi}, one obtains the Curry-style System \Fw\ with
+as well as all the grey boxes, from Figures~\ref{fig:Fixi}, \ref{fig:Fixi2}, \ref{fig:eqFixi}
+and~\ref{fig:eqFixi2}, one obtains the Curry-style System \Fw\ with
 typing contexts separated into two parts.
 
 
@@ -99,18 +99,17 @@ $ \fbox{$\Delta |- \Gamma$}
               \Delta |- \Gamma,x:A}
       \big( x\notin\dom(\Gamma) \big)
 $ \vskip1ex ~
-\paragraph{Sorting:} \fbox{$|- \kappa : \square$}
-$ \quad
+\paragraph{Sorting:\!\!\!\!}\fbox{$|- \kappa : \square$}
+$ ~
   \inference[($A$)]{}{|- *:\square}
- ~~~
+ ~
    \inference[($R$)]{|- \kappa:\square & |- \kappa':\square}{
 		     |- \dbox{$p\kappa$} -> \kappa' : \square}
- ~~~
+ ~
    \newFi{
    \inference[($Ri$)]{\cdot |- A:* & |- \kappa:\square}{
                       |- A -> \kappa : \square} }
 $
-~\\
 \paragraph{Kinding:} \fbox{$\Delta |- F : \kappa$}
 $ \qquad
    \inference[($Var$)]{\dbox{$X^{p\kappa}$}\in\Delta & |- \Delta}{
@@ -156,7 +155,6 @@ $ \qquad
                        & \Delta |- \kappa = \kappa' : \square }{
                         \Delta |- A : \kappa'} }
 \]
-~\\
 \paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
 $ \qquad
  ~~~~
@@ -177,18 +175,17 @@ $
 			    & \Delta,\dbox{$X^{0\kappa}$\!};\Gamma |- t : B}{
                              \Delta;\Gamma |- t : \forall X^\kappa.B}
 			    (X\notin\FV(\Gamma))
- ~~~~ ~~~~
+ ~
    \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
                             & \Delta |- G:\kappa }{
                              \Delta;\Gamma |- t : B[G/X]}
 \]
-\[ \newFi{
+\[ \!\!\newFi{
    \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}{
                                \Delta;\Gamma |- t : \forall i^A.B}
    \left(\begin{matrix}
 		i\notin\FV(t),\\
 		i\notin\FV(\Gamma)\end{matrix}\right)
- ~~~~
    \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
                               & \Delta;\cdot |- s:A}{
                                \Delta;\Gamma |- t : B[s/i]} }
@@ -221,7 +218,6 @@ $ \quad
              & |- \kappa'=\kappa'':\square}{
               |- \kappa=\kappa'':\square}
 \]
-~
 \paragraph{Type constructor equality:} \fbox{$\Delta |- F = F' : \kappa$}
 $\qquad \dbox{$
   \inference{\Delta|- F:+\kappa-> \kappa}{\Delta|- \fix F=F(\fix F):\kappa}$ } $
@@ -251,11 +247,12 @@ $\qquad \dbox{$
    \inference{\cdot |- A:* & \Delta,i^A |- F=F' : \kappa}{
 	      \Delta |- \lambda i^A.F=\lambda i^A.F' : A -> \kappa} }
 \]
-\[\!\!\!\!\!\!\!\!\!\!\!\!
+\[
    \inference{ \Delta |- F=F' : \dbox{$p\kappa$} -> \kappa'
    	     & \dbox{$p\Delta$} |- G=G':\kappa}{
               \Delta |- F\,G = F'\,G' : \kappa'}
- ~~~~
+\]
+\[
  \newFi{
    \inference{ \Delta |- F=F': A -> \kappa
              & \dbox{$0\Delta$\!};\cdot |- s=s':A}{
@@ -275,7 +272,12 @@ $\qquad \dbox{$
    \inference{\Delta |- F = F' : \kappa & \Delta |- F' = F'' : \kappa}{
               \Delta |- F = F'' : \kappa}
 \]
-~
+\end{singlespace}
+\caption{Kind and type-constructor equality rules of \Fixi.}
+\label{fig:eqFixi}
+\end{figure}
+
+\begin{figure}\begin{singlespace}\small
 \paragraph{Term equality:} \fbox{$\Delta;\Gamma |- t = t' : A$}
 \[
    \inference{\Delta;\Gamma,x:A |- t:B & \Delta;\Gamma |- s:A}{
@@ -285,7 +287,8 @@ $\qquad \dbox{$
 \]
 \[ \inference{\Delta |- A:* & \Delta;\Gamma,x:A |- t=t':B}{
               \Delta;\Gamma |- \lambda x.t = \lambda x.t':B}
- ~~~~
+\]
+\[
    \inference{\Delta;\Gamma |- r=r':A-> B & \Delta;\Gamma |- s=s':A}{
               \Delta;\Gamma |- r\;s=r'\;s':B}
 \]
@@ -293,7 +296,8 @@ $\qquad \dbox{$
 	     & \Delta, \dbox{$X^{0\kappa}$\!};\Gamma |- t=t' : B}{
               \Delta;\Gamma |- t=t' : \forall X^\kappa.B}
 	     (X\notin\FV(\Gamma))
- ~~~~ ~~~~
+\]
+\[
    \inference{ \Delta;\Gamma |- t=t' : \forall X^\kappa.B
              & \Delta |- G:\kappa }{
               \Delta;\Gamma |- t=t' : B[G/X]}
@@ -305,7 +309,9 @@ $\qquad \dbox{$
 		i\notin\FV(t),\\
 		i\notin\FV(t'),\\
 		i\notin\FV(\Gamma)\end{smallmatrix}\right)
- ~~~~
+	}
+\]
+\[ \newFi{
    \inference{ \Delta;\Gamma |- t=t' : \forall i^A.B
              & \Delta;\cdot |- s:A}{
               \Delta;\Gamma |- t=t' : B[s/i]} }
@@ -316,8 +322,8 @@ $\qquad \dbox{$
               \Delta;\Gamma |- t=t'':A}
 \]
 \end{singlespace}
-\caption{Equality rules of \Fixi.}
-\label{fig:eqFixi}
+\caption{Term equality rules of \Fixi.}
+\label{fig:eqFixi2}
 \end{figure}
 
 The grey-boxed extensions for term-indexing are essentially the same as

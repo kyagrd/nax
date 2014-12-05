@@ -11,7 +11,8 @@ TEXSRC=mylhs2tex.sty main.tex \
        mendler_nonreg.tex mendler_nest.tex mendler_gadt.tex mendler_mutrec.tex \
        mendler_proof.tex \
        mendler_prim.tex \
-       fi.tex fi_fi.tex fi_theory.tex fi_data.tex fixi.tex \
+       fi.tex fi_fi.tex fi_theory.tex fi_data.tex \
+       fixi_fixi.tex fixi_prim.tex fixi_cvpr.tex fixi_theory.tex \
        nax.tex naxtyinfer.tex casestd.tex \
        relwork.tex relwork_mcoit.tex relwork_mmult.tex \
        futwork.tex futwork_mprsi.tex futwork_mu.tex \

@@ -1,6 +1,7 @@
 \documentclass[12pt]{report}
 %% \usepackage[bbgreekl]{mathbbol}
 \usepackage{psu-thesis}
+
 %% \usepackage[T1]{fontenc}
 %% \usepackage[latin1]{inputenc}
 \usepackage{amssymb}
@@ -33,7 +34,16 @@
 % \usepackage[backref]{hyperref}
 \usepackage{hyperref}
 
+\usepackage[subfigure]{tocloft}
+\usepackage[titletoc]{appendix}
+
 \usepackage{mylhs2tex}
+
+\renewcommand{\contentsname}{Table of Contents}
+
+\addtocontents{toc}{\protect\renewcommand{\protect\cftpartpresnum}{\partname\;}}
+\addtocontents{toc}{\protect\renewcommand{\protect\cftchappresnum}{\chaptername\;}}
+\setlength{\cftchapnumwidth}{\widthof{\sc\chaptername~00~}}
 
 \makeindex
 
@@ -145,9 +155,9 @@
 %% \renewcommand\qedsymbol{$\blacksquare$}
 
 \begin{document}
-\title{The Nax language:\\
-       unifying functional programming and logical reasoning in a language\\
-       based on Mendler-style recursion schemes and term-indexed types}
+\title{\sc {\large The Nax language\,:}\\
+       unifying functional programming and logical reasoning\\ in a language
+       based on Mendler-style recursion schemes\\~\qquad and term-indexed types}
 \titleline{The Nax language}
 
 \author{Ki Yung Ahn}
@@ -220,10 +230,12 @@ love and prayers from the other side of the Pacific; the young adults' group
 in Oregon Eden Presbyterian Church for being a warm and dynamic community; and,
 to coach Ruth Aquino and friends in the Lloyd Center Ice Rink, where I chilled
 out in the evenings.
+\newpage
 %%%% %% esac
 
 \afterpreface
 \body
+
 
 %% BEGIN PART1
 \part{Prelude}\label{part:Prelude}
@@ -255,14 +267,10 @@ out in the evenings.
 \include{concl}   %% Conclusion                            {ch:concl}
 %% END PART5
 
+\addtocontents{toc}{\protect\renewcommand{\protect\cftpartpresnum}{}}
+\addtocontents{toc}{\protect\renewcommand{\protect\cftchappresnum}{}}
 \clearpage
-\phantomsection
-\addcontentsline{toc}{part}{Appendix}
-\appendix
-\include{appendix}
-
-\clearpage
-\phantomsection
+\phantomsection{}
 \addcontentsline{toc}{part}{Bibliography}
 \bibliographystyle{plainnat}
 \bibliography{main}
@@ -276,7 +284,10 @@ out in the evenings.
 \end{singlespace}
 }
 
-
+\clearpage
+\begin{appendices}
+\include{appendix}
+\end{appendices}
 
 \end{document}
 

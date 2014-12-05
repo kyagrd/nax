@@ -164,7 +164,6 @@ the typing context into two parts is the simplest solution for our purposes.
               \Delta |- \Gamma,x:A}
       \big( x\notin\dom(\Gamma)\cup\dom(\Delta) \big)
 \]
-~\\
 \paragraph{Sorting:} \fbox{$|- \kappa : \square$}
 \[
   \inference[($A$)]{}{|- *:\square}
@@ -215,7 +214,6 @@ $
                        & \Delta |- \kappa = \kappa' : \square }{
                         \Delta |- A : \kappa'} }
 \]
-~\\
 \paragraph{Typing:} \fbox{$\Delta;\Gamma |- t : A$}
 $ \qquad
  ~~~~
@@ -236,18 +234,17 @@ $
 	                    & \Delta, X^\kappa;\Gamma |- t : B}{
                              \Delta;\Gamma |- t : \forall X^\kappa.B}
 			    (X\notin\FV(\Gamma))
- ~~~~ ~~~~
+ ~
    \inference[($\forall E$)]{ \Delta;\Gamma |- t : \forall X^\kappa.B
                             & \Delta |- G:\kappa }{
                              \Delta;\Gamma |- t : B[G/X]}
 \]
-\[ \newFi{
+\[ \!\!\newFi{
    \inference[($\forall I i$)]{\cdot |- A:* & \Delta, i^A;\Gamma |- t : B}{
                                \Delta;\Gamma |- t : \forall i^A.B}
    \left(\begin{matrix}
 		i\notin\FV(t),\\
 		i\notin\FV(\Gamma)\end{matrix}\right)
- ~~~~
    \inference[($\forall E i$)]{ \Delta;\Gamma |- t : \forall i^A.B
                               & \Delta;\cdot |- s:A}{
                                \Delta;\Gamma |- t : B[s/i]} }
@@ -255,7 +252,6 @@ $
 \[ \inference[($=$)]{\Delta;\Gamma |- t : A & \Delta |- A = B : *}{
                      \Delta;\Gamma |- t : B}
 \]
-~\\
 \end{singlespace}
 \caption{Sorting, Kinding, and Typing rules of \Fi.}
 \label{fig:Fi2}
