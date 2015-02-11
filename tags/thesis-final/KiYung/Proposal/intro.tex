@@ -1,0 +1,153 @@
+\section{Introduction: dividing the problem space of typed formal reasoning systems}
+\label{sec:intro}
+\newcommand{\IND}{\ensuremath{\mathsf{IND}}}
+\newcommand{\REC}{\ensuremath{\mathsf{REC}}}
+\newcommand{\INDbot}{\ensuremath{\mathsf{IND}_\bot}}
+\newcommand{\RECbot}{\ensuremath{\mathsf{REC}_\bot}}
+
+\begin{figure}
+\begin{tabular}{p{12em}p{10em}|p{10em}}
+             & ~\newline normalizing terms & possibly\newline non-normalizing terms \\
+\begin{center}\centering
+inductive types
+\end{center} & \begin{center}\Large\IND\end{center} & \begin{center}\Large\INDbot\end{center} \\ \hline
+\begin{center}
+~~~~recursive types\newline
+(possibly non-inductive)
+\end{center} & \begin{center}\Large\REC\end{center} & \begin{center}\Large\RECbot\end{center}
+\end{tabular}
+\caption{The four problem spaces categorized by inductiveness and normalization}
+\label{fig:probspace}
+~\\
+\framebox{
+\begin{minipage}{\textwidth}
+\IND\ consists of the normalizing terms with inductive types.
+Terms of the simply typed lambda calculus, extended with finite ground types
+(\eg unit, boolean) or (more generally) inductive types with primitive recursion
+(\eg natural number, list, tree) also belong to \IND.\\
+
+\INDbot\ consists of possibly non-normalizing terms with inductive types.
+That is, both normalizing and non-normalizing terms with inductive types
+are in \INDbot. Thus, any term belonging to \IND also belongs to \INDbot\
+(\ie $\IND\subset\INDbot$) by definition. A typical way of extending
+a language, to break the \IND\ containment, is to add unrestricted
+\emph{general recursion} to the language. For example,
+the simply typed lambda calculus extended with general recursion
+(\ie by adding a Y-combinator) have non-normalizing (or, non-terminating) terms,
+which then belong to \INDbot\ but not \IND.\\
+
+\REC\ consists of normalizing terms of recursive types, which are possibly
+not inductive. That is, some recursive types correspond to inductive types,
+while others do not. So, \IND\ is contained in \REC\ (\ie $\IND\subset\REC$)
+by definition. Terms of System \F\ belong to \REC, since System \F\ is powerful
+enough to encode all recursive types, while remaining strongly normalizing.
+Although the fact that there exist sound languages contained in \REC, such
+languages have often been overlooked in the design of formal reasoning systems.\\
+
+\RECbot\ consists of possibly non-normalizing terms with recursive types,
+which are possibly not inductive. Unlike languages with inductive types,
+languages that allow unrestricted use of recursive types can have
+non-normalizing terms, even without unrestricted general recursion.
+For example, the simply typed lambda calculus extended with recursive types
+can have non-normalizing terms (\ie can express non-terminating computations).
+Note, it is much easier to introduce non-termination in the presence of
+recursive types (where one doesn't need general recursion) than
+in the presence of inductive types (where one needs general recursion
+to introduce non-termination). For this reason, \REC\ has often been neglected
+and \RECbot\ has mainly been considered for reasoning about languages
+with recursive types.
+\end{minipage}
+}
+\end{figure}
+
+My proposed thesis is:
+\begin{quote}
+The two important concepts in typed formal reasoning systems (or,
+typed programming languages), \emph{inductiveness of types}
+(\ie well defined as logical propositions)
+and \emph{normalization of terms} (\ie canonical values and total functions),
+can be and must be considered separately.
+\end{quote}
+
+We can categorize the problem space of typed formal reasoning systems (\eg LCF,
+HOL, Coq, Twelf) by the inductiveness of types and the normalization of terms.
+There are four combinations (\IND, \INDbot, \REC, \RECbot)
+in this two dimensional space as shown in Figure\;\ref{fig:probspace}.
+The upper two (\IND, \INDbot) categorize inductive types and
+the lower two (\REC, \RECbot) categorize recursive types.
+The left two (\IND, \REC) only allow total functions and
+the right two (\INDbot, \RECbot) allow partial functions.
+These four fragments are related by inclusion: the upper ones are included in
+the lower ones ($\IND\subset\REC$, $\INDbot\subset\RECbot$) and the left ones
+are included in the right ones ($\IND\subset\INDbot$, $\REC\subset\RECbot$).
+And, as a consequence of transitivity, it is the case that $\IND\subset\RECbot$.
+Note, \IND\ is the smallest and \RECbot is the largest of the four divisions
+of the problem space. As we move to a smaller space, we are less expressive,
+but we have more properties guaranteed. As we move to a larger space, we are
+more expressive but have fewer properties guaranteed. For instance, in \IND,
+we can not use general recursion to express terms, but have a normalization
+guarantee; whereas, in \INDbot, we can use general recursion but no longer
+have a normalization guarantee.
+ 
+An ideal general purpose formal reasoning system should be able to shift
+gears smoothly between these four spaces. If we can smoothly move around
+from one space to another, we can take advantage of the benefits of both
+the smaller space and the larger space. That is, we can express terms
+in flexible ways allowed by the larger space, yet also depend upon
+the desired properties guaranteed by the smaller space. For example,
+consider the following diagram of function compositions, which commute:
+That is, $f = g \circ f' \circ h$.
+\[ \xymatrix{A_1 \ar[r]^f \ar[d]_h & A_2 \\
+             B_1 \ar[r]_{f'}       & B_2 \ar[u]^g} \]
+Let this diagram lie in \REC. That is,
+all the functions ($f,h,g,f'$) are total and all the types ($A_1,A_2,B_1,B_2)$
+are recursive types, which may or may not be inductive.
+Then I expect the following property to hold:
+If $A_1$ and $A_2$ are inductive, then $f$ is in \IND.
+
+The motivation for the diagram above and its related property is the following.
+We want to define $f$, which may be definable in \IND\ but the definition
+is likely to be annoying since we have limited expressiveness in \IND.
+It may be easier and more natural to define $f'$ in \REC, which is a function
+over non-inductive recursive types $B_1$ and $B_2$, where the meaning of $f'$
+corresponds to $f$. Then, we would be able to define $f$ as a composition of
+$f'$ with (hopefully simple) mapping functions, $g$ and $h$. Later on,
+we will introduce a well known example of Normalization by Evaluation
+(\S\ref{sssec:NbE}), which directly correspond to this diagram.
+
+More generally, I expect that a function $f$ in \REC\ can also be considered
+to be in \IND\ when domain and range of $f$ are inductive types.
+We can also write this in the style of typing judgement as follows:
+\[\inference[\REC-\IND($\to$)]{ \Gamma |-_\REC f:A\to B
+                      & \Gamma |-_\IND A:\star
+                      & \Gamma |-_\IND B:\star }
+                      { \Gamma |-_\IND f:A\to B } \]
+Note, $A\to B$ is a inductive type when $A$ and $B$ are inductive. Thus,
+even more generally, I expect any term $e$ in \REC\ can also be considered
+to be in \IND\ when its type is inductive:
+\[\inference[\REC-\IND]{ \Gamma |-_\REC e:T
+                       & \Gamma |-_\IND T:\star }
+                       { \Gamma |-_\IND e:T } \]
+The typing rule for going the other way (\ie considering a term of \IND\
+as a term of \REC) is trivial by the inclusion relation between \IND\ and \REC:
+\[\inference[\IND-\REC]{ \Gamma |-_\IND e:T }
+                       { \Gamma |-_\REC e:T } \]
+There would be similar properties between other pairs of the four fragments,
+which are in an inclusion relation (\eg \IND\ and \INDbot,
+\INDbot\ and \RECbot). In my thesis work, I will identify those properties
+and categorize prior work by the inclusion relation they depend upon.
+From my preliminary research, it seems that the relation between
+\IND\ and \INDbot\ has been most heavily studied and implemented in practice.
+Various \emph{termination analysis} methods found in proof assistants,
+which are based on inductive types, can be categorized as relating
+\IND\ and \INDbot. The studies on \emph{strictly positive types} and
+\emph{monotonicity} relates \IND\ and \REC. Although there exists some
+theoretical studies relating \REC\ and \RECbot, few formal reasoning system
+make use of those studies in practice. Thus, in my dissertation, I will put
+more focus on relating \REC\ and \RECbot\ among the other inclusion relations.
+More detailed plans for my dissertation work will be presented
+in \S\ref{sec:plan}, after reviewing the background literature on
+inductive types and recursive types in \S\ref{sec:bg}
+and summarizing our preliminary work in \S\ref{sec:prelim}.
+
+%% TODO thesis should be made more clear in the last summary sentence/paragraph

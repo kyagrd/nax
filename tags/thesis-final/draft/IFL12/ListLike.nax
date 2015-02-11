@@ -1,0 +1,119 @@
+-- nothing to do for nax
+
+
+
+
+{-"\underline{\textsc{Nax}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i_{g}}}"-}
+
+data Ty = I | B
+{-""-}
+
+data Val : Ty -> * where
+  IV  : Int -> Val {I}
+  BV  : Bool -> Val {B}
+
+-- |plusV : Val {I} -> Val {I} -> Val {I}|
+plusV (IV n) (IV m) = IV (n + m)
+
+-- |ifV : Val {B} -> Val {t} -> Val {t} -> Val {t}|
+ifV (BV b) v1 v2 = if b then v1 else v2
+
+{-""-} 
+data E : (Ty -> *) -> (Ty -> *) where
+  VAL   : Val {t} -> E r {t}
+  PLUS  : r {I} -> r {I} -> E r {I}
+  IF    : r {B} -> r {t} -> r {t} -> E r {t}
+    deriving fixpoint Expr
+-- |eval : Expr {t} -> Val {t}|
+eval e =  mcata { {t} . Val {t} } e with
+            ev (VAL v)        = v
+            ev (PLUS e1 e2)   =
+              plusV (ev e1) (ev e2)
+            ev (IF e0 e1 e2)  =
+              ifV (ev e0) (ev e1) (ev e2)
+
+
+
+
+
+{-"\underline{\textsc{Nax}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}_{\phantom{i}}"-}
+
+data P :  ({iota} -> {iota} -> *) ->
+          ({iota} -> {iota} -> *) ->
+          ({iota} -> {iota} -> *) where
+  PNil    : P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}i{-"\!"-}}
+  PCons   : x {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> r {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> P x r {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}
+     deriving fixpoint Path
+-- |append : Path {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} -> Path {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}}|
+append l = {-"\hspace*{5ex}"-}-- \hspace*{4ex} |-> Path {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}}|
+  mcata { {{-"\!"-}i{-"\!"-}} {{-"\!"-}j{-"\!"-}} . Path x {{-"\!"-}j{-"\!"-}} {{-"\!"-}k{-"\!"-}} -> Path x {{-"\!"-}i{-"\!"-}} {{-"\!"-}k{-"\!"-}} } l
+    with
+      app PNil           ys  = ys
+      app  (PCons x xs)  ys  =
+           pCons x (app xs ys)
+
+
+
+
+
+
+{-"\underline{\textsc{Nax}_{\phantom{g}}
+              \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad~~}"-}
+
+data Instr  :  (List Ty -> List Ty -> *) ->
+               (List Ty -> List Ty -> *) where
+   PUSH   : Val {t} -> Instr r {ts} {`cons t ts}
+   ADD    : Instr r {`cons I (`cons I ts)} {`cons I ts}
+   IFPOP  :  Path r {ts} {ts'} ->
+             Path r {ts} {ts'} ->
+             Instr r {`cons B ts} {ts'}
+     deriving fixpoint Inst
+{-""-}
+
+synonym  Code {sc} {sc'} = Path Inst {sc} {sc'}
+    -- ~ |Path (Mu[List Ty -> List Ty -> *] Instr) {sc} {sc'}|
+
+compile e =
+  mcata { {t} . Code {ts} {`cons t ts} } e with
+    cmpl (VAL v)        =
+      pCons (pUSH v) pNil
+    cmpl (PLUS e1 e2)   =
+      append  (append  (cmpl e1) (cmpl e2))
+              (pCons aDD pNil)
+    cmpl (IF e0 e1 e2)  =
+      append  (cmpl e0)
+              (pCons  (iFPOP  (cmpl e1)
+                              (cmpl e2))
+                      pNil)
+
+
+
+
+
+-- instantiating to a plain regular list
+data Unit = U
+data Elem : * -> Unit -> Unit -> * where
+  MkElem : a -> Elem a {U} {U}
+
+synonym List' a = Path (Elem a) {U} {U}
+
+nil' = pNil {-" ~~ "-} -- |: List' a|
+
+-- |cons' : a -> List' a -> List' a|
+cons' x = pCons (MkElem x)
+
+-- instantiating to a length indexed list
+
+data ElemV : * -> Nat -> Nat -> * where
+  MkElemV : a -> ElemV a {`succ n} {n}
+
+synonym  Vec a {n}
+           = Path (ElemV a) {n} {`zero}
+
+vNil = pNil {-" ~~ "-} -- |: Vec a {`zero}|
+
+-- |vCons : a -> Vec a {n} -> Vec a {`succ n}|
+vCons x = pCons (MkElemV x)
+

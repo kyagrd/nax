@@ -1,0 +1,200 @@
+\documentclass{llncs}
+
+%% \usepackage[hang]{caption}
+\usepackage{amsmath}
+\usepackage{semantic}
+\usepackage{color}
+%% \usepackage{framed}
+\usepackage{comment}
+\usepackage[numbers]{natbib}
+\usepackage{mylhs2tex}
+
+\newcommand{\KYA}[1]{\textcolor{blue}{#1 -- Ki Yung}}
+\newcommand{\TS}[1]{\textcolor{red}{#1 -- Tim}}
+
+\title{The Nax programming language {\small(work in progress)}}
+\titlerunning{The Nax programming language}
+\author{Ki Yung Ahn\inst{1} \and Tim Sheard\inst{1} \and
+	Marcelo Fiore\inst{2} \and Andrew M. Pitts\inst{2}
+	}
+\institute{
+	Portland State University, Portland, Oregon, USA \thanks{supported by NSF grant 0910500.}
+	\\ \email{kya@cs.pdx.edu} \qquad \email{sheard@cs.pdx.edu}
+	\and
+	University of Cambridge, Cambridge, UK
+	\\ \email{\{Marcelo.Fiore,Andrew.Pitts\}@cl.cam.ac.uk}
+	}
+
+\newcommand{\ie}{{i.e.}}
+\newcommand{\eg}{{e.g.}}
+\newcommand{\aka}{{a.k.a.}$\,$}
+
+\newcommand{\Fig}[1]{Fig.\,\ref{fig:#1}}
+
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
+
+\newcommand{\Wi}{\ensuremath{W_i}}
+
+\newcommand{\Fi}{\ensuremath{\mathsf{F}_i}}
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
+\newcommand{\fix}{\mathsf{fix}}
+\newcommand{\Fix}{\mathsf{Fix}}
+\newcommand{\Fixw}{\ensuremath{\Fix_{\omega}}}
+\newcommand{\Fixi}{\ensuremath{\Fix_{i}}}
+
+\newcommand{\Nat}{\ensuremath{\mathsf{Nat}}}
+\newcommand{\Bool}{\ensuremath{\mathsf{Bool}}}
+\newcommand{\sfList}{\ensuremath{\mathsf{List}}}
+\newcommand{\sfVec}{\ensuremath{\mathsf{Vec}}}
+\newcommand{\SAT}{\ensuremath{\mathsf{SAT}}}
+
+\newcommand{\oz}{\oldstylenums{0}}
+\newcommand{\ka}{{\check\kappa}}
+
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calA}{\mathcal{A}}
+\newcommand{\calR}{\mathcal{R}}
+\newcommand{\dom}{\mathop{\mathsf{dom}}}
+\newcommand{\FV}{\mathop{\mathrm{FV}}}
+\newcommand{\In}{\mathsf{In}}
+
+\newcommand{\defeq}{\stackrel{\mathrm{def}}{=}}
+\newcommand{\tyinf}{\mathrel{\triangleright}}
+
+
+%%% semantic package commands
+\reservestyle[\mathinner]{\command}{\mathsf}
+\command{MIt[MIt\;]}
+\reservestyle[\mathinner]{\cmd}{\mathbf}
+\cmd{let[let\;],in[\;in\;],data[data~],where[~where~]}
+
+\begin{document}
+\maketitle
+%% \begin{abstract}
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% 	Write abstract here. Write abstract here.
+%% \keywords{asdf, asdf, asdf, asdf}
+%% \end{abstract}
+
+\input{intro}
+
+% Proof assistants have shown its practical use in mechanizing certain
+% mathematical proofs \cite{4 color problem}, verifying specifications
+% \cite{something}, and mechanizing metatheories of programming languages.
+% However, verified programming, or \emph{``correct by construction''} approach
+% to programming, is yet far from being practical for everyday programming tasks,
+% because proof assistants were designed for aiding formal proof generation,
+% not for writing executable programs.
+
+
+% \subsection{Proof assistants}
+% \emph{Proof assistants} based on Curry-Howard correspondence over
+% dependently-typed $\lambda$-calculi is a major application area of type theory.
+% Such proof assistants can \emph{express fine-grained properties} using
+% dependent types and also \emph{guarantee correctness} since they are based on
+% strongly normalizing and logically consistent calculi. For instance, Coq is
+% based on the Calculus of Inductive Constructions, which is a dependently-typed
+% $\lambda$-calculi known to be strongly normalizing and logically consistent.
+% 
+% Proof assistants have shown its practical use in mechanizing certain
+% mathematical proofs \cite{4 color problem}, verifying specifications
+% \cite{something}, and mechanizing metatheories of programming languages.
+% However, verified programming, or \emph{``correct by construction''} approach
+% to programming, is yet far from being practical for everyday programming tasks,
+% because proof assistants were designed for aiding formal proof generation,
+% not for writing executable programs.
+
+% There are basically two ways of
+% \emph{verified programming} in such proof assistants: either
+% (1) extract program exploiting Curry-Howard correspondence (shallow embedding)
+% or
+% (2) write your own verified compiler for your object language (deep embedding).
+
+% since the generated proof term has a notion executable
+% semantics (shallow embedding)
+% (\ie, cut-elimination corresponds to 
+% reduction of proof terms).
+
+% \subsection{Functional programming languages}
+% 
+% \emph{Functional programming languages} based on type-safe (\ie, if a term
+% evaluates to a value, the value has the same type as the original term)
+% polymorphic $\lambda$-calculi is another major application of type theory.
+% Many popular functional programming languages, such as Haskell\cite{Haskell 98}
+% and ML, are based on the Hindley-Milner type system, which is not only
+% \emph{type-safe} but also \emph{type-inferable}. Type inference makes type-safe
+% programming easy and productive for everyday programming tasks since programmers
+% are free from tedious type annotations.
+% 
+% But, fine-grained properties are not expressible in these functional languages
+% due to the lack of dependent types. Even if those fine-grained properties were
+% somehow expressible, the type system of these languages cannot give guarantee
+% those properties. Recall that general purpose programming languages are neither
+% strongly normalizing nor logically consistent, because they are capable of
+% expressing diverging computations by design.
+
+%% \subsection{Indexed datatypes}
+%% 
+%% Type-indexed datatypes
+%% 
+%% Term-indexed datatypes
+%% 
+%% \subsection{Mendler-style recursion combinators}
+%% 
+%% TODO
+
+\input{example}
+
+\input{nax}
+
+%% \cite{Girard72} dummy citation
+%% \cite{AhnShe11}
+%% 
+%% \citet{Girard72} citet test
+%% \citet{AhnShe11} citet test
+%% 
+%% \citeauthor{Girard72} citeauthor test
+%% \citeauthor{AhnShe11} citeauthor test
+
+\section{Embedding Nax into strongly normalizing calculus}\label{sec:theory}
+
+Our approach to formalizing the Nax as a logical language, is to
+embed each logical feature of Nax into a lower level language,
+System \Fi, which we have proven to
+be strongly normalizing and logically consistent\cite{POPL13}. 
+We have designed System \Fi, which is an extension of \Fw\ with 
+erasable term indices, and proved its properties.\footnote{
+	We submitted a paper on System \Fi\ on POPL recently.
+	Along with this submission, the draft of that paper on System \Fi\ is
+	included as a supplimentary material.}
+Our approach of
+distinguishing type and term indices is unique, and requires the
+extension of some previous work on normalizing calculi. 
+		
+\section{Implementation}
+We used Haskell and its libraries (\eg, unbound \cite{unbound})
+to implement a prototype of Nax as an interpreter.
+
+\input{summary}
+
+\bibliographystyle{splncs03}
+%% \bibliographystyle{splncsnat}
+\bibliography{main}
+
+\newpage
+\appendix
+\section{Supplimentary material}
+~\\
+
+{\huge
+Material following from next page is a supplimentary material on System \Fi,
+which is a draft submitted to POPL '13.}
+
+\end{document}

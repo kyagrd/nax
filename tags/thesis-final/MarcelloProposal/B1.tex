@@ -1,0 +1,1919 @@
+\documentclass[11pt,twocolumn]{article}
+
+\usepackage{amsfonts,euler}
+\usepackage{MnSymbol}
+
+\usepackage[all]{xy}
+\UseComputerModernTips
+\xyoption{knot}
+
+\usepackage[a4paper,includehead,includefoot,headheight=13.6pt,
+  headsep=4mm,top=1cm,bottom=1cm,left=2cm,right=2cm]{geometry}
+
+\usepackage{float}
+\floatstyle{ruled}
+\restylefloat{figure}
+
+\usepackage{dashrule}
+
+\usepackage{multirow}
+
+\usepackage{color}
+\definecolor{grey}{gray}{.85}
+
+\setcounter{secnumdepth}{4}
+\renewcommand{\theparagraph}{\arabic{subsection}.\arabic{subsubsection}.\arabic{paragraph}}
+
+%%% BEGIN macros
+\newenvironment{myitemize}
+  {\begin{list}{$\bullet$}
+  {\setlength{\topsep}{1pt}
+   \setlength{\partopsep}{1pt}
+   \setlength{\itemsep}{0pt}
+   \setlength{\parsep}{0pt}
+   \setlength{\leftmargin}{1em}
+   \setlength{\labelwidth}{.5em}}}
+  {\end{list}}
+\newenvironment{myindentitemize}
+  {\begin{list}{$-$}
+  {\setlength{\topsep}{2pt}
+   \setlength{\partopsep}{2pt}
+   \setlength{\itemsep}{2.5pt}
+   \setlength{\parsep}{2.5pt}
+   \setlength{\leftmargin}{2.125em}
+   \setlength{\labelwidth}{1.625em}}}
+  {\end{list}}
+\newenvironment{myquote}
+  {\begin{list}{}
+  {\setlength{\topsep}{2pt}
+   \setlength{\partopsep}{2pt}
+   \setlength{\itemsep}{2.5pt}
+   \setlength{\parsep}{2.5pt}
+   \setlength{\rightmargin}{1em}
+   \setlength{\leftmargin}{1em}
+   \setlength{\labelwidth}{.5em}}}
+  {\end{list}}
+\newenvironment{mybigitemize}
+  {\begin{list}{$\bullet$}
+  {\setlength{\topsep}{2pt}
+   \setlength{\partopsep}{2pt}
+   \setlength{\itemsep}{2.5pt}
+   \setlength{\parsep}{2.5pt}
+   \setlength{\leftmargin}{1em}
+   \setlength{\labelwidth}{.5em}}}
+  {\end{list}}
+\newenvironment{btritemize}
+  {\begin{list}{\btr}
+  {\setlength{\topsep}{2pt}
+   \setlength{\partopsep}{2pt}
+   \setlength{\itemsep}{2.5pt}
+   \setlength{\parsep}{2.5pt}
+   \setlength{\leftmargin}{1em}
+   \setlength{\labelwidth}{.5em}}}
+  {\end{list}}
+\newcounter{CC}
+\newenvironment{resenumerate}
+  {\begin{list}{[\textbf{\arabic{CC}]}}
+  {\usecounter{CC}
+   \setlength{\topsep}{2pt}
+   \setlength{\partopsep}{2pt}
+   \setlength{\itemsep}{2.5pt}
+   \setlength{\parsep}{2.5pt}
+   \setlength{\leftmargin}{1.65em}
+   \setlength{\labelwidth}{1.15em}
+ }}
+  {\end{list}}
+
+\newcommand{\mysf}{\small\sf}
+\newcommand{\mytextsf}[1]{\textsf{\small #1}}
+\newcommand{\erc}{{\small\sf MaStrPLan}}
+\newcommand{\ERC}{Mathematical Structures for Type Theories,\\[-.5mm] Logical
+  Systems, and Programming Languages}
+
+\newcommand{\hide}[1]{}
+\newcommand{\hidebib}[1]{}%{#1}
+
+\newcommand{\hl}[1]{#1}%{\emph{#1}}
+
+\newcommand{\eg}{\emph{eg.}}
+\newcommand{\Eg}{\emph{Eg.}}
+\newcommand{\vs}{\emph{vs.}}
+\newcommand{\ie}{\emph{ie.}}
+\newcommand{\viz}{\emph{viz.}}
+\newcommand{\etc}{\emph{etc.}}
+\newcommand{\etal}{\emph{et al.}}
+\newcommand{\cf}{\emph{cf.}}
+
+\newcommand{\lcalculus}{\mbox{$\lambda$-calculus}}
+\newcommand{\SysL}{$L$}%{$\boldsymbol L$}
+\newcommand{\SystemF}{\mbox{System~$F$}}
+\newcommand{\SystemFi}{\mbox{System~$F_i$}}
+\newcommand{\SystemFomega}{\mbox{System~$F_\omega$}}
+\newcommand{\LC}{\mbox{$LC$}}
+
+\newcommand{\btr}{$\blacktriangleright$}
+
+\newcommand{\reqpsize}{8.113395cm}%{\columnwidth}
+
+\newcommand{\req}[2]{\begin{center}\colorbox{grey}{\begin{minipage}{\reqpsize} 
+  \mytextsf{Research question}\hfill$^{\mbox{\scriptsize see (#1) }}$\\[-5.5mm]
+  \begin{btritemize}
+  \item #2
+  \end{btritemize}
+\end{minipage}}\end{center}}
+
+\newcommand{\reqs}[2]{\begin{center}\colorbox{grey}{\begin{minipage}{\reqpsize}
+  \mytextsf{Research questions}\hfill$^{\mbox{\scriptsize see (#1) }}$\\[-5.5mm]
+  \begin{btritemize}
+  \item #2
+  \end{btritemize}
+\end{minipage}}\end{center}}
+
+\newcommand{\rep}[2]{\begin{center}\colorbox{grey}{\begin{minipage}{\reqpsize}
+  \mytextsf{Research pathway}\hfill$^{\mbox{\scriptsize see (#1) }}$\\[-5.5mm]
+  \begin{btritemize}
+  \item #2
+  \end{btritemize}
+\end{minipage}}\end{center}}
+
+\newcommand{\Set}{{\boldsymbol{\mathscr S}}}
+\newcommand{\scat}[1]{\mathbb{#1}}
+\newcommand{\cat}[1]{\mathscr{#1}}
+\newcommand{\op}{\circ}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\Di}{\mathrm{Di}}
+
+\newcommand{\qed}{\Box}
+\newcommand{\logo}
+{\mbox{\tiny$\xymatrix@C=3pt@R=4.5pt{
+    & \qed \ar@{-}[d] 
+    \ar@/_.5em/@{-}[ddl]<-.25em>
+    \ar@/^.5em/@{-}[ddr]<.25em>
+    & 
+    \\
+    & \ar@{-}[dl] \qed \ar@{-}[dr] & 
+    \\
+    \ar@/_.5em/@{-}[rr]<.125em>
+    \qed & & \qed
+  }$}}
+%%% END macros
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\emph{Marcelo Fiore}}
+\chead{Part~B1}
+\rhead{\erc}
+\lfoot{}
+\cfoot{\thepage}
+\rfoot{}
+
+\usepackage[compact]{titlesec}
+
+\usepackage{compactbib}
+
+\usepackage{setspace}
+\setstretch{.9}
+
+\usepackage{times}
+
+\makeatletter
+\renewcommand\@biblabel[1]{#1}
+\makeatother
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+
+\def\contentsname{\large Contents\\[-7.5mm]}
+\usepackage{minitoc}
+\tightmtctrue
+
+\usepackage[draft]{hyperref}
+\hypersetup{pdftitle={\ERC},pdfauthor={Marcelo Fiore}}
+
+\newcommand{\obullet}{\mbox{$\raisebox{-.85mm}{\huge$\circ$}\hspace*{-2.6mm}\bullet$}}
+
+\renewcommand{\ostar}{\mbox{$\raisebox{-.85mm}{\huge$\circ$}\hspace*{-2.75mm}\star$}}
+
+\setlength{\intextsep}{5pt}
+
+\begin{document}
+\setlength{\abovedisplayskip}{5pt}
+\setlength{\belowdisplayskip}{5pt}
+
+\setcounter{page}{0}
+\thispagestyle{plain}
+\twocolumn[\begin{@twocolumnfalse}
+{\large European Research Council}
+
+\vspace*{7.5mm}
+\begin{center}\Large
+ERC Advanced Grant\\
+Research Proposal\\
+(Part B1)
+\end{center}
+
+\vspace*{2.5mm}
+
+\begin{center}\bfseries\LARGE
+Mathematical Structures for Type Theories,\\
+Logical Systems, and Programming Languages\\
+\vspace*{10mm}
+\Large\bfseries\sf 
+MaStrPLan\\
+  \logo
+\end{center}
+
+\vspace*{2.5mm}
+
+\begin{center}\large
+Principal Investigator: Marcelo Fiore\\
+\vspace*{1mm}
+Host Institution: University of Cambridge\\
+\vspace*{1mm}
+Proposal duration: 60 months
+\end{center}
+
+\vspace*{5mm}
+
+\renewcommand{\abstractname}{\bfseries\large Summary}
+\begin{abstract}\normalsize
+Headed by Principal Investigator Marcelo Fiore, the project builds an
+international group of world-leading experts in theoretical and applied
+computer science.  This team will be dedicated to combined research in
+Category Theory, Mathematical Logic, Programming Theory, and Type Theory.
+Specifically, our goal is to understand and develop formal languages and
+mathematical models for computer programming and mathematical proof. 
+
+{\color{red}TO BE FINISHED}
+
+We aim to produce several artifacts: a framework to analyse and synthesise
+type theories; mathematical theories and models for computational phenomena;
+formal calculi for proof and/or computation; and experimental high-level
+programming languages.
+\end{abstract}
+
+\end{@twocolumnfalse}]
+
+\clearpage
+\chead{Part\,B1(a)}
+\twocolumn[\begin{@twocolumnfalse}
+	\hfill{\bfseries\Large 
+      Extended Synopsis of the scientific proposal
+  }\hfill\null\\
+\end{@twocolumnfalse}]
+
+\subsection{Proposal}
+\label{Proposal}
+
+\paragraph*{General aim.}
+
+Headed by Principal Investigator Marcelo Fiore, the project builds an
+international group of world-leading experts in theoretical and applied
+computer science.  This team will be dedicated to combined research in
+Category Theory, Mathematical Logic, Programming Theory, and Type Theory.
+Specifically, our goal is to understand and develop formal languages and
+mathematical models for computer programming and mathematical proof. 
+
+\paragraph*{Working thesis.}
+
+The research is driven by the thesis that
+\begin{myquote}
+\item
+Languages for computer programming and languages for mathematical proof are of
+the same character.
+\end{myquote}
+This view was first developed in the 1960s and is now central to research in
+programming languages and constructive mathematics.
+
+An aspect of the thesis that is fundamental to us here is typically referred
+to as the Proofs-as-Programs or Propositions-as-Types correspondence.  It can
+be impressionistically presented as follows
+\[
+  \mbox{proof : Proposition} 
+  \enspace \approx \enspace 
+  \mbox{program : Type} 
+\]
+and is intuitively explained along these lines: to give a constructive proof
+of a proposition is to construct a program that certifies the statement, while
+to type a program is to establish a property of that program.
+
+Research stemming from the Propositions-as-Types correspondence has been very
+fruitful.  Many of its mathematical theories have been implemented as computer
+systems, and used academically and industrially.  Cases in point are:
+programming languages for high-assurance code and proof assistants for
+computer-aided verification; examples are Haskell, %~\cite{Haskell} 
+an industrial-strength functional programming language, and Coq, %~\cite{Coq} 
+a proof assistant in which bodies of mathematics are being verified.
+
+\paragraph*{The future.}
+
+The transfer of mathematical theories to computer systems has required
+both technical/theoretical and technological/applied progress.  In turn,
+this has necessarily demanded increasingly specialised, and to some extent
+fragmentary, research.  Importantly, there is now a consolidated body of
+work and expertise.  How will the field continue to advance?  By
+considering new directions and challenges, of course.  But, it is our firm
+view that, %as in the early days of the subject, 
+it will be essential to do so generating questions and tackling problems
+from the perspectives and interplay of a variety of research areas.  This
+is %indeed 
+what we put forward here.
+
+\paragraph*{Our philosophy.}
+
+Two disciplines are clearly involved in investigating the Proofs-as-Programs 
+correspondence: Mathematical Logic and Programming Theory.  This is only half
+of the picture.  The full picture also involves Type Theory and Category
+Theory.  Figure~\ref{ResearchAreas} 
+\begin{figure}[h]
+\caption{Research areas and interactions.}
+\vspace*{2mm}
+\begin{center}
+\hspace*{.5mm}
+\xymatrix@R=25pt@C=15pt{
+& 
+\raisebox{7mm}{\fbox{\txt{\small Mathematical\\\small Logic}}}
+\ar@/_1em/@{<->}[ddl]<-1em>|-
+  {\txt{\scriptsize Propositions\\ \raisebox{1mm}{\scriptsize as Types}}}
+\ar@/^1em/@{<->}[ddr]<1em>|-
+  {\txt{\scriptsize Proofs as\\\raisebox{1mm}{\scriptsize Programs}}} 
+& 
+\\
+& 
+\ar@{<->}[dl]|-
+  {\txt{\scriptsize Internal\\\raisebox{1mm}{\scriptsize Languages}}}
+\ar@{<->}[dr]|-
+  {\txt{\scriptsize Denotational\\\raisebox{1mm}{\scriptsize Semantics}}} 
+\ar@{<->}[u]|-
+{\txt{\scriptsize Mathematical\\\raisebox{1mm}{\scriptsize Models}}}
+\fbox{\txt{\small Category\\\small Theory}}
+& 
+\\
+  \fbox{\txt{\small Type\\\quad\small Theory\quad\null}}
+\ar@/_1em/@{<->}[rr]|-
+  {\txt{\scriptsize Formal\\\raisebox{1mm}{\scriptsize Languages}}}
+& & 
+\fbox{\txt{\small Programming\\\small Theory}}
+}
+\end{center}
+\vspace*{-2mm}
+\label{ResearchAreas}
+\end{figure}
+gives a schematic view of the interactions between 
+these four research areas
+in this context.  Each of them is complementary to the others.  Together, as a
+unified whole, they have shaped fields of computer science and mathematics.
+It is within this framework that we propose cross-cutting research in Category
+Theory, Mathematical Logic, Programming Theory, and Type Theory.  We contend
+that an approach neglecting any one of them is to the detriment of the others;
+missing the depth and richness of the subject and, crucially, missing
+opportunities for research and development.  
+
+\paragraph*{Main goals.}
+
+The motivations for our research proposal are specifically as follows. 
+\begin{myitemize}
+\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
+  To identify the next-generation framework of Type Theory relevant to
+  computer science and mathematics.
+\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
+  To exercise and test Category Theory both as a unifying and as a
+  foundational mathematical language.
+\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
+  To broaden the current role of Mathematical Logic in computation.
+\item[\raisebox{.75mm}{\tiny$\bigstar$}]\hspace*{-2mm}
+  To design, implement, and experiment within Programming Theory, looking
+  into the languages of the future.
+\end{myitemize}
+
+We particularly aim to contribute with: a framework to analyse and synthesise
+type theories; mathematical theories and models for varieties of computational
+phenomena; formal calculi for proof and/or computation; and experimental
+high-level programming languages.
+
+\paragraph*{Research programme.}
+
+The research programme has been precisely conceived to target the goals
+above.  It is organised in four strands %as outlined below.
+each of which involves the interaction of at least two research areas as in
+Figure\,\ref{ResearchAreas}.
+\begin{myitemize}
+\item[{\bfseries 1\enspace Foundations:}]\mbox{}\enspace\thinspace 
+  \emph{A comprehensive research programme on the metamathematics of type
+    theories.}
+
+  \vspace*{1mm}
+  We will address the fundamental question of what type theories are, which
+  will also lead us to rethink them.  Our approach aims at an algebraic
+  framework that will generalise to type theories all aspects of our current
+  understanding of algebraic theories.  
+  The scale at which this will be
+  attempted is unprecedented, systematically exploring a wide spectrum of
+  key type-theoretic features.
+  \vspace*{1mm}
+
+\item[{\bfseries 2\enspace Models:}]\mbox{}\enspace\thinspace
+  \emph{Study of mathematical models for type theories and logical systems.}
+
+  \vspace*{1mm}
+  We will tackle semantic problems at the forefront of current understanding.
+  %
+  In the context of type theories, we will conduct investigations
+  concerning a main problem in the area: to reconcile extensional equality
+  and intensional identity (\ie~the mathematical and computational notions
+  of sameness).  
+  %
+  In the context of logical systems, we will develop both calculi suggested by
+  mathematical models and models for so far intractable calculi,
+  \eg~encompassing aspects of resource management and computational effects.  
+  \vspace*{1mm}%%%HACK!!!
+  
+\item[{\bfseries 3\enspace Calculi:}]\mbox{}\enspace\thinspace
+  \emph{Development of formalisms of deduction as internal languages of
+    mathematical models.}
+  
+  \vspace*{1mm}
+  We will aim at evolving the term and type structure of current type
+  theories, which in essence has not changed since the late 1960s.  Pursuing
+  the view that evolution will come from mathematical input, we will
+  research type theories as formal languages of (higher-dimensional)
+  categorical structures.  
+  \vspace*{1mm}
+
+\item[{\bfseries 4\enspace Programming:}]\mbox{}\enspace\thinspace
+  \emph{Design and implementation of novel computational languages.}
+
+  \vspace*{1mm}
+  Guided by mathematical theories and pragmatics, we will look into the
+  engineering of principles and concepts for programming, exporting them to
+  language designs and implementations.  We will specifically consider
+  experimental languages, \eg~supporting indexed data,
+  computational effects, and metaprogramming.  
+\end{myitemize}
+
+\paragraph*{The team.}
+
+The research team will be led by Principal Investigator~(PI) \emph{Marcelo
+Fiore} (%Computer Laboratory, 
+University of Cambridge): 
+    a leading expert in applications of category theory to computer science,
+    including abstract algebra, concurrency theory, programming-language
+    semantics, sheaf theory, and type theory.  
+He will be backed up by an international group of three Senior Visiting
+Researchers~(SVRs): \emph{Pierre-Louis Curien} (%Laboratoire PPS, 
+Universit\'e Paris Diderot - Paris~7): 
+  a leading expert in programming-language semantics, with contributions into
+  category theory, logic, %rewriting theory, 
+  and type theory; 
+  \emph{Peter \mbox{Dybjer}} (%Department of Computer Science, 
+Chalmers University of Technology): 
+  a leading expert in type theory, including its connections with category
+  theory and logic, and its implementation in proof assistants; and 
+  \emph{Tim Sheard} (%Department of Computer Science, 
+Portland State University): 
+  a leading expert in pro\-gram\-ming-language design and implementation,
+  encompassing functional and metaprogramming systems. 
+%
+The PI is to collaborate with the SVRs by mutual research visits, email, and
+conference calls.
+%
+The team is completed by three outstanding Research Associates~(RAs) to be
+based at the Computer Laboratory (University of Cambridge) under the PI.  They
+are
+  \emph{Ki Yung Ahn} (%Department of Computer Science, 
+Portland State University): 
+  a PhD student of Sheard writing up his dissertation on the design and
+  implementation of a language for indexed programming;
+  \emph{Nicola \mbox{Gambino}} (%Dipartimento di Matematica e Informatica, 
+Universit\`a degli Studi di Palermo):  
+  an established researcher in the areas of type theory and category theory,
+  with whom the PI has already collaborated; and 
+  \emph{Guillaume Munch-Maccagnoni} (%Laboratoire PPS, 
+Universit\'e Paris Diderot - Paris~7): 
+  a PhD student of Curien writing up his dissertation on the
+  Propositions-as-Types correspondence in classical logic.
+Currently, the two junior RAs lack future funding.  All RAs would be ready
+to join the project from the start.
+
+\subsection{Origins and influences}
+\label{Origins}
+
+We sketch the background of our scientific framework, 
+touching upon %mentioning 
+developments that led to the holistic conception of
+Figure\,\ref{ResearchAreas}.
+
+
+\paragraph*{Logic and computation.}
+
+Computer science was born as a branch of mathematics, specifically
+mathematical logic.  Its inception was Hilbert's %~\cite{?}
+Decision Problem asking whether there is an algorithmic procedure for
+deciding mathematical statements.  Negative answers were provided
+independently by Church %~\cite{Church1936} 
+and Turing, %~\cite{Turing},
+giving birth to the mathematical theory of computation.  Their approaches
+founded different branches of theoretical computer science.  
+While Turing machines are the most widely used model for analysing
+computational complexity, the line of development starting with Church's
+{\lcalculus} is concerned with prototypical computational languages that
+are used to study high-level programming languages.  
+
+\paragraph*{Type theory and logic.}
+\label{SectionATypeTheoryAndLogicParagraph}
+
+Type Theory, as we %now 
+know it, arose from Church's typing of
+his \lcalculus, that yielded the 
+Simply-Typed Lambda Calculus. %~\cite{Church1940}.
+This was a natural step under the naive interpretation of
+\mbox{$\lambda$-abstraction} as defining functions.  In this
+context,
+Howard %~\cite{Howard1969}
+made a fundamental discovery relating Mathematical Logic to Type Theory.
+This is the Prop\-o\-si\-tions-as-Types correspondence, referred to
+in Section~\ref{Proposal}.
+
+In another %very 
+important direction, Church introduced 
+an axiomatization of Higher-Order Logic, the 
+Simple Theory of Types, %~\cite{Church1940},
+within a Simply-Typed Lambda Calculus.  In doing so, he adopted a
+radically new perspective, shifting the status of the Simply-Typed Lambda
+Calculus from that of a `language' to a `metalanguage'; \ie~a language in
+which it is possible to represent and work with other languages. 
+
+\paragraph*{Category theory, logic, and type theory.}
+
+The connection between Category Theory, Logic, and Type Theory was
+initiated by Lawvere %~\cite{LawvereAinF} 
+and Lambek. %~\cite{LambekI}. 
+%
+Lawvere's insight was to understand logical connectives and type constructors
+as categorical structures arising from adjoint functors.  It is now
+well-understood that the Simply-Typed Lambda Calculus with products provides
+an internal language for Cartesian Closed Categories; \viz~it is the
+calculus of all such models.  This view extends the Propositions-as-Types
+correspondence to a trinity consisting of the Simply-Typed Lambda Calculus
+%\pagebreak%%%HACK!!!
+with products, Cartesian Closed Categories, and Propositional
+Intuitionistic Logic.
+
+\paragraph*{Type theory and programming.}
+
+The Simply-Typed Lambda Calculus is a prototypical functional programming
+language.  In this light, the problem of type inference became of central
+practical importance.  Milner %~\cite{Milner1978} 
+solved it for the Simply-Typed Lambda Calculus with parametric polymorphism.  
+ 
+Polymorphism in programming was introduced by Strachey %~\cite{Strachey1967}.
+and formalised by Reynolds %~\cite{Reynolds} 
+in his Polymorphic Typed Lambda Calculus.
+Strikingly, this system had already been proposed by
+Girard %~\cite{GirardSystemF} 
+as the type-theoretic counterpart of Second-Order Propositional Logic. 
+In fact, he %Girard
+had also introduced {\SystemFomega}, the type-theoretic counterpart of
+Higher-Order Propositional Logic.  
+This is the system %{\SystemFomega} 
+at the core of the Haskell programming language. 
+
+These type systems aim at logical foundations and thus only introduce
+terminating computations.  As for Turing-complete languages, 
+%motivated by model-theoretic studies of the {\lcalculus} 
+Scott %~\cite{ScottTCS}
+introduced an extension of Typed Combinatory Logic with a fixpoint combinator. 
+Plotkin %~\cite{PlotkinLCF} 
+studied the calculus as a programming language, enriching type
+theory with concerns from programming; \viz~the distinction between
+call-by-value and call-by-name. %~\cite{PlotkinCBVCBN}.
+
+\subsection{Questions and pathways for research}
+
+We turn attention to topics of current research, presenting the basis for
+the research methodology and plan outlined in the next section.
+
+\paragraph*{Foundations.}
+
+As we have seen in the previous section, type theories are ubiquitous in
+computer science and mathematics.  However, the following fundamental question
+remains open:
+\req{\ref{AlgebraicTypeTheoryParagraph}}
+%{What is a type theory?}
+%{What are type theories?}
+%{What kind of mathematical structures are type theories?}
+{What is the mathematical structure of type theories?}
+
+\paragraph*{Dependent types.}
+
+Besides simple and polymorphic type theories, a main development in the
+evolution of type theory has been that of Dependent Type Theory.  Dependent
+judgements and dependent types were introduced by de~Bruijn %~\cite{deBruijn}
+in the 1960s as an extension of their simple versions allowing types to be
+indexed by other types.  He was motivated by the formalisation of
+mathematical theories, where such objects abound.  
+
+Two essential constructions on dependent judgements are: dependent sums and
+dependent product types.  Under the Propositions-as-Types correspondence, they
+amount to existential and universal quantification.  A crucial problem is to:
+\rep{\ref{IntensionalTypeTheoryParagraph}}
+  {Investigate equality and identity in dependent type theory.}
+
+The passage from sum and product types to their dependent versions
+required new type theories.  
+%
+Categorical models suggest further generalisations of dependent sum and
+dependent product types (in the form of so-called coends and ends); and,
+more generally, the following:
+\rep{\ref{CalculiSubsection}}
+  {Develop type theories from mathematical models.}
+
+\paragraph*{Mathematical universes.}
+
+The construction of new mathematical universes of discourse from old ones is
+basic in semantics.  It is thus natural to ask:
+\reqs{\ref{MethodologyMathematicalUniversesParagraph}}
+  {What mechanisms are there for changing from a type theory to another one
+    as universes of discourse? 
+%
+%    Can this be done while maintaining the relevant computational properties
+%    and then incorporated into mechanical proof assistants?
+}
+%
+One technique to do so is the presheaf construction.  
+
+\paragraph*{Indexed programming.}
+
+Discrete %In %their most basic %elementary discrete form, 
+pre\-sheaves can be found in programming languages as indexed data\-types
+(like the type $\mbox{\small$\mathsf{Vec}$}\:\alpha\:n$ of
+\mbox{$n$-dimensional} vectors of type $\alpha$).  Programming with indexed
+datatypes will be referred to as indexed programming.  
+
+Indexed programming is being developed from one of two main influences:
+functional programming and dependent type theory.  
+Since %the intrinsic concerns of each of 
+these two views somehow pull the design of indexed programming languages in
+contrasting directions, one is lead to reconsider the approach.
+\rep{\ref{IndexedProgrammingParagraph}} 
+  {Develop foundational type theories for indexed datatypes.  
+   % 
+   Base the design and implementation of indexed programming languages on
+   these and pragmatics.}
+
+\paragraph*{Resources, effects, modalities.}
+
+In the late 1980s, 
+Girard %~\cite{GirardLinearLogic} 
+and Moggi %~\cite{MoggiLambdaC} 
+proposed two important analyses of computation, respectively for resources and
+effects.  The former in the contexts of logic and proof theory; the latter in
+that of denotational semantics and category theory.  Both have had tremendous
+impact in programming-language theory.  
+
+The predominant model-theoretic view of resources and effects is as dual
+categorical structures, resource comonads and computational monads, arising at
+opposite sides of an adjunction, intuitively between linear and multiplicative
+structures or between computations and values.  This is not so in all models
+and the following remains unanswered.
+%
+\req{\ref{PolarisationParagraph}}
+  {How can resources and effects be reconciled and unified?}
+%
+The answer seems to involve the logical notion of
+polarisation. %~\cite{Andreoli}. 
+This further enriches the computational scenario with eager \vs~lazy modes of
+computation and data structures.  We incorporate this into the following.
+%
+\rep{\ref{PolarisationParagraph}\,\&\,\ref{ProgrammingEffectsParagraph}}
+  {Study and develop the theory of resource management, computational
+    effects, and polarisation.  Percolate this down into the design of
+    programming languages.}
+
+\paragraph*{Sequent calculi.}
+
+A theme orthogonal to the logics under consideration is whether they are
+specified in natural deduction or sequent calculus style. 
+%\pagebreak%%%HACK!!!
+
+Work on the Propositions-as-Types correspondence has focussed on natural
+deduction systems, mainly because there is as yet no 
+widely-adopted %established 
+syntax for sequent calculi.  Two questions at the core of this situation
+are:
+%
+\reqs{\ref{ProgrammingEffectsParagraph}}
+  {What is the categorical algebra of classical sequent calculi? %}
+%
+%\req{\ref{ProgrammingEffectsParagraph}}
+  %{
+  What can the proof theory of sequent calculi do for programming?}
+
+\subsection{Research methodology and plan}
+
+We expand the research programme outlined in Section\,\ref{Proposal}, giving
+just a taste of the full scientific proposal.
+
+\subsubsection{Foundations}
+\label{Foundations}
+
+\paragraph{Algebraic Type Theory.}
+\label{AlgebraicTypeTheoryParagraph}
+
+Many-sorted algebra provides the most basic notion of type theory, with no
+binding operators and no type constructors.  Its modern understanding is
+through an Algebraic Trinity of three interrelated perspectives: Equational
+Logic, Categorical Algebra, and Universal Algebra.
+%(see~\cite{Birkhoff,LawvereThesis,Linton}).
+Each of these approaches gives an important different viewpoint of the
+subject.
+
+We will \hl{investigate} an analogous development for varieties of Type
+Theory.  To make substantial prog\-ress, we will systematically explore a broad
+spectrum of key features present in type theories; to wit, term and type
+variable binding with simple, polymorphic, and dependent typing, in
+combination with the orthogonal notion of linearity.  
+
+This research rests on fundamental work, old and recent, of
+Fiore~\etal\
+%~\cite{FiorePlotkinTuri,FioreLICS08,FioreHurLMCS,FioreSecOrdEqLog,FioreMahmoud,FioreICALP2012}.
+Two salient \hl{goals} are: To develop a mathematical algebraic framework
+for the semantics of language phrases, whereby free models universally
+characterise the abstract syntax of the language; and to synthesise
+metalanguages for type theories in the form of formal systems for equational
+deduction, that are sound and complete for the model theory.  The outcome of
+this work will be new unified metamathematical foundations for Type Theory.
+
+\subsubsection{Models}
+\label{Models}
+
+\paragraph{Equality and identity in dependent type theory.}
+\label{IntensionalTypeTheoryParagraph}
+
+Central to a type theory is its associated equational theory, or judgemental
+equality.  In Pure Intensional Type Theory, this is generated by rules of
+computation.  Extensional Type Theory refers to extensions of Pure Intensional
+Type Theory with extensionality features.  These may be given by weak rules of
+extensionality or by a strong rule of equality reflection (of an intensional
+notion of equality internal to the type theory as a judgemental equality).  
+
+Conceptually, one may regard a type theory as a deduction system extended with
+type constructors.  As such, a type theory is to be thought not just as a
+single universe of discourse, but rather as a variety of universes of
+discourse.  From this perspective, it is important to understand the
+interaction of modularly extending type theories.  A key notion is that of
+conservative extension.  
+%\pagebreak%%%HACK!!!
+Informally, an extension of a type theory is
+conservative when it does not modify the judgemental equality of the extended
+type theory.
+
+We will pursue \hl{research} on the so far unexplored problem of
+conservativity in dependent type theory.  We will \hl{aim} at being
+comprehensive, targeting Intensional and Weak/Strong Extensional type theories
+with dependent sums, dependent products, inductive types, and universes.  Our
+\hl{goal} is to deepen the current understanding of equality/extensionality
+and identity/intensionality in type theory via a model-theoretic framework for
+conservative extension results.  
+
+The full scientific proposal expands on the above in connection to an
+interesting recent approach to extensionality in Martin-L\"of Type Theory,
+\viz~Voevodsky's Univalence Axiom. %~\cite{UnivalentProgramme}. 
+Those considerations \hl{aim} to investigate a main problem in type
+theory: To reconcile Intensional and Extensional Type Theory in a
+computational framework.
+
+\paragraph{Mathematical universes.}
+\label{MethodologyMathematicalUniversesParagraph}
+
+Our \hl{research} activity centered on exploring new models will investigate
+pre\-sheaf, orthogonality, sheaf, glueing, and forcing constructions on type
+theories.  Topos Theory %~\cite{Elephant} 
+will be used as a main source of inspiration and guidance.  Our \hl{goal}
+is to build a mathematical theory of constructions on type theories that
+produce new type theories from old ones, together with an interpretation
+(or compilation) of the latter into the former.
+
+\paragraph{Polarised logic.}
+\label{PolarisationParagraph}
+
+A logical system (or type theory) with explicit polarisation classifies
+logical connectives (or type constructors) as either being positive or
+negative; with these two worlds being dual to each other (categorically, by
+adjunction).  Examples are the Girard's logic~{\LC} %~\cite{GirardLC} 
+and Levy's Call-By-Push-Value calculus. %~\cite{LevyCBPV}.
+
+A distinguishing aspect of polarised calculi is that they make call-by-value
+(or eager) and call-by-name (or lazy) modes of computation explicit, allowing
+for their combination in a framework with eager and lazy data structures.
+
+Our investigations in this context will aim at a model-theoretic study of
+a rich variety of calculi encompassing aspects of resource management
+(categorically, comonadic structure) %~\cite{Seely}) 
+and computational effects (categorically, monadic 
+structure) %~\cite{MoggiLambdaC})
+as informed by polarisation.
+%
+Our models will subsume 
+%
+Girard's Intuitionistic Linear Logic; %~\cite{GirardLinearLogic};
+%
+Levy's Call-By-Push-Value; %~\cite{LevyCBPV};
+%
+Egger, M{\o}gelberg, and Simpson's Enriched Effect Calculus; %~\cite{EEC}
+and
+%
+Melli\`es and Tabareau's Tensor Logic. %~\cite{TensorLogic}
+%
+In fact, we will go far beyond, tackling the open \hl{problem} of developing a
+model theory for Girard's~\LC.
+
+Importantly, our investigations will target so-called direct-style languages
+and models; so that they can be directly feed into the proposed research of
+Section~\ref{ProgrammingEffectsParagraph}.
+
+\paragraph{Modal logics.}
+\label{ModalLogicsParagraph}
+
+Resource comonads and effect monads are logical modalities.  Polarisation in
+the general context of modal logic has not been considered yet, and we will
+complement the previous studies 
+with the \hl{investigation} of Polarised
+Modal Logics.  Our \hl{goal} is to develop the Propositions-as-Types
+correspondence for modal logics.  We are specially interested in grounding it
+through categorical models, that have been scarcely investigated in this
+context.
+
+Logical systems to be studied include:
+%
+Borghuis' Modal Pure Type Systems; %~\cite{ModalPTS};
+%
+Artemov's Logic of Proofs %~\cite{ArtemovLP} 
+and related systems;
+%
+Mendler's Multimodal $CK$; %~\cite{MendlerMMCK};
+and
+%
+Park and Im's Calculus $S_\Delta$. %~\cite{ParkIm}.
+
+A particularly interesting aspect of many of these systems is that they
+have reflective features, in that they can internally represent and
+manipulate themselves.  In this respect, and in connection to the proposed
+research in Section\,\ref{Programming}, we will investigate the role of
+modal calculi supporting reflection in the design of reflective
+programming languages.
+
+\subsubsection{Calculi}
+\label{CalculiSubsection}
+
+\paragraph*{Categorical Type Theory.}
+
+We propose two lines of \hl{research} aimed at developing type-theoretic
+formalisms as languages for categorical structures.
+
+\paragraph{Generalised Type Theory.}
+\label{GeneralisedTypeTheoryParagraph}
+
+We will consider Lawvere's Generalised Logical Calculus, %~\cite{LawvereMetric},
+synthesised by him from the model of presheaves in enriched category theory.
+Our \hl{goal} will be to develop a type theory providing a
+Propositions-as-Types interpretation of the Generalised Logical Calculus.
+Success will yield a system where mathematical calculations in enriched
+category theory can be established formally.  The problem of automating it
+will be investigated.
+
+The central novel constructions of the Generalised Logical Calculus are
+so-called coends and ends.  Intuitively, these are quotients of dependent sums
+and restrictions of dependent products.  Taking this view seriously, we will
+\hl{aim} to extend the above to a fully-fledged, possibly
+higher-dimensional, dependent type theory.  
+
+\paragraph{Directed Type Theory.}
+\label{DirectedTypeTheoryParagraph}
+
+Homotopy Type Theory (HoTT) refers to a body of work at the boundary between
+Homotopy Theory and Dependent Type Theory through Martin-L\"of's Identity
+Types. %~\cite{ProgMLTT}.  
+In a related vein, our \hl{aim} is to discover a notion of Directed Type
+connecting Higher-Dimensional Category Theory and Dependent Type Theory on
+which to establish a body of work on Directed Type Theory (DiTT).  Our
+\hl{motivation} for this comes from computation.  Indeed, while Identity
+Types establish the intensional equality of elements in a type, Directed Types
+would instead represent the ways in which an element of a type may evolve to
+another one in a possibly irreversible manner.  
+
+\subsubsection{Programming}
+\label{Programming}
+
+We will design and implement programming languages from first principles and
+pragmatics, following this up by their subsequent test, use, and distribution.
+The research directions below will be considered as units in their own right,
+and in relation to each other.
+
+\paragraph{Indexed programming.}
+\label{IndexedProgrammingParagraph}
+
+Our main \hl{goal} here is to design/implement a language for programming
+indexed data structures that will inform the design/implementation of the next
+generation of programming languages.  To this end, we will pursue
+\hl{research} in a bottom-up fashion, an approach that in this context has not
+been explored systematically, extending functional programming languages with
+indexing structure as prescribed by foundational calculi.
+
+Under the Propositions-as-Types paradigm, we \hl{aim} at a language
+supporting the activity of proving properties as a by-product of programming,
+rather than that of extracting programs from the activity of proving
+properties.  A strong pragmatic reason for this is that our uppermost interest
+is in a language for programmers. 
+
+An important \hl{challenge} to be faced is to design language constructs
+with minimal type annotation that support maximal type inference.  Indeed,
+this is a main open problem in dependently-typed programming language theory.
+
+\paragraph{Effects.}
+\label{ProgrammingEffectsParagraph}
+
+Our overall \hl{aim} is to consider the model-theoretic investigations of
+Section~\ref{PolarisationParagraph} from a proof-theoretic viewpoint and
+percolate them down to programming language theory.
+
+A main \hl{novelty} of our approach is that the proof theory to be
+considered is based on sequent calculus, rather than the traditional line
+followed so far in programming-language foundations based on sequent-style
+natural deduction.  This requires the use and further investigation of an
+emerging formalism, currently referred to as the calculus or system~\SysL,
+that is proving robust in applications.
+
+The research will require theoretical and applied work.  Theoretically, our
+\hl{goal} will be to establish a Propositions-as-Types trinity between
+classical sequent calculi and computational languages with effects and rich
+type structure through adjoint interpretations.  Practically, we will need to
+address a crucial programming-language \hl{question}:  What is the
+programming paradigm stemming from sequent calculi in general, and the
+calculus~\SysL\ in particular? 
+
+As for polarisation, we believe that programmers will be able to intuitively
+assimilate the eager {\vs}~lazy modes of computation and data structures
+underlying it.  But, pragmatically, we will need to \hl{investigate} the
+kind of programming style and language that will easily allow a programmer to
+code and exploit polarisation.
+
+The full scientific proposal contains further considerations on \hl{research}
+possibilities for system~\SysL\ in programming and for effects encompassing
+control.
+
+%\paragraph{Metaprogramming.}
+%\label{MetaprogrammingParagraph}
+
+%\subsection{Conclusion}
+
+\hidebib{\setstretch{0}\footnotesize
+\begin{thebibliography}{00}
+\bibitem{UnivalentProgramme}
+S.\,Awodey, T.\,Coquand, and V.\,Voevodsky (2012)
+\newblock Univalent Foundations of Mathematics.
+%\newblock IAS School of Mathematics program, Princeton.
+\newblock IAS Princeton.
+%\url{http://www.math.ias.edu/sp/univalent}.  
+
+\bibitem{Birkhoff}
+G.\,Birkhoff (1935).
+\newblock On the structure of abstract algebras.
+\newblock {\em P.\ Camb.\ Philos.\ Soc.}, 31:433--454. 
+
+\bibitem{Church1936}
+A.\,Church (1936).
+\newblock An unsolvable problem of elementary number theory.
+%\newblock \emph{American Journal of Mathematics}, 58:345--363. 
+\newblock \emph{American Journal of Mathematics} 58.
+
+\bibitem{Church1940}
+A.\,Church (1940).
+\newblock A formulation of the simple theory of types.
+\newblock {\em J.\,Symbolic Logic}, 5:56--68. 
+
+\bibitem{FioreLICS08}
+M.\,Fiore (2008).
+\newblock Second-order and dependently-sorted abstract syntax. 
+\newblock In \emph{LICS'08}, pp.\,57--68. 
+
+\bibitem{FioreICALP2012}
+M.\,Fiore (2012).   
+\newblock Discrete Generalised Polynomial Functors.  
+\newblock In \emph{ICALP'12}, LNCS 7392, pp\,214--226.
+
+\bibitem{FioreSecOrdEqLog}
+M.\,Fiore and C.-K.\,Hur (2010).   
+\newblock Second-order equational logic.  
+\newblock In \emph{CSL'10}, LNCS 6247, pp\,320--335. 
+
+\bibitem{FioreHurLMCS}
+M.\,Fiore and C.-K.\,Hur (2011).   
+\newblock On the mathematical synthesis of equational logics.
+\newblock \emph{LMCS}-7(3:12).
+
+\bibitem{FioreMahmoud}
+M.\,Fiore and O.\,Mahmoud (2010).   
+\newblock Second-order algebraic theories.  
+\newblock In \emph{MFCS'10}, LNCS 6281, pp\,368--380. 
+
+\bibitem{FiorePlotkinTuri}
+M.\,Fiore, G.\,Plotkin and D.\,Turi (1999). 
+\newblock Abstract syntax and variable binding.
+\newblock In \emph{LICS'99}.
+
+\bibitem{GirardSystemF}
+J.-Y.\,Girard (1972).
+\newblock \emph{Interpr\'{e}tation Fonctionnelle et \'{E}li\-mi\-na\-tion des
+  Coupures de l'Arithm\'{e}tique d'Ordre Sup\'{e}rieur}.
+\newblock Th\`{e}se de doctorat d'\'{e}tat, Universit\'{e} Paris VII. 
+
+\bibitem{GirardLinearLogic}
+J.-Y.\,Girard (1987).
+\newblock Linear logic.
+%\newblock \emph{Theoretical Computer Science}, 50:1--101.
+\newblock \emph{TCS}, 50:1--101.
+
+\bibitem{Howard1969}
+W.\,Howard (1969).
+\newblock The formulae-as-types notion of construction.
+\newblock In \emph{\cite{ToHBCurry}}, pp\,479--490. 
+
+\bibitem{LambekI}
+J.\,Lambek (1968).
+\newblock Deductive systems and categories I.
+\newblock \emph{J.\ Math.\ Systems Theory}, 2:278--318.
+
+\bibitem{LawvereThesis}
+F.\,W.\,Lawvere (1963). %\,\&\,1968).
+\newblock Functorial Semantics of Algebraic Theories. %and Some Algebraic
+  %Problems in the context of Functorial Semantics of Algebraic Theories.
+\newblock \emph{Reprints in TAC} 5, 2004.
+
+\bibitem{LawvereAinF}
+F.\,W.\,Lawvere (1969).
+\newblock Adjointness in foundations.
+\newblock \emph{Reprints in TAC} 16, 2006.
+
+\bibitem{LawvereMetric}
+F.\,W.\,Lawvere (1973).
+\newblock Metric spaces, generalized logic and closed categories.
+\newblock \emph{Reprints in TAC} 1, 2002.
+
+\bibitem{PlotkinCBVCBN}
+G.\,Plotkin (1975).
+\newblock Call-by-name, call-by-value and the \mbox{$\lambda$-calculus}.
+\newblock \emph{Theoretical Computer Science}, 1:125--159.
+
+\bibitem{PlotkinLCF}
+G.\,Plotkin (1977).
+\newblock LCF considered as a programming language.
+\newblock \emph{Theoretical Computer Science}, 5:223--255.
+
+\bibitem{Milner1978}
+R.\,Milner (1978).
+\newblock A Theory of Type Polymorphism in Programming.
+%\newblock \emph{Journal of Computer and System Sciences}, 17:348--375.
+\newblock \emph{J.\ of Computer and System Sciences}, 17:348--375.
+
+\bibitem{MoggiLambdaC}
+E.\,Moggi (1991).
+\newblock Notions of computation and monads. 
+\newblock \emph{Information And Computation}, 93(1).
+
+\bibitem{ProgMLTT}
+B.\,Nordstr\"om, K.\,Petersson, and J.\,Smith (1990).
+\newblock Programming in Martin-L\"of Type Theory: An Introduction.
+%\newblock Oxford University Press.
+\newblock OUP.
+
+\bibitem{Reynolds}
+J.\,Reynolds (1983).
+\newblock Types, abstraction and parametric polymorphism.
+\newblock \emph{Information Processing} 83, pp\,513--523.
+
+\bibitem{ScottTCS}
+D.\,Scott (1969).
+\newblock A type-theoretical alternative to ISWIM, CUCH, OWHY
+%\newblock In \emph{Theoretical Computer Science}, 121(1--2):411--440,
+%1993.
+\newblock In \emph{TCS}, 121(1--2):411--440, 1993.
+
+\bibitem{ToHBCurry}
+J.\,Seldin and J.\,R.\,Hindley (1980).
+\newblock \emph{To H.B.\,Curry: Essays on Combinatory Logic, Lambda
+  Calculus and Formalism}.
+%\newblock Academic Press. 
+
+\bibitem{Strachey1967}
+C.\,Strachey (1967).
+\newblock Fundamental Concepts in Programming Languages.  
+%\newblock In \emph{Higher-Order and Symbolic Computation}, 13:11--49,
+%2000.
+\newblock In \emph{HOSC}, 13:11--49, 2000.
+
+\bibitem{Turing}
+A.\,Turing (1937). 
+\newblock On computable numbers, with an application to the
+  Entscheidungsproblem. 
+%\newblock \emph{Proc.\ of the London Mathematical Society}, 42:230--265.
+\newblock \emph{Proc.\ LMS}, 42:230--265.
+
+\end{thebibliography}}
+
+\clearpage
+\setcounter{page}{1}
+\chead{Part\,B1(b)}
+\twocolumn[\begin{@twocolumnfalse}
+	\hfill{\bfseries\Large 
+    Curriculum Vitae
+  }\hfill\null\\
+\end{@twocolumnfalse}]
+
+\subsection*{\S\enspace\thinspace Personal data}
+
+\begin{myitemize}
+\item
+\textbf{\em Name}: 
+\begin{tabular}[t]{l}
+  Marcelo Pablo Fiore.
+\end{tabular}
+
+\item
+\textbf{\em Nationality}: 
+\begin{tabular}[t]{l}
+  Argentinian/Italian.
+\end{tabular}
+
+\item
+\textbf{\em Date of birth}: 
+\begin{tabular}[t]{l}
+  June 29, 1966.
+\end{tabular}
+
+\item
+\textbf{\em Marital status}: 
+\begin{tabular}[t]{l}
+  Married, with two children (8\,\&\,3).
+\end{tabular}
+
+\item
+\textbf{\em Address}: 
+\begin{tabular}[t]{l}
+  University of Cambridge, 
+  Computer\\ Laboratory, 15 JJ Thomson
+  Avenue,\\ Cambridge CB3 0FD, UK.
+\end{tabular}
+
+\item
+\textbf{\em Web}: 
+\begin{tabular}[t]{l}\small
+  \url{www.cl.cam.ac.uk/~mpf23}
+\end{tabular}
+
+\item
+\textbf{\em Email}: 
+\begin{tabular}[t]{l}\small
+  \texttt{Marcelo.Fiore@cl.cam.ac.uk}
+\end{tabular}
+
+\item
+\textbf{\em Phone}: 
+\begin{tabular}[t]{l}
+  +44 (0)1223 334622.
+\end{tabular}
+\end{myitemize}
+
+\subsection*{\S\enspace\thinspace University appointments}
+
+\begin{myitemize}
+\item
+\textbf{\em Professor} in \emph{Mathematical Foundations of Computer
+Science},  Computer Laboratory, University of Cambridge.  Since October
+2011.
+
+\item
+\textbf{\em Reader} in \emph{Mathematical Foundations of Computer
+Science}, Computer Laboratory, University of Cambridge.  October 2005 to
+September 2011.
+
+\item
+\textbf{\em University Lecturer}, Computer Laboratory, University of
+Cambridge.  October 2000 to September 2005.
+
+\item
+\textbf{\em Lecturer} in Computer Science, School of Cognitive and
+Computing Sciences, University of Sussex.  April 1998 to September 2000. 
+
+\item
+\textbf{\em Research Fellow}, Laboratory for Foundations of Computer
+Science, Department of Computer Science, University of Edinburgh.  January
+1994 to March 1998.
+\end{myitemize}
+
+\subsection*{\S\enspace\thinspace University education}
+
+\begin{myitemize}
+\item
+{\em Postgraduate}: \textbf{\em PhD in Computer Science}, University of
+Edinburgh, June 1994.  \emph{Thesis}: Axiomatic Domain Theory in
+Categories of Partial Maps.  \emph{Supervisor}: Prof Gordon Plotkin
+(University of Edinburgh).  \emph{Examiner}: Prof Dana Scott (Carnegie
+Mellon University)
+
+\item
+{\em Graduate}: \textbf{\em Licentiate in Informatics}, Escuela Superior
+Latino Americana de Inform\'atica, Universidad Nacional de Luj\'an, Buenos
+Aires (Argentina), December 1989.  \emph{Thesis}: On-line Algorithms for
+Traversal of Dynamic Directed Hypergraphs with Application to
+Satisfiability of Horn Formulae.  \emph{Supervisor}: Prof Giorgio
+Ausiello, Uniersit\`a di Roma ``La Sapienze'', Italy.
+\end{myitemize}
+
+\subsection*{\S\enspace\thinspace Awards}
+
+\begin{myitemize}
+\item
+\textbf{\em 10-Year Most Influential PPDP Paper Award} for the article
+\emph{Semantic Analysis of Normalisation by Evaluation for Typed Lambda
+Calculus} in the 2002 International Symposium on Principles and Practice
+of Declarative Programming.
+
+\item
+\textbf{\em Distinguished Dissertation in Computer Science} for 1995.
+\emph{Axiomatic Domain Theory in Categories of Partial Maps}.  Doctoral
+thesis selected by the Conference of Professors and Heads of Computing in
+conjunction with the British Computer Society.
+\end{myitemize}
+
+\subsection*{\S\enspace\thinspace Postgraduate supervision}
+\vspace*{-1.9mm}
+\begin{myitemize}
+\item[]\small\ at the Computer Laboratory, University of Cambridge
+\end{myitemize}
+
+\begin{myitemize}
+\item
+  Marco Ferreira Devesas Campos.  Second year of PhD in Computer Science.
+
+\item
+  Ola Mahmoud, 2011 PhD in Computer Science.  \emph{Thesis}: Second-Order
+  Algebraic Theories.
+
+\item
+  Marco Ferreira Devesas Campos, 2011 MPhil in Advanced Computer Science.
+  \emph{Research essay}: Generalizing Bigraphs to DAG-like Place Graphs.
+
+\item
+  Eirik Tsarpalis, 2010 Certificate of Postgraduate Studies.
+
+\item
+  Maciej Wos, 2010 MPhil in Advanced Computer Science. \emph{Research essay}:
+  Generic Programming with Fixed-Points for Nested Datatypes.
+
+\item
+  Chung-Kil Hur, 2010 PhD in Computer Science.  \emph{Thesis}: Categorical
+  Equational Systems: Algebraic Models and Equational Reasoning.
+
+\item
+  Samuel Staton, 2007 PhD in Computer Science.  \emph{Thesis}:
+  Name-Passing Process Calculi: Operational Models and Structural
+  Operational Semantics.
+\end{myitemize}
+
+\subsection*{\S\enspace\thinspace Mentoring}
+\vspace*{-2mm}
+\begin{myitemize}
+\item[]\small\ at the Computer Laboratory, University of Cambridge
+\end{myitemize}
+
+\begin{myitemize}
+\item
+Bartosz Klin.  EPSRC Postdoctoral Research Fellow in Theoretical Computer
+Science.  October 2008 to September 2011.  
+
+\item
+Johan Glimming.  Visiting Research Fellow funded by the Swedish Research
+Council VR.  October 2008 to September 2010.  
+
+\item
+Samuel Staton.  EPSRC Postdoctoral Research Fellow in Theoretical Computer
+Science.  June 2007 to May 2010.  
+\end{myitemize}
+
+\subsection*{\S\enspace\thinspace Examining}
+
+\begin{myitemize}
+\item
+\textbf{\em External} committee member for the PhD theses of: 
+%
+Wei Chen (University of Nottingham, 2012);
+%
+Julianna Zsido (Universit\'e de Nice Sophia Antipolis, 2010); 
+%
+Stephane Gimenez (Universit\'e Paris Diderot - Paris~7, 2009); 
+%
+Vincenzo Ciancia (Dipartamento di Informatica, Universit\`a di Pisa,
+2008); 
+%
+Joachim de Lataillade (Universit\'e Paris Diderot - Paris~7, 2007); 
+%
+Emmanuel Beffara (Universit\'e Paris Diderot - Paris~7, 2005); 
+%
+Pierre Hyvernat (Institut Math\'ematique de Luminy, 2005);
+%
+Bartosz Klin (Aarhus University, 2004);
+%
+Vincent Balat~(Universit\'e Paris Diderot - Paris~7, 2002);
+%
+Krzysztof Worytkiewicz~(\'Ecole Polytechnique F\'ed\'erale de Lausanne,
+2000).
+
+\item
+\textbf{\em Internal} committee member for the PhD theses of: 
+%
+Bjarki Holm (2011); 
+%
+Ranald Clouston (2009); 
+%
+Paul Hunter (2007); 
+%
+Lucy Brace-Evans (2007).
+
+\item
+Committee member for the Professorship habilitation of
+%
+Davide Sangiorgi~(INRIA Sophia Antipolis, 2002).
+
+\item
+Committee member for the MPhil thesis of
+%
+Henrik Enstr{\o}m (Aarhus University, 1998).
+
+\item
+Computer Science Tripos Examiner for Part IB, Part II, Part II (General),
+and Diploma in 2006/07, 2007/08, and 2008/09 (Chair).  
+%\pagebreak
+Computer Laboratory, University of Cambridge.  
+\end{myitemize}
+
+\vspace*{-1.25mm}
+\subsection*{\S\enspace\thinspace Funding}
+\vspace*{-1mm}
+\begin{myitemize}
+\item
+  EPSRC grant submission (under consideration).
+  \emph{Efficient Extraction of Feasible Programs}.  \textbf{\em Principal
+    Investigator}, with co-investigators Timothy Griffin and Glynn Winskel
+  (University of Cambridge).  Joint submission with Dr Mart\'{\i}n
+  Escard\'o (University of Birmingham), Paulo Oliva (Queen Mary University
+  of London), Ulrich Berger and Monika Seisenberger (Swansea University).
+  Travel funding for 24 months.
+
+\item
+  \textbf{\em Visiting grant} from the Gunma University Foundation for
+  Science and Technology.  Department of Computer Science, Gunma
+  University.  April 3--12, 2012.
+
+\item
+  \textbf{\em Research in Paris grant} from the \emph{programme d'accueil
+    des chercheurs \'etrangers de la Ville de Paris}, Laboratoire PPS,
+  Universit\'e Paris Diderot - Paris~7.  October--December 2011.
+
+\item
+  \emph{Domain theory for concurrency---New categorical foundations}.
+  \textbf{\em Co-investigator} of Glynn Winskel.  EPSRC Grant
+  GR/T22049/01.  July 2005 to June 2008.
+
+\item
+  \emph{Mathematical models for functional and concurrent computation}.
+  \textbf{\em EPSRC Advanced Research Fellowship}. October 2000 to
+  September 2005.  
+\end{myitemize}
+
+\vspace*{-1.25mm}
+\subsection*{\S\enspace\thinspace Invited research visits}
+\vspace*{-1mm}
+
+\begin{myitemize}
+\item
+  Short-Term Scholar invitation to the Univalent Foundations of Mathematics
+  Program at the School of Mathematics, Institute for Advanced Study,
+  Princeton. 
+
+\item
+  Assistant Prof Makoto Hamana at the Department of Computer Science,
+  Gunma University.  In April 2012.
+
+\item
+  Prof Peter Dybjer at the Department of Computer Science and Engineering,
+  Chalmers University of Technology.  In September 2008. 
+
+\item
+  Prof Anders Kock at the Department of Mathematical Sciences, Aarhus
+  University.  In August 2007. 
+
+\item
+  Prof Mart\'{\i}n Abadi at the Department of Computer Science, University
+  of California at Santa Cruz.  November 2003. 
+
+\item
+  Dr Vincent Danos at Laboratoire PPS, Universit\'e Paris Diderot -
+  Paris~7.  June 2002.
+
+\item
+  Dr Paul-Andr\'e Melli\`es at Laboratoire PPS, Universit\'e Paris Diderot
+  - Paris~7.  June 2001.
+
+\item
+  Mart\'{i}n Abadi at Bell Labs Research, Lucent Technologies, Palo Alto.
+  In October--November 1999. 
+
+\item
+  Prof Gordon Plotkin at LFCS, Department of Computer Science, University
+  of Edinburgh.  In November--December 1998.
+
+\item
+  Prof Marta Bunge at Department of Mathematics and Statistics, McGill
+  University.  September and October 1998.
+
+\item
+  Prof Glynn Winskel at Department of Computer Science, Aarhus University,
+  Denmark.  In August--September 1997.
+\end{myitemize}
+
+\vspace*{-1mm}
+\subsection*{\S\enspace\thinspace Hosted research visitors}
+\vspace*{-2mm}
+\begin{myitemize}
+\item[]\small\ at the Computer Laboratory, University of Cambridge
+\end{myitemize}
+%\pagebreak
+
+\noindent
+PhD Student Ki Yung Ahn 
+(Portland State University) in September 2012; 
+%
+Dr Michael Warren (IAS School of Mathematics, Princeton) in May 2012; 
+%
+Associate Prof Iliano Cervesato (Carnegie Mellon University - Qatar
+Campus) in July 2011; 
+%
+PhD Student Guillaume Munch-Maccagnoni, (Universit\'e Paris Diderot -
+Paris~7) March–May 2011 and in October 2012;
+%
+Prof Pierre-Louis Curien (Universit\'e Paris Diderot - Paris~7)
+April--June 2009, April--June 2010, and in October 2012; 
+%
+Assistant Prof Makoto Hamana (Gunma University) in September 2009, March
+2010 and October 2012;
+%
+Ichiro Hasuo (RIMS, Kyoto University) in November 2009;
+%
+Mat\'{\i}as Menni (Lifia, Universidad Nacional de La Plata) in July 2007
+and April 2009;
+%
+Prof Franck van Breugel (York University, Toronto) sabbatical leave in
+2004--05.
+
+\vspace*{-0mm}
+\subsection*{\S\enspace\thinspace Peer-reviewing}
+
+\begin{myitemize}
+\item
+  \textbf{\em Programme committees}: CT 2013, ICALP 2013, Wollic 2012,
+  MFPS XXVIII, MFCS 2012, URC 2010, SOS 2009, FOSSACS 2009, CSL 08, ICALP
+  2008, MFPS XXIII (Chair), LICS 2007, SOFSEM 07, MSFP’06, CT 2006, MFPS
+  XXI, ICALP’05, TCS 2004, CTCS 2004, CMCIM’03, WAIT’2003 (Co-chair),
+  LICS’2003, FOSSACS’2002, MFPS XVII, LICS’2000, WAIT’98.
+
+\item
+  Reviewer for national and international conferences and journals.
+
+\item
+  Reviewer for the Uruguayan National Agency for Research and Innovation
+  (ANII).
+
+\item
+  EPSRC Computer Science Panel Member.  February~1, 2005.
+\end{myitemize}
+
+\vspace*{-0mm}
+\subsection*{\S\enspace\thinspace Memberships}
+
+\begin{myitemize}
+\item
+  Fellow of \textbf{\em Christ's College}, University of Cambridge.  Since
+  October 2001.
+
+\item
+  \textbf{\em EPSRC Peer Review College} member. October 2000 to September
+  2010.
+
+\item
+  Editorial Board member of \textbf{\em Applied Categorical Structures}.
+  Since October 2004.
+
+\item
+  Editorial Board member of the \textbf{\em Bulletin of Symbolic Logic}
+  reviews for the \emph{Association for Symbolic Logic}.  January 2009 to
+  December 2011.
+\end{myitemize}
+
+\vspace*{-0mm}
+\subsection*{\S\enspace\thinspace Teaching}
+\begin{myitemize}
+\item Sundry undergraduate and postgraduate lecturing at the Computer
+  Laboratory, University of Cambridge.  
+\item Director of Studies for Computer Science in Christ's College
+  Cambridge.  October 2001 to September 2011.  
+\item Sundry undergraduate lecturing and tutorials at the School of
+  Cognitive and Computing Sciences, University of Sussex. 
+\item Sundry postgraduate lecturing at the Laboratory for Foundations of
+  Computer Science, University of Edinburgh.
+\end{myitemize}
+
+\subsection*{\S\enspace\thinspace Administration}
+
+\begin{myitemize}
+\item
+Sundry committees at the University of Cambridge and Christ's College
+Cambridge.
+\end{myitemize}
+
+\clearpage
+\setcounter{page}{1}
+\chead{Part\,B1(c)}
+\twocolumn[\begin{@twocolumnfalse}
+	\hfill{\bfseries\Large 
+    10-Year Track Record
+  }\hfill\null\\
+\end{@twocolumnfalse}]
+
+%\subsection*{\S\enspace\thinspace Personal statement}
+
+My research is in theoretical computer science, and by its own nature develops
+in the context of close specialised collaboration.  My work stems from the
+interaction between two approaches: abstract and concrete. At the abstract
+level, I build mathematical theories. At the concrete level, theories are
+applied to specific problems. This duality has yielded deep results and
+provided research breadth, giving fundamental contributions to a variety of
+fields and finding connections among them; \eg~domain theory, category theory,
+concurrency theory, sheaf theory, type theory, logic, algebra.  Indeed,
+note that I publish in computer science and mathematics venues, and I have
+been invited speaker at both computer science and mathematics meetings.
+My \mbox{h-index} is 21, according to Google scholar.  
+
+\subsection*{\S\enspace\thinspace Award}
+
+\begin{mybigitemize}
+\item%[$\star$]
+\textbf{\em 10-Year Most Influential PPDP Paper Award} for the article
+\emph{Semantic Analysis of Normalisation by Evaluation for Typed Lambda
+Calculus} in the 2002 International Symposium on Principles and Practice
+of Declarative Programming.
+\end{mybigitemize}
+
+\subsection*{\S\enspace\thinspace Selected %peer-reviewed 
+  publications}
+\vspace*{-1.125mm}
+\begin{myitemize}
+\item[]\small\ 
+  Number of citations provided according to Google
+  \\\mbox{} 
+  scholar.  Conference publications further selected for
+  \\\mbox{} 
+  journal proceedings have been circled.  Representative 
+  \\\mbox{} 
+  publications have been starred.
+\end{myitemize}
+
+\paragraph*{Research monograph}
+
+\begin{mybigitemize}
+\item[$\star$] 
+  M.\,Fiore (2004). \emph{Axiomatic Domain Theory in Categories of Partial
+    Maps}.  Distinguished Dissertations in Computer Science, No.\,14.
+  Paperback Edition, Cambridge University
+  Press.\mbox{}\hfill{\small[111~citations]}
+\end{mybigitemize}
+
+\paragraph*{Journals}
+
+\begin{mybigitemize}
+\item[$\obullet$]
+  M.\,Fiore and C.-K.\,Hur (2011).  On the mathematical synthesis of
+  equational logics.   In \emph{Selected Papers of the Conference
+    ``Typed Lambda Calculi and Applications 2009''}.  \emph{Logical
+    Methods in Computer Science}, Volume 7, ISSUE 3, PAPER
+  12.\\\mbox{}\hfill{\small[19 (conference version) citations]}
+
+%\item
+%  M.\,Fiore and T.\,Leinster (2010).  An abstract characterization of
+%  Thompson’s group F.  \emph{Semigroup Forum}, Volume 80, Number 2,
+%  325--340.\\\mbox{}\hfill{\small[1~citation]}
+
+\item[$\star$]
+  M.\,Fiore and S.\,Staton (2009).  A congruence rule format for
+  name-passing process calculi.  In \emph{Special Issue on Structural
+    Operational Semantics (SOS)}. \emph{Information and Computation},
+  207(2):209-236.\\\mbox{}\hfill{\small[26 (conference version) + 5~citations]}
+
+\item[$\obullet$]
+  M.\,Fiore and C.-K.\,Hur (2008).  On the construction of free
+  algebras for equational systems.  In \emph{Special Issue for the
+    Thirty-fourth International Colloquium on Automata, Languages and
+    Programming (ICALP'07).  Theoretical Computer Science},
+  410:1704--1729.\\\mbox{}\hfill{\small[15 (conference version) + 11 citations]}
+
+\item[$\star$]
+  M.\,Fiore, N.\,Gambino, M.\,Hyland, and G.\,Winskel (2008).  The
+  cartesian closed bicategory of generalised species of structures. 
+  \emph{Journal of the London Mathematical Society},
+  77:203-220.\mbox{}\hfill{\small[19~citations]}
+
+%\item
+%  G.L.\,Cattani and M.\,Fiore (2007).  The bicategory-theoretic
+%  solution of recursive domain equations.  In \emph{Computation,
+%    Meaning, and Logic: Articles dedicated to Gordon Plotkin, Electronic Notes
+%    in Theoretical Computer Science}, Volume 172,
+%  pp\,203--222.\\\mbox{}\hfill{\small[0~citations]}
+
+\item[$\obullet$]
+  M.\,Fiore and S.\,Staton (2006).  
+  Comparing operational models of
+  name-passing process calculi.  \emph{Information and Computation},
+  Vol\,204, Issue 4, pp\,524--560.\\\mbox{}\hfill{\small[15 (conference version)
+    + 29~citations]}
+
+\item[$\obullet$]
+  M.\,Fiore, R.\,Di Cosmo, and V.\,Balat (2006).  Remarks on
+  isomorphisms in typed lambda calculi with empty and sum types. 
+  \emph{Annals of Pure and Applied Logic}, Vol\,141, Issues 1--2,
+  pp\,35--50.\\\mbox{}\hfill{\small[19 (conference version) + 11 citations]}
+
+%\item
+%  M.\,Fiore and M.\,Menni (2005).  Reflective Kleisli subcategories
+%  of the category of Eilenberg-Moore algebras for factorization monads.
+%   In \emph{Proceedings of the International Category Theory
+%    Conference (CT2004), Theory and Applications of Categories}, Vol\,15,
+%  No\,2, pp\,40--65.\\\mbox{}\hfill{\small[3~citations]}
+
+\item
+  M.\,Fiore and T.\,Leinster (2005).  Objects of categories as
+  complex numbers.  \emph{Advances in Mathematics},
+  190(2):264--277.\mbox{}\hfill{\small[11~citations]} 
+
+\item
+  M.\,Fiore and T.\,Leinster (2004).  An Objective Representation of
+  the Gaussian Integers.  \emph{Journal of Symbolic Computation},
+  37(6): 707--716.\mbox{}\hfill{\small[5~citations]} 
+
+\item[$\ostar$]
+  M.\,Fiore, E.\,Moggi, and D.\,Sangiorgi (2002).  A fully-abstract
+  model for the pi-calculus.  Information and Computation,
+  179:76--117.\\\mbox{}\hfill{\small[95 (conference version) + 30 citations]}
+\end{mybigitemize}
+
+\paragraph*{Conferences}
+
+\begin{mybigitemize}
+\item[$\star$]
+  M.\,Fiore (2012).  Discrete Generalised Polynomial Functors.  In
+  \emph{Automata, Languages, and Programming Conference (ICALP'12)}.
+  Volume 7392 of Lecture Notes in Computer Science,
+  pp.\,214--226.\\\mbox{}\hfill{\small[0~citations]}
+
+%\item
+%  M.\,Hamana and M.\,Fiore (2011).  A foundation for GADTs and
+%  Inductive Families: Dependent polynomial functor approach.  In
+%  \emph{ACM SIGPLAN Seventh Workshop on Generic Programming (WGP'11)},
+%  pp.\,59--70.  ACM Press.\\\mbox{}\hfill{\small[0~citations]}
+
+\item[$\obullet$]
+  M.\,Fiore and O.\,Mahmoud (2010).  Second-order algebraic theories.
+   In \emph{Proceedings of the Thirty-fifth International Symposium
+    on Mathematical Foundations of Computer Science (MFCS'10)}.  
+  Volume 6281 of Lecture Notes in Computer Science,
+  pp\,368--380.\mbox{}\hfill{\small[7~citations]}
+
+\item[$\ostar$]
+  M.\,Fiore and C.-K.\,Hur (2010).  Second-order equational logic. In
+  \emph{Proceedings of the Nineteenth EACSL Annual Conference on Computer
+    Science Logic (CSL'10)}.  Volume 6247 of Lecture Notes in
+  Computer Science, pp\,320--335.\mbox{}\hfill{\small[11~citations]}
+
+%\item
+%  M.\,Fiore and S.\,Staton (2010).  Positive structural operational
+%  semantics and monotone distributive laws.  \emph{In Short
+%    Contributions for the Tenth International Workshop on Coalgebraic Methods
+%    in Computer Science (CMCS 2010)}.  CWI Technical report SEN-1004,
+%  pp\,8--9.\\\mbox{}\hfill{\small[0~citations]}
+
+%%\item
+%%  M.\,Fiore and C.-K.\,Hur (2008).   Term equational systems and
+%%  logics.  In \emph{Proceedings of the Twenty-fourth Conference on
+%%    the Mathematical Foundations of Programming Semantics (MFPS XXIV)}.
+%%   Electronic Notes in Theoretical Computer Science, volume 218,
+%%  pp\,171--192.\\\mbox{}\hfill{\small[19~citations]}
+
+\item[$\star$]
+  M.\,Fiore (2008).  Second-order and dependently-sorted abstract
+  syntax.  In \emph{Logic in Computer Science Conference (LICS'08)},
+  pp.\,57--68.  IEEE, Computer Society
+  Press.\mbox{}\hfill{\small[22~citations]}
+
+%%\item
+%%  M.\,Fiore and C.-K.\,Hur (2007).  Equational systems and free
+%%  constructions.  In \emph{International Colloquium on Automata,
+%%    Language and Programming (ICALP 2007)}. Volume 4596 of Lecture Notes in
+%%  Computer Science, pp\,607--619.\\\mbox{}\hfill{\small[15~citations]}
+
+\item[$\obullet$]
+  M.\,Fiore (2007).  Differential structure in models of
+  multiplicative biadditive intuitionistic linear logic.  In
+  \emph{Typed Lambda Calculi and Applications (TLCA'07)}.  Volume
+  4583 of Lecture Notes in Computer Science,
+  pp\,163--177.\mbox{}\hfill{\small[14~citations]}
+
+%%\item
+%%  M.\,Fiore and S.\,Staton (2006).  A congruence rule format for
+%%  name-passing process calculi from mathematical structural operational
+%%  semantics.  In \emph{Twenty-first Logic in Computer Science
+%%    Conference (LICS'06)}, pp\,49--58.  IEEE, Computer Society
+%%  Press.\\\mbox{}\hfill{\small[26~citations]}
+
+%%\item
+%%  M.\,Fiore and S.\,Staton (2004).  Comparing operational models of
+%%  name-passing process calculi.  In \emph{Proceedings of the 7th
+%%  Coalgebraic Methods in Computer Science Workshop (CMCS'04)}. 
+%%  Volume 106 of Electronic Notes in Theoretical Computer Science, pages
+%%  91--104.  Elsevier.\mbox{}\hfill{\small[29 citations]}
+
+\item
+  M.\,Fiore (2004).  Isomorphisms of generic recursive polynomial
+  types.   In \emph{Thirty-first Symposium on Principles of
+    Programming Languages (POPL'04)}, pp\,64--76.  ACM
+  Press.\mbox{}\hfill{\small[22~citations]}
+
+\item[$\star$]
+  V.\,Balat, R.\,Di Cosmo, and M.\,Fiore (2004).  Extensional
+  normalisation and type-directed partial evaluation for typed lambda
+  calculus with sums.   
+  In \emph{Thirty-first Symposium on Principles
+    of Programming Languages (POPL'04)}, pp\,64--76.  ACM
+  Press.\mbox{}\hfill{\small[47~citations]}
+
+\item[$\star$]
+  M.\,Fiore (2002).  Semantic analysis of normalisation by evaluation
+  for typed lambda calculus.  In \emph{Fourth Principles and Practice
+    of Declarative Programming Conference (PPDP'02)}, pages 26--37. 
+  ACM Press.\mbox{}\hfill{\small[45~citations]}
+
+%%\item
+%%  M.\,Fiore, R.\,Di Cosmo, and V.\,Balat (2002).  Remarks on
+%%  isomorphisms in typed lambda calculi with empty and sum types.  In
+%%  \emph{Seventeenth Logic in Computer Science Conference (LICS'02)},
+%%  pp\,147--156.   IEEE, Computer Society
+%%  Press.\\\mbox{}\hfill{\small[19~citations]}
+\end{mybigitemize}
+
+\paragraph*{Invited}
+
+\begin{mybigitemize}
+\item[$\star$]
+  M.\,Fiore (2005).  Mathematical models of computational and combinatorial
+  structures.  {\em Foundations of Software Science and Computation Structures
+    (FOSSACS'05)}.  Volume 3441 of Lecture Notes in Computer Science,
+  pp\,25--46.\mbox{}\hfill{\small[18~citations]}
+\end{mybigitemize}
+
+\subsection*{\S\enspace\thinspace Invited addresses}
+\vspace*{-1.125mm}
+\begin{myitemize}
+\item[]\small\ 
+  Salient invitations have been starred.
+\end{myitemize}
+
+
+\begin{mybigitemize}
+\item[$\star$]
+  Indexing Structures in Programming Language Semantics and Design.
+  \emph{Fourteenth International Symposium on Principles and Practice of
+    Declarative Programming~(PPDP'12)}, 
+  %10-Year Most Influential PPDP Paper Award talk, 
+  Leuven (Belgium), September~2012.
+
+\item
+  Lie in Logic.  \emph{S\'{e}minaire CHoCoLa}, \'Ecole Normale Sup\'erieure de
+  Lyon (France), May~2012.
+
+\item[$\star$]
+  Second-order algebra and generalised polynomial functors.  \emph{Logic and
+    Interactions 2012}, Centre International de Rencontres Math\'{e}matiques,
+  Luminy (France), February~2012.
+
+\item
+  Estructuras matem\'{a}ticas en lenguajes de programaci\'{o}n.
+  \emph{French-Argentinean Laboratoire Internationale Associ\'e LIA INFINIS},
+  %inaugural meeting, 
+  Departamento de Computaci\'{o}n, Facultad de Ciencias Exactas y Naturales -
+  Universidad de Buenos Aires (Argentina), December~2011.
+
+\item
+  On Higher-Order Algebra.   \emph{Third Scottish Category Theory Seminar},
+  University of Strathclyde, Glasgow (Scotland), December~2010.
+
+\item
+  Algebraic simple type theory.  \emph{Curry-Howard and Concurrency Theory
+    (CHoCo) S\'eminaire}, l'Ecole Normale Sup\'erieure de Lyon (France),
+  December 2009.
+
+\item[$\star$]
+  Mathematical synthesis of equational deduction systems.  \emph{Ninth
+    International Conference on Typed Lambda Calculi and Applications
+    (TLCA'09)}, Brasilia (Brazil), June 2009.  
+
+\item
+  Algebraic Type Theory.  \emph{Eighty-eighth Peripatetic Seminar on Sheaves
+    and Logic (88th PSSL), Celebrating the 60th birthdays of Martin Hyland and
+    Peter Johnstone}, University of Cambridge (UK), April~2009.
+
+\item[$\star$]
+  Algebraic theories and equational logics.  \emph{Twenty-fourth Conference on
+    the Mathematical Foundations of Programming Semantics (MFPS~XXIV)},
+  University of Pennsylvania~(USA), May~2008.  
+
+\item
+  Second-order and dependently-sorted algebraic theories.  \emph{Workshop on
+    Categorical and Homotopical Structures in Proof Theory}, Centre de Recerca
+  Matem\`atica, %~(CRM), 
+  Barcelona~(Spain), February 2008.
+
+\item
+  An axiomatics and a combinatorial model of creation/annihilation operators
+  and differential structure.  \emph{Categorical Quantum Logic
+    Workshop (CQL)}, %Computing Laboratory, 
+  University of Oxford (UK), August 2007.
+
+\item
+  A mathematical theory of substitution and its applications to syntax and
+  semantics.  \emph{Coalgebraic Logic Workshop (CoL)}, %Computing Laboratory,
+  University of Oxford (UK), August 2007.
+
+\item[$\star$]
+  Towards a mathematical theory of substitution.  \emph{Annual International
+    Conference on Category Theory (CT'07)}, Carvoeiro, Algarve (Portugal),
+  June 2007.
+ 
+\item[$\star$]
+  A mathematical theory of substitution and its applications to syntax and
+  semantics.  \emph{Workshop on Mathematical Theories of Abstraction,
+    Substitution and Naming in Computer Science}, International Centre for
+  Mathematical Sciences, %(ICMS), 
+  Edinburgh (Scotland), May~2007.
+ 
+\item[$\star$]
+  Analytic functors and domain theory.  \emph{Symposium for Gordon Plotkin},
+  Laboratory for Foundations of Computer Science, %~(LFCS), 
+  University of Edinburgh (Scotland), September~2006.
+ 
+\item[$\star$]
+  On the structure of substitution. \emph{Twenty-second Mathematical
+    Foundations of Programming Semantics Conference (MFPS XXII)}, %DISI,
+  University of Genova (Italy), May~2006.
+ 
+\item
+  Isomorphisms on generic mutually recursive polynomial types.  \emph{Second
+    International Workshop on Isomorphisms of Types}, Universit\'e de Toulouse
+  (France), October 2005.
+
+\item[$\star$]
+  Mathematical models of computational and combinatorial structures.  
+  \emph{Foundations of Software Science and Computation Structures
+  (FOSSACS'05)} for European Joint Conferences on Theory and Practice of
+  Software (ETAPS'05), Edinburgh~(UK), April 2005.  
+
+\item[$\star$]
+  Computational semantics.  \emph{Winter School on Semantics and
+    Applications}, Instituto de Computaci\'on, Facultad de Ingenier\'{\i}a,
+  Universidad de la Rep\'ublica, Montevideo~(Uruguay), July 2003.
+
+\item
+  A semantic framework for name and value passing process calculi.
+  \emph{Workshop on Concurrency and Mobility, Logic and Foundations of
+    Computation}, Fields Institute Summer School, University of Ottawa
+  (Canada), June 2003.
+
+\item[$\star$]
+  Imaginary types.  \emph{Nineteenth Conference on the Mathematical
+    Foundations of Programming Semantics (MFPS~XIX)}, Montr\'eal~(Canada),
+  March~2003.
+
+\item
+  Foundational theories of combinatorial type structures.  \emph{Birmingham,
+    Leicester, and Nottingham Christmas Theory Day}, Department of Computer
+  Science, University of Birmingham~(UK), December~2002.
+\end{mybigitemize}
+\vspace*{-6mm}
+\end{document}

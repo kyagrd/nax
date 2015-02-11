@@ -1,0 +1,200 @@
+\section{Motivation: from System~\Fw\ to System~\Fi, and back}
+\label{sec:motiv}
+It is well known that datatypes can be embedded into polymorphic lambda
+calculi by means of functional encodings
+%% such as the Church and Boehm-Berarducci encodings~
+\cite{BoehmBerarducci}.
+
+In System~\textsf{F}, one can embed \emph{regular datatypes},
+like homogeneous lists:\vspace*{-3pt}
+\[
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data List a = Cons a (List a) | Nil} \\
+\text{System \textsf{F}:}~& 
+\texttt{{List}}\:\: A\:\:\triangleq\:\:
+\forall X.
+(A\to X\to X) \to X \to X ~~\; \\
+&
+\quad~~
+\texttt{Cons} \triangleq \l w.\l x.\l y.\l z.\,y\;w\,(x\;y\;z),~
+\texttt{Nil} \triangleq \l y.\l z.z
+\end{array}
+\]\vskip-1ex\noindent
+In such regular datatypes, constructors have algebraic structure that
+directly translates into polymorphic operations on abstract types as
+encapsulated by universal quantification over types (of kind $*$).
+
+In the more expressive System \Fw\ (where one can abstract over
+type constructors of any kind), one can encode more general
+\emph{type-indexed datatypes} that go beyond the regular datatypes.
+For example, one can embed powerlists with heterogeneous elements
+in which an element of type \texttt{a} is followed by
+an element of the product type \texttt{(a,a)}:\vspace*{-3pt}
+\[
+\begin{array}{ll}
+\text{Haskell:} & \texttt{data Powl a = 
+        PCons a (Powl(a,a))
+        | 
+        PNil 
+} \\
+& \!\!\!\!\!\!\!\!\!
+  \textcolor{gray}{\small\texttt{-- PCons 1 (PCons (2,3) (PCons ((3,4),(1,2)) PNil)) :: Powl Int}}\\
+\text{System \Fw:}~& \texttt{{Powl}}\:\triangleq\:
+\lambda A^{*}.\forall X^{*\to*}. (A\to X(A\times A)\to X A) \to X A \to XA
+\end{array}
+\]\vskip-1ex\noindent
+Note the non-regular occurrence (\texttt{Powl(a,a)}) in the definition of
+(\texttt{Powl a}), and the use of universal quantification over
+higher-order kinds ($\forall X^{*\to*}$).
+The term encodings for {\small\tt PCons} and {\small\tt PNil} are exactly
+the same as the term encodings for {\small\tt Cons} and {\small\tt Nil},
+but have different types.
+
+What about term-indexed datatypes?  What extensions to System~\Fw\ are
+needed to embed term-indices as well as type-indices?  Our answer is
+System~\Fi.
+
+In a functional language supporting term-indexed datatypes, we envisage
+that the classic example of homogeneous length-indexed lists would be
+defined along the following lines (in Nax\footnote{We are developing
+a language called Nax whose theory is based on System \Fi.}-like syntax):
+\vspace{-3pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell]
+   data Nat = S Nat | Z 
+   data Vec : * -> Nat -> * where
+     VCons : a -> Vec a {i} -> Vec a {S i}
+     VNil  : Vec a {Z}
+\end{lstlisting}\vskip-1ex\noindent
+Here the type constructor~{\tt Vec} is defined to admit parameterisation
+by both type and term-indices.  For instance, the type 
+(\verb|Vec (List Nat) {S (S Z)}|) is that of two-dimensional
+vectors of natural numbers.  By design, our syntax directly
+reflects the difference between type and term-indexing by enclosing
+the latter in curly braces.  We also make this distinction in 
+System~\Fi, where it is useful within the type system
+to guarantee the static nature of term-indexing.
+
+The encoding of the vector datatype in System~\Fi\ is as follows:\vspace*{-3pt}
+\begin{equation*}\label{FiVecType}
+\texttt{{Vec}}
+\triangleq
+\begin{array}[t]{l}
+\lambda A^{*}.\lambda
+i^{\texttt{{Nat}}}.  \forall X^{\texttt{{Nat}}\to *}.
+  (\forall j^{\texttt{{Nat}}}.A\to X\{j\}\to X\{\texttt{{S}}\; j\})
+  \to X\{\texttt{{Z}}\}
+    \to X\{i\}
+\end{array}
+\end{equation*}\vskip-1ex\noindent
+where $\texttt{{Nat}}$, $\mathtt Z$, and $\mathtt S$ respectively encode
+the natural number type and its two constructors,  zero and successor.
+Again, the term encodings for {\small\tt VCons} and {\small\tt VNil} are exactly
+the same as the encodings for {\small\tt Cons} and {\small\tt Nil},
+but have different types.
+
+Without going into the details of the formalism, which are given in the
+next section, one sees that such a calculus incorporating term-indexing
+structure needs four additional constructs (see \Fig{FiSyntax} for the
+highlighted extended syntax).
+\begin{enumerate}
+\item 
+  Type-indexed kinding~($A\to\kappa$), as in $(\texttt{{Nat}\ensuremath{\to}*})$
+  in the example above, where the compile-time nature of term-indexing
+  will be reflected in the typing rules, enforcing that $A$ be a closed
+  type~(rule~$(Ri)$ in \Fig{FiTyping}).
+
+\item 
+  Term-index abstraction~$\lambda i^A.F$~(as $\lambda
+  i^{\texttt{{Nat}}}.\cdots$ in the example above) for constructing (or
+  introducing) term-indexed kinds (rule~$(\lambda i)$ in
+  \Fig{FiTyping}).  
+
+\item 
+  Term-index application~$F\{s\}$ (as $X\{{\tt Z}\}$, $X\{j\}$, and
+  $X\{\texttt{S}\;j\}$ in the example above) for destructing (or
+  eliminating) term-indexed kinds, where the compile-time nature of
+  indexing will be reflected in the typing rules, enforceing that the index be
+  statically typed% in that it does not depend on run-time parameters
+~(rule~$(@i)$ in \Fig{FiTyping}) .
+
+\item 
+  Term-index polymorphism~$\forall i^A.B$ (as $\forall
+  j^{\texttt{{Nat}}}.\cdots$ in the example above) where the compile-time
+  nature of polymorphic term-indexing will be reflected in the typing rules enforcing
+  that the variable~$i$ be static of closed type~$A$~(rule~$(\forall
+  Ii)$ in \Fig{FiTyping}).
+\end{enumerate}
+
+As described above, System~\Fi\ maintains a clear-cut separation between
+type-indexing and term-indexing.  This adds a level of abstraction
+to System~\Fw\ and yields types that in addition to parametric polymorphism
+also keep track of inductive invariants using term-indices. All term-index
+information can be erased, since it is only used at compile-time.  
+It is possible to project any well-typed System~\Fi\ term into a well-typed System~\Fw\ term.
+For instance, the erasure of the \Fi-type~\texttt{Vec}
+is the \Fw-type~\texttt{List}.  This is established in
+\S\ref{sec:theory} and used to deduce the strong normalization of
+System~\Fi.
+
+
+\section{Why Term-Indexed Calculi? {\small(rather than dependent types)}}
+We claim that a moderate extension to the polymorphic calculus (\Fw)
+is a better candidate than a dependently typed calculus for the basis of
+a practical programming system. We hope to design
+a unified system for programming as well as reasoning.
+Language designs based on indexed types can benefit from
+existing compiler technology and type inference algorithms for
+functional programming languages. In addition, theories for
+term-indexd datatypes are simpler than theories for full-fledged
+dependent datatypes, because term-indexd datatypes can be encoded
+as functions (using Church-like encodings).
+
+The implementation technology for functional programming languages based on
+polymorphic calculi is quite mature. The industrial strength
+Glasgow Haskell Compiler (GHC),
+whose intermediate core language is an extension of \Fw, is used by thousands
+every day.
+Our term-indexed calculus \Fi\ is closely
+related to \Fw\ by an index-erasure property. The hope is that
+a language implementation based on \Fi\ can benefit from these technologies.
+We have built a language implementation of these ideas, which we call Nax.
+
+Type inference algorithms for functional programming languages are often
+based on certain restrictions of the Curry-style polymorphic lambda calculi.
+These restrictions are designed to avoid higher-order unification during type
+inference. We have developed a conservative extension of Hindley--Milner
+type inference for Nax. This was possible because Nax is based on a
+restricted \Fi. Dependently typed languages, on the other hand, are
+often based on bidirectional type checking, which requires annotations on
+top level definitions, rather than Hindley--Milner-style type inference.
+
+In dependent type theories, datatypes are usually introduced as
+primitive constructs (with axioms), rather than as
+functional encodings  (\eg, Church encodings). 
+One can give functional encodings for datatypes in a dependent type theory,
+but one soon realizes that the induction principles (or, dependent eliminators)
+for those datatypes cannot be derived within the pure dependent calculi
+\cite{Geuvers01}.
+So, dependently typed reasoning systems support datatypes as primitives.
+For instance, Coq is based on Calculus of Inductive Constructions, which
+extends Calculus of Constructions \cite{CoqHue86} with dependent datatypes
+and their induction principles.
+
+In contrast, in polymorphic type theories, all imaginable datatypes
+within the calculi have functional encodings (\eg, Church encodings).
+For instance, \Fw\ need not introduce datatypes as primitive constructs,
+since \Fw\ can embed all these datatypes, including non-regular
+recursive datatypes with type indices.
+
+Another reason to use \Fi\ is to extend the application of 
+Mendler-style recursion schemes, which are well-understood
+in the context of polymorphic lambda calculi like \Fw.
+Researchers have thought about (though not published)\footnote{
+     Tarmo Uustalu described this on a whiteboard
+     when we met with him at the University of Cambridge in 2011.}
+Mendler-style primitive recursion over dependently-typed functions
+over positive datatypes (\ie, datatypes that have a map), but not for
+negative (or, mixed-variant) datatypes.
+In System \Fi, we can embed Mendler-style recursion schemes, (just as we
+embedded them in \Fw) that are also well-defined for negative datatypes.
+

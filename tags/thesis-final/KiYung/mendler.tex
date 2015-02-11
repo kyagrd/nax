@@ -1,0 +1,88 @@
+\chapter{Mendler-style recursion schemes}\label{ch:mendler}
+In this chapter, we explore a family of terminating recursion combinators
+of Mendler style. These combinators behave well over a wide class of
+recursive datatypes. This chapter is a revised and extended version of
+the conference paper by \citet{AhnShe11}. Here, the names of Mendler-style
+recursion combinators are different from those in the paper to make the names
+consistent throughout the dissertation: \MIt, \MsfIt, \McvIt, and
+\MsfcvIt\ correspond to \textit{mcata}, \textit{msfcata}, \textit{mhist},
+and \textit{msfhist} in the paper. In addition, we introduce several
+more families of recursion combinators (\MPr, \McvIt, \McvPr)
+and a new example using \MsfIt\ over an indexed datatype,\footnote{
+	The type signature of $\MsfIt_{* -> *}$ and the definition
+	of the $\breve\mu_{* -> *}$ datatype is different from
+	the type signature of $\textit{msfcata1}$ and
+	the definition of $\breve\mu_{* -> *}$ datatype in the paper. 
+	\textit{msfcata1} does type check but its type sigature was
+	too restrictive to write any useful examples.
+	Here, we give a more flexible type signature and defintion
+	for $\MsfIt_{* -> *}$ and $\breve\mu_{* -> *}$ so that
+	we can write useful examples with them.}
+which are not present in the conference paper.
+
+\index{Mendler-style!recursion combinators}
+\index{Mendler-style!combinators}
+This chapter gives the reader an intuitive understanding of Mendler-style
+recursion combinators, rather than providing a rigorous formulation of
+the theories behind Mendler style. The discussions in this chapter
+are guided by a series of examples (and some semi-formal proofs) written
+in a certain style of Haskell, which assumes certain conventions
+(see \S\ref{sec:intro}).  Haskell is a \emph{real world}
+functional programming language \cite{OSullivan08}, which admits
+a certain level of formality since it is a pure functional language.
+More rigorous formulations of the background theory used to formalize
+Mendler style will come in the following chapters
+(Chapter~\ref{ch:fi} and Chapter~\ref{ch:fixi}).
+
+\input{mendler_intro}
+
+\input{mendler_it}
+
+%% We \cite{AhnShe11} have illustrated that Mendler-style recursion combinators
+%% can be defined not only for nested datatypes but also for arbitrary indexed
+%% datatypes, whose can index may vary in the result types of the
+%% data constructors as well as in the argument types of the data constructors.
+%% For example, many examples using Generalized Algebraic DataTypes (GADTs),
+%% a popular extension to the type system of Haskell, involves indexed datatypes
+%% beyond the scope of nested datatypes.
+%% 
+%% Previous work, that promoted the expressiveness and generality of
+%% the Mendler-style \cite{AbeMatUus03,AbeMatUus05,AbeMat04} used examples
+%% involving nested datatypes, a particularly simple kind of indexing
+%% where the variation of indices are restricted to the argument types of
+%% the data constructors. In order to handle nested datatypes, the translation of
+%% the Mendler-style combinators into System \textsf{F}, had to be extended to
+%% translation into \Fw. To translate Mendler-style combinators over arbitrary
+%% indexed types including term indices we have to extend \Fw, to a new calculus
+%% we call \Fi, and prove that this new calculus is also strongly normalizing.
+%% I have identified what the extensions must look like and have been developing
+%% the theoretical background necessary to accomplish this task.
+%% This theory is an important part of the thesis and is elaborated in
+%% Chapter \ref{ch:fi}.
+%% 
+%% Despite, not having a completed theory to support the translation of GADTs,
+%% we have identified many examples \cite{AhnShe11}. Including examples
+%% that use term indices to exploit the Curry--Howard isomorphism, and
+%% examples of mutual recursion (between types) encoded in terms of GADTs.
+%% 
+%% In general, we have pushed the boundaries of what is known about
+%% the Mendler-style operators in many ways. We have identified new domains
+%% in which they are applicable, identified new operators, adapted old ones,
+%% and organized them all into a natural hierarchy that explains how all are
+%% instances of a common pattern. However, we know of no guarantee that every
+%% principled recursion scheme has a Mendler-style operator, so there is
+%% much work still to be done.
+
+\input{mendler_cv} %%%% ssec:tourHist0
+
+\input{mendler_nonreg} %%%% mendler_nonreg
+	%%% three files below are subsections of nonreg
+	\input{mendler_nest}   %%%% ssec:tourNested
+	\input{mendler_gadt}   %%%% ssec:tourIndexed
+	\input{mendler_mutrec} %%%% ssec:tourMutRec
+
+\input{mendler_prim}
+
+\input{mendler_sf}
+
+\input{mendler_proof}

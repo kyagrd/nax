@@ -1,0 +1,3928 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass beamer
+\begin_preamble
+\usetheme{Warsaw}
+% or ...
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+\definecolor{grey}{rgb}{.6,.6,.6}
+
+\makeatletter
+    \newenvironment{withoutheadline}{
+        \setbeamertemplate{headline}[default]
+        \def\beamer@entrycode{\vspace*{-\headheight}}
+    }{}
+\makeatother
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman times
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 2
+\use_esint 0
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+This file is a solution template for:
+\end_layout
+
+\begin_layout Itemize
+Talk at a conference/colloquium.
+ 
+\end_layout
+
+\begin_layout Itemize
+Talk length is about 20min.
+ 
+\end_layout
+
+\begin_layout Itemize
+Style is ornate.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+In principle, this file can be redistributed and/or modified under the terms
+ of the GNU Public License, version 2.
+ However, this file is supposed to be a template to be modified for your
+ own needs.
+ For this reason, if you use this file as a template and not specifically
+ distribute it as part of a another package/program, the author grants the
+ extra permission to freely copy and modify this file as you see fit and
+ even to delete this copyright notice.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+The Nax programming language
+\begin_inset Argument
+status open
+
+\begin_layout Plain Layout
+Nax
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+optional, use only with long paper titles
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subtitle
+subtitle
+\end_layout
+
+\begin_layout Author
+Ki Yung Ahn 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ Tim Sheard
+\begin_inset Flex InstituteMark
+status open
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ Marcelo Fiore 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ Andrew M.
+ Pitts
+\begin_inset Flex InstituteMark
+status collapsed
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Itemize
+Give the names in the same order as the appear in the paper.
+ 
+\end_layout
+
+\begin_layout Itemize
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+Institute mark
+\begin_inset Quotes erd
+\end_inset
+
+ inset (
+\family sans
+Insert\SpecialChar \menuseparator
+Custom Insets\SpecialChar \menuseparator
+InstituteMark
+\family default
+) only if the authors have different affiliations.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument
+status open
+
+\begin_layout Plain Layout
+Ahn, Sheard, Fiore, Pitts
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+- optional, use only with lots of authors
+\end_layout
+
+\begin_layout Plain Layout
+- if there are really lots of authors, use 
+\begin_inset Quotes eld
+\end_inset
+
+Author et al.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Institute
+\begin_inset Flex InstituteMark
+status collapsed
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+
+Department of Computer Science
+\begin_inset Newline newline
+\end_inset
+
+Portland State University
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Flex InstituteMark
+status collapsed
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+
+Computer Laboratory
+\begin_inset Newline newline
+\end_inset
+
+University of Cambridge
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Itemize
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+Institute mark
+\begin_inset Quotes erd
+\end_inset
+
+ inset (
+\family sans
+Insert\SpecialChar \menuseparator
+Custom Insets\SpecialChar \menuseparator
+InstituteMark
+\family default
+) only if there are several affiliations.
+\end_layout
+
+\begin_layout Itemize
+Keep it simple, no one is interested in your street address.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument
+status open
+
+\begin_layout Plain Layout
+Portland State Univ.
+ and Univ.
+ of Cambridge
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+optional, but mostly needed
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Date
+the 24th Symposium on Implementation and Application of Functional Languages
+ (IFL 2012)
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Itemize
+Either use conference name or its abbreviation.
+ 
+\end_layout
+
+\begin_layout Itemize
+Not really informative to the audience, more for people (including yourself)
+ who are reading the slides online
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument
+status open
+
+\begin_layout Plain Layout
+IFL 2012
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+optional, should be abbreviation of conference name
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+If you have a file called "institution-logo-filename.xxx", where xxx is a
+ graphic format that can be processed by latex or pdflatex, resp., then you
+ can add a logo by uncommenting the following:
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%
+\backslash
+pgfdeclareimage[height=0.5cm]{institution-logo}{institution-logo-filename}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%
+\backslash
+logo{
+\backslash
+pgfuseimage{institution-logo}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+The following causes the table of contents to be shown at the beginning
+ of every subsection.
+ Delete this, if you do not want it.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+AtBeginSubsection[]{
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+frame<beamer>{ 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+frametitle{Outline}   
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+tableofcontents[currentsection,currentsubsection] 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+If you wish to uncover everything in a step-wise fashion, uncomment the
+ following command:
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%
+\backslash
+beamerdefaultoverlayspecification{<+->}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Outline
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Structuring a talk is a difficult task and the following structure may not
+ be suitable.
+ Here are some rules that apply for this solution: 
+\end_layout
+
+\begin_layout Itemize
+Exactly two or three sections (other than the summary).
+ 
+\end_layout
+
+\begin_layout Itemize
+At *most* three subsections per section.
+ 
+\end_layout
+
+\begin_layout Itemize
+Talk about 30s to 2min per frame.
+ So there should be between about 15 and 30 frames, all told.
+\end_layout
+
+\begin_layout Itemize
+A conference audience is likely to know very little of what you are going
+ to talk about.
+ So *simplify*! 
+\end_layout
+
+\begin_layout Itemize
+In a 20min talk, getting the main ideas across is hard enough.
+ Leave out details, even if it means being less precise than you think necessary.
+ 
+\end_layout
+
+\begin_layout Itemize
+If you omit details that are vital to the proof/implementation, just say
+ so once.
+ Everybody will be happy with that.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Subsection
+Motivation: Lightweight Approach - can we make it better? 
+\begin_inset Argument
+status open
+
+\begin_layout Plain Layout
+Basic Problem
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Lightweight Approach
+\end_layout
+
+\begin_layout FrameSubtitle
+programming with lightweight dependent types in programming languages
+\end_layout
+
+\begin_layout Itemize
+Maintain fine-grained program properties by rather moderate extension to
+ the type system of functional programming languages (e.g.
+ GADT extension in Haskell)
+\end_layout
+
+\begin_deeper
+\begin_layout Pause
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+May need less effort than verifying program properties with formal proof
+ assistants based on full-spectrum dependent types
+\end_layout
+
+\begin_deeper
+\begin_layout Pause
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Has gained popularity over the past decade but there are some shortcomings
+ in practice
+\end_layout
+
+\begin_layout BeginFrame
+Shortcomings of Lightweight Approach 
+\end_layout
+
+\begin_layout Itemize
+No (formal) correctness guarantee 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+ but only (semi-formal) confidence of program properties
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+programming language type systems were not designed for logical consistency
+\end_layout
+
+\begin_layout Itemize
+must rely on belief that inconsistent features were not involved in reasoning
+ about program properties
+\end_layout
+
+\begin_layout Pause
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Faked-term indices in implementations (until recently)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+duplication of the term structure at type level
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+\size footnotesize
+data Zero; data Succ n 
+\shape slanted
+\color blue
+-- cannot prevent (Succ Bool)
+\shape default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+data Vec a n where { Nil ::Zero;
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+Cons::a -> Vec a i -> Vec Succ i }
+\end_layout
+
+\begin_layout Pause
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Type inference
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+papers on GADT type inference being published every year
+\end_layout
+
+\begin_layout Itemize
+Do need annotation obliviously, but 
+\emph on
+how much
+\emph default
+ and 
+\emph on
+where
+\emph default
+?
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Outline of our approach
+\end_layout
+
+\begin_layout BeginFrame
+Outline of our approach
+\end_layout
+
+\begin_layout Itemize
+Formalize the idea of erasable term-indices by extending well-studied polymorphi
+c lambda calculi
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+terms can appear in types but with phase distinction
+\begin_inset Newline newline
+\end_inset
+
+(i.e.
+ not dependent on variables from term abstraction)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Study on datatypes and their principled recursion schemes convenient for
+ programming as well as logical reasoning
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Mendler style
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Design a programming language based on the theory with adequate abstraction
+ level (e.g.
+ support datatypes and recursion schemes) and usability (e.g.
+ type inference)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+design a strongly normalizing and logically consistent language
+\end_layout
+
+\begin_layout Itemize
+later add non-logical features safely (ideas from Trellys project)
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Previous Work
+\end_layout
+
+\begin_layout BeginFrame
+Mendler-style recursion combinators
+\end_layout
+
+\begin_layout FrameSubtitle
+comparison of two styles -- iteration (a.k.a catamorphism)
+\end_layout
+
+\begin_layout Standard
+
+\size small
+newtype 
+\begin_inset Formula $\mu_{*}$
+\end_inset
+
+ ( f :: 
+\begin_inset Formula $*\to*$
+\end_inset
+
+ ) = In { unIn :: f (
+\begin_inset Formula $\mu_{*}$
+\end_inset
+
+f) }
+\begin_inset VSpace -2.5ex
+\end_inset
+
+
+\end_layout
+
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+5.6cm
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Oxford style
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+<1->
+\end_layout
+
+\end_inset
+
+
+\size small
+iter :: Functor f 
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+ (f a 
+\begin_inset Formula $\to$
+\end_inset
+
+ a)
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\size default
+ 
+\size small
+
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset Formula $\mu_{*}$
+\end_inset
+
+ f 
+\begin_inset Formula $\to$
+\end_inset
+
+ a
+\begin_inset Newline newline
+\end_inset
+
+iter 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ = 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ (fmap (iter 
+\begin_inset Formula $\varphi$
+\end_inset
+
+)) 
+\begin_inset Formula $\circ$
+\end_inset
+
+ unIn
+\end_layout
+
+\begin_layout Itemize
+
+\size small
+Polytypic definition --
+\begin_inset Newline newline
+\end_inset
+
+fmap defined for each functor f
+\end_layout
+
+\begin_layout Itemize
+
+\size small
+Normalization relies on meta-properties of functor being positive, etc.
+\end_layout
+
+\begin_layout Itemize
+
+\size small
+Generalization to higher-kinds needs some thinking (e.g., gfold, efold for
+ nested datatypes)
+\end_layout
+
+\begin_layout Column
+5.5cm
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+Mendler style
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+<2->
+\end_layout
+
+\end_inset
+
+
+\size small
+miter :: (
+\begin_inset Formula $\forall$
+\end_inset
+
+r.
+ (r 
+\begin_inset Formula $\to$
+\end_inset
+
+ a) 
+\begin_inset Formula $\to$
+\end_inset
+
+ f r 
+\begin_inset Formula $\to$
+\end_inset
+
+ a)
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset Formula $\mu_{*}$
+\end_inset
+
+ f 
+\begin_inset Formula $\to$
+\end_inset
+
+ a
+\begin_inset Newline newline
+\end_inset
+
+miter 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ = 
+\begin_inset Formula $\varphi$
+\end_inset
+
+ (miter 
+\begin_inset Formula $\varphi$
+\end_inset
+
+) 
+\begin_inset Formula $\circ$
+\end_inset
+
+ unIn
+\end_layout
+
+\begin_layout Itemize
+
+\size small
+Polymorphic definition -- requires higher-rank polymorphism
+\end_layout
+
+\begin_layout Itemize
+
+\size small
+Type system guarantees normalization -- miter can be embedded into System
+ 
+\begin_inset Formula $F_{\omega}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\size small
+Immediately generalizes to higher-kinds 
+\size footnotesize
+(
+\begin_inset Formula $*\to*$
+\end_inset
+
+, 
+\begin_inset Formula $\mathtt{{Nat}\to*}$
+\end_inset
+
+, ...)
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+Mendler-style recursion combinators
+\end_layout
+
+\begin_layout FrameSubtitle
+several families of combinators
+\end_layout
+
+\begin_layout Block
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+types of abstract operations
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\size small
+CALL
+\begin_inset Formula $\triangleq$
+\end_inset
+
+(r 
+\begin_inset Formula $\to$
+\end_inset
+
+ a) 
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+ CAST
+\begin_inset Formula $\triangleq$
+\end_inset
+
+(r 
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset Formula $\mu$
+\end_inset
+
+f) 
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+ OUT
+\begin_inset Formula $\triangleq$
+\end_inset
+
+(r 
+\begin_inset Formula $\to$
+\end_inset
+
+ f r) 
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+
+\begin_inset space \space{}
+\end_inset
+
+ INV
+\begin_inset Formula $\triangleq$
+\end_inset
+
+(a 
+\begin_inset Formula $\to$
+\end_inset
+
+ r)
+\end_layout
+
+\begin_layout Standard
+Each family supports a different set of abstract operations
+\end_layout
+
+\begin_layout Itemize
+miter
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $\;$
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<2->
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+:: (
+\begin_inset Formula $\forall$
+\end_inset
+
+r.
+ 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+ CALL 
+\begin_inset Formula $\to$
+\end_inset
+
+ f r 
+\begin_inset Formula $\to$
+\end_inset
+
+ a) 
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset Formula $\mu$
+\end_inset
+
+f 
+\begin_inset Formula $\to$
+\end_inset
+
+ a
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+ len (Cons x xs) = len xs + 1
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+mprim 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<3->
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+:: (
+\begin_inset Formula $\forall$
+\end_inset
+
+r.
+ 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+ CAST 
+\begin_inset Formula $\to$
+\end_inset
+
+ CALL 
+\begin_inset Formula $\to$
+\end_inset
+
+ f r 
+\begin_inset Formula $\to$
+\end_inset
+
+ a) 
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset Formula $\mu$
+\end_inset
+
+f 
+\begin_inset Formula $\to$
+\end_inset
+
+ a
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+ fac (S n) = fac n * (S n)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+mcvit 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<4->
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+:: (
+\begin_inset Formula $\forall$
+\end_inset
+
+r.
+ OUT 
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+ CALL 
+\begin_inset Formula $\to$
+\end_inset
+
+ f r 
+\begin_inset Formula $\to$
+\end_inset
+
+ a) 
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset Formula $\mu$
+\end_inset
+
+f 
+\begin_inset Formula $\to$
+\end_inset
+
+ a
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+ fib (S(S n)) = fib (S n) * fib n
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+mcvpr 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<5->
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+:: (
+\begin_inset Formula $\forall$
+\end_inset
+
+r.
+ OUT 
+\begin_inset Formula $\to$
+\end_inset
+
+ CAST 
+\begin_inset Formula $\to$
+\end_inset
+
+ CALL 
+\begin_inset Formula $\to$
+\end_inset
+
+ f r 
+\begin_inset Formula $\to$
+\end_inset
+
+ a) 
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset Formula $\mu$
+\end_inset
+
+f 
+\begin_inset Formula $\to$
+\end_inset
+
+ a
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+ luc (S(S n)) = luc (S n) * luc n + n
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+msfit 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $\,$
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<6->
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+:: (
+\begin_inset Formula $\forall$
+\end_inset
+
+r.
+ INV 
+\begin_inset Formula $\to$
+\end_inset
+
+ CALL 
+\begin_inset Formula $\to$
+\end_inset
+
+ f r 
+\begin_inset Formula $\to$
+\end_inset
+
+ a) 
+\begin_inset Formula $\to$
+\end_inset
+
+ 
+\begin_inset Formula $\mu$
+\end_inset
+
+f 
+\begin_inset Formula $\to$
+\end_inset
+
+ a
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+ printing HOAS into string 
+\size small
+(Ahn & Sheard 2011)
+\size default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<6>{
+\end_layout
+
+\end_inset
+
+miter, msfit normalize for arbitrary f -- embeddable into System 
+\begin_inset Formula $F_{\omega}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+mprim normalize for positive f -- embeddable into System 
+\begin_inset Formula $Fix_{\omega}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+mcv
+\begin_inset Formula $**$
+\end_inset
+
+ normalize for positive f -- should be embeddable into 
+\begin_inset Formula $F_{\omega}$
+\end_inset
+
+,
+\begin_inset Formula $Fix_{\omega}$
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $\qquad\quad\vdots$
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vskip5pt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size small
+\begin_inset Quotes eld
+\end_inset
+
+cv
+\begin_inset Quotes erd
+\end_inset
+
+ stands for course-of-values 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+qquad
+\backslash
+qquad
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes eld
+\end_inset
+
+sf
+\begin_inset Quotes erd
+\end_inset
+
+ stands for Sheard & Fegaras
+\size default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+Mendler-style recursion combinators
+\end_layout
+
+\begin_layout FrameSubtitle
+why do I care about embeddings into polymorphic lambda calculi?
+\end_layout
+
+\begin_layout ColumnsTopAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+6cm 
+\end_layout
+
+\begin_layout Standard
+I have problems dealing with
+\begin_inset VSpace 2ex
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename joyofcats.jpg
+	width 6cm
+
+\end_inset
+
+
+\begin_inset VSpace 1ex
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\size tiny
+(img from 
+\family typewriter
+\color blue
+
+\begin_inset CommandInset href
+LatexCommand href
+name "The Joy of Cats"
+target "http://katmat.math.uni-bremen.de/acc/acc.pdf"
+
+\end_inset
+
+
+\family default
+\color inherit
+)
+\end_layout
+
+\begin_layout Column
+6cm
+\end_layout
+
+\begin_layout Standard
+But, I have faith in things like
+\begin_inset VSpace 1ex
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+qquad
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename Fw.png
+	width 4.3cm
+
+\end_inset
+
+
+\size tiny
+
+\begin_inset VSpace 2ex
+\end_inset
+
+
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+
+\size tiny
+(img from 
+\family typewriter
+\color blue
+
+\begin_inset CommandInset href
+LatexCommand href
+name "http://bartdesmet.net/blogs/bart/"
+target "http://bartdesmet.net/blogs/bart/archive/2009/09/19/extraordinary-non-technical-activities-on-saturday.aspx"
+
+\end_inset
+
+
+\family default
+\color inherit
+)
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+Lambda Calculi with Erasable Term Indices 
+\end_layout
+
+\begin_layout Itemize
+
+\color red
+Minimal extensions
+\color inherit
+ to higher-order polymorphic lambda calculi to support true term indices
+\end_layout
+
+\begin_deeper
+\begin_layout Block
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+System 
+\begin_inset Formula $F_{i}$
+\end_inset
+
+ extended from System 
+\begin_inset Formula $F_{\omega}$
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vskip-3ex
+\backslash
+begin{align*}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+kappa &~::=
+\backslash
+; * 
+\backslash
+mid 
+\backslash
+kappa
+\backslash
+to
+\backslash
+kappa 
+\backslash
+mid {
+\backslash
+color{red}A
+\backslash
+to
+\backslash
+kappa}
+\end_layout
+
+\begin_layout Plain Layout
+
+										&& 
+\backslash
+qquad 
+\backslash
+fbox{$
+\backslash
+vdash 
+\backslash
+kappa$}
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+F,G,A,B &~::=
+\backslash
+; 
+\backslash
+cdots 
+\backslash
+mid {
+\backslash
+color{red}
+\backslash
+lambda i^A.F}
+\end_layout
+
+\begin_layout Plain Layout
+
+                     
+\backslash
+mid {
+\backslash
+color{red}F
+\backslash
+{s
+\backslash
+}}
+\end_layout
+
+\begin_layout Plain Layout
+
+                     
+\backslash
+mid {
+\backslash
+color{red}
+\backslash
+forall i^A.F} && ~~
+\backslash
+;
+\backslash
+fbox{$
+\backslash
+Delta 
+\backslash
+vdash F : 
+\backslash
+kappa$} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+t,s &~::= x 
+\backslash
+mid
+\backslash
+; 
+\backslash
+lambda x.t 
+\backslash
+mid t~s && 
+\backslash
+fbox{$
+\backslash
+Delta;
+\backslash
+Gamma 
+\backslash
+vdash t : A$}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{align*}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Strongly normalizing 
+\size small
+(by index erasure into 
+\begin_inset Formula $F_{\omega}$
+\end_inset
+
+)
+\size default
+ and
+\begin_inset Newline newline
+\end_inset
+
+Logically consistent 
+\size small
+(
+\begin_inset Formula $\because$
+\end_inset
+
+ subset of logically consistent subset of ICC)
+\end_layout
+
+\begin_layout Itemize
+Further details in
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+poster in ACM-SRC hosted by ICFP 2012
+\end_layout
+
+\begin_layout Itemize
+draft submitted to POPL 2013
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+can similarly extend System 
+\begin_inset Formula $Fix_{\omega}$
+\end_inset
+
+ into System 
+\begin_inset Formula $Fix_{i}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+The Nax programming language
+\end_layout
+
+\begin_layout Subsection
+Main Results
+\end_layout
+
+\begin_layout BeginFrame
+The Nax programming language -- Overview
+\end_layout
+
+\begin_layout Standard
+We have background theories (e.g.
+ System 
+\begin_inset Formula $F_{i}$
+\end_inset
+
+) that
+\end_layout
+
+\begin_layout Itemize
+formalizes the idea of erasable term indices
+\end_layout
+
+\begin_layout Itemize
+strongly normalizing and logically consistent
+\end_layout
+
+\begin_layout Itemize
+can embed datatypes and Mendler-style recursion schemes 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vskip2ex
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Nax programming language 
+\size small
+(named after after Nax P.
+ Mendler)
+\size default
+ 
+\end_layout
+
+\begin_layout Itemize
+supports datatypes and Mendler-style recursion schemes
+\end_layout
+
+\begin_layout Itemize
+semantics understood by embedding into background theory
+\end_layout
+
+\begin_layout Itemize
+clear design on 
+\emph on
+how much
+\emph default
+ and 
+\emph on
+where
+\emph default
+ annotations are needed
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+no annotations for regular datatypes (exactly the same as HM)
+\end_layout
+
+\begin_layout Itemize
+annotations for non-regular datatypes at declaration (using GADT-like syntax)
+ and elimination (i.e., pattern matching)
+\end_layout
+
+\begin_layout Itemize
+kind annotation for 
+\family roman
+\series bold
+Mu
+\family default
+\series default
+ and 
+\family roman
+\series bold
+In
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Code example
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{withoutheadline}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout BeginFrame
+
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing other 0.66000000000000003
+
+\family typewriter
+\size scriptsize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vskip-6ex
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula $\;$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family roman
+\series bold
+\size footnotesize
+data
+\family typewriter
+\series default
+ Tag = E | O
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\;$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+flip E = O
+\begin_inset Newline newline
+\end_inset
+
+flip O = E
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\;$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family roman
+\series bold
+gadt
+\family typewriter
+\series default
+ P : (Tag
+\begin_inset Formula $\,\to\,$
+\end_inset
+
+Nat
+\begin_inset Formula $\,\to*$
+\end_inset
+
+) 
+\begin_inset Formula $\to$
+\end_inset
+
+ Tag
+\begin_inset Formula $\,\to\,$
+\end_inset
+
+Nat
+\begin_inset Formula $\,\to*$
+\end_inset
+
+ where
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+Base 
+\begin_inset space ~
+\end_inset
+
+: P r {E} {zero}
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+StepO : r {O} {i} 
+\begin_inset Formula $\to$
+\end_inset
+
+ P r {E} {succ i}
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+StepE : r {E} {i} 
+\begin_inset Formula $\to$
+\end_inset
+
+ P r {O} 
+\begin_inset Formula $\to$
+\end_inset
+
+ P r {O} {succ i}
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<2>{{
+\end_layout
+
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\family roman
+\series bold
+deriving
+\family typewriter
+\series default
+ 
+\family roman
+\series bold
+fixpoint
+\family typewriter
+\series default
+ Proof
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}}{$~$}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<2>{
+\backslash
+color{grey}-{}- }{}{
+\end_layout
+
+\end_inset
+
+
+\family roman
+\series bold
+synonym
+\family typewriter
+\series default
+ Proof t n = 
+\family roman
+\series bold
+\color blue
+Mu
+\family typewriter
+\series default
+\color inherit
+(Tag
+\begin_inset Formula $\,\to\,$
+\end_inset
+
+Nat
+\begin_inset Formula $\,\to*$
+\end_inset
+
+) P t n
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family roman
+\series bold
+synonym
+\family typewriter
+\series default
+ Even n = Proof {E} n
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<2>{
+\backslash
+color{grey}-{}- }{}{
+\end_layout
+
+\end_inset
+
+base 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+= 
+\family roman
+\series bold
+\color blue
+In
+\family typewriter
+\series default
+\color inherit
+(Tag
+\begin_inset Formula $\,\to\,$
+\end_inset
+
+Nat
+\begin_inset Formula $\,\to*$
+\end_inset
+
+) Base
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<2>{
+\backslash
+color{grey}-{}- }{}{
+\end_layout
+
+\end_inset
+
+stepO x = 
+\family roman
+\series bold
+\color blue
+In
+\family typewriter
+\series default
+\color inherit
+(Tag
+\begin_inset Formula $\,\to\,$
+\end_inset
+
+Nat
+\begin_inset Formula $\,\to*$
+\end_inset
+
+) (StepO x)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\;$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family roman
+\series bold
+synonym
+\family typewriter
+\series default
+ Odd n = Proof {O} n
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+alt<2>{
+\backslash
+color{grey}-{}- }{}{
+\end_layout
+
+\end_inset
+
+stepE x = 
+\family roman
+\series bold
+\color blue
+In
+\family typewriter
+\series default
+\color inherit
+(Tag
+\begin_inset Formula $\,\to\,$
+\end_inset
+
+Nat
+\begin_inset Formula $\,\to*$
+\end_inset
+
+) (StepE x)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\;$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{grey}
+\end_layout
+
+\end_inset
+
+-- stepProof
+\begin_inset Formula $\;:\;$
+\end_inset
+
+Proof {t} {i} 
+\begin_inset Formula $\to$
+\end_inset
+
+ Proof {flip t} {succ i}
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+stepProof pf = 
+\family roman
+\series bold
+\color blue
+miter
+\family typewriter
+\series default
+\color inherit
+ { t i .
+ Proof {flip t} {succ i} } pf
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\family roman
+\series bold
+where
+\family typewriter
+\series default
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+f Base 
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+= stepE base
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+f (StepO p) = stepE (f p)
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+f (StepE p) = stepO (f p)
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\;$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+color{grey}
+\end_layout
+
+\end_inset
+
+-- evenORodd
+\begin_inset Formula $\;:\;$
+\end_inset
+
+Vec a {n} 
+\begin_inset Formula $\to$
+\end_inset
+
+ Either (Even {n}) (Odd {n})
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lyxframeend{}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{withoutheadline}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+lyxframe{}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Summary
+\end_layout
+
+\begin_layout BeginFrame
+Summary
+\end_layout
+
+\begin_layout Itemize
+We 
+\color none
+know how to extend higher-order polymorphic lambda calculi with erasable
+ term-indices, which maintain desirable properties
+\end_layout
+
+\begin_layout Itemize
+Mendler-style recursion schemes over indexed datatypes are embeddable these
+ calculi -- only need to believe in those calclui
+\end_layout
+
+\begin_layout Itemize
+
+\color none
+Nax is a programming language built on top of the theories above -- programming
+ with GADTs with 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+real term indices -- no code duplication at type and term level
+\end_layout
+
+\begin_layout Itemize
+
+\color none
+formal correctness guarantee
+\end_layout
+
+\begin_layout Itemize
+
+\color none
+clearly understandable type reconstruction (or, partial type inference)
+\end_layout
+
+\end_deeper
+\begin_layout BeginFrame
+Outlook
+\end_layout
+
+\begin_layout Itemize
+Ongoing work
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+writing down embedding of course-of-values iteration & recursion and try
+ some examples over higher-kinded datatypes
+\end_layout
+
+\begin_layout Itemize
+write down typing rules & type inference algorithm of Nax and prove their
+ correspondence
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $Fix_{\omega}$
+\end_inset
+
+ is strongly normalizing but is there a superset logically consistent calculi?
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Future work
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+try to reduce annotations further
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+(e.g., kind annotations on Mu and In may be inferable)
+\end_layout
+
+\begin_layout Itemize
+let polymorphism for kinds may not be harmful
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+(since HM is STLC by let-inlining)
+\end_layout
+
+\begin_layout Itemize
+More large eliminations in Nax?
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+quad
+\end_layout
+
+\end_inset
+
+(e.g., 
+\family typewriter
+{ x .
+ if x then Nat else (Nat
+\begin_inset Formula $\to$
+\end_inset
+
+Nat) }
+\family default
+ )
+\end_layout
+
+\end_deeper
+\begin_layout EndFrame
+
+\end_layout
+
+\end_body
+\end_document

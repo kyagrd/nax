@@ -1,0 +1,107 @@
+\documentclass{llncs}
+\usepackage{pdfpages}
+%% \usepackage[hang,bf]{caption}
+\usepackage{color}
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{semantic}
+\usepackage{listings}
+\usepackage{comment}
+\usepackage[numbers]{natbib}
+
+\renewcommand{\qed}{~\hfill$\blacksquare$}
+
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+
+\newcommand{\Fig}[1]{Fig.\,\ref{fig:#1}}
+\newcommand{\Figs}[1]{Figs.\,\ref{fig:#1}}
+\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
+
+\newcommand{\ie}{{i.e.}}
+\newcommand{\eg}{{e.g.}}
+\newcommand{\aka}{{a.k.a.}$\,$}
+
+\newcommand{\Fi}{\ensuremath{\mathsf{F}_i}}
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
+\newcommand{\fix}{\mathsf{fix}}
+\newcommand{\Fix}{\mathsf{Fix}}
+\newcommand{\Fixw}{\ensuremath{\Fix_{\omega}}}
+\newcommand{\Fixi}{\ensuremath{\Fix_{i}}}
+
+\renewcommand{\l}{\lambda}
+
+\newcommand{\dom}{\mathop{\mathsf{dom}}}
+\newcommand{\FV}{\mathop{\mathrm{FV}}}
+
+\newcommand{\Eq}{\mathtt{Eq}}
+\newcommand{\LEq}{\mathtt{LEq}}
+\newcommand{\Ran}{\mathtt{Ran}}
+\newcommand{\Lan}{\mathtt{Lan}}
+\newcommand{\s}[1]{\{#1\}}
+
+\renewcommand{\S}[0]{Sect.\;}
+
+\title{System \Fi}
+\subtitle{a Higher-Order Polymorphic $\lambda$-Calculus\\
+        with Erasable Term-Indices}
+\titlerunning{System \Fi}
+\author{Ki Yung Ahn\inst{1} \and Tim Sheard\inst{1} \and
+        Marcelo Fiore\inst{2} \and Andrew M. Pitts\inst{2} }
+\institute{
+        Portland State University, Portland, Oregon, USA
+        \thanks{supported by NSF grant 0910500.}
+	\\ \email{\{kya,sheard\}@cs.pdx.edu}
+        \and
+        University of Cambridge, Cambridge, UK
+        \\ \email{\{Marcelo.Fiore,Andrew.Pitts\}@cl.cam.ac.uk}
+        }
+
+\begin{document}
+\maketitle
+\begin{abstract}
+We introduce a foundational lambda calculus,
+System~\Fi, for studying programming languages with
+term-indexed datatypes -- higher-kinded datatypes whose indices range
+over data such as natural numbers or lists.
+System~\Fi\ is an extension of System~\Fw\ that 
+introduces the minimal features needed to support term-indexing.
+We show that System~\Fi\ provides a theory for analysing programs
+with term-indexed types and also argue that it constitutes a basis
+for the design of logically-sound light-weight dependent programming languages.
+%% In terms of expressivity, System~\Fi\ sits in between System~\Fw\ and the
+%% Implicit Calculus of Constructions (ICC). Indeed, we relate System~\Fi\ to
+%% System~\Fw\ and ICC as follows.
+We establish erasure properties of
+\Fi-types that capture the idea that term-indices are discardable in
+that they are irrelevant for computation.  Index erasure projects typing
+in System~\Fi\ to typing in System~\Fw. So, System~\Fi\ inherits
+strong normalization and logical consistency from System~\Fw.
+%% The logical consistency of
+%% System~\Fi\ is established by embedding it into a subset of ICC.
+\keywords{term-indexed data types, generalized algebraic data types,
+higher-order polymorphism, type-constructor polymorphism, higher-kinded types,
+impredicative encoding, strong normalization, logical consistency}
+\end{abstract}
+
+\input{intro}
+
+\input{motiv}
+
+\input{fi}
+
+\input{theory}
+
+\input{data}
+
+\input{relwork}
+
+\input{concl}
+
+\bibliographystyle{splncsnat}
+\bibliography{main}
+
+%% \newpage
+%% \appendix
+
+\end{document}

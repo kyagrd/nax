@@ -1,0 +1,177 @@
+%-----------------------------------------------------------------------------
+%
+%               Template for sigplanconf LaTeX Class
+%
+% Name:         sigplanconf-template.tex
+%
+% Purpose:      A template for sigplanconf.cls, which is a LaTeX 2e class
+%               file for SIGPLAN conference proceedings.
+%
+% Guide:        Refer to "Author's Guide to the ACM SIGPLAN Class,"
+%               sigplanconf-guide.pdf
+%
+% Author:       Paul C. Anagnostopoulos
+%               Windfall Software
+%               978 371-2316
+%               paul@windfall.com
+%
+% Created:      15 February 2005
+%
+%-----------------------------------------------------------------------------
+
+
+\documentclass[preprint]{sigplanconf}
+
+% The following \documentclass options may be useful:
+%
+% 10pt          To set in 10-point type instead of 9-point.
+% 11pt          To set in 11-point type instead of 9-point.
+% authoryear    To obtain author/year citation style instead of numeric.
+
+\usepackage[fleqn]{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{semantic}
+\usepackage{color}
+\usepackage{fancybox}
+\usepackage{framed}
+\usepackage{listings}
+\usepackage{todonotes}
+\usepackage{comment}
+
+\newcommand{\KYA}[1]{\todo[inline,author=KiYung,size=\small,color=pink]{#1}}
+
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+
+\newcommand{\Fig}[1]{Figure\,\ref{fig:#1}}
+\newcommand{\Figs}[1]{Figures\,\ref{fig:#1}}
+\newcommand{\newFi}[1]{\colorbox{grey}{\ensuremath{#1}}}
+
+\newcommand{\eg}{{e.g.}}
+\newcommand{\ie}{{i.e.}}
+
+\newcommand{\Fi}{\ensuremath{\mathsf{F}_i}}
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_\omega}}
+\newcommand{\fix}{\mathsf{fix}}
+\newcommand{\Fix}{\mathsf{Fix}}
+\newcommand{\Fixw}{\ensuremath{\Fix_{\omega}}}
+\newcommand{\Fixi}{\ensuremath{\Fix_{i}}}
+
+\renewcommand{\l}{\lambda}
+
+\newcommand{\dom}{\mathop{\mathsf{dom}}}
+\newcommand{\FV}{\mathop{\mathrm{FV}}}
+
+\newcommand{\Eq}{\mathtt{Eq}}
+\newcommand{\LEq}{\mathtt{LEq}}
+\newcommand{\Ran}{\mathtt{Ran}}
+\newcommand{\Lan}{\mathtt{Lan}}
+\newcommand{\s}[1]{\{#1\}}
+\renewcommand\qedsymbol{$\blacksquare$}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{example}{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+
+\conferenceinfo{WXYZ '05}{date, City.} 
+\copyrightyear{2005} 
+\copyrightdata{[to be supplied]} 
+
+\titlebanner{banner above paper title}        % These are ignored unless
+\preprintfooter{short description of paper}   % 'preprint' option specified.
+
+\title{System \Fi}
+\subtitle{a higher-order polymorphic $\lambda$-calculus with erasable term indices}
+
+\authorinfo{Ki Yung Ahn\and Tim Sheard}
+           {Portland State University}
+	   {\{kya,sheard\}@cs.pdx.edu}
+\authorinfo{Marcelo Fiore\and Andrew M. Pitts}
+           {University of Cambridge}
+	   {\{Marcelo.Fiore,Andrew.Pitts\}@cl.cam.ac.uk}
+
+\maketitle
+
+\begin{abstract}
+The purpose of this paper is to introduce a foundational type system,
+System~\Fi, for the design of programming languages with first-class
+term-indexed datatypes -- higher-order datatypes whose parameters range
+over data such as 
+Natural Numbers %~(e.g. {\tt Z} and {(\tt S Z})) 
+or 
+Lists. %~(e.g. {\tt Nil} and ({\tt Cons Z Nil})).
+
+To do this, we have
+devised a minimal extension of System~\Fw\ that incorporates term indices.
+While term-indexed datatypes are expressible in rich type theories, like
+the Implicit Calculus of Constructions~(ICC), these systems typically come 
+coupled with
+orthogonal features such as large eliminations and full type dependency.  We
+argue that there are important pedagogical benefits of isolating the
+minimal features to support term-indexing. We show that System~\Fi\
+provides a theory for analysing programs with term-indexed types and also
+argue that it constitutes a basis for the design of logically-sound
+light-weight dependent programming languages.
+
+In terms of expressivity, System~\Fi\ sits in between System~\Fw\ (the
+prototypical logical calculus for functional programming) and ICC~(a
+full-featured dependent type theory).  Indeed, we relate System~\Fi\ to
+System~\Fw\ and ICC as follows.  We establish erasure properties of
+\Fi-types that capture the idea that term indices are discardable in
+that they are irrelevant for computation.  Index erasure projects typing
+in System~\Fi\ to typing in System~\Fw; so System~\Fi\ inherits the
+strong-normalisation property from System~\Fw.  The logical consistency of
+System~\Fi\ is established by embedding it into a subset of ICC.
+\end{abstract}
+
+\category{D.3.3}{Programming Languages}{Language Constructs and Features}[data types and structures]
+\category{F.4.1}{Mathematical Logic and Formal Languages}{Mathematical Logic}[lambda calculus and related systems]
+
+\terms
+Languages, Theory
+
+\keywords
+term-indexed data types, generalized algebraic data types,
+higher-order polymorphism, type-constructor polymorphism, higher-kinded types,
+impredicative encoding
+
+\input{intro}
+\input{fi}
+\input{data}
+\input{theory}
+\input{relwork}
+\input{concl}
+
+
+
+
+%% \appendix
+\acks
+This work was supported by NSF grant 0910500.
+
+% We recommend abbrvnat bibliography style.
+
+\bibliographystyle{abbrvnat}
+
+% The bibliography should be embedded for final submission.
+
+\bibliography{main}
+
+%%%%%%%%%% if we need appendix for submission
+%%%
+%%% \newpage
+%%% \section{Appendix Title}
+
+\end{document}

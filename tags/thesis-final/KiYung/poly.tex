@@ -1,0 +1,33 @@
+\chapter{Polymorphic type systems}\label{ch:poly}
+In this chapter, we review the simply-typed lambda calculus (\S\ref{sec:stlc}),
+a non-polymorphic type system, and
+a series of well-known polymorphic type systems:
+System~\F\ (\S\ref{sec:f}), System~\Fw\ (\S\ref{sec:fw}),
+and the Hindley--Milner type system (\S\ref{sec:hm}).
+We review them because \Fi\ (Chapter \ref{ch:fi}),
+\Fixi\ (Chapter \ref{ch:fixi}), and the Nax language (Chapter \ref{ch:nax})
+in later chapters are extensions of these systems.
+
+We assume the reader has some familiarity with lambda calculi, at least
+with the untyped lambda calculus. Readers with an expert understanding on
+polymorphic type systems and encodings of datatypes in such systems
+may skip this chapter and continue directly to the following chapters.
+
+\index{Church style}
+\index{Curry style}
+One of the purposes of this chapter is illustrating
+the strong normalization theorem for less common formulations of
+the polymorphic lambda calculi. System~\F\ and System~\Fw\ are more often
+formulated in Church style and with a single typing context. Here,
+we illustrate them in Curry style and their typing rules with two
+typing contexts, because our indexed type theories, System~\Fi\ and
+System~\Fixi, in Part~\ref{part:Calculi} are formulated in such ways.
+Another purpose of this chapter is to familiarize the readers with
+functional encodings of datatypes in polymorphic type systems
+(see \S\ref{sec:f:data} and \S\ref{sec:fw:data}).
+
+\input{poly_stlc} %% \section{The simply-typed lambda calculus} \label{sec:stlc}
+\input{poly_f}    %% \section{System \F}                        \label{sec:f}
+\input{poly_fw}   %% \section{System \Fw}                       \label{sec:fw}
+\input{poly_hm}   %% \section{The Hindley-Milner type system}   \label{sec:hm}
+

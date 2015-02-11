@@ -1,0 +1,798 @@
+===========================================================================
+                           POPL 2013 Review #57A
+                Updated Saturday 25 Aug 2012 8:26:42pm CEST
+---------------------------------------------------------------------------
+   Paper #57: System Fi: a higher-order polymorphic lambda-calculus with
+              erasable term indices
+---------------------------------------------------------------------------
+
+                      Overall merit: C. Weak reject
+                          Expertise: Y. Knowledgeable
+
+                         ===== Paper summary =====
+
+This paper defines a typed lambda calculus called Fi.
+Fi extends Fomega with type-indexed kinds and term-indexed types.
+The language is designed so that term indices may be erased.
+In doing so, one is left simply with Fomega types and terms.
+Consequently, the language is strongly normalizing.  In addition,
+the authors observe it is consistent as it is a subset of the
+Implicit Calculus of Constructions.
+
+The authors illustrate that one can carry out certain kinds of
+Church encodings in the language.  They prove several meta-theoretic
+properties of the language.
+
+                     ===== Comments for authors =====
+
+From a technical standpoint, this paper appears sounds.  The authors
+show how to carry out proofs of well-formedness conditions and type
+erasure.  The "bigger" theorems such as strong normalization then
+simply fall out as consequences of the fact that Fi types can be
+erased leaving just Fomega types and terms.  From a meta-theoretical
+standpoint, this is a nice design.  The authors exploit past work
+effectively.
+
+On the other hand, the paper is quite weak in terms of motivating and
+proving the utility of the work.  If I understand the introduction
+properly, the goal of the work is to design a programming language
+that has a type system rich enough so that programmers can prove
+interesting programs totally correct, as one might do in Coq.  And yet
+it should be possible to execute those programs as is.  If this is so,
+the authors need to make their case by demonstrating that Fi is a
+tractable language for coding interesting algorithms and its type
+system is strong enough to guarantee the correctness of such
+algorithms.  Showing that it is possible to perform church encodings
+of indexed lists, while somewhat interesting, is a very long way from
+demonstrating that this design is useful in practice and has
+advantages over Coq or other dependently typed programming languages.
+
+As a minor comment: the authors spend many pages of the paper showing
+the reader how to prove some simple theorems.  I think the statement
+of the theorems should be put in the paper, but the proofs should
+be relegated to a technical report.  Several pages are taken up by
+proofs where many of the cases are "by induction" and "by lemma 3".
+The POPL audience does not need to see that.  It does give this
+review confidence that the results are correct, but these results
+could have been included as "auxiliary materials" in the submission 
+process.
+
+Please explain the pros and cons of your language vs. a language such
+as Pfenning and Xi's dependent ML.  Dependent ML has static indices
+like the authors.  Lots of different languages of indices are possible.
+For instance, in one incarnation of dependent ML, LF was used as the
+index language and consequently (I believe) it was possible to 
+prove rich properties of programs such as type preservation of
+transformations between typed intermediate languages (an example
+suggested in the introduction).  Xi and Pfenning's dependent ML
+did allow arbitrary recursion in the term language.  However, the
+term recursion construct could likely be omitted and replaced
+by some kind of induction that would ensure termination. So the bottom
+line is: why do you prefer your proposed type structure over the kind
+of structure espoused by Xi and Pfenning?
+
+Another related language or set of languages is the line work developed
+by Nik Swamy and others on Fine, F7, FX, and F*.  What are the pros and
+cons of the current design vs. that work?
+
+Minor Comment:  I found the way the authors presented the first proposition
+in section 5.1 a little bizarre.  I was confused by the "case" structure
+and the presence of the judgements forms in boxes to the right of the word
+case.  In addition, there is a footnote explaining that this is only a "rough"
+statement of the actual theorem.  The authors have tons of space in the
+paper (given that the details of many of the proofs can easily be omitted).
+There is no reason to have "rough" theorems instead of exact ones.
+I would have written out the theorem in a conventional style as:
+
+Proposition:
+
+(1) If |- D and D |- F : k then |- K : box
+
+(2) If D |- G and D; G |- t : A then D |- A : *
+
+...
+
+That actually probably wouldn't have taken up any more space than 
+the authors use.
+
+In addition, the first case:
+
+If |- k : s then s = box
+
+should be omitted.  The authors actually never previously defined s, a
+meta-variable that ranges over sorts.  There is nothing to prove here.
+
+                     ===== Questions for authors =====
+
+I would like to hear about the pros and cons vs designs similar to Xi and Pfenning's DML as well as more modern variants such as F*.
+
+===========================================================================
+                           POPL 2013 Review #57B
+                Updated Saturday 1 Sep 2012 9:09:31pm CEST
+---------------------------------------------------------------------------
+   Paper #57: System Fi: a higher-order polymorphic lambda-calculus with
+              erasable term indices
+---------------------------------------------------------------------------
+
+                      Overall merit: D. Reject
+                          Expertise: X. Expert
+
+                         ===== Paper summary =====
+
+Defines and studies a relatively simple extension of system F-omega, dubbed
+Fi, featuring types indexed by static term-level indices.  Fi is intended as
+a core language for a future functional programming language (Nax) with
+indexed types, but Nax is not described in detail.  Basic
+metatheory (erasure properties, SN, etc.) is developed in detail.
+
+                     ===== Comments for authors =====
+
+This line of work seems to be headed in a quite interesting direction, but
+the paper as it stands feels a bit too preliminary for inclusion in POPL
+2013.  The paper's main stated motivation is pedagogical -- to design the
+simplest possible foundational core for a programming language with
+term-indexed types.  But, except for a few paragraphs at the very end, there
+is no justification that this aim has been achieved.  Instead, the paper
+focuses on definitions and detailed proofs of fairly routine properties.
+
+There are some interesting passages about encodings of Mendler-style
+iterators.  Unfortunately, these are quite dense and not well explained -- I
+didn't get much out of them.  
+
+I also have one significant technical concern -- see the Questions for
+Authors section below.
+
+SMALLER COMMENTS
+
+Most of the writing is fairly clear.  However, there are a lot of small
+grammar mistakes throughout the paper.  It could use a careful reading by a
+native speaker.
+
+"In his CompCert system, Leroy [12] showed that the much richer logical
+Calculus of Inductive Constructions (CIC), which constitutes the basis of
+the Coq proof assistant, is expressive enough to guarantee type
+preservation (and more) between com- piler stages. This approach, however,
+comes at a cost. Programmers must learn to use both dependent types and a
+new programming paradigm, programming by code extraction."  
+
+  CompCert is not "programming by code extraction" in the sense of
+  extracting the computational content of proofs: the compiler is a pretty
+  vanilla functional program written in Gallina.  The only really unusual
+  aspect of the compiler is that it's written in an obviously terminating
+  style, as Coq demands.
+
+"universal quantification over higher-order kinds" -- not what you mean, I
+think. 
+
+"Since values are elimination functions, the eliminator can be defined as
+applying the value itself to the needed operations. One for each of the data
+constructors."  -- 'operations' is not what you mean, I think.
+
+Mendler-style iterators should be explained.  (Just showing Figure 6 is not
+enough.)
+
+Section 4.3 is way too dense.
+
+Proposition 1 is confusing: what else could s possibly be?
+
+More generally, most of the proofs in section 5 seem much too detailed and
+low-level.  (I did not check them.)
+
+"One can however build pathological examples." -- 
+
+Section 5.3 is disappointing, given that these properties were claimed as
+significant contributions in the introduction -- there's no actual proof
+here, just a handwave.  You could avoid disappointment simply by saying that
+we will observe that these properties are kind of trivial to establish, just
+by noting that this is a syntactic subsystem of another system that enjoys
+them.
+
+"Enriching the type annotations in Nax will motivate us to identify the
+features needed to extend Fi to support a notion of large eliminations." --
+This is a bit worrying: You started out saying that you wanted the simplest
+possible core language needed to support a certain style of functional
+programming language.  But here you seem to imply that what you have is
+*too* simple and doesn't fit the purpose!
+
+---------------------
+ANOTHER REVIEWER WRITES:
+
+General remarks:
+
+The article describes a lambda-calculus named System F_{i}, which is an
+extension of System F_{\omega} that supports term-indexing datatypes. The
+non-technical explanations are excellent and give a clear insight on both
+the motivations for System F_{i} and its utility. The ideas developed in the
+paper seem very interesting and original. However the proofs in Part 5 are
+tremendously lacking of rigor. This part is clearly not ready and should be
+rewritten carefully. It seems also there some changes would be needed in the
+inference rules. Once this is done, the paper should be suitable to be
+presented to the community. 　
+
+Specific remarks:
+
+======
+
+part 1
+
+======
+
+- 2nd paragraph: (On the other hand..)
+
+would be clearer if the parenthesis (see par6 for a very recent GHC...) was a footnote balancing the statement "term-indices are not first-class";
+
+seems inconsistent the way it is written I think
+
+- 2nd paragraph after the Vector code example:
+
+the sentence "First, there is no way to say,..." seems ill-formed
+
+"First" is followed by a sentence with a verb; "second" is followed by a name
+
+　
+
+================
+
+part 3 System Fi
+
+================
+
+3.1 a reference where F\omega is designed using two contexts would be nice (I have checked 1,2 and they use a one context design)
+
+3.2
+
+- "We assume readers to be familiar with System F\omega" should quote the references 1,2 and 9 that are given later at the very beginning of part 6.
+
+- paragraph "Well formed typing contexts"
+
+"whose kind \kappa is well-sorted under \Delta" : sorting judgments have no context;
+
+-> "whose kind \kappa is well-sorted"
+
+Figure 1:
+
+- it would be handy if the rules for well-formed typing contexts had a name: they are used a lot during the metatheory proofs and naming them would help to make the proofs clearer
+
+- in Conv, there should be no context in the kind equality judgement
+
+- why is the condition \vdash\kappa : \square needed in (\lambda) (\forall)(\forall I) ?[it is not the case in the referenced paper (2)]
+
+- a question in @i: would we lose much power if \Delta was supposed empty?
+
+conversely, if we allow a non-empty context \Gamma: what restrictions (if any) to keep all the properties, and in particular SN, subject-reduction and consistency
+
+Figure 3:
+
+in the premise of (: i) it should be \Delta, i^A \vdash and not \Delta\vdash;
+
+then the 3rd rule (the grey one) of the well-formed typing contexts should be applied beforehand
+
+page 5 - Terms and their typing rules:
+
+calclui -> calculi
+
+"only one side conditions" -> "only one side condition" or, shorter, "only one"
+
+"polymorphicaly" --> polymorphically
+
+　
+
+=========================================
+
+Part 4 (PS: really not an expert on that)
+
+=========================================
+
+4.1
+
+elim_{Nat} does not seem to me as a \eta-expansion of the identity:
+
+\lambda x.(\lambda xs. (\lambda xz . xz) . xs). x would be
+
+Similar --> similar
+
+Figure 4. elim (+) encoding not clear : is case x of ... part of the encoding?
+
+if so, how do you code case ... of
+
+if not, is the encoding of elim (+) working?
+
+===================
+
+part 5. Metatheory:
+
+===================
+
+General remark: in the proofs, the order of the rules should be the same than the order in the description in the system;
+
+it would make proofs easier to follow
+
+5.1 well-formedness:
+
+this part is really confusing and I think the proofs should be rewritten
+
+- footnote 4 is very misleading:
+
+* it seems to imply that to be "completely rigorous" mutual induction between Prop 1,2,3 and Lemma 1,2,3 and not only Prop 1,2,3 was needed
+
+* but the lemmas can be proven independently
+
+* and for the propositions as well, there is no need for mutual induction...
+
+- proposition 2:
+
+* "By induction on the derivation" --> By induction on the kinding derivation
+
+* case (\lambda): \vdash \kappa : \square is a premise, not an induction hypothesis; no need to apply prop 1 then.
+
+the proof of this case is both too imprecise and too long
+
+* case (\lambda i): \vdash A : * is a premise, not an induction hypothesis. too long the "since we..." bits could be removed
+
+"By induction": precise what judgement the induction is made on
+
+* case @: by induction AND inversion of the sorting rule (R)
+
+* case @i: I don't see where the prop 3 would be useful; but similarly to the case @, you need to use rule (Ri)
+
+- proposition 3:
+
+* "By induction on the derivation" --> By induction on the typing derivation
+
+* case (:i): not so trivial I think; one needs to prove that \vdash\Delta
+
+* case (=): no induction, but Lemma 2 on the premisse \Delta\vdash A = B : *
+
+* case ->E: induction does not seem enough; one should also use the inversion of ->, but we probably need some inversion lemmas, because of the conversion rule
+
+* case \forall E: similarly an inversion lemma for \Delta \vdash \forall X^{\kappa}.B : \kappa is missing;
+
+the rule (\forall) is NOT the only kinding rule to derive this judgement; it can be the conversion rule as well
+
+* case (\forall Ei): same mistake as in (\forall E) and (->E): inversion lemma is needed
+
+- lemma 1:
+
+should mention that lemma 2 needs to be applied for the grey rule;
+
+　
+
+- lemma 2:
+
+* for the first rule (left to right, top to bottom); the justification that \vdash\kappa : \square holds is missing
+
+(perhaps because the rule (\lambda) should be changed... or maybe it should be added to the type constructor equality rule)
+
+* second rule: I think that the justification that \vdash A : * is missing
+
+* ninth rule: it depends on lemma 3 and that should be mentioned...
+
+- lemma 3:
+
+* first rule: the justification of \Delta \vdash A : * is missing (maybe change the rule?)
+
+- lemma 4:
+
+I think the proof should be much more developed. I am sure it is standard, but probably not trivial. There is probably the need for lemmas (such as weakening e.g.). mentioning these lemmas as well as giving a reference to where this proof is detailed would certainly help to convince the reader.
+
+　
+
+general remark about the order of the results in 5.1:
+
+I think the order of the lemmas and proposition, as it is the case in section 5.3) should follow the dependencies:
+
+lemmas 4, 3, 2,1; proposition 1,3,2
+
+　
+
+5.2 erasure properties
+
+- the paragraphs after remark 3 and remark 4 ("The three theorems above..." and "The proofs for the two...") explaining why there is no need for mutual induction seem useless to me, especially given that there was no need for mutual induction in 5.1
+
+- theorem 4:
+
+* mention the use of Definition 1 (it is used for all the cases and is mentioned only in some)
+
+* case (\lambda): mention the use of the 2nd well-formedness rule to prove that \vdash \Gamma, X^k
+
+* case (\forall): idem (\lambda) + too long
+
+* case (\lambda i): mention the use of the 3rd well-formedness rule to prove that \vdash \Gamma, i^A
+
+* case @i: too detailed
+
+* case (\forall i): idem (\lambda i) + too long
+
+- theorem 5:
+
+* non-detailed cases: don't see why Proposition 2 would be used, probably Theorem 1 is needed
+
+* 1st detailed case:
+
+** the key point, i.e. that (F [G\X])^\circle = (F^\circle [G^\circle \X]) should be detailed:
+
+the least would be to say how to prove it: I guess a simple induction on the structure of F is enough, but perhaps it is more difficult;
+
+perhaps it is only valid for well-kinded constructors. this result could probably be a lemma by itself
+
+** the rest should not be detailed because it is straightforward: applying the same equality rule to the induction hypothesis;
+
+** I don't understand how (\lambda) and (@) are used, I think they're useless
+
+** "very equality rule" --> very same equality rule
+
+(F [G\X])^\circle = (F^\circle [G^\circle \X]) should be detailed.
+
+* 2nd detailed case:
+
+similarly, the result that (F[s\i])^\circle = F^\circle should be more detailed; the rest is obvious
+
+- theorem 6:
+
+* 2nd case: to apply theorem 4, we need to know that \vdash \Delta
+
+- theorem 7:
+
+* case (-> I): ".\vdash A^\circle : *" --> \Delta^\circle \vdash A^\circle : *
+
+proving that \vdash \Delta holds is needed to apply Theorem 4;
+
+I think a lemma such as "\Delta \vdash F : \kappa => \vdash\Delta" is missing
+
+* case (\forall I): the proof that \Delta, X^\kappa \vdash \Gamma is needed
+
+(the lemma "\Delta;\Gamma\vdash t : A" => \Delta\vdash\Gamma" could be useful)
+
+* case (\forall E): same as in (-> I), the proof that \vdash\Delta holds is missing
+
+* case (\forall I i): first sentence is useless since .\vdash A^\circle : * is not used...
+
+　
+
+- theorem 8:
+
+* do not understand the proof, why would the theorem 6 or the rule (:i) be used?
+
+* I think the theorem does not hold and here is a possible counter example:
+
+\Gamma = .
+
+\Delta = A^* ; i^A (where A = \forall X ^* . X is closed)
+
+By rule (\forall), we have .\vdash A : *
+
+and then \vdash \Delta and then \Delta \vdash\Gamma
+
+Furthermore:
+
+\Delta^\circle = (A^\circle)^*
+
+\Delta^\dot,\Gamma = i^A
+
+and - since \Delta^\dot,\Gamma is a context for terms and not a context for types -
+
+(\Delta^\dot,\Gamma)^\circle = i^(A^\circle)
+
+if theorem 8 was correct, we would have
+
+\Delta^\circle \vdash (\Delta^\dot,\Gamma)^\circle
+
+which is (A^\circle)^* \vdash i^(A^\circle)
+
+which cannot hold since free variable i is not in the context...
+
+I think the mistake made by the authors was to consider when computing (\Delta^\dot,\Gamma)^\circle, that the \Delta^\dot is still a context for types wheras it became a context for terms, which implies that the index variables are not erased...
+
+- theorem 9: needs more details
+
+* the dependence on theorem 8 about the (: i) case should be mentioned
+
+* if theorem 8 is indeed false, then the proof is not correct and the result may not be true
+
+* since theorem 7 and theorem 9 have similar proofs, one should develop the more complex one, i.e. the th9 proof
+
+
+5.3 strong normalization and logical consistency
+
+should be more detailed:
+
+* explain why a reduction in F_{i} implies a reduction in F_{\omega}
+
+* maybe write the theorems that are used
+
+================
+
+6. Related work:
+
+================
+
+- the first sentence of the second paragraph ("We can derive...") should be
+  in 5.3
+
+- maybe the 3rd paragraph would be better placed in section 3.1: all the
+  other works cited in part 6 are much more recent than those cited in this
+  paragraph
+
+- This article 
+
+     http://dblp.uni-trier.de/rec/bibtex/conf/fossacs/BarrasB08
+
+  should really be cited and discussed.
+
+                     ===== Questions for authors =====
+
+I don't understand how scoping and erasure work.  Rule (:i) allows index
+variables to be used in ordinary terms, so for example
+
+   \lambda x. i
+
+would be a well-typed term of type 
+
+   \forall i^Nat. Bool -> Nat
+
+right?  But this doesn't make much sense, does it?
+
+(This seems related to the possible counterexamples mentioned above.)
+
+===========================================================================
+                           POPL 2013 Review #57C
+                Updated Thursday 6 Sep 2012 7:36:54pm CEST
+---------------------------------------------------------------------------
+   Paper #57: System Fi: a higher-order polymorphic lambda-calculus with
+              erasable term indices
+---------------------------------------------------------------------------
+
+                      Overall merit: B. Weak accept
+                          Expertise: X. Expert
+
+                         ===== Paper summary =====
+
+The paper describes F_i, an extension of Curry-style F_omega with
+term-indexed types. Terms are not annotated with types, so typing does
+not affect evaluation. (The title mentions "erasable term indices".
+This refers to types---terms are never annotated, and do not need to
+be erased.)
+
+Well-typed F_i terms are also well-typed F_omega terms (with
+corresponding erased types), so the calculus inherits strong
+normalisation and logical consistency from F_omega (the erasure of
+forall X.X is forall X.X). Due to the lack of type annotations I
+assume that type checking is undecidable.
+
+Several examples are presented, including a Church encoding of vectors
+(lists of a given length). Mendler-style iteration is also discussed.
+
+                     ===== Comments for authors =====
+
+Evaluation
+----------
+
+The goal here seems to be to create a calculus that is as simple as
+possible, while still having the following features:
+
+* Term-indexed types (like vectors).
+
+* Strong normalisation and consistency.
+
+* No need to worry about proof objects at run-time.
+
+The presented calculus meets the last three goals (with the caveat
+that I have not checked all proofs, and one proof looks a bit
+suspicious), and is not too complicated (the paper was mostly easy to
+follow), so I think that the goal is more or less met.
+
+However, is this a reasonable goal? The authors end the paper by
+stating that they want to extend F_i with support for large
+elimination (types defined by recursion/pattern matching on data), and
+I don't think F_i is powerful enough to handle the kind of type-level
+computation that is supported by the latest version of GHC (even if we
+ignore the fact that GHC is logically inconsistent). Will this
+calculus be used by anyone in the future?
+
+There are already other, more powerful, calculi that satisfy the three
+properties above (more or less). The authors mention ICC. In ICC the
+term
+
+  cons true (cons false (cons true nil))
+
+has type
+
+  vect bool (S (S (S 0)))
+
+[15, page 357]. Neither type nor length indices are present in the
+term. There is also ICC^*, which has decidable type-checking (and
+which should be cited: Barras and Bernardo, FOSSACS 2008). These
+calculi have full-blown dependent types, and are hence more
+future-proof.
+
+The main benefit of F_i seems to be that it isolates term-indexing
+from other features present in, say, ICC. That may be valuable for,
+say, pedagogical reasons, or if someone wants to analyse the
+meta-theoretical properties of term-indexing in isolation (avoiding
+the meta-theoretical complexities of a system like ICC). For this
+reason I do not object to the publication of this paper.
+
+Details
+-------
+
+Please read through the paper carefully and fix typos and similar
+mistakes.
+
+§1
+
+"The first is very expressive, while the second is often much easier
+to learn and use especially for those who are familiar to functional
+programming languages like Haskell or ML": Isn't the second a special
+case of the first?
+
+"a new programming paradigm, programming by code extraction": As far
+as I know Leroy et al. mostly use the "proofs separate from programs"
+paradigm, which is quite close to "programs plus pen-and-paper
+proofs".
+
+§3
+
+Figure 2, Type constructor equality, fifth rule: Why is kappa fixed?
+Does anything break if the rule is generalised as follows?
+
+  |- k = k' : box  Delta, X^k |- F = F' : k''
+  -------------------------------------------
+     Delta |- \X^k.F = \X^k'.F' : k -> k''
+
+Is the more general rule admissible? Similar questions apply to other
+rules as well.
+
+Is the following rule admissible?
+
+  Delta; Gamma |- t = t' : A  Delta |- A = A' : *
+  -----------------------------------------------
+           Delta; Gamma |- t = t' : A'
+
+Figure 3: The upper-most, right-most antecedent should be
+Delta, i^A |-.
+
+§4
+
+Figure 4: The type of pair seems to be incorrect (you forgot A_1 ->
+A_2 ->). Some type variables X are not explicitly kinded.
+
+Figure 5: foldr x_z x_c x should be foldr x_c x_n x.
+
+In the absence of eta-equality, can you prove that your encoding of
+products satisfies the categorical definition of a weak product? I
+don't think so: fst o <f, g> =_beta \x. f x /=_beta f. I think
+adequacy of the Church encodings should be discussed.
+
+You also use Church-encoded things as indices. Doesn't this cause
+problems? Take the following two implementations of the Church numeral
+1:
+
+  O = S Z = \s z. s z
+  O'      = \s. s
+
+Is the type Vec A {O'} empty?
+
+mit\kappa -> mit_{\kappa}
+
+"there exist embeddings", "we can reason about these datatypes in a
+logically consistent calculus": Please point out that the results of
+such reasoning only have limited applicability in Haskell.
+
+Is the inference rule on page 7 supposed to be an admissible rule? Is
+weakening admissible?
+
+Does (Logical) refer to two separate types?
+
+What's the point of Eq? As far as I can tell LEq is symmetric (shown
+using the standard trick of instantiating X to \k^A. X {k} -> X {i}):
+
+  |- \p x. p (\y.y) x : forall i^A j^A. LEq_A {i} {j} -> LEq_A {j} {i}
+
+(Assuming A is closed and of kind *.)
+
+§5
+
+I think you should skip most of the proofs in this section, as I don't
+find them very interesting. You could focus on the interesting cases
+(like the beta rules in Theorem 5).
+
+type considered equality -> type constructor equality
+
+I don't see how your proof of Lemma 2 works. In the second type
+constructor equality rule you do not assume P = "|- A : *", which is
+needed to show that \i^A.F is well-typed, and I don't see how you
+could prove P using the other lemmas.
+
+Example 1: Why is the Unit example "pathological"? It seems reasonable
+that erasure transforms equality into the unit type.
+
+Why don't you include an erasure theorem for term equality?
+
+Example 2:
+
+* "it is impossible to have both [...]": How did you arrive at this
+  conclusion? An F_i term can have several types.
+
+* Is Void = forall X^*.X?
+
+* "even though one has P": Is P really the conclusion of a valid
+  typing derivation?
+
+* "LEq_A is not symmetric": I believe that it is; the term I gave
+  above does not refer to any index variables. However, I may have
+  made a mistake, as I have not formalised your calculus. (Have you?)
+
+§6
+
+Please explain what the extensionality typing rule is.
+
+"index terms appearing in types (e.g., s in F {s}) are always
+erasable": Please emphasise that this has nothing to do with run-time
+overhead, as the type constructor F {s} cannot be present in a term.
+In fact, I'm not quite sure what you're trying to convey with this
+argument.
+
+"but they only consider beta-equivalence for type conversion": As do
+you.
+
+"kind polymorphism [...] is known to break strong normalization and
+cause logical inconsistency": Unless you stratify, like in ICC and
+other systems.
+
+§7
+
+"It supports type inference with minimal typing annotations. We
+believe this is an advantage made possible because our extensions to
+F-omega are all static. This would be made much more difficult had we
+restricted ICC": Note that type inference (with annotations) is
+decidable for ICC^*.
+
+"Enriching the type annotations in Nax will motivate us to identify
+the features needed to extend F_i to support a notion of large
+eliminations": Why not just use an existing calculus like ICC^*?
+
+References
+
+[10] and [11] use different styles.
+
+Please use correct capitalisation.
+
+                     ===== Questions for authors =====
+
+Can you answer my last question above?
+
+Is Lemma 2 correct?
+
+===========================================================================
+                           POPL 2013 Review #57D
+                 Updated Friday 7 Sep 2012 1:55:51pm CEST
+---------------------------------------------------------------------------
+   Paper #57: System Fi: a higher-order polymorphic lambda-calculus with
+              erasable term indices
+---------------------------------------------------------------------------
+
+                      Overall merit: B. Weak accept
+                          Expertise: Y. Knowledgeable
+
+                         ===== Paper summary =====
+
+The paper introduces system Fi, an extension of system F_\omega with a limited form of dependent types, that is, types that depend on values. In Fi, types can only depend on 'static' values, that is, on value-level expressions where every variable is bound at compile time; terms are the same as in System F. The authors prove that this extension is conservative, or, more precisely, that, after all the value-level parts of types are erased from a typing judgment, we get a system-F valid judgment. This implies that Fi is logically consistent and terminating.
+
+                     ===== Comments for authors =====
+
+The paper presents a system that is extremely elegant. It is very well-written, and, most of the time, it is a pleasure to read.
+
+My only concern is about motivations. Elegant systems are, in a sense, self-motivating, and indexed types have been advocated in many occasions. However, this paper is targeting one specific point in the design space, that of erasable indexes. It is not obvious that this point is interesting. It may, for example, interfere with programming practice - there is the possibility, for example, that reasonable pieces of code that deal with size-changing vectors cannot be type-checked any more. Or, it could be that interesting size-related invariants cannot be expressed or proved, because of the limitations of the approach. I am not suggesting that this is actually the case, but I would like to see some motivating examples, or some discussions, that relate this specific level of expressive power with typical programming patterns.
+
+My second concern is with examples in the paper. Figure 7 is a bit daunting, and section 4.3 was beyond my decoding abilities. This choice of examples did not make me any more confident about the applicability of this approach to real-life programming.
+
+These issues are the only things the separate my judgment from a whole-hearted 'accept' evaluation.
+
+Suggestions for the authors only:
+
+Please add real-life examples. Please make section 4.3 more accessible, or delete it. If you need more space, you may reduce the space you give to proofs - they are interesting, but slightly less interesting than motivations.
+
+Figure 7: I have the impression that these are encodings that were known to work for system Fomega, and you are showing here that they can be smoothly extended to system Fi. If this is the case, please be more explicit about this in the text.
+
+Last paragraph of section 6: what are 'type equality constraints'?
+

@@ -1,0 +1,65 @@
+\section{Related Work} \label{sec:relwork}
+System~\Fi\ is most closely related to
+Curry-style System~\Fw\ \cite{AbeMatUus05,GHR93}
+and the Implicit Calculus of Constructions (ICC) \cite{Miquel01}.
+All terms typable in a Curry-style System \Fw\ are typable (with the same type) in System \Fi\ 
+and all terms typable in \Fi\ are typable (with the same type\footnote{The $*$ kind in \Fw\ and \Fi\ corresponds
+        to \textsf{Set} in ICC}) in ICC.
+
+As mentioned in \S\ref{ssec:sn}, we can derive strong normalization of \Fi\ 
+from System~\Fw, and derive logical consistency of \Fi\ from certain
+restrictions of ICC \cite{Miquel00,BarrasB08}.
+In fact, ICC is more than just an extension of System~\Fi\ 
+with dependent types and stratified universes, since ICC includes
+$\eta$-reduction and $\eta$-equivalence.
+We do not foresee any problems adding
+$\eta$-reduction and $\eta$-equivalence to System~\Fi.
+Although System~\Fi\ accepts fewer terms than ICC, it enjoys simpler
+erasure properties (Theorem \ref{thm:ierasetypingall} and
+Corollary \ref{cor:ierasetypingifree}) just by looking at the syntax
+of kinds and types, which ICC cannot enjoy due to its support for
+full dependent types.  In System \Fi, term-indices appearing in types
+(\eg,~$s$ in $F\{s\}$) are always erasable.  \citet{LingerS08} generalized the ICC framework to one which describes
+erasure on arbitrary Church-style calculi~(EPTS) and Curry-style
+calculi~(IPTS), but only consider $\beta$-equivalence for type conversion.
+
+
+In the practical setting of programming language implementation,
+\citet{YorgeyWCJVM12}, inspired by \citet{SHE}, recently designed an extension
+to Haskell's GADTs by allowing datatypes to be used as kinds. For instance,
+\texttt{Bool} is promoted to a kind (\ie, $\texttt{Bool}:\square$) and its
+data constructors \texttt{True} and \texttt{False} are promoted to types.
+They extended System $F_{\!C}$ (the Glasgow Haskell Compiler's
+intermediate core language) to support \emph{datatype promotion}
+and named it System~$F_{\!C}^\uparrow$. The key difference between
+$F_{\!C}^\uparrow$ and \Fi\ is in their kind syntax: %%, as illustrated below:
+\vspace*{-5pt}
+\[\qquad\quad
+\begin{array}{ll}
+F_{\!C}^\uparrow\,\textbf{kinds}\quad &
+\kappa ::= * \mid \kappa -> \kappa \mid F \vec{\kappa} \mid \mathcal{X} \mid \forall \mathcal{X}.\kappa \mid \cdots \\
+\,\Fi\,\,\textbf{kinds}\quad &
+\kappa ::= * \mid \kappa -> \kappa \mid A -> \kappa \phantom{A^{A^A}}
+\end{array}  
+\] \vskip-1.5ex\noindent
+In $F_{\!C}^\uparrow$, all type constructors ($F$) are promotable to the 
+kind level and become kinds when fully applied to other kinds
+($F\vec\kappa$). On the other hand, in \Fi,  a type can only appear
+as the domain of an index arrow kind ($A-> \kappa$).
+The ramifications of this difference is that $F_{\!C}^\uparrow$ can
+express type-level data structures but not nested term-indices,
+while \Fi\ supports the converse. Intuitively,
+a type constructor like $\texttt{List}:* -> *$ is promoted to a kind constructor
+$\texttt{List}:\square-> \square$, which enables type-level data structures
+such as $\mathtt{[Nat,Bool,Nat-> Bool]:List\,*}$. Type-level
+data structures motivate type-level computations over promoted data.
+This is made possible by type families\footnote{
+        A GHC extension to define type-level functions in Haskell.}.
+The promotion of polymorphic types naturally motivates
+kind polymorphism ($\forall \mathcal{X}.\kappa$).
+Kind polymorphism of arbitrary rank is known to
+break strong normalization and cause logical inconsistency \cite{Girard72}.
+In a {\em programming language}, inconsistency is not an issue.
+However, when studying logically consistent systems, we need
+a more conservative approach, as in \Fi.
+

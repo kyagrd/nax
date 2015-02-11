@@ -1,0 +1,796 @@
+\section{The Hindley--Milner type system} \label{sec:hm}
+\index{Hindley--Milner}
+\citet{Hindley69} demonstrated the existence of a unique principal type scheme
+for every object in a combinatory logic. \citet{Milner78} rediscovered this fact
+in the setting of a polymorphic lambda calculus. He was devising
+an algorithm, called algorithm $W$, which infers a most general
+type scheme (\aka\ principal type scheme) for a Curry-style lambda term.
+\index{type scheme}
+\citet{Damas85} (a student of Milner) published detailed theories about
+Milner's polymorphic lambda calculus and the type inference algorithm $W$.
+This type system for Milner's polymorphic lambda calculus \cite{Milner78,DamMil82,Damas85}
+is also known as the Hindley--Milner type system (HM),
+the Damas--Hindley--Milner type system (DHM), or let-polymorphic type system.
+\index{polymorphic lambda calculus!Milner's}
+\index{let-polymorphic}
+\index{type inference}
+
+The syntax of Milner's polymorphic lambda calculus and its typing rules
+are illustrated in Figure \ref{fig:hm}. The type inference algorithm $W$
+is illustrated in Figure \ref{fig:algW}. We discuss each of these
+figures separately --- the syntax in
+\S\ref{sec:hm:syntax}, the typing rules in \S\ref{sec:hm:dectyrule} and
+\S\ref{sec:hm:syntyrule}, and the inference algorithm in \S\ref{sec:hm:W}.
+We provide two equivalent sets of typing rules (we prove this in \S\ref{sec:hm:syntyrule}).
+\index{typing rules!declarative}
+The declarative typing rules (\S\ref{sec:hm:dectyrule}) are suited for
+reasoning about the soundness of typing.
+\index{typing rules!syntax-directed}
+The syntax-directed typing rules (\S\ref{sec:hm:syntyrule}) are suited
+for reasoning about the properties of the type inference algorithm $W$
+(\S\ref{sec:hm:W}).
+
+\begin{figure}
+\begin{singlespace}\small
+\small
+\begin{align*}
+&\textbf{Term}&
+t,s&~::= ~ x          
+    ~  | ~ \l x    . t 
+    ~  | ~ t ~ s       
+    ~  | ~ \<let> x=s \<in> t
+\\
+&\textbf{Type (or, monotype)}&
+A,B&~::= ~ A -> B
+    ~  | ~ \iota
+    ~  | ~ X
+\\
+&\textbf{Type scheme (or, polytype)}&
+\sigma&~::= ~ \forall X.\sigma
+       ~  | ~ A
+\\
+&\textbf{Typing context}&
+\Gamma&~::= ~ \cdot 
+       ~  | ~ \Gamma, x:\sigma \quad (x\notin \dom(\Gamma))
+\end{align*}
+\[ \textbf{Type scheme ordering (or, generic instantiation)} \quad \framebox{$\sigma \sqsubseteq \sigma'$}\]
+\[ \qquad \inference[\sc GenInst]{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
+             {\forall X_1\dots X_n.A \;\sqsubseteq\;
+              \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} \]
+$\!\!\!\!\!\!\!\!\!\!$
+\begin{align*}
+&\textbf{Declarative typing rules}&\quad
+&\textbf{Syntax-directed typing rules}
+        \\
+& \qquad\framebox{$\Gamma |- t : \sigma$}
+&
+&~\qquad\framebox{$\Gamma |-s t : A$}
+        \\
+& \inference[\sc Var]{x:\sigma \in \Gamma}{\Gamma |- x:\sigma} &
+& \inference[\sc Var$_s$]{x:\sigma \in \Gamma & \sigma \sqsubseteq A}
+                         {\Gamma |-s x:A} \\
+& \inference[\sc Abs]{\Gamma,x:A |- t : B}{\Gamma |- \l x   .t : A -> B} &
+& \inference[\sc Abs$_s$]{\Gamma,x:A |-s t:B}{\Gamma |-s \l x   .t : A -> B} \\
+& \inference[\sc App]{\Gamma |- t : A -> B & \Gamma |- s : A}
+                     {\Gamma |- t~s : B} &
+& \inference[\sc App$_s$]{\Gamma |-s t : A -> B & \Gamma |-s s : A}
+                         {\Gamma |-s t~s : B} \\
+& \inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
+                     {\Gamma |- \<let> x=s \<in> t : B} &
+& \inference[\sc Let$_s$]
+            {\Gamma |-s s : A & \Gamma,x:\overline{\Gamma}(A) |-s t : B}
+            {\Gamma |-s \<let> x=s \<in> t : B} \\
+& \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
+                      {\Gamma |- t : \sigma'} &
+&\quad\qquad \begin{smallmatrix}\overline{\Gamma}(A)=\forall\vec{X}.A&
+                         ~\text{where}~\vec{X}=\FV(A)\setminus\FV(\Gamma)
+                 \end{smallmatrix}
+                 \\
+& \inference[\sc Gen]{\Gamma |- t : \sigma}
+                     {\Gamma |- t : \forall X.\sigma} ~ (X \notin\FV(\Gamma))
+\end{align*}
+\end{singlespace}
+\caption{Milner's polymorphic lambda calculus.}
+\label{fig:hm}
+\end{figure}
+
+\subsection{Syntax}\label{sec:hm:syntax}
+The syntax of terms includes the usual Curry-style terms
+($x$, $\l x.t$, and $t\;s$) and let-terms ($\<let> x=s \<in> t$).
+A let term, $\<let> x=s \<in> t$, is semantically equivalent to
+$(\l x.t)\,s$. That is, $\<let> x=s \<in> t$ is a syntactic sugar
+for $(\l x.t)\,s$ when we think about reduction.\footnote{
+	The reduction rules for
+        the terms of HM are exactly the same as the reduction rules for
+        Curry-style terms in the previous sections, once we desugar
+        all the let terms.}
+However, a let-term ($\<let> x=s \<in> t$) is assigned
+a significantly different type than its semantic equivalent ($(\l x.t)\,s$).
+The typing rules support the introduction of
+a polymorphic type scheme for $x$ into the typing context when typing the let-term's
+body $t$. We will discuss many
+further details of typing let-terms (the \rulename{Let} rule) when
+we explain the typing rules.
+\index{type scheme}
+
+\index{monotype}
+\index{polytype}
+The syntax of types (or, monotypes) includes all the types in the STLC
+($A -> B$ and $\iota$) and type variables ($X$).
+The syntax of type schemes (or, polytypes) are similar to
+the polymorphic types of System \F, but universal quantification must appear
+only at the top level. Syntactically, type schemes are either universal quantifications over
+other type schemes ($\forall X.\sigma$) or (mono)types ($A$).
+Typing contexts ($\Gamma$) keep track of each term variable and
+its associated type scheme ($x:\sigma$).
+
+The ordering between two type schemes $\sigma \sqsubseteq \sigma'$,
+defined in Figure \ref{fig:hm}, means that $\sigma$ is more general
+than or equivalent to $\sigma'$. The ordering relation $\sqsubseteq$
+comes from \citet{DamMil82}, and is also known as generic instantiation ---
+$\sigma'$ is called a generic instance of $\sigma$
+when $\sigma \sqsubseteq \sigma'$. The shorthand notation
+$\forall X_1\dots X_n.A$ stands for consecutive universal quantification
+of $n$ variables. For instance, $\forall X_1\,X_2\,X_3.A$
+is a shorthand for $\forall X_1.\forall X_2.\forall X_3.A$.
+
+Two type schemes $\sigma$ and $\sigma'$ are equivalent
+when $\sigma \sqsubseteq \sigma'$ and $\sigma' \sqsubseteq \sigma$.
+This coincides with $\alpha$-equivalence (\eg, $\forall X.X -> X$ is
+equivalent to $\forall X'. X' -> X'$). In fact, we can derive
+$\alpha$-equivalence as a special case of the type scheme ordering rule \rulename{GenInst} (Figure \ref{fig:hm}),
+where $n=m$ and $B_i=X_i'$ for each $i$ from $1$ to $n$.
+
+\index{generic instance}
+The usual \empty{instantiation} (\ie, substitution of quantified variables
+with monotypes) is a special case of generic instantiation. For example,
+consider the instantiations of $\forall X_1\,X_2.X_1 -> X_2$ below:
+\[ (\forall X_1\,X_2.X_1 -> X_2) \sqsubseteq
+   (\forall X_2.\iota -> X_2) \sqsubseteq (\iota -> \iota)
+\] 
+Here, we instantiate the quantified $X_1$ with $\iota$,
+and then, instantiate the quantified $X_2$ with $\iota$.
+In such cases of $\sigma\sqsubseteq\sigma'$, we can call $\sigma'$ an instance
+(as well as a generic instance) of $\sigma$. For example, (1) $\iota\to\iota$ is
+an instance of $\forall X_2.\iota\to X_2$ and an instance of $\forall X_1\,X_2.X->X_2$; and (2)
+both $\iota\to\iota$ and $\forall X_2.\iota\to X_2$ are instances of
+$\forall X_1\,X_2.X_1->X_2$.
+
+The relation $\sqsubseteq$
+is more than $\alpha$-equivalence and instantiation, since
+the type scheme ordering rule allows quantifying newly introduced
+variables in $\sigma'$, which do not appear free in $\sigma$.
+For example, consider the two generic instances of $\forall X.X -> X$ below:
+\begin{align*}
+\forall X.X -> X \sqsubseteq\;\,& (X'-> X')-> (X'-> X') \\
+\forall X.X -> X \sqsubseteq\;\,& \forall X'.(X'-> X')-> (X'-> X')
+\end{align*}
+The former, $(X'-> X')-> (X'-> X')$, is an instance of $\forall X.X -> X$
+instantiating $X$ to $(X'-> X')$. However, the latter,
+$\forall X'.(X'-> X')-> (X'-> X')$, is not an instance
+but a generic instance of $\forall X.X-> X$ because
+the newly introduced variable $X'$ is universally quantified.
+\index{generic instance}
+
+There is a difference between the (mono)type $(X'-> X')-> (X'-> X')$,
+where $X'$ is free, and the type scheme $\forall X'.(X'-> X')-> (X'-> X')$,
+where $X'$ is universally quantified.
+A function of the monomorphic type $(X'-> X')-> (X'-> X')$
+can only be applied to functions of the same type in one program, but
+a function of the polymorphic type scheme $\forall X'.(X'-> X')-> (X'-> X')$
+can be applied to functions of many different types in one program.
+For example, consider a typing context $\Gamma$ with four term-variables such that\footnote{
+        For an intuitive explanation, we assume \texttt{int} and \texttt{string}
+        to be existing ground types although our formal definition of HM
+        in Figure \ref{fig:hm} only has the void type $\iota$ as
+        the ground type for simplicity.} \vspace*{-1em}\\ 
+\begin{minipage}{.3\linewidth}
+\begin{align*}
+\!\!\!\!\!\!\!\!\!\!
+\textit{square} : \;\quad~\texttt{int} -> \texttt{int} ~\quad\; \in \Gamma \\
+\!\!\!\!\!\!\!\!\!\!
+\textit{revstr} : \texttt{string} -> \texttt{string} \in \Gamma
+\end{align*}
+\end{minipage}
+\begin{minipage}{.4\linewidth}
+\begin{align*}
+\textit{Id}_{->}^{\,\textit{mon}} : \quad (X'-> X')-> (X'-> X') \quad \in \Gamma \\
+\textit{Id}_{->}^{\,\textit{poly}} : \forall X'.(X'-> X')-> (X'-> X') \in \Gamma
+\end{align*}
+\end{minipage} \vspace*{1em} \\
+The four function names, with the types assigned as above,
+are available in the context. Under this typing context $\Gamma$,
+it is possible to apply $\textit{Id}_{->}^{\,\textit{mon}}$,
+the monomorphic identity function over endofunctions,
+to either \textit{square} or \textit{revstr} (as we do below),
+as long as we do not try to apply $\textit{Id}_{->}^{\,\textit{mon}}$ to both
+of them in the same program.\footnote{A program is just a term, but it sounds
+like a more practical example.} For example, we note the different types
+for each application, and consider the different type that
+$\textit{Id}_{->}^{\,\textit{mon}}$ must have inside each term.
+\[ \Gamma |-
+        (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{square}) :
+        \texttt{int} -> \texttt{int}
+\]
+\[ \Gamma |-
+        (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{revstr}) :
+        \texttt{string} -> \texttt{string}
+\]
+It is impossible to derive a type for a program that applies
+$\textit{Id}_{->}^{\,\textit{mon}}$ to both \textit{square} and \textit{revstr} 
+in one program, since there is no solution for the inconsistent equations
+$X'=\mathtt{int}$ and $X'=\mathtt{string}$.
+\begin{align*}
+\Gamma |- \;
+& \dots (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{square}) \dots \\
+& \dots (\textit{Id}_{->}^{\,\textit{mon}}\;\textit{revstr}) \dots
+~:~ \text{this is a type error}
+\end{align*}
+On the other hand, we can apply $\textit{Id}_{->}^{\,\textit{poly}}$,
+the polymorphic identity function over endofunctions, to both
+\textit{square} and \textit{revstr} in the same program, since
+the universally quantified type variable $X'$ can be instantiated
+to many different types including \texttt{int} and \texttt{string}.
+\[ \Gamma |-
+        (\textit{Id}_{->}^{\,\textit{poly}}\;\textit{square}) :
+        \texttt{int} -> \texttt{int}
+\]
+\[ \Gamma |-
+        (\textit{Id}_{->}^{\,\textit{poly}}\;\textit{revstr}) :
+        \texttt{string} -> \texttt{string}
+\]
+\begin{align*}
+\Gamma |-\;
+& \dots (\textit{Id}_{->}^{\,\textit{poly}}\;\textit{square}) \dots \\
+& \dots (\textit{Id}_{->}^{\,\textit{poly}}\;\textit{revstr}) \dots
+~:~ \text{this can be type correct}
+\end{align*}
+
+To discover why the first must be ill-typed, and the second can be well-typed
+we must look at the details of the typing rules.
+
+\subsection{Declarative typing rules}\label{sec:hm:dectyrule}
+\index{typing rules!declarative}
+The declarative typing rules deduce a type scheme for a given term under
+a typing context ($\Gamma |- t : \sigma$). The type scheme ($\sigma$)
+deduced for the given term ($t$) under the typing context ($\Gamma$) may not
+be unique. For example,
+\begin{align*}
+        &\cdot |- \l x.x: \iota -> \iota \\
+        &\cdot |- \l x.x: X -> X \\
+        &\cdot |- \l x.x: (X -> X) -> (X -> X) \\
+        &\cdot |- \l x.x: \forall X.X -> X \\
+        &\cdot |- \l x.x: \forall X.(X -> X) -> (X -> X) \\
+        &\cdot |- \l x.x: \forall X_1 X_2.(X_1 -> X_2) -> (X_1 -> X_2) \\
+        &\quad \vdots
+\end{align*}
+This is expected since terms of HM are Curry style. Recall that
+the uniqueness of typing does not hold for lambda calculi with
+Curry-style terms.
+
+The first three declarative rules
+-- \rulename{Var}, \rulename{Abs}, and \rulename{App} --
+in Figure \ref{fig:hm} are fairly standard.
+The \rulename{Var} rule deduces the type scheme of
+a variable according to the type scheme binding of the variable in
+the typing context. Note that the type schemes deduced by the rules
+\rulename{Abs} and \rulename{App} are restricted to the form of
+(mono)types\footnote{Recall that (mono)types are subset of type schemes.}
+since the domain and range of function ($\rightarrow$) types are restricted to (mono)types.
+
+%%%%% TODO TODO TODO more about this later <- fix ... we discuss this in ...
+The \rulename{Let} rule can introduce polymorphic type schemes into
+the typing context (we discuss more about this shortly, in the next page).
+The most interesting rules are the \rulename{Inst} rule and
+the \rulename{Gen} rule. %% Let's consider these one at a time.
+
+\begin{itemize}
+
+\item {\bf The \rulename{Inst} rule} deduces a generic instance
+($\sigma'$) of any type scheme ($\sigma$). The \rulename{Inst} rule
+is essential when variables with polymorphic type schemes appear in
+the rules \rulename{Abs} and \rulename{App}. For instance,
+when $t$ is a variable with a polymorphic type scheme in $\Gamma$,
+we need to instantiate the type scheme into a type since \rulename{Abs}
+and \rulename{App} are restricted to deduce (mono)types. A typical usage
+(where $\Gamma = x':\forall X'.X' -> X'$) of
+the \rulename{Inst} rule is illustrated below:
+\[
+\inference[\sc Abs]
+  {\inference[Inst]
+        {\inference[Var]
+                {x':\forall X'.X' -> X' \in \Gamma,x:X}
+                {\Gamma,x:X|- x':\forall X'.X'-> X'}
+        }
+        {\Gamma,x:X |- x':X'' -> X''}}
+  {\Gamma |- \l x.x' : X -> (X'' -> X'')}
+\]
+
+\item {\bf The \rulename{Gen} rule} deduces a generalization (\ie,
+universal quantification) of a type scheme, as long as
+the quantified variable does not appear free in the typing context.
+The \rulename{Gen} is essential for the \rulename{Let} rule to be useful.
+For instance, consider that $s$ is a function that may be polymorphic,
+such as the identity function $\l x'.x'$. We want to bind this function
+in a let term, $\<let> x=\l x'.x' \<in> t$, and use $x$ as a polymorphic
+function in $t$ (\ie, extend the typing context with $x:\forall X.X-> X$).
+However, the \rulename{Abs} rule can only deduce a function type without
+any universal quantification, such as $\Gamma |- \l x'.x' : X -> X$.
+Here, we can use the \rulename{Gen} rule to generalize $X -> X$ to
+$\forall X.X -> X$, provided that $X$ does not appear free in
+the typing context $\Gamma$, as below:
+\[
+\inference[\sc Let]
+  { \inference[\sc Gen]
+          {\inference[\sc Abs]{\vdots}{\Gamma|- \l x'.x' : X -> X}}
+          {\Gamma|- \l x'.x':\forall X.X-> X}
+  & \Gamma,x:\forall X.X-> X |- t : B}
+  {\Gamma |- \<let> x = \l x'.x' \<in> t : B}
+\]
+
+\end{itemize}
+
+\paragraph{}
+The soundness of typing is obvious
+once we observe that HM is a restriction of the Curry-style System \F\ (\ie,
+if $\Gamma|- t:\sigma$ in HM, then $\Delta;\Gamma|- t:\sigma$ in System \F).
+The terms in HM are exactly the same as the terms in the Curry-style System \F,
+if we consider the let-term as a syntactic sugar. Both types (or, monotypes)
+and type schemes (or, polytypes) in HM are restrictions of types in System \F.
+The declarative typing rules (of Figure \ref{fig:hm}) are also a restriction of the typing rules
+in System \F. The rules \rulename{Var}, \rulename{Abs}, \rulename{App},
+and \rulename{Gen} in HM are virtually the same as their counterparts
+in System \F.\footnote{The names of corresponding rules
+        in HM and System \F\ are the same (\rulename{Var}, \rulename{Abs},
+        \rulename{App}), except for the \rulename{Gen} rule.
+        The \rulename{Gen} rule in HM corresponds to
+        the \rulename{TyAbs} rule in System \F.}
+Thus, we only need ensure that the \rulename{Let} rule and
+the \rulename{Inst} rule in HM are admissible in System \F.
+
+A single derivation step of \rulename{Let} in HM corresponds to
+two derivation steps in System \F\
+involving the \rulename{App} and \rulename{Abs} rules.
+Let us start from the \rulename{Let} rule in HM, quoted verbatim from
+Figure \ref{fig:hm}:
+\[\inference[\sc Let]{\Gamma |- s : \sigma & \Gamma,x:\sigma |- t : B}
+                     {\Gamma |- \<let> x=s \<in> t : B} 
+\]
+Recall that a let-term, $\<let> x=s \<in> t$ is semantically equivalent to
+$(\l x.t)\;s$. We first desugar the let-term into an application of
+an abstraction $(\l x.t)$ to the body of the local definition ($s$).
+Then, we can simply apply the \rulename{App} rule and the \rulename{Abs} rule
+in System~\F, as below:
+\label{hm:LetAdmissibleFw}
+\[
+ \inference[\sc App]
+        { \inference[\sc Abs]
+                { \Delta |- \sigma
+                & \Delta;\Gamma,x:\sigma |- t : B}
+                {\Delta;\Gamma |- \l x.t : A -> B}
+        & \Delta;\Gamma |- s : \sigma }
+        {\Delta;\Gamma |- (\l x.t)\;s}
+\]
+
+
+A singe derivation step of \rulename{Inst} in HM corresponds to
+multiple derivation steps in System \F\ involving
+the rules \rulename{TyAbs} and \rulename{TyApp} rules.
+Since the \rulename{Inst} rule refers to the generic instantiation relation
+$\sqsubseteq$, the shape of $\sigma$ and $\sigma'$ in the \rulename{Inst} rule
+must match the left- and right-hand sides of $\sqsubseteq$
+in the generic instantiation rule, as below:
+\begin{singlespace}
+\begin{multline*}
+  \inference[\sc Inst]{\Gamma |- t : \sigma & \sigma \sqsubseteq \sigma'}
+                      {\Gamma |- t : \sigma'}
+        \quad\text{where}~
+        \begin{array}{rl}
+                \sigma =& \forall X_1\dots X_n.A ~~~~~~~~~~~~~~~~~~~~~~ \\
+               \sigma' =& \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]
+        \end{array}
+	\\ \text{such that} ~ \phantom{\frac{\frac{A}{\frac{A}{A}}}{A}}
+   \inference{X_1',\dots,X_m'\notin\FV(\forall X_1\dots X_n.A)}
+             {\forall X_1\dots X_n.A \;\sqsubseteq\;
+              \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
+\end{multline*}
+\end{singlespace}
+\index{generic instantiation}
+The generic instantiation from $\sigma$ to $\sigma'$
+in the \rulename{Inst} rule above can be understood as having two phases:
+instantiation from $\sigma$ to $A[B_1/X_1]\cdots[B_n/X_n]$ and
+generalization from $A[B_1/X_1]\cdots[B_n/X_n]$ to $\sigma'$.
+The instantiation phase, from $\forall.X_1\dots X_n.A$ to $A[B_1/X_1]\cdots[B_n/X_n]$,
+can be broken down to $n$ small steps of instantiation ---
+each step instantiates one of the quantified variables ($X_1\dots X_n$).
+The generalization phase, from $A[B_1/X_1]\cdots[B_n/X_n]$ to
+$\forall X_1'\dots X_m'.A[B_1/X_1]\cdots[B_n/X_n]$, can be broken down into
+$m$ small steps of generalization --- each step universally quantifies one
+of the newly introduced variables ($X_1'\dots X_m$) from the instantiation phase.
+The Curry-style System \F\ has rules, which correspond exactly to these 
+small steps (see Figure \ref{fig:f} in \S\ref{sec:f}).
+The \rulename{TyApp} rule captures the small steps in the instantiation phase.
+The \rulename{TyAbs} rule captures the small steps in the generalization phase.
+Therefore, we can translate the \rulename{Inst} rule in HM into
+consecutive applications of the \rulename{TyApp} rule followed by
+consecutive applications of the \rulename{TyAbs} rule in System \F, as below:
+{\small
+\begin{align*}
+& \!\!\!\!\!\!\!\!\!\!\!
+	\inference[\sc TyApp]
+        {\Delta;\Gamma |- t : \forall X_1\dots X_n.A & \Delta |- \forall X_1\dots X_n.A}
+        {\Delta;\Gamma |- t : \forall X_2\dots X_n.A[B_1/X_1]
+        \qquad\qquad\quad~~} \\
+& \!\!\!\!\!\!\!\!\!\!\!
+	\inference[\sc TyApp]
+        { \qquad\qquad \vdots \qquad\qquad\qquad\qquad\qquad \quad
+        & \Delta |- \forall X_n.A[B_1/X_1]\cdots[B_{n-1}/X_{n-1}]
+        }
+        { \Delta;\Gamma |- t : A[B_1/X_1]\cdots[B_n/X_n] \qquad \qquad
+         \qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
+        } \\
+& \!\!\!\!\!\!\!\!\!\!\!
+	\inference[\sc TyAbs]
+        {}
+        {\Delta;\Gamma |- t : \forall X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
+        (X_m'\notin\FV(A[B_1/X_1]\cdots[B_n/X_n])) \\
+& \!\!\!\!\!\!\!\!\!\!\!
+	\qquad\qquad\qquad\qquad\qquad \vdots \\
+& \!\!\!\!\!\!\!\!\!\!\!
+	\inference[\sc TyAbs]
+        {\Delta;\Gamma |- t : \forall X_2'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]}
+        {\Delta;\Gamma |- t : \forall X_1'\dots X_m'.\,A[B_1/X_1]\cdots[B_n/X_n]} ~
+        (X_1'\notin\FV\left(\begin{smallmatrix}\forall X_2'\dots X_m'.\\A[B_1/X_1]\cdots[B_n/X_n]\end{smallmatrix}\right))
+\end{align*}
+} %end \small
+
+\subsection{Syntax-directed typing rules}\label{sec:hm:syntyrule}
+\index{typing rules!syntax-directed}
+The syntax-directed typing rules \cite{Clement86} deduce a type,
+rather than a type scheme, for a given term under a typing context
+($\Gamma |- t : A$). These rules are syntax-directed, since 
+for each syntactic category of terms, there is only one typing rule that can apply.
+
+The syntax-directed typing rules are based on the observation
+that the \rulename{Inst} and \rulename{Gen} in the declarative typing rules
+are only necessary at the \rulename{Var} and \rulename{Let} rules, respectively.
+That is, we only need to apply the \rulename{Inst} rule to the conclusion of
+the \rulename{Var} rule, and, we only need to apply the \rulename{Gen} rule to
+the first premise ($\Gamma |- s:\sigma$) of the \rulename{Let} rule.
+The \rulename{Var$_s$} rule can be understood as a merging of
+\rulename{Var} and \rulename{Inst} into one rule.
+The \rulename{Abs$_s$} rule and the \rulename{App$_s$} rule remain the same as
+their counterparts in the declarative typing rules.
+The \rulename{Let$_s$} rule can be understood as a merging of
+the \rulename{Let} and the \rulename{Gen} into one rule.
+
+The notation $\overline{\Gamma}(A)$ appearing in the rule \rulename{Let$_s$} is
+the generalization closure of the type $A$ with respect to $\Gamma$. 
+That is, $\overline{\Gamma}(A)$
+generalizes $A$ over all the free type variables occurring in $A$, except the free types
+variables occurring in $\Gamma$. The free type variables of $\Gamma$ are defined as
+$\FV(\Gamma) = \bigcup_{x:\sigma\in \Gamma} \FV(\sigma)$.
+
+\paragraph{}
+The syntax-directed typing rules are sound (Theorem \ref{thm:sdHMsound})
+and complete (Theorem \ref{thm:sdHMcomplete}) with respect to
+the declarative typing rules.
+
+We will simply sketch the key ideas for the proof of the soundness of $|-s$
+since the soundness is rather obvious. All we need to do is transform
+any given derivation for $|-s$ into a derivation for $|-$, which is
+straightforward.
+\begin{theorem}[$|-s$ is sound with respect to $|-$]
+$ \inference{\Gamma |-s t : A}{\Gamma |- t : A} $
+\label{thm:sdHMsound}
+\end{theorem}
+\begin{proof}
+Recall that the \rulename{Var$_s$} rule can be understood as a merging of
+\rulename{Var} and \rulename{Inst}. Thus, we can transform any derivation
+step using the \rulename{Var$_s$} rule into two steps of derivation: using
+the \rulename{Var} rule and then applying the \rulename{Inst} rule
+to the conclusion of the \rulename{Var} rule.
+
+The \rulename{Abs$_s$} rule and the \rulename{App$_s$} rules are mapped
+to the \rulename{Abs} rule and the \rulename{App} rule, respectively.
+
+Recall that the \rulename{Let$_s$} rule can be understood as a merging of
+\rulename{Let} and \rulename{Gen}. We can transform any derivation step
+using the \rulename{Let$_s$} rule into a series of \rulename{Gen} rules
+applied to the first premise of the \rulename{Let} rule, and then applying
+the \rulename{Let} rule. Since the definition of the closure
+$\overline{\Gamma}(A)$ appearing in the \rulename{Let$_s$} rule
+generalizes only the free type variables of $A$, which do not
+appear free in $\Gamma$, the condition $X\notin\FV(\Gamma)$ appearing
+in the \rulename{Gen} rule holds.
+\end{proof}
+
+The completeness of $|-s$ is stated below.
+Note that the completeness of $|-s$ must be stated
+in terms of generalization closure and of
+the type scheme ordering relation ($\overline{\Gamma}(A)\sqsubseteq\sigma$)
+since the syntax-directed rules can only deduce types, not type schemes.
+The syntax-directed rule $|-s$ is complete in the sense that for any given term
+we can always deduce a type $A$ such that the closure of $A$ is more general
+than the type scheme $\sigma$ deduced from the declarative typing rules.
+\begin{theorem}[$|-s$ is complete with respect to $|-$]
+$ \inference
+        {\Gamma |- t : \sigma}
+        {\exists A.\;\Gamma |-s t : A ~\land~
+	 \overline{\Gamma}(A) \sqsubseteq \sigma} $
+\label{thm:sdHMcomplete}
+\end{theorem}
+\begin{proof}
+We prove this by induction on the derivation of $\Gamma |- t : \sigma$.
+Let us consider the cases by the last rule applied
+(\ie, root of the derivation).
+
+When the last rule is \rulename{Var}, we know that $x:\sigma \in \Gamma$.
+We choose $A$ in the \rulename{Var$_s$} rule to be an instance of $\sigma$,
+instantiating each universally quantified variable with a fresh variable,
+which neither appears free in $\sigma$ nor $\Gamma$. We further 
+restrict $A$ to satisfy $\overline{\Gamma}(A)\sqsubseteq\sigma$.
+For example, when $\sigma=\forall X_1.\forall X_2.X_1 -> X_2 -> X$,
+we choose $A = X_1' -> X_2' -> X$ where $X_1',X_2'\notin\FV(\Gamma)$.
+If $X\in\FV(\Gamma)$, then
+$\overline{\Gamma}(A) = \forall X_1'.\forall X_2'.X_1' -> X_2' -> X$,
+which is $\alpha$-equivalent to $\sigma$, therefore,
+$\overline{\Gamma}(A)\sqsubseteq\sigma$.
+Otherwise, if $X\notin\FV(\Gamma)$, then
+$\overline{\Gamma}(A) = \forall X_1'.\forall X_2'.\forall X.X_1' -> X_2' -> X$;
+so, $\overline{\Gamma}(A)\sqsubseteq\sigma$ still holds.
+
+When the last rule is \rulename{Abs}, it is straightforward by induction.
+
+When the last rule is \rulename{App}, it is straightforward by induction.
+
+When the last rule is \rulename{Let} ($\<let> x = s \<in> t$), we know by induction that there exists
+$A'$ and $B'$ such that
+$\Gamma |-s s : A' \land \overline{\Gamma}(A') \sqsubseteq \sigma$ and
+$\Gamma,x:\sigma |-s t : B' \land
+        \overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
+The case for \rulename{Let} would be complete if we could show that
+$\Gamma,x:\overline{\Gamma}(A') |-s t : B' \land
+        \overline{\Gamma,x:\overline{\Gamma}(A')}(B') \sqsubseteq B$.
+Instead we can only show $\Gamma,x:\sigma |-s t : B' \land
+        \overline{\Gamma,x:\sigma}(B') \sqsubseteq B$.
+We use Lemma \ref{lem:generalizeGamma} to prove
+$\Gamma,x:\overline{\Gamma}(A') |-s t : B'$ from $\Gamma,x:\sigma |-s t : B'$,
+and we use Lemma \ref{lem:closureMoreGen} to prove
+$\overline{\Gamma,x:\overline{\Gamma}(A')}(B') \sqsubseteq B$
+from $\overline{\Gamma,x:\sigma}(B') \sqsubseteq B$ and the transitivity of
+$\sqsubseteq$. These two lemmas are introduced directly following the proof of this theorem.
+
+When the last rule is \rulename{Inst}, it is straightforward by induction
+and transitivity of $\sqsubseteq$.
+
+When the last rule is \rulename{Gen}, we know by induction that there exists
+$A$ such that $\overline{\Gamma}(A) \sqsubseteq \sigma$. We also know
+that $X \notin\FV(\overline{\Gamma}(A))$ by the definition of generalization closure.
+This step follows from a proof by contradiction argument.
+If it were the case that $X\in\overline{\Gamma}(A)$, then it should be the case that
+$X\in\FV(\Gamma)$
+by the definition of generalization closure. This contradicts the side condition of
+the \rulename{Gen} rule: $X\notin\FV(\Gamma)$.
+Recall that generic instantiation allows quantifying type variables
+that do not appear free in the original type scheme. Thus,
+$\overline{\Gamma}(A) \sqsubseteq \forall X.\sigma$ by definition
+of $\sqsubseteq$.
+\end{proof}
+
+\begin{lemma}[generalizing typing context is safe] \label{lem:genGamma}
+$ \inference{\Gamma |-s t : A & \Gamma' \sqsubseteq \Gamma}
+            {\Gamma' |-s t : A} $ where
+\begin{quote}
+$\Gamma' \sqsubseteq \Gamma$ when for any $x:\sigma\in \Gamma$,
+there exists $x:\sigma'\in\Gamma'$ such that $\sigma'\sqsubseteq\sigma$.
+\end{quote}
+\label{lem:generalizeGamma}
+\end{lemma}
+\begin{proof}
+This is an intuitively obvious property since assuming
+more general type schemes for variables only makes it possible
+to deduce all the judgments of $|-s$ and more, but no less,
+by transitivity of $\sqsubseteq$ over type schemes.
+We will simply give a proof for the base case, the \rulename{Var} rule,
+which illustrates this intuition.
+Other cases are straightforward by induction on the derivation of $|-s$.
+
+When $\Gamma |-s x : A$, we know that there exists
+$x,\sigma'\in\Gamma'$ such that $\sigma'\sqsubseteq\sigma$.
+By the \rulename{Var$_s$} rule, we can deduce any $A'$ for $x$
+such that $\Gamma' |-s x : A'$ and $\sigma'\sqsubseteq A'$.
+By transitivity of $\sqsubseteq$, $\sigma' \sqsubseteq \sigma \sqsubseteq A$.
+Therefore, $\Gamma' |-s x : A$.
+\end{proof}
+
+\begin{lemma}[closure of a more general typing context is more general]
+\begin{quote}
+$ \inference{\Gamma' \sqsubseteq \Gamma}
+            {\overline{\Gamma'}(A) \sqsubseteq \overline{\Gamma}(A)} $
+for any $A$.
+\end{quote}
+\label{lem:closureMoreGen}
+\end{lemma}
+\begin{proof}
+It is obvious once we observe that $\FV(\Gamma') \subseteq \FV(\Gamma)$.
+To show this, it suffices to show that ($\subseteq$) relation holds
+pointwise on the type schemes in the context. That is,
+$\FV(\sigma')\sqsubseteq\FV(\sigma)$ when $x:\sigma' \in \Gamma'$
+and $x:\sigma \in \Gamma$. Note that $\dom(\Gamma')=\dom(\Gamma)$
+by definition of $\sqsubseteq$ over contexts.
+From the assumption $\Gamma' \sqsubseteq \Gamma$, we know that
+$\sigma'\sqsubseteq\sigma$ when $x:\sigma' \in \Gamma'$
+and $x:\sigma \in \Gamma$. Thus, we only need to show that
+$\sigma' \sqsubseteq \sigma$ implies $\FV(\sigma') \subseteq \FV(\sigma)$,
+which is not difficult to observe from the definition of $\sqsubseteq$ over
+type schemes (\rulename{GenInst} in Figure \ref{fig:hm}).
+\end{proof}
+
+\subsection{The type inference algorithm $W$}\label{sec:hm:W}
+\index{type inference!algorithm W}
+\citet{DamMil82} presented the type inference algorithm $W$
+(Figure \ref{fig:algW}) and proved its soundness and completeness
+with respect to the declarative typing rules. Here, we show the
+soundness and completeness of the type inference algorithm, $W$ (Figure \ref{fig:algW}),
+with respect to the syntax-directed typing rules.
+Each rule of the type inference algorithm $W$
+has a similar structure to the corresponding syntax-directed rule.
+The type inference algorithm has additional details of explicitly
+managing fresh type variable introduction and substitution.
+
+The unification of $A_1$ and $A_2$ succeeds when there exists a substitution $S$
+such that $S A_1 = S A_2$.  When the unification succeeds,
+we write $\unify(A_1,A_2) ~> S$, where the resulting substitution $S$ is
+a unifier of $A_1$ and $A_2$.  Furthermore, $S$ is a most general unifier
+\cite{Herbrand30,Robinson65} whose domain is a subset of $\FV(A_1)\cup\FV(A_2)$.
+That is, for any unifier $S'$ such that $S' A_1 = S' A_2$ and
+$\dom(S') \subseteq \FV(A_1) \cup \FV(A_2)$,
+there exists a substitution $R$ such that $S' = R\circ S$ and
+$\dom(R)\subseteq\dom(S)$. The composition of two substitutions
+is defined as $(S_2\circ S_1)A = S_2(S_1(A))$.
+
+\begin{figure}
+\begin{singlespace}
+\[ \inference[\sc Var$_W$]
+        {x:\forall X_1\dots X_n.A\in\Gamma \\
+         X_1',\dots,X_n'~\text{fresh}}
+        {W(\Gamma,x) ~> (\emptyset,A[X_1'/X_1]\cdots[X_n'/X_n])}
+\]
+\[ \inference[\sc Abs$_W$]
+        {X~\text{fresh} \\
+         W((\Gamma,x:X),t) ~> (S_1,A)}
+        {W(\Gamma,\l x.t) ~> (S_1,S_1 X -> A)}
+\]
+%% double check the composition order
+\[ \inference[\sc App$_W$]
+        {W(\Gamma,t) ~> (S_1,A_1) \\
+         W(S_1 \Gamma,s) ~> (S_2,A_2) \\
+         X~\text{fresh} \\
+         \unify(S_2 A_1,A_2 -> X) ~> S_3 }
+        {W(\Gamma,t\;s) ~> (S_3\circ S_2\circ S_1,S_3 X)}
+\]
+
+\[ \inference[\sc Let$_W$]
+        {W(\Gamma,s) ~> (S_1,A_1) \\
+         W((S_1\Gamma,x:\overline{S_1\Gamma}(A_1)),t) ~> (S_2,A_2) }
+        {W(\Gamma,\<let> x=s \<in> t) ~> (S_2\circ S_1,A_2)}
+\]
+\end{singlespace}
+\caption{The type inference algorithm $W$.}
+\label{fig:algW}
+\end{figure}
+
+\begin{proposition} \label{prop:substvdashs}
+        $\inference{\Gamma |-s t : A}{S\Gamma |-s t : SA}$
+\end{proposition}
+\begin{proposition} \label{prop:substclosure}
+        $ S(\overline{\Gamma}(A)) = \overline{S\Gamma}(SA) $
+\end{proposition}
+
+\begin{theorem}[Soundness of $W$] \label{thm:soundW}
+$ \inference{ W(\Gamma,t) ~> (S,A) }{ S\Gamma |-s t : A } $
+\end{theorem}
+\begin{proof}
+By induction on the syntax of the term $t$.
+\begin{itemize}
+\item[case]($x$)
+        Obvious, by definition of $\sqsubseteq$.
+
+\item[case]($\l x.t$)
+        We need to show that
+        $S_1\Gamma |-s \l x.t : S_1 X -> A$.
+
+        By induction, we know that $S_1(\Gamma,x:X) |-s t : A$.
+
+        We know that $S_1\Gamma,x:S_1X |-s t : A$,
+        since $S_1(\Gamma,x:X) = S_1\Gamma,x:S_1 X$.
+
+        By \rulename{Abs$_s$} rule, we have
+        $S_1\Gamma |-s \l x.t : S_1 X -> A$.
+
+\item[case]($t\;s$)
+        We need to show that $(S_3\circ S_2 \circ S_1)\Gamma |-s t\,s : S_3 X$.
+
+        By induction, we know that
+        $S_1\Gamma |-s t : A_1$ and 
+        $S_2(S_1\Gamma) |-s s : A_2$.
+        By Proposition~\ref{prop:substvdashs},
+        $S_3(S_2(S_1\Gamma)) |-s t : S_3(S_2(A_1))$ and 
+        $S_3(S_2(S_1\Gamma)) |-s s : S_3 A_2$.
+
+        Due to the property of unification, $S_2 A_1 =  A_2 -> X$.
+
+        Thus, $S_3(S_2(S_1\Gamma)) |-s t : S_3(A_2 -> X)$ and 
+        $S_3(S_2(S_1\Gamma)) |-s s : S_3 A_2$.
+
+        That is, $(S_3\circ S_2 \circ S_1)\Gamma |-s t : S_3 A_2 -> S_3 X$ and 
+        $(S_3\circ S_2 \circ S_1)\Gamma |-s s : S_3 A_2$.
+
+        By \rulename{App$_s$} rule, we have 
+        $(S_3\circ S_2 \circ S_1)\Gamma |-s t\,s : S_3 X$.
+
+\item[case]($\<let> x=s \<in> t$)
+        We need to show that $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
+
+        By induction, we have $S_1\Gamma |-s s:A_1$ and
+        $S_2(S_1\Gamma,x:\overline{S_1\Gamma}(A_1)) |-s t:A_2$.
+
+        By Proposition~\ref{prop:substvdashs}, we have $S_2(S_1\Gamma) |-s s:S_2 A_1$.
+
+        By Proposition~\ref{prop:substclosure}, we have
+        $S_2(S_1\Gamma),x:\overline{S_2(S_1\Gamma)}(S_2 A_1) |-s t: A_2$.
+
+        By \rulename{Let$_s$}, we have
+        $S_2(S_1\Gamma) |-s \<let> x=s \<in> t:A_2$.
+        Since $S_2(S_1\Gamma)=(S_2\circ S_1)\Gamma$ by definition,
+        we have $(S_2\circ S_1)\Gamma |-s \<let> x=s \<in> t:A_2$.
+\vspace*{-2em}
+\end{itemize}
+\end{proof}
+
+
+\begin{proposition}[\rulename{Abs$_s$} inverse] \label{prop:Abssrev}
+$ \inference{\Gamma |-s \l x   .t : A -> B}{\Gamma,x:A |-s t:B} $
+\end{proposition}
+
+\begin{proposition}[\rulename{App$_s$} inverse] \label{prop:Appsrev}
+$
+  \inference{\Gamma |-s t~s : B}{
+        \exists A.\left(\Gamma |-s t : A -> B ~\land~ \Gamma |-s s : A\right) } $
+\end{proposition}
+
+\begin{proposition}[\rulename{Let$_s$} inverse] \label{prop:Letsrev}
+$ \inference{\Gamma |-s \<let> x=s \<in> t : B}{
+        \exists A.\left( \Gamma |-s s : A ~\land~
+                        \Gamma,x:\overline{\Gamma}(A) |-s t : B \right)} $
+\end{proposition}
+
+
+\begin{theorem}[Completeness of $W$] \label{thm:completeW}
+~\\ $~$ $~$ For any $\Gamma$ and $t$,
+there exist $S'$, where $\dom(S')\subseteq\FV(\Gamma)$, and $A'$ such that
+\[ \inference{ S'\Gamma |-s t : A' }{
+        W(\Gamma,t) ~> (S,A_W) ~\land~
+        \exists R . \left(
+                S'\Gamma = R(S\Gamma) \,\land\,
+                R(\overline{S\Gamma}(A_W))\sqsubseteq A' \right) }
+\]
+\end{theorem}
+\begin{proof}
+See Appendix \ref{app:completeWproof}.
+\end{proof}
+
+\begin{corollary}[Completeness of $W$ under closed context]
+%% ~\\ For any $\Gamma$ and $t$, there exist $S'$ and $A'$ such that
+\[
+\inference{ \Gamma |-s t : A' & \FV(\Gamma)=\emptyset }{
+        W(\Gamma,t) ~> (S,A) ~\land~
+        \exists R.R(\overline{\Gamma}(A))\sqsubseteq A' }
+\]
+\end{corollary}
+\begin{proof} By Theorem \ref{thm:completeW} and the fact that
+        $S'\Gamma = \Gamma$ for any $S'$
+        when $\FV(\Gamma) = \emptyset$.
+\end{proof}
+

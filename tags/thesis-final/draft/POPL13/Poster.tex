@@ -1,0 +1,303 @@
+\documentclass[final]{beamer}
+%% beamer 3.10: do NOT use option hyperref={pdfpagelabels=false} !
+
+\mode<presentation> {
+%% examples http://www-i6.informatik.rwth-aachen.de/~dreuw/latexbeamerposter.php
+% \usetheme{Berlin}
+%% you should define your own theme e.g. for big headlines using your own logos 
+  \usetheme{I6pd2}
+}
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amsthm,amssymb,latexsym,textcomp,setspace}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage[inference,ligature]{semantic}
+\mathlig{->}{\to}
+\mathlig{|-}{\vdash}
+%\usepackage{times}\usefonttheme{professionalfonts}  % times is obsolete
+\usefonttheme[onlymath]{serif}
+\boldmath
+\usepackage[orientation=landscape,size=a0,scale=1.4,debug]{beamerposter}
+
+\newcommand{\dom}{\mathop{\mathsf{dom}}}
+\newcommand{\FV}{\mathop{\mathrm{FV}}}
+
+\newcommand{\Fw}{\ensuremath{\mathsf{F}_{\!\omega}}}
+\newcommand{\Fi}{\ensuremath{\mathsf{F}_{\!i}}}
+\definecolor{grey}{rgb}{0.8,0.8,0.8}
+\definecolor{lightgrey}{rgb}{0.85,0.85,0.85}
+\newcommand{\newFi}[1]{\colorbox{lightgrey}{\ensuremath{#1}}}
+
+
+
+\lstset{language=Haskell,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{ta4chameleon},
+	emph={List,Int,Bool},
+	commentstyle=\color{gray},
+	literate =
+		{forall}{{\textcolor{ta3chocolate}{$\forall$}}}1
+		{|}{{\textcolor{ta3chocolate}{$\mid\;\,$}}}1
+		{=}{{\textcolor{ta3chocolate}{$=\,\;$}}}1
+		{::}{{\textcolor{ta3chocolate}{$:\!\,:$}}}1
+		{->}{{\textcolor{ta3chocolate}{$\to$}}}1
+	}
+
+\title[Fancy Posters]{{\VERYHuge System \Fi} {\Huge :}
+		{\huge a Higher-Order Polymorphic $\lambda$-calculus} \\
+		{\huge with Erasable Term Indices}
+  }
+\author[Ki Yung Ahn]{ Ki Yung $\,$Ahn $\,$ {\Large\texttt{kya@cs.pdx.edu}} }
+\institute[Portland State University]{
+	Department of Computer Science, Portland State University }
+\date{2012-09}
+\begin{document}
+\begin{frame}[fragile]
+%%   \vfill
+%%   \begin{block}{Fontsizes}
+%%     \centering
+%%     {\tiny tiny}\par
+%%     {\scriptsize scriptsize}\par
+%%     {\footnotesize footnotesize}\par
+%%     {\normalsize normalsize}\par
+%%     {\large large}\par
+%%     {\Large Large}\par
+%%     {\LARGE LARGE}\par
+%%     {\Huge Huge}\par
+%%     {\veryHuge veryHuge}\par
+%%     {\VeryHuge VeryHuge}\par
+%%     {\VERYHuge VERYHuge}\par
+%%   \end{block}
+%% \vfill
+\begin{columns}[t]
+
+\begin{column}{.315\linewidth}
+
+\begin{block}{1. Indexed Datatypes
+	{\normalsize(Lightweight Dependent Types)} }
+\begin{itemize}
+\item Indexed datatypes are datatypes
+	with \emph{static (compile-time) dependencies}.
+%%        (c.f. full-fledged dependent types can have
+%%        both static and dynamic dependencies)
+	Also known as higher-kinded datatypes, higher-rank datatypes,
+	or lightweight dependent types
+\item Use of indexed datatypes in programming languages,
+	or the {\emph{lightweight approach}}, has become popular
+	over the past decade even in real-world functional programming due to
+	the GADT extension in the Glasgow Haskell Compiler.
+\end{itemize}
+\end{block}
+
+\begin{block}{2. Examples of Indexed Datatypes}
+\begin{itemize}
+\item[]$\!\!\!\!\!\!${\normalsize(c.f.)} Regular datatypes
+	$~$ \lstinline!data List a = Cons a (List a) | Nil!
+\item Type-indexed datatypes
+	$\quad$\textcolor{gray}{\normalsize(example code in Haskell)}
+	\begin{itemize}
+		\item Nested datatypes $\quad$
+			\lstinline!data Powl a = PCons a (Powl(a,a)) | PNil!
+		\item Representation types in datatype generic programming
+		\begin{lstlisting}
+		data Rep t where
+		  RInt  :: Rep Int
+		  RBool :: Rep Bool
+		  RPair :: Rep a -> Rep b -> Rep (a,b)
+		  RFun  :: Rep a -> Rep b -> Rep (a -> b)
+		\end{lstlisting}
+	\end{itemize}
+\item Term-indexed datatypes
+	$\quad$\textcolor{gray}{\normalsize(example code in Nax)}
+	\begin{itemize}
+        	\item Length-indexed lists
+		\begin{lstlisting}
+		data Vec (a :: *) {n :: Nat} where
+		  VCons :: a -> Vec a {i} -> Vec a {Succ i}
+		  VNil  :: Vec a {Zero}
+		\end{lstlisting}
+		\item de Bruijn terms indexed by size-indexed contexts
+		\begin{lstlisting}
+		data BTerm (c :: Nat -> *) {n :: Nat} where
+		  BVar :: c {i} -> BTerm c {i}
+		  BApp :: BTerm c {i} -> BTerm {i} -> BTerm c {i}
+		  BAbs :: BTerm c {Succ i} -> BTerm c {i}
+		\end{lstlisting}
+	\end{itemize}
+\end{itemize} %% $$\alpha=\gamma, \sum_{i}$$
+\end{block}
+
+\end{column}
+%%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{column}{.315\linewidth}
+
+\begin{block}{4. Motivating example: embedding datatypes}
+\begin{itemize}
+\item Regular datatypes are embeddable in System $\mathsf{F}$ \\
+	{\normalsize
+	$\texttt{List}\,A \triangleq \forall X.X\to(A\to X\to X)\to X$
+	}
+\item Type-indexed datatypes are embeddable in System \Fw \\
+	{\normalsize
+	$ \texttt{Powl} \triangleq \lambda A^{*}.\forall X^{*\to*}.
+		X A\to(A\to X(A\times A)\to X A)\to X A $
+	}\vskip1ex
+\item Term-indexed datatypes are embeddable in
+	\newFi{\,\text{System \Fi}\phantom{^i}\!}
+	{\normalsize
+		\begin{multline*}
+ \texttt{Vec}~ \triangleq
+ \lambda A^{*}.\colorbox{tabutter}{$\lambda i^{\texttt{Nat}}\phantom{\}}\!\!\!$}.
+ \forall X^{\colorbox{ta0scarletred}{\small$\texttt{{Nat}}\to*$}}.\\
+ \colorbox{ta0chameleon}{$X\{\texttt{{Z}}\}$}\to
+ (\colorbox{ta0skyblue}{$\forall i^{\texttt{{Nat}}}\phantom{\}}\!\!\!$}.A\to\colorbox{ta0chameleon}{$X\{i\}$}\to
+ \colorbox{ta0chameleon}{$X\{\texttt{{S}}\; i\}$})\to\colorbox{ta0chameleon}{$X\{i\}$}
+		\end{multline*}
+	}
+	New features of \Fi\ not found in \Fw\ \\ \vskip1ex
+	\begin{minipage}{.4\linewidth}
+	\begin{itemize}
+		\item \colorbox{ta0scarletred}{%
+			\,index-arrow kinds$\phantom{g^I}$\!\!\!\!\!}
+		\item \colorbox{ta0skyblue}{%
+			\,index polymorphism$\phantom{g^I}$\!\!\!\!\!}
+	\end{itemize}
+	\end{minipage}
+	\begin{minipage}{.4\linewidth}
+	\begin{itemize}
+		\item \colorbox{tabutter}{%
+			\,index abstraction$\phantom{g^I}$\!\!\!\!\!}
+		\item \colorbox{ta0chameleon}{%
+			\,index application$\phantom{g^I}$\!\!\!\!\!}
+	\end{itemize}
+	\end{minipage}
+\end{itemize}
+\end{block}
+
+
+\begin{block}{3. Limitations of the Lightweight approach}
+\begin{spacing}{1}\vskip1ex \small
+Although extending existing programming languages with indexed datatypes
+has been useful in practice, but it still suffers from the following problems
+(so far):
+\end{spacing}
+\begin{itemize}
+\item Increase \emph{confidence} but no \emph{guarantee} of correctness
+	\begin{lstlisting}
+	loop :: forall a . a    -- logically inconsistent type system
+	loop = loop       -- allows proof of falsity
+	\end{lstlisting}
+\item Faked term indices in implementations (until recently)
+	\begin{lstlisting}
+	data Zero       -- code duplication at type level
+	data Succ n     -- and cannot prevent (Succ Bool)
+	\end{lstlisting}
+\item Type checking/inference may be undecidable/impossible
+	\begin{itemize}
+		\item type equality check over term-indexed types
+			relies on term equality, which is undecidable
+			when diverging terms exist
+		\item need \emph{annotation} for inference,
+			but \emph{how much} and \emph{where}?
+\vskip1ex
+	\end{itemize}
+\end{itemize}
+\begin{spacing}{1}\small
+System \Fi\ (details submitted to \textit{POPL '13}) resolves all of above,
+except where and how much annotations are needed for type inference.
+Sequel to this work, we are developing Nax (to appear in \textit{IFL '12}),
+a programming language based on System \Fi, which supports type inference
+from small amount of systematic type annotation.
+\end{spacing}
+\end{block}
+
+
+\end{column}
+%%%%%%%%%%%%%%%%%%%%%%%%% column sep %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{column}{.315\linewidth}
+
+\begin{block}{5. \Fi ~= {\normalsize Curry-style} \Fw\ + \{erasable term indices\}}
+$\text{Variables}~~ x,i \qquad\quad \text{Type constructor variables}~~ X$ \\
+$\text{Terms}~~~ r,s,t ~ ::= ~ x \mid \lambda x.t \mid r\;s \qquad\quad\text{\small(Curry-style terms)}$\\
+$\text{Kinds}~~~~ \kappa ~ ::= ~ *
+                                \mid \kappa -> \kappa
+				\mid \newFi{A -> \kappa{\phantom{y}}\!\!} $\\
+$\text{Type Constructors}$\\
+$\quad A,B,F,G               ~ ::= ~ X
+                                \mid A -> B
+                                \mid \lambda X^\kappa.F
+                                \mid F\,G
+                                \mid \forall X^\kappa . B$\\
+$~\qquad\qquad\qquad\qquad\qquad\qquad\qquad\quad
+\mid \newFi{\lambda i^A.F
+                                \mid F\,\{s\}
+                                \mid \forall i^A . B}$ \\
+$\text{Contexts}
+\qquad \Delta                ~ ::= ~ \cdot
+                                \mid \Delta, X^\kappa
+                                \mid \newFi{\Delta, i^A}
+\qquad \Gamma                ~ ::= ~ \cdot
+                                \mid \Gamma, x : A 
+$
+\vskip-2ex\textcolor{grey}{\hrule}\vskip.7ex
+$\text{Typing rules} \quad
+\inference[($:$)]{ (x:A) \in \Gamma & \Delta |- \Gamma }
+		 {\Delta;\Gamma |- x : A} ~~~
+\newFi{
+\inference[($:i$)]{ i^A \in \Delta & \Delta |- \Gamma }
+		  {\Delta;\Gamma |- i : A}  }
+$ \vskip-1ex ~ \\
+$\text{Kinding rules} \quad
+\newFi{
+\inference[($@i$)]{ \Delta |- F : A -> \kappa & \Delta;\cdot |- s : A }
+                  {\Delta |- F\,\{s\} : \kappa}  }
+$
+\vskip-1ex\textcolor{grey}{\hrule}\vskip.7ex
+$\text{Index Erasure}
+\qquad (A\to\kappa)^{\circ}=\kappa^{\circ} \qquad
+(\Delta,i^A)^\circ = \Delta^\circ $ \\
+$\qquad(\lambda i^{A}.F)^{\circ}=F^{\circ} \qquad
+(F\,\{s\})^{\circ}\;=F^{\circ} \qquad
+(\forall i^{A}.F)^{\circ}=F^{\circ}
+$ \\
+$ \text{Index Erasure Theorem {\small(for terms without index variables)} }$
+\[
+\inference{\Gamma;\Delta|- t:A ~~\text{derivable in \Fi}}
+	  {\Delta^\circ;\Gamma^\circ|- t:A^\circ  ~~\text{derivable in \Fw}}
+	  (\FV(t)\cap\dom(\Delta) = \emptyset)
+\]
+\vskip-2ex\textcolor{grey}{\hrule}\vskip1.5ex
+$\!\!\!\!$\textbullet\;
+\textbf{Strong Normalization}: Index Erasure and Strong Normalization of \Fw\\
+$\!\!\!\!$\textbullet\;
+\textbf{Logical Consistency}: strict subset of a logically consistent calculus 
+\end{block}
+
+\begin{block}{6. Contribution and Ongoing work}
+\begin{itemize}
+\item Identifying the features needed for polymorphic $\lambda$-calculi
+	to embed term-indexed datatypes
+	{\normalsize in isolation with other requirements
+		% (e.g., large elimination)
+	}
+\item Design of a calculus useful for studying properties of
+    term-indexed datatypes
+    {\normalsize
+	    (e.g., proof using \Fi\ that the eliminators for indexed datatypes
+    	in \textit{Ahn\,\&\,Sheard,\,ICFP '11} are indeed normalizing) }
+\item Proof that the calculus enjoys a simple erasure property and
+	inherits metatheoretic results from well-known calculi {\normalsize(\Fw, ICC)}
+\item[\!{\Huge\textbullet}\;] Ongoing work: {\normalsize
+	Leibniz equality on term-indices,
+	type inference in Nax,\\ \vskip-1ex
+	$\quad$ handling non-logical language constructs
+		(ideas from Trellys project)}
+\end{itemize}
+\end{block}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+\end{document}

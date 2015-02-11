@@ -1,0 +1,568 @@
+\section{Metatheory of \Fixi} \label{sec:fixi:theory}
+Recall that we extended \Fixw\ to \Fixi\ to support primitive recursion and
+course-of-values recursion. In this section, we show strong normalization and
+logical consistency of \Fixi. We also give a partial proof of
+the syntactic conditions necessary for well-behaved course-of-values recursion.
+
+\subsection{Strong normalization and logical consistency}
+\label{ssec:fixi:theory:sn}
+We can prove strong normalization of \Fixi\ by the following strategy.
+\begin{itemize}
+\item Define a notion of index erasure that
+	projects \Fixi\ types to \Fixw\ types.
+\item Show that every well-typed \Fixi-term is a well-typed \Fixw-term
+	by index erasure.
+\item \Fixi\ inherits strongly normalization from \Fixw\ 
+	because \Fixw\ is strongly normalizing \cite{AbeMat04}.
+\end{itemize}
+
+\index{index erasure}
+The definition of the index erasure operation for System \Fixi\ and
+the proofs of the related theorems are virtually the same as their counterparts
+in System \Fi\ (see \S\ref{sec:fi:theory}). So, we simply illustrate
+the definition and the theorems, but omit their proofs.
+
+We define a meta-operation of index erasure ($\circ$) that
+projects $\Fixi$ types to $\Fixw$ types and another meta-operation ($\bullet$)
+that selects only the index variable bindings ($i^A$) from
+the type-level context.
+\begin{definition}[index erasure]\label{def:Fixierase}
+\[ \fbox{$\kappa^\circ$}
+ ~~~~ ~~
+ *^\circ =
+ *
+ ~~~~ ~~
+ (p\kappa_1 -> \kappa_2)^\circ =
+ p{\kappa_1}^\circ -> {\kappa_2}^\circ
+ ~~~~ ~~
+ (A -> \kappa)^\circ =
+ \kappa^\circ
+\]
+\[ \fbox{$F^\circ$}
+ ~~~~
+ X^\circ =
+ X
+ ~~~~ ~~~~
+ (A -> B)^\circ =
+ A^\circ -> B^\circ
+ ~~~~ ~~~~
+ (\fix F)^\circ =
+ \fix F^\circ
+\]
+\[ \qquad
+ (\lambda X^{p\kappa}.F)^\circ =
+ \lambda X^{p\kappa^\circ}.F^\circ
+ ~~~~ ~~~~
+ (\lambda i^A.F)^\circ =
+ F^\circ
+\]
+\[ \qquad
+ (F\;G)^\circ =
+ F^\circ\;G^\circ
+ ~~~~ ~~~~ ~~~~ ~~~~ ~~
+ (F\,\{s\})^\circ =
+ F^\circ
+\]
+\[ \qquad
+ (\forall X^\kappa . B)^\circ =
+ \forall X^{\kappa^\circ} . B^\circ
+ ~~~~ ~~~~
+ (\forall i^A . B)^\circ =
+ B^\circ
+\]
+\[ \fbox{$\Delta^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~
+ (\Delta,X^{p\kappa})^\circ = \Delta^\circ,X^{p\kappa^\circ}
+ ~~~~ ~~
+ (\Delta,i^A)^\circ = \Delta^\circ
+\]
+\[ \fbox{$\Gamma^\circ$}
+ ~~~~
+ \cdot^\circ = \cdot
+ ~~~~ ~~~~
+ (\Gamma,x:A)^\circ = \Gamma^\circ,x:A^\circ
+\]
+\end{definition}
+
+\begin{definition}[index variable selection]
+\[ \cdot^\bullet = \cdot \qquad
+        (\Delta,X^{p\kappa})^\bullet = \Delta^\bullet \qquad
+        (\Delta,i^A)^\bullet = \Delta^\bullet,i:A
+\]
+\end{definition}
+These two definitions are exactly the same as the definitions of
+$^\circ$ and $^\bullet$ in \Fi\ (defined in \S\ref{ssec:fi:sn}),
+except for the new constructs of \Fixi: (1) polarities in kinds and (2)
+the equi-recursive type operator $\fix$.
+
+\index{strong normalization!System Fixi@System \Fixi}
+Once $^\circ$ and $^\bullet$ are defined, the proof of strong normalization
+of \Fixi, by index erasure, is virtually the same as the proof of
+strong normalization of \Fi\ (\S\ref{ssec:fi:sn}). Here, we list only
+the theorems since their proofs can be trivially reconstructed by consulting
+the proofs of the corresponding theorems in \S\ref{ssec:fi:sn}.
+
+\begin{theorem}[index erasure on well-sorted kinds]
+\label{thm:Fixierasesorting}
+        $\inference{|- \kappa : \square}{|- \kappa^\circ : \square}$
+\end{theorem}
+
+\begin{theorem}[index erasure on well-formed type-level contexts]
+\label{thm:Fixierasetyctx}
+\[ \inference{|- \Delta}{|- \Delta^\circ} \]
+\end{theorem}
+
+\begin{theorem}[index erasure on kind equality]\label{thm:Fixierasekindeq}
+$ \inference{|- \kappa=\kappa':\square}
+        {|- \kappa^\circ=\kappa'^\circ:\square}
+$
+\end{theorem}
+
+\begin{theorem}[index erasure on well-kinded type constructors]
+\label{thm:Fixierasekinding}
+\[ \inference{|- \Delta & \Delta |- F : \kappa}
+                {\Delta^\circ |- F^\circ : \kappa^\circ}
+\]
+\end{theorem}
+\begin{theorem}[index erasure on type constructor equality]
+\[ \inference{\Delta |- F=F':\kappa}
+                {\Delta^\circ |- F^\circ=F'^\circ:\kappa^\circ}
+\]
+\label{thm:Fixierasetyconeq}
+\end{theorem}
+
+\begin{theorem}[index erasure on well-formed term-level contexts]
+\label{thm:Fixierasetmctx}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- \Gamma^\circ} \]
+\end{theorem}
+
+\begin{theorem}[index erasure on index-free well-typed terms]
+\label{thm:Fixierasetypingifree}
+\[ \inference{ \Delta |- \Gamma & \Delta;\Gamma |- t : A}
+                {\Delta^\circ;\Gamma^\circ |- t : A^\circ}
+                {\enspace(\dom(\Delta)\cap\FV(t) = \emptyset)}
+\]
+\end{theorem}
+
+\begin{theorem}[index erasure on well-formed term-level contexts
+                prepended by index variable selection]
+\label{thm:Fixierasetmctxivs}
+\[ \inference{\Delta |- \Gamma}{\Delta^\circ |- (\Delta^\bullet,\Gamma)^\circ}
+\]
+\end{theorem}
+
+
+\begin{theorem}[index erasure on well-typed terms]
+\label{thm:Fixierasetypingall}
+\[ \inference{\Delta |- \Gamma & \Delta;\Gamma |- t : A}
+                {\Delta^\circ;(\Delta^\bullet,\Gamma)^\circ |- t : A^\circ}
+\]
+\end{theorem}
+As stated in the introduction to this section, strong normalization is a direct
+consequence of the erasure theorems above.
+
+\paragraph{Logical consistency:}
+We show the logical consistency of \Fixi\ by showing that the void type
+$\forall X^{*}.X$ is uninhabited. By index erasure, we know that
+that the set of terms that inhabit a \Fixi-type is a subset of
+the set of terms that inhabit the corresponding (erased) \Fixw-type.
+Thus, if $\forall X^{*}.X$ is uninhabited in \Fixw\ then 
+$\forall X^{*}.X$ is uninhabited in \Fixi. \citet{AbeMat04} gives
+a saturated set interpretation for the type constructors in \Fixw\ 
+that is similar to the interpretation given in \S\ref{sec:fw:srsn} for
+\Fw\ type constructors. The void type $\forall X^{*}.X$ is obviously
+uninhabited (by any closed term) according to this interpretation. That is, no 
+strongly-normalizing, closed term inhabits $\forall X^{*}.X$.
+\begin{align*}
+        [| \forall X^{*}.X |]_\xi &\in \SAT_{*} -> \SAT_{*} \\
+        [| \forall X^{*}.X |]_\xi &
+        = \bigcap_{\mathcal{A}\in[| * |]} [| X |]_{\xi[X\to\mathcal{A}]}
+        = \bigcap_{\mathcal{A}\in[| * |]} \mathcal{A} = \bot
+\end{align*}
+The minimal saturated set $\bot$ of $\SAT$, which is saturated from
+the empty set, does not have any closed terms. See \S\ref{sec:stlc:srsn}
+for the definition of saturated sets.
+
+\subsection{Syntactic conditions for well-behaved course-of-values recursion}
+\label{ssec:fixi:theory:cv}
+In \S\ref{sec:fixi:cv}, we embedded Mendler-style course-of-values
+recursion (\McvPr) in \Fixi\ for the base structures ($F$)
+that have maps ($\textit{fmap}_F$), also known as
+\emph{monotonicity witnesses} \cite{Mat98,Mat99}. The theoretical development of
+the termination of \McvPr\ by assuming the existence of maps is elegant, since
+it does not require ad-hoc syntactic restrictions on the formation of types.
+However, in a language implementation, it is not desirable to require users to
+manually witness $\textit{fmap}_F$ every time they need to convince
+the type system that \McvPr\ is well-defined over $F$.
+
+It would be very convenient if we could categorize type constructors of
+\Fixi\ that have maps by analyzing their polarized kinds. As a consequence,
+for any type constructor $F$ whose kind meets certain criteria, users can
+immediately assume the existence of $\textit{fmap}_F$ and that \McvPr\ always
+terminates for $F$.
+
+For instance, we conjecture that any $F: +* -> *$ should have a map, as in
+Conjecture \ref{conj:fixi:fmap} below. In this thesis, we only show that this
+conjecture holds for simple cases (Proposition \ref{prop:fixi:fmapBaseCase})
+while still encompassing a broad range of types.
+The complete proof is left for future work.
+\citet{Mat99} showed that positive inductive types, in the context of System \F,
+are monotone (\ie, map exists), but it has not yet been studied
+whether we can rely on polarized kinds to derive monotonicity
+in the context of System \Fw.
+
+\begin{conjecture}\label{conj:fixi:fmap}
+For any $F : +* -> *$, there exists\\ \vspace*{-1ex}
+$\phantom{A}\qquad
+        \textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+\quad such that
+\begin{align*}
+\textit{fmap}_F~\textit{id} &~=~ \textit{id} \\
+\textit{fmap}_F~\textit{f} \;\circ\; \textit{fmap}_F~\textit{g}
+&~=~ \textit{fmap}_F~(f\circ g)
+\end{align*}
+\end{conjecture}
+\noindent
+Assuming that the conjecture above is true,
+we can show that $\McvPr$ is well-defined for any $F: +* -> *$ as follows.
+\begin{conjecture} For any $F : +* -> *$, there exists
+$\unIn_F : \mu^{+}{*} F -> F(\mu^{+}{*} F)$ such that
+$\unIn_F (\In_F\;t) -->+ t$.
+\end{conjecture}
+\begin{proof}
+Because we know that $\textit{fmap}_F$ exists
+by Conjecture~\ref{conj:fixi:fmap}, we can define
+\[ \unIn_F = \McvPr_{*}\;
+            (\l\_.\l\textit{cast}.\l\_.\l x.\textit{fmap}_F\;\textit{cast}\;x)
+\]
+Because we know that $\textit{fmap}_F\;\textit{id}\;x -->+ x$,
+we can show that the unroller $\unIn_F$ has the desired property
+$\quad \unIn_F (\In_F\;t) -->+ \textit{fmap}_F\;\textit{id}\;t -->+ t $.
+\end{proof}
+We believe that the above conjectures are true, but we prove only
+a small fragment (outlined below), which is a special case
+of Conjecture \ref{conj:fixi:fmap}.
+\begin{proposition}\label{prop:fixi:fmapBaseCase}
+There exists
+$\textit{fmap}_F : \forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+for any $F : +* -> *$ such that
+\begin{itemize}
+        \item $F$ is non-recursive, that is, does not have $\fix$,
+        \item $F$ is a value, that is, $F$ is
+                in normal form (\ie, has no redex) and
+                closed (\ie, $F$ has no free variables),
+        \item All the bound variables within $F$ are
+                introduced by universal quantification
+                and those variables are of kind $*$.
+\end{itemize}
+\end{proposition}
+\begin{proof}
+        We can derive $\textit{fmap}_F$ from the structure of $F$.
+        Since $F$ has kind $+* -> *$, it must be a lambda abstraction
+        ($\l Z^{+*}.B$), some kind of application 
+        (a normal application, $F'\,G$, or an index application $F'\{s\}$),
+        or a variable of kind $+* -> *$.
+        No other way of forming $F$ can have kind $+* -> *$.
+        
+        We also assume that $F$ is in normal form, so if $F$ were an application
+        then $F'$ must be a variable with an arrow kind. However, we have
+	assumed that all variables have kind $*$. Hence, $F$ cannot be
+	a variable since we have assumed that $F$ is a value with
+	no free variables, thus $F$ must have the form $\l Z^{+*}.B$.
+	We proceed by analyzing the structure of $B$.
+ 
+\begin{itemize}
+\item[case]($Z\notin \FV(B)$, \ie, $F$ is a constant function.)
+        $ \textit{fmap}_{(\l Z^{+*}. B)} = \l \_ . \l x. x $
+
+        Since $F\;X = F\;Y = B$, we simply return the identity function on $B$.
+
+\item[case]($F \triangleq \l Z^{+*}. Z$. \ie, $F$ is the identity.)
+        $ \textit{fmap}_{(\l Z^{+*}. Z)} = \l z . z $
+
+        Since $F\;X = X$ and $F\;X = Y$,
+        we return the function $z:X -> Y$ itself.
+
+\item[case]($F \triangleq \l Z^{+*}. \forall X_1^{*} .B_1$, $B$ is a universal quantification.)
+        \vspace*{-2ex}
+        \[ \textit{fmap}_{(\l Z^{+*}. \forall X_1^{*} .B_1)}
+        = \textit{fmap}_{(\l Z^{+*}.B_1)} \]\vskip-2ex
+        Here, we need to find an \textit{fmap}
+        that works for any valuation of $X_1$.
+        That is, we must find an \textit{fmap} that works for
+	$\l Z^{+*}. B_1[V/X_1]$ for an arbitrary value $V$.
+	Since values are closed, $v$ cannot contain free variables
+	including $Z$. Since $v$ is completely independent of $Z$,
+	the value $V$ cannot make any difference to the derived \textit{fmap}.
+	Hence, we simply ignore $X_1$.
+
+\item[case]($F \triangleq \l Z^{+*}. A -> B_1$, \ie, $B$ is a function.)
+
+        When $Z\notin\FV(A)$,
+        $\textit{fmap}_{(\l Z^{+*}.A -> B_1)}
+        = \l z.\l y. \l x. \textit{fmap}_{(\l Z^{+*}.B_1)} \; z \; (y \; x)$
+
+        When $A \triangleq \forall X_1^{*}.A_1$,
+        $\textit{fmap}_{(\l Z^{+*}.(\forall X_1^{*}.A_1) -> B_1)}
+        = \textit{fmap}_{(\l Z^{+*}.A_1 -> B_1)}$
+        
+        When $B_1 \triangleq \forall X_1^{*}.B_2$,
+        $\textit{fmap}_{(\l Z^{+*}.A -> \forall X_1^{*}.B_2)}
+        = \textit{fmap}_{(\l Z^{+*}.A -> B_2)}$        
+
+        \begin{singlespace}
+        When $A \triangleq A_1 -> \cdots -> A_n -> \forall X_2^{*}.B_2'$,
+        \vspace{-1.5ex}
+        \[\textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> \forall X_2^{*}.B_2') -> B_1)}
+        = \textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> B_2') -> B_1)} \]
+
+        When $A \triangleq A_1 -> \cdots -> A_n -> B_2$,
+        where $B_2$ is not an arrow type
+        \vspace{-1.5ex}
+        \begin{align*}
+          & \textit{fmap}_{(\l Z^{+*}.(A_1 -> \cdots -> A_n -> B_2) -> B_1)} \\
+        =~& \l z.\l y. \l x.\;
+        \textit{fmap}_{(\l Z^{+*}.B_1)} \; z \;
+                (y \; (\l x_1.\ldots\l x_n. ~
+                   x  &\!\!\!\!(\textit{fmap}_{(\l Z^{+*}.A_1)} ~ z ~ x_1)& \\
+                     &&\!\!\!\!\vdots \qquad\qquad& \\
+                     &&\!\!\!\!(\textit{fmap}_{(\l Z^{+*}.A_n)} ~ z ~ x_n)&
+                \,) \,)
+        \end{align*}
+        \end{singlespace}\vspace*{-4ex}
+\end{itemize}
+\end{proof}
+
+To illustrate that the \textit{fmap}s derived in the proof above are indeed
+type-correct, we provide some examples in Haskell accepted by GHC in
+Figure~\ref{fig:deriveFunctor}. In fact, all the \texttt{\small Functor}
+instances in Figure~\ref{fig:deriveFunctor} are automatically derivable
+using the \texttt{\small DeriveFunctor} extension in GHC version 7.4.
+However, GHC does not derive functor instances when there are
+type constructor variables other than $*$, since the kind system in GHC
+does not keep track of polarity as in \Fixw\ or \Fixi.
+\begin{figure}
+\begin{singlespace}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell,mathescape]
+{-# LANGUAGE RankNTypes #-}
+
+data F1 x = C1 (Int -> Bool)
+
+instance Functor F1 where
+  fmap f (C1 z) = C1 z
+
+data F2 x = C2 x
+
+instance Functor F2 where
+  fmap f (C2 z) = C2 (f z)
+
+data F3 x = C3 (([x] -> Bool) -> Maybe x)
+
+instance Functor F3 where
+  fmap z (C3 y) = C3 (\x -> fmap z (y (\x1-> x (fmap z x1))))
+
+data F4 x = C4 ((forall y . [x] -> y) -> Maybe x)
+
+instance Functor F4 where
+  fmap z (C4 y) = C4 (\x -> fmap z (y (\x1-> x (fmap z x1))))
+
+data F5 x = C5 (forall y . ([x] -> y) -> Maybe x)
+
+instance Functor F5 where
+  fmap z (C5 y) = C5 (\x -> fmap z (y (\x1-> x (fmap z x1))))
+
+data F6 x = C6 (([x] -> ([x] -> Bool)) -> Maybe x)
+
+instance Functor F6 where
+  fmap z (C6 y) =
+    C6 (\x -> fmap z (y (\x1 x2 -> x (fmap z x1) (fmap z x2))))
+\end{lstlisting}
+\end{singlespace}
+\caption{Haskell code example to illustrate well-typedness of \textit{fmap}s
+        derived in the proof of Proposition \ref{prop:fixi:fmapBaseCase}.}
+\label{fig:deriveFunctor}
+\end{figure}
+
+Recall that we are proving a simplified version of the desired conjecture with
+several simplifying assumptions: $F$ is a non-recursive closed value and
+bound variables introduced in $F$ have kind $*$. Let us now generalize
+the latter restriction by allowing type constructor variables of kind $p* -> *$
+as well as type variables of kind $*$. There are three possibilities for
+$X:p* -> *$. Note that the variable $X$ would be used as the function part of
+an application, like $X\,G$, within type $B$.
+\begin{itemize}
+\item[case]($X : +* -> *$)
+        By induction,\footnote{
+                We need to make sure that this is a well-founded induction.
+                It may be a coinductive proof.}
+        there exists a map for any valuation of $X$.
+        So, we denote that map as $\textit{fmap}_{X}$.
+        The map for $\l Z^{+*}.X\,G$ is
+        \[ \textit{fmap}_{(\l Z^{+*}.X\,G)} =
+                \textit{fmap}_{X} \circ\, \textit{fmap}_{(\l Z^{+*}.G)} \]
+        Note that $\textit{fmap}_{X}$ is not fixed until it is instantiated,
+	however, we definitely know that it exists for any valuation.
+
+\item[case]($X : -* -> *$)
+        According to the ($@$) rule applied to $X\;G$, the argument $G$ should be well-kinded under $-\Delta$.
+        Note that $Z^{-*}\in-\Delta$ since $Z^{+*}\in \Delta$.
+        So, $Z$ cannot appear in positive positions in $G$.
+	It can only appear in negative positions (\eg, $G \triangleq Z -> G'$).
+        Any valuation of $X$ will have the form of $\l X_1^{-*}.B_1$
+        where $X_1$ appears in negative positions. As a consequence,
+        $(\l X_1^{-*}.B_1)G = B_1[G/X_1]$ by a single step reduction.
+        Note that $B_1[G/X_1]$ must be in normal form. Since $G$ has kind $*$
+        (it cannot be a lambda), substitution of $X_1$ with $G$ cannot
+        introduce a new redex. Since $G$ is substituted only into
+        negative positions, any $Z$ occurring in a negative position in $G$
+        become a positive position in the substituted type.
+        Thus, $\l Z^{+*}.B_1[G/X_1] : +* -> *$.
+        Hence, by induction,\footnote{
+                We need to make sure that this is a well-founded induction.
+                It may be a coinductive proof.}
+        there exists a map for any valuation of $X$
+        since we can derive $\textit{fmap}_{(\l Z^{+*}.B_1[G/X_1])}$.
+
+\item[case]($X : 0* -> *$)
+        Note that $G$ cannot have $Z$ in it because $Z$ has $+$ polarity
+        in the context. Recall that, $0\Delta$ ignores the variables
+        with either $+$ or $-$ polarity. According to the ($@$) rule
+        in Figure \ref{fig:Fixi2}, $G$ should be well-kinded under $0\Delta$.
+        Since $Z\notin\FV(X\,G)$, we simply return the identity function
+        as the map for $\l Z^{+*}.X\,G$.
+\end{itemize}
+In addition, having $X : A -> *$ does not make a difference since $X\{s\}$
+cannot have $Z$ either. Once we know that we can derive maps in the presence
+of type constructor variables with single argument, it is easy to generalize
+this to arbitrary rank-1 kinded type constructor variables
+(\eg, $+* -> A_1 -> -* -> A_2 -> 0* -> *$).
+
+To complete the proof of Conjecture \ref{conj:fixi:fmap}, we need to
+consider the equi-recursive type operator ($\fix$) and type constructor
+variables of kind higher than rank 1. Considering $\fix$ makes the proof harder
+since it becomes less obvious what ``normal form'' of a type constructor means.
+Recall that $(\fix\,F_1)$ expands to $F_1(\fix\,F_1)$.  When $F_1$ is
+a lambda abstraction, the expansion of $\fix$ introduces a new redex
+at the type level. We hope to complete this proof in the future.
+
+Once we have completed the proof of Conjecture \ref{conj:fixi:fmap},
+the next step is prove a similar conjecture for higher kinds
+(recall \texttt{fmap1} in \S\ref{sec:fixi:cv:unInExamples}).
+For instance, we conjecture that maps exist for type constructors
+of kind $+(+* -> *) -> (+* -> *)$.
+
+%% \KYA{TODO introduce a general form of a conjecture??}
+
+\begin{comment}
+TODO To generalize this even further allowing type constructor variables
+of any kind, we prove by induction on the rank of the kind of
+the type constructor variables. That is, assuming that it holds for any
+value $F$ with up to rank-$n$ kinded type constructor variables, we should
+show that it holds when we also allow rank-$(n+1)$ kinded type constructor
+variables. What we have proved so far is the base case $n=0$ and the case $n=1$.
+
+For simplicity let us consider type constructor variables
+that expect only one argument to become a type. That is,
+$X : p\kappa -> *$ and $\kappa$ itself is in the form of $\kappa' -> *$.
+\begin{itemize}
+        \item[case]($X : 0\kappa -> * $)
+        Since $G$ in $X\,G$ cannot have $Z$,
+        we simply return the identity function as the map for $\l Z^{+*}.X\,G$.
+
+        \item[case]($X : +\kappa -> * $)
+        Valuation of $X$ must have the form of $\l X_1^{+\kappa}. B_1$.
+        The argument $G$ in $X\,G$ must either be lambda or an application.
+        When $G$ is an application of the form $X_2 G_2$, after reducing
+        $(\l X_1^{+\kappa}. B_1)(X_2 G_2)$ to $B_1[X_2G_2/X_1]$, there are
+        no new redex introduced by this reduction. Thus, this is just an
+        inductive case.
+        When $G$ is a lambda abstraction of the form $\l X_2^{p\kappa_2}.B_2$ it will make new redex ...
+When G is a lambda it will make new redex ...
+$X_1 G_1$ will be $G\,G_1$ since $G_1$.
+We know that $G\,G_1$ will reduce to a normal form.
+
+        \item[case]($X : -\kappa -> * $)
+\[ \l X_1^{+\kappa}. B_1 : +\kappa -> * \]
+G must either be lambda or an application.
+When G is an application we already know how to handle this no problem --
+reduction won't make any new redex either so it is still a value.
+When G is a lambda it will make new redex ...
+$X_1 G_1$ will be $G\,G_1$ since $G_1$.
+We know that $G\,G_1$ will reduce to a normal form.
+\end{itemize}
+
+\begin{proposition}\label{prop:fixi:fmapFree}
+If $\textit{fmap}_F:\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+exists, then
+\begin{align*}
+\textit{fmap}_F~\textit{id} &~=~ \textit{id} \\
+\textit{fmap}_F~\textit{f} \;\circ\; \textit{fmap}_F~\textit{g}
+&~=~ \textit{fmap}_F~(f\circ g)
+\end{align*}
+\end{proposition}\noindent
+This is a well-known parametricity theorem on maps any instance of the type
+$\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$ satisfies
+the two equations above. However, for the purpose of defining $\McvPr_{*}$,
+we only need to know that there exists one such $\textit{fmap}_F$. That is,
+\begin{proposition}\label{prop:fixi:fmapHom}
+For any $F : +* -> *$, there exists
+
+$\textit{fmap}_F:\forall X^{*}.\forall Y^{*}.(X -> Y) -> F\;X -> F\;Y$
+such that
+\begin{align*}
+\textit{fmap}_F~\textit{id} &~=~ \textit{id} \\
+\textit{fmap}_F~\textit{f} \;\circ\; \textit{fmap}_F~\textit{g}
+&~=~ \textit{fmap}_F~(f\circ g)
+\end{align*}
+\end{proposition}
+\begin{proof}
+        You can check that each case %% TODO
+        in the proof of Theorem \ref{thm:fixi:fmap} (TODO maybe refer to lemmas)
+        satisfies the two equations above.
+\end{proof}
+
+\begin{proposition} For any $F : +* -> *$, there exists
+$\unIn_F : \mu^{+}{*} F -> F(\mu^{+}{*} F)$ such that
+$\unIn_F (\In_F\;t) -->+ t$.
+\end{proposition}
+\begin{proof}
+Since we know that $\textit{fmap}_F$ exists by Theorem~\ref{thm:fixi:fmap},
+we can define
+\[ \unIn_F = \McvPr_{*}\;
+            (\l\_.\l\textit{cast}.\l\_.\l x.\textit{fmap}_F\;\textit{cast}\;x)
+\]
+
+From Proposition~\ref{prop:fixi:fmapFree}, we know that
+$\textit{fmap}_F\;\textit{id}\;x -->+ x$.
+Thus,
+\[ \unIn_F (\In_F\;t) -->+ \textit{fmap}_F\;\textit{id}\;t -->+ t \]
+\end{proof}
+
+\begin{align*}
+A \rrarrow_{*} B &~\triangleq~ A -> B \\
+F \rrarrow^{p\kappa -> \kappa'} G &~\triangleq~
+        \forall X^\kappa.\forall Y^\kappa.
+                (X \rrarrow_\kappa Y) -> F X \rrarrow_\kappa F Y \\
+F \rrarrow^{A -> \kappa} G &~\triangleq~
+        \forall i^A.\forall f^{A->A}. F\{i\} \rrarrow_\kappa F\{f\;i\}
+\end{align*}
+
+\[
+\textsf{mon}_\kappa
+  = \l X^{0\kappa}.X \rrarrow^\kappa X
+\]
+
+$\textsf{mon}_{+* -> *} F$ is the type of $\textit{fmap}_F$
+where $F : +* -> *$.
+
+$\textsf{mon}_{+(p* -> *)->(p* -> *)} F$ is the type of $\textit{fmap1}_F$
+where $F : +(p* -> *)->(p* -> *)$.
+
+if $\textsf{mon}_{+(p* -> *)->(p* -> *)}$ is inhabited
+then $\unIn_F$ for any $F : +(p* -> *)->(p* -> *)$?
+
+what about general case? if $\textsf{mon}_\kappa$ is inhabited
+then $\unIn_F$ for any $F : \kappa$?
+\end{comment}

@@ -1,0 +1,217 @@
+\section{Plans for dissertation work}\label{sec:plan}
+
+My dissertation will contain four parts.
+The first two parts will review and summarize the literature
+organized from the viewpoint of my thesis, and the later two parts will
+contain mostly original contributions.
+
+Part I is the introduction and background. This part will consist of chapters
+extending \S\ref{sec:intro} (introduction) and \S\ref{sec:bg} (background)
+of this document. That is, first, further details on what is already in this document,
+second, additional background material from an extended literature search, and third, introduction to the issues to be
+discussed in later parts.
+
+Part II discusses current ideas from the literature on normalization.
+Strong  normalization is an important component of logical consistency, so
+understanding normalization is a necessary component of the thesis.
+The current literature deals mostly with positive datatypes,
+thus this part will consist of chapters discussing normalization of
+both strictly positive datatypes and non-strictly positive datatypes. 
+
+Part III is on normalization of negative datatypes. This part will consist of
+chapters extending \S\ref{sec:prelim} of this document, where we discussed our
+preliminary results using Mendler style iteration. Further details will be added.
+In addition, this part will have chapters addressing some of the open questions and
+issues related to normalization of negative datatypes
+(\eg interaction with dependent types, course of values recursion).
+
+Part IV explores the design of languages that can shift gears between
+different fragments of the problem spaces (\IND, \INDbot, \REC, \RECbot).
+I will extend lambda calculi with recursive types, and then extend them with
+facilities that track which fragment the terms belong to, and what conditions
+can make the terms shiftable from one fragment to another.
+
+\subsection{Outline and Timeline}
+
+\paragraph{Part 1 (introduction and background):}
+This part will be an extended literature search, adding to the material from
+the introduction (\S\ref{sec:intro}) and the background (\S\ref{sec:bg})
+sections of this document. A tentative list of additional subjects I am
+planning to survey include:
+\begin{itemize}
+\item Examples of formal reasoning system designs that relate
+      \IND\ and \INDbot (\eg the bar type \cite{ConSmi93} in Nuprl).
+\item More generally, how \emph{extensional type theory}
+      (in contrast to \emph{intensional type theory}), can be more flexible
+      when tracking non-terminating computations using the type system.
+      Extensional type theory does not distinguish computational equality
+      from propositional equality. Type checking become undecidable when
+      non-terminating computation is allowed while type checking.
+\item \emph{Observational type theory}, which claims to take advantage of
+      the benefits from both intensional and extensional type theories.
+\item Libraries that track partiality as effects or monads
+      in formal reasoning systems (\eg Agda, Epigram), which lie in \IND
+%%% TODO refer to work like http://www.cs.nott.ac.uk/~txa/talks/bctcs06.pdf ???
+\item Various termination analysis methods, and whether those
+      methods are known to reduce to more primitive ways of
+      ensuring termination (\eg primitive recursion or structural recursion)
+\item More details and examples on the use of monotonicity, especially for
+      non-strictly positive datatypes
+      (\eg Matthes' thesis mentions that there exists monotone but not positive
+      datatypes due to Ulrich Berger).
+%%      \ts{Brian Huffmans thesis discusses monotonicty}
+\end{itemize}
+
+I plan to finish the writing of Part I of the thesis in November 2011,
+this fall.
+
+%% Some strange functions like\\
+%% \url{http://en.wikipedia.org/wiki/McCarthy_91_function}
+
+%%% maybe a good resource
+%%% http://www.scholarpedia.org/article/Computational_type_theory
+
+\paragraph{Part II (positive datatypes)}
+Although this part is also a background literature search, I decided to
+separate this material from Part I and add more detail on positive datatypes
+for several reasons.
+
+Firstly, strong normalization is necessary for logical consistency.
+So understanding current approaches is necessary for part IV.
+
+Secondly, a detailed understanding of how normalization is ensured for
+positive datatypes, supports comparing and contrasting with how normalization
+is ensured for negative datatypes later in Part III.
+
+Thirdly, it is one of my theses that normalization and inductiveness
+(or, logical interpretation of types) are indeed separate concerns
+of logical consistency. By reviewing the current literature
+on positive dataypes (where the two ideas are conflated), we can 
+begin to unravel the knot that currently binds them together.
+
+Computationally, all positive datatypes behave the same
+regardless of whether they are strictly positive or not.
+Primitive recursion supports normalization of both strictly positive datatypes
+and non-strictly positive datatypes (more generally, monotone datatypes).
+However, logically, not all positive datatypes can be accepted as propositions,
+depending on what is considered an acceptable logic. In the inductive paradigm,
+where types must have set theoretic interpretations, strictly positive datatypes
+are valid types, but not all positive datatypes are considered to be valid types
+in general. For instance, when we interpret types as sets and $\to$ as
+function space over sets, the positive, but not strictly positive, datatype
+$\mu \alpha.(\alpha\to\textsf{Bool})\to\textsf{Bool}$ asserts an isomorphism
+between the powerset of powerset of $\alpha$ and $\alpha$ itself, which is
+a set theoretic nonsense.
+
+Although monotonicity is a more general principle than the syntactic condition
+of positivity, positivity is nice approximation since monotonicity witness for
+positive datatypes can be simply derived automatically. For non-positive
+monotone datatypes, I have not seen work on automatic derivation of their
+monotonicity witnesses. So, I think a practical system would use the syntactic
+conditions like positivity by default, and to be more flexible, it can have
+a mechanism to check and accept monotonicity witness manually provided by
+the user.
+
+I plan to finish the first pass of writing Part II in December 2011,
+this winter.
+
+\paragraph{Part III (negative datatypes)}
+This part will report the preliminary results I have already finished.
+Additional writing will be necessary.
+ 
+I will add more detailed descriptions to the material reported in this document
+(\S\ref{sec:prelim}) on Mendler style iteration for negative datatypes,
+and a more detailed summary of the literature on primitive recursion and
+induction principles proposed for HOAS. I plan to write these chapters
+in January 2012. Considerable text in this area exists from published papers,
+which needs to be recast in the style of a thesis.
+
+As my research progresses, I will address some of the open questions and
+issues related to normalization of negative datatypes
+(\eg interaction with dependent types, course of values recursion).
+I will write additional chapters on those results.
+Since this is speculative work to be done, I cannot predict a confident timeline
+for this, but my initial plan is to finish writing this in March 2012.
+
+\paragraph{Part IV (language design)}
+This part is on the high level design of logical languages
+(or, formal reasoning systems) that can shift gears between
+the four fragments of \IND, \INDbot, \REC, and \RECbot.
+Although the ideal design would cover all of the four fragments,
+I will only focus on four pairs of fragments to avoid accidental complexity.
+That is, I will illustrate four typed lambda calculi that cover
+\IND-\INDbot, \IND-\REC, \REC-\RECbot, and \INDbot-\RECbot.
+
+The highlight of the design of the type system for these 4 different calculi
+is going to be how to represent and track the side conditions that determines
+when a term in a larger fragment can be seen as a term in a smaller fragment
+(\ie a term in \INDbot\ as a term in \IND, a term in \REC\ as a term in \IND,
+a term in \RECbot\ as a term in \REC, a term in \RECbot\ as a term in \INDbot).
+
+In addition to developing these calculi, there will be a chapter of case studies
+that demonstrates the usefulness of the developed calculi. In the case study
+chapter, I will formulate the examples that work over more than one fragment
+(\eg Normalization by Evaluation) inside one of these calculi.
+
+Since this part is again speculative work to be done, I cannot make a confident
+timeline for this, but my initial plan is to complete the writing for Part III
+in May 2012.
+
+\subsection{Publication goals and methods for research}
+Since Part I and II are survey on existing work by literature literature search,
+results for publication will come out from working on Part III and IV.
+
+\paragraph{}
+I am planning to work on a journal version of our preliminary work.
+I have two improvements to make in mind from our conference version.
+First, I will have better context discussions and clear use of vocabularies
+in the journal version. I was less clear on distinguishing iteration from
+recursion at the point when we were writing the conference version.
+Secondly, I will discuss further on related work. Due to the space limitations,
+the conference version lacks the detailed discussion of the related work
+in comparison to our results.
+
+\paragraph{}
+As mentioned in \S\ref{ssec:MendlerFW}, I am searching for more general and
+more expressive Mendler style iteration and recursion for negative datatypes.
+The result this work will be another material for publication.
+In particluar, there are two generalization in consideration.
+
+First is to generalize Mendler style iteration to dependently typed setting.
+Menlder style iteration rely on parametriclty, but dependent types makes it
+hard to rely on parametricity. The method I am currently trying is to use
+erasable arguments and heterogeneous equality, in order to make
+the dependent type indices be observable only at the type level,
+but remain abstract at the value level (see \S\ref{ssec:MendlerFW}).
+I will try applyng this method on examples other than even/odd datatype
+to see if this method makes sense for other examples too. After trying out
+several examples and become more confident that this may be a general enough
+method, I will formally describe a calcui with dependent types, erasable
+argument, and heterogeneous equality, and start proving the termination
+behavior of the Mendler style iteration in that calculus,
+
+Second is to formulate Mendler style recursion, rather than just iteration,
+which guarantee totality. As we have seen in \S\ref{ssec:MendlerRW}, primitive
+recursion for HOAS has been studied using modal types. However, those work are
+for simple types and not in Mendler style. In our preliminary work, we have
+been successful in formulating Fegaras-Sheard catamorphism in Mendler style,
+which has only been studied in conventional style previously. Similarly,
+I will try to formulate primitive recursion for HOAS in Mendler style.
+
+\paragraph{}
+Lastly, the calculi to be developed in Part IV is yet another topic for
+publication. I will start from four calculi that is known to be type safe
+in each of the four fragment (\IND, \INDbot, \REC, \RECbot), where the two
+calculi for \IND\ and \REC\ should be normalizing calculi. Among the four
+calculi, the calculus for \RECbot\ is the most flexible calculi allowing
+all the recursive types, which will be the basis for the other three calculi.
+The other three calculi would have additional restrictions that restrict certain
+formation and use of recursive types and recursive control structures. Then, I
+will try to design a type system that bridge between the four pairs we focus on,
+which preserves the original property of the individual calculi and yet
+possible to shift gears between the two calculi of the different fragments.
+I would also need to show that the logic described by the calculus for \IND\,
+or any pair involving \IND\, is consistent. To prove the consistency of our
+developed calculus, I will study the literature on proving logical consistency
+and try to apply the proof strategies to the calculi to be developed.
+

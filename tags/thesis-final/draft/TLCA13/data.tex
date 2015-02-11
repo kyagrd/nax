@@ -1,0 +1,129 @@
+\section{Encodings of Term-Indexed Datatypes} \label{sec:data}
+Recall that our motivation was a foundational calculus
+that can encode term-indexed datatypes. In \S\ref{sec:motiv},
+we gave Church encodings of
+{\small\tt List} (a regular datatype),
+{\small\tt Powl} (a type-indexed datatype), and
+{\small\tt Vec} (a term-indexed datatype).
+In this section, we discuss a more complex datatype \cite{BraHam10}
+involving nested term-indices, and several encoding schemes
+that we have seen used in practice --
+first, encoding indexed datatypes using equality constraints
+\cite{Sheard04equality,Crary98} and second, encoding datatypes
+in the Mendler-style \cite{AbeMatUus05,AhnShe11}.
+\vspace*{-1ex}
+\paragraph{Nested term-indices\,$:$} System \Fi\ is able to express
+datatypes with \emph{nested term-indices} -- term-indices which are
+themselves term-indexed datatypes. Consider the resource-state
+tracking environment \cite{BraHam10} in Nax-like syntax below:
+\vspace*{-3pt}
+\begin{lstlisting}[basicstyle={\ttfamily\small},language=Haskell]
+   data Env : ({st} -> *) -> {Vec st {n}} -> * where
+     Extend : res {x} -> Env res {xs} -> Env res {VCons x xs}
+     Empty  : Env res {VNil}
+\end{lstlisting}
+\vskip-.7ex\noindent
+Note that {\small\tt Env} has a term-index of type {\small\tt Vec},
+which is again indexed by {\small\tt Nat}.
+For simplicity,\footnote{Nax supports
+        rank-1 kind-level polymorphism. %% over kinds, types, and term-indices.
+        It would be virtually useless if nested term-indices % like {\texttt{n}}
+        were only limited to constants rather than polymorphic variables.
+	We strongly believe rank-1 kind polymorphism does not introduce
+	inconsistency, since rank-1 polymorphic systems are essentially
+	equivalent to simply-typed systems by inlining the polymorphic
+	definition with the instantiated arguments in each instantiation site.
+	}
+assume that {\small\tt n} is some fixed constant (\eg, {\small\tt S(S(S Z))},
+\ie, 3). Then, an {\small\tt Env} tracks 3 independent resources
+({\small\tt res}), each which could be in a different state ({\small\tt st}).
+For example, 3 files in different states -- one open for reading,
+the next open for writing, and the third closed.
+%% Where {\small\tt st}
+%% is the type of these resources states (\eg, OpenRead, OpenWrite, Closed).
+We can encode {\small\tt Env} in \Fi\ as follows:
+\vspace*{-5pt}
+\begin{multline*}
+\texttt{Env} \triangleq
+\l Y^{\,\texttt{st} -> *}.\,\l i^{(\texttt{Vec}\;\texttt{st}\;\texttt{n})}.\,
+\forall X^{(\texttt{Vec}\;\texttt{st}\,\{\texttt{n}\}) -> *}.\, \\
+( \forall j^\texttt{st}\!.\,
+  \forall k^{(\texttt{Vec}\;\texttt{st}\;\texttt{n})}\!.\,
+  Y\!\{j\} -> X\!\{k\} ->
+                                X\!\{\!\texttt{\small VCons}\;j\,k\!\} )
+-> X \{\texttt{\!\small VNil\!}\} -> X\!\{i\}
+\end{multline*}
+\vskip-1ex\noindent
+The term encodings for {\small\tt Extend} and {\small\tt Empty} are
+exactly the same as the term encodings for {\small\tt Cons} and {\small\tt Nil}
+of the {\small\tt List} datatype in \S\ref{sec:motiv}.
+\vspace*{-1ex}
+\paragraph{Encoding indexed datatypes using equality constraints\,$:$}
+Systematic encodings of GADTs \cite{Sheard04equality,Crary98}, which are
+used in practical implementations, typically involve equality constraints
+and existential quantification. Here, we want to emphasize that such encoding
+schemes are expressible within System \Fi, since it is possible to define
+equalities and existentials over both types and term-indices in \Fi.
+
+It is well known that Leibniz equality over type constructors
+can be defined within System \Fw\ as 
+$
+(\stackrel{\kappa}{=}) \triangleq \l X_1^\kappa.\,\l X_2^\kappa.\,
+     \forall X^{\kappa\to*}.\, X X_1 -> X X_2
+$.
+Similarly, Leibniz equality over term-indices is defined as
+$
+(\stackrel{A}{=}) \triangleq
+        \l i^A.\, \l j^A.\, \forall X^{A\to*}.\, X\{i\}\to X\{j\}
+$
+in System \Fi.
+Then, we can encode {\small\tt Vec} as the sum of its two data constructor types:
+\vspace*{-5pt}
+\[ \mathtt{Vec} \triangleq \l A^{*}.\,\l i^\texttt{Nat}.\,\forall X^{\texttt{Nat} -> *}.\,
+        (\exists j^\texttt{Nat}.\,(\texttt{S}\;j\stackrel{\texttt{Nat}}{=}i)\times A \times X\{j\})
+        +
+        (\texttt{Z}\stackrel{\texttt{Nat}}{=}i)
+\] \vskip-.7ex\noindent
+where $+$ and $\times$ are the usual impredicative encoding of sums and
+products. We can encode the existential quantification over indices 
+($\exists$ used in the encoding of {\small\tt Vec} above) as
+$ \exists i^A.B \triangleq \forall X^{*}. (\forall i^A.B -> X) -> X $,
+which is similar to the usual encoding of the existential quantification
+over types in System $\mathsf{F}$ or \Fw.
+
+Compared to the simple Church encoded versions in \S\ref{sec:motiv},
+the encodings using equality constraints work particularly well with
+encodings of functions that constrain their domain types by restricting
+their indices. For instance, the function $\texttt{safeTail} :
+        \texttt{Vec}\;a\;\{\texttt{S}\;n\} -> \texttt{Vec}\;a\;\{n\}$,
+which can only be applied to non-empty length indexed lists due
+the index of the domain type ($\texttt{S}\;n$).
+\vspace*{-1ex}
+\paragraph{The Mendler-style encoding\,$:$}
+Recursive type theories that extend higher-order polymorphic lambda calculi
+typically come with a built-in recursive type operator
+$\mu_\kappa : (\kappa -> \kappa) -> \kappa$ for each kind $\kappa$,
+which yields recursive types ($\mu_\kappa\,F : \kappa$) when applied to
+type constructors of appropriate kind ($F : \kappa -> \kappa$).
+For instance,
+$\texttt{List} \triangleq \l Y^{*}\!.\,\mu_{*}(\l X^{*}.Y\times X+ \mathbbm{1})$
+where $\mathbbm{1}$ is the unit type. One benefit of factoring out
+the recursion at type-level (\eg, $\mu_{*}$) from
+the base structure (\eg, $\l X^{*}.Y\times X+ \mathbbm{1}$) of
+recursive types is that such factorized (or, two-level) representations
+are more amenable to express generic recursion schemes (\eg, catamorphism)
+that work over different recursive datatypes.
+Interestingly, there exists an encoding scheme, namely the Mendler style,
+which can embed $\mu_{\kappa}$ within Systems like \Fw\ or \Fi.
+The Mendler-style encoding can keep the theoretical basis small,
+while enjoying the benefits of factoring out the recursion at type-level.
+
+% exploiting impredicative polymorphism.
+%% Thus, in the Mendler style encoding,
+%% $\mu_\kappa$ no more needs to be primitive,
+%% and encoding scheme of eliminators for recursive types become uniform 
+%% -- in a logical view, inductive reasoning become better modularized
+%% 
+%% strong normalization while supporting negative datatypes
+%% (\eg, higher-order abstract syntax, semantic domains of lambda calculi)
+

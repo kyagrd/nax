@@ -1,0 +1,380 @@
+\chapter{Related work}\label{ch:relwork}
+In this chapter, we discuss additional related work that was not
+discussed in previous chapters (\S\ref{sec:intro} and \S\ref{sec:related}).
+We discuss five categories of related work:
+Mendler-style co-recursion schemes over co-data (\S\ref{sec:relwork:co}),
+Mendler-style recursion schemes over multiple values (\S\ref{sec:relwork:mult}),
+dependently-typed Mendler-style induction (\S\ref{sec:relwork:dep}), 
+the use of sized-types to explain the termination of Mendler-style
+recursion schemes (\S\ref{sec:relwork:sized}), and the comparison of
+our Mendler-style approach to logical frameworks (\S\ref{sec:relwork:LF}).
+\index{Mendler-style!co-recursion scheme}
+\index{Mendler-style!multiple values}
+\index{co-data}
+
+
+\input{relwork_mcoit} %% sec:relwork:co
+
+\input{relwork_mmult} %% sec:relwork:mult
+
+\section{Mendler-style induction}
+\label{sec:relwork:dep}
+\index{Mendler-style!induction}
+\index{regular datatype}
+\index{datatype!regular}
+The dependently-typed version of primitive recursion is called induction.
+We formulate Mendler-style induction over regular datatypes as follows.
+\vspace*{-2em}
+\begin{singlespace}
+\[\begin{array}{ll}
+\textbf{mind}_{*} \, :
+& \!\!\forall (F:* -> *) (A: \mu_{*}F -> *). \\
+& ~~ \big(\forall(r:*).\;(cast : r -> \mu_{*}F) \\
+& ~\qquad\quad -> (call : (x:r) -> A\,(cast~x)) \\
+& ~\qquad\quad -> (y: F\;r) -> A\,(\In_{*}(\textit{fmap}_{F}\;cast\;y)) \big) 
+-> (z:\mu_{*}\,f) -> A\;z
+\end{array}
+\]
+\[
+\textbf{mind}_{*} ~ \varphi ~ (\In_{*}\;x)
+  ~=~ \varphi~~\textit{id}~~(\textbf{mind}_{*}~\varphi)~~x \]
+\end{singlespace}\noindent
+The definition of Mendler-style induction $\textbf{mind}$\footnote{
+	The idea behind $\textbf{mind}_{*}$ comes from discussion with
+	Tarmo Uustalu. He described this on a whiteboard when I met with him
+	at the University of Cambridge in Fall 2011.}
+shows that induction is essentially the same as
+the Mendler-style primitive recursion $\MPr$, except
+that the type signature involves dependent types.
+\index{Mendler-style!primitive recursion}
+\index{dependent type}
+\index{type!dependent}
+Note, the final answer type $(A\;z)$ is dependent on
+the recursive argument $z:\mu_{*}F$.
+Since $A: \mu_{*}F -> *$ expects a concrete recursive value,
+we use $cast$ in the type signature of the $\varphi$ function
+to cast $(x:r)$ and $(y:F\,r)$ into $\mu_{*}F$ values, so that
+they can be passed to $A$.
+In the type signature of $\textbf{mind}$, $cast$ comes before $call$
+because the type signature of $call$ depends on $cast$.
+When defining $\MPr$, $cast$ and $call$ can come in any order
+since there is no dependency in the type signature of $\MPr$.
+
+One important aspect of $\textbf{mind}_{*}$ is that
+it is well-defined only over positive $F$, because we relied on
+the existence of $\textit{fmap}_F$ to write its type signature.
+It is an open question whether one can formulate a Mendler-style induction
+that works for negative datatypes.
+
+In the future work section (\S\ref{sec:futwork:mprsi}), we introduce 
+another Mendler-style recursion scheme that is useful for
+mixed-variant datatypes. The work of a Mendler stylist is never done!
+
+
+
+\section[Type-based termination and sized types]{
+	 Type-based termination and sized types\footnotemark{} }
+\footnotetext{We plan to submit a modified version of this section
+		as a part of the TYPES post-proceedings draft.}
+\label{sec:relwork:sized}
+\index{type-based termination}
+\index{termination!type-based}
+\index{sized type}
+\index{type!sized}
+\emph{Type-based termination} (coined by \citet{BartheFGPU04}) stands for
+approaches that integrate termination into type checking, as opposed to
+syntactic approaches that reason about termination over untyped term structures.
+The Mendler-style approach is, of course, type-based.  In fact, the idea of
+type-based termination was inspired by \citet{Mendler87,Mendler91}.
+In Mendler style, we know that well-typed functions defined using
+Mendler-style recursion schemes always terminate.  This guarantee follows
+from the design of the recursion scheme, where the use of higher-rank 
+polymorphic types in the abstract operations enforce the invariants
+necessary for termination.
+
+\index{type-based termination!advantage}
+\citet{abel06phd,Abel12talkFICS} summarizes the advantages of
+type-based termination as follows:
+\emph{communication} (programmers think using types),
+\emph{certification} (types are machine-checkable certificates),
+\emph{a simple theoretical justification}
+        (no additional complication for termination other than type checking),
+\emph{orthogonality} (only small parts of the language are affected,
+        \eg, principled recursion schemes instead of general recursion),
+\emph{robustness} (type system extensions are less likely to
+                        disrupt termination checking),
+\emph{compositionality}\footnote{This is not listed in Abel's thesis,
+                                but comes from his invited talk in FICS 2012.}
+        (one needs only types, not the code, for checking the termination), and
+\emph{higher-order functions and higher-kinded datatypes}
+        (works well even for higher-order functions and non-regular datatypes,
+        as a consequence of compositionality).
+In his dissertation \cite{abel06phd} (Section 4.4) on sized types,
+Abel views the Mendler-style approach as enforcing size restrictions
+using higher-rank polymorphism as follows:
+\begin{itemize}
+\item The abstract recursive type $r$ in Mendler style corresponds to
+        $\mu^\alpha F$ in his sized-type system (System \Fwhat),
+        where the sized type
+        for the value being passed in corresponds to $\mu^{\alpha+1} F$.
+\item The concrete recursive type $\mu F$ in Mendler style corresponds to
+        $\mu^\infty F$ since there is no size restriction.
+\item \index{subtyping}
+	By subtyping, a type with a smaller size-index can be cast to
+        the same type with a larger size-index.
+\end{itemize}
+This view is based on the same intuition we discussed in
+Chapter \ref{ch:mendler}. Mendler-style recursion schemes terminate --- for
+positive datatypes --- because $r$-values are direct subcomponents
+of the value being eliminated. They are always smaller
+than the value being passed in. Types enforce that recursive calls
+are only well-typed, when applied to smaller subcomponents.
+
+\index{primitive recursion}
+\index{implicit conversion}
+Abel's System \Fwhat\ can express primitive recursion quite naturally
+using subtyping. The casting operation $(r -> \mu F)$ in Mendler-style
+primitive recursion corresponds to an implicit conversion by subtyping
+from $\mu^\alpha F$ to $\mu^\infty F$ because $\alpha \leq \infty$.
+
+System \Fwhat\ \cite{abel06phd} is closely related to
+System \Fixw\ \cite{AbeMat04}. Both of these systems are base on
+equi-recursive fixpoint types over positive base structures.
+Both of these systems are able to embed (or simulate) Mendler-style
+primitive recursion (which is based on iso-recursive types) via
+the encoding \cite{Geu92} of arbitrary base structures into
+positive base structures. In \S\ref{sec:fixi:data}, we rely on
+the same encoding, denoted by $\Phi$, when embedding \MPr\ into System \Fixi.
+
+Abel's sized-type approach evidences good intuition concerning the reasons
+that certain recursion schemes terminate over positive datatypes.
+But, it is not a useful intuition of whether or not those recursion schemes
+would terminate for negative datatypes, unless there is an encoding that can
+translate negative datatypes into positive datatypes. For primitive recursion,
+this is possible (as we mentioned above). However, for our recursion scheme
+\MsfIt, which is especially useful over negative datatypes, we do not know of
+an encoding that can map the inverse augmented fixpoints into
+positive fixpoints. So, it is not clear whether Abel's the sized-type approach
+based on positive equi-recursive fixpoint types can provide a good explanation
+for the termination of \MsfIt. In \S\ref{sec:futwork:mprsi}, we will discuss
+another Mendler-style recursion scheme (\mprsi), which is also useful over
+negative datatypes and has a termination property (not yet proved) based on 
+the size of the index in the datatype.
+
+\section{Logical Frameworks based on the $\lambda\Pi$-calculus}
+\label{sec:relwork:LF}
+\index{logical framework}
+A ``logical framework'', in a broad sense, refers to
+any system that serves as ``a meta-language for
+the formalization of deductive systems'' \cite{Pfe02LFintro}.
+In a more narrow sense, logical frameworks are systems closely related to
+to the Edinburgh Logical Framework (LF or ELF) \cite{Harper87}, which uses
+the $\lambda\Pi$-calculus as its specification language. In this section,
+we discuss \emph{logical frameworks} in this more narrow sense.
+
+The $\lambda\Pi$-calculus (\aka\ $\lambda\mathbf{P}$) is one of the corners
+in Barendregt's $\lambda$-cube \cite{Barendregt91} that is adjacent to
+the simply-typed lambda calculus (STLC, or, $\lambda\!\!\rightarrow$).
+The $\lambda\Pi$-calculus extends the STLC with dependent types,
+but without polymorphism or functions from types to types (type operators).
+The syntax of $\lambda\Pi$, extended with constants ($c$), is describe below:
+\[
+\begin{array}{lll}
+\text{Kinds}         & K   & ::= \texttt{type} \mid \Pi x:A.K
+        \\
+\text{Type Families} & A,B & ::= c \mid \Pi x:A.B \mid \lambda x:A.B \mid AM
+        \\
+\text{Objects}       & M,N & ::= c \mid x \mid \l x:A.M \mid MN
+\end{array}
+\]
+In logical frameworks, one can introduce new constants by naming types and
+objects. These are intended to represent datatypes such as natural numbers,
+lists, and may even involve higher-order abstract syntax. However,
+these constants are merely syntactic descriptions, not necessary tied to
+any specific semantics or logical interpretations. That is, introducing
+constants does not automatically supply any recursion schemes or
+induction principles, as is done in functional languages or proof assistants
+that support new datatypes as a feature. Each logical framework
+supports its own meta-logic to give meanings to the logic (or, the language)
+specified by introducing such constants. The choice of meta-logic can be either
+relational (like a logic programming language),
+functional (like a functional programming language), or something else.
+
+Logical frameworks are very flexible for describing many
+different logical systems (i.e., formalizing a language) by using
+a two-layered approach of a minimal specification language ($\lambda\Pi$)
+and a meta-logic. However, this two-layered approach is not ideal
+as a programming system. One can model arbitrary
+programming languages, giving them semantics
+in the logical framework. But, the programming capability of the 
+specification language and the meta-logic is limited.
+In the remainder of this section, we discuss Twelf, whose meta-logic
+is relational, and, Beluga and Delphin, whose meta-logics are functional.
+
+\paragraph{}
+Twelf\footnote{\url{http://twelf.org/}} is the most widely used
+logical framework. In Twelf, you can define abstract syntax for datatypes
+by introducing constants for types and objects involving those types.
+For example, you can define natural numbers as follows.\footnote{
+        Twelf examples are adopted from Boyland's Twelf Library on Github.\\
+        $~~~~~~~$
+        \url{https://github.com/boyland/twelf-library}}\vspace*{-2em}
+\begin{singlespace}
+\begin{verbatim}
+  nat : type.       %%% define a type constant
+  z : nat.          %%% define a constant for zero
+  s : nat -> nat.   %%% define a constant for sucessor
+\end{verbatim}
+\end{singlespace}\noindent
+At this point, the constants \texttt{z} and \texttt{s} are just typed syntax.
+Introduction of constants is not associated with any semantics for
+the constants, unlike the natively supported inductive datatypes
+in Coq or Agda. So, there are no restrictions on how these constants
+may be used, such as the positivity constraint on inductive datatypes
+in Coq or Agda. One can give meanings to the natural number constants
+by defining inductive relations over them. For example, we can define
+addition as a ternary relation over natural numbers, as follows:\vspace*{-2em}
+\begin{singlespace}
+\begin{verbatim}
+  plus : nat -> nat -> nat -> type.
+  plus/z : plus z Y Y.
+  plus/s : plus (s X) Y (s Z)
+        <- plus X Y Z.
+\end{verbatim}
+\end{singlespace}\noindent
+The right-hand sides (after the colon) of \verb|plus/z| and \verb|plus/s|
+look like a Prolog program defining addition. Twelf's meta-logic is, in fact,
+typed first-order relational logic. At the type-level, Twelf predicates are
+like pure Prolog programs with type-checking. All computational issues,
+such as termination checking, are present at the level of these
+relational definitions (as opposed to the introduction of new constants).
+Twelf has a termination checker for inductive relations (external to
+the type checker) based on lexicographic subterm ordering over untyped terms.
+In addition to the type signatures of the relations, one can optionally specify
+input/output modes for each of their arguments, if necessary, in order to guide
+the termination checker to consider only the input arguments
+for termination.\footnote{There are various directives to guide
+        checking input/output modes, coverage, and termination in Twelf.
+        For further information, see the  documentations from its homepage.}
+
+One cannot write higher-order relations natively in Twelf
+because Twelf's meta-logic is first-order, not higher-order.
+To write a program using higher-order functions in Twelf, one has to model
+one's own object language that is able to support higher-order functions,
+then program within that object language rather than programming in
+Twelf's meta-logic. We summarize the steps necessary to program
+using higher-order functions in Twelf:
+\begin{itemize}
+\item[(1)] Define an object language syntax
+        (as the syntax \texttt{z} and \texttt{s} for natural numbers)
+        with bindings (this is done by HOAS), applications, and whatever
+        needed to express higher-order functions.
+\item[(2)] Define the evaluation semantics of the object language using
+        inductive relations (\ie, write an evaluation relation for
+        the object language in a Prolog-like way).
+\item[(3)] Write programs in the object language by putting
+        together pieces of the syntax you defined in (1).
+\item[(4)] Finally, evaluate the program by reasoning based on
+        the evaluation relation defined in (2).
+\end{itemize}
+This process is clearly not ideal if the desire is simply to ``program''
+with higher-order functions in a type-safe way, possibly with some
+termination guarantees. One does not always want to reason about
+the meta-theory of the object language in general.
+
+\paragraph{}
+Beluga \cite{Pie10} is similar to Twelf, but it is closer to
+a functional language since the inductive definitions are functional,
+rather than relational. Beluga supports higher-order functions, unlike Twelf.
+One can write a natural number addition function in Beluga 
+as follows:\footnote{
+        Adopted from the Beluga tutorial.
+        \url{http://complogic.cs.mcgill.ca/beluga/} }\vspace*{-2em}
+\begin{singlespace}
+\begin{verbatim}
+  rec add : [. nat ] -> [. nat ] -> [. nat ]
+    = fn x => fn y =>
+      case x of
+      | [. z ]   => y
+      | [. s N ] => let [. R ] = add [. N ] y in [. s R ]
+      ;
+\end{verbatim}
+\end{singlespace}\noindent
+Types like \verb|nat| and \verb|nat -> nat| are called
+representation-level types. So, objects like \verb|z| and \verb|s|
+are called representation-level objects. Types like \verb|[. nat ]|
+and \verb|[. nat ] -> [. nat ]| are called computation-level types.
+This \verb|add| function definition is almost identical to typical
+recursive function definition of natural number addition
+in functional languages, except for the new representation-level
+variable binding \verb|R| in the second case branch. In Beluga,
+one cannot write \verb|[. s (add [. N ] y) ]| because \verb|s| expects
+a representation-level object as its argument.
+In Twelf-style logical frameworks, representation-level types are inhabited
+only by $\eta$-long $\beta$-normal representation-level objects, which do not
+include application forms of computational-level objects.
+
+More generally, computation-level types can have the form \verb|[g . t]|
+where \verb|g| is a context object and \verb|t| is a representation-level type.
+One of the Beluga's unique features is supporting pattern matching over
+computational objects with contexts, and also coverage checking of those
+patterns. Computational types with the empty context, of the form
+\verb|[. t]|, are inhabited by closed values, which do not involve
+any free (representation-level) variables.
+Since Beluga has explicit access to context objects, we believe that
+it can express what \MsfIt\ can express, and in addition, it can
+also express what \textbf{openit} (\S\ref{sec:openit}) can express.
+
+One can also write higher-order functions (\eg, map)\footnote{
+        A map function over natural number lists is
+        given in the Beluga tutorial. }
+in Beluga almost the same way one does in functional programming languages,
+except, perhaps, for the tedious representation-level bindings 
+(\eg, \verb|R| in the \verb|add| function above).
+In regards to higher-order functions, Beluga is in a much better position
+than Twelf. Recall that, in Twelf, one needs to model a whole new
+functional language by describing its semantics with inductive relations
+in order to express higher-order functions.
+
+Termination is not type based in Beluga either. Like Twelf, it needs
+an external termination (or totality) checker, but its prototype
+implementation currently lacks such a checker. We suspect one of the reasons
+why the Beluga implementation does not yet contain a termination checker is
+due to the difficulty of checking termination of higher-order functions.
+The syntactic approaches to termination, used by logical frameworks
+based on first-order meta-logic, may fail to check termination for
+many higher-order functions.
+
+\paragraph{}
+Delphin \cite{pos08phd} has goals similar to Beluga,
+supporting functional programming rather than relational reasoning.
+For example, the addition function over natural numbers can be defined
+in Delphin as follows.\vspace{-2em}
+\begin{singlespace}
+\begin{verbatim}
+fun plus : <nat> -> <nat> -> <nat> 
+  = fn <z>   <M> => <M>
+    |  <s N> <M> => let val <x> = plus <N> <M> in <s x> end
+    ;
+\end{verbatim}
+\end{singlespace}\noindent
+Although both Beluga and Delphin support similar features with similar syntax,
+their theoretical foundations differ \cite{Pie10} on how they treat contexts.
+Delphin cannot distinguish open values from closed values as is done in Beluga,
+since Delpin does not explicitly manage contexts.
+\citet{Pie10} also points out that Delphin tries to reuse Twelf's infrastructure
+as much as possible. For instance, the termination checker of Delphin is
+based on lexicographic subterm ordering, which is also the case in Twelf.
+
+Although Delphin and Beluga do support higher-order functions,
+they do not support polymorphism, but only dependent types by term indexing.
+That is, one can only write monomorphic functions. Recall that,
+in $\lambda\Pi$, one can only index type families by terms, not types.
+Indexing by types would support polymorphism.
+This is inconvenient for programming higher-order functions,
+because many higher-order functions are polymorphic in nature; users
+need to duplicate their definitions for each different type needed.
+%% One may work around this limitation by using type-representation objects
+%% -- define constant objects that represent types and pass them around instead
+%% of passing types.
+

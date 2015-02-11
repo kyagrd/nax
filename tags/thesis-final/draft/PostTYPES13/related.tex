@@ -1,0 +1,93 @@
+\section{Related Work}\label{sec:relwork}
+TODO
+
+\subsection{Mendler-style primitive recursion}\label{sec:relwork:mpr}
+TODO
+
+TODO
+we should introduce Mendler-style primitive recursion (\mpr{}) here
+because we are going to discuss \mprsi{}
+TODO
+
+\subsection{Type-based termination and sized types}\label{sec:relwork:sized}
+\emph{Type-based termination} (coined by Barthe and others \cite{BartheFGPU04})
+stands for approaches that integrate termination into type checking,
+as opposed to syntactic approaches (\ie, conventional approach) that
+reason about termination over untyped term structures.
+The Mendler-style approach is, of course, type-based. In fact, the idea of
+type-based termination was inspired by Mendler \cite{Mendler87,Mendler91}.
+In the Mendler style, we know that well-typed functions defined using
+Mendler-style recursion schemes always terminate.  This guarantee flows
+from the design of the recursion scheme, where the use of higher-rank 
+polymorphic types in the abstract operations enforce the invariants
+necessary for termination.
+
+Abel \cite{abel06phd,Abel12talkFICS} summarizes the advantages of
+type-based termination as follows:
+\textbf{communication} (programmers can think using types),
+\textbf{certification} (types are machine checkable certificates),
+\textbf{a simple theoretical justification}
+        (no additional complication for termination other than type checking),
+\textbf{orthogonality} (only small parts of the language are affected,
+        \eg, principled recursion schemes instead of general recursion),
+\textbf{robustness} (type system extensions are less likely to
+                        disrupt termination checking),
+\textbf{compositionality}\footnote{This is not listed in Abel's thesis,
+                                but comes from his invited talk in FICS 2012.}
+        (one needs only types, not the code, for checking the termination), and
+\textbf{higher-order functions and higher-kinded datatypes}
+        (works well even for higher-order functions and non-regular datatypes,
+        as a consequence of compositionality).
+In his dissertation \cite{abel06phd} (Section 4.4) on sized types,
+Abel views the Mendler-style approach as enforcing size restrictions
+using higher-rank polymorphism as follows:
+\begin{itemize}
+\item The abstract recursive type $r$ in Mendler style corresponds to
+        $\mu^\alpha F$ in his sized-type system (System~\Fwhat),
+        where the sized type
+        for the value being passed in corresponds to $\mu^{\alpha+1} F$.
+\item The concrete recursive type $\mu F$ in Mendler style corresponds to
+        $\mu^\infty F$ since there is no size restriction.
+\item By subtyping, a type with a smaller size index can be cast to
+        the same type with a larger size index.
+\end{itemize}
+The same intuition holds for the termination behaviors
+of Mendler-style recursion schemes over positive datatypes.
+Mendler-style recursion schemes terminate, for positive datatypes,
+because $r$-values are direct subcomponents of the value being eliminated.
+They are always smaller than the value being passed in.
+Types enforce that recursive calls are only well typed,
+when applied to smaller subcomponents.
+
+Abel's System~\Fwhat\ can express primitive recursion quite naturally
+using subtyping. The casting operation $(r \to \mu F)$ in Mendler-style
+primitive recursion corresponds to an implicit conversion by subtyping
+from $\mu^\alpha F$ to $\mu^\infty F$ because $\alpha \leq \infty$.
+
+System~\Fwhat\ \cite{abel06phd} is closely related to
+System~\Fixw\ \cite{AbeMat04}. Both of these systems are base on
+equi-recursive fixpoint types over positive base structures.
+Both of these systems are able to embed (or simulate) Mendler-style
+primitive recursion (which is based on iso-recursive types) via
+the encoding \cite{Geu92} of arbitrary base structures into
+positive base structures.
+%% In \S\ref{sec:fixi:data}, we rely on
+%% the same encoding, denoted by $\Phi$, when embedding \MPr\ into System~\Fixw.
+
+Abel's sized-type approach provides good intuitions why 
+certain recursion schemes terminate over positive datatypes.
+But, it does not give a good intuition of whether or not
+those recursion schemes would terminate for negative datatypes,
+unless there is an encoding that can translate negative datatypes into
+positive datatypes. For primitive recursion, this is possible (as we
+mentioned above). However, for our recursion scheme \MsfIt, which is
+especially useful over negative datatypes, we do not know of an encoding
+that can map the inverse augmented fixpoints into positive fixpoints.
+So, it is not clear whether Abel's the sized type approach based on
+positive equi-recursive fixpoint types can provide a good intuition
+for the termination behavior of \MsfIt. In the following section,
+we will discuss another Mendler-style recursion scheme (\mprsi{}), which
+is also useful over negative datatypes and has a termination property
+(not proved yet) based on the size of the index in the datatype.
+
+

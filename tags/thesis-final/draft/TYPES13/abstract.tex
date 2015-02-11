@@ -1,0 +1,250 @@
+\documentclass[a4paper]{easychair} % A4 is needed for the abstract book
+
+%\documentclass[a4paper, debug]{easychair} 
+% can be used to better see overfull boxes
+
+\usepackage{enumerate}
+\usepackage{comment}
+
+\bibliographystyle{plain}
+
+%\newtheorem{thm}{Theorem}   % no such environments are predefined
+
+\title{Mendler-style Recursion Schemes for Mixed-Variant Datatypes}
+\titlerunning{Mendler-style Recursion Schemes for Mixed-Variant Datatypes}
+\author{
+Ki Yung Ahn\inst{1}
+\and
+Tim Sheard\inst{1}
+ \and
+Marcelo Fiore\inst{2}
+}
+\institute{
+  Portland State University~\thanks{supported by NSF grant 0910500.}
+%%, \\ Portland, OR, USA
+\and
+  University of Cambridge
+%%, \\ Cambridge, UK
+}
+\authorrunning{K.Y. Ahn, T. Sheard and M. Fiore}
+
+\newcommand{\cf}[0]{{cf.}}
+\newcommand{\eg}[0]{{e.g.}}
+\newcommand{\ie}[0]{{i.e.}}
+\newcommand{\aka}[0]{{a.k.a.}}
+
+\newcommand{\F}[0]{{\ensuremath{\mathsf{\uppercase{F}}}}}
+\newcommand{\Fw}[0]{{\ensuremath{\mathsf{\uppercase{F}}_{\!\omega}}}}
+\newcommand{\Fixw}[0]{{\ensuremath{\mathsf{\uppercase{F}\lowercase{ix}}_{\!\omega}}}}
+
+\newcommand{\msfit}[0]{\texttt{msfit}}
+\newcommand{\mprsi}[0]{\texttt{mprsi}}
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%\end{abstract}
+% abstracts of abstracts are not compulsory
+
+The context of our work is the Nax project.
+% We are developing a unified programming and reasoning system,
+% called Nax, with the following design goals:\vspace*{-1ex}
+% \begin{enumerate}[(1)]
+%  \item Nax supports the major constructs of modern functional programming languages,
+%  such as parametric polymorphism, recursive datatypes, and type inference,
+%  \vspace*{-1.2ex}
+%  \item Nax can specify fine-grained program properties as types and
+%  witness proofs of such properties by writing a program (the Curry--Howard correspondence),
+%  \vspace*{-1.2ex}
+%  \item Nax is based on a minimal foundational calculus
+%  that is expressive enough to embed all language constructs in (1)
+%  and is also logically consistent to avoid paradoxical proofs in (2),\vspace*{-1.2ex}
+%  \item Nax has a simple implementation infrastructure that keeps the trusted base small.
+% \end{enumerate}
+% \vspace*{-.5ex}
+Our goal is to develop a language system, called Nax, which supports the merits of both
+functional programming languages and formal reasoning systems based on
+the Curry--Howard correspondence. Our approach towards these goals is to 
+design an appropriate foundational calculus \cite{AhnSheFioPit13}
+that extends \Fw \cite{Girard72} (or \Fixw \cite{AbeMat04} similarly) to support
+\emph{Mendler-style recursion schemes} \cite{Mendler87} with \emph{term-indexed datatypes}.
+% Mendler-style recursion schemes support (1) since they are based
+% on parametric polymorphism and well-defined over wide range of datatypes.
+% They also support (4) since their termination is type-based --
+% no other termination checking is necessary.
+% Term-indexed datatypes support (2), for instance,
+% statically tracking the size of a list using a natural number.
+
+In this abstract, we outline a paper
+that will
+\textcircled{1} discuss the advantages of the Mendler style,
+\textcircled{2} report that we can define an evaluator for the simply-typed HOAS
+using Mendler-style iteration with syntactic inverses (\msfit), and
+\textcircled{3}~propose a new recursion scheme (work in progress) whose
+termination relies on the invariants specified by size measures on indices.
+\vspace*{-2ex}
+\paragraph{Advantages of the Mendler style\!\!\!}
+include allowing arbitrary definition of recursive datatypes, while still 
+ensuring well-behaved use by providing a rich set of principled eliminators.
+Certain concepts, such as HOAS, are most succinctly defined as
+mixed-variant datatypes, which are unfortunately, outlawed in
+many existing reasoning systems (\eg, Coq, Agda).
+One is forced to devise clever encodings \cite{PHOAS},
+to use concepts like HOAS within such systems.
+
+We believe it is worthwhile to allow the definition all recursive datatypes
+available in functional \emph{programming} languages, including those outlawed
+in many reasoning systems. For example, the untyped $\lambda$-calculus
+can be defined in HOAS as
+{\small\texttt{\,data Exp~=~Abs\;(Exp\;->\;Exp)~|~App\;Exp\;Exp\,}} in Haskell.
+Even if we assume all functions embedded in \texttt{Abs} are non-recursive,
+evaluating HOAS may still cause problems for logical reasoning,
+since the untyped $\lambda$-calculus has diverging terms. However, there are
+many well-behaved (\ie, terminating) computations on \texttt{Exp}, such as
+converting an HOAS expression to first-order syntax.
+Ahn and Sheard \cite{AhnShe11} formalized a Mendler-style recursion scheme
+(\msfit, \aka\ \textit{msfcata}) that captures these well-behaved computations.
+
+If the datatype \texttt{Exp} had indexes to assert invariants of
+well-formed expressions, we could rely on these invariants to write
+even more expressive programs, such as a terminating well-typed evaluator.
+Discussion around this idea will constitute the latter parts of the paper.
+\vspace*{-2ex}
+\paragraph{A simply-typed HOAS evaluator\!\!\!} can be defined
+using \msfit\ at kind \texttt{*\,->\,*}.  Since \msfit\ terminates
+for any datatype, we are also proving that the evaluation of
+the simply-typed $\lambda$-calculus always terminates
+just by defining \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} in Nax.
+The entire Nax code is laid out below. \cite{BerSch91}
+\vspace*{-1ex}
+{\small
+\begin{verbatim}
+  data E : (* -> *) -> (* -> *) where      -- the "deriving fixpoint Exp" defines
+    Abs : (r a -> r b) -> E r (a -> b)     --   abs f   = In[* -> *] (Abs f)
+    App : E r (a -> b) -> E r a -> E r b   --   app f e = In[* -> *] (App f e)
+      deriving fixpoint Exp                --   synonym Exp t = Mu[* -> *] E t
+  data Id a = MkId a -- the identity type
+  unId (MkId x) = x  -- destructor of Id
+  eval e = msfit { t . Id t } e with
+             call inv (App f x) = MkId (unId(call f) (unId(call x)))
+             call inv (Abs f) = MkId (\v -> unId(call (f (inv (MkId v)))))
+\end{verbatim} }
+\vspace*{-.5ex}
+\noindent
+The type of \texttt{eval\,:\,Exp\;t\;->\;Id\;t\,} is inferred from
+\texttt{\{\,t\,.\;Id t\,\}}, which specifies the answer type in relation
+to the input type's index.
+Conceptually, \texttt{msfit} at kind \texttt{*\,->\,*} has the following type.
+Note the types of \texttt{msfit}'s two abstract operations
+\texttt{call} and \texttt{inv}.\vspace*{-.5ex}
+{\small
+\begin{verbatim}
+  msfit : (forall r . (forall i . r i -> ans i) -- call
+                   -> (forall i . ans i -> r i) -- inv
+                   -> (forall i . f r i -> ans i)      ) -> Mu[* -> *] f j -> ans j
+\end{verbatim} }
+\vspace*{-2.5ex}
+\paragraph{Evaluation via user-defined value domain\!\!\!\!\!}, instead of
+the native value space of Nax, motivates a new recursion scheme,
+\mprsi, standing for Mendler-style primitive recursion with sized index.
+%% A user-defined value domain is particularly useful for evaluating expressions
+%% of first-order syntax. Here, we stick to HOAS to avoid introducing a new datatype.
+Consider writing an evaluator \texttt{\,veval\;:\;Exp\;t\,->\,Val\;t\,}
+via the value domain \texttt{Val\;:\;*\,->\,*\,}.\vspace*{-1ex}
+{\small
+\begin{verbatim}
+  data V : (* -> *) -> * -> * where      -- the "deriving fixpoint Val" defines
+    Fun : (r a -> r b) -> V r (a -> b)   -- fun f = In [* -> *] (Fun f)
+      deriving fixpoint Val              -- synonym Val t = Mu[* -> *] V t
+  veval e = msfit { t . V t } e with
+              call inv (App f x) = unfun (call f) (call x)  -- how do we define unfun?
+              call inv (Abs f) = fun (\v -> (call (f (inv v))))
+\end{verbatim} }
+\noindent
+Only if we were able to define
+\texttt{unfun\;:\;Val\,(a\,->\,b)\;->\;Val\;a\,->\,Val\;b},
+this would be admitted in Nax.
+However, it is not likely that \texttt{unfun} can be defined using
+recursion schemes currently available in Nax. Thereby, we propose
+a new recursion scheme \mprsi, which extends the Mendler-style primitive recursion
+(\texttt{mpr}) with the uncasting operation.\vspace*{-.5ex}
+{\small
+\begin{verbatim}
+  mprsi : (forall r . (forall i. r i -> ans i)                      -- call
+                   -> (forall i. (i < j) => r i -> Mu[* -> *] f i)  -- cast   
+                   -> (forall i. (i < j) => Mu[* -> *] f i -> r i)  -- uncast 
+                   -> (forall i. f r i -> ans i) ) -> Mu[* -> *] f j -> ans j
+
+  unfun v = mprsi { (a -> b) . V a -> V b } v with
+              call cast (Fun f) = cast . f . uncast   -- dot (.) is function composition
+\end{verbatim} }\vspace*{-.5ex}
+\noindent
+Note the size constraints \texttt{(i\;<\;j)} on both \texttt{cast} and \texttt{uncast} operations
+(FYI, \texttt{mpr}'s \texttt{cast} does not have size constraints).
+These constraints prevent writing evaluator-like functions on strange expressions
+that have constructors like below, which may cause non-termination.\vspace*{-.5ex}
+{\small
+\begin{verbatim}
+ app1 : (Exp1 (a->b) -> Exp1 b) -> Exp1 (a->b)  -- prevented by constraint on uncast
+ app2 : (Exp2 a -> Exp2 (a->b)) -> Exp2 (a->b)  -- prevented by constraint on cast
+\end{verbatim} }\vspace*{-.5ex}
+\noindent
+Our examples in this abstract only involve type indices, but similar
+formulation is possible for term indices as well.
+This is still a fresh proposal awaiting proof of termination.
+We hope to discuss this in TYPES 2013 and welcome
+enlightening feedback from the TYPES community.
+\vspace*{-1ex}
+\begin{comment}
+\paragraph{Term-indices that govern termination behavior over datatypes\!\!\!}
+motivate a new Mendler-style recursion scheme.
+Consider yet another HOAS datatype below for the Simply-Typed Lambda-Calculus (STLC)
+defined in Nax-like syntax,\footnote{curly braces emphasize
+  term-indices used in types (\texttt{Exp\{t1\}}),
+  and types used in kinds (\texttt{\{Ty\}\;->\;*}).}
+where HOAS expressions (\texttt{Expr}) are
+statically indexed by the terms that represent STLC-types (\texttt{Ty}).
+\begin{verbatim}
+    data Ty : * where    Iota : Ty
+                         Arr  : Ty -> Ty -> Ty
+\end{verbatim}\vspace*{-2ex}
+\begin{verbatim}
+    data Exp : {Ty} -> * where   Abs : (Exp{t1} -> Exp{t2}) -> Exp{Arr t1 t2}
+                                 App : Exp{Arr t1 t2} -> Exp{t1} -> Exp{t2}
+\end{verbatim}
+Unlike the HOAS datatype for untyped lambda calculus, evaluating
+these term-indexed HOAS expressions will always terminate,
+since the STLC is strongly normalizing.
+The intuitive principle behind the termination behavior of \texttt{Exp\,:\,\{Ty\}\,->\,*}
+comes from the paradigmatic use of term-indices at negative recursive occurrences.  
+In the type of \texttt{Abs}, the term index \texttt{t1}
+at negative recursive occurrence is ``smaller'' than the index
+(\texttt{Arr t1 t2}) of the result type. In the type of \texttt{App},
+the two term-indices (\texttt{Arr t1 t2}) and \texttt{t1} at positive recursive
+occurrences are larger than and unrelated to the index \texttt{t2} of the result type.
+Thus, we conjecture that our new Mendler-style recursion scheme, namely \textsf{MPrIx},
+which enables us to write an evaluator for  \texttt{Exp\,:\,\{Ty\}\,->\,*}, 
+is well-defined when every index at a negative recursive occurrence is
+smaller than the index of the result type.
+In the paper, we will \vspace*{-.5ex}
+\begin{itemize}
+ \item Formulate the type signature and the reduction rule of \textsf{MPrIx},
+ \vspace*{-1ex}
+ \item Clearly specify what ``smaller'' means, and
+ \vspace*{-1ex}
+ \item Prove that \textsf{MPrIx} terminates whenever it is well defined.
+ \vspace*{-1ex}
+\end{itemize}
+\vspace{-1ex}
+% \paragraph{The impact\!\!} of our work is not limited to
+% systems like Nax that adopt Mendler-style or type-based termination.
+% We hope to inspire other existing Curry--Howard based reasoning systems
+% to support datatypes like \texttt{Exp\,:\,\{Ty\}\,->\,*}.
+% For instance, perhaps the positivity checker in Agda may be extended to accept
+% not only positive datatypes but also certain term-indexed negative datatypes
+% whose negative occurrences are guarded by our ``smaller'' condition.
+% \vspace{-1ex}
+\end{comment}
+\bibliography{main}   % refers to main.bib
+\end{document}

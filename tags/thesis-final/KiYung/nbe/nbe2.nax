@@ -1,0 +1,21 @@
+synonym String = List Char
+
+data T r = Iota | Arr r r deriving fixpoint Ty
+
+data T' : (Ty -> *) -> (Ty -> *) where
+  Iota' : T' r {iota}
+  Arr'  : r {a} -> r {b} -> T' r {`arr a b}
+   deriving fixpoint Ty'
+
+data Tag = E | V
+data EV : (Tag -> Ty -> *) -> (Tag -> Ty -> *) where
+  Var : String -> EV r {E} {a}
+  Lam : String -> r {E} {b} -> EV r {E} {`arr a b}
+  App : r {E} {`arr a b} -> r {E} {a} -> EV r {E} {b}
+  Fun : (r {V} {a} -> r {V} {b}) -> EV r {V} {`arr a b}
+  Syn : r {E} {`iota} -> EV r {V} {`iota}
+   deriving fixpoint ExpVal
+
+synonym Tm = ExpVal {E}
+synonym Val = ExpVal {V}
+
